@@ -1,0 +1,271 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum KeyDateType {
+  DEADLINE
+  RESULTS
+  REGISTRATION
+  OTHER
+}
+
+enum ResourceType {
+  SYLLABUS
+  SPECIFICATION
+  PAST_PAPER
+  MARK_SCHEME
+  GUIDE
+  LINK
+  OTHER
+}
+
+enum SourceDocumentType {
+  EXAM_TIMETABLE
+  KEY_DATES
+  REGISTRATION
+  RESULTS
+  SYLLABUS
+  OTHER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         UserRole @default(VIEWER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sourceDocuments SourceDocument[]
+}
+
+model ExamBoard {
+  id          String   @id @default(cuid())
+  name        String
+  code        String   @unique
+  description String?
+  country     String
+  region      String?
+  website     String?
+  timezone    String?
+  calendarSubjectFilterEnabled Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  qualifications  Qualification[]
+  examSeries      ExamSeries[]
+  keyDates        KeyDate[]
+  resources       Resource[]
+  sourceDocuments SourceDocument[]
+  calendarSubjectSelections CalendarSubjectSelection[]
+
+  @@index([country])
+}
+
+model Qualification {
+  id          String    @id @default(cuid())
+  name        String
+  level       String
+  code        String?
+  examBoardId String
+  examBoard   ExamBoard @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  subjects Subject[]
+  resources Resource[]
+
+  @@index([examBoardId])
+}
+
+model Subject {
+  id              String        @id @default(cuid())
+  name            String
+  code            String
+  qualificationId String
+  qualification   Qualification @relation(fields: [qualificationId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  papers   Paper[]
+  keyDates KeyDate[]
+  resources Resource[]
+  calendarSubjectSelections CalendarSubjectSelection[]
+
+  @@index([qualificationId])
+}
+
+model CalendarSubjectSelection {
+  id          String    @id @default(cuid())
+  examBoardId String
+  examBoard   ExamBoard @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  subjectId   String
+  subject     Subject   @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  @@unique([examBoardId, subjectId])
+  @@index([examBoardId])
+  @@index([subjectId])
+}
+
+model Paper {
+  id               String          @id @default(cuid())
+  code             String
+  title            String
+  duration         Int?
+  subjectId        String
+  subject          Subject         @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  sourceDocumentId String?
+  sourceDocument   SourceDocument? @relation(fields: [sourceDocumentId], references: [id], onDelete: SetNull)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  examSessions ExamSession[]
+  resources    Resource[]
+
+  @@index([subjectId])
+  @@index([sourceDocumentId])
+}
+
+model ExamSeries {
+  id               String          @id @default(cuid())
+  name             String
+  year             Int
+  examBoardId      String
+  examBoard        ExamBoard       @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  startDate        DateTime?
+  endDate          DateTime?
+  sourceDocumentId String?
+  sourceDocument   SourceDocument? @relation(fields: [sourceDocumentId], references: [id], onDelete: SetNull)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  examSessions ExamSession[]
+  keyDates     KeyDate[]
+  resources    Resource[]
+
+  @@index([examBoardId])
+  @@index([year])
+  @@index([sourceDocumentId])
+}
+
+model ExamSession {
+  id               String          @id @default(cuid())
+  date             DateTime
+  startTime        String?
+  endTime          String?
+  timezone         String?
+  venue            String?
+  notes            String?
+  paperId          String
+  paper            Paper           @relation(fields: [paperId], references: [id], onDelete: Cascade)
+  examSeriesId     String
+  examSeries       ExamSeries      @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
+  sourceDocumentId String?
+  sourceDocument   SourceDocument? @relation(fields: [sourceDocumentId], references: [id], onDelete: SetNull)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([paperId])
+  @@index([examSeriesId])
+  @@index([date])
+  @@index([sourceDocumentId])
+}
+
+model KeyDate {
+  id               String          @id @default(cuid())
+  title            String
+  date             DateTime
+  type             KeyDateType     @default(OTHER)
+  description      String?
+  timezone         String?
+  examBoardId      String?
+  examBoard        ExamBoard?      @relation(fields: [examBoardId], references: [id], onDelete: SetNull)
+  subjectId        String?
+  subject          Subject?        @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  examSeriesId     String?
+  examSeries       ExamSeries?     @relation(fields: [examSeriesId], references: [id], onDelete: SetNull)
+  sourceDocumentId String?
+  sourceDocument   SourceDocument? @relation(fields: [sourceDocumentId], references: [id], onDelete: SetNull)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([date])
+  @@index([examBoardId])
+  @@index([subjectId])
+  @@index([examSeriesId])
+  @@index([sourceDocumentId])
+}
+
+model Resource {
+  id               String          @id @default(cuid())
+  title            String
+  description      String?
+  url              String?
+  filePath         String?
+  type             ResourceType    @default(OTHER)
+  language         String?
+  examBoardId      String?
+  examBoard        ExamBoard?      @relation(fields: [examBoardId], references: [id], onDelete: SetNull)
+  qualificationId  String?
+  qualification    Qualification?  @relation(fields: [qualificationId], references: [id], onDelete: SetNull)
+  subjectId        String?
+  subject          Subject?        @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  paperId          String?
+  paper            Paper?          @relation(fields: [paperId], references: [id], onDelete: SetNull)
+  examSeriesId     String?
+  examSeries       ExamSeries?     @relation(fields: [examSeriesId], references: [id], onDelete: SetNull)
+  sourceDocumentId String?
+  sourceDocument   SourceDocument? @relation(fields: [sourceDocumentId], references: [id], onDelete: SetNull)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([examBoardId])
+  @@index([qualificationId])
+  @@index([subjectId])
+  @@index([paperId])
+  @@index([examSeriesId])
+  @@index([sourceDocumentId])
+  @@index([type])
+}
+
+model SourceDocument {
+  id           String             @id @default(cuid())
+  title        String
+  type         SourceDocumentType @default(OTHER)
+  sourceUrl    String?
+  fileName     String?
+  fileHash     String?
+  publishedAt  DateTime?
+  fetchedAt    DateTime?
+  notes        String?
+  examBoardId  String?
+  examBoard    ExamBoard?         @relation(fields: [examBoardId], references: [id], onDelete: SetNull)
+  uploadedById String?
+  uploadedBy   User?              @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  papers       Paper[]
+  examSeries   ExamSeries[]
+  examSessions ExamSession[]
+  keyDates     KeyDate[]
+  resources    Resource[]
+
+  @@index([examBoardId])
+  @@index([uploadedById])
+  @@index([type])
+  @@index([publishedAt])
+}

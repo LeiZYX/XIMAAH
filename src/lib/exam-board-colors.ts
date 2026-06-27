@@ -1,0 +1,35 @@
+export const EXAM_BOARD_ACCENTS: Record<string, { accent: string; label: string }> = {
+  AQA: { accent: "#be123c", label: "AQA" },
+  CIE: { accent: "#0284c7", label: "CIE" },
+  EDEXCEL: { accent: "#312e81", label: "Edexcel" },
+};
+
+export const EXAM_BOARD_LEGEND = Object.entries(EXAM_BOARD_ACCENTS).map(([code, value]) => ({
+  code,
+  label: value.label,
+  color: value.accent,
+}));
+
+export function examBoardAccent(code: string) {
+  const normalized = code.trim().toUpperCase();
+  return EXAM_BOARD_ACCENTS[normalized] ?? {
+    accent: "#475569",
+    label: code || "Other",
+  };
+}
+
+export function examBoardCalendarLabel(code: string): string {
+  const normalized = code.trim().toUpperCase();
+  if (normalized === "AQA") return "AQA";
+  if (normalized === "CIE") return "CIE";
+  if (normalized === "EDEXCEL") return "EDEXCEL";
+  return normalized || "?";
+}
+
+export function examBoardInitial(code: string): string {
+  const normalized = code.trim().toUpperCase();
+  if (normalized === "AQA") return "A";
+  if (normalized === "CIE") return "C";
+  if (normalized === "EDEXCEL") return "E";
+  return normalized.charAt(0) || "?";
+}

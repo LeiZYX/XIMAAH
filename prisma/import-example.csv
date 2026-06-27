@@ -1,0 +1,23 @@
+entity,examBoardCode,level,name,code
+qualification,CIE,IGCSE,Mathematics,0580
+qualification,EDEXCEL,GCSE,Mathematics,1MA1
+
+entity,examBoardCode,level,name,code,title
+subject,CIE,IGCSE,Mathematics,0580,Mathematics
+subject,EDEXCEL,GCSE,Mathematics,1MA1,Mathematics
+
+entity,examBoardCode,subjectCode,code,title,duration
+paper,CIE,0580,0580/21,Paper 2 Extended,120
+paper,EDEXCEL,1MA1,1MA1/2F,Paper 2 Foundation,90
+
+entity,examBoardCode,name,year,startDate,endDate
+exam_series,CIE,June 2026,2026,2026-04-28,2026-06-12
+exam_series,EDEXCEL,Summer 2026,2026,2026-05-11,2026-06-26
+
+entity,examBoardCode,paperCode,seriesName,year,date,startTime,endTime,venue
+exam_session,CIE,0580/21,June 2026,2026,2026-05-08,09:00,11:00,Hall A
+exam_session,EDEXCEL,1MA1/2F,Summer 2026,2026,2026-06-05,13:00,14:30,Hall B
+
+entity,examBoardCode,seriesName,year,title,date,type,description
+key_date,CIE,June 2026,2026,Late Entry Deadline,2026-03-01,DEADLINE,Final late entry
+key_date,EDEXCEL,Summer 2026,2026,Results Day,2026-08-20,RESULTS,Summer results released

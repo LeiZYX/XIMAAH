@@ -1,0 +1,293 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import {
+  isLevelCategory,
+  matchesAnyLevelCategory,
+  parseLevelCategories,
+  qualificationLevelsForCategories,
+} from "@/lib/level-categories";
+import {
+  formatSessionTimeRange,
+  sessionCalendarDetailLabel,
+  sessionCalendarLabel,
+  sessionEventAppearance,
+} from "@/lib/calendar-events";
+import {
+  getCalendarSubjectFilterState,
+  isSubjectVisibleOnCalendar,
+} from "@/lib/calendar-subject-selections";
+import type { CalendarEvent } from "@/lib/types";
+
+function sessionEndTime(date: Date, startTime?: string | null, endTime?: string | null) {
+  if (endTime) {
+    const [hours, minutes] = endTime.split(":").map(Number);
+    const end = new Date(date);
+    end.setHours(hours, minutes, 0, 0);
+    return end.toISOString();
+  }
+
+  if (startTime) {
+    const [hours, minutes] = startTime.split(":").map(Number);
+    const end = new Date(date);
+    end.setHours(hours + 2, minutes, 0, 0);
+    return end.toISOString();
+  }
+
+  return undefined;
+}
+
+function sessionStartTime(date: Date, startTime?: string | null) {
+  if (!startTime) {
+    return date.toISOString().split("T")[0];
+  }
+
+  const [hours, minutes] = startTime.split(":").map(Number);
+  const start = new Date(date);
+  start.setHours(hours, minutes, 0, 0);
+  return start.toISOString();
+}
+
+export async function GET(request: NextRequest) {
+  const params = request.nextUrl.searchParams;
+  const examBoardIds = params.getAll("examBoardId").filter(Boolean);
+  const qualificationId = params.get("qualificationId");
+  const subjectId = params.get("subjectId");
+  const examSeriesId = params.get("examSeriesId");
+  const levelCategories = parseLevelCategories(params.getAll("levelCategory"));
+  const showSessions = params.get("showSessions") !== "false";
+  const showKeyDates = params.get("showKeyDates") !== "false";
+
+  const filterState = await getCalendarSubjectFilterState();
+  const events: CalendarEvent[] = [];
+
+  const sessionWhere = {
+    ...(examSeriesId ? { examSeriesId } : {}),
+    ...(examBoardIds.length > 0
+      ? { examSeries: { examBoardId: { in: examBoardIds } } }
+      : {}),
+    ...(subjectId ? { paper: { subjectId } } : {}),
+    ...(qualificationId && !subjectId
+      ? { paper: { subject: { qualificationId } } }
+      : {}),
+    ...(levelCategories.length > 0 && !qualificationId && !subjectId
+      ? {
+          paper: {
+            subject: {
+              qualification: {
+                level: { in: qualificationLevelsForCategories(levelCategories) },
+              },
+            },
+          },
+        }
+      : {}),
+  };
+
+  const keyDateWhere = {
+    ...(examSeriesId ? { examSeriesId } : {}),
+    ...(examBoardIds.length > 0 ? { examBoardId: { in: examBoardIds } } : {}),
+    ...(subjectId ? { subjectId } : {}),
+    ...(qualificationId && !subjectId
+      ? {
+          OR: [
+            { subject: { qualificationId } },
+            {
+              subjectId: null,
+              examBoard: { qualifications: { some: { id: qualificationId } } },
+            },
+          ],
+        }
+      : {}),
+    ...(levelCategories.length > 0 && !qualificationId && !subjectId
+      ? {
+          OR: [
+            {
+              subject: {
+                qualification: {
+                  level: { in: qualificationLevelsForCategories(levelCategories) },
+                },
+              },
+            },
+            { subjectId: null },
+          ],
+        }
+      : {}),
+  };
+
+  if (showSessions) {
+    const sessions = await prisma.examSession.findMany({
+      where: sessionWhere,
+      include: {
+        paper: {
+          select: {
+            code: true,
+            title: true,
+            subject: {
+              select: {
+                id: true,
+                name: true,
+                code: true,
+                qualification: {
+                  select: {
+                    name: true,
+                    level: true,
+                    examBoard: { select: { id: true, name: true, code: true } },
+                  },
+                },
+              },
+            },
+          },
+        },
+        examSeries: { select: { name: true, year: true } },
+      },
+    });
+
+    for (const session of sessions) {
+      const { qualification } = session.paper.subject;
+
+      if (
+        levelCategories.length > 0 &&
+        !matchesAnyLevelCategory(
+          qualification.level,
+          levelCategories,
+          session.paper.title,
+        )
+      ) {
+        continue;
+      }
+
+      if (
+        !isSubjectVisibleOnCalendar(
+          filterState,
+          qualification.examBoard.id,
+          session.paper.subject.id,
+        )
+      ) {
+        continue;
+      }
+
+      const examBoardCode = qualification.examBoard.code;
+      const appearance = sessionEventAppearance(
+        qualification.level,
+        examBoardCode,
+        session.paper.title,
+      );
+
+      const calendarTimeLabel = formatSessionTimeRange(session.startTime, session.endTime);
+      const calendarDetailLabel = sessionCalendarDetailLabel(
+        qualification.level,
+        session.paper.subject.name,
+        session.paper.code,
+        session.paper.title,
+      );
+
+      events.push({
+        id: `session-${session.id}`,
+        title: `${calendarTimeLabel} ${calendarDetailLabel}`.trim(),
+        start: sessionStartTime(session.date, session.startTime),
+        end: sessionEndTime(session.date, session.startTime, session.endTime),
+        allDay: !session.startTime,
+        type: "session",
+        backgroundColor: appearance.backgroundColor,
+        borderColor: appearance.borderColor,
+        extendedProps: {
+          entityId: session.id,
+          entityType: "session",
+          levelCategory: appearance.levelCategory,
+          boardAccent: appearance.boardAccent,
+          boardLabel: appearance.boardLabel,
+          calendarLabel: sessionCalendarLabel(
+            session.paper.subject.name,
+            session.paper.code,
+          ),
+          calendarTimeLabel,
+          calendarDetailLabel,
+          paperCode: session.paper.code,
+          paperTitle: session.paper.title,
+          subject: session.paper.subject.name,
+          subjectCode: session.paper.subject.code,
+          qualification: `${qualification.level} ${qualification.name}`,
+          examBoard: examBoardCode,
+          examSeries: `${session.examSeries.name} (${session.examSeries.year})`,
+          venue: session.venue,
+          startTime: session.startTime,
+          endTime: session.endTime,
+          notes: session.notes,
+        },
+      });
+    }
+  }
+
+  if (showKeyDates) {
+    const keyDates = await prisma.keyDate.findMany({
+      where: keyDateWhere,
+      include: {
+        examBoard: { select: { id: true, name: true, code: true } },
+        subject: {
+          select: {
+            id: true,
+            name: true,
+            qualification: {
+              select: {
+                name: true,
+                level: true,
+                examBoardId: true,
+              },
+            },
+          },
+        },
+        examSeries: { select: { name: true, year: true } },
+      },
+    });
+
+    const typeColors: Record<string, { bg: string; border: string }> = {
+      DEADLINE: { bg: "#dc2626", border: "#b91c1c" },
+      RESULTS: { bg: "#16a34a", border: "#15803d" },
+      REGISTRATION: { bg: "#ca8a04", border: "#a16207" },
+      OTHER: { bg: "#7c3aed", border: "#6d28d9" },
+    };
+
+    for (const keyDate of keyDates) {
+      if (levelCategories.length > 0 && keyDate.subject) {
+        const { level } = keyDate.subject.qualification;
+        if (!matchesAnyLevelCategory(level, levelCategories)) {
+          continue;
+        }
+      }
+
+      if (keyDate.subject) {
+        const boardId =
+          keyDate.examBoardId ?? keyDate.subject.qualification.examBoardId;
+        if (!isSubjectVisibleOnCalendar(filterState, boardId, keyDate.subject.id)) {
+          continue;
+        }
+      }
+
+      const colors = typeColors[keyDate.type] ?? typeColors.OTHER;
+      events.push({
+        id: `keydate-${keyDate.id}`,
+        title: keyDate.title,
+        start: keyDate.date.toISOString().split("T")[0],
+        allDay: true,
+        type: "keydate",
+        backgroundColor: colors.bg,
+        borderColor: colors.border,
+        extendedProps: {
+          entityId: keyDate.id,
+          entityType: "keydate",
+          keyDateType: keyDate.type,
+          description: keyDate.description,
+          examBoard: keyDate.examBoard?.code,
+          subject: keyDate.subject?.name,
+          qualification: keyDate.subject
+            ? `${keyDate.subject.qualification.level} ${keyDate.subject.qualification.name}`
+            : undefined,
+          examSeries: keyDate.examSeries
+            ? `${keyDate.examSeries.name} (${keyDate.examSeries.year})`
+            : undefined,
+        },
+      });
+    }
+  }
+
+  return NextResponse.json(events);
+}

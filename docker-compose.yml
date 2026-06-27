@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: xima-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: xima_assessment_hub
+    volumes:
+      - xima_pg_data:/var/lib/postgresql/data
+
+volumes:
+  xima_pg_data:
