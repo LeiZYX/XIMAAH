@@ -23,6 +23,51 @@ export * from './enums';
  */
 export type User = Prisma.UserModel
 /**
+ * Model PasswordResetToken
+ * 
+ */
+export type PasswordResetToken = Prisma.PasswordResetTokenModel
+/**
+ * Model StudentProfile
+ * 
+ */
+export type StudentProfile = Prisma.StudentProfileModel
+/**
+ * Model TeacherAssignment
+ * 
+ */
+export type TeacherAssignment = Prisma.TeacherAssignmentModel
+/**
+ * Model RegistrationWindow
+ * 
+ */
+export type RegistrationWindow = Prisma.RegistrationWindowModel
+/**
+ * Model RegistrationWorkspace
+ * 
+ */
+export type RegistrationWorkspace = Prisma.RegistrationWorkspaceModel
+/**
+ * Model StudentExamRegistration
+ * 
+ */
+export type StudentExamRegistration = Prisma.StudentExamRegistrationModel
+/**
+ * Model RegistrationAuditLog
+ * 
+ */
+export type RegistrationAuditLog = Prisma.RegistrationAuditLogModel
+/**
+ * Model RegistrationChangeRequest
+ * 
+ */
+export type RegistrationChangeRequest = Prisma.RegistrationChangeRequestModel
+/**
+ * Model RegistrationChangeRequestExamSession
+ * 
+ */
+export type RegistrationChangeRequestExamSession = Prisma.RegistrationChangeRequestExamSessionModel
+/**
  * Model ExamBoard
  * 
  */

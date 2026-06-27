@@ -52,6 +52,15 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  PasswordResetToken: 'PasswordResetToken',
+  StudentProfile: 'StudentProfile',
+  TeacherAssignment: 'TeacherAssignment',
+  RegistrationWindow: 'RegistrationWindow',
+  RegistrationWorkspace: 'RegistrationWorkspace',
+  StudentExamRegistration: 'StudentExamRegistration',
+  RegistrationAuditLog: 'RegistrationAuditLog',
+  RegistrationChangeRequest: 'RegistrationChangeRequest',
+  RegistrationChangeRequestExamSession: 'RegistrationChangeRequestExamSession',
   ExamBoard: 'ExamBoard',
   Qualification: 'Qualification',
   Subject: 'Subject',
@@ -82,15 +91,171 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  email: 'email',
   name: 'name',
+  username: 'username',
+  email: 'email',
+  phone: 'phone',
+  studentNo: 'studentNo',
   passwordHash: 'passwordHash',
   role: 'role',
+  mustChangePassword: 'mustChangePassword',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
+export const StudentProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  studentNo: 'studentNo',
+  currentGrade: 'currentGrade',
+  currentClassName: 'currentClassName',
+  email: 'email',
+  phone: 'phone',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentProfileScalarFieldEnum = (typeof StudentProfileScalarFieldEnum)[keyof typeof StudentProfileScalarFieldEnum]
+
+
+export const TeacherAssignmentScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  subjectId: 'subjectId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TeacherAssignmentScalarFieldEnum = (typeof TeacherAssignmentScalarFieldEnum)[keyof typeof TeacherAssignmentScalarFieldEnum]
+
+
+export const RegistrationWindowScalarFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  title: 'title',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  status: 'status',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RegistrationWindowScalarFieldEnum = (typeof RegistrationWindowScalarFieldEnum)[keyof typeof RegistrationWindowScalarFieldEnum]
+
+
+export const RegistrationWorkspaceScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  registrationWindowId: 'registrationWindowId',
+  lockedAt: 'lockedAt',
+  lastAdjustedByUserId: 'lastAdjustedByUserId',
+  lastAdjustedByRole: 'lastAdjustedByRole',
+  lastAdjustedAt: 'lastAdjustedAt',
+  lastAdjustmentReason: 'lastAdjustmentReason',
+  lastAdjustmentSummary: 'lastAdjustmentSummary',
+  hasPostLockAdjustment: 'hasPostLockAdjustment',
+  isLateRegistration: 'isLateRegistration',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RegistrationWorkspaceScalarFieldEnum = (typeof RegistrationWorkspaceScalarFieldEnum)[keyof typeof RegistrationWorkspaceScalarFieldEnum]
+
+
+export const StudentExamRegistrationScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  examSessionId: 'examSessionId',
+  registrationWindowId: 'registrationWindowId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  studentNameSnapshot: 'studentNameSnapshot',
+  studentNoSnapshot: 'studentNoSnapshot',
+  gradeSnapshot: 'gradeSnapshot',
+  classNameSnapshot: 'classNameSnapshot',
+  emailSnapshot: 'emailSnapshot',
+  phoneSnapshot: 'phoneSnapshot',
+  status: 'status',
+  lockedAt: 'lockedAt',
+  cancelledAt: 'cancelledAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentExamRegistrationScalarFieldEnum = (typeof StudentExamRegistrationScalarFieldEnum)[keyof typeof StudentExamRegistrationScalarFieldEnum]
+
+
+export const RegistrationAuditLogScalarFieldEnum = {
+  id: 'id',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  studentId: 'studentId',
+  registrationId: 'registrationId',
+  examSessionId: 'examSessionId',
+  action: 'action',
+  performedById: 'performedById',
+  performedByRole: 'performedByRole',
+  performedAt: 'performedAt',
+  beforeValue: 'beforeValue',
+  afterValue: 'afterValue',
+  reason: 'reason',
+  note: 'note',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistrationAuditLogScalarFieldEnum = (typeof RegistrationAuditLogScalarFieldEnum)[keyof typeof RegistrationAuditLogScalarFieldEnum]
+
+
+export const RegistrationChangeRequestScalarFieldEnum = {
+  id: 'id',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
+  studentId: 'studentId',
+  requestedByUserId: 'requestedByUserId',
+  requestedByRole: 'requestedByRole',
+  requestType: 'requestType',
+  targetExamSessionId: 'targetExamSessionId',
+  targetRegistrationId: 'targetRegistrationId',
+  replacementExamSessionId: 'replacementExamSessionId',
+  reason: 'reason',
+  status: 'status',
+  reviewedByUserId: 'reviewedByUserId',
+  reviewedAt: 'reviewedAt',
+  reviewNote: 'reviewNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RegistrationChangeRequestScalarFieldEnum = (typeof RegistrationChangeRequestScalarFieldEnum)[keyof typeof RegistrationChangeRequestScalarFieldEnum]
+
+
+export const RegistrationChangeRequestExamSessionScalarFieldEnum = {
+  id: 'id',
+  changeRequestId: 'changeRequestId',
+  examSessionId: 'examSessionId',
+  createdAt: 'createdAt'
+} as const
+
+export type RegistrationChangeRequestExamSessionScalarFieldEnum = (typeof RegistrationChangeRequestExamSessionScalarFieldEnum)[keyof typeof RegistrationChangeRequestExamSessionScalarFieldEnum]
 
 
 export const ExamBoardScalarFieldEnum = {

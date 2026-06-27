@@ -213,7 +213,12 @@ export default function CalendarSubjectsPage() {
         </p>
       </Card>
 
-      <AdminStatus loading={loading} error={loadError} empty={!loading && !examBoards.length} />
+      <AdminStatus
+        loading={loading}
+        error={loadError}
+        empty={!loading && !examBoards.length}
+        entityName="exam boards"
+      />
 
       {!loading && !loadError && examBoards.length > 0 ? (
         <div className="grid gap-6 lg:grid-cols-[220px_1fr]">

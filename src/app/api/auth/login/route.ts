@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
-import { verifyPassword } from "@/lib/auth/password";
-import { canAccessAdmin, createSessionToken, sessionCookieOptions } from "@/lib/auth/session";
+import { verifyPassword, hashPassword } from "@/lib/auth/password";
+import { createPasswordResetToken, sendPasswordResetEmail } from "@/lib/auth/password-reset";
+import { findUserByLoginIdentifier } from "@/lib/auth/resolve-user";
+import {
+  createSessionToken,
+  getSessionUser,
+  sessionCookieOptions,
+} from "@/lib/auth/session";
+import { homePathForRole } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 
 export const runtime = "nodejs";
@@ -9,21 +16,19 @@ export const runtime = "nodejs";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const data = parseJsonBody<{ email: string; password: string }>(body, ["email", "password"]);
+    const data = parseJsonBody<{ identifier: string; password: string }>(body, [
+      "identifier",
+      "password",
+    ]);
 
     if (!data) {
-      return jsonError("Email and password are required");
+      return jsonError("Identifier and password are required");
     }
 
-    const email = data.email.trim().toLowerCase();
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await findUserByLoginIdentifier(data.identifier);
 
     if (!user || !(await verifyPassword(data.password, user.passwordHash))) {
-      return jsonError("Invalid email or password", 401);
-    }
-
-    if (!canAccessAdmin(user.role)) {
-      return jsonError("You do not have permission to access admin", 403);
+      return jsonError("Invalid credentials", 401);
     }
 
     const token = await createSessionToken({
@@ -31,14 +36,17 @@ export async function POST(request: NextRequest) {
       email: user.email,
       name: user.name,
       role: user.role,
+      mustChangePassword: user.mustChangePassword,
     });
 
     const response = NextResponse.json({
       user: {
         id: user.id,
-        email: user.email,
         name: user.name,
+        email: user.email,
         role: user.role,
+        mustChangePassword: user.mustChangePassword,
+        homePath: homePathForRole(user.role),
       },
     });
 

@@ -241,6 +241,11 @@ export type ExamSessionWhereInput = {
   paper?: Prisma.XOR<Prisma.PaperScalarRelationFilter, Prisma.PaperWhereInput>
   examSeries?: Prisma.XOR<Prisma.ExamSeriesScalarRelationFilter, Prisma.ExamSeriesWhereInput>
   sourceDocument?: Prisma.XOR<Prisma.SourceDocumentNullableScalarRelationFilter, Prisma.SourceDocumentWhereInput> | null
+  studentExamRegistrations?: Prisma.StudentExamRegistrationListRelationFilter
+  registrationAuditLogs?: Prisma.RegistrationAuditLogListRelationFilter
+  changeRequestTargets?: Prisma.RegistrationChangeRequestListRelationFilter
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestListRelationFilter
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionListRelationFilter
 }
 
 export type ExamSessionOrderByWithRelationInput = {
@@ -259,6 +264,11 @@ export type ExamSessionOrderByWithRelationInput = {
   paper?: Prisma.PaperOrderByWithRelationInput
   examSeries?: Prisma.ExamSeriesOrderByWithRelationInput
   sourceDocument?: Prisma.SourceDocumentOrderByWithRelationInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationOrderByRelationAggregateInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogOrderByRelationAggregateInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestOrderByRelationAggregateInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestOrderByRelationAggregateInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionOrderByRelationAggregateInput
 }
 
 export type ExamSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -280,6 +290,11 @@ export type ExamSessionWhereUniqueInput = Prisma.AtLeast<{
   paper?: Prisma.XOR<Prisma.PaperScalarRelationFilter, Prisma.PaperWhereInput>
   examSeries?: Prisma.XOR<Prisma.ExamSeriesScalarRelationFilter, Prisma.ExamSeriesWhereInput>
   sourceDocument?: Prisma.XOR<Prisma.SourceDocumentNullableScalarRelationFilter, Prisma.SourceDocumentWhereInput> | null
+  studentExamRegistrations?: Prisma.StudentExamRegistrationListRelationFilter
+  registrationAuditLogs?: Prisma.RegistrationAuditLogListRelationFilter
+  changeRequestTargets?: Prisma.RegistrationChangeRequestListRelationFilter
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestListRelationFilter
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionListRelationFilter
 }, "id">
 
 export type ExamSessionOrderByWithAggregationInput = {
@@ -331,6 +346,11 @@ export type ExamSessionCreateInput = {
   paper: Prisma.PaperCreateNestedOneWithoutExamSessionsInput
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutExamSessionsInput
   sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSessionsInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateInput = {
@@ -346,6 +366,11 @@ export type ExamSessionUncheckedCreateInput = {
   sourceDocumentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUpdateInput = {
@@ -361,6 +386,11 @@ export type ExamSessionUpdateInput = {
   paper?: Prisma.PaperUpdateOneRequiredWithoutExamSessionsNestedInput
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
   sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateInput = {
@@ -376,6 +406,11 @@ export type ExamSessionUncheckedUpdateInput = {
   sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionCreateManyInput = {
@@ -418,6 +453,16 @@ export type ExamSessionUncheckedUpdateManyInput = {
   sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ExamSessionScalarRelationFilter = {
+  is?: Prisma.ExamSessionWhereInput
+  isNot?: Prisma.ExamSessionWhereInput
+}
+
+export type ExamSessionNullableScalarRelationFilter = {
+  is?: Prisma.ExamSessionWhereInput | null
+  isNot?: Prisma.ExamSessionWhereInput | null
 }
 
 export type ExamSessionListRelationFilter = {
@@ -473,6 +518,80 @@ export type ExamSessionMinOrderByAggregateInput = {
   sourceDocumentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutStudentExamRegistrationsInput, Prisma.ExamSessionUncheckedCreateWithoutStudentExamRegistrationsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutStudentExamRegistrationsInput
+  connect?: Prisma.ExamSessionWhereUniqueInput
+}
+
+export type ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutStudentExamRegistrationsInput, Prisma.ExamSessionUncheckedCreateWithoutStudentExamRegistrationsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutStudentExamRegistrationsInput
+  upsert?: Prisma.ExamSessionUpsertWithoutStudentExamRegistrationsInput
+  connect?: Prisma.ExamSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExamSessionUpdateToOneWithWhereWithoutStudentExamRegistrationsInput, Prisma.ExamSessionUpdateWithoutStudentExamRegistrationsInput>, Prisma.ExamSessionUncheckedUpdateWithoutStudentExamRegistrationsInput>
+}
+
+export type ExamSessionCreateNestedOneWithoutRegistrationAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutRegistrationAuditLogsInput, Prisma.ExamSessionUncheckedCreateWithoutRegistrationAuditLogsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutRegistrationAuditLogsInput
+  connect?: Prisma.ExamSessionWhereUniqueInput
+}
+
+export type ExamSessionUpdateOneRequiredWithoutRegistrationAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutRegistrationAuditLogsInput, Prisma.ExamSessionUncheckedCreateWithoutRegistrationAuditLogsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutRegistrationAuditLogsInput
+  upsert?: Prisma.ExamSessionUpsertWithoutRegistrationAuditLogsInput
+  connect?: Prisma.ExamSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExamSessionUpdateToOneWithWhereWithoutRegistrationAuditLogsInput, Prisma.ExamSessionUpdateWithoutRegistrationAuditLogsInput>, Prisma.ExamSessionUncheckedUpdateWithoutRegistrationAuditLogsInput>
+}
+
+export type ExamSessionCreateNestedOneWithoutChangeRequestTargetsInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestTargetsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestTargetsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutChangeRequestTargetsInput
+  connect?: Prisma.ExamSessionWhereUniqueInput
+}
+
+export type ExamSessionCreateNestedOneWithoutChangeRequestReplacementsInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestReplacementsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestReplacementsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutChangeRequestReplacementsInput
+  connect?: Prisma.ExamSessionWhereUniqueInput
+}
+
+export type ExamSessionUpdateOneWithoutChangeRequestTargetsNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestTargetsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestTargetsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutChangeRequestTargetsInput
+  upsert?: Prisma.ExamSessionUpsertWithoutChangeRequestTargetsInput
+  disconnect?: Prisma.ExamSessionWhereInput | boolean
+  delete?: Prisma.ExamSessionWhereInput | boolean
+  connect?: Prisma.ExamSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExamSessionUpdateToOneWithWhereWithoutChangeRequestTargetsInput, Prisma.ExamSessionUpdateWithoutChangeRequestTargetsInput>, Prisma.ExamSessionUncheckedUpdateWithoutChangeRequestTargetsInput>
+}
+
+export type ExamSessionUpdateOneWithoutChangeRequestReplacementsNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestReplacementsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestReplacementsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutChangeRequestReplacementsInput
+  upsert?: Prisma.ExamSessionUpsertWithoutChangeRequestReplacementsInput
+  disconnect?: Prisma.ExamSessionWhereInput | boolean
+  delete?: Prisma.ExamSessionWhereInput | boolean
+  connect?: Prisma.ExamSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExamSessionUpdateToOneWithWhereWithoutChangeRequestReplacementsInput, Prisma.ExamSessionUpdateWithoutChangeRequestReplacementsInput>, Prisma.ExamSessionUncheckedUpdateWithoutChangeRequestReplacementsInput>
+}
+
+export type ExamSessionCreateNestedOneWithoutChangeRequestExamSessionsInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestExamSessionsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestExamSessionsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutChangeRequestExamSessionsInput
+  connect?: Prisma.ExamSessionWhereUniqueInput
+}
+
+export type ExamSessionUpdateOneRequiredWithoutChangeRequestExamSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestExamSessionsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestExamSessionsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutChangeRequestExamSessionsInput
+  upsert?: Prisma.ExamSessionUpsertWithoutChangeRequestExamSessionsInput
+  connect?: Prisma.ExamSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExamSessionUpdateToOneWithWhereWithoutChangeRequestExamSessionsInput, Prisma.ExamSessionUpdateWithoutChangeRequestExamSessionsInput>, Prisma.ExamSessionUncheckedUpdateWithoutChangeRequestExamSessionsInput>
 }
 
 export type ExamSessionCreateNestedManyWithoutPaperInput = {
@@ -601,6 +720,466 @@ export type ExamSessionUncheckedUpdateManyWithoutSourceDocumentNestedInput = {
   deleteMany?: Prisma.ExamSessionScalarWhereInput | Prisma.ExamSessionScalarWhereInput[]
 }
 
+export type ExamSessionCreateWithoutStudentExamRegistrationsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  paper: Prisma.PaperCreateNestedOneWithoutExamSessionsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutExamSessionsInput
+  sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSessionsInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionUncheckedCreateWithoutStudentExamRegistrationsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  paperId: string
+  examSeriesId: string
+  sourceDocumentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionCreateOrConnectWithoutStudentExamRegistrationsInput = {
+  where: Prisma.ExamSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutStudentExamRegistrationsInput, Prisma.ExamSessionUncheckedCreateWithoutStudentExamRegistrationsInput>
+}
+
+export type ExamSessionUpsertWithoutStudentExamRegistrationsInput = {
+  update: Prisma.XOR<Prisma.ExamSessionUpdateWithoutStudentExamRegistrationsInput, Prisma.ExamSessionUncheckedUpdateWithoutStudentExamRegistrationsInput>
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutStudentExamRegistrationsInput, Prisma.ExamSessionUncheckedCreateWithoutStudentExamRegistrationsInput>
+  where?: Prisma.ExamSessionWhereInput
+}
+
+export type ExamSessionUpdateToOneWithWhereWithoutStudentExamRegistrationsInput = {
+  where?: Prisma.ExamSessionWhereInput
+  data: Prisma.XOR<Prisma.ExamSessionUpdateWithoutStudentExamRegistrationsInput, Prisma.ExamSessionUncheckedUpdateWithoutStudentExamRegistrationsInput>
+}
+
+export type ExamSessionUpdateWithoutStudentExamRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paper?: Prisma.PaperUpdateOneRequiredWithoutExamSessionsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
+  sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionUncheckedUpdateWithoutStudentExamRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionCreateWithoutRegistrationAuditLogsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  paper: Prisma.PaperCreateNestedOneWithoutExamSessionsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutExamSessionsInput
+  sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSessionsInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionUncheckedCreateWithoutRegistrationAuditLogsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  paperId: string
+  examSeriesId: string
+  sourceDocumentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionCreateOrConnectWithoutRegistrationAuditLogsInput = {
+  where: Prisma.ExamSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutRegistrationAuditLogsInput, Prisma.ExamSessionUncheckedCreateWithoutRegistrationAuditLogsInput>
+}
+
+export type ExamSessionUpsertWithoutRegistrationAuditLogsInput = {
+  update: Prisma.XOR<Prisma.ExamSessionUpdateWithoutRegistrationAuditLogsInput, Prisma.ExamSessionUncheckedUpdateWithoutRegistrationAuditLogsInput>
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutRegistrationAuditLogsInput, Prisma.ExamSessionUncheckedCreateWithoutRegistrationAuditLogsInput>
+  where?: Prisma.ExamSessionWhereInput
+}
+
+export type ExamSessionUpdateToOneWithWhereWithoutRegistrationAuditLogsInput = {
+  where?: Prisma.ExamSessionWhereInput
+  data: Prisma.XOR<Prisma.ExamSessionUpdateWithoutRegistrationAuditLogsInput, Prisma.ExamSessionUncheckedUpdateWithoutRegistrationAuditLogsInput>
+}
+
+export type ExamSessionUpdateWithoutRegistrationAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paper?: Prisma.PaperUpdateOneRequiredWithoutExamSessionsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
+  sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionUncheckedUpdateWithoutRegistrationAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionCreateWithoutChangeRequestTargetsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  paper: Prisma.PaperCreateNestedOneWithoutExamSessionsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutExamSessionsInput
+  sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSessionsInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionUncheckedCreateWithoutChangeRequestTargetsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  paperId: string
+  examSeriesId: string
+  sourceDocumentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionCreateOrConnectWithoutChangeRequestTargetsInput = {
+  where: Prisma.ExamSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestTargetsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestTargetsInput>
+}
+
+export type ExamSessionCreateWithoutChangeRequestReplacementsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  paper: Prisma.PaperCreateNestedOneWithoutExamSessionsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutExamSessionsInput
+  sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSessionsInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionUncheckedCreateWithoutChangeRequestReplacementsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  paperId: string
+  examSeriesId: string
+  sourceDocumentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionCreateOrConnectWithoutChangeRequestReplacementsInput = {
+  where: Prisma.ExamSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestReplacementsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestReplacementsInput>
+}
+
+export type ExamSessionUpsertWithoutChangeRequestTargetsInput = {
+  update: Prisma.XOR<Prisma.ExamSessionUpdateWithoutChangeRequestTargetsInput, Prisma.ExamSessionUncheckedUpdateWithoutChangeRequestTargetsInput>
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestTargetsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestTargetsInput>
+  where?: Prisma.ExamSessionWhereInput
+}
+
+export type ExamSessionUpdateToOneWithWhereWithoutChangeRequestTargetsInput = {
+  where?: Prisma.ExamSessionWhereInput
+  data: Prisma.XOR<Prisma.ExamSessionUpdateWithoutChangeRequestTargetsInput, Prisma.ExamSessionUncheckedUpdateWithoutChangeRequestTargetsInput>
+}
+
+export type ExamSessionUpdateWithoutChangeRequestTargetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paper?: Prisma.PaperUpdateOneRequiredWithoutExamSessionsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
+  sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionUncheckedUpdateWithoutChangeRequestTargetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionUpsertWithoutChangeRequestReplacementsInput = {
+  update: Prisma.XOR<Prisma.ExamSessionUpdateWithoutChangeRequestReplacementsInput, Prisma.ExamSessionUncheckedUpdateWithoutChangeRequestReplacementsInput>
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestReplacementsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestReplacementsInput>
+  where?: Prisma.ExamSessionWhereInput
+}
+
+export type ExamSessionUpdateToOneWithWhereWithoutChangeRequestReplacementsInput = {
+  where?: Prisma.ExamSessionWhereInput
+  data: Prisma.XOR<Prisma.ExamSessionUpdateWithoutChangeRequestReplacementsInput, Prisma.ExamSessionUncheckedUpdateWithoutChangeRequestReplacementsInput>
+}
+
+export type ExamSessionUpdateWithoutChangeRequestReplacementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paper?: Prisma.PaperUpdateOneRequiredWithoutExamSessionsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
+  sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionUncheckedUpdateWithoutChangeRequestReplacementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionCreateWithoutChangeRequestExamSessionsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  paper: Prisma.PaperCreateNestedOneWithoutExamSessionsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutExamSessionsInput
+  sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSessionsInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+}
+
+export type ExamSessionUncheckedCreateWithoutChangeRequestExamSessionsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  paperId: string
+  examSeriesId: string
+  sourceDocumentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+}
+
+export type ExamSessionCreateOrConnectWithoutChangeRequestExamSessionsInput = {
+  where: Prisma.ExamSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestExamSessionsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestExamSessionsInput>
+}
+
+export type ExamSessionUpsertWithoutChangeRequestExamSessionsInput = {
+  update: Prisma.XOR<Prisma.ExamSessionUpdateWithoutChangeRequestExamSessionsInput, Prisma.ExamSessionUncheckedUpdateWithoutChangeRequestExamSessionsInput>
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutChangeRequestExamSessionsInput, Prisma.ExamSessionUncheckedCreateWithoutChangeRequestExamSessionsInput>
+  where?: Prisma.ExamSessionWhereInput
+}
+
+export type ExamSessionUpdateToOneWithWhereWithoutChangeRequestExamSessionsInput = {
+  where?: Prisma.ExamSessionWhereInput
+  data: Prisma.XOR<Prisma.ExamSessionUpdateWithoutChangeRequestExamSessionsInput, Prisma.ExamSessionUncheckedUpdateWithoutChangeRequestExamSessionsInput>
+}
+
+export type ExamSessionUpdateWithoutChangeRequestExamSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paper?: Prisma.PaperUpdateOneRequiredWithoutExamSessionsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
+  sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+}
+
+export type ExamSessionUncheckedUpdateWithoutChangeRequestExamSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+}
+
 export type ExamSessionCreateWithoutPaperInput = {
   id?: string
   date: Date | string
@@ -613,6 +1192,11 @@ export type ExamSessionCreateWithoutPaperInput = {
   updatedAt?: Date | string
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutExamSessionsInput
   sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSessionsInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutPaperInput = {
@@ -627,6 +1211,11 @@ export type ExamSessionUncheckedCreateWithoutPaperInput = {
   sourceDocumentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutPaperInput = {
@@ -685,6 +1274,11 @@ export type ExamSessionCreateWithoutExamSeriesInput = {
   updatedAt?: Date | string
   paper: Prisma.PaperCreateNestedOneWithoutExamSessionsInput
   sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSessionsInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutExamSeriesInput = {
@@ -699,6 +1293,11 @@ export type ExamSessionUncheckedCreateWithoutExamSeriesInput = {
   sourceDocumentId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutExamSeriesInput = {
@@ -739,6 +1338,11 @@ export type ExamSessionCreateWithoutSourceDocumentInput = {
   updatedAt?: Date | string
   paper: Prisma.PaperCreateNestedOneWithoutExamSessionsInput
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutExamSessionsInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutSourceDocumentInput = {
@@ -753,6 +1357,11 @@ export type ExamSessionUncheckedCreateWithoutSourceDocumentInput = {
   examSeriesId: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutSourceDocumentInput = {
@@ -807,6 +1416,11 @@ export type ExamSessionUpdateWithoutPaperInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
   sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutPaperInput = {
@@ -821,6 +1435,11 @@ export type ExamSessionUncheckedUpdateWithoutPaperInput = {
   sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateManyWithoutPaperInput = {
@@ -863,6 +1482,11 @@ export type ExamSessionUpdateWithoutExamSeriesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paper?: Prisma.PaperUpdateOneRequiredWithoutExamSessionsNestedInput
   sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutExamSeriesInput = {
@@ -877,6 +1501,11 @@ export type ExamSessionUncheckedUpdateWithoutExamSeriesInput = {
   sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateManyWithoutExamSeriesInput = {
@@ -919,6 +1548,11 @@ export type ExamSessionUpdateWithoutSourceDocumentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paper?: Prisma.PaperUpdateOneRequiredWithoutExamSessionsNestedInput
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutSourceDocumentInput = {
@@ -933,6 +1567,11 @@ export type ExamSessionUncheckedUpdateWithoutSourceDocumentInput = {
   examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateManyWithoutSourceDocumentInput = {
@@ -949,6 +1588,71 @@ export type ExamSessionUncheckedUpdateManyWithoutSourceDocumentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+
+/**
+ * Count Type ExamSessionCountOutputType
+ */
+
+export type ExamSessionCountOutputType = {
+  studentExamRegistrations: number
+  registrationAuditLogs: number
+  changeRequestTargets: number
+  changeRequestReplacements: number
+  changeRequestExamSessions: number
+}
+
+export type ExamSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  studentExamRegistrations?: boolean | ExamSessionCountOutputTypeCountStudentExamRegistrationsArgs
+  registrationAuditLogs?: boolean | ExamSessionCountOutputTypeCountRegistrationAuditLogsArgs
+  changeRequestTargets?: boolean | ExamSessionCountOutputTypeCountChangeRequestTargetsArgs
+  changeRequestReplacements?: boolean | ExamSessionCountOutputTypeCountChangeRequestReplacementsArgs
+  changeRequestExamSessions?: boolean | ExamSessionCountOutputTypeCountChangeRequestExamSessionsArgs
+}
+
+/**
+ * ExamSessionCountOutputType without action
+ */
+export type ExamSessionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExamSessionCountOutputType
+   */
+  select?: Prisma.ExamSessionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * ExamSessionCountOutputType without action
+ */
+export type ExamSessionCountOutputTypeCountStudentExamRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentExamRegistrationWhereInput
+}
+
+/**
+ * ExamSessionCountOutputType without action
+ */
+export type ExamSessionCountOutputTypeCountRegistrationAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationAuditLogWhereInput
+}
+
+/**
+ * ExamSessionCountOutputType without action
+ */
+export type ExamSessionCountOutputTypeCountChangeRequestTargetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationChangeRequestWhereInput
+}
+
+/**
+ * ExamSessionCountOutputType without action
+ */
+export type ExamSessionCountOutputTypeCountChangeRequestReplacementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationChangeRequestWhereInput
+}
+
+/**
+ * ExamSessionCountOutputType without action
+ */
+export type ExamSessionCountOutputTypeCountChangeRequestExamSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationChangeRequestExamSessionWhereInput
+}
 
 
 export type ExamSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -967,6 +1671,12 @@ export type ExamSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
   examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
   sourceDocument?: boolean | Prisma.ExamSession$sourceDocumentArgs<ExtArgs>
+  studentExamRegistrations?: boolean | Prisma.ExamSession$studentExamRegistrationsArgs<ExtArgs>
+  registrationAuditLogs?: boolean | Prisma.ExamSession$registrationAuditLogsArgs<ExtArgs>
+  changeRequestTargets?: boolean | Prisma.ExamSession$changeRequestTargetsArgs<ExtArgs>
+  changeRequestReplacements?: boolean | Prisma.ExamSession$changeRequestReplacementsArgs<ExtArgs>
+  changeRequestExamSessions?: boolean | Prisma.ExamSession$changeRequestExamSessionsArgs<ExtArgs>
+  _count?: boolean | Prisma.ExamSessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["examSession"]>
 
 export type ExamSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1025,6 +1735,12 @@ export type ExamSessionInclude<ExtArgs extends runtime.Types.Extensions.Internal
   paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
   examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
   sourceDocument?: boolean | Prisma.ExamSession$sourceDocumentArgs<ExtArgs>
+  studentExamRegistrations?: boolean | Prisma.ExamSession$studentExamRegistrationsArgs<ExtArgs>
+  registrationAuditLogs?: boolean | Prisma.ExamSession$registrationAuditLogsArgs<ExtArgs>
+  changeRequestTargets?: boolean | Prisma.ExamSession$changeRequestTargetsArgs<ExtArgs>
+  changeRequestReplacements?: boolean | Prisma.ExamSession$changeRequestReplacementsArgs<ExtArgs>
+  changeRequestExamSessions?: boolean | Prisma.ExamSession$changeRequestExamSessionsArgs<ExtArgs>
+  _count?: boolean | Prisma.ExamSessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ExamSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
@@ -1043,6 +1759,11 @@ export type $ExamSessionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     paper: Prisma.$PaperPayload<ExtArgs>
     examSeries: Prisma.$ExamSeriesPayload<ExtArgs>
     sourceDocument: Prisma.$SourceDocumentPayload<ExtArgs> | null
+    studentExamRegistrations: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
+    registrationAuditLogs: Prisma.$RegistrationAuditLogPayload<ExtArgs>[]
+    changeRequestTargets: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
+    changeRequestReplacements: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
+    changeRequestExamSessions: Prisma.$RegistrationChangeRequestExamSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1454,6 +2175,11 @@ export interface Prisma__ExamSessionClient<T, Null = never, ExtArgs extends runt
   paper<T extends Prisma.PaperDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaperDefaultArgs<ExtArgs>>): Prisma.Prisma__PaperClient<runtime.Types.Result.GetResult<Prisma.$PaperPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   examSeries<T extends Prisma.ExamSeriesDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSeriesDefaultArgs<ExtArgs>>): Prisma.Prisma__ExamSeriesClient<runtime.Types.Result.GetResult<Prisma.$ExamSeriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   sourceDocument<T extends Prisma.ExamSession$sourceDocumentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$sourceDocumentArgs<ExtArgs>>): Prisma.Prisma__SourceDocumentClient<runtime.Types.Result.GetResult<Prisma.$SourceDocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  studentExamRegistrations<T extends Prisma.ExamSession$studentExamRegistrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$studentExamRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  registrationAuditLogs<T extends Prisma.ExamSession$registrationAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$registrationAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  changeRequestTargets<T extends Prisma.ExamSession$changeRequestTargetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$changeRequestTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  changeRequestReplacements<T extends Prisma.ExamSession$changeRequestReplacementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$changeRequestReplacementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  changeRequestExamSessions<T extends Prisma.ExamSession$changeRequestExamSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$changeRequestExamSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestExamSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1912,6 +2638,126 @@ export type ExamSession$sourceDocumentArgs<ExtArgs extends runtime.Types.Extensi
    */
   include?: Prisma.SourceDocumentInclude<ExtArgs> | null
   where?: Prisma.SourceDocumentWhereInput
+}
+
+/**
+ * ExamSession.studentExamRegistrations
+ */
+export type ExamSession$studentExamRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentExamRegistration
+   */
+  select?: Prisma.StudentExamRegistrationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentExamRegistration
+   */
+  omit?: Prisma.StudentExamRegistrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentExamRegistrationInclude<ExtArgs> | null
+  where?: Prisma.StudentExamRegistrationWhereInput
+  orderBy?: Prisma.StudentExamRegistrationOrderByWithRelationInput | Prisma.StudentExamRegistrationOrderByWithRelationInput[]
+  cursor?: Prisma.StudentExamRegistrationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentExamRegistrationScalarFieldEnum | Prisma.StudentExamRegistrationScalarFieldEnum[]
+}
+
+/**
+ * ExamSession.registrationAuditLogs
+ */
+export type ExamSession$registrationAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationAuditLog
+   */
+  select?: Prisma.RegistrationAuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationAuditLog
+   */
+  omit?: Prisma.RegistrationAuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationAuditLogInclude<ExtArgs> | null
+  where?: Prisma.RegistrationAuditLogWhereInput
+  orderBy?: Prisma.RegistrationAuditLogOrderByWithRelationInput | Prisma.RegistrationAuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationAuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationAuditLogScalarFieldEnum | Prisma.RegistrationAuditLogScalarFieldEnum[]
+}
+
+/**
+ * ExamSession.changeRequestTargets
+ */
+export type ExamSession$changeRequestTargetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationChangeRequest
+   */
+  select?: Prisma.RegistrationChangeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationChangeRequest
+   */
+  omit?: Prisma.RegistrationChangeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationChangeRequestInclude<ExtArgs> | null
+  where?: Prisma.RegistrationChangeRequestWhereInput
+  orderBy?: Prisma.RegistrationChangeRequestOrderByWithRelationInput | Prisma.RegistrationChangeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationChangeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationChangeRequestScalarFieldEnum | Prisma.RegistrationChangeRequestScalarFieldEnum[]
+}
+
+/**
+ * ExamSession.changeRequestReplacements
+ */
+export type ExamSession$changeRequestReplacementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationChangeRequest
+   */
+  select?: Prisma.RegistrationChangeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationChangeRequest
+   */
+  omit?: Prisma.RegistrationChangeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationChangeRequestInclude<ExtArgs> | null
+  where?: Prisma.RegistrationChangeRequestWhereInput
+  orderBy?: Prisma.RegistrationChangeRequestOrderByWithRelationInput | Prisma.RegistrationChangeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationChangeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationChangeRequestScalarFieldEnum | Prisma.RegistrationChangeRequestScalarFieldEnum[]
+}
+
+/**
+ * ExamSession.changeRequestExamSessions
+ */
+export type ExamSession$changeRequestExamSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationChangeRequestExamSession
+   */
+  select?: Prisma.RegistrationChangeRequestExamSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationChangeRequestExamSession
+   */
+  omit?: Prisma.RegistrationChangeRequestExamSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationChangeRequestExamSessionInclude<ExtArgs> | null
+  where?: Prisma.RegistrationChangeRequestExamSessionWhereInput
+  orderBy?: Prisma.RegistrationChangeRequestExamSessionOrderByWithRelationInput | Prisma.RegistrationChangeRequestExamSessionOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationChangeRequestExamSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationChangeRequestExamSessionScalarFieldEnum | Prisma.RegistrationChangeRequestExamSessionScalarFieldEnum[]
 }
 
 /**

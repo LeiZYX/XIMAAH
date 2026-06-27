@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseDate, parseJsonBody } from "@/lib/api";
+import { filterExamSessions, EXAM_SESSION_SEARCH_LIMIT } from "@/lib/exam-session-search";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
@@ -7,6 +8,10 @@ export async function GET(request: NextRequest) {
   const paperId = request.nextUrl.searchParams.get("paperId");
   const examBoardId = request.nextUrl.searchParams.get("examBoardId");
   const subjectId = request.nextUrl.searchParams.get("subjectId");
+  const query = request.nextUrl.searchParams.get("q")?.trim() ?? "";
+  const limitParam = request.nextUrl.searchParams.get("limit");
+  const parsedLimit = limitParam ? Number.parseInt(limitParam, 10) : Number.NaN;
+  const limit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : undefined;
 
   const examSessions = await prisma.examSession.findMany({
     where: {
@@ -27,6 +32,7 @@ export async function GET(request: NextRequest) {
               name: true,
               qualification: {
                 select: {
+                  name: true,
                   examBoard: { select: { name: true, code: true } },
                 },
               },
@@ -38,7 +44,13 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  return NextResponse.json(examSessions);
+  let filtered = examSessions;
+  if (query) {
+    filtered = filterExamSessions(examSessions, query, limit ?? EXAM_SESSION_SEARCH_LIMIT);
+  } else if (limit) {
+    filtered = examSessions.slice(0, limit);
+  }
+  return NextResponse.json(filtered);
 }
 
 export async function POST(request: NextRequest) {

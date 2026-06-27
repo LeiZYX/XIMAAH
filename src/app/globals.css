@@ -159,6 +159,20 @@ body {
   z-index: 4 !important;
 }
 
+.fc .fc-event.fc-event-submitted {
+  box-shadow: inset 0 0 0 2px #fbbf24;
+}
+
+.fc .fc-event.fc-event-in-list {
+  box-shadow: inset 0 0 0 2px #f59e0b;
+  color: #334155 !important;
+}
+
+.fc .fc-event.fc-event-in-list .fc-event-time-line,
+.fc .fc-event.fc-event-in-list .fc-event-detail-line {
+  color: #334155 !important;
+}
+
 .fc .fc-list-event.fc-event-selected td {
   background-color: #eef2ff !important;
 }

@@ -1,16 +1,27 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
-import { ADMIN_ROLES, SESSION_COOKIE, SESSION_MAX_AGE_SECONDS, type AdminRole } from "@/lib/auth/constants";
+import {
+  isUserRole,
+  SESSION_COOKIE,
+  SESSION_MAX_AGE_SECONDS,
+  type UserRole,
+} from "@/lib/auth/constants";
 
 export interface SessionUser {
   id: string;
-  email: string;
+  email: string | null;
   name: string;
-  role: AdminRole;
+  role: UserRole;
+  mustChangePassword: boolean;
 }
 
-interface SessionPayload extends SessionUser {
+interface SessionPayload {
+  id?: string;
+  email?: string | null;
+  name?: string;
+  role?: string;
+  mustChangePassword?: boolean;
   exp?: number;
 }
 
@@ -25,16 +36,13 @@ function getAuthSecret(): Uint8Array {
   return new TextEncoder().encode(secret);
 }
 
-export function canAccessAdmin(role: string): role is AdminRole {
-  return ADMIN_ROLES.includes(role as AdminRole);
-}
-
 export async function createSessionToken(user: SessionUser): Promise<string> {
   return new SignJWT({
     id: user.id,
     email: user.email,
     name: user.name,
     role: user.role,
+    mustChangePassword: user.mustChangePassword,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -49,19 +57,19 @@ export async function verifySessionToken(token: string): Promise<SessionUser | n
 
     if (
       typeof session.id !== "string" ||
-      typeof session.email !== "string" ||
       typeof session.name !== "string" ||
       typeof session.role !== "string" ||
-      !canAccessAdmin(session.role)
+      !isUserRole(session.role)
     ) {
       return null;
     }
 
     return {
       id: session.id,
-      email: session.email,
+      email: typeof session.email === "string" ? session.email : null,
       name: session.name,
       role: session.role,
+      mustChangePassword: Boolean(session.mustChangePassword),
     };
   } catch {
     return null;
@@ -105,4 +113,9 @@ export function clearSessionCookieOptions() {
     path: "/",
     maxAge: 0,
   };
+}
+
+/** Backward compatibility for legacy admin-only checks */
+export function canAccessAdmin(role: string): role is UserRole {
+  return role === "ADMIN" || role === "EXAM_OFFICER";
 }

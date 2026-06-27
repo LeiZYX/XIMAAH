@@ -9,8 +9,9 @@ datasource db {
 
 enum UserRole {
   ADMIN
-  EDITOR
-  VIEWER
+  EXAM_OFFICER
+  SUBJECT_TEACHER
+  STUDENT
 }
 
 enum KeyDateType {
@@ -39,37 +40,332 @@ enum SourceDocumentType {
   OTHER
 }
 
-model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  name         String
-  passwordHash String
-  role         UserRole @default(VIEWER)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+enum RegistrationWindowStatus {
+  DRAFT
+  OPEN
+  CLOSED
+}
 
-  sourceDocuments SourceDocument[]
+enum RegistrationStatus {
+  ACTIVE
+  CANCELLED
+  LOCKED
+}
+
+enum RegistrationAuditAction {
+  ADD
+  REMOVE
+  SUBMIT
+  UPDATE
+  CANCEL
+  LOCK
+  ADMIN_ADJUST
+  STUDENT_ADD
+  STUDENT_REMOVE
+  STUDENT_SUBMIT
+  SYSTEM_LOCK
+  EO_ADD_AFTER_LOCK
+  EO_REMOVE_AFTER_LOCK
+  EO_REPLACE_AFTER_LOCK
+  ADMIN_ADD_AFTER_LOCK
+  ADMIN_REMOVE_AFTER_LOCK
+  ADMIN_REPLACE_AFTER_LOCK
+  TEACHER_CHANGE_REQUEST
+  TEACHER_REQUEST_APPROVED
+  TEACHER_REQUEST_REJECTED
+  TEACHER_LATE_REGISTRATION_REQUEST
+  TEACHER_LATE_REGISTRATION_APPROVED
+  TEACHER_LATE_REGISTRATION_REJECTED
+  EO_LATE_REGISTRATION_CREATED
+  ADMIN_LATE_REGISTRATION_CREATED
+}
+
+enum RegistrationChangeRequestType {
+  ADD_EXAM
+  REMOVE_EXAM
+  REPLACE_EXAM
+  LATE_REGISTRATION
+}
+
+enum RegistrationChangeRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id                 String   @id @default(cuid())
+  name               String
+  username           String?  @unique
+  email              String?  @unique
+  phone              String?  @unique
+  studentNo          String?  @unique
+  passwordHash       String
+  role               UserRole @default(STUDENT)
+  mustChangePassword Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  sourceDocuments       SourceDocument[]
+  studentProfile        StudentProfile?
+  teacherAssignments    TeacherAssignment[] @relation("TeacherAssignments")
+  registrationWindows   RegistrationWindow[] @relation("RegistrationWindowCreator")
+  studentRegistrations  StudentExamRegistration[] @relation("StudentRegistrations")
+  passwordResetTokens   PasswordResetToken[]
+  registrationAuditLogsAsStudent   RegistrationAuditLog[] @relation("RegistrationAuditStudent")
+  registrationAuditLogsPerformed RegistrationAuditLog[] @relation("RegistrationAuditPerformer")
+  registrationWorkspaces           RegistrationWorkspace[] @relation("StudentRegistrationWorkspaces")
+  workspacesLastAdjusted         RegistrationWorkspace[] @relation("WorkspaceLastAdjuster")
+  registrationChangeRequests     RegistrationChangeRequest[] @relation("ChangeRequestRequester")
+  reviewedChangeRequests           RegistrationChangeRequest[] @relation("ChangeRequestReviewer")
+  studentChangeRequests            RegistrationChangeRequest[] @relation("ChangeRequestStudent")
+
+  @@index([role])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model StudentProfile {
+  id               String   @id @default(cuid())
+  userId           String   @unique
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studentNo        String   @unique
+  currentGrade     String
+  currentClassName String
+  email            String?
+  phone            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([currentGrade])
+  @@index([currentClassName])
+}
+
+model TeacherAssignment {
+  id        String   @id @default(cuid())
+  teacherId String
+  teacher   User     @relation("TeacherAssignments", fields: [teacherId], references: [id], onDelete: Cascade)
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([teacherId, subjectId])
+  @@index([teacherId])
+  @@index([subjectId])
+}
+
+model RegistrationWindow {
+  id           String                   @id @default(cuid())
+  examBoardId  String
+  examBoard    ExamBoard                @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  examSeriesId String
+  examSeries   ExamSeries               @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
+  title        String
+  startAt      DateTime
+  endAt        DateTime
+  status       RegistrationWindowStatus @default(DRAFT)
+  createdById  String?
+  createdBy    User?                    @relation("RegistrationWindowCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt    DateTime                 @default(now())
+  updatedAt    DateTime                 @updatedAt
+
+  registrations StudentExamRegistration[]
+  workspaces    RegistrationWorkspace[]
+  changeRequests RegistrationChangeRequest[]
+
+  @@index([examBoardId])
+  @@index([examSeriesId])
+  @@index([status])
+  @@index([startAt, endAt])
+}
+
+model RegistrationWorkspace {
+  id                   String   @id @default(cuid())
+  studentId            String
+  student              User     @relation("StudentRegistrationWorkspaces", fields: [studentId], references: [id], onDelete: Cascade)
+  registrationWindowId String
+  registrationWindow   RegistrationWindow @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+
+  lockedAt              DateTime?
+  lastAdjustedByUserId  String?
+  lastAdjustedByUser    User?     @relation("WorkspaceLastAdjuster", fields: [lastAdjustedByUserId], references: [id], onDelete: SetNull)
+  lastAdjustedByRole    UserRole?
+  lastAdjustedAt        DateTime?
+  lastAdjustmentReason  String?
+  lastAdjustmentSummary String?
+  hasPostLockAdjustment Boolean   @default(false)
+  isLateRegistration    Boolean   @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  registrations  StudentExamRegistration[]
+  auditLogs      RegistrationAuditLog[]
+  changeRequests RegistrationChangeRequest[]
+
+  @@unique([studentId, registrationWindowId])
+  @@index([studentId])
+  @@index([registrationWindowId])
+  @@index([hasPostLockAdjustment])
+}
+
+model StudentExamRegistration {
+  id                     String                @id @default(cuid())
+  studentId              String
+  student                User                  @relation("StudentRegistrations", fields: [studentId], references: [id], onDelete: Cascade)
+  registrationWorkspaceId String?
+  registrationWorkspace  RegistrationWorkspace? @relation(fields: [registrationWorkspaceId], references: [id], onDelete: SetNull)
+  examSessionId        String
+  examSession          ExamSession        @relation(fields: [examSessionId], references: [id], onDelete: Cascade)
+  registrationWindowId String
+  registrationWindow   RegistrationWindow @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  examBoardId          String
+  examBoard            ExamBoard          @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  examSeriesId         String
+  examSeries           ExamSeries         @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
+  subjectId            String
+  subject              Subject            @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  paperId              String
+  paper                Paper              @relation(fields: [paperId], references: [id], onDelete: Cascade)
+
+  studentNameSnapshot  String
+  studentNoSnapshot    String
+  gradeSnapshot        String
+  classNameSnapshot    String
+  emailSnapshot        String?
+  phoneSnapshot        String?
+
+  status      RegistrationStatus @default(ACTIVE)
+  lockedAt    DateTime?
+  cancelledAt DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  auditLogs RegistrationAuditLog[]
+
+  @@unique([studentId, examSessionId])
+  @@index([studentId])
+  @@index([registrationWorkspaceId])
+  @@index([examSessionId])
+  @@index([registrationWindowId])
+  @@index([examBoardId])
+  @@index([examSeriesId])
+  @@index([subjectId])
+  @@index([status])
+  @@index([gradeSnapshot, classNameSnapshot])
+  @@index([studentNoSnapshot])
+}
+
+model RegistrationAuditLog {
+  id                      String                  @id @default(cuid())
+  registrationWorkspaceId String?
+  registrationWorkspace   RegistrationWorkspace?  @relation(fields: [registrationWorkspaceId], references: [id], onDelete: SetNull)
+  studentId               String
+  student                 User                    @relation("RegistrationAuditStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  registrationId          String?
+  registration            StudentExamRegistration? @relation(fields: [registrationId], references: [id], onDelete: SetNull)
+  examSessionId           String
+  examSession             ExamSession             @relation(fields: [examSessionId], references: [id], onDelete: Cascade)
+  action                  RegistrationAuditAction
+  performedById             String
+  performedBy               User                    @relation("RegistrationAuditPerformer", fields: [performedById], references: [id], onDelete: Cascade)
+  performedByRole           UserRole?
+  performedAt               DateTime                @default(now())
+  beforeValue               String?
+  afterValue                String?
+  reason                    String?
+  note                      String?
+  createdAt                 DateTime                @default(now())
+
+  @@index([registrationWorkspaceId])
+  @@index([studentId])
+  @@index([registrationId])
+  @@index([examSessionId])
+  @@index([performedById])
+  @@index([performedAt])
+}
+
+model RegistrationChangeRequest {
+  id                       String                          @id @default(cuid())
+  registrationWorkspaceId  String?
+  registrationWorkspace    RegistrationWorkspace?          @relation(fields: [registrationWorkspaceId], references: [id], onDelete: Cascade)
+  registrationWindowId     String?
+  registrationWindow       RegistrationWindow?             @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  studentId                String
+  student                  User                            @relation("ChangeRequestStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  requestedByUserId        String
+  requestedBy              User                            @relation("ChangeRequestRequester", fields: [requestedByUserId], references: [id], onDelete: Cascade)
+  requestedByRole          UserRole
+  requestType              RegistrationChangeRequestType
+  targetExamSessionId      String?
+  targetExamSession        ExamSession?                    @relation("ChangeRequestTargetSession", fields: [targetExamSessionId], references: [id], onDelete: SetNull)
+  targetRegistrationId     String?
+  replacementExamSessionId String?
+  replacementExamSession   ExamSession?                    @relation("ChangeRequestReplacementSession", fields: [replacementExamSessionId], references: [id], onDelete: SetNull)
+  reason                   String
+  status                   RegistrationChangeRequestStatus @default(PENDING)
+  reviewedByUserId         String?
+  reviewedBy               User?                           @relation("ChangeRequestReviewer", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
+  reviewedAt               DateTime?
+  reviewNote               String?
+  createdAt                DateTime                        @default(now())
+  updatedAt                DateTime                        @updatedAt
+
+  examSessions RegistrationChangeRequestExamSession[]
+
+  @@index([registrationWorkspaceId])
+  @@index([registrationWindowId])
+  @@index([studentId])
+  @@index([requestedByUserId])
+  @@index([status])
+}
+
+model RegistrationChangeRequestExamSession {
+  id              String                    @id @default(cuid())
+  changeRequestId String
+  changeRequest   RegistrationChangeRequest @relation(fields: [changeRequestId], references: [id], onDelete: Cascade)
+  examSessionId   String
+  examSession     ExamSession               @relation(fields: [examSessionId], references: [id], onDelete: Cascade)
+  createdAt       DateTime                  @default(now())
+
+  @@unique([changeRequestId, examSessionId])
+  @@index([changeRequestId])
+  @@index([examSessionId])
 }
 
 model ExamBoard {
-  id          String   @id @default(cuid())
-  name        String
-  code        String   @unique
-  description String?
-  country     String
-  region      String?
-  website     String?
-  timezone    String?
-  calendarSubjectFilterEnabled Boolean @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                           String   @id @default(cuid())
+  name                         String
+  code                         String   @unique
+  description                  String?
+  country                      String
+  region                       String?
+  website                      String?
+  timezone                     String?
+  calendarSubjectFilterEnabled Boolean  @default(false)
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
 
-  qualifications  Qualification[]
-  examSeries      ExamSeries[]
-  keyDates        KeyDate[]
-  resources       Resource[]
-  sourceDocuments SourceDocument[]
+  qualifications            Qualification[]
+  examSeries                ExamSeries[]
+  keyDates                  KeyDate[]
+  resources                 Resource[]
+  sourceDocuments           SourceDocument[]
   calendarSubjectSelections CalendarSubjectSelection[]
+  registrationWindows       RegistrationWindow[]
+  studentExamRegistrations  StudentExamRegistration[]
 
   @@index([country])
 }
@@ -84,7 +380,7 @@ model Qualification {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  subjects Subject[]
+  subjects  Subject[]
   resources Resource[]
 
   @@index([examBoardId])
@@ -99,10 +395,12 @@ model Subject {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
-  papers   Paper[]
-  keyDates KeyDate[]
-  resources Resource[]
+  papers                    Paper[]
+  keyDates                  KeyDate[]
+  resources                 Resource[]
   calendarSubjectSelections CalendarSubjectSelection[]
+  teacherAssignments        TeacherAssignment[]
+  studentExamRegistrations  StudentExamRegistration[]
 
   @@index([qualificationId])
 }
@@ -132,8 +430,9 @@ model Paper {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 
-  examSessions ExamSession[]
-  resources    Resource[]
+  examSessions             ExamSession[]
+  resources                Resource[]
+  studentExamRegistrations StudentExamRegistration[]
 
   @@index([subjectId])
   @@index([sourceDocumentId])
@@ -152,9 +451,11 @@ model ExamSeries {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 
-  examSessions ExamSession[]
-  keyDates     KeyDate[]
-  resources    Resource[]
+  examSessions             ExamSession[]
+  keyDates                 KeyDate[]
+  resources                Resource[]
+  registrationWindows      RegistrationWindow[]
+  studentExamRegistrations StudentExamRegistration[]
 
   @@index([examBoardId])
   @@index([year])
@@ -177,6 +478,12 @@ model ExamSession {
   sourceDocument   SourceDocument? @relation(fields: [sourceDocumentId], references: [id], onDelete: SetNull)
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
+
+  studentExamRegistrations StudentExamRegistration[]
+  registrationAuditLogs    RegistrationAuditLog[]
+  changeRequestTargets     RegistrationChangeRequest[] @relation("ChangeRequestTargetSession")
+  changeRequestReplacements RegistrationChangeRequest[] @relation("ChangeRequestReplacementSession")
+  changeRequestExamSessions RegistrationChangeRequestExamSession[]
 
   @@index([paperId])
   @@index([examSeriesId])

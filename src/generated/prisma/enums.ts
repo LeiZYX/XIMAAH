@@ -11,8 +11,9 @@
 
 export const UserRole = {
   ADMIN: 'ADMIN',
-  EDITOR: 'EDITOR',
-  VIEWER: 'VIEWER'
+  EXAM_OFFICER: 'EXAM_OFFICER',
+  SUBJECT_TEACHER: 'SUBJECT_TEACHER',
+  STUDENT: 'STUDENT'
 } as const
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -51,3 +52,71 @@ export const SourceDocumentType = {
 } as const
 
 export type SourceDocumentType = (typeof SourceDocumentType)[keyof typeof SourceDocumentType]
+
+
+export const RegistrationWindowStatus = {
+  DRAFT: 'DRAFT',
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED'
+} as const
+
+export type RegistrationWindowStatus = (typeof RegistrationWindowStatus)[keyof typeof RegistrationWindowStatus]
+
+
+export const RegistrationStatus = {
+  ACTIVE: 'ACTIVE',
+  CANCELLED: 'CANCELLED',
+  LOCKED: 'LOCKED'
+} as const
+
+export type RegistrationStatus = (typeof RegistrationStatus)[keyof typeof RegistrationStatus]
+
+
+export const RegistrationAuditAction = {
+  ADD: 'ADD',
+  REMOVE: 'REMOVE',
+  SUBMIT: 'SUBMIT',
+  UPDATE: 'UPDATE',
+  CANCEL: 'CANCEL',
+  LOCK: 'LOCK',
+  ADMIN_ADJUST: 'ADMIN_ADJUST',
+  STUDENT_ADD: 'STUDENT_ADD',
+  STUDENT_REMOVE: 'STUDENT_REMOVE',
+  STUDENT_SUBMIT: 'STUDENT_SUBMIT',
+  SYSTEM_LOCK: 'SYSTEM_LOCK',
+  EO_ADD_AFTER_LOCK: 'EO_ADD_AFTER_LOCK',
+  EO_REMOVE_AFTER_LOCK: 'EO_REMOVE_AFTER_LOCK',
+  EO_REPLACE_AFTER_LOCK: 'EO_REPLACE_AFTER_LOCK',
+  ADMIN_ADD_AFTER_LOCK: 'ADMIN_ADD_AFTER_LOCK',
+  ADMIN_REMOVE_AFTER_LOCK: 'ADMIN_REMOVE_AFTER_LOCK',
+  ADMIN_REPLACE_AFTER_LOCK: 'ADMIN_REPLACE_AFTER_LOCK',
+  TEACHER_CHANGE_REQUEST: 'TEACHER_CHANGE_REQUEST',
+  TEACHER_REQUEST_APPROVED: 'TEACHER_REQUEST_APPROVED',
+  TEACHER_REQUEST_REJECTED: 'TEACHER_REQUEST_REJECTED',
+  TEACHER_LATE_REGISTRATION_REQUEST: 'TEACHER_LATE_REGISTRATION_REQUEST',
+  TEACHER_LATE_REGISTRATION_APPROVED: 'TEACHER_LATE_REGISTRATION_APPROVED',
+  TEACHER_LATE_REGISTRATION_REJECTED: 'TEACHER_LATE_REGISTRATION_REJECTED',
+  EO_LATE_REGISTRATION_CREATED: 'EO_LATE_REGISTRATION_CREATED',
+  ADMIN_LATE_REGISTRATION_CREATED: 'ADMIN_LATE_REGISTRATION_CREATED'
+} as const
+
+export type RegistrationAuditAction = (typeof RegistrationAuditAction)[keyof typeof RegistrationAuditAction]
+
+
+export const RegistrationChangeRequestType = {
+  ADD_EXAM: 'ADD_EXAM',
+  REMOVE_EXAM: 'REMOVE_EXAM',
+  REPLACE_EXAM: 'REPLACE_EXAM',
+  LATE_REGISTRATION: 'LATE_REGISTRATION'
+} as const
+
+export type RegistrationChangeRequestType = (typeof RegistrationChangeRequestType)[keyof typeof RegistrationChangeRequestType]
+
+
+export const RegistrationChangeRequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type RegistrationChangeRequestStatus = (typeof RegistrationChangeRequestStatus)[keyof typeof RegistrationChangeRequestStatus]

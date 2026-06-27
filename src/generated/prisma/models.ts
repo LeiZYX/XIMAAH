@@ -9,6 +9,15 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/PasswordResetToken'
+export type * from './models/StudentProfile'
+export type * from './models/TeacherAssignment'
+export type * from './models/RegistrationWindow'
+export type * from './models/RegistrationWorkspace'
+export type * from './models/StudentExamRegistration'
+export type * from './models/RegistrationAuditLog'
+export type * from './models/RegistrationChangeRequest'
+export type * from './models/RegistrationChangeRequestExamSession'
 export type * from './models/ExamBoard'
 export type * from './models/Qualification'
 export type * from './models/Subject'

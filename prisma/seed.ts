@@ -16,18 +16,22 @@ async function main() {
   const adminPassword = process.env.ADMIN_PASSWORD ?? "admin123";
   const adminName = process.env.ADMIN_NAME ?? "Admin";
 
-  await prisma.user.upsert({
+  const adminUser = await prisma.user.upsert({
     where: { email: adminEmail },
     update: {
       name: adminName,
+      username: "admin",
       passwordHash: await hashPassword(adminPassword),
       role: "ADMIN",
+      mustChangePassword: false,
     },
     create: {
       email: adminEmail,
+      username: "admin",
       name: adminName,
       passwordHash: await hashPassword(adminPassword),
       role: "ADMIN",
+      mustChangePassword: false,
     },
   });
 
@@ -408,7 +412,204 @@ async function main() {
     },
   });
 
-  console.log("Seed complete: AQA, CIE, Edexcel exam boards and sample data.");
+  const examOfficer = await prisma.user.upsert({
+    where: { username: "examofficer" },
+    update: {
+      name: "Exam Officer",
+      email: "exam.officer@xima.local",
+      passwordHash: await hashPassword("password123"),
+      role: "EXAM_OFFICER",
+      mustChangePassword: false,
+    },
+    create: {
+      username: "examofficer",
+      email: "exam.officer@xima.local",
+      name: "Exam Officer",
+      passwordHash: await hashPassword("password123"),
+      role: "EXAM_OFFICER",
+      mustChangePassword: false,
+    },
+  });
+
+  const teacher = await prisma.user.upsert({
+    where: { email: "teacher@xima.local" },
+    update: {
+      name: "Physics Teacher",
+      phone: "+8613800000001",
+      passwordHash: await hashPassword("password123"),
+      role: "SUBJECT_TEACHER",
+      mustChangePassword: false,
+    },
+    create: {
+      email: "teacher@xima.local",
+      phone: "+8613800000001",
+      name: "Physics Teacher",
+      passwordHash: await hashPassword("password123"),
+      role: "SUBJECT_TEACHER",
+      mustChangePassword: false,
+    },
+  });
+
+  const student = await prisma.user.upsert({
+    where: { studentNo: "S2026001" },
+    update: {
+      name: "Sample Student",
+      email: "student@xima.local",
+      phone: "+8613800000002",
+      passwordHash: await hashPassword("password123"),
+      role: "STUDENT",
+      mustChangePassword: false,
+    },
+    create: {
+      studentNo: "S2026001",
+      name: "Sample Student",
+      email: "student@xima.local",
+      phone: "+8613800000002",
+      passwordHash: await hashPassword("password123"),
+      role: "STUDENT",
+      mustChangePassword: false,
+    },
+  });
+
+  await prisma.studentProfile.upsert({
+    where: { userId: student.id },
+    update: {
+      studentNo: "S2026001",
+      currentGrade: "Year 12",
+      currentClassName: "12A",
+      email: "student@xima.local",
+      phone: "+8613800000002",
+    },
+    create: {
+      userId: student.id,
+      studentNo: "S2026001",
+      currentGrade: "Year 12",
+      currentClassName: "12A",
+      email: "student@xima.local",
+      phone: "+8613800000002",
+    },
+  });
+
+  const studentTwo = await prisma.user.upsert({
+    where: { studentNo: "S2026002" },
+    update: {
+      name: "Test Student Two",
+      email: "student2@xima.local",
+      phone: "+8613800000003",
+      passwordHash: await hashPassword("password123"),
+      role: "STUDENT",
+      mustChangePassword: false,
+    },
+    create: {
+      studentNo: "S2026002",
+      name: "Test Student Two",
+      email: "student2@xima.local",
+      phone: "+8613800000003",
+      passwordHash: await hashPassword("password123"),
+      role: "STUDENT",
+      mustChangePassword: false,
+    },
+  });
+
+  await prisma.studentProfile.upsert({
+    where: { userId: studentTwo.id },
+    update: {
+      studentNo: "S2026002",
+      currentGrade: "Year 11",
+      currentClassName: "11B",
+      email: "student2@xima.local",
+      phone: "+8613800000003",
+    },
+    create: {
+      userId: studentTwo.id,
+      studentNo: "S2026002",
+      currentGrade: "Year 11",
+      currentClassName: "11B",
+      email: "student2@xima.local",
+      phone: "+8613800000003",
+    },
+  });
+
+  await prisma.teacherAssignment.upsert({
+    where: {
+      teacherId_subjectId: {
+        teacherId: teacher.id,
+        subjectId: physicsSubjectAqa.id,
+      },
+    },
+    update: {},
+    create: {
+      teacherId: teacher.id,
+      subjectId: physicsSubjectAqa.id,
+    },
+  });
+
+  await prisma.registrationWindow.upsert({
+    where: { id: "seed-window-aqa-summer" },
+    update: {
+      title: "AQA Summer 2026 Registration",
+      startAt: new Date("2026-01-01"),
+      endAt: new Date("2026-12-31"),
+      status: "OPEN",
+    },
+    create: {
+      id: "seed-window-aqa-summer",
+      examBoardId: aqa.id,
+      examSeriesId: aqaSummer2026.id,
+      title: "AQA Summer 2026 Registration",
+      startAt: new Date("2026-01-01"),
+      endAt: new Date("2026-12-31"),
+      status: "OPEN",
+      createdById: adminUser.id,
+    },
+  });
+
+  await prisma.registrationWindow.upsert({
+    where: { id: "seed-window-cie-june" },
+    update: {
+      title: "Cambridge June 2026 Registration",
+      startAt: new Date("2026-01-01"),
+      endAt: new Date("2026-12-31"),
+      status: "OPEN",
+    },
+    create: {
+      id: "seed-window-cie-june",
+      examBoardId: cie.id,
+      examSeriesId: cieJune2026.id,
+      title: "Cambridge June 2026 Registration",
+      startAt: new Date("2026-01-01"),
+      endAt: new Date("2026-12-31"),
+      status: "OPEN",
+      createdById: adminUser.id,
+    },
+  });
+
+  await prisma.registrationWindow.upsert({
+    where: { id: "seed-window-edexcel-summer" },
+    update: {
+      title: "Edexcel Summer 2026 Registration",
+      startAt: new Date("2026-01-01"),
+      endAt: new Date("2026-12-31"),
+      status: "OPEN",
+    },
+    create: {
+      id: "seed-window-edexcel-summer",
+      examBoardId: edexcel.id,
+      examSeriesId: edexcelSummer2026.id,
+      title: "Edexcel Summer 2026 Registration",
+      startAt: new Date("2026-01-01"),
+      endAt: new Date("2026-12-31"),
+      status: "OPEN",
+      createdById: adminUser.id,
+    },
+  });
+
+  console.log("Seed complete: exam boards, sample users, and registration windows.");
+  console.log(`Admin: admin / ${adminEmail} — password from ADMIN_PASSWORD (default admin123)`);
+  console.log(`Exam officer: examofficer — password123`);
+  console.log(`Teacher: teacher@xima.local or +8613800000001 — password123 (assigned: Physics, all grades/boards)`);
+  console.log(`Student 1: S2026001 or student@xima.local — password123 (Year 12 · 12A)`);
+  console.log(`Student 2: S2026002 or student2@xima.local — password123 (Year 11 · 11B)`);
 }
 
 main()

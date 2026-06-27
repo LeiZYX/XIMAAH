@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -194,7 +195,14 @@ export function CalendarView() {
   const [examSeries, setExamSeries] = useState<ExamSeriesOption[]>([]);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const [examViewMode, setExamViewMode] = useState<"all" | "my">(
+    searchParams.get("view") === "my" ? "my" : "all",
+  );
+  const [currentUser, setCurrentUser] = useState<{ id: string; role: string } | null>(null);
+  const [registrationActionLoading, setRegistrationActionLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const hasLoadedEventsRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const calendarRef = useRef<FullCalendar>(null);
@@ -245,8 +253,21 @@ export function CalendarView() {
       .catch(() => setExamSeries([]));
   }, []);
 
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        const user = data?.user ?? null;
+        setCurrentUser(user ? { id: user.id, role: user.role } : null);
+      })
+      .catch(() => setCurrentUser(null));
+  }, []);
+
   const loadEvents = useCallback(async () => {
-    setLoading(true);
+    const isFirstLoad = !hasLoadedEventsRef.current;
+    if (isFirstLoad) {
+      setInitialLoading(true);
+    }
     setError(null);
 
     const params = new URLSearchParams();
@@ -257,34 +278,51 @@ export function CalendarView() {
     for (const category of filters.levelCategories) params.append("levelCategory", category);
     params.set("showSessions", String(filters.showSessions));
     params.set("showKeyDates", String(filters.showKeyDates));
+    if (examViewMode === "my" && currentUser?.role === "STUDENT") {
+      params.set("registeredOnly", "true");
+    }
+
+    const endpoint =
+      examViewMode === "my" && currentUser?.role === "STUDENT"
+        ? "/api/calendar/my"
+        : "/api/calendar";
 
     try {
-      const response = await fetch(`/api/calendar/events?${params.toString()}`);
-      if (!response.ok) throw new Error("Failed to load calendar events");
+      const response = await fetch(`${endpoint}?${params.toString()}`);
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(
+          typeof body.error === "string"
+            ? body.error
+            : "Failed to load calendar events",
+        );
+      }
       const data = await response.json();
       const nextEvents = Array.isArray(data) ? data : [];
       setEvents(nextEvents);
-      setSelectedEvent((current) =>
-        current && nextEvents.some((item: CalendarEvent) => item.id === current.id)
-          ? current
-          : null,
-      );
-    } catch {
+      setSelectedEvent((current) => {
+        if (!current) return null;
+        return nextEvents.find((item: CalendarEvent) => item.id === current.id) ?? null;
+      });
+    } catch (loadError) {
       setEvents([]);
       setError(
-        "Could not load events. Ensure PostgreSQL is running and data has been seeded.",
+        loadError instanceof Error
+          ? loadError.message
+          : "Could not load events. Ensure PostgreSQL is running and data has been seeded.",
       );
     } finally {
-      setLoading(false);
+      hasLoadedEventsRef.current = true;
+      setInitialLoading(false);
     }
-  }, [filters]);
+  }, [filters, examViewMode, currentUser]);
 
   useEffect(() => {
     loadEvents();
   }, [loadEvents]);
 
   useEffect(() => {
-    if (loading || events.length === 0) return;
+    if (initialLoading || events.length === 0) return;
 
     const levelKey = filters.levelCategories.join(",");
     if (filters.levelCategories.length === 0 || lastNavigatedLevels.current === levelKey) {
@@ -300,7 +338,7 @@ export function CalendarView() {
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [events, filters.levelCategories, loading]);
+  }, [events, filters.levelCategories, initialLoading]);
 
   useEffect(() => {
     if (filters.levelCategories.length === 0) {
@@ -367,6 +405,64 @@ export function CalendarView() {
   }, [visibleEvents, selectedEvent]);
 
   const searchActive = searchQuery.trim().length > 0;
+  const isStudent = currentUser?.role === "STUDENT";
+  const selectedProps = selectedEvent?.extendedProps ?? {};
+  const canRegister =
+    isStudent &&
+    selectedEvent?.type === "session" &&
+    selectedProps.registrationOpen &&
+    !selectedProps.isRegistered;
+  const canRemoveFromList =
+    isStudent &&
+    selectedEvent?.type === "session" &&
+    selectedProps.isActive &&
+    selectedProps.registrationOpen;
+
+  async function handleAddToList() {
+    if (!selectedEvent || selectedEvent.type !== "session") return;
+    const examSessionId = String(selectedProps.entityId ?? "");
+    if (!examSessionId) return;
+
+    setRegistrationActionLoading(true);
+    try {
+      const response = await fetch("/api/registrations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ examSessionId }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error ?? "Could not add to list");
+      }
+      await loadEvents();
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Could not add to list");
+    } finally {
+      setRegistrationActionLoading(false);
+    }
+  }
+
+  async function handleRemoveFromList() {
+    const registrationId = String(selectedProps.registrationId ?? "");
+    if (!registrationId) return;
+
+    setRegistrationActionLoading(true);
+    try {
+      const response = await fetch(`/api/registrations/${registrationId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error ?? "Could not remove from list");
+      }
+      await loadEvents();
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Could not remove from list");
+    } finally {
+      setRegistrationActionLoading(false);
+    }
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -379,6 +475,32 @@ export function CalendarView() {
             Manage calendar subjects
           </Link>
         </p>
+        {isStudent ? (
+          <div className="flex rounded-lg border border-slate-200 p-0.5 text-sm">
+            <button
+              type="button"
+              onClick={() => setExamViewMode("all")}
+              className={`rounded-md px-3 py-1.5 font-medium ${
+                examViewMode === "all"
+                  ? "bg-indigo-600 text-white"
+                  : "text-slate-600 hover:bg-slate-100"
+              }`}
+            >
+              All Exams
+            </button>
+            <button
+              type="button"
+              onClick={() => setExamViewMode("my")}
+              className={`rounded-md px-3 py-1.5 font-medium ${
+                examViewMode === "my"
+                  ? "bg-indigo-600 text-white"
+                  : "text-slate-600 hover:bg-slate-100"
+              }`}
+            >
+              My Exams
+            </button>
+          </div>
+        ) : null}
       </div>
 
       <Card>
@@ -451,7 +573,7 @@ export function CalendarView() {
             }}
           />
 
-          {!loading && visibleEvents.length > 0 ? (
+          {!initialLoading && visibleEvents.length > 0 ? (
             <p className="text-xs text-slate-500">
               {searchActive
                 ? `${visibleEvents.length} matching event${visibleEvents.length === 1 ? "" : "s"} · ${summarizeEventMonths(visibleEvents) ?? "No dates"}`
@@ -460,7 +582,7 @@ export function CalendarView() {
                   : `${visibleEvents.length} total events · use filters above to narrow by level, board, or series`}
             </p>
           ) : null}
-          {!loading && searchActive && visibleEvents.length === 0 ? (
+          {!initialLoading && searchActive && visibleEvents.length === 0 ? (
             <p className="text-xs text-amber-700">No events match your search.</p>
           ) : null}
         </div>
@@ -579,7 +701,7 @@ export function CalendarView() {
               {error}
             </div>
           ) : null}
-          {loading ? (
+          {initialLoading ? (
             <div className="flex h-[700px] items-center justify-center text-sm text-slate-500">
               Loading calendar...
             </div>
@@ -605,9 +727,13 @@ export function CalendarView() {
                 const day = String(arg.date.getDate()).padStart(2, "0");
                 return `${year}-${month}-${day}` === selectedDateKey ? ["fc-day-selected"] : [];
               }}
-              eventClassNames={(arg) =>
-                arg.event.id === selectedEvent?.id ? ["fc-event-selected"] : []
-              }
+              eventClassNames={(arg) => {
+                const classes: string[] = [];
+                if (arg.event.id === selectedEvent?.id) classes.push("fc-event-selected");
+                if (arg.event.extendedProps.isLocked) classes.push("fc-event-submitted");
+                if (arg.event.extendedProps.isActive) classes.push("fc-event-in-list");
+                return classes;
+              }}
               eventContent={sessionEventContent}
               eventDidMount={sessionEventDidMount}
               eventClick={(info) => {
@@ -624,7 +750,7 @@ export function CalendarView() {
               }}
             />
           )}
-          {!loading && !error ? (
+          {!initialLoading && !error ? (
             <p className="mt-3 text-xs text-slate-500">
               Showing {visibleEvents.length} event{visibleEvents.length === 1 ? "" : "s"}
               {searchActive ? ` (filtered from ${events.length})` : ""}
@@ -662,6 +788,50 @@ export function CalendarView() {
               ) : null}
               <DetailRow label="Description" value={selectedEvent.extendedProps.description} />
               <DetailRow label="Notes" value={selectedEvent.extendedProps.notes} />
+              {selectedEvent.type === "session" && isStudent ? (
+                <div className="space-y-2 border-t border-slate-200 pt-3">
+                  {selectedProps.isLocked ? (
+                    <p className="font-medium text-indigo-700">Locked after deadline</p>
+                  ) : selectedProps.isActive ? (
+                    <p className="font-medium text-amber-700">Selected</p>
+                  ) : selectedProps.registrationOpen ? (
+                    <p className="text-emerald-700">
+                      Registration open
+                      {selectedProps.registrationWindowTitle
+                        ? ` — ${String(selectedProps.registrationWindowTitle)}`
+                        : ""}
+                    </p>
+                  ) : (
+                    <p className="text-slate-500">Registration is not open for this exam.</p>
+                  )}
+                  {canRegister ? (
+                    <button
+                      type="button"
+                      disabled={registrationActionLoading}
+                      onClick={handleAddToList}
+                      className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+                    >
+                      Add to list
+                    </button>
+                  ) : null}
+                  {canRemoveFromList ? (
+                    <button
+                      type="button"
+                      disabled={registrationActionLoading}
+                      onClick={handleRemoveFromList}
+                      className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                    >
+                      Remove from list
+                    </button>
+                  ) : null}
+                  <Link
+                    href="/student/registrations"
+                    className="block text-sm text-indigo-600 hover:text-indigo-700"
+                  >
+                    My Exam Registrations
+                  </Link>
+                </div>
+              ) : null}
             </div>
           ) : (
             <p className="text-sm text-slate-500">

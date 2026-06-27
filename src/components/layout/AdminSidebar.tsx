@@ -14,6 +14,8 @@ const adminLinks = [
   { href: "/admin/exam-series", label: "Exam Series" },
   { href: "/admin/exam-sessions", label: "Exam Sessions" },
   { href: "/admin/key-dates", label: "Key Dates" },
+  { href: "/admin/registration-windows", label: "Registration Windows" },
+  { href: "/admin/registrations", label: "Registrations" },
   { href: "/admin/import", label: "Import" },
 ];
 
@@ -31,7 +33,7 @@ export function AdminSidebar() {
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
-    router.replace("/admin/login");
+    router.replace("/login");
     router.refresh();
   }
 

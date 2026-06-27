@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { CalendarView } from "@/components/calendar/CalendarView";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -11,7 +12,9 @@ export default function CalendarPage() {
           title="Assessment Calendar"
           description="View exam sessions and key dates. Filter by exam board, qualification, subject, or series."
         />
-        <CalendarView />
+        <Suspense fallback={<p className="text-sm text-slate-600">Loading calendar...</p>}>
+          <CalendarView />
+        </Suspense>
       </main>
     </div>
   );

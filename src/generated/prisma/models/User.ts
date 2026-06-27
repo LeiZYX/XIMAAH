@@ -26,30 +26,42 @@ export type AggregateUser = {
 
 export type UserMinAggregateOutputType = {
   id: string | null
-  email: string | null
   name: string | null
+  username: string | null
+  email: string | null
+  phone: string | null
+  studentNo: string | null
   passwordHash: string | null
   role: $Enums.UserRole | null
+  mustChangePassword: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
   id: string | null
-  email: string | null
   name: string | null
+  username: string | null
+  email: string | null
+  phone: string | null
+  studentNo: string | null
   passwordHash: string | null
   role: $Enums.UserRole | null
+  mustChangePassword: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type UserCountAggregateOutputType = {
   id: number
-  email: number
   name: number
+  username: number
+  email: number
+  phone: number
+  studentNo: number
   passwordHash: number
   role: number
+  mustChangePassword: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -58,30 +70,42 @@ export type UserCountAggregateOutputType = {
 
 export type UserMinAggregateInputType = {
   id?: true
-  email?: true
   name?: true
+  username?: true
+  email?: true
+  phone?: true
+  studentNo?: true
   passwordHash?: true
   role?: true
+  mustChangePassword?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type UserMaxAggregateInputType = {
   id?: true
-  email?: true
   name?: true
+  username?: true
+  email?: true
+  phone?: true
+  studentNo?: true
   passwordHash?: true
   role?: true
+  mustChangePassword?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type UserCountAggregateInputType = {
   id?: true
-  email?: true
   name?: true
+  username?: true
+  email?: true
+  phone?: true
+  studentNo?: true
   passwordHash?: true
   role?: true
+  mustChangePassword?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -161,10 +185,14 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   id: string
-  email: string
   name: string
+  username: string | null
+  email: string | null
+  phone: string | null
+  studentNo: string | null
   passwordHash: string
   role: $Enums.UserRole
+  mustChangePassword: boolean
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -192,46 +220,98 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
-  email?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringFilter<"User"> | string
+  username?: Prisma.StringNullableFilter<"User"> | string | null
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  phone?: Prisma.StringNullableFilter<"User"> | string | null
+  studentNo?: Prisma.StringNullableFilter<"User"> | string | null
   passwordHash?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sourceDocuments?: Prisma.SourceDocumentListRelationFilter
+  studentProfile?: Prisma.XOR<Prisma.StudentProfileNullableScalarRelationFilter, Prisma.StudentProfileWhereInput> | null
+  teacherAssignments?: Prisma.TeacherAssignmentListRelationFilter
+  registrationWindows?: Prisma.RegistrationWindowListRelationFilter
+  studentRegistrations?: Prisma.StudentExamRegistrationListRelationFilter
+  passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogListRelationFilter
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogListRelationFilter
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceListRelationFilter
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceListRelationFilter
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestListRelationFilter
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestListRelationFilter
+  studentChangeRequests?: Prisma.RegistrationChangeRequestListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  username?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  studentNo?: Prisma.SortOrderInput | Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  mustChangePassword?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   sourceDocuments?: Prisma.SourceDocumentOrderByRelationAggregateInput
+  studentProfile?: Prisma.StudentProfileOrderByWithRelationInput
+  teacherAssignments?: Prisma.TeacherAssignmentOrderByRelationAggregateInput
+  registrationWindows?: Prisma.RegistrationWindowOrderByRelationAggregateInput
+  studentRegistrations?: Prisma.StudentExamRegistrationOrderByRelationAggregateInput
+  passwordResetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogOrderByRelationAggregateInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogOrderByRelationAggregateInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceOrderByRelationAggregateInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceOrderByRelationAggregateInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestOrderByRelationAggregateInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestOrderByRelationAggregateInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  username?: string
   email?: string
+  phone?: string
+  studentNo?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   sourceDocuments?: Prisma.SourceDocumentListRelationFilter
-}, "id" | "email">
+  studentProfile?: Prisma.XOR<Prisma.StudentProfileNullableScalarRelationFilter, Prisma.StudentProfileWhereInput> | null
+  teacherAssignments?: Prisma.TeacherAssignmentListRelationFilter
+  registrationWindows?: Prisma.RegistrationWindowListRelationFilter
+  studentRegistrations?: Prisma.StudentExamRegistrationListRelationFilter
+  passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogListRelationFilter
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogListRelationFilter
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceListRelationFilter
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceListRelationFilter
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestListRelationFilter
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestListRelationFilter
+  studentChangeRequests?: Prisma.RegistrationChangeRequestListRelationFilter
+}, "id" | "username" | "email" | "phone" | "studentNo">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  username?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  studentNo?: Prisma.SortOrderInput | Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  mustChangePassword?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -244,116 +324,213 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
-  email?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
+  username?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  studentNo?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
 export type UserCreateInput = {
   id?: string
-  email: string
   name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
   passwordHash: string
   role?: $Enums.UserRole
+  mustChangePassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: string
-  email: string
   name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
   passwordHash: string
   role?: $Enums.UserRole
+  mustChangePassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: string
-  email: string
   name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
   passwordHash: string
   role?: $Enums.UserRole
+  mustChangePassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  username?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  studentNo?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  mustChangePassword?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  username?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  studentNo?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  mustChangePassword?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  email?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  username?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  studentNo?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  mustChangePassword?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type UserScalarRelationFilter = {
+  is?: Prisma.UserWhereInput
+  isNot?: Prisma.UserWhereInput
 }
 
 export type UserNullableScalarRelationFilter = {
@@ -365,12 +542,194 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type EnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPasswordResetTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPasswordResetTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPasswordResetTokensInput
+  upsert?: Prisma.UserUpsertWithoutPasswordResetTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPasswordResetTokensInput, Prisma.UserUpdateWithoutPasswordResetTokensInput>, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
+}
+
+export type UserCreateNestedOneWithoutStudentProfileInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStudentProfileInput, Prisma.UserUncheckedCreateWithoutStudentProfileInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudentProfileInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStudentProfileNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStudentProfileInput, Prisma.UserUncheckedCreateWithoutStudentProfileInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudentProfileInput
+  upsert?: Prisma.UserUpsertWithoutStudentProfileInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStudentProfileInput, Prisma.UserUpdateWithoutStudentProfileInput>, Prisma.UserUncheckedUpdateWithoutStudentProfileInput>
+}
+
+export type UserCreateNestedOneWithoutTeacherAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTeacherAssignmentsInput, Prisma.UserUncheckedCreateWithoutTeacherAssignmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTeacherAssignmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTeacherAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTeacherAssignmentsInput, Prisma.UserUncheckedCreateWithoutTeacherAssignmentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTeacherAssignmentsInput
+  upsert?: Prisma.UserUpsertWithoutTeacherAssignmentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTeacherAssignmentsInput, Prisma.UserUpdateWithoutTeacherAssignmentsInput>, Prisma.UserUncheckedUpdateWithoutTeacherAssignmentsInput>
+}
+
+export type UserCreateNestedOneWithoutRegistrationWindowsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationWindowsInput, Prisma.UserUncheckedCreateWithoutRegistrationWindowsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationWindowsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutRegistrationWindowsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationWindowsInput, Prisma.UserUncheckedCreateWithoutRegistrationWindowsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationWindowsInput
+  upsert?: Prisma.UserUpsertWithoutRegistrationWindowsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRegistrationWindowsInput, Prisma.UserUpdateWithoutRegistrationWindowsInput>, Prisma.UserUncheckedUpdateWithoutRegistrationWindowsInput>
+}
+
+export type UserCreateNestedOneWithoutRegistrationWorkspacesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationWorkspacesInput, Prisma.UserUncheckedCreateWithoutRegistrationWorkspacesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationWorkspacesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutWorkspacesLastAdjustedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWorkspacesLastAdjustedInput, Prisma.UserUncheckedCreateWithoutWorkspacesLastAdjustedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWorkspacesLastAdjustedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRegistrationWorkspacesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationWorkspacesInput, Prisma.UserUncheckedCreateWithoutRegistrationWorkspacesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationWorkspacesInput
+  upsert?: Prisma.UserUpsertWithoutRegistrationWorkspacesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRegistrationWorkspacesInput, Prisma.UserUpdateWithoutRegistrationWorkspacesInput>, Prisma.UserUncheckedUpdateWithoutRegistrationWorkspacesInput>
+}
+
+export type UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWorkspacesLastAdjustedInput, Prisma.UserUncheckedCreateWithoutWorkspacesLastAdjustedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWorkspacesLastAdjustedInput
+  upsert?: Prisma.UserUpsertWithoutWorkspacesLastAdjustedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWorkspacesLastAdjustedInput, Prisma.UserUpdateWithoutWorkspacesLastAdjustedInput>, Prisma.UserUncheckedUpdateWithoutWorkspacesLastAdjustedInput>
+}
+
+export type UserCreateNestedOneWithoutStudentRegistrationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStudentRegistrationsInput, Prisma.UserUncheckedCreateWithoutStudentRegistrationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudentRegistrationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStudentRegistrationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStudentRegistrationsInput, Prisma.UserUncheckedCreateWithoutStudentRegistrationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudentRegistrationsInput
+  upsert?: Prisma.UserUpsertWithoutStudentRegistrationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStudentRegistrationsInput, Prisma.UserUpdateWithoutStudentRegistrationsInput>, Prisma.UserUncheckedUpdateWithoutStudentRegistrationsInput>
+}
+
+export type UserCreateNestedOneWithoutRegistrationAuditLogsAsStudentInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationAuditLogsAsStudentInput, Prisma.UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationAuditLogsAsStudentInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutRegistrationAuditLogsPerformedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationAuditLogsPerformedInput, Prisma.UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationAuditLogsPerformedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRegistrationAuditLogsAsStudentNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationAuditLogsAsStudentInput, Prisma.UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationAuditLogsAsStudentInput
+  upsert?: Prisma.UserUpsertWithoutRegistrationAuditLogsAsStudentInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRegistrationAuditLogsAsStudentInput, Prisma.UserUpdateWithoutRegistrationAuditLogsAsStudentInput>, Prisma.UserUncheckedUpdateWithoutRegistrationAuditLogsAsStudentInput>
+}
+
+export type UserUpdateOneRequiredWithoutRegistrationAuditLogsPerformedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationAuditLogsPerformedInput, Prisma.UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationAuditLogsPerformedInput
+  upsert?: Prisma.UserUpsertWithoutRegistrationAuditLogsPerformedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRegistrationAuditLogsPerformedInput, Prisma.UserUpdateWithoutRegistrationAuditLogsPerformedInput>, Prisma.UserUncheckedUpdateWithoutRegistrationAuditLogsPerformedInput>
+}
+
+export type UserCreateNestedOneWithoutStudentChangeRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStudentChangeRequestsInput, Prisma.UserUncheckedCreateWithoutStudentChangeRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudentChangeRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutRegistrationChangeRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationChangeRequestsInput, Prisma.UserUncheckedCreateWithoutRegistrationChangeRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationChangeRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReviewedChangeRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedChangeRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedChangeRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedChangeRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStudentChangeRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStudentChangeRequestsInput, Prisma.UserUncheckedCreateWithoutStudentChangeRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStudentChangeRequestsInput
+  upsert?: Prisma.UserUpsertWithoutStudentChangeRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStudentChangeRequestsInput, Prisma.UserUpdateWithoutStudentChangeRequestsInput>, Prisma.UserUncheckedUpdateWithoutStudentChangeRequestsInput>
+}
+
+export type UserUpdateOneRequiredWithoutRegistrationChangeRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationChangeRequestsInput, Prisma.UserUncheckedCreateWithoutRegistrationChangeRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationChangeRequestsInput
+  upsert?: Prisma.UserUpsertWithoutRegistrationChangeRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRegistrationChangeRequestsInput, Prisma.UserUpdateWithoutRegistrationChangeRequestsInput>, Prisma.UserUncheckedUpdateWithoutRegistrationChangeRequestsInput>
+}
+
+export type UserUpdateOneWithoutReviewedChangeRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedChangeRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedChangeRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedChangeRequestsInput
+  upsert?: Prisma.UserUpsertWithoutReviewedChangeRequestsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewedChangeRequestsInput, Prisma.UserUpdateWithoutReviewedChangeRequestsInput>, Prisma.UserUncheckedUpdateWithoutReviewedChangeRequestsInput>
 }
 
 export type UserCreateNestedOneWithoutSourceDocumentsInput = {
@@ -389,24 +748,1496 @@ export type UserUpdateOneWithoutSourceDocumentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSourceDocumentsInput, Prisma.UserUpdateWithoutSourceDocumentsInput>, Prisma.UserUncheckedUpdateWithoutSourceDocumentsInput>
 }
 
-export type UserCreateWithoutSourceDocumentsInput = {
+export type UserCreateWithoutPasswordResetTokensInput = {
   id?: string
-  email: string
   name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
   passwordHash: string
   role?: $Enums.UserRole
+  mustChangePassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+}
+
+export type UserUpsertWithoutPasswordResetTokensInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPasswordResetTokensInput, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPasswordResetTokensInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPasswordResetTokensInput, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
+}
+
+export type UserUpdateWithoutPasswordResetTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserCreateWithoutStudentProfileInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutStudentProfileInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutStudentProfileInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStudentProfileInput, Prisma.UserUncheckedCreateWithoutStudentProfileInput>
+}
+
+export type UserUpsertWithoutStudentProfileInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStudentProfileInput, Prisma.UserUncheckedUpdateWithoutStudentProfileInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStudentProfileInput, Prisma.UserUncheckedCreateWithoutStudentProfileInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStudentProfileInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStudentProfileInput, Prisma.UserUncheckedUpdateWithoutStudentProfileInput>
+}
+
+export type UserUpdateWithoutStudentProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStudentProfileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserCreateWithoutTeacherAssignmentsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutTeacherAssignmentsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutTeacherAssignmentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTeacherAssignmentsInput, Prisma.UserUncheckedCreateWithoutTeacherAssignmentsInput>
+}
+
+export type UserUpsertWithoutTeacherAssignmentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTeacherAssignmentsInput, Prisma.UserUncheckedUpdateWithoutTeacherAssignmentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTeacherAssignmentsInput, Prisma.UserUncheckedCreateWithoutTeacherAssignmentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTeacherAssignmentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTeacherAssignmentsInput, Prisma.UserUncheckedUpdateWithoutTeacherAssignmentsInput>
+}
+
+export type UserUpdateWithoutTeacherAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTeacherAssignmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserCreateWithoutRegistrationWindowsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutRegistrationWindowsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutRegistrationWindowsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationWindowsInput, Prisma.UserUncheckedCreateWithoutRegistrationWindowsInput>
+}
+
+export type UserUpsertWithoutRegistrationWindowsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRegistrationWindowsInput, Prisma.UserUncheckedUpdateWithoutRegistrationWindowsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationWindowsInput, Prisma.UserUncheckedCreateWithoutRegistrationWindowsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRegistrationWindowsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRegistrationWindowsInput, Prisma.UserUncheckedUpdateWithoutRegistrationWindowsInput>
+}
+
+export type UserUpdateWithoutRegistrationWindowsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRegistrationWindowsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserCreateWithoutRegistrationWorkspacesInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutRegistrationWorkspacesInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutRegistrationWorkspacesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationWorkspacesInput, Prisma.UserUncheckedCreateWithoutRegistrationWorkspacesInput>
+}
+
+export type UserCreateWithoutWorkspacesLastAdjustedInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutWorkspacesLastAdjustedInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutWorkspacesLastAdjustedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWorkspacesLastAdjustedInput, Prisma.UserUncheckedCreateWithoutWorkspacesLastAdjustedInput>
+}
+
+export type UserUpsertWithoutRegistrationWorkspacesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRegistrationWorkspacesInput, Prisma.UserUncheckedUpdateWithoutRegistrationWorkspacesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationWorkspacesInput, Prisma.UserUncheckedCreateWithoutRegistrationWorkspacesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRegistrationWorkspacesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRegistrationWorkspacesInput, Prisma.UserUncheckedUpdateWithoutRegistrationWorkspacesInput>
+}
+
+export type UserUpdateWithoutRegistrationWorkspacesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRegistrationWorkspacesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUpsertWithoutWorkspacesLastAdjustedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWorkspacesLastAdjustedInput, Prisma.UserUncheckedUpdateWithoutWorkspacesLastAdjustedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWorkspacesLastAdjustedInput, Prisma.UserUncheckedCreateWithoutWorkspacesLastAdjustedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWorkspacesLastAdjustedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWorkspacesLastAdjustedInput, Prisma.UserUncheckedUpdateWithoutWorkspacesLastAdjustedInput>
+}
+
+export type UserUpdateWithoutWorkspacesLastAdjustedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWorkspacesLastAdjustedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserCreateWithoutStudentRegistrationsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutStudentRegistrationsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutStudentRegistrationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStudentRegistrationsInput, Prisma.UserUncheckedCreateWithoutStudentRegistrationsInput>
+}
+
+export type UserUpsertWithoutStudentRegistrationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStudentRegistrationsInput, Prisma.UserUncheckedUpdateWithoutStudentRegistrationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStudentRegistrationsInput, Prisma.UserUncheckedCreateWithoutStudentRegistrationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStudentRegistrationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStudentRegistrationsInput, Prisma.UserUncheckedUpdateWithoutStudentRegistrationsInput>
+}
+
+export type UserUpdateWithoutStudentRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStudentRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserCreateWithoutRegistrationAuditLogsAsStudentInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutRegistrationAuditLogsAsStudentInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationAuditLogsAsStudentInput, Prisma.UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput>
+}
+
+export type UserCreateWithoutRegistrationAuditLogsPerformedInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutRegistrationAuditLogsPerformedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationAuditLogsPerformedInput, Prisma.UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput>
+}
+
+export type UserUpsertWithoutRegistrationAuditLogsAsStudentInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRegistrationAuditLogsAsStudentInput, Prisma.UserUncheckedUpdateWithoutRegistrationAuditLogsAsStudentInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationAuditLogsAsStudentInput, Prisma.UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRegistrationAuditLogsAsStudentInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRegistrationAuditLogsAsStudentInput, Prisma.UserUncheckedUpdateWithoutRegistrationAuditLogsAsStudentInput>
+}
+
+export type UserUpdateWithoutRegistrationAuditLogsAsStudentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRegistrationAuditLogsAsStudentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUpsertWithoutRegistrationAuditLogsPerformedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRegistrationAuditLogsPerformedInput, Prisma.UserUncheckedUpdateWithoutRegistrationAuditLogsPerformedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationAuditLogsPerformedInput, Prisma.UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRegistrationAuditLogsPerformedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRegistrationAuditLogsPerformedInput, Prisma.UserUncheckedUpdateWithoutRegistrationAuditLogsPerformedInput>
+}
+
+export type UserUpdateWithoutRegistrationAuditLogsPerformedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRegistrationAuditLogsPerformedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserCreateWithoutStudentChangeRequestsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+}
+
+export type UserUncheckedCreateWithoutStudentChangeRequestsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+}
+
+export type UserCreateOrConnectWithoutStudentChangeRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStudentChangeRequestsInput, Prisma.UserUncheckedCreateWithoutStudentChangeRequestsInput>
+}
+
+export type UserCreateWithoutRegistrationChangeRequestsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutRegistrationChangeRequestsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutRegistrationChangeRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationChangeRequestsInput, Prisma.UserUncheckedCreateWithoutRegistrationChangeRequestsInput>
+}
+
+export type UserCreateWithoutReviewedChangeRequestsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type UserUncheckedCreateWithoutReviewedChangeRequestsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type UserCreateOrConnectWithoutReviewedChangeRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedChangeRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedChangeRequestsInput>
+}
+
+export type UserUpsertWithoutStudentChangeRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStudentChangeRequestsInput, Prisma.UserUncheckedUpdateWithoutStudentChangeRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStudentChangeRequestsInput, Prisma.UserUncheckedCreateWithoutStudentChangeRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStudentChangeRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStudentChangeRequestsInput, Prisma.UserUncheckedUpdateWithoutStudentChangeRequestsInput>
+}
+
+export type UserUpdateWithoutStudentChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStudentChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+}
+
+export type UserUpsertWithoutRegistrationChangeRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRegistrationChangeRequestsInput, Prisma.UserUncheckedUpdateWithoutRegistrationChangeRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationChangeRequestsInput, Prisma.UserUncheckedCreateWithoutRegistrationChangeRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRegistrationChangeRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRegistrationChangeRequestsInput, Prisma.UserUncheckedUpdateWithoutRegistrationChangeRequestsInput>
+}
+
+export type UserUpdateWithoutRegistrationChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRegistrationChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUpsertWithoutReviewedChangeRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewedChangeRequestsInput, Prisma.UserUncheckedUpdateWithoutReviewedChangeRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedChangeRequestsInput, Prisma.UserUncheckedCreateWithoutReviewedChangeRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewedChangeRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewedChangeRequestsInput, Prisma.UserUncheckedUpdateWithoutReviewedChangeRequestsInput>
+}
+
+export type UserUpdateWithoutReviewedChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewedChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceDocuments?: Prisma.SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type UserCreateWithoutSourceDocumentsInput = {
+  id?: string
+  name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
+  passwordHash: string
+  role?: $Enums.UserRole
+  mustChangePassword?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutStudentInput
 }
 
 export type UserUncheckedCreateWithoutSourceDocumentsInput = {
   id?: string
-  email: string
   name: string
+  username?: string | null
+  email?: string | null
+  phone?: string | null
+  studentNo?: string | null
   passwordHash: string
   role?: $Enums.UserRole
+  mustChangePassword?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutUserInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type UserCreateOrConnectWithoutSourceDocumentsInput = {
@@ -427,22 +2258,54 @@ export type UserUpdateToOneWithWhereWithoutSourceDocumentsInput = {
 
 export type UserUpdateWithoutSourceDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSourceDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  mustChangePassword?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+  studentRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  registrationAuditLogsAsStudent?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+  registrationAuditLogsPerformed?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+  registrationWorkspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+  workspacesLastAdjusted?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+  registrationChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+  reviewedChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  studentChangeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 
@@ -452,10 +2315,32 @@ export type UserUncheckedUpdateWithoutSourceDocumentsInput = {
 
 export type UserCountOutputType = {
   sourceDocuments: number
+  teacherAssignments: number
+  registrationWindows: number
+  studentRegistrations: number
+  passwordResetTokens: number
+  registrationAuditLogsAsStudent: number
+  registrationAuditLogsPerformed: number
+  registrationWorkspaces: number
+  workspacesLastAdjusted: number
+  registrationChangeRequests: number
+  reviewedChangeRequests: number
+  studentChangeRequests: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sourceDocuments?: boolean | UserCountOutputTypeCountSourceDocumentsArgs
+  teacherAssignments?: boolean | UserCountOutputTypeCountTeacherAssignmentsArgs
+  registrationWindows?: boolean | UserCountOutputTypeCountRegistrationWindowsArgs
+  studentRegistrations?: boolean | UserCountOutputTypeCountStudentRegistrationsArgs
+  passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
+  registrationAuditLogsAsStudent?: boolean | UserCountOutputTypeCountRegistrationAuditLogsAsStudentArgs
+  registrationAuditLogsPerformed?: boolean | UserCountOutputTypeCountRegistrationAuditLogsPerformedArgs
+  registrationWorkspaces?: boolean | UserCountOutputTypeCountRegistrationWorkspacesArgs
+  workspacesLastAdjusted?: boolean | UserCountOutputTypeCountWorkspacesLastAdjustedArgs
+  registrationChangeRequests?: boolean | UserCountOutputTypeCountRegistrationChangeRequestsArgs
+  reviewedChangeRequests?: boolean | UserCountOutputTypeCountReviewedChangeRequestsArgs
+  studentChangeRequests?: boolean | UserCountOutputTypeCountStudentChangeRequestsArgs
 }
 
 /**
@@ -475,52 +2360,169 @@ export type UserCountOutputTypeCountSourceDocumentsArgs<ExtArgs extends runtime.
   where?: Prisma.SourceDocumentWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTeacherAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TeacherAssignmentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRegistrationWindowsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationWindowWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStudentRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentExamRegistrationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PasswordResetTokenWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRegistrationAuditLogsAsStudentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationAuditLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRegistrationAuditLogsPerformedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationAuditLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRegistrationWorkspacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationWorkspaceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWorkspacesLastAdjustedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationWorkspaceWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRegistrationChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationChangeRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewedChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationChangeRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStudentChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationChangeRequestWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  email?: boolean
   name?: boolean
+  username?: boolean
+  email?: boolean
+  phone?: boolean
+  studentNo?: boolean
   passwordHash?: boolean
   role?: boolean
+  mustChangePassword?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   sourceDocuments?: boolean | Prisma.User$sourceDocumentsArgs<ExtArgs>
+  studentProfile?: boolean | Prisma.User$studentProfileArgs<ExtArgs>
+  teacherAssignments?: boolean | Prisma.User$teacherAssignmentsArgs<ExtArgs>
+  registrationWindows?: boolean | Prisma.User$registrationWindowsArgs<ExtArgs>
+  studentRegistrations?: boolean | Prisma.User$studentRegistrationsArgs<ExtArgs>
+  passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
+  registrationAuditLogsAsStudent?: boolean | Prisma.User$registrationAuditLogsAsStudentArgs<ExtArgs>
+  registrationAuditLogsPerformed?: boolean | Prisma.User$registrationAuditLogsPerformedArgs<ExtArgs>
+  registrationWorkspaces?: boolean | Prisma.User$registrationWorkspacesArgs<ExtArgs>
+  workspacesLastAdjusted?: boolean | Prisma.User$workspacesLastAdjustedArgs<ExtArgs>
+  registrationChangeRequests?: boolean | Prisma.User$registrationChangeRequestsArgs<ExtArgs>
+  reviewedChangeRequests?: boolean | Prisma.User$reviewedChangeRequestsArgs<ExtArgs>
+  studentChangeRequests?: boolean | Prisma.User$studentChangeRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  email?: boolean
   name?: boolean
+  username?: boolean
+  email?: boolean
+  phone?: boolean
+  studentNo?: boolean
   passwordHash?: boolean
   role?: boolean
+  mustChangePassword?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  email?: boolean
   name?: boolean
+  username?: boolean
+  email?: boolean
+  phone?: boolean
+  studentNo?: boolean
   passwordHash?: boolean
   role?: boolean
+  mustChangePassword?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
   id?: boolean
-  email?: boolean
   name?: boolean
+  username?: boolean
+  email?: boolean
+  phone?: boolean
+  studentNo?: boolean
   passwordHash?: boolean
   role?: boolean
+  mustChangePassword?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "passwordHash" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "username" | "email" | "phone" | "studentNo" | "passwordHash" | "role" | "mustChangePassword" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sourceDocuments?: boolean | Prisma.User$sourceDocumentsArgs<ExtArgs>
+  studentProfile?: boolean | Prisma.User$studentProfileArgs<ExtArgs>
+  teacherAssignments?: boolean | Prisma.User$teacherAssignmentsArgs<ExtArgs>
+  registrationWindows?: boolean | Prisma.User$registrationWindowsArgs<ExtArgs>
+  studentRegistrations?: boolean | Prisma.User$studentRegistrationsArgs<ExtArgs>
+  passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
+  registrationAuditLogsAsStudent?: boolean | Prisma.User$registrationAuditLogsAsStudentArgs<ExtArgs>
+  registrationAuditLogsPerformed?: boolean | Prisma.User$registrationAuditLogsPerformedArgs<ExtArgs>
+  registrationWorkspaces?: boolean | Prisma.User$registrationWorkspacesArgs<ExtArgs>
+  workspacesLastAdjusted?: boolean | Prisma.User$workspacesLastAdjustedArgs<ExtArgs>
+  registrationChangeRequests?: boolean | Prisma.User$registrationChangeRequestsArgs<ExtArgs>
+  reviewedChangeRequests?: boolean | Prisma.User$reviewedChangeRequestsArgs<ExtArgs>
+  studentChangeRequests?: boolean | Prisma.User$studentChangeRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -530,13 +2532,29 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     sourceDocuments: Prisma.$SourceDocumentPayload<ExtArgs>[]
+    studentProfile: Prisma.$StudentProfilePayload<ExtArgs> | null
+    teacherAssignments: Prisma.$TeacherAssignmentPayload<ExtArgs>[]
+    registrationWindows: Prisma.$RegistrationWindowPayload<ExtArgs>[]
+    studentRegistrations: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
+    passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
+    registrationAuditLogsAsStudent: Prisma.$RegistrationAuditLogPayload<ExtArgs>[]
+    registrationAuditLogsPerformed: Prisma.$RegistrationAuditLogPayload<ExtArgs>[]
+    registrationWorkspaces: Prisma.$RegistrationWorkspacePayload<ExtArgs>[]
+    workspacesLastAdjusted: Prisma.$RegistrationWorkspacePayload<ExtArgs>[]
+    registrationChangeRequests: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
+    reviewedChangeRequests: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
+    studentChangeRequests: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    email: string
     name: string
+    username: string | null
+    email: string | null
+    phone: string | null
+    studentNo: string | null
     passwordHash: string
     role: $Enums.UserRole
+    mustChangePassword: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -934,6 +2952,18 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sourceDocuments<T extends Prisma.User$sourceDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sourceDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SourceDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  studentProfile<T extends Prisma.User$studentProfileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studentProfileArgs<ExtArgs>>): Prisma.Prisma__StudentProfileClient<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  teacherAssignments<T extends Prisma.User$teacherAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$teacherAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  registrationWindows<T extends Prisma.User$registrationWindowsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$registrationWindowsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  studentRegistrations<T extends Prisma.User$studentRegistrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studentRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  passwordResetTokens<T extends Prisma.User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  registrationAuditLogsAsStudent<T extends Prisma.User$registrationAuditLogsAsStudentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$registrationAuditLogsAsStudentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  registrationAuditLogsPerformed<T extends Prisma.User$registrationAuditLogsPerformedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$registrationAuditLogsPerformedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  registrationWorkspaces<T extends Prisma.User$registrationWorkspacesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$registrationWorkspacesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationWorkspacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  workspacesLastAdjusted<T extends Prisma.User$workspacesLastAdjustedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$workspacesLastAdjustedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationWorkspacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  registrationChangeRequests<T extends Prisma.User$registrationChangeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$registrationChangeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewedChangeRequests<T extends Prisma.User$reviewedChangeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedChangeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  studentChangeRequests<T extends Prisma.User$studentChangeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studentChangeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -964,10 +2994,14 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
-  readonly email: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
+  readonly username: Prisma.FieldRef<"User", 'String'>
+  readonly email: Prisma.FieldRef<"User", 'String'>
+  readonly phone: Prisma.FieldRef<"User", 'String'>
+  readonly studentNo: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
+  readonly mustChangePassword: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -1384,6 +3418,289 @@ export type User$sourceDocumentsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.SourceDocumentScalarFieldEnum | Prisma.SourceDocumentScalarFieldEnum[]
+}
+
+/**
+ * User.studentProfile
+ */
+export type User$studentProfileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentProfile
+   */
+  select?: Prisma.StudentProfileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentProfile
+   */
+  omit?: Prisma.StudentProfileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentProfileInclude<ExtArgs> | null
+  where?: Prisma.StudentProfileWhereInput
+}
+
+/**
+ * User.teacherAssignments
+ */
+export type User$teacherAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TeacherAssignment
+   */
+  select?: Prisma.TeacherAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TeacherAssignment
+   */
+  omit?: Prisma.TeacherAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeacherAssignmentInclude<ExtArgs> | null
+  where?: Prisma.TeacherAssignmentWhereInput
+  orderBy?: Prisma.TeacherAssignmentOrderByWithRelationInput | Prisma.TeacherAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.TeacherAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TeacherAssignmentScalarFieldEnum | Prisma.TeacherAssignmentScalarFieldEnum[]
+}
+
+/**
+ * User.registrationWindows
+ */
+export type User$registrationWindowsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationWindow
+   */
+  select?: Prisma.RegistrationWindowSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationWindow
+   */
+  omit?: Prisma.RegistrationWindowOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationWindowInclude<ExtArgs> | null
+  where?: Prisma.RegistrationWindowWhereInput
+  orderBy?: Prisma.RegistrationWindowOrderByWithRelationInput | Prisma.RegistrationWindowOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationWindowWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationWindowScalarFieldEnum | Prisma.RegistrationWindowScalarFieldEnum[]
+}
+
+/**
+ * User.studentRegistrations
+ */
+export type User$studentRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentExamRegistration
+   */
+  select?: Prisma.StudentExamRegistrationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentExamRegistration
+   */
+  omit?: Prisma.StudentExamRegistrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentExamRegistrationInclude<ExtArgs> | null
+  where?: Prisma.StudentExamRegistrationWhereInput
+  orderBy?: Prisma.StudentExamRegistrationOrderByWithRelationInput | Prisma.StudentExamRegistrationOrderByWithRelationInput[]
+  cursor?: Prisma.StudentExamRegistrationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentExamRegistrationScalarFieldEnum | Prisma.StudentExamRegistrationScalarFieldEnum[]
+}
+
+/**
+ * User.passwordResetTokens
+ */
+export type User$passwordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PasswordResetToken
+   */
+  select?: Prisma.PasswordResetTokenSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PasswordResetToken
+   */
+  omit?: Prisma.PasswordResetTokenOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PasswordResetTokenInclude<ExtArgs> | null
+  where?: Prisma.PasswordResetTokenWhereInput
+  orderBy?: Prisma.PasswordResetTokenOrderByWithRelationInput | Prisma.PasswordResetTokenOrderByWithRelationInput[]
+  cursor?: Prisma.PasswordResetTokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PasswordResetTokenScalarFieldEnum | Prisma.PasswordResetTokenScalarFieldEnum[]
+}
+
+/**
+ * User.registrationAuditLogsAsStudent
+ */
+export type User$registrationAuditLogsAsStudentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationAuditLog
+   */
+  select?: Prisma.RegistrationAuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationAuditLog
+   */
+  omit?: Prisma.RegistrationAuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationAuditLogInclude<ExtArgs> | null
+  where?: Prisma.RegistrationAuditLogWhereInput
+  orderBy?: Prisma.RegistrationAuditLogOrderByWithRelationInput | Prisma.RegistrationAuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationAuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationAuditLogScalarFieldEnum | Prisma.RegistrationAuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.registrationAuditLogsPerformed
+ */
+export type User$registrationAuditLogsPerformedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationAuditLog
+   */
+  select?: Prisma.RegistrationAuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationAuditLog
+   */
+  omit?: Prisma.RegistrationAuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationAuditLogInclude<ExtArgs> | null
+  where?: Prisma.RegistrationAuditLogWhereInput
+  orderBy?: Prisma.RegistrationAuditLogOrderByWithRelationInput | Prisma.RegistrationAuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationAuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationAuditLogScalarFieldEnum | Prisma.RegistrationAuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.registrationWorkspaces
+ */
+export type User$registrationWorkspacesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationWorkspace
+   */
+  select?: Prisma.RegistrationWorkspaceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationWorkspace
+   */
+  omit?: Prisma.RegistrationWorkspaceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationWorkspaceInclude<ExtArgs> | null
+  where?: Prisma.RegistrationWorkspaceWhereInput
+  orderBy?: Prisma.RegistrationWorkspaceOrderByWithRelationInput | Prisma.RegistrationWorkspaceOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationWorkspaceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationWorkspaceScalarFieldEnum | Prisma.RegistrationWorkspaceScalarFieldEnum[]
+}
+
+/**
+ * User.workspacesLastAdjusted
+ */
+export type User$workspacesLastAdjustedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationWorkspace
+   */
+  select?: Prisma.RegistrationWorkspaceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationWorkspace
+   */
+  omit?: Prisma.RegistrationWorkspaceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationWorkspaceInclude<ExtArgs> | null
+  where?: Prisma.RegistrationWorkspaceWhereInput
+  orderBy?: Prisma.RegistrationWorkspaceOrderByWithRelationInput | Prisma.RegistrationWorkspaceOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationWorkspaceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationWorkspaceScalarFieldEnum | Prisma.RegistrationWorkspaceScalarFieldEnum[]
+}
+
+/**
+ * User.registrationChangeRequests
+ */
+export type User$registrationChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationChangeRequest
+   */
+  select?: Prisma.RegistrationChangeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationChangeRequest
+   */
+  omit?: Prisma.RegistrationChangeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationChangeRequestInclude<ExtArgs> | null
+  where?: Prisma.RegistrationChangeRequestWhereInput
+  orderBy?: Prisma.RegistrationChangeRequestOrderByWithRelationInput | Prisma.RegistrationChangeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationChangeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationChangeRequestScalarFieldEnum | Prisma.RegistrationChangeRequestScalarFieldEnum[]
+}
+
+/**
+ * User.reviewedChangeRequests
+ */
+export type User$reviewedChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationChangeRequest
+   */
+  select?: Prisma.RegistrationChangeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationChangeRequest
+   */
+  omit?: Prisma.RegistrationChangeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationChangeRequestInclude<ExtArgs> | null
+  where?: Prisma.RegistrationChangeRequestWhereInput
+  orderBy?: Prisma.RegistrationChangeRequestOrderByWithRelationInput | Prisma.RegistrationChangeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationChangeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationChangeRequestScalarFieldEnum | Prisma.RegistrationChangeRequestScalarFieldEnum[]
+}
+
+/**
+ * User.studentChangeRequests
+ */
+export type User$studentChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationChangeRequest
+   */
+  select?: Prisma.RegistrationChangeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RegistrationChangeRequest
+   */
+  omit?: Prisma.RegistrationChangeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationChangeRequestInclude<ExtArgs> | null
+  where?: Prisma.RegistrationChangeRequestWhereInput
+  orderBy?: Prisma.RegistrationChangeRequestOrderByWithRelationInput | Prisma.RegistrationChangeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationChangeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationChangeRequestScalarFieldEnum | Prisma.RegistrationChangeRequestScalarFieldEnum[]
 }
 
 /**
