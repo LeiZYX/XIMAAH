@@ -8,6 +8,13 @@ export type { AdjustmentSummaryPayload } from "@/lib/registrations/workspace-dis
 export { parseAdjustmentSummary, formatAdjusterLabel } from "@/lib/registrations/workspace-display";
 
 export const workspaceInclude = {
+  candidate: {
+    include: {
+      examIdentities: {
+        include: { examBoard: { select: { id: true, name: true, code: true } } },
+      },
+    },
+  },
   student: { include: { studentProfile: true } },
   registrationWindow: { include: { examBoard: true, examSeries: true } },
   lastAdjustedByUser: { select: { id: true, name: true, role: true } },
@@ -42,17 +49,41 @@ export const workspaceInclude = {
   },
 };
 
+export async function ensureRegistrationWorkspaceForCandidate(
+  candidateId: string,
+  registrationWindowId: string,
+  studentId?: string | null,
+) {
+  const byCandidate = await prisma.registrationWorkspace.findFirst({
+    where: { candidateId, registrationWindowId },
+  });
+  if (byCandidate) return byCandidate;
+
+  if (studentId) {
+    return prisma.registrationWorkspace.upsert({
+      where: {
+        studentId_registrationWindowId: { studentId, registrationWindowId },
+      },
+      create: { candidateId, studentId, registrationWindowId },
+      update: { candidateId },
+    });
+  }
+
+  return prisma.registrationWorkspace.create({
+    data: { candidateId, registrationWindowId },
+  });
+}
+
 export async function ensureRegistrationWorkspace(
   studentId: string,
   registrationWindowId: string,
 ) {
-  return prisma.registrationWorkspace.upsert({
-    where: {
-      studentId_registrationWindowId: { studentId, registrationWindowId },
-    },
-    create: { studentId, registrationWindowId },
-    update: {},
-  });
+  const { syncCandidateFromStudentUser } = await import("@/lib/candidates/service");
+  const candidate = await syncCandidateFromStudentUser(studentId);
+  if (!candidate) {
+    throw new Error("Could not resolve candidate for student");
+  }
+  return ensureRegistrationWorkspaceForCandidate(candidate.id, registrationWindowId, studentId);
 }
 
 export async function backfillRegistrationWorkspaces() {
@@ -63,6 +94,7 @@ export async function backfillRegistrationWorkspaces() {
   });
 
   for (const row of rows) {
+    if (!row.studentId) continue;
     const workspace = await ensureRegistrationWorkspace(row.studentId, row.registrationWindowId);
     await prisma.studentExamRegistration.updateMany({
       where: {

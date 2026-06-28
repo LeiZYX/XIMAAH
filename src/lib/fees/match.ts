@@ -1,0 +1,44 @@
+import type { FeeRuleMatchContext, FeeRuleRecord } from "@/lib/fees/types";
+
+function ruleMatchesRegistration(rule: FeeRuleRecord, ctx: FeeRuleMatchContext): boolean {
+  if (!rule.isActive) return false;
+  if (rule.examBoardId !== ctx.examBoardId) return false;
+  if (rule.examSeriesId !== ctx.examSeriesId) return false;
+  if (rule.qualificationId !== ctx.qualificationId) return false;
+  if (rule.entryType !== ctx.entryType) return false;
+  if (rule.examSessionId && rule.examSessionId !== ctx.examSessionId) return false;
+  if (rule.paperId && rule.paperId !== ctx.paperId) return false;
+  if (rule.subjectId && rule.subjectId !== ctx.subjectId) return false;
+  return true;
+}
+
+export function findMatchingFeeRule(
+  rules: FeeRuleRecord[],
+  ctx: FeeRuleMatchContext,
+): FeeRuleRecord | null {
+  const candidates = rules.filter((rule) => ruleMatchesRegistration(rule, ctx));
+
+  const bySession = candidates.filter((rule) => rule.examSessionId === ctx.examSessionId);
+  if (bySession.length > 0) return bySession[0];
+
+  const byPaper = candidates.filter(
+    (rule) => !rule.examSessionId && rule.paperId === ctx.paperId,
+  );
+  if (byPaper.length > 0) return byPaper[0];
+
+  const bySubject = candidates.filter(
+    (rule) => !rule.examSessionId && !rule.paperId && rule.subjectId === ctx.subjectId,
+  );
+  if (bySubject.length > 0) return bySubject[0];
+
+  const byQualification = candidates.filter(
+    (rule) => !rule.examSessionId && !rule.paperId && !rule.subjectId,
+  );
+  if (byQualification.length > 0) return byQualification[0];
+
+  return null;
+}
+
+export function resolveEntryTypeForWorkspace(isLateRegistration: boolean): "NORMAL" | "LATE" {
+  return isLateRegistration ? "LATE" : "NORMAL";
+}

@@ -31,12 +31,14 @@ import {
   limitExamSessions,
   type ExamSessionSearchable,
 } from "@/lib/exam-session-search";
+import { FeeStatementPanel } from "@/components/fees/FeeStatementPanel";
 
 interface WorkspaceDetailProps {
   workspaceId: string;
   apiBase: string;
   backHref: string;
   canAdjust?: boolean;
+  feeRulesHrefBase?: "/admin/registration-windows" | "/exam-office/registration-windows";
 }
 
 interface ExamSessionOption extends ExamSessionSearchable {
@@ -138,7 +140,22 @@ interface WorkspaceData {
     name: string;
     email: string | null;
     studentProfile: { studentNo: string; currentGrade: string; currentClassName: string; email: string | null } | null;
-  };
+  } | null;
+  candidate?: {
+    englishName: string;
+    studentNumber: string | null;
+    grade: string | null;
+    className: string | null;
+    email: string | null;
+    assessmentHubCandidateNumber: string;
+    candidateType: string;
+    examIdentities?: Array<{
+      boardCandidateNumber: string | null;
+      uci: string | null;
+      centreNumber: string | null;
+      examBoard: { name: string; code: string };
+    }>;
+  } | null;
   registrationWindow: {
     id: string;
     title: string;
@@ -151,6 +168,13 @@ interface WorkspaceData {
     id: string;
     updatedAt: string;
     lockedAt: string | null;
+    studentNameSnapshot?: string;
+    studentNoSnapshot?: string;
+    gradeSnapshot?: string;
+    classNameSnapshot?: string;
+    emailSnapshot?: string | null;
+    assessmentHubCandidateNumberSnapshot?: string | null;
+    candidateTypeSnapshot?: string | null;
     examSession: {
       id: string;
       date: string;
@@ -210,6 +234,7 @@ export function RegistrationWorkspaceDetail({
   apiBase,
   backHref,
   canAdjust = true,
+  feeRulesHrefBase = "/admin/registration-windows",
 }: WorkspaceDetailProps) {
   const [workspace, setWorkspace] = useState<WorkspaceData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -230,6 +255,10 @@ export function RegistrationWorkspaceDetail({
   const [applying, setApplying] = useState(false);
   const [rejectingRequestId, setRejectingRequestId] = useState<string | null>(null);
   const [rejectNote, setRejectNote] = useState("");
+  const [feeStatementRefreshKey, setFeeStatementRefreshKey] = useState(0);
+  const [feeNeedsRegeneration, setFeeNeedsRegeneration] = useState(false);
+  const [feeHasIssuedStatement, setFeeHasIssuedStatement] = useState(false);
+  const [confirmFeeImpact, setConfirmFeeImpact] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -290,14 +319,38 @@ export function RegistrationWorkspaceDetail({
 
   const printData = useMemo(() => {
     if (!workspace) return null;
-    const profile = workspace.student.studentProfile;
+    const candidate = workspace.candidate;
+    const profile = workspace.student?.studentProfile;
+    const firstReg = workspace.registrations[0];
     const studentSnapshots = {
-      studentNameSnapshot: workspace.student.name,
-      studentNoSnapshot: profile?.studentNo ?? "",
-      gradeSnapshot: profile?.currentGrade ?? "",
-      classNameSnapshot: profile?.currentClassName ?? "",
-      emailSnapshot: profile?.email ?? workspace.student.email ?? null,
+      studentNameSnapshot:
+        firstReg?.studentNameSnapshot ?? candidate?.englishName ?? workspace.student?.name ?? "",
+      studentNoSnapshot:
+        firstReg?.studentNoSnapshot ?? candidate?.studentNumber ?? profile?.studentNo ?? "",
+      gradeSnapshot: firstReg?.gradeSnapshot ?? candidate?.grade ?? profile?.currentGrade ?? "",
+      classNameSnapshot:
+        firstReg?.classNameSnapshot ?? candidate?.className ?? profile?.currentClassName ?? "",
+      emailSnapshot:
+        firstReg?.emailSnapshot ??
+        candidate?.email ??
+        profile?.email ??
+        workspace.student?.email ??
+        null,
+      assessmentHubCandidateNumberSnapshot:
+        firstReg?.assessmentHubCandidateNumberSnapshot ??
+        candidate?.assessmentHubCandidateNumber ??
+        null,
+      candidateTypeSnapshot:
+        firstReg?.candidateTypeSnapshot ?? candidate?.candidateType ?? null,
     };
+    const examBoardIdentities =
+      candidate?.examIdentities?.map((identity) => ({
+        examBoardName: identity.examBoard.name,
+        examBoardCode: identity.examBoard.code,
+        boardCandidateNumber: identity.boardCandidateNumber,
+        uci: identity.uci,
+        centreNumber: identity.centreNumber,
+      })) ?? [];
     const group = {
       windowId: workspace.registrationWindow.id,
       workspaceId: workspace.id,
@@ -332,23 +385,22 @@ export function RegistrationWorkspaceDetail({
       cardStatus: "Locked" as const,
       boardSummary: workspace.registrationWindow.examBoard.name,
     };
-    return buildConfirmationPrintData(group as never, {
-      id: workspace.id,
-      hasPostLockAdjustment: workspace.hasPostLockAdjustment,
-      lastAdjustedAt: workspace.lastAdjustedAt,
-      lastAdjustedByUser: workspace.lastAdjustedByUser,
-      lastAdjustedByRole: workspace.lastAdjustedByRole,
-      lastAdjustmentReason: workspace.lastAdjustmentReason,
-      lastAdjustmentSummary: workspace.lastAdjustmentSummary,
-      auditLogs: workspace.auditLogs,
-    });
+    return {
+      ...buildConfirmationPrintData(group as never, {
+        id: workspace.id,
+        hasPostLockAdjustment: workspace.hasPostLockAdjustment,
+        lastAdjustedAt: workspace.lastAdjustedAt,
+        lastAdjustedByUser: workspace.lastAdjustedByUser,
+        lastAdjustedByRole: workspace.lastAdjustedByRole,
+        lastAdjustmentReason: workspace.lastAdjustmentReason,
+        lastAdjustmentSummary: workspace.lastAdjustmentSummary,
+        auditLogs: workspace.auditLogs,
+      }),
+      examBoardIdentities,
+    };
   }, [workspace, lastUpdated]);
 
-  async function applyChanges() {
-    if (!reason.trim()) {
-      setError("Adjustment reason is required.");
-      return;
-    }
+  async function executeApplyChanges() {
     setApplying(true);
     setError(null);
     setSuccess(null);
@@ -373,12 +425,40 @@ export function RegistrationWorkspaceDetail({
       setPendingReplace([]);
       setReason("");
       setAdjustMode(null);
-      setSuccess("Changes applied successfully. You can now print the confirmation document.");
+      setConfirmFeeImpact(false);
+      setFeeStatementRefreshKey((key) => key + 1);
+      setFeeNeedsRegeneration(true);
+      setSuccess(
+        feeHasIssuedStatement
+          ? "Changes applied. The issued fee statement is now superseded — regenerate and re-issue it in the Fee statements section below."
+          : "Changes applied successfully. Review the fee statement section below if one already exists.",
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not apply changes");
     } finally {
       setApplying(false);
     }
+  }
+
+  async function applyChanges() {
+    if (!reason.trim()) {
+      setError("Adjustment reason is required.");
+      return;
+    }
+
+    const hasPendingChanges =
+      pendingAdd.length > 0 || pendingRemove.length > 0 || pendingReplace.length > 0;
+    if (!hasPendingChanges) {
+      setError("No changes to apply.");
+      return;
+    }
+
+    if (feeHasIssuedStatement && !confirmFeeImpact) {
+      setConfirmFeeImpact(true);
+      return;
+    }
+
+    await executeApplyChanges();
   }
 
   function queueAdd() {
@@ -428,7 +508,15 @@ export function RegistrationWorkspaceDetail({
       setWorkspace(await response.json());
       setRejectingRequestId(null);
       setRejectNote("");
-      setSuccess(decision === "APPROVED" ? "Change request approved and applied." : "Change request rejected.");
+      setFeeStatementRefreshKey((key) => key + 1);
+      setFeeNeedsRegeneration(true);
+      setSuccess(
+        decision === "APPROVED"
+          ? feeHasIssuedStatement
+            ? "Change request approved and applied. The issued fee statement is now superseded — regenerate and re-issue it below."
+            : "Change request approved and applied. Review the fee statement section if one already exists."
+          : "Change request rejected.",
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not review request");
     } finally {
@@ -479,7 +567,12 @@ export function RegistrationWorkspaceDetail({
   if (loading) return <p className="text-sm text-slate-600">Loading...</p>;
   if (!workspace) return <p className="text-sm text-red-600">{error ?? "Not found"}</p>;
 
-  const profile = workspace.student.studentProfile;
+  const profile = workspace.student?.studentProfile;
+  const candidate = workspace.candidate;
+  const displayName =
+    candidate?.englishName ?? workspace.student?.name ?? workspace.registrations[0]?.studentNameSnapshot ?? "—";
+  const displayStudentNo =
+    candidate?.studentNumber ?? profile?.studentNo ?? candidate?.assessmentHubCandidateNumber ?? "—";
   const adjustment = parseAdjustmentSummary(workspace.lastAdjustmentSummary);
 
   return (
@@ -488,10 +581,51 @@ export function RegistrationWorkspaceDetail({
       {error ? <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div> : null}
       {success ? <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{success}</div> : null}
 
+      {feeNeedsRegeneration ? (
+        <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          <p className="font-medium">Fee statement needs to be regenerated</p>
+          <p className="mt-1">
+            Exam subjects no longer match the last fee statement. Scroll to{" "}
+            <a href="#fee-statements-panel" className="font-medium text-amber-900 underline">
+              Fee statements
+            </a>{" "}
+            and use <strong>Regenerate revised</strong>, then issue the new statement.
+          </p>
+        </div>
+      ) : null}
+
+      {confirmFeeImpact ? (
+        <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-4 text-sm text-amber-950">
+          <p className="font-medium">This will affect the issued fee statement</p>
+          <p className="mt-2">
+            This registration already has an issued fee statement. Changing exam subjects will mark it
+            as superseded. You will need to regenerate and re-issue the fee statement afterwards.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={applying}
+              onClick={() => void executeApplyChanges()}
+              className="rounded-lg bg-amber-700 px-4 py-2 text-sm font-medium text-white hover:bg-amber-800 disabled:opacity-50"
+            >
+              Continue with adjustment
+            </button>
+            <button
+              type="button"
+              disabled={applying}
+              onClick={() => setConfirmFeeImpact(false)}
+              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-white disabled:opacity-50"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">{workspace.registrationWindow.title}</h1>
-          <p className="text-sm text-slate-600">{workspace.student.name} · {profile?.studentNo}</p>
+          <p className="text-sm text-slate-600">{displayName} · {displayStudentNo}</p>
         </div>
         {isLocked ? (
           <button type="button" onClick={() => setPrintOpen(true)} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
@@ -506,13 +640,19 @@ export function RegistrationWorkspaceDetail({
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
-          <h2 className="mb-3 text-lg font-semibold text-slate-900">Student</h2>
+          <h2 className="mb-3 text-lg font-semibold text-slate-900">Candidate</h2>
           <dl className="grid gap-2 text-sm">
-            <div><dt className="text-slate-500">Student Name</dt><dd className="font-medium">{workspace.student.name}</dd></div>
-            <div><dt className="text-slate-500">Grade</dt><dd className="font-medium">{profile?.currentGrade ?? "—"}</dd></div>
-            <div><dt className="text-slate-500">Class</dt><dd className="font-medium">{profile?.currentClassName ?? "—"}</dd></div>
-            <div><dt className="text-slate-500">Student No.</dt><dd className="font-medium">{profile?.studentNo ?? "—"}</dd></div>
-            <div><dt className="text-slate-500">Email</dt><dd className="font-medium">{profile?.email ?? workspace.student.email ?? "—"}</dd></div>
+            <div><dt className="text-slate-500">Name</dt><dd className="font-medium">{displayName}</dd></div>
+            <div><dt className="text-slate-500">Assessment Hub Candidate No.</dt><dd className="font-medium">{candidate?.assessmentHubCandidateNumber ?? workspace.registrations[0]?.assessmentHubCandidateNumberSnapshot ?? "—"}</dd></div>
+            <div><dt className="text-slate-500">Candidate Type</dt><dd className="font-medium">{candidate?.candidateType ?? workspace.registrations[0]?.candidateTypeSnapshot ?? "—"}</dd></div>
+            {(candidate?.candidateType ?? workspace.registrations[0]?.candidateTypeSnapshot) === "INTERNAL" ? (
+              <>
+                <div><dt className="text-slate-500">Grade</dt><dd className="font-medium">{candidate?.grade ?? profile?.currentGrade ?? workspace.registrations[0]?.gradeSnapshot ?? "—"}</dd></div>
+                <div><dt className="text-slate-500">Class</dt><dd className="font-medium">{candidate?.className ?? profile?.currentClassName ?? workspace.registrations[0]?.classNameSnapshot ?? "—"}</dd></div>
+                <div><dt className="text-slate-500">Student No.</dt><dd className="font-medium">{candidate?.studentNumber ?? profile?.studentNo ?? workspace.registrations[0]?.studentNoSnapshot ?? "—"}</dd></div>
+              </>
+            ) : null}
+            <div><dt className="text-slate-500">Email</dt><dd className="font-medium">{candidate?.email ?? profile?.email ?? workspace.student?.email ?? workspace.registrations[0]?.emailSnapshot ?? "—"}</dd></div>
           </dl>
         </Card>
         <Card>
@@ -758,6 +898,20 @@ export function RegistrationWorkspaceDetail({
           </ul>
         )}
       </Card>
+
+      {workspace ? (
+        <FeeStatementPanel
+          workspaceId={workspace.id}
+          registrationWindowId={workspace.registrationWindow.id}
+          locked={Boolean(workspace.lockedAt)}
+          feeRulesHref={`${feeRulesHrefBase}/${workspace.registrationWindow.id}/fees`}
+          refreshKey={feeStatementRefreshKey}
+          onStatusChange={({ needsRegeneration, hasIssuedStatement }) => {
+            setFeeNeedsRegeneration(needsRegeneration);
+            setFeeHasIssuedStatement(hasIssuedStatement);
+          }}
+        />
+      ) : null}
 
       <Card>
         <h2 className="mb-3 text-lg font-semibold text-slate-900">Change History</h2>

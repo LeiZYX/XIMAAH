@@ -1,13 +1,20 @@
 import { RegistrationAuditAction, RegistrationStatus } from "@/generated/prisma/enums";
+import type { CandidateType } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   createRegistrationAuditLog,
   registrationAuditSnapshot,
 } from "@/lib/registrations/audit";
 import { ensureExpiredWindowsLocked } from "@/lib/registrations/lock";
+import { buildStudentVisibleRegistrationWhere } from "@/lib/registrations/filters";
 import { canRegisterInWindow } from "@/lib/registrations/window";
 import { ensureRegistrationWorkspace } from "@/lib/registrations/workspace";
 import { hasWorkspaceSchema } from "@/lib/registrations/schema-capabilities";
+import { assertStudentCanRegister } from "@/lib/students/archive";
+import {
+  candidateRegistrationSnapshots,
+  syncCandidateFromStudentUser,
+} from "@/lib/candidates/service";
 
 import { RegistrationError } from "@/lib/registrations/errors";
 import { registrationInclude } from "@/lib/registrations/include";
@@ -55,8 +62,21 @@ function buildRegistrationData(
     };
   },
   registrationWindowId: string,
+  candidate: { id: string; assessmentHubCandidateNumber: string; candidateType: CandidateType },
 ) {
+  const snapshots = candidateRegistrationSnapshots({
+    englishName: student.name,
+    studentNumber: profile.studentNo,
+    grade: profile.currentGrade,
+    className: profile.currentClassName,
+    email: profile.email ?? student.email,
+    phone: profile.phone ?? student.phone,
+    assessmentHubCandidateNumber: candidate.assessmentHubCandidateNumber,
+    candidateType: candidate.candidateType,
+  });
+
   return {
+    candidateId: candidate.id,
     studentId: student.id,
     examSessionId: session.id,
     registrationWindowId,
@@ -64,20 +84,19 @@ function buildRegistrationData(
     examSeriesId: session.examSeriesId,
     subjectId: session.paper.subjectId,
     paperId: session.paper.id,
-    studentNameSnapshot: student.name,
-    studentNoSnapshot: profile.studentNo,
-    gradeSnapshot: profile.currentGrade,
-    classNameSnapshot: profile.currentClassName,
-    emailSnapshot: profile.email ?? student.email,
-    phoneSnapshot: profile.phone ?? student.phone,
+    ...snapshots,
     status: RegistrationStatus.ACTIVE,
     lockedAt: null,
     cancelledAt: null,
+    registrationSource: "STUDENT_SUBMITTED" as const,
+    visibility: "STUDENT_AND_TEACHER" as const,
+    billingScope: "NORMAL_BILLING" as const,
   };
 }
 
 export async function createStudentRegistration(studentId: string, examSessionId: string) {
   await ensureExpiredWindowsLocked();
+  await assertStudentCanRegister(studentId);
   const now = new Date();
 
   const [student, session, existing] = await Promise.all([
@@ -131,7 +150,18 @@ export async function createStudentRegistration(studentId: string, examSessionId
   }
 
   const registrationWindow = openWindows[0];
-  const data = buildRegistrationData(student, student.studentProfile, session, registrationWindow.id);
+  const candidate = await syncCandidateFromStudentUser(studentId);
+  if (!candidate) {
+    throw new RegistrationError("Could not resolve candidate profile", 400);
+  }
+
+  const data = buildRegistrationData(
+    student,
+    student.studentProfile,
+    session,
+    registrationWindow.id,
+    candidate,
+  );
 
   if (existing?.status === RegistrationStatus.CANCELLED) {
     return prisma.$transaction(async (tx) => {
@@ -150,6 +180,7 @@ export async function createStudentRegistration(studentId: string, examSessionId
       await createRegistrationAuditLog(
         {
           registrationWorkspaceId: workspace?.id,
+          candidateId: candidate.id,
           studentId,
           registrationId: updated.id,
           examSessionId,
@@ -158,6 +189,11 @@ export async function createStudentRegistration(studentId: string, examSessionId
             : RegistrationAuditAction.UPDATE,
           performedById: studentId,
           performedByRole: workspaceReady ? "STUDENT" : undefined,
+          registrationSource: "STUDENT_SUBMITTED",
+          visibility: "STUDENT_AND_TEACHER",
+          billingScope: "NORMAL_BILLING",
+          assessmentHubCandidateNumberSnapshot: candidate.assessmentHubCandidateNumber,
+          candidateTypeSnapshot: candidate.candidateType,
           beforeValue: registrationAuditSnapshot(existing),
           afterValue: registrationAuditSnapshot(updated),
           note: "Re-added to registration list",
@@ -182,6 +218,7 @@ export async function createStudentRegistration(studentId: string, examSessionId
     await createRegistrationAuditLog(
       {
         registrationWorkspaceId: workspace?.id,
+        candidateId: candidate.id,
         studentId,
         registrationId: created.id,
         examSessionId,
@@ -190,6 +227,11 @@ export async function createStudentRegistration(studentId: string, examSessionId
           : RegistrationAuditAction.ADD,
         performedById: studentId,
         performedByRole: workspaceReady ? "STUDENT" : undefined,
+        registrationSource: "STUDENT_SUBMITTED",
+        visibility: "STUDENT_AND_TEACHER",
+        billingScope: "NORMAL_BILLING",
+        assessmentHubCandidateNumberSnapshot: candidate.assessmentHubCandidateNumber,
+        candidateTypeSnapshot: candidate.candidateType,
         afterValue: registrationAuditSnapshot(created),
       },
       tx,
@@ -268,10 +310,7 @@ export async function listStudentVisibleRegistrations(studentId: string) {
   }
 
   const rows = await prisma.studentExamRegistration.findMany({
-    where: {
-      studentId,
-      status: { in: [RegistrationStatus.ACTIVE, RegistrationStatus.LOCKED] },
-    },
+    where: buildStudentVisibleRegistrationWhere(studentId),
     include: workspaceReady
       ? {
           ...registrationInclude,
@@ -280,6 +319,9 @@ export async function listStudentVisibleRegistrations(studentId: string) {
               id: true,
               hasPostLockAdjustment: true,
               isLateRegistration: true,
+              registrationSource: true,
+              visibility: true,
+              billingScope: true,
               lastAdjustedAt: true,
               lastAdjustedByRole: true,
               lastAdjustmentReason: true,

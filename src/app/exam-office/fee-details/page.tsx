@@ -1,0 +1,10 @@
+import { Suspense } from "react";
+import { FeeDetailsView } from "@/components/fees/FeeDetailsView";
+
+export default function ExamOfficeFeeDetailsPage() {
+  return (
+    <Suspense fallback={<p className="p-6 text-sm text-slate-600">Loading fee details...</p>}>
+      <FeeDetailsView basePath="/exam-office" />
+    </Suspense>
+  );
+}

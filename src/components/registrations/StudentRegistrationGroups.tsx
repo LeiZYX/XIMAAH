@@ -88,9 +88,11 @@ function WindowCard({
         </div>
 
         <dl className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
-          {group.isLateRegistration ? (
+          {group.registrationSource === "EO_ASSISTED" ||
+          group.registrationSource === "ADMIN_ASSISTED" ||
+          group.isLateRegistration ? (
             <div className="sm:col-span-2 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-indigo-900">
-              Added by Exams Office after deadline
+              Registered by Exams Office on behalf of student
               {group.lastAdjustedAt
                 ? ` on ${new Date(group.lastAdjustedAt).toLocaleString()}`
                 : ""}

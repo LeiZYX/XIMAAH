@@ -20,6 +20,20 @@ export async function GET(
     return jsonError("Forbidden", 403);
   }
 
+  if (
+    auth.user.role === "STUDENT" &&
+    workspace.visibility === "EXAM_OFFICE_ONLY"
+  ) {
+    return jsonError("Forbidden", 403);
+  }
+
+  if (
+    auth.user.role === "SUBJECT_TEACHER" &&
+    workspace.visibility === "EXAM_OFFICE_ONLY"
+  ) {
+    return jsonError("Forbidden", 403);
+  }
+
   return NextResponse.json(workspace);
 }
 

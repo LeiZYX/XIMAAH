@@ -35,6 +35,13 @@ export function canManageRegistrationWindows(role: UserRole): boolean {
   return role === "ADMIN" || role === "EXAM_OFFICER";
 }
 
+export {
+  canConfigureFeeRules,
+  canGenerateFeeStatements,
+  canViewFeeRuleCosts,
+  canViewStudentFeeStatements,
+} from "@/lib/config/fees";
+
 export function canViewAllRegistrations(role: UserRole): boolean {
   return role === "ADMIN" || role === "EXAM_OFFICER";
 }

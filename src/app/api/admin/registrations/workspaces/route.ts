@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
         }
       : undefined,
     include: {
-      student: { select: { name: true } },
+      student: { select: { name: true, studentNo: true } },
       registrationWindow: {
         include: { examBoard: true, examSeries: true },
       },

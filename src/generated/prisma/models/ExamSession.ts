@@ -246,6 +246,8 @@ export type ExamSessionWhereInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestListRelationFilter
   changeRequestReplacements?: Prisma.RegistrationChangeRequestListRelationFilter
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionListRelationFilter
+  feeRules?: Prisma.FeeRuleListRelationFilter
+  feeStatementItems?: Prisma.FeeStatementItemListRelationFilter
 }
 
 export type ExamSessionOrderByWithRelationInput = {
@@ -269,6 +271,8 @@ export type ExamSessionOrderByWithRelationInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestOrderByRelationAggregateInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestOrderByRelationAggregateInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionOrderByRelationAggregateInput
+  feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
+  feeStatementItems?: Prisma.FeeStatementItemOrderByRelationAggregateInput
 }
 
 export type ExamSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -295,6 +299,8 @@ export type ExamSessionWhereUniqueInput = Prisma.AtLeast<{
   changeRequestTargets?: Prisma.RegistrationChangeRequestListRelationFilter
   changeRequestReplacements?: Prisma.RegistrationChangeRequestListRelationFilter
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionListRelationFilter
+  feeRules?: Prisma.FeeRuleListRelationFilter
+  feeStatementItems?: Prisma.FeeStatementItemListRelationFilter
 }, "id">
 
 export type ExamSessionOrderByWithAggregationInput = {
@@ -351,6 +357,8 @@ export type ExamSessionCreateInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateInput = {
@@ -371,6 +379,8 @@ export type ExamSessionUncheckedCreateInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUpdateInput = {
@@ -391,6 +401,8 @@ export type ExamSessionUpdateInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateInput = {
@@ -411,6 +423,8 @@ export type ExamSessionUncheckedUpdateInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionCreateManyInput = {
@@ -720,6 +734,38 @@ export type ExamSessionUncheckedUpdateManyWithoutSourceDocumentNestedInput = {
   deleteMany?: Prisma.ExamSessionScalarWhereInput | Prisma.ExamSessionScalarWhereInput[]
 }
 
+export type ExamSessionCreateNestedOneWithoutFeeRulesInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutFeeRulesInput, Prisma.ExamSessionUncheckedCreateWithoutFeeRulesInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutFeeRulesInput
+  connect?: Prisma.ExamSessionWhereUniqueInput
+}
+
+export type ExamSessionUpdateOneWithoutFeeRulesNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutFeeRulesInput, Prisma.ExamSessionUncheckedCreateWithoutFeeRulesInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutFeeRulesInput
+  upsert?: Prisma.ExamSessionUpsertWithoutFeeRulesInput
+  disconnect?: Prisma.ExamSessionWhereInput | boolean
+  delete?: Prisma.ExamSessionWhereInput | boolean
+  connect?: Prisma.ExamSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExamSessionUpdateToOneWithWhereWithoutFeeRulesInput, Prisma.ExamSessionUpdateWithoutFeeRulesInput>, Prisma.ExamSessionUncheckedUpdateWithoutFeeRulesInput>
+}
+
+export type ExamSessionCreateNestedOneWithoutFeeStatementItemsInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutFeeStatementItemsInput, Prisma.ExamSessionUncheckedCreateWithoutFeeStatementItemsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutFeeStatementItemsInput
+  connect?: Prisma.ExamSessionWhereUniqueInput
+}
+
+export type ExamSessionUpdateOneWithoutFeeStatementItemsNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutFeeStatementItemsInput, Prisma.ExamSessionUncheckedCreateWithoutFeeStatementItemsInput>
+  connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutFeeStatementItemsInput
+  upsert?: Prisma.ExamSessionUpsertWithoutFeeStatementItemsInput
+  disconnect?: Prisma.ExamSessionWhereInput | boolean
+  delete?: Prisma.ExamSessionWhereInput | boolean
+  connect?: Prisma.ExamSessionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExamSessionUpdateToOneWithWhereWithoutFeeStatementItemsInput, Prisma.ExamSessionUpdateWithoutFeeStatementItemsInput>, Prisma.ExamSessionUncheckedUpdateWithoutFeeStatementItemsInput>
+}
+
 export type ExamSessionCreateWithoutStudentExamRegistrationsInput = {
   id?: string
   date: Date | string
@@ -737,6 +783,8 @@ export type ExamSessionCreateWithoutStudentExamRegistrationsInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutStudentExamRegistrationsInput = {
@@ -756,6 +804,8 @@ export type ExamSessionUncheckedCreateWithoutStudentExamRegistrationsInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutStudentExamRegistrationsInput = {
@@ -791,6 +841,8 @@ export type ExamSessionUpdateWithoutStudentExamRegistrationsInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutStudentExamRegistrationsInput = {
@@ -810,6 +862,8 @@ export type ExamSessionUncheckedUpdateWithoutStudentExamRegistrationsInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionCreateWithoutRegistrationAuditLogsInput = {
@@ -829,6 +883,8 @@ export type ExamSessionCreateWithoutRegistrationAuditLogsInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutRegistrationAuditLogsInput = {
@@ -848,6 +904,8 @@ export type ExamSessionUncheckedCreateWithoutRegistrationAuditLogsInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutRegistrationAuditLogsInput = {
@@ -883,6 +941,8 @@ export type ExamSessionUpdateWithoutRegistrationAuditLogsInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutRegistrationAuditLogsInput = {
@@ -902,6 +962,8 @@ export type ExamSessionUncheckedUpdateWithoutRegistrationAuditLogsInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionCreateWithoutChangeRequestTargetsInput = {
@@ -921,6 +983,8 @@ export type ExamSessionCreateWithoutChangeRequestTargetsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutChangeRequestTargetsInput = {
@@ -940,6 +1004,8 @@ export type ExamSessionUncheckedCreateWithoutChangeRequestTargetsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutChangeRequestTargetsInput = {
@@ -964,6 +1030,8 @@ export type ExamSessionCreateWithoutChangeRequestReplacementsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
   changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutChangeRequestReplacementsInput = {
@@ -983,6 +1051,8 @@ export type ExamSessionUncheckedCreateWithoutChangeRequestReplacementsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutChangeRequestReplacementsInput = {
@@ -1018,6 +1088,8 @@ export type ExamSessionUpdateWithoutChangeRequestTargetsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutChangeRequestTargetsInput = {
@@ -1037,6 +1109,8 @@ export type ExamSessionUncheckedUpdateWithoutChangeRequestTargetsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUpsertWithoutChangeRequestReplacementsInput = {
@@ -1067,6 +1141,8 @@ export type ExamSessionUpdateWithoutChangeRequestReplacementsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
   changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutChangeRequestReplacementsInput = {
@@ -1086,6 +1162,8 @@ export type ExamSessionUncheckedUpdateWithoutChangeRequestReplacementsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionCreateWithoutChangeRequestExamSessionsInput = {
@@ -1105,6 +1183,8 @@ export type ExamSessionCreateWithoutChangeRequestExamSessionsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
   changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutChangeRequestExamSessionsInput = {
@@ -1124,6 +1204,8 @@ export type ExamSessionUncheckedCreateWithoutChangeRequestExamSessionsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutChangeRequestExamSessionsInput = {
@@ -1159,6 +1241,8 @@ export type ExamSessionUpdateWithoutChangeRequestExamSessionsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
   changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutChangeRequestExamSessionsInput = {
@@ -1178,6 +1262,8 @@ export type ExamSessionUncheckedUpdateWithoutChangeRequestExamSessionsInput = {
   registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionCreateWithoutPaperInput = {
@@ -1197,6 +1283,8 @@ export type ExamSessionCreateWithoutPaperInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutPaperInput = {
@@ -1216,6 +1304,8 @@ export type ExamSessionUncheckedCreateWithoutPaperInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutPaperInput = {
@@ -1279,6 +1369,8 @@ export type ExamSessionCreateWithoutExamSeriesInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutExamSeriesInput = {
@@ -1298,6 +1390,8 @@ export type ExamSessionUncheckedCreateWithoutExamSeriesInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutExamSeriesInput = {
@@ -1343,6 +1437,8 @@ export type ExamSessionCreateWithoutSourceDocumentInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionUncheckedCreateWithoutSourceDocumentInput = {
@@ -1362,6 +1458,8 @@ export type ExamSessionUncheckedCreateWithoutSourceDocumentInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
 }
 
 export type ExamSessionCreateOrConnectWithoutSourceDocumentInput = {
@@ -1388,6 +1486,206 @@ export type ExamSessionUpdateWithWhereUniqueWithoutSourceDocumentInput = {
 export type ExamSessionUpdateManyWithWhereWithoutSourceDocumentInput = {
   where: Prisma.ExamSessionScalarWhereInput
   data: Prisma.XOR<Prisma.ExamSessionUpdateManyMutationInput, Prisma.ExamSessionUncheckedUpdateManyWithoutSourceDocumentInput>
+}
+
+export type ExamSessionCreateWithoutFeeRulesInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  paper: Prisma.PaperCreateNestedOneWithoutExamSessionsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutExamSessionsInput
+  sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSessionsInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionUncheckedCreateWithoutFeeRulesInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  paperId: string
+  examSeriesId: string
+  sourceDocumentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionCreateOrConnectWithoutFeeRulesInput = {
+  where: Prisma.ExamSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutFeeRulesInput, Prisma.ExamSessionUncheckedCreateWithoutFeeRulesInput>
+}
+
+export type ExamSessionUpsertWithoutFeeRulesInput = {
+  update: Prisma.XOR<Prisma.ExamSessionUpdateWithoutFeeRulesInput, Prisma.ExamSessionUncheckedUpdateWithoutFeeRulesInput>
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutFeeRulesInput, Prisma.ExamSessionUncheckedCreateWithoutFeeRulesInput>
+  where?: Prisma.ExamSessionWhereInput
+}
+
+export type ExamSessionUpdateToOneWithWhereWithoutFeeRulesInput = {
+  where?: Prisma.ExamSessionWhereInput
+  data: Prisma.XOR<Prisma.ExamSessionUpdateWithoutFeeRulesInput, Prisma.ExamSessionUncheckedUpdateWithoutFeeRulesInput>
+}
+
+export type ExamSessionUpdateWithoutFeeRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paper?: Prisma.PaperUpdateOneRequiredWithoutExamSessionsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
+  sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionUncheckedUpdateWithoutFeeRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionCreateWithoutFeeStatementItemsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  paper: Prisma.PaperCreateNestedOneWithoutExamSessionsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutExamSessionsInput
+  sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSessionsInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionUncheckedCreateWithoutFeeStatementItemsInput = {
+  id?: string
+  date: Date | string
+  startTime?: string | null
+  endTime?: string | null
+  timezone?: string | null
+  venue?: string | null
+  notes?: string | null
+  paperId: string
+  examSeriesId: string
+  sourceDocumentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+}
+
+export type ExamSessionCreateOrConnectWithoutFeeStatementItemsInput = {
+  where: Prisma.ExamSessionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutFeeStatementItemsInput, Prisma.ExamSessionUncheckedCreateWithoutFeeStatementItemsInput>
+}
+
+export type ExamSessionUpsertWithoutFeeStatementItemsInput = {
+  update: Prisma.XOR<Prisma.ExamSessionUpdateWithoutFeeStatementItemsInput, Prisma.ExamSessionUncheckedUpdateWithoutFeeStatementItemsInput>
+  create: Prisma.XOR<Prisma.ExamSessionCreateWithoutFeeStatementItemsInput, Prisma.ExamSessionUncheckedCreateWithoutFeeStatementItemsInput>
+  where?: Prisma.ExamSessionWhereInput
+}
+
+export type ExamSessionUpdateToOneWithWhereWithoutFeeStatementItemsInput = {
+  where?: Prisma.ExamSessionWhereInput
+  data: Prisma.XOR<Prisma.ExamSessionUpdateWithoutFeeStatementItemsInput, Prisma.ExamSessionUncheckedUpdateWithoutFeeStatementItemsInput>
+}
+
+export type ExamSessionUpdateWithoutFeeStatementItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paper?: Prisma.PaperUpdateOneRequiredWithoutExamSessionsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
+  sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSessionNestedInput
+}
+
+export type ExamSessionUncheckedUpdateWithoutFeeStatementItemsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  endTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  venue?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+  registrationAuditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+  changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+  changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+  changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionCreateManyPaperInput = {
@@ -1421,6 +1719,8 @@ export type ExamSessionUpdateWithoutPaperInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutPaperInput = {
@@ -1440,6 +1740,8 @@ export type ExamSessionUncheckedUpdateWithoutPaperInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateManyWithoutPaperInput = {
@@ -1487,6 +1789,8 @@ export type ExamSessionUpdateWithoutExamSeriesInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutExamSeriesInput = {
@@ -1506,6 +1810,8 @@ export type ExamSessionUncheckedUpdateWithoutExamSeriesInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateManyWithoutExamSeriesInput = {
@@ -1553,6 +1859,8 @@ export type ExamSessionUpdateWithoutSourceDocumentInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateWithoutSourceDocumentInput = {
@@ -1572,6 +1880,8 @@ export type ExamSessionUncheckedUpdateWithoutSourceDocumentInput = {
   changeRequestTargets?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
   changeRequestReplacements?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+  feeStatementItems?: Prisma.FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
 }
 
 export type ExamSessionUncheckedUpdateManyWithoutSourceDocumentInput = {
@@ -1599,6 +1909,8 @@ export type ExamSessionCountOutputType = {
   changeRequestTargets: number
   changeRequestReplacements: number
   changeRequestExamSessions: number
+  feeRules: number
+  feeStatementItems: number
 }
 
 export type ExamSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1607,6 +1919,8 @@ export type ExamSessionCountOutputTypeSelect<ExtArgs extends runtime.Types.Exten
   changeRequestTargets?: boolean | ExamSessionCountOutputTypeCountChangeRequestTargetsArgs
   changeRequestReplacements?: boolean | ExamSessionCountOutputTypeCountChangeRequestReplacementsArgs
   changeRequestExamSessions?: boolean | ExamSessionCountOutputTypeCountChangeRequestExamSessionsArgs
+  feeRules?: boolean | ExamSessionCountOutputTypeCountFeeRulesArgs
+  feeStatementItems?: boolean | ExamSessionCountOutputTypeCountFeeStatementItemsArgs
 }
 
 /**
@@ -1654,6 +1968,20 @@ export type ExamSessionCountOutputTypeCountChangeRequestExamSessionsArgs<ExtArgs
   where?: Prisma.RegistrationChangeRequestExamSessionWhereInput
 }
 
+/**
+ * ExamSessionCountOutputType without action
+ */
+export type ExamSessionCountOutputTypeCountFeeRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeRuleWhereInput
+}
+
+/**
+ * ExamSessionCountOutputType without action
+ */
+export type ExamSessionCountOutputTypeCountFeeStatementItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeStatementItemWhereInput
+}
+
 
 export type ExamSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1676,6 +2004,8 @@ export type ExamSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   changeRequestTargets?: boolean | Prisma.ExamSession$changeRequestTargetsArgs<ExtArgs>
   changeRequestReplacements?: boolean | Prisma.ExamSession$changeRequestReplacementsArgs<ExtArgs>
   changeRequestExamSessions?: boolean | Prisma.ExamSession$changeRequestExamSessionsArgs<ExtArgs>
+  feeRules?: boolean | Prisma.ExamSession$feeRulesArgs<ExtArgs>
+  feeStatementItems?: boolean | Prisma.ExamSession$feeStatementItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ExamSessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["examSession"]>
 
@@ -1740,6 +2070,8 @@ export type ExamSessionInclude<ExtArgs extends runtime.Types.Extensions.Internal
   changeRequestTargets?: boolean | Prisma.ExamSession$changeRequestTargetsArgs<ExtArgs>
   changeRequestReplacements?: boolean | Prisma.ExamSession$changeRequestReplacementsArgs<ExtArgs>
   changeRequestExamSessions?: boolean | Prisma.ExamSession$changeRequestExamSessionsArgs<ExtArgs>
+  feeRules?: boolean | Prisma.ExamSession$feeRulesArgs<ExtArgs>
+  feeStatementItems?: boolean | Prisma.ExamSession$feeStatementItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ExamSessionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ExamSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1764,6 +2096,8 @@ export type $ExamSessionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     changeRequestTargets: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
     changeRequestReplacements: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
     changeRequestExamSessions: Prisma.$RegistrationChangeRequestExamSessionPayload<ExtArgs>[]
+    feeRules: Prisma.$FeeRulePayload<ExtArgs>[]
+    feeStatementItems: Prisma.$FeeStatementItemPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2180,6 +2514,8 @@ export interface Prisma__ExamSessionClient<T, Null = never, ExtArgs extends runt
   changeRequestTargets<T extends Prisma.ExamSession$changeRequestTargetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$changeRequestTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   changeRequestReplacements<T extends Prisma.ExamSession$changeRequestReplacementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$changeRequestReplacementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   changeRequestExamSessions<T extends Prisma.ExamSession$changeRequestExamSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$changeRequestExamSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestExamSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feeRules<T extends Prisma.ExamSession$feeRulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$feeRulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feeStatementItems<T extends Prisma.ExamSession$feeStatementItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSession$feeStatementItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeStatementItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2758,6 +3094,54 @@ export type ExamSession$changeRequestExamSessionsArgs<ExtArgs extends runtime.Ty
   take?: number
   skip?: number
   distinct?: Prisma.RegistrationChangeRequestExamSessionScalarFieldEnum | Prisma.RegistrationChangeRequestExamSessionScalarFieldEnum[]
+}
+
+/**
+ * ExamSession.feeRules
+ */
+export type ExamSession$feeRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeeRule
+   */
+  select?: Prisma.FeeRuleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeeRule
+   */
+  omit?: Prisma.FeeRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeRuleInclude<ExtArgs> | null
+  where?: Prisma.FeeRuleWhereInput
+  orderBy?: Prisma.FeeRuleOrderByWithRelationInput | Prisma.FeeRuleOrderByWithRelationInput[]
+  cursor?: Prisma.FeeRuleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeRuleScalarFieldEnum | Prisma.FeeRuleScalarFieldEnum[]
+}
+
+/**
+ * ExamSession.feeStatementItems
+ */
+export type ExamSession$feeStatementItemsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeeStatementItem
+   */
+  select?: Prisma.FeeStatementItemSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeeStatementItem
+   */
+  omit?: Prisma.FeeStatementItemOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeStatementItemInclude<ExtArgs> | null
+  where?: Prisma.FeeStatementItemWhereInput
+  orderBy?: Prisma.FeeStatementItemOrderByWithRelationInput | Prisma.FeeStatementItemOrderByWithRelationInput[]
+  cursor?: Prisma.FeeStatementItemWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeStatementItemScalarFieldEnum | Prisma.FeeStatementItemScalarFieldEnum[]
 }
 
 /**

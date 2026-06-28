@@ -387,6 +387,8 @@ export const ModelName = {
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
   StudentProfile: 'StudentProfile',
+  Candidate: 'Candidate',
+  CandidateExamIdentity: 'CandidateExamIdentity',
   TeacherAssignment: 'TeacherAssignment',
   RegistrationWindow: 'RegistrationWindow',
   RegistrationWorkspace: 'RegistrationWorkspace',
@@ -403,7 +405,12 @@ export const ModelName = {
   ExamSession: 'ExamSession',
   KeyDate: 'KeyDate',
   Resource: 'Resource',
-  SourceDocument: 'SourceDocument'
+  SourceDocument: 'SourceDocument',
+  FeeRule: 'FeeRule',
+  ExchangeRate: 'ExchangeRate',
+  FeeStatement: 'FeeStatement',
+  FeeStatementItem: 'FeeStatementItem',
+  FeeAuditLog: 'FeeAuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordResetToken" | "studentProfile" | "teacherAssignment" | "registrationWindow" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument"
+    modelProps: "user" | "passwordResetToken" | "studentProfile" | "candidate" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "feeStatementItem" | "feeAuditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -642,6 +649,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.StudentProfileCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.StudentProfileCountAggregateOutputType> | number
+        }
+      }
+    }
+    Candidate: {
+      payload: Prisma.$CandidatePayload<ExtArgs>
+      fields: Prisma.CandidateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CandidateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CandidateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        findFirst: {
+          args: Prisma.CandidateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CandidateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        findMany: {
+          args: Prisma.CandidateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>[]
+        }
+        create: {
+          args: Prisma.CandidateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        createMany: {
+          args: Prisma.CandidateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CandidateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>[]
+        }
+        delete: {
+          args: Prisma.CandidateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        update: {
+          args: Prisma.CandidateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        deleteMany: {
+          args: Prisma.CandidateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CandidateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CandidateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>[]
+        }
+        upsert: {
+          args: Prisma.CandidateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidatePayload>
+        }
+        aggregate: {
+          args: Prisma.CandidateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCandidate>
+        }
+        groupBy: {
+          args: Prisma.CandidateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CandidateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CandidateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CandidateCountAggregateOutputType> | number
+        }
+      }
+    }
+    CandidateExamIdentity: {
+      payload: Prisma.$CandidateExamIdentityPayload<ExtArgs>
+      fields: Prisma.CandidateExamIdentityFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CandidateExamIdentityFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CandidateExamIdentityFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload>
+        }
+        findFirst: {
+          args: Prisma.CandidateExamIdentityFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CandidateExamIdentityFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload>
+        }
+        findMany: {
+          args: Prisma.CandidateExamIdentityFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload>[]
+        }
+        create: {
+          args: Prisma.CandidateExamIdentityCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload>
+        }
+        createMany: {
+          args: Prisma.CandidateExamIdentityCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CandidateExamIdentityCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload>[]
+        }
+        delete: {
+          args: Prisma.CandidateExamIdentityDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload>
+        }
+        update: {
+          args: Prisma.CandidateExamIdentityUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload>
+        }
+        deleteMany: {
+          args: Prisma.CandidateExamIdentityDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CandidateExamIdentityUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CandidateExamIdentityUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload>[]
+        }
+        upsert: {
+          args: Prisma.CandidateExamIdentityUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CandidateExamIdentityPayload>
+        }
+        aggregate: {
+          args: Prisma.CandidateExamIdentityAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCandidateExamIdentity>
+        }
+        groupBy: {
+          args: Prisma.CandidateExamIdentityGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CandidateExamIdentityGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CandidateExamIdentityCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CandidateExamIdentityCountAggregateOutputType> | number
         }
       }
     }
@@ -1903,6 +2058,376 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FeeRule: {
+      payload: Prisma.$FeeRulePayload<ExtArgs>
+      fields: Prisma.FeeRuleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeeRuleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeeRuleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload>
+        }
+        findFirst: {
+          args: Prisma.FeeRuleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeeRuleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload>
+        }
+        findMany: {
+          args: Prisma.FeeRuleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload>[]
+        }
+        create: {
+          args: Prisma.FeeRuleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload>
+        }
+        createMany: {
+          args: Prisma.FeeRuleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeeRuleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload>[]
+        }
+        delete: {
+          args: Prisma.FeeRuleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload>
+        }
+        update: {
+          args: Prisma.FeeRuleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload>
+        }
+        deleteMany: {
+          args: Prisma.FeeRuleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeeRuleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeeRuleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload>[]
+        }
+        upsert: {
+          args: Prisma.FeeRuleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeRulePayload>
+        }
+        aggregate: {
+          args: Prisma.FeeRuleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeeRule>
+        }
+        groupBy: {
+          args: Prisma.FeeRuleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeRuleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeeRuleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeRuleCountAggregateOutputType> | number
+        }
+      }
+    }
+    ExchangeRate: {
+      payload: Prisma.$ExchangeRatePayload<ExtArgs>
+      fields: Prisma.ExchangeRateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ExchangeRateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ExchangeRateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        findFirst: {
+          args: Prisma.ExchangeRateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ExchangeRateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        findMany: {
+          args: Prisma.ExchangeRateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>[]
+        }
+        create: {
+          args: Prisma.ExchangeRateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        createMany: {
+          args: Prisma.ExchangeRateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ExchangeRateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>[]
+        }
+        delete: {
+          args: Prisma.ExchangeRateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        update: {
+          args: Prisma.ExchangeRateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        deleteMany: {
+          args: Prisma.ExchangeRateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ExchangeRateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ExchangeRateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>[]
+        }
+        upsert: {
+          args: Prisma.ExchangeRateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ExchangeRatePayload>
+        }
+        aggregate: {
+          args: Prisma.ExchangeRateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateExchangeRate>
+        }
+        groupBy: {
+          args: Prisma.ExchangeRateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExchangeRateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ExchangeRateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ExchangeRateCountAggregateOutputType> | number
+        }
+      }
+    }
+    FeeStatement: {
+      payload: Prisma.$FeeStatementPayload<ExtArgs>
+      fields: Prisma.FeeStatementFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeeStatementFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeeStatementFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload>
+        }
+        findFirst: {
+          args: Prisma.FeeStatementFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeeStatementFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload>
+        }
+        findMany: {
+          args: Prisma.FeeStatementFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload>[]
+        }
+        create: {
+          args: Prisma.FeeStatementCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload>
+        }
+        createMany: {
+          args: Prisma.FeeStatementCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeeStatementCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload>[]
+        }
+        delete: {
+          args: Prisma.FeeStatementDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload>
+        }
+        update: {
+          args: Prisma.FeeStatementUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload>
+        }
+        deleteMany: {
+          args: Prisma.FeeStatementDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeeStatementUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeeStatementUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload>[]
+        }
+        upsert: {
+          args: Prisma.FeeStatementUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementPayload>
+        }
+        aggregate: {
+          args: Prisma.FeeStatementAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeeStatement>
+        }
+        groupBy: {
+          args: Prisma.FeeStatementGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeStatementGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeeStatementCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeStatementCountAggregateOutputType> | number
+        }
+      }
+    }
+    FeeStatementItem: {
+      payload: Prisma.$FeeStatementItemPayload<ExtArgs>
+      fields: Prisma.FeeStatementItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeeStatementItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeeStatementItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload>
+        }
+        findFirst: {
+          args: Prisma.FeeStatementItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeeStatementItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload>
+        }
+        findMany: {
+          args: Prisma.FeeStatementItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload>[]
+        }
+        create: {
+          args: Prisma.FeeStatementItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload>
+        }
+        createMany: {
+          args: Prisma.FeeStatementItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeeStatementItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload>[]
+        }
+        delete: {
+          args: Prisma.FeeStatementItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload>
+        }
+        update: {
+          args: Prisma.FeeStatementItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.FeeStatementItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeeStatementItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeeStatementItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.FeeStatementItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeStatementItemPayload>
+        }
+        aggregate: {
+          args: Prisma.FeeStatementItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeeStatementItem>
+        }
+        groupBy: {
+          args: Prisma.FeeStatementItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeStatementItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeeStatementItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeStatementItemCountAggregateOutputType> | number
+        }
+      }
+    }
+    FeeAuditLog: {
+      payload: Prisma.$FeeAuditLogPayload<ExtArgs>
+      fields: Prisma.FeeAuditLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeeAuditLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeeAuditLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload>
+        }
+        findFirst: {
+          args: Prisma.FeeAuditLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeeAuditLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload>
+        }
+        findMany: {
+          args: Prisma.FeeAuditLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload>[]
+        }
+        create: {
+          args: Prisma.FeeAuditLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload>
+        }
+        createMany: {
+          args: Prisma.FeeAuditLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeeAuditLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload>[]
+        }
+        delete: {
+          args: Prisma.FeeAuditLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload>
+        }
+        update: {
+          args: Prisma.FeeAuditLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.FeeAuditLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeeAuditLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeeAuditLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.FeeAuditLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeeAuditLogPayload>
+        }
+        aggregate: {
+          args: Prisma.FeeAuditLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeeAuditLog>
+        }
+        groupBy: {
+          args: Prisma.FeeAuditLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeAuditLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeeAuditLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeeAuditLogCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1951,6 +2476,7 @@ export const UserScalarFieldEnum = {
   studentNo: 'studentNo',
   passwordHash: 'passwordHash',
   role: 'role',
+  isActive: 'isActive',
   mustChangePassword: 'mustChangePassword',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1979,11 +2505,60 @@ export const StudentProfileScalarFieldEnum = {
   currentClassName: 'currentClassName',
   email: 'email',
   phone: 'phone',
+  status: 'status',
+  entryYear: 'entryYear',
+  graduationYear: 'graduationYear',
+  graduatedAt: 'graduatedAt',
+  leftAt: 'leftAt',
+  archivedAt: 'archivedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type StudentProfileScalarFieldEnum = (typeof StudentProfileScalarFieldEnum)[keyof typeof StudentProfileScalarFieldEnum]
+
+
+export const CandidateScalarFieldEnum = {
+  id: 'id',
+  assessmentHubCandidateNumber: 'assessmentHubCandidateNumber',
+  candidateType: 'candidateType',
+  userId: 'userId',
+  studentNumber: 'studentNumber',
+  englishName: 'englishName',
+  chineseName: 'chineseName',
+  email: 'email',
+  phone: 'phone',
+  dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
+  idNumber: 'idNumber',
+  passportNumber: 'passportNumber',
+  schoolName: 'schoolName',
+  grade: 'grade',
+  className: 'className',
+  status: 'status',
+  loginEnabled: 'loginEnabled',
+  sourceSystem: 'sourceSystem',
+  externalId: 'externalId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CandidateScalarFieldEnum = (typeof CandidateScalarFieldEnum)[keyof typeof CandidateScalarFieldEnum]
+
+
+export const CandidateExamIdentityScalarFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  centreNumber: 'centreNumber',
+  boardCandidateNumber: 'boardCandidateNumber',
+  uci: 'uci',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CandidateExamIdentityScalarFieldEnum = (typeof CandidateExamIdentityScalarFieldEnum)[keyof typeof CandidateExamIdentityScalarFieldEnum]
 
 
 export const TeacherAssignmentScalarFieldEnum = {
@@ -2015,6 +2590,7 @@ export type RegistrationWindowScalarFieldEnum = (typeof RegistrationWindowScalar
 
 export const RegistrationWorkspaceScalarFieldEnum = {
   id: 'id',
+  candidateId: 'candidateId',
   studentId: 'studentId',
   registrationWindowId: 'registrationWindowId',
   lockedAt: 'lockedAt',
@@ -2025,6 +2601,9 @@ export const RegistrationWorkspaceScalarFieldEnum = {
   lastAdjustmentSummary: 'lastAdjustmentSummary',
   hasPostLockAdjustment: 'hasPostLockAdjustment',
   isLateRegistration: 'isLateRegistration',
+  registrationSource: 'registrationSource',
+  visibility: 'visibility',
+  billingScope: 'billingScope',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2034,6 +2613,7 @@ export type RegistrationWorkspaceScalarFieldEnum = (typeof RegistrationWorkspace
 
 export const StudentExamRegistrationScalarFieldEnum = {
   id: 'id',
+  candidateId: 'candidateId',
   studentId: 'studentId',
   registrationWorkspaceId: 'registrationWorkspaceId',
   examSessionId: 'examSessionId',
@@ -2048,9 +2628,18 @@ export const StudentExamRegistrationScalarFieldEnum = {
   classNameSnapshot: 'classNameSnapshot',
   emailSnapshot: 'emailSnapshot',
   phoneSnapshot: 'phoneSnapshot',
+  assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
+  candidateTypeSnapshot: 'candidateTypeSnapshot',
   status: 'status',
   lockedAt: 'lockedAt',
   cancelledAt: 'cancelledAt',
+  registrationSource: 'registrationSource',
+  visibility: 'visibility',
+  billingScope: 'billingScope',
+  addedByUserId: 'addedByUserId',
+  addedByRole: 'addedByRole',
+  addedAt: 'addedAt',
+  reason: 'reason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2061,6 +2650,7 @@ export type StudentExamRegistrationScalarFieldEnum = (typeof StudentExamRegistra
 export const RegistrationAuditLogScalarFieldEnum = {
   id: 'id',
   registrationWorkspaceId: 'registrationWorkspaceId',
+  candidateId: 'candidateId',
   studentId: 'studentId',
   registrationId: 'registrationId',
   examSessionId: 'examSessionId',
@@ -2071,6 +2661,11 @@ export const RegistrationAuditLogScalarFieldEnum = {
   beforeValue: 'beforeValue',
   afterValue: 'afterValue',
   reason: 'reason',
+  registrationSource: 'registrationSource',
+  visibility: 'visibility',
+  billingScope: 'billingScope',
+  assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
+  candidateTypeSnapshot: 'candidateTypeSnapshot',
   note: 'note',
   createdAt: 'createdAt'
 } as const
@@ -2083,6 +2678,7 @@ export const RegistrationChangeRequestScalarFieldEnum = {
   registrationWorkspaceId: 'registrationWorkspaceId',
   registrationWindowId: 'registrationWindowId',
   studentId: 'studentId',
+  candidateId: 'candidateId',
   requestedByUserId: 'requestedByUserId',
   requestedByRole: 'requestedByRole',
   requestType: 'requestType',
@@ -2268,6 +2864,117 @@ export const SourceDocumentScalarFieldEnum = {
 export type SourceDocumentScalarFieldEnum = (typeof SourceDocumentScalarFieldEnum)[keyof typeof SourceDocumentScalarFieldEnum]
 
 
+export const FeeRuleScalarFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  qualificationId: 'qualificationId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  examSessionId: 'examSessionId',
+  entryType: 'entryType',
+  costCurrency: 'costCurrency',
+  costAmount: 'costAmount',
+  exchangeRateToCny: 'exchangeRateToCny',
+  markupType: 'markupType',
+  markupValue: 'markupValue',
+  salesCurrency: 'salesCurrency',
+  salesAmount: 'salesAmount',
+  isActive: 'isActive',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeeRuleScalarFieldEnum = (typeof FeeRuleScalarFieldEnum)[keyof typeof FeeRuleScalarFieldEnum]
+
+
+export const ExchangeRateScalarFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  baseCurrency: 'baseCurrency',
+  targetCurrency: 'targetCurrency',
+  rate: 'rate',
+  effectiveDate: 'effectiveDate',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExchangeRateScalarFieldEnum = (typeof ExchangeRateScalarFieldEnum)[keyof typeof ExchangeRateScalarFieldEnum]
+
+
+export const FeeStatementScalarFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  studentId: 'studentId',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
+  statementNo: 'statementNo',
+  displayCurrency: 'displayCurrency',
+  exchangeRateSnapshot: 'exchangeRateSnapshot',
+  studentNameSnapshot: 'studentNameSnapshot',
+  studentNoSnapshot: 'studentNoSnapshot',
+  gradeSnapshot: 'gradeSnapshot',
+  classNameSnapshot: 'classNameSnapshot',
+  emailSnapshot: 'emailSnapshot',
+  assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
+  candidateTypeSnapshot: 'candidateTypeSnapshot',
+  status: 'status',
+  totalGbpAmount: 'totalGbpAmount',
+  totalCnyAmount: 'totalCnyAmount',
+  paymentNotes: 'paymentNotes',
+  generatedByUserId: 'generatedByUserId',
+  generatedAt: 'generatedAt',
+  issuedAt: 'issuedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeeStatementScalarFieldEnum = (typeof FeeStatementScalarFieldEnum)[keyof typeof FeeStatementScalarFieldEnum]
+
+
+export const FeeStatementItemScalarFieldEnum = {
+  id: 'id',
+  feeStatementId: 'feeStatementId',
+  examSessionId: 'examSessionId',
+  examBoardSnapshot: 'examBoardSnapshot',
+  qualificationSnapshot: 'qualificationSnapshot',
+  subjectSnapshot: 'subjectSnapshot',
+  paperCodeSnapshot: 'paperCodeSnapshot',
+  paperTitleSnapshot: 'paperTitleSnapshot',
+  entryTypeSnapshot: 'entryTypeSnapshot',
+  costCurrencySnapshot: 'costCurrencySnapshot',
+  costAmountSnapshot: 'costAmountSnapshot',
+  exchangeRateSnapshot: 'exchangeRateSnapshot',
+  markupTypeSnapshot: 'markupTypeSnapshot',
+  markupValueSnapshot: 'markupValueSnapshot',
+  salesGbpAmountSnapshot: 'salesGbpAmountSnapshot',
+  salesCnyAmountSnapshot: 'salesCnyAmountSnapshot',
+  displayCurrencySnapshot: 'displayCurrencySnapshot',
+  lineTotalGbp: 'lineTotalGbp',
+  lineTotalCny: 'lineTotalCny',
+  quantity: 'quantity',
+  createdAt: 'createdAt'
+} as const
+
+export type FeeStatementItemScalarFieldEnum = (typeof FeeStatementItemScalarFieldEnum)[keyof typeof FeeStatementItemScalarFieldEnum]
+
+
+export const FeeAuditLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  registrationWindowId: 'registrationWindowId',
+  performedByUserId: 'performedByUserId',
+  performedAt: 'performedAt',
+  metadata: 'metadata',
+  note: 'note'
+} as const
+
+export type FeeAuditLogScalarFieldEnum = (typeof FeeAuditLogScalarFieldEnum)[keyof typeof FeeAuditLogScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2348,6 +3055,62 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'StudentProfileStatus'
+ */
+export type EnumStudentProfileStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentProfileStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'StudentProfileStatus[]'
+ */
+export type ListEnumStudentProfileStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentProfileStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CandidateType'
+ */
+export type EnumCandidateTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CandidateType'>
+    
+
+
+/**
+ * Reference to a field of type 'CandidateType[]'
+ */
+export type ListEnumCandidateTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CandidateType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CandidateStatus'
+ */
+export type EnumCandidateStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CandidateStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'CandidateStatus[]'
+ */
+export type ListEnumCandidateStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CandidateStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'RegistrationWindowStatus'
  */
 export type EnumRegistrationWindowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationWindowStatus'>
@@ -2358,6 +3121,48 @@ export type EnumRegistrationWindowStatusFieldRefInput<$PrismaModel> = FieldRefIn
  * Reference to a field of type 'RegistrationWindowStatus[]'
  */
 export type ListEnumRegistrationWindowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationWindowStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'RegistrationSource'
+ */
+export type EnumRegistrationSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationSource'>
+    
+
+
+/**
+ * Reference to a field of type 'RegistrationSource[]'
+ */
+export type ListEnumRegistrationSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationSource[]'>
+    
+
+
+/**
+ * Reference to a field of type 'RegistrationVisibility'
+ */
+export type EnumRegistrationVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationVisibility'>
+    
+
+
+/**
+ * Reference to a field of type 'RegistrationVisibility[]'
+ */
+export type ListEnumRegistrationVisibilityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationVisibility[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BillingScope'
+ */
+export type EnumBillingScopeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingScope'>
+    
+
+
+/**
+ * Reference to a field of type 'BillingScope[]'
+ */
+export type ListEnumBillingScopeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BillingScope[]'>
     
 
 
@@ -2418,20 +3223,6 @@ export type ListEnumRegistrationChangeRequestStatusFieldRefInput<$PrismaModel> =
 
 
 /**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
  * Reference to a field of type 'KeyDateType'
  */
 export type EnumKeyDateTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KeyDateType'>
@@ -2470,6 +3261,104 @@ export type EnumSourceDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputTyp
  * Reference to a field of type 'SourceDocumentType[]'
  */
 export type ListEnumSourceDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SourceDocumentType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeEntryType'
+ */
+export type EnumFeeEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeEntryType'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeEntryType[]'
+ */
+export type ListEnumFeeEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeEntryType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeCurrency'
+ */
+export type EnumFeeCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeCurrency'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeCurrency[]'
+ */
+export type ListEnumFeeCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeCurrency[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeMarkupType'
+ */
+export type EnumFeeMarkupTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeMarkupType'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeMarkupType[]'
+ */
+export type ListEnumFeeMarkupTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeMarkupType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeStatementDisplayCurrency'
+ */
+export type EnumFeeStatementDisplayCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeStatementDisplayCurrency'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeStatementDisplayCurrency[]'
+ */
+export type ListEnumFeeStatementDisplayCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeStatementDisplayCurrency[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeStatementStatus'
+ */
+export type EnumFeeStatementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeStatementStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeStatementStatus[]'
+ */
+export type ListEnumFeeStatementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeStatementStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeAuditAction'
+ */
+export type EnumFeeAuditActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeAuditAction'>
+    
+
+
+/**
+ * Reference to a field of type 'FeeAuditAction[]'
+ */
+export type ListEnumFeeAuditActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeAuditAction[]'>
     
 
 
@@ -2599,6 +3488,8 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   passwordResetToken?: Prisma.PasswordResetTokenOmit
   studentProfile?: Prisma.StudentProfileOmit
+  candidate?: Prisma.CandidateOmit
+  candidateExamIdentity?: Prisma.CandidateExamIdentityOmit
   teacherAssignment?: Prisma.TeacherAssignmentOmit
   registrationWindow?: Prisma.RegistrationWindowOmit
   registrationWorkspace?: Prisma.RegistrationWorkspaceOmit
@@ -2616,6 +3507,11 @@ export type GlobalOmitConfig = {
   keyDate?: Prisma.KeyDateOmit
   resource?: Prisma.ResourceOmit
   sourceDocument?: Prisma.SourceDocumentOmit
+  feeRule?: Prisma.FeeRuleOmit
+  exchangeRate?: Prisma.ExchangeRateOmit
+  feeStatement?: Prisma.FeeStatementOmit
+  feeStatementItem?: Prisma.FeeStatementItemOmit
+  feeAuditLog?: Prisma.FeeAuditLogOmit
 }
 
 /* Types for Logging */

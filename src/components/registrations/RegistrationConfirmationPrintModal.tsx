@@ -41,6 +41,13 @@ export interface ConfirmationPrintData {
   lastAdjustmentSummary?: AdjustmentSummaryPayload | null;
   postLockAdjustments?: AdjustmentHistoryBatch[];
   isLateRegistration?: boolean;
+  examBoardIdentities?: Array<{
+    examBoardName: string;
+    examBoardCode: string;
+    boardCandidateNumber?: string | null;
+    uci?: string | null;
+    centreNumber?: string | null;
+  }>;
 }
 
 interface RegistrationConfirmationPrintModalProps {
@@ -95,9 +102,21 @@ export function buildPrintDocumentTitle(data: ConfirmationPrintData, at = new Da
   return `${sanitize(student.name)}-${ymd}-${sanitize(registrationName)}-${timestamp}`;
 }
 
+function candidateTypeLabel(value: string): string {
+  switch (value) {
+    case "INTERNAL":
+      return "Internal (school student)";
+    case "EXTERNAL":
+      return "External candidate";
+    default:
+      return value;
+  }
+}
+
 function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrintData; printTimestamp: Date }) {
   const { group } = data;
   const student = getStudentSnapshotFromRegistrations(group.registrations);
+  const isInternal = student.candidateType === "INTERNAL";
   const lockedOn = getGroupLockedOn(group.registrations);
   const exams = sortRegistrationsForPrint(group.registrations);
   const postLockAdjustments = data.postLockAdjustments ?? [];
@@ -130,14 +149,45 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
 
       <div className="registration-print-body space-y-5 px-6 py-5">
         <section>
-          <h4 className="border-b border-slate-200 pb-2 text-sm font-semibold uppercase tracking-wide text-indigo-700">Student Information</h4>
+          <h4 className="border-b border-slate-200 pb-2 text-sm font-semibold uppercase tracking-wide text-indigo-700">Candidate Information</h4>
           <dl className="mt-3 grid gap-3 sm:grid-cols-2">
-            <SummaryField label="Student Name" value={student.name} />
-            <SummaryField label="Grade" value={student.grade} />
-            <SummaryField label="Class" value={student.className} />
-            <SummaryField label="Student ID / Student No." value={student.studentNo} />
+            <SummaryField label="Candidate Name" value={student.name} />
+            <SummaryField label="Assessment Hub Candidate No." value={student.assessmentHubCandidateNumber} />
+            <SummaryField label="Candidate Type" value={candidateTypeLabel(student.candidateType)} />
+            {isInternal ? (
+              <>
+                <SummaryField label="Grade" value={student.grade} />
+                <SummaryField label="Class" value={student.className} />
+                <SummaryField label="Student Number" value={student.studentNo} />
+              </>
+            ) : null}
             <SummaryField label="Email Address" value={student.email} />
           </dl>
+          {data.examBoardIdentities && data.examBoardIdentities.length > 0 ? (
+            <div className="mt-4">
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Exam board identities</p>
+              <table className="mt-2 w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-200 text-left text-xs uppercase text-slate-500">
+                    <th className="py-1 pr-3">Exam board</th>
+                    <th className="py-1 pr-3">Board candidate no.</th>
+                    <th className="py-1 pr-3">UCI</th>
+                    <th className="py-1">Centre no.</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.examBoardIdentities.map((identity) => (
+                    <tr key={identity.examBoardCode} className="border-b border-slate-100">
+                      <td className="py-1.5 pr-3">{identity.examBoardName}</td>
+                      <td className="py-1.5 pr-3">{identity.boardCandidateNumber ?? "—"}</td>
+                      <td className="py-1.5 pr-3">{identity.uci ?? "—"}</td>
+                      <td className="py-1.5">{identity.centreNumber ?? "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
         </section>
 
         <section>

@@ -1,5 +1,6 @@
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { AUTO_BILLING_SCOPES, STUDENT_VISIBLE, TEACHER_VISIBLE } from "@/lib/registrations/metadata";
 
 export interface RegistrationListFilters {
   examBoardId?: string;
@@ -12,6 +13,12 @@ export interface RegistrationListFilters {
   status?: string;
   studentName?: string;
   studentNo?: string;
+  registrationSource?: string;
+  visibility?: string;
+  billingScope?: string;
+  studentType?: string;
+  candidateType?: string;
+  assessmentHubCandidateNumber?: string;
 }
 
 export function buildRegistrationWhere(
@@ -25,6 +32,31 @@ export function buildRegistrationWhere(
   if (filters.className) where.classNameSnapshot = filters.className;
   if (filters.subjectId) where.subjectId = filters.subjectId;
   if (filters.status) where.status = filters.status as Prisma.EnumRegistrationStatusFilter;
+  if (filters.registrationSource) {
+    where.registrationSource = filters.registrationSource as Prisma.EnumRegistrationSourceFilter;
+  }
+  if (filters.visibility) {
+    where.visibility = filters.visibility as Prisma.EnumRegistrationVisibilityFilter;
+  }
+  if (filters.billingScope) {
+    where.billingScope = filters.billingScope as Prisma.EnumBillingScopeFilter;
+  }
+  if (filters.studentType === "EXTERNAL") {
+    where.registrationSource = "EXTERNAL_CANDIDATE";
+  } else if (filters.studentType === "INTERNAL") {
+    where.registrationSource = { not: "EXTERNAL_CANDIDATE" };
+  }
+  if (filters.candidateType === "INTERNAL") {
+    where.candidateTypeSnapshot = "INTERNAL";
+  } else if (filters.candidateType === "EXTERNAL") {
+    where.candidateTypeSnapshot = "EXTERNAL";
+  }
+  if (filters.assessmentHubCandidateNumber) {
+    where.assessmentHubCandidateNumberSnapshot = {
+      contains: filters.assessmentHubCandidateNumber,
+      mode: "insensitive",
+    };
+  }
   if (filters.studentNo) {
     where.studentNoSnapshot = { contains: filters.studentNo, mode: "insensitive" };
   }
@@ -50,6 +82,33 @@ export function buildRegistrationWhere(
   return where;
 }
 
+export function buildStudentVisibleRegistrationWhere(
+  studentUserId: string,
+): Prisma.StudentExamRegistrationWhereInput {
+  return {
+    status: { in: ["ACTIVE", "LOCKED"] },
+    visibility: { in: STUDENT_VISIBLE },
+    OR: [{ studentId: studentUserId }, { candidate: { userId: studentUserId } }],
+  };
+}
+
+export function buildTeacherVisibleRegistrationWhere(
+  base: Prisma.StudentExamRegistrationWhereInput,
+): Prisma.StudentExamRegistrationWhereInput {
+  return {
+    AND: [
+      base,
+      { visibility: { in: TEACHER_VISIBLE } },
+      {
+        OR: [
+          { candidateTypeSnapshot: "INTERNAL" },
+          { candidateTypeSnapshot: null },
+        ],
+      },
+    ],
+  };
+}
+
 export async function buildTeacherRegistrationWhere(
   teacherId: string,
   filters: RegistrationListFilters,
@@ -72,12 +131,12 @@ export async function buildTeacherRegistrationWhere(
   };
 
   if (Object.keys(base).length === 0) {
-    return subjectFilter;
+    return buildTeacherVisibleRegistrationWhere(subjectFilter);
   }
 
-  return {
+  return buildTeacherVisibleRegistrationWhere({
     AND: [base, subjectFilter],
-  };
+  });
 }
 
 export function parseRegistrationFilters(searchParams: URLSearchParams): RegistrationListFilters {
@@ -95,5 +154,12 @@ export function parseRegistrationFilters(searchParams: URLSearchParams): Registr
     status: searchParams.get("status") || undefined,
     studentName: searchParams.get("studentName") || undefined,
     studentNo: searchParams.get("studentNo") || undefined,
+    registrationSource: searchParams.get("registrationSource") || undefined,
+    visibility: searchParams.get("visibility") || undefined,
+    billingScope: searchParams.get("billingScope") || undefined,
+    studentType: searchParams.get("studentType") || undefined,
+    candidateType: searchParams.get("candidateType") || undefined,
+    assessmentHubCandidateNumber:
+      searchParams.get("assessmentHubCandidateNumber") || undefined,
   };
 }

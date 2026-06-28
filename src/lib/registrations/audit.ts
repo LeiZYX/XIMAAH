@@ -23,6 +23,14 @@ const LEGACY_AUDIT_ACTION: Partial<Record<RegistrationAuditAction, RegistrationA
   TEACHER_LATE_REGISTRATION_REJECTED: "UPDATE",
   EO_LATE_REGISTRATION_CREATED: "ADMIN_ADJUST",
   ADMIN_LATE_REGISTRATION_CREATED: "ADMIN_ADJUST",
+  EO_ASSISTED_REGISTRATION_CREATED: "ADMIN_ADJUST",
+  ADMIN_ASSISTED_REGISTRATION_CREATED: "ADMIN_ADJUST",
+  EO_OFFICE_ONLY_REGISTRATION_CREATED: "ADMIN_ADJUST",
+  ADMIN_OFFICE_ONLY_REGISTRATION_CREATED: "ADMIN_ADJUST",
+  EO_POST_LOCK_ADJUSTMENT: "ADMIN_ADJUST",
+  ADMIN_POST_LOCK_ADJUSTMENT: "ADMIN_ADJUST",
+  STUDENT_REGISTRATION_SUBMITTED: "STUDENT_SUBMIT",
+  EXTERNAL_CANDIDATE_REGISTRATION_CREATED: "ADMIN_ADJUST",
 };
 
 export function serializeAuditValue(value: unknown): string | null {
@@ -33,7 +41,8 @@ export function serializeAuditValue(value: unknown): string | null {
 export async function createRegistrationAuditLog(
   params: {
     registrationWorkspaceId?: string | null;
-    studentId: string;
+    candidateId?: string | null;
+    studentId?: string | null;
     registrationId?: string | null;
     examSessionId: string;
     action: RegistrationAuditAction;
@@ -43,6 +52,11 @@ export async function createRegistrationAuditLog(
     afterValue?: unknown;
     reason?: string;
     note?: string;
+    registrationSource?: string | null;
+    visibility?: string | null;
+    billingScope?: string | null;
+    assessmentHubCandidateNumberSnapshot?: string | null;
+    candidateTypeSnapshot?: string | null;
   },
   client: AuditClient = prisma,
 ) {
@@ -52,7 +66,7 @@ export async function createRegistrationAuditLog(
     : (LEGACY_AUDIT_ACTION[params.action] ?? params.action);
 
   const data: Record<string, unknown> = {
-    studentId: params.studentId,
+    studentId: params.studentId ?? null,
     registrationId: params.registrationId ?? null,
     examSessionId: params.examSessionId,
     action,
@@ -64,8 +78,15 @@ export async function createRegistrationAuditLog(
 
   if (workspaceReady) {
     data.registrationWorkspaceId = params.registrationWorkspaceId ?? null;
+    data.candidateId = params.candidateId ?? null;
     data.performedByRole = params.performedByRole ?? null;
     data.reason = params.reason ?? null;
+    data.registrationSource = params.registrationSource ?? null;
+    data.visibility = params.visibility ?? null;
+    data.billingScope = params.billingScope ?? null;
+    data.assessmentHubCandidateNumberSnapshot =
+      params.assessmentHubCandidateNumberSnapshot ?? null;
+    data.candidateTypeSnapshot = params.candidateTypeSnapshot ?? null;
   }
 
   return client.registrationAuditLog.create({
@@ -85,6 +106,12 @@ export function registrationAuditSnapshot(registration: {
   registrationWindowId: string;
   lockedAt?: Date | null;
   cancelledAt?: Date | null;
+  registrationSource?: string;
+  visibility?: string;
+  billingScope?: string;
+  reason?: string | null;
+  assessmentHubCandidateNumberSnapshot?: string | null;
+  candidateTypeSnapshot?: string | null;
 }) {
   return {
     id: registration.id,
@@ -98,5 +125,12 @@ export function registrationAuditSnapshot(registration: {
     registrationWindowId: registration.registrationWindowId,
     lockedAt: registration.lockedAt?.toISOString() ?? null,
     cancelledAt: registration.cancelledAt?.toISOString() ?? null,
+    registrationSource: registration.registrationSource ?? null,
+    visibility: registration.visibility ?? null,
+    billingScope: registration.billingScope ?? null,
+    reason: registration.reason ?? null,
+    assessmentHubCandidateNumberSnapshot:
+      registration.assessmentHubCandidateNumberSnapshot ?? null,
+    candidateTypeSnapshot: registration.candidateTypeSnapshot ?? null,
   };
 }

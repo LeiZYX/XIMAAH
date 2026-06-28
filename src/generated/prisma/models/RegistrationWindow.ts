@@ -228,6 +228,10 @@ export type RegistrationWindowWhereInput = {
   registrations?: Prisma.StudentExamRegistrationListRelationFilter
   workspaces?: Prisma.RegistrationWorkspaceListRelationFilter
   changeRequests?: Prisma.RegistrationChangeRequestListRelationFilter
+  feeRules?: Prisma.FeeRuleListRelationFilter
+  exchangeRates?: Prisma.ExchangeRateListRelationFilter
+  feeStatements?: Prisma.FeeStatementListRelationFilter
+  feeAuditLogs?: Prisma.FeeAuditLogListRelationFilter
 }
 
 export type RegistrationWindowOrderByWithRelationInput = {
@@ -247,6 +251,10 @@ export type RegistrationWindowOrderByWithRelationInput = {
   registrations?: Prisma.StudentExamRegistrationOrderByRelationAggregateInput
   workspaces?: Prisma.RegistrationWorkspaceOrderByRelationAggregateInput
   changeRequests?: Prisma.RegistrationChangeRequestOrderByRelationAggregateInput
+  feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
+  exchangeRates?: Prisma.ExchangeRateOrderByRelationAggregateInput
+  feeStatements?: Prisma.FeeStatementOrderByRelationAggregateInput
+  feeAuditLogs?: Prisma.FeeAuditLogOrderByRelationAggregateInput
 }
 
 export type RegistrationWindowWhereUniqueInput = Prisma.AtLeast<{
@@ -269,6 +277,10 @@ export type RegistrationWindowWhereUniqueInput = Prisma.AtLeast<{
   registrations?: Prisma.StudentExamRegistrationListRelationFilter
   workspaces?: Prisma.RegistrationWorkspaceListRelationFilter
   changeRequests?: Prisma.RegistrationChangeRequestListRelationFilter
+  feeRules?: Prisma.FeeRuleListRelationFilter
+  exchangeRates?: Prisma.ExchangeRateListRelationFilter
+  feeStatements?: Prisma.FeeStatementListRelationFilter
+  feeAuditLogs?: Prisma.FeeAuditLogListRelationFilter
 }, "id">
 
 export type RegistrationWindowOrderByWithAggregationInput = {
@@ -317,6 +329,10 @@ export type RegistrationWindowCreateInput = {
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
   workspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowUncheckedCreateInput = {
@@ -333,6 +349,10 @@ export type RegistrationWindowUncheckedCreateInput = {
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
   workspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowUpdateInput = {
@@ -349,6 +369,10 @@ export type RegistrationWindowUpdateInput = {
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowUncheckedUpdateInput = {
@@ -365,6 +389,10 @@ export type RegistrationWindowUncheckedUpdateInput = {
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowCreateManyInput = {
@@ -636,6 +664,64 @@ export type RegistrationWindowUncheckedUpdateManyWithoutExamSeriesNestedInput = 
   deleteMany?: Prisma.RegistrationWindowScalarWhereInput | Prisma.RegistrationWindowScalarWhereInput[]
 }
 
+export type RegistrationWindowCreateNestedOneWithoutFeeRulesInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeRulesInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeRulesInput>
+  connectOrCreate?: Prisma.RegistrationWindowCreateOrConnectWithoutFeeRulesInput
+  connect?: Prisma.RegistrationWindowWhereUniqueInput
+}
+
+export type RegistrationWindowUpdateOneRequiredWithoutFeeRulesNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeRulesInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeRulesInput>
+  connectOrCreate?: Prisma.RegistrationWindowCreateOrConnectWithoutFeeRulesInput
+  upsert?: Prisma.RegistrationWindowUpsertWithoutFeeRulesInput
+  connect?: Prisma.RegistrationWindowWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RegistrationWindowUpdateToOneWithWhereWithoutFeeRulesInput, Prisma.RegistrationWindowUpdateWithoutFeeRulesInput>, Prisma.RegistrationWindowUncheckedUpdateWithoutFeeRulesInput>
+}
+
+export type RegistrationWindowCreateNestedOneWithoutExchangeRatesInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutExchangeRatesInput, Prisma.RegistrationWindowUncheckedCreateWithoutExchangeRatesInput>
+  connectOrCreate?: Prisma.RegistrationWindowCreateOrConnectWithoutExchangeRatesInput
+  connect?: Prisma.RegistrationWindowWhereUniqueInput
+}
+
+export type RegistrationWindowUpdateOneRequiredWithoutExchangeRatesNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutExchangeRatesInput, Prisma.RegistrationWindowUncheckedCreateWithoutExchangeRatesInput>
+  connectOrCreate?: Prisma.RegistrationWindowCreateOrConnectWithoutExchangeRatesInput
+  upsert?: Prisma.RegistrationWindowUpsertWithoutExchangeRatesInput
+  connect?: Prisma.RegistrationWindowWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RegistrationWindowUpdateToOneWithWhereWithoutExchangeRatesInput, Prisma.RegistrationWindowUpdateWithoutExchangeRatesInput>, Prisma.RegistrationWindowUncheckedUpdateWithoutExchangeRatesInput>
+}
+
+export type RegistrationWindowCreateNestedOneWithoutFeeStatementsInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeStatementsInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeStatementsInput>
+  connectOrCreate?: Prisma.RegistrationWindowCreateOrConnectWithoutFeeStatementsInput
+  connect?: Prisma.RegistrationWindowWhereUniqueInput
+}
+
+export type RegistrationWindowUpdateOneRequiredWithoutFeeStatementsNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeStatementsInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeStatementsInput>
+  connectOrCreate?: Prisma.RegistrationWindowCreateOrConnectWithoutFeeStatementsInput
+  upsert?: Prisma.RegistrationWindowUpsertWithoutFeeStatementsInput
+  connect?: Prisma.RegistrationWindowWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RegistrationWindowUpdateToOneWithWhereWithoutFeeStatementsInput, Prisma.RegistrationWindowUpdateWithoutFeeStatementsInput>, Prisma.RegistrationWindowUncheckedUpdateWithoutFeeStatementsInput>
+}
+
+export type RegistrationWindowCreateNestedOneWithoutFeeAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeAuditLogsInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeAuditLogsInput>
+  connectOrCreate?: Prisma.RegistrationWindowCreateOrConnectWithoutFeeAuditLogsInput
+  connect?: Prisma.RegistrationWindowWhereUniqueInput
+}
+
+export type RegistrationWindowUpdateOneWithoutFeeAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeAuditLogsInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeAuditLogsInput>
+  connectOrCreate?: Prisma.RegistrationWindowCreateOrConnectWithoutFeeAuditLogsInput
+  upsert?: Prisma.RegistrationWindowUpsertWithoutFeeAuditLogsInput
+  disconnect?: Prisma.RegistrationWindowWhereInput | boolean
+  delete?: Prisma.RegistrationWindowWhereInput | boolean
+  connect?: Prisma.RegistrationWindowWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RegistrationWindowUpdateToOneWithWhereWithoutFeeAuditLogsInput, Prisma.RegistrationWindowUpdateWithoutFeeAuditLogsInput>, Prisma.RegistrationWindowUncheckedUpdateWithoutFeeAuditLogsInput>
+}
+
 export type RegistrationWindowCreateWithoutCreatedByInput = {
   id?: string
   title: string
@@ -649,6 +735,10 @@ export type RegistrationWindowCreateWithoutCreatedByInput = {
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
   workspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowUncheckedCreateWithoutCreatedByInput = {
@@ -664,6 +754,10 @@ export type RegistrationWindowUncheckedCreateWithoutCreatedByInput = {
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
   workspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowCreateOrConnectWithoutCreatedByInput = {
@@ -721,6 +815,10 @@ export type RegistrationWindowCreateWithoutWorkspacesInput = {
   createdBy?: Prisma.UserCreateNestedOneWithoutRegistrationWindowsInput
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowUncheckedCreateWithoutWorkspacesInput = {
@@ -736,6 +834,10 @@ export type RegistrationWindowUncheckedCreateWithoutWorkspacesInput = {
   updatedAt?: Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowCreateOrConnectWithoutWorkspacesInput = {
@@ -767,6 +869,10 @@ export type RegistrationWindowUpdateWithoutWorkspacesInput = {
   createdBy?: Prisma.UserUpdateOneWithoutRegistrationWindowsNestedInput
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowUncheckedUpdateWithoutWorkspacesInput = {
@@ -782,6 +888,10 @@ export type RegistrationWindowUncheckedUpdateWithoutWorkspacesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowCreateWithoutRegistrationsInput = {
@@ -797,6 +907,10 @@ export type RegistrationWindowCreateWithoutRegistrationsInput = {
   createdBy?: Prisma.UserCreateNestedOneWithoutRegistrationWindowsInput
   workspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowUncheckedCreateWithoutRegistrationsInput = {
@@ -812,6 +926,10 @@ export type RegistrationWindowUncheckedCreateWithoutRegistrationsInput = {
   updatedAt?: Date | string
   workspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowCreateOrConnectWithoutRegistrationsInput = {
@@ -843,6 +961,10 @@ export type RegistrationWindowUpdateWithoutRegistrationsInput = {
   createdBy?: Prisma.UserUpdateOneWithoutRegistrationWindowsNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowUncheckedUpdateWithoutRegistrationsInput = {
@@ -858,6 +980,10 @@ export type RegistrationWindowUncheckedUpdateWithoutRegistrationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   workspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowCreateWithoutChangeRequestsInput = {
@@ -873,6 +999,10 @@ export type RegistrationWindowCreateWithoutChangeRequestsInput = {
   createdBy?: Prisma.UserCreateNestedOneWithoutRegistrationWindowsInput
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
   workspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowUncheckedCreateWithoutChangeRequestsInput = {
@@ -888,6 +1018,10 @@ export type RegistrationWindowUncheckedCreateWithoutChangeRequestsInput = {
   updatedAt?: Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
   workspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowCreateOrConnectWithoutChangeRequestsInput = {
@@ -919,6 +1053,10 @@ export type RegistrationWindowUpdateWithoutChangeRequestsInput = {
   createdBy?: Prisma.UserUpdateOneWithoutRegistrationWindowsNestedInput
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowUncheckedUpdateWithoutChangeRequestsInput = {
@@ -934,6 +1072,10 @@ export type RegistrationWindowUncheckedUpdateWithoutChangeRequestsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowCreateWithoutExamBoardInput = {
@@ -949,6 +1091,10 @@ export type RegistrationWindowCreateWithoutExamBoardInput = {
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
   workspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowUncheckedCreateWithoutExamBoardInput = {
@@ -964,6 +1110,10 @@ export type RegistrationWindowUncheckedCreateWithoutExamBoardInput = {
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
   workspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowCreateOrConnectWithoutExamBoardInput = {
@@ -1005,6 +1155,10 @@ export type RegistrationWindowCreateWithoutExamSeriesInput = {
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
   workspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowUncheckedCreateWithoutExamSeriesInput = {
@@ -1020,6 +1174,10 @@ export type RegistrationWindowUncheckedCreateWithoutExamSeriesInput = {
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
   workspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
 }
 
 export type RegistrationWindowCreateOrConnectWithoutExamSeriesInput = {
@@ -1048,6 +1206,374 @@ export type RegistrationWindowUpdateManyWithWhereWithoutExamSeriesInput = {
   data: Prisma.XOR<Prisma.RegistrationWindowUpdateManyMutationInput, Prisma.RegistrationWindowUncheckedUpdateManyWithoutExamSeriesInput>
 }
 
+export type RegistrationWindowCreateWithoutFeeRulesInput = {
+  id?: string
+  title: string
+  startAt: Date | string
+  endAt: Date | string
+  status?: $Enums.RegistrationWindowStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  examBoard: Prisma.ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutRegistrationWindowsInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutRegistrationWindowsInput
+  registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
+  workspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
+  changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
+}
+
+export type RegistrationWindowUncheckedCreateWithoutFeeRulesInput = {
+  id?: string
+  examBoardId: string
+  examSeriesId: string
+  title: string
+  startAt: Date | string
+  endAt: Date | string
+  status?: $Enums.RegistrationWindowStatus
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  workspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+}
+
+export type RegistrationWindowCreateOrConnectWithoutFeeRulesInput = {
+  where: Prisma.RegistrationWindowWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeRulesInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeRulesInput>
+}
+
+export type RegistrationWindowUpsertWithoutFeeRulesInput = {
+  update: Prisma.XOR<Prisma.RegistrationWindowUpdateWithoutFeeRulesInput, Prisma.RegistrationWindowUncheckedUpdateWithoutFeeRulesInput>
+  create: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeRulesInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeRulesInput>
+  where?: Prisma.RegistrationWindowWhereInput
+}
+
+export type RegistrationWindowUpdateToOneWithWhereWithoutFeeRulesInput = {
+  where?: Prisma.RegistrationWindowWhereInput
+  data: Prisma.XOR<Prisma.RegistrationWindowUpdateWithoutFeeRulesInput, Prisma.RegistrationWindowUncheckedUpdateWithoutFeeRulesInput>
+}
+
+export type RegistrationWindowUpdateWithoutFeeRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutRegistrationWindowsNestedInput
+  registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
+  workspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+}
+
+export type RegistrationWindowUncheckedUpdateWithoutFeeRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  workspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+}
+
+export type RegistrationWindowCreateWithoutExchangeRatesInput = {
+  id?: string
+  title: string
+  startAt: Date | string
+  endAt: Date | string
+  status?: $Enums.RegistrationWindowStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  examBoard: Prisma.ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutRegistrationWindowsInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutRegistrationWindowsInput
+  registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
+  workspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
+  changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
+}
+
+export type RegistrationWindowUncheckedCreateWithoutExchangeRatesInput = {
+  id?: string
+  examBoardId: string
+  examSeriesId: string
+  title: string
+  startAt: Date | string
+  endAt: Date | string
+  status?: $Enums.RegistrationWindowStatus
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  workspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+}
+
+export type RegistrationWindowCreateOrConnectWithoutExchangeRatesInput = {
+  where: Prisma.RegistrationWindowWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutExchangeRatesInput, Prisma.RegistrationWindowUncheckedCreateWithoutExchangeRatesInput>
+}
+
+export type RegistrationWindowUpsertWithoutExchangeRatesInput = {
+  update: Prisma.XOR<Prisma.RegistrationWindowUpdateWithoutExchangeRatesInput, Prisma.RegistrationWindowUncheckedUpdateWithoutExchangeRatesInput>
+  create: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutExchangeRatesInput, Prisma.RegistrationWindowUncheckedCreateWithoutExchangeRatesInput>
+  where?: Prisma.RegistrationWindowWhereInput
+}
+
+export type RegistrationWindowUpdateToOneWithWhereWithoutExchangeRatesInput = {
+  where?: Prisma.RegistrationWindowWhereInput
+  data: Prisma.XOR<Prisma.RegistrationWindowUpdateWithoutExchangeRatesInput, Prisma.RegistrationWindowUncheckedUpdateWithoutExchangeRatesInput>
+}
+
+export type RegistrationWindowUpdateWithoutExchangeRatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutRegistrationWindowsNestedInput
+  registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
+  workspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+}
+
+export type RegistrationWindowUncheckedUpdateWithoutExchangeRatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  workspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+}
+
+export type RegistrationWindowCreateWithoutFeeStatementsInput = {
+  id?: string
+  title: string
+  startAt: Date | string
+  endAt: Date | string
+  status?: $Enums.RegistrationWindowStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  examBoard: Prisma.ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutRegistrationWindowsInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutRegistrationWindowsInput
+  registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
+  workspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
+  changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
+}
+
+export type RegistrationWindowUncheckedCreateWithoutFeeStatementsInput = {
+  id?: string
+  examBoardId: string
+  examSeriesId: string
+  title: string
+  startAt: Date | string
+  endAt: Date | string
+  status?: $Enums.RegistrationWindowStatus
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  workspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+}
+
+export type RegistrationWindowCreateOrConnectWithoutFeeStatementsInput = {
+  where: Prisma.RegistrationWindowWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeStatementsInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeStatementsInput>
+}
+
+export type RegistrationWindowUpsertWithoutFeeStatementsInput = {
+  update: Prisma.XOR<Prisma.RegistrationWindowUpdateWithoutFeeStatementsInput, Prisma.RegistrationWindowUncheckedUpdateWithoutFeeStatementsInput>
+  create: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeStatementsInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeStatementsInput>
+  where?: Prisma.RegistrationWindowWhereInput
+}
+
+export type RegistrationWindowUpdateToOneWithWhereWithoutFeeStatementsInput = {
+  where?: Prisma.RegistrationWindowWhereInput
+  data: Prisma.XOR<Prisma.RegistrationWindowUpdateWithoutFeeStatementsInput, Prisma.RegistrationWindowUncheckedUpdateWithoutFeeStatementsInput>
+}
+
+export type RegistrationWindowUpdateWithoutFeeStatementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutRegistrationWindowsNestedInput
+  registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
+  workspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+}
+
+export type RegistrationWindowUncheckedUpdateWithoutFeeStatementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  workspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+}
+
+export type RegistrationWindowCreateWithoutFeeAuditLogsInput = {
+  id?: string
+  title: string
+  startAt: Date | string
+  endAt: Date | string
+  status?: $Enums.RegistrationWindowStatus
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  examBoard: Prisma.ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutRegistrationWindowsInput
+  createdBy?: Prisma.UserCreateNestedOneWithoutRegistrationWindowsInput
+  registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
+  workspaces?: Prisma.RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
+  changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+}
+
+export type RegistrationWindowUncheckedCreateWithoutFeeAuditLogsInput = {
+  id?: string
+  examBoardId: string
+  examSeriesId: string
+  title: string
+  startAt: Date | string
+  endAt: Date | string
+  status?: $Enums.RegistrationWindowStatus
+  createdById?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  workspaces?: Prisma.RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+}
+
+export type RegistrationWindowCreateOrConnectWithoutFeeAuditLogsInput = {
+  where: Prisma.RegistrationWindowWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeAuditLogsInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeAuditLogsInput>
+}
+
+export type RegistrationWindowUpsertWithoutFeeAuditLogsInput = {
+  update: Prisma.XOR<Prisma.RegistrationWindowUpdateWithoutFeeAuditLogsInput, Prisma.RegistrationWindowUncheckedUpdateWithoutFeeAuditLogsInput>
+  create: Prisma.XOR<Prisma.RegistrationWindowCreateWithoutFeeAuditLogsInput, Prisma.RegistrationWindowUncheckedCreateWithoutFeeAuditLogsInput>
+  where?: Prisma.RegistrationWindowWhereInput
+}
+
+export type RegistrationWindowUpdateToOneWithWhereWithoutFeeAuditLogsInput = {
+  where?: Prisma.RegistrationWindowWhereInput
+  data: Prisma.XOR<Prisma.RegistrationWindowUpdateWithoutFeeAuditLogsInput, Prisma.RegistrationWindowUncheckedUpdateWithoutFeeAuditLogsInput>
+}
+
+export type RegistrationWindowUpdateWithoutFeeAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+  createdBy?: Prisma.UserUpdateOneWithoutRegistrationWindowsNestedInput
+  registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
+  workspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+}
+
+export type RegistrationWindowUncheckedUpdateWithoutFeeAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  startAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+  createdById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  workspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+}
+
 export type RegistrationWindowCreateManyCreatedByInput = {
   id?: string
   examBoardId: string
@@ -1073,6 +1599,10 @@ export type RegistrationWindowUpdateWithoutCreatedByInput = {
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowUncheckedUpdateWithoutCreatedByInput = {
@@ -1088,6 +1618,10 @@ export type RegistrationWindowUncheckedUpdateWithoutCreatedByInput = {
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowUncheckedUpdateManyWithoutCreatedByInput = {
@@ -1127,6 +1661,10 @@ export type RegistrationWindowUpdateWithoutExamBoardInput = {
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowUncheckedUpdateWithoutExamBoardInput = {
@@ -1142,6 +1680,10 @@ export type RegistrationWindowUncheckedUpdateWithoutExamBoardInput = {
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowUncheckedUpdateManyWithoutExamBoardInput = {
@@ -1181,6 +1723,10 @@ export type RegistrationWindowUpdateWithoutExamSeriesInput = {
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowUncheckedUpdateWithoutExamSeriesInput = {
@@ -1196,6 +1742,10 @@ export type RegistrationWindowUncheckedUpdateWithoutExamSeriesInput = {
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   workspaces?: Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  exchangeRates?: Prisma.ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  feeAuditLogs?: Prisma.FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
 }
 
 export type RegistrationWindowUncheckedUpdateManyWithoutExamSeriesInput = {
@@ -1219,12 +1769,20 @@ export type RegistrationWindowCountOutputType = {
   registrations: number
   workspaces: number
   changeRequests: number
+  feeRules: number
+  exchangeRates: number
+  feeStatements: number
+  feeAuditLogs: number
 }
 
 export type RegistrationWindowCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrations?: boolean | RegistrationWindowCountOutputTypeCountRegistrationsArgs
   workspaces?: boolean | RegistrationWindowCountOutputTypeCountWorkspacesArgs
   changeRequests?: boolean | RegistrationWindowCountOutputTypeCountChangeRequestsArgs
+  feeRules?: boolean | RegistrationWindowCountOutputTypeCountFeeRulesArgs
+  exchangeRates?: boolean | RegistrationWindowCountOutputTypeCountExchangeRatesArgs
+  feeStatements?: boolean | RegistrationWindowCountOutputTypeCountFeeStatementsArgs
+  feeAuditLogs?: boolean | RegistrationWindowCountOutputTypeCountFeeAuditLogsArgs
 }
 
 /**
@@ -1258,6 +1816,34 @@ export type RegistrationWindowCountOutputTypeCountChangeRequestsArgs<ExtArgs ext
   where?: Prisma.RegistrationChangeRequestWhereInput
 }
 
+/**
+ * RegistrationWindowCountOutputType without action
+ */
+export type RegistrationWindowCountOutputTypeCountFeeRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeRuleWhereInput
+}
+
+/**
+ * RegistrationWindowCountOutputType without action
+ */
+export type RegistrationWindowCountOutputTypeCountExchangeRatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ExchangeRateWhereInput
+}
+
+/**
+ * RegistrationWindowCountOutputType without action
+ */
+export type RegistrationWindowCountOutputTypeCountFeeStatementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeStatementWhereInput
+}
+
+/**
+ * RegistrationWindowCountOutputType without action
+ */
+export type RegistrationWindowCountOutputTypeCountFeeAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeAuditLogWhereInput
+}
+
 
 export type RegistrationWindowSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1276,6 +1862,10 @@ export type RegistrationWindowSelect<ExtArgs extends runtime.Types.Extensions.In
   registrations?: boolean | Prisma.RegistrationWindow$registrationsArgs<ExtArgs>
   workspaces?: boolean | Prisma.RegistrationWindow$workspacesArgs<ExtArgs>
   changeRequests?: boolean | Prisma.RegistrationWindow$changeRequestsArgs<ExtArgs>
+  feeRules?: boolean | Prisma.RegistrationWindow$feeRulesArgs<ExtArgs>
+  exchangeRates?: boolean | Prisma.RegistrationWindow$exchangeRatesArgs<ExtArgs>
+  feeStatements?: boolean | Prisma.RegistrationWindow$feeStatementsArgs<ExtArgs>
+  feeAuditLogs?: boolean | Prisma.RegistrationWindow$feeAuditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.RegistrationWindowCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["registrationWindow"]>
 
@@ -1332,6 +1922,10 @@ export type RegistrationWindowInclude<ExtArgs extends runtime.Types.Extensions.I
   registrations?: boolean | Prisma.RegistrationWindow$registrationsArgs<ExtArgs>
   workspaces?: boolean | Prisma.RegistrationWindow$workspacesArgs<ExtArgs>
   changeRequests?: boolean | Prisma.RegistrationWindow$changeRequestsArgs<ExtArgs>
+  feeRules?: boolean | Prisma.RegistrationWindow$feeRulesArgs<ExtArgs>
+  exchangeRates?: boolean | Prisma.RegistrationWindow$exchangeRatesArgs<ExtArgs>
+  feeStatements?: boolean | Prisma.RegistrationWindow$feeStatementsArgs<ExtArgs>
+  feeAuditLogs?: boolean | Prisma.RegistrationWindow$feeAuditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.RegistrationWindowCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RegistrationWindowIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1354,6 +1948,10 @@ export type $RegistrationWindowPayload<ExtArgs extends runtime.Types.Extensions.
     registrations: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
     workspaces: Prisma.$RegistrationWorkspacePayload<ExtArgs>[]
     changeRequests: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
+    feeRules: Prisma.$FeeRulePayload<ExtArgs>[]
+    exchangeRates: Prisma.$ExchangeRatePayload<ExtArgs>[]
+    feeStatements: Prisma.$FeeStatementPayload<ExtArgs>[]
+    feeAuditLogs: Prisma.$FeeAuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1766,6 +2364,10 @@ export interface Prisma__RegistrationWindowClient<T, Null = never, ExtArgs exten
   registrations<T extends Prisma.RegistrationWindow$registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWindow$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   workspaces<T extends Prisma.RegistrationWindow$workspacesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWindow$workspacesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationWorkspacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   changeRequests<T extends Prisma.RegistrationWindow$changeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWindow$changeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feeRules<T extends Prisma.RegistrationWindow$feeRulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWindow$feeRulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  exchangeRates<T extends Prisma.RegistrationWindow$exchangeRatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWindow$exchangeRatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feeStatements<T extends Prisma.RegistrationWindow$feeStatementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWindow$feeStatementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feeAuditLogs<T extends Prisma.RegistrationWindow$feeAuditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWindow$feeAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2294,6 +2896,102 @@ export type RegistrationWindow$changeRequestsArgs<ExtArgs extends runtime.Types.
   take?: number
   skip?: number
   distinct?: Prisma.RegistrationChangeRequestScalarFieldEnum | Prisma.RegistrationChangeRequestScalarFieldEnum[]
+}
+
+/**
+ * RegistrationWindow.feeRules
+ */
+export type RegistrationWindow$feeRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeeRule
+   */
+  select?: Prisma.FeeRuleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeeRule
+   */
+  omit?: Prisma.FeeRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeRuleInclude<ExtArgs> | null
+  where?: Prisma.FeeRuleWhereInput
+  orderBy?: Prisma.FeeRuleOrderByWithRelationInput | Prisma.FeeRuleOrderByWithRelationInput[]
+  cursor?: Prisma.FeeRuleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeRuleScalarFieldEnum | Prisma.FeeRuleScalarFieldEnum[]
+}
+
+/**
+ * RegistrationWindow.exchangeRates
+ */
+export type RegistrationWindow$exchangeRatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ExchangeRate
+   */
+  select?: Prisma.ExchangeRateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ExchangeRate
+   */
+  omit?: Prisma.ExchangeRateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ExchangeRateInclude<ExtArgs> | null
+  where?: Prisma.ExchangeRateWhereInput
+  orderBy?: Prisma.ExchangeRateOrderByWithRelationInput | Prisma.ExchangeRateOrderByWithRelationInput[]
+  cursor?: Prisma.ExchangeRateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ExchangeRateScalarFieldEnum | Prisma.ExchangeRateScalarFieldEnum[]
+}
+
+/**
+ * RegistrationWindow.feeStatements
+ */
+export type RegistrationWindow$feeStatementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeeStatement
+   */
+  select?: Prisma.FeeStatementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeeStatement
+   */
+  omit?: Prisma.FeeStatementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeStatementInclude<ExtArgs> | null
+  where?: Prisma.FeeStatementWhereInput
+  orderBy?: Prisma.FeeStatementOrderByWithRelationInput | Prisma.FeeStatementOrderByWithRelationInput[]
+  cursor?: Prisma.FeeStatementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeStatementScalarFieldEnum | Prisma.FeeStatementScalarFieldEnum[]
+}
+
+/**
+ * RegistrationWindow.feeAuditLogs
+ */
+export type RegistrationWindow$feeAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeeAuditLog
+   */
+  select?: Prisma.FeeAuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeeAuditLog
+   */
+  omit?: Prisma.FeeAuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeAuditLogInclude<ExtArgs> | null
+  where?: Prisma.FeeAuditLogWhereInput
+  orderBy?: Prisma.FeeAuditLogOrderByWithRelationInput | Prisma.FeeAuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.FeeAuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeAuditLogScalarFieldEnum | Prisma.FeeAuditLogScalarFieldEnum[]
 }
 
 /**

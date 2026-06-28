@@ -255,6 +255,7 @@ export type ExamSeriesWhereInput = {
   resources?: Prisma.ResourceListRelationFilter
   registrationWindows?: Prisma.RegistrationWindowListRelationFilter
   studentExamRegistrations?: Prisma.StudentExamRegistrationListRelationFilter
+  feeRules?: Prisma.FeeRuleListRelationFilter
 }
 
 export type ExamSeriesOrderByWithRelationInput = {
@@ -274,6 +275,7 @@ export type ExamSeriesOrderByWithRelationInput = {
   resources?: Prisma.ResourceOrderByRelationAggregateInput
   registrationWindows?: Prisma.RegistrationWindowOrderByRelationAggregateInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationOrderByRelationAggregateInput
+  feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
 }
 
 export type ExamSeriesWhereUniqueInput = Prisma.AtLeast<{
@@ -296,6 +298,7 @@ export type ExamSeriesWhereUniqueInput = Prisma.AtLeast<{
   resources?: Prisma.ResourceListRelationFilter
   registrationWindows?: Prisma.RegistrationWindowListRelationFilter
   studentExamRegistrations?: Prisma.StudentExamRegistrationListRelationFilter
+  feeRules?: Prisma.FeeRuleListRelationFilter
 }, "id">
 
 export type ExamSeriesOrderByWithAggregationInput = {
@@ -345,6 +348,7 @@ export type ExamSeriesCreateInput = {
   resources?: Prisma.ResourceCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesUncheckedCreateInput = {
@@ -362,6 +366,7 @@ export type ExamSeriesUncheckedCreateInput = {
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesUpdateInput = {
@@ -379,6 +384,7 @@ export type ExamSeriesUpdateInput = {
   resources?: Prisma.ResourceUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesUncheckedUpdateInput = {
@@ -396,6 +402,7 @@ export type ExamSeriesUncheckedUpdateInput = {
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesCreateManyInput = {
@@ -662,6 +669,20 @@ export type ExamSeriesUncheckedUpdateManyWithoutSourceDocumentNestedInput = {
   deleteMany?: Prisma.ExamSeriesScalarWhereInput | Prisma.ExamSeriesScalarWhereInput[]
 }
 
+export type ExamSeriesCreateNestedOneWithoutFeeRulesInput = {
+  create?: Prisma.XOR<Prisma.ExamSeriesCreateWithoutFeeRulesInput, Prisma.ExamSeriesUncheckedCreateWithoutFeeRulesInput>
+  connectOrCreate?: Prisma.ExamSeriesCreateOrConnectWithoutFeeRulesInput
+  connect?: Prisma.ExamSeriesWhereUniqueInput
+}
+
+export type ExamSeriesUpdateOneRequiredWithoutFeeRulesNestedInput = {
+  create?: Prisma.XOR<Prisma.ExamSeriesCreateWithoutFeeRulesInput, Prisma.ExamSeriesUncheckedCreateWithoutFeeRulesInput>
+  connectOrCreate?: Prisma.ExamSeriesCreateOrConnectWithoutFeeRulesInput
+  upsert?: Prisma.ExamSeriesUpsertWithoutFeeRulesInput
+  connect?: Prisma.ExamSeriesWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ExamSeriesUpdateToOneWithWhereWithoutFeeRulesInput, Prisma.ExamSeriesUpdateWithoutFeeRulesInput>, Prisma.ExamSeriesUncheckedUpdateWithoutFeeRulesInput>
+}
+
 export type ExamSeriesCreateWithoutRegistrationWindowsInput = {
   id?: string
   name: string
@@ -676,6 +697,7 @@ export type ExamSeriesCreateWithoutRegistrationWindowsInput = {
   keyDates?: Prisma.KeyDateCreateNestedManyWithoutExamSeriesInput
   resources?: Prisma.ResourceCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesUncheckedCreateWithoutRegistrationWindowsInput = {
@@ -692,6 +714,7 @@ export type ExamSeriesUncheckedCreateWithoutRegistrationWindowsInput = {
   keyDates?: Prisma.KeyDateUncheckedCreateNestedManyWithoutExamSeriesInput
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesCreateOrConnectWithoutRegistrationWindowsInput = {
@@ -724,6 +747,7 @@ export type ExamSeriesUpdateWithoutRegistrationWindowsInput = {
   keyDates?: Prisma.KeyDateUpdateManyWithoutExamSeriesNestedInput
   resources?: Prisma.ResourceUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesUncheckedUpdateWithoutRegistrationWindowsInput = {
@@ -740,6 +764,7 @@ export type ExamSeriesUncheckedUpdateWithoutRegistrationWindowsInput = {
   keyDates?: Prisma.KeyDateUncheckedUpdateManyWithoutExamSeriesNestedInput
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesCreateWithoutStudentExamRegistrationsInput = {
@@ -756,6 +781,7 @@ export type ExamSeriesCreateWithoutStudentExamRegistrationsInput = {
   keyDates?: Prisma.KeyDateCreateNestedManyWithoutExamSeriesInput
   resources?: Prisma.ResourceCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesUncheckedCreateWithoutStudentExamRegistrationsInput = {
@@ -772,6 +798,7 @@ export type ExamSeriesUncheckedCreateWithoutStudentExamRegistrationsInput = {
   keyDates?: Prisma.KeyDateUncheckedCreateNestedManyWithoutExamSeriesInput
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesCreateOrConnectWithoutStudentExamRegistrationsInput = {
@@ -804,6 +831,7 @@ export type ExamSeriesUpdateWithoutStudentExamRegistrationsInput = {
   keyDates?: Prisma.KeyDateUpdateManyWithoutExamSeriesNestedInput
   resources?: Prisma.ResourceUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesUncheckedUpdateWithoutStudentExamRegistrationsInput = {
@@ -820,6 +848,7 @@ export type ExamSeriesUncheckedUpdateWithoutStudentExamRegistrationsInput = {
   keyDates?: Prisma.KeyDateUncheckedUpdateManyWithoutExamSeriesNestedInput
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesCreateWithoutExamBoardInput = {
@@ -836,6 +865,7 @@ export type ExamSeriesCreateWithoutExamBoardInput = {
   resources?: Prisma.ResourceCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesUncheckedCreateWithoutExamBoardInput = {
@@ -852,6 +882,7 @@ export type ExamSeriesUncheckedCreateWithoutExamBoardInput = {
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesCreateOrConnectWithoutExamBoardInput = {
@@ -909,6 +940,7 @@ export type ExamSeriesCreateWithoutExamSessionsInput = {
   resources?: Prisma.ResourceCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesUncheckedCreateWithoutExamSessionsInput = {
@@ -925,6 +957,7 @@ export type ExamSeriesUncheckedCreateWithoutExamSessionsInput = {
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesCreateOrConnectWithoutExamSessionsInput = {
@@ -957,6 +990,7 @@ export type ExamSeriesUpdateWithoutExamSessionsInput = {
   resources?: Prisma.ResourceUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesUncheckedUpdateWithoutExamSessionsInput = {
@@ -973,6 +1007,7 @@ export type ExamSeriesUncheckedUpdateWithoutExamSessionsInput = {
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesCreateWithoutKeyDatesInput = {
@@ -989,6 +1024,7 @@ export type ExamSeriesCreateWithoutKeyDatesInput = {
   resources?: Prisma.ResourceCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesUncheckedCreateWithoutKeyDatesInput = {
@@ -1005,6 +1041,7 @@ export type ExamSeriesUncheckedCreateWithoutKeyDatesInput = {
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesCreateOrConnectWithoutKeyDatesInput = {
@@ -1037,6 +1074,7 @@ export type ExamSeriesUpdateWithoutKeyDatesInput = {
   resources?: Prisma.ResourceUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesUncheckedUpdateWithoutKeyDatesInput = {
@@ -1053,6 +1091,7 @@ export type ExamSeriesUncheckedUpdateWithoutKeyDatesInput = {
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesCreateWithoutResourcesInput = {
@@ -1069,6 +1108,7 @@ export type ExamSeriesCreateWithoutResourcesInput = {
   keyDates?: Prisma.KeyDateCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesUncheckedCreateWithoutResourcesInput = {
@@ -1085,6 +1125,7 @@ export type ExamSeriesUncheckedCreateWithoutResourcesInput = {
   keyDates?: Prisma.KeyDateUncheckedCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesCreateOrConnectWithoutResourcesInput = {
@@ -1117,6 +1158,7 @@ export type ExamSeriesUpdateWithoutResourcesInput = {
   keyDates?: Prisma.KeyDateUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesUncheckedUpdateWithoutResourcesInput = {
@@ -1133,6 +1175,7 @@ export type ExamSeriesUncheckedUpdateWithoutResourcesInput = {
   keyDates?: Prisma.KeyDateUncheckedUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesCreateWithoutSourceDocumentInput = {
@@ -1149,6 +1192,7 @@ export type ExamSeriesCreateWithoutSourceDocumentInput = {
   resources?: Prisma.ResourceCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesUncheckedCreateWithoutSourceDocumentInput = {
@@ -1165,6 +1209,7 @@ export type ExamSeriesUncheckedCreateWithoutSourceDocumentInput = {
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutExamSeriesInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutExamSeriesInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSeriesInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutExamSeriesInput
 }
 
 export type ExamSeriesCreateOrConnectWithoutSourceDocumentInput = {
@@ -1193,6 +1238,90 @@ export type ExamSeriesUpdateManyWithWhereWithoutSourceDocumentInput = {
   data: Prisma.XOR<Prisma.ExamSeriesUpdateManyMutationInput, Prisma.ExamSeriesUncheckedUpdateManyWithoutSourceDocumentInput>
 }
 
+export type ExamSeriesCreateWithoutFeeRulesInput = {
+  id?: string
+  name: string
+  year: number
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  examBoard: Prisma.ExamBoardCreateNestedOneWithoutExamSeriesInput
+  sourceDocument?: Prisma.SourceDocumentCreateNestedOneWithoutExamSeriesInput
+  examSessions?: Prisma.ExamSessionCreateNestedManyWithoutExamSeriesInput
+  keyDates?: Prisma.KeyDateCreateNestedManyWithoutExamSeriesInput
+  resources?: Prisma.ResourceCreateNestedManyWithoutExamSeriesInput
+  registrationWindows?: Prisma.RegistrationWindowCreateNestedManyWithoutExamSeriesInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutExamSeriesInput
+}
+
+export type ExamSeriesUncheckedCreateWithoutFeeRulesInput = {
+  id?: string
+  name: string
+  year: number
+  examBoardId: string
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  sourceDocumentId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  examSessions?: Prisma.ExamSessionUncheckedCreateNestedManyWithoutExamSeriesInput
+  keyDates?: Prisma.KeyDateUncheckedCreateNestedManyWithoutExamSeriesInput
+  resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutExamSeriesInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedCreateNestedManyWithoutExamSeriesInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSeriesInput
+}
+
+export type ExamSeriesCreateOrConnectWithoutFeeRulesInput = {
+  where: Prisma.ExamSeriesWhereUniqueInput
+  create: Prisma.XOR<Prisma.ExamSeriesCreateWithoutFeeRulesInput, Prisma.ExamSeriesUncheckedCreateWithoutFeeRulesInput>
+}
+
+export type ExamSeriesUpsertWithoutFeeRulesInput = {
+  update: Prisma.XOR<Prisma.ExamSeriesUpdateWithoutFeeRulesInput, Prisma.ExamSeriesUncheckedUpdateWithoutFeeRulesInput>
+  create: Prisma.XOR<Prisma.ExamSeriesCreateWithoutFeeRulesInput, Prisma.ExamSeriesUncheckedCreateWithoutFeeRulesInput>
+  where?: Prisma.ExamSeriesWhereInput
+}
+
+export type ExamSeriesUpdateToOneWithWhereWithoutFeeRulesInput = {
+  where?: Prisma.ExamSeriesWhereInput
+  data: Prisma.XOR<Prisma.ExamSeriesUpdateWithoutFeeRulesInput, Prisma.ExamSeriesUncheckedUpdateWithoutFeeRulesInput>
+}
+
+export type ExamSeriesUpdateWithoutFeeRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutExamSeriesNestedInput
+  sourceDocument?: Prisma.SourceDocumentUpdateOneWithoutExamSeriesNestedInput
+  examSessions?: Prisma.ExamSessionUpdateManyWithoutExamSeriesNestedInput
+  keyDates?: Prisma.KeyDateUpdateManyWithoutExamSeriesNestedInput
+  resources?: Prisma.ResourceUpdateManyWithoutExamSeriesNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutExamSeriesNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSeriesNestedInput
+}
+
+export type ExamSeriesUncheckedUpdateWithoutFeeRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sourceDocumentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  examSessions?: Prisma.ExamSessionUncheckedUpdateManyWithoutExamSeriesNestedInput
+  keyDates?: Prisma.KeyDateUncheckedUpdateManyWithoutExamSeriesNestedInput
+  resources?: Prisma.ResourceUncheckedUpdateManyWithoutExamSeriesNestedInput
+  registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutExamSeriesNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesNestedInput
+}
+
 export type ExamSeriesCreateManyExamBoardInput = {
   id?: string
   name: string
@@ -1218,6 +1347,7 @@ export type ExamSeriesUpdateWithoutExamBoardInput = {
   resources?: Prisma.ResourceUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesUncheckedUpdateWithoutExamBoardInput = {
@@ -1234,6 +1364,7 @@ export type ExamSeriesUncheckedUpdateWithoutExamBoardInput = {
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesUncheckedUpdateManyWithoutExamBoardInput = {
@@ -1272,6 +1403,7 @@ export type ExamSeriesUpdateWithoutSourceDocumentInput = {
   resources?: Prisma.ResourceUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesUncheckedUpdateWithoutSourceDocumentInput = {
@@ -1288,6 +1420,7 @@ export type ExamSeriesUncheckedUpdateWithoutSourceDocumentInput = {
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutExamSeriesNestedInput
   registrationWindows?: Prisma.RegistrationWindowUncheckedUpdateManyWithoutExamSeriesNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutExamSeriesNestedInput
 }
 
 export type ExamSeriesUncheckedUpdateManyWithoutSourceDocumentInput = {
@@ -1312,6 +1445,7 @@ export type ExamSeriesCountOutputType = {
   resources: number
   registrationWindows: number
   studentExamRegistrations: number
+  feeRules: number
 }
 
 export type ExamSeriesCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1320,6 +1454,7 @@ export type ExamSeriesCountOutputTypeSelect<ExtArgs extends runtime.Types.Extens
   resources?: boolean | ExamSeriesCountOutputTypeCountResourcesArgs
   registrationWindows?: boolean | ExamSeriesCountOutputTypeCountRegistrationWindowsArgs
   studentExamRegistrations?: boolean | ExamSeriesCountOutputTypeCountStudentExamRegistrationsArgs
+  feeRules?: boolean | ExamSeriesCountOutputTypeCountFeeRulesArgs
 }
 
 /**
@@ -1367,6 +1502,13 @@ export type ExamSeriesCountOutputTypeCountStudentExamRegistrationsArgs<ExtArgs e
   where?: Prisma.StudentExamRegistrationWhereInput
 }
 
+/**
+ * ExamSeriesCountOutputType without action
+ */
+export type ExamSeriesCountOutputTypeCountFeeRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeRuleWhereInput
+}
+
 
 export type ExamSeriesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1385,6 +1527,7 @@ export type ExamSeriesSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   resources?: boolean | Prisma.ExamSeries$resourcesArgs<ExtArgs>
   registrationWindows?: boolean | Prisma.ExamSeries$registrationWindowsArgs<ExtArgs>
   studentExamRegistrations?: boolean | Prisma.ExamSeries$studentExamRegistrationsArgs<ExtArgs>
+  feeRules?: boolean | Prisma.ExamSeries$feeRulesArgs<ExtArgs>
   _count?: boolean | Prisma.ExamSeriesCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["examSeries"]>
 
@@ -1437,6 +1580,7 @@ export type ExamSeriesInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   resources?: boolean | Prisma.ExamSeries$resourcesArgs<ExtArgs>
   registrationWindows?: boolean | Prisma.ExamSeries$registrationWindowsArgs<ExtArgs>
   studentExamRegistrations?: boolean | Prisma.ExamSeries$studentExamRegistrationsArgs<ExtArgs>
+  feeRules?: boolean | Prisma.ExamSeries$feeRulesArgs<ExtArgs>
   _count?: boolean | Prisma.ExamSeriesCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ExamSeriesIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1458,6 +1602,7 @@ export type $ExamSeriesPayload<ExtArgs extends runtime.Types.Extensions.Internal
     resources: Prisma.$ResourcePayload<ExtArgs>[]
     registrationWindows: Prisma.$RegistrationWindowPayload<ExtArgs>[]
     studentExamRegistrations: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
+    feeRules: Prisma.$FeeRulePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1870,6 +2015,7 @@ export interface Prisma__ExamSeriesClient<T, Null = never, ExtArgs extends runti
   resources<T extends Prisma.ExamSeries$resourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSeries$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   registrationWindows<T extends Prisma.ExamSeries$registrationWindowsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSeries$registrationWindowsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   studentExamRegistrations<T extends Prisma.ExamSeries$studentExamRegistrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSeries$studentExamRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feeRules<T extends Prisma.ExamSeries$feeRulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSeries$feeRulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2445,6 +2591,30 @@ export type ExamSeries$studentExamRegistrationsArgs<ExtArgs extends runtime.Type
   take?: number
   skip?: number
   distinct?: Prisma.StudentExamRegistrationScalarFieldEnum | Prisma.StudentExamRegistrationScalarFieldEnum[]
+}
+
+/**
+ * ExamSeries.feeRules
+ */
+export type ExamSeries$feeRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeeRule
+   */
+  select?: Prisma.FeeRuleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeeRule
+   */
+  omit?: Prisma.FeeRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeRuleInclude<ExtArgs> | null
+  where?: Prisma.FeeRuleWhereInput
+  orderBy?: Prisma.FeeRuleOrderByWithRelationInput | Prisma.FeeRuleOrderByWithRelationInput[]
+  cursor?: Prisma.FeeRuleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeRuleScalarFieldEnum | Prisma.FeeRuleScalarFieldEnum[]
 }
 
 /**

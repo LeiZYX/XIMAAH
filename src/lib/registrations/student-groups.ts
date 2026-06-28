@@ -11,6 +11,9 @@ export interface StudentRegistrationRow {
   gradeSnapshot?: string;
   classNameSnapshot?: string;
   emailSnapshot?: string | null;
+  assessmentHubCandidateNumberSnapshot?: string | null;
+  candidateTypeSnapshot?: string | null;
+  registrationSource?: string;
   examBoard: { name: string; code: string };
   examSeries: { name: string; year: number };
   subject: { name: string; code: string };
@@ -32,6 +35,7 @@ export interface StudentRegistrationRow {
     id: string;
     hasPostLockAdjustment: boolean;
     isLateRegistration?: boolean;
+    registrationSource?: string;
     lastAdjustedAt: string | null;
     lastAdjustmentReason: string | null;
     lastAdjustmentSummary: string | null;
@@ -124,6 +128,7 @@ export interface RegistrationWindowGroup {
   boardSummary: string;
   hasPostLockAdjustment?: boolean;
   isLateRegistration?: boolean;
+  registrationSource?: string;
   lastAdjustedAt?: string | null;
   lastAdjustedByName?: string | null;
   lastAdjustedByRole?: string | null;
@@ -150,6 +155,7 @@ export function groupRegistrationsByWindow(
         lastAdjustmentSummary: string | null;
         lastAdjustedByRole: string | null;
         lastAdjustedByUser: { name: string } | null;
+        registrationSource?: string;
         postLockAdjustments?: AdjustmentHistoryBatch[];
       } | null;
     }).registrationWorkspace;
@@ -171,6 +177,7 @@ export function groupRegistrationsByWindow(
         boardSummary: "",
         hasPostLockAdjustment: workspace?.hasPostLockAdjustment ?? false,
         isLateRegistration: workspace?.isLateRegistration ?? false,
+        registrationSource: workspace?.registrationSource ?? row.registrationSource,
         lastAdjustedAt: workspace?.lastAdjustedAt ?? null,
         lastAdjustedByName: workspace?.lastAdjustedByUser?.name ?? null,
         lastAdjustedByRole: workspace?.lastAdjustedByRole ?? null,
@@ -232,6 +239,8 @@ export function getStudentSnapshotFromRegistrations(registrations: StudentRegist
       className: "—",
       studentNo: "—",
       email: "—",
+      assessmentHubCandidateNumber: "—",
+      candidateType: "—",
     };
   }
 
@@ -241,6 +250,8 @@ export function getStudentSnapshotFromRegistrations(registrations: StudentRegist
     className: row.classNameSnapshot ?? "—",
     studentNo: row.studentNoSnapshot ?? "—",
     email: row.emailSnapshot ?? "—",
+    assessmentHubCandidateNumber: row.assessmentHubCandidateNumberSnapshot ?? "—",
+    candidateType: row.candidateTypeSnapshot ?? "—",
   };
 }
 

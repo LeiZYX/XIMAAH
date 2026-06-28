@@ -54,6 +54,8 @@ export const ModelName = {
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
   StudentProfile: 'StudentProfile',
+  Candidate: 'Candidate',
+  CandidateExamIdentity: 'CandidateExamIdentity',
   TeacherAssignment: 'TeacherAssignment',
   RegistrationWindow: 'RegistrationWindow',
   RegistrationWorkspace: 'RegistrationWorkspace',
@@ -70,7 +72,12 @@ export const ModelName = {
   ExamSession: 'ExamSession',
   KeyDate: 'KeyDate',
   Resource: 'Resource',
-  SourceDocument: 'SourceDocument'
+  SourceDocument: 'SourceDocument',
+  FeeRule: 'FeeRule',
+  ExchangeRate: 'ExchangeRate',
+  FeeStatement: 'FeeStatement',
+  FeeStatementItem: 'FeeStatementItem',
+  FeeAuditLog: 'FeeAuditLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -98,6 +105,7 @@ export const UserScalarFieldEnum = {
   studentNo: 'studentNo',
   passwordHash: 'passwordHash',
   role: 'role',
+  isActive: 'isActive',
   mustChangePassword: 'mustChangePassword',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -126,11 +134,60 @@ export const StudentProfileScalarFieldEnum = {
   currentClassName: 'currentClassName',
   email: 'email',
   phone: 'phone',
+  status: 'status',
+  entryYear: 'entryYear',
+  graduationYear: 'graduationYear',
+  graduatedAt: 'graduatedAt',
+  leftAt: 'leftAt',
+  archivedAt: 'archivedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type StudentProfileScalarFieldEnum = (typeof StudentProfileScalarFieldEnum)[keyof typeof StudentProfileScalarFieldEnum]
+
+
+export const CandidateScalarFieldEnum = {
+  id: 'id',
+  assessmentHubCandidateNumber: 'assessmentHubCandidateNumber',
+  candidateType: 'candidateType',
+  userId: 'userId',
+  studentNumber: 'studentNumber',
+  englishName: 'englishName',
+  chineseName: 'chineseName',
+  email: 'email',
+  phone: 'phone',
+  dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
+  idNumber: 'idNumber',
+  passportNumber: 'passportNumber',
+  schoolName: 'schoolName',
+  grade: 'grade',
+  className: 'className',
+  status: 'status',
+  loginEnabled: 'loginEnabled',
+  sourceSystem: 'sourceSystem',
+  externalId: 'externalId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CandidateScalarFieldEnum = (typeof CandidateScalarFieldEnum)[keyof typeof CandidateScalarFieldEnum]
+
+
+export const CandidateExamIdentityScalarFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  centreNumber: 'centreNumber',
+  boardCandidateNumber: 'boardCandidateNumber',
+  uci: 'uci',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CandidateExamIdentityScalarFieldEnum = (typeof CandidateExamIdentityScalarFieldEnum)[keyof typeof CandidateExamIdentityScalarFieldEnum]
 
 
 export const TeacherAssignmentScalarFieldEnum = {
@@ -162,6 +219,7 @@ export type RegistrationWindowScalarFieldEnum = (typeof RegistrationWindowScalar
 
 export const RegistrationWorkspaceScalarFieldEnum = {
   id: 'id',
+  candidateId: 'candidateId',
   studentId: 'studentId',
   registrationWindowId: 'registrationWindowId',
   lockedAt: 'lockedAt',
@@ -172,6 +230,9 @@ export const RegistrationWorkspaceScalarFieldEnum = {
   lastAdjustmentSummary: 'lastAdjustmentSummary',
   hasPostLockAdjustment: 'hasPostLockAdjustment',
   isLateRegistration: 'isLateRegistration',
+  registrationSource: 'registrationSource',
+  visibility: 'visibility',
+  billingScope: 'billingScope',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -181,6 +242,7 @@ export type RegistrationWorkspaceScalarFieldEnum = (typeof RegistrationWorkspace
 
 export const StudentExamRegistrationScalarFieldEnum = {
   id: 'id',
+  candidateId: 'candidateId',
   studentId: 'studentId',
   registrationWorkspaceId: 'registrationWorkspaceId',
   examSessionId: 'examSessionId',
@@ -195,9 +257,18 @@ export const StudentExamRegistrationScalarFieldEnum = {
   classNameSnapshot: 'classNameSnapshot',
   emailSnapshot: 'emailSnapshot',
   phoneSnapshot: 'phoneSnapshot',
+  assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
+  candidateTypeSnapshot: 'candidateTypeSnapshot',
   status: 'status',
   lockedAt: 'lockedAt',
   cancelledAt: 'cancelledAt',
+  registrationSource: 'registrationSource',
+  visibility: 'visibility',
+  billingScope: 'billingScope',
+  addedByUserId: 'addedByUserId',
+  addedByRole: 'addedByRole',
+  addedAt: 'addedAt',
+  reason: 'reason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -208,6 +279,7 @@ export type StudentExamRegistrationScalarFieldEnum = (typeof StudentExamRegistra
 export const RegistrationAuditLogScalarFieldEnum = {
   id: 'id',
   registrationWorkspaceId: 'registrationWorkspaceId',
+  candidateId: 'candidateId',
   studentId: 'studentId',
   registrationId: 'registrationId',
   examSessionId: 'examSessionId',
@@ -218,6 +290,11 @@ export const RegistrationAuditLogScalarFieldEnum = {
   beforeValue: 'beforeValue',
   afterValue: 'afterValue',
   reason: 'reason',
+  registrationSource: 'registrationSource',
+  visibility: 'visibility',
+  billingScope: 'billingScope',
+  assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
+  candidateTypeSnapshot: 'candidateTypeSnapshot',
   note: 'note',
   createdAt: 'createdAt'
 } as const
@@ -230,6 +307,7 @@ export const RegistrationChangeRequestScalarFieldEnum = {
   registrationWorkspaceId: 'registrationWorkspaceId',
   registrationWindowId: 'registrationWindowId',
   studentId: 'studentId',
+  candidateId: 'candidateId',
   requestedByUserId: 'requestedByUserId',
   requestedByRole: 'requestedByRole',
   requestType: 'requestType',
@@ -413,6 +491,117 @@ export const SourceDocumentScalarFieldEnum = {
 } as const
 
 export type SourceDocumentScalarFieldEnum = (typeof SourceDocumentScalarFieldEnum)[keyof typeof SourceDocumentScalarFieldEnum]
+
+
+export const FeeRuleScalarFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  qualificationId: 'qualificationId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  examSessionId: 'examSessionId',
+  entryType: 'entryType',
+  costCurrency: 'costCurrency',
+  costAmount: 'costAmount',
+  exchangeRateToCny: 'exchangeRateToCny',
+  markupType: 'markupType',
+  markupValue: 'markupValue',
+  salesCurrency: 'salesCurrency',
+  salesAmount: 'salesAmount',
+  isActive: 'isActive',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeeRuleScalarFieldEnum = (typeof FeeRuleScalarFieldEnum)[keyof typeof FeeRuleScalarFieldEnum]
+
+
+export const ExchangeRateScalarFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  baseCurrency: 'baseCurrency',
+  targetCurrency: 'targetCurrency',
+  rate: 'rate',
+  effectiveDate: 'effectiveDate',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExchangeRateScalarFieldEnum = (typeof ExchangeRateScalarFieldEnum)[keyof typeof ExchangeRateScalarFieldEnum]
+
+
+export const FeeStatementScalarFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  studentId: 'studentId',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
+  statementNo: 'statementNo',
+  displayCurrency: 'displayCurrency',
+  exchangeRateSnapshot: 'exchangeRateSnapshot',
+  studentNameSnapshot: 'studentNameSnapshot',
+  studentNoSnapshot: 'studentNoSnapshot',
+  gradeSnapshot: 'gradeSnapshot',
+  classNameSnapshot: 'classNameSnapshot',
+  emailSnapshot: 'emailSnapshot',
+  assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
+  candidateTypeSnapshot: 'candidateTypeSnapshot',
+  status: 'status',
+  totalGbpAmount: 'totalGbpAmount',
+  totalCnyAmount: 'totalCnyAmount',
+  paymentNotes: 'paymentNotes',
+  generatedByUserId: 'generatedByUserId',
+  generatedAt: 'generatedAt',
+  issuedAt: 'issuedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeeStatementScalarFieldEnum = (typeof FeeStatementScalarFieldEnum)[keyof typeof FeeStatementScalarFieldEnum]
+
+
+export const FeeStatementItemScalarFieldEnum = {
+  id: 'id',
+  feeStatementId: 'feeStatementId',
+  examSessionId: 'examSessionId',
+  examBoardSnapshot: 'examBoardSnapshot',
+  qualificationSnapshot: 'qualificationSnapshot',
+  subjectSnapshot: 'subjectSnapshot',
+  paperCodeSnapshot: 'paperCodeSnapshot',
+  paperTitleSnapshot: 'paperTitleSnapshot',
+  entryTypeSnapshot: 'entryTypeSnapshot',
+  costCurrencySnapshot: 'costCurrencySnapshot',
+  costAmountSnapshot: 'costAmountSnapshot',
+  exchangeRateSnapshot: 'exchangeRateSnapshot',
+  markupTypeSnapshot: 'markupTypeSnapshot',
+  markupValueSnapshot: 'markupValueSnapshot',
+  salesGbpAmountSnapshot: 'salesGbpAmountSnapshot',
+  salesCnyAmountSnapshot: 'salesCnyAmountSnapshot',
+  displayCurrencySnapshot: 'displayCurrencySnapshot',
+  lineTotalGbp: 'lineTotalGbp',
+  lineTotalCny: 'lineTotalCny',
+  quantity: 'quantity',
+  createdAt: 'createdAt'
+} as const
+
+export type FeeStatementItemScalarFieldEnum = (typeof FeeStatementItemScalarFieldEnum)[keyof typeof FeeStatementItemScalarFieldEnum]
+
+
+export const FeeAuditLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  registrationWindowId: 'registrationWindowId',
+  performedByUserId: 'performedByUserId',
+  performedAt: 'performedAt',
+  metadata: 'metadata',
+  note: 'note'
+} as const
+
+export type FeeAuditLogScalarFieldEnum = (typeof FeeAuditLogScalarFieldEnum)[keyof typeof FeeAuditLogScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -14,6 +14,7 @@ import {
   assertLateRegistrationAllowed,
   assertNoDuplicateStudentExamSessions,
 } from "@/lib/registrations/late-registration";
+import { assertStudentCanRegister } from "@/lib/students/archive";
 
 export const changeRequestInclude = {
   requestedBy: { select: { id: true, name: true, role: true } },
@@ -230,6 +231,7 @@ export async function submitTeacherLateRegistrationRequest(
   await assertLateRegistrationAllowed(input.registrationWindowId, uniqueSessionIds);
   await assertTeacherAssignedToExamSessions(teacher.id, uniqueSessionIds);
   await assertNoDuplicateStudentExamSessions(input.studentId, uniqueSessionIds);
+  await assertStudentCanRegister(input.studentId);
   await assertNoDuplicatePendingLateRequest({
     studentId: input.studentId,
     registrationWindowId: input.registrationWindowId,
@@ -286,6 +288,14 @@ export async function submitTeacherChangeRequest(
   }
 
   const workspace = await assertTeacherCanRequestChange(teacher.id, input.registrationWorkspaceId);
+
+  if (
+    (input.requestType === RegistrationChangeRequestType.ADD_EXAM ||
+      input.requestType === RegistrationChangeRequestType.REPLACE_EXAM) &&
+    workspace.studentId
+  ) {
+    await assertStudentCanRegister(workspace.studentId);
+  }
 
   if (input.requestType === RegistrationChangeRequestType.ADD_EXAM && !input.targetExamSessionId) {
     throw new RegistrationError("targetExamSessionId is required for ADD_EXAM", 400);
@@ -403,7 +413,8 @@ export async function reviewChangeRequest(
       const workspace = await applyLateRegistration(
         { id: reviewer.id, role: reviewer.role },
         {
-          studentId: requestRow.studentId,
+          studentId: requestRow.studentId ?? undefined,
+          candidateId: requestRow.candidateId ?? undefined,
           registrationWindowId: requestRow.registrationWindowId,
           examSessionIds,
           reason: requestRow.reason,

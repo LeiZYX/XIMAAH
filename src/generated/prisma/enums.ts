@@ -72,6 +72,40 @@ export const RegistrationStatus = {
 export type RegistrationStatus = (typeof RegistrationStatus)[keyof typeof RegistrationStatus]
 
 
+export const RegistrationSource = {
+  STUDENT_SUBMITTED: 'STUDENT_SUBMITTED',
+  TEACHER_REQUEST_APPROVED: 'TEACHER_REQUEST_APPROVED',
+  EO_ASSISTED: 'EO_ASSISTED',
+  ADMIN_ASSISTED: 'ADMIN_ASSISTED',
+  EO_FORCED_INTERNAL: 'EO_FORCED_INTERNAL',
+  ADMIN_FORCED_INTERNAL: 'ADMIN_FORCED_INTERNAL',
+  EO_POST_LOCK_ADJUSTMENT: 'EO_POST_LOCK_ADJUSTMENT',
+  ADMIN_POST_LOCK_ADJUSTMENT: 'ADMIN_POST_LOCK_ADJUSTMENT',
+  EXTERNAL_CANDIDATE: 'EXTERNAL_CANDIDATE'
+} as const
+
+export type RegistrationSource = (typeof RegistrationSource)[keyof typeof RegistrationSource]
+
+
+export const RegistrationVisibility = {
+  STUDENT_AND_TEACHER: 'STUDENT_AND_TEACHER',
+  STUDENT_ONLY: 'STUDENT_ONLY',
+  EXAM_OFFICE_ONLY: 'EXAM_OFFICE_ONLY'
+} as const
+
+export type RegistrationVisibility = (typeof RegistrationVisibility)[keyof typeof RegistrationVisibility]
+
+
+export const BillingScope = {
+  NORMAL_BILLING: 'NORMAL_BILLING',
+  OFFICE_ONLY_BILLING: 'OFFICE_ONLY_BILLING',
+  NO_BILLING: 'NO_BILLING',
+  MANUAL_REVIEW: 'MANUAL_REVIEW'
+} as const
+
+export type BillingScope = (typeof BillingScope)[keyof typeof BillingScope]
+
+
 export const RegistrationAuditAction = {
   ADD: 'ADD',
   REMOVE: 'REMOVE',
@@ -97,7 +131,15 @@ export const RegistrationAuditAction = {
   TEACHER_LATE_REGISTRATION_APPROVED: 'TEACHER_LATE_REGISTRATION_APPROVED',
   TEACHER_LATE_REGISTRATION_REJECTED: 'TEACHER_LATE_REGISTRATION_REJECTED',
   EO_LATE_REGISTRATION_CREATED: 'EO_LATE_REGISTRATION_CREATED',
-  ADMIN_LATE_REGISTRATION_CREATED: 'ADMIN_LATE_REGISTRATION_CREATED'
+  ADMIN_LATE_REGISTRATION_CREATED: 'ADMIN_LATE_REGISTRATION_CREATED',
+  EO_ASSISTED_REGISTRATION_CREATED: 'EO_ASSISTED_REGISTRATION_CREATED',
+  ADMIN_ASSISTED_REGISTRATION_CREATED: 'ADMIN_ASSISTED_REGISTRATION_CREATED',
+  EO_OFFICE_ONLY_REGISTRATION_CREATED: 'EO_OFFICE_ONLY_REGISTRATION_CREATED',
+  ADMIN_OFFICE_ONLY_REGISTRATION_CREATED: 'ADMIN_OFFICE_ONLY_REGISTRATION_CREATED',
+  EO_POST_LOCK_ADJUSTMENT: 'EO_POST_LOCK_ADJUSTMENT',
+  ADMIN_POST_LOCK_ADJUSTMENT: 'ADMIN_POST_LOCK_ADJUSTMENT',
+  STUDENT_REGISTRATION_SUBMITTED: 'STUDENT_REGISTRATION_SUBMITTED',
+  EXTERNAL_CANDIDATE_REGISTRATION_CREATED: 'EXTERNAL_CANDIDATE_REGISTRATION_CREATED'
 } as const
 
 export type RegistrationAuditAction = (typeof RegistrationAuditAction)[keyof typeof RegistrationAuditAction]
@@ -120,3 +162,92 @@ export const RegistrationChangeRequestStatus = {
 } as const
 
 export type RegistrationChangeRequestStatus = (typeof RegistrationChangeRequestStatus)[keyof typeof RegistrationChangeRequestStatus]
+
+
+export const FeeEntryType = {
+  NORMAL: 'NORMAL',
+  LATE: 'LATE',
+  HIGH_LATE: 'HIGH_LATE'
+} as const
+
+export type FeeEntryType = (typeof FeeEntryType)[keyof typeof FeeEntryType]
+
+
+export const FeeCurrency = {
+  GBP: 'GBP',
+  CNY: 'CNY'
+} as const
+
+export type FeeCurrency = (typeof FeeCurrency)[keyof typeof FeeCurrency]
+
+
+export const FeeMarkupType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED_AMOUNT: 'FIXED_AMOUNT',
+  MANUAL: 'MANUAL'
+} as const
+
+export type FeeMarkupType = (typeof FeeMarkupType)[keyof typeof FeeMarkupType]
+
+
+export const FeeStatementDisplayCurrency = {
+  GBP: 'GBP',
+  CNY: 'CNY',
+  BOTH: 'BOTH'
+} as const
+
+export type FeeStatementDisplayCurrency = (typeof FeeStatementDisplayCurrency)[keyof typeof FeeStatementDisplayCurrency]
+
+
+export const FeeStatementStatus = {
+  DRAFT: 'DRAFT',
+  ISSUED: 'ISSUED',
+  PAID: 'PAID',
+  CANCELLED: 'CANCELLED',
+  REVISED: 'REVISED',
+  NEEDS_REVIEW: 'NEEDS_REVIEW'
+} as const
+
+export type FeeStatementStatus = (typeof FeeStatementStatus)[keyof typeof FeeStatementStatus]
+
+
+export const FeeAuditAction = {
+  FEE_RULE_CREATED: 'FEE_RULE_CREATED',
+  FEE_RULE_UPDATED: 'FEE_RULE_UPDATED',
+  EXCHANGE_RATE_UPDATED: 'EXCHANGE_RATE_UPDATED',
+  FEE_STATEMENT_GENERATED: 'FEE_STATEMENT_GENERATED',
+  FEE_STATEMENT_BATCH_GENERATED: 'FEE_STATEMENT_BATCH_GENERATED',
+  FEE_STATEMENT_PRINTED: 'FEE_STATEMENT_PRINTED',
+  FEE_SUMMARY_EXPORTED: 'FEE_SUMMARY_EXPORTED',
+  FEE_DETAILS_EXPORTED: 'FEE_DETAILS_EXPORTED'
+} as const
+
+export type FeeAuditAction = (typeof FeeAuditAction)[keyof typeof FeeAuditAction]
+
+
+export const StudentProfileStatus = {
+  ACTIVE: 'ACTIVE',
+  GRADUATED: 'GRADUATED',
+  LEFT: 'LEFT',
+  INACTIVE: 'INACTIVE'
+} as const
+
+export type StudentProfileStatus = (typeof StudentProfileStatus)[keyof typeof StudentProfileStatus]
+
+
+export const CandidateType = {
+  INTERNAL: 'INTERNAL',
+  EXTERNAL: 'EXTERNAL'
+} as const
+
+export type CandidateType = (typeof CandidateType)[keyof typeof CandidateType]
+
+
+export const CandidateStatus = {
+  ACTIVE: 'ACTIVE',
+  GRADUATED: 'GRADUATED',
+  LEFT: 'LEFT',
+  INACTIVE: 'INACTIVE'
+} as const
+
+export type CandidateStatus = (typeof CandidateStatus)[keyof typeof CandidateStatus]

@@ -201,6 +201,7 @@ export type QualificationWhereInput = {
   examBoard?: Prisma.XOR<Prisma.ExamBoardScalarRelationFilter, Prisma.ExamBoardWhereInput>
   subjects?: Prisma.SubjectListRelationFilter
   resources?: Prisma.ResourceListRelationFilter
+  feeRules?: Prisma.FeeRuleListRelationFilter
 }
 
 export type QualificationOrderByWithRelationInput = {
@@ -214,6 +215,7 @@ export type QualificationOrderByWithRelationInput = {
   examBoard?: Prisma.ExamBoardOrderByWithRelationInput
   subjects?: Prisma.SubjectOrderByRelationAggregateInput
   resources?: Prisma.ResourceOrderByRelationAggregateInput
+  feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
 }
 
 export type QualificationWhereUniqueInput = Prisma.AtLeast<{
@@ -230,6 +232,7 @@ export type QualificationWhereUniqueInput = Prisma.AtLeast<{
   examBoard?: Prisma.XOR<Prisma.ExamBoardScalarRelationFilter, Prisma.ExamBoardWhereInput>
   subjects?: Prisma.SubjectListRelationFilter
   resources?: Prisma.ResourceListRelationFilter
+  feeRules?: Prisma.FeeRuleListRelationFilter
 }, "id">
 
 export type QualificationOrderByWithAggregationInput = {
@@ -268,6 +271,7 @@ export type QualificationCreateInput = {
   examBoard: Prisma.ExamBoardCreateNestedOneWithoutQualificationsInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutQualificationInput
   resources?: Prisma.ResourceCreateNestedManyWithoutQualificationInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutQualificationInput
 }
 
 export type QualificationUncheckedCreateInput = {
@@ -280,6 +284,7 @@ export type QualificationUncheckedCreateInput = {
   updatedAt?: Date | string
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutQualificationInput
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutQualificationInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
 }
 
 export type QualificationUpdateInput = {
@@ -292,6 +297,7 @@ export type QualificationUpdateInput = {
   examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutQualificationsNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutQualificationNestedInput
   resources?: Prisma.ResourceUpdateManyWithoutQualificationNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutQualificationNestedInput
 }
 
 export type QualificationUncheckedUpdateInput = {
@@ -304,6 +310,7 @@ export type QualificationUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutQualificationNestedInput
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutQualificationNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
 }
 
 export type QualificationCreateManyInput = {
@@ -457,6 +464,20 @@ export type QualificationUpdateOneWithoutResourcesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.QualificationUpdateToOneWithWhereWithoutResourcesInput, Prisma.QualificationUpdateWithoutResourcesInput>, Prisma.QualificationUncheckedUpdateWithoutResourcesInput>
 }
 
+export type QualificationCreateNestedOneWithoutFeeRulesInput = {
+  create?: Prisma.XOR<Prisma.QualificationCreateWithoutFeeRulesInput, Prisma.QualificationUncheckedCreateWithoutFeeRulesInput>
+  connectOrCreate?: Prisma.QualificationCreateOrConnectWithoutFeeRulesInput
+  connect?: Prisma.QualificationWhereUniqueInput
+}
+
+export type QualificationUpdateOneRequiredWithoutFeeRulesNestedInput = {
+  create?: Prisma.XOR<Prisma.QualificationCreateWithoutFeeRulesInput, Prisma.QualificationUncheckedCreateWithoutFeeRulesInput>
+  connectOrCreate?: Prisma.QualificationCreateOrConnectWithoutFeeRulesInput
+  upsert?: Prisma.QualificationUpsertWithoutFeeRulesInput
+  connect?: Prisma.QualificationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.QualificationUpdateToOneWithWhereWithoutFeeRulesInput, Prisma.QualificationUpdateWithoutFeeRulesInput>, Prisma.QualificationUncheckedUpdateWithoutFeeRulesInput>
+}
+
 export type QualificationCreateWithoutExamBoardInput = {
   id?: string
   name: string
@@ -466,6 +487,7 @@ export type QualificationCreateWithoutExamBoardInput = {
   updatedAt?: Date | string
   subjects?: Prisma.SubjectCreateNestedManyWithoutQualificationInput
   resources?: Prisma.ResourceCreateNestedManyWithoutQualificationInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutQualificationInput
 }
 
 export type QualificationUncheckedCreateWithoutExamBoardInput = {
@@ -477,6 +499,7 @@ export type QualificationUncheckedCreateWithoutExamBoardInput = {
   updatedAt?: Date | string
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutQualificationInput
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutQualificationInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
 }
 
 export type QualificationCreateOrConnectWithoutExamBoardInput = {
@@ -527,6 +550,7 @@ export type QualificationCreateWithoutSubjectsInput = {
   updatedAt?: Date | string
   examBoard: Prisma.ExamBoardCreateNestedOneWithoutQualificationsInput
   resources?: Prisma.ResourceCreateNestedManyWithoutQualificationInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutQualificationInput
 }
 
 export type QualificationUncheckedCreateWithoutSubjectsInput = {
@@ -538,6 +562,7 @@ export type QualificationUncheckedCreateWithoutSubjectsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutQualificationInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
 }
 
 export type QualificationCreateOrConnectWithoutSubjectsInput = {
@@ -565,6 +590,7 @@ export type QualificationUpdateWithoutSubjectsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutQualificationsNestedInput
   resources?: Prisma.ResourceUpdateManyWithoutQualificationNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutQualificationNestedInput
 }
 
 export type QualificationUncheckedUpdateWithoutSubjectsInput = {
@@ -576,6 +602,7 @@ export type QualificationUncheckedUpdateWithoutSubjectsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutQualificationNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
 }
 
 export type QualificationCreateWithoutResourcesInput = {
@@ -587,6 +614,7 @@ export type QualificationCreateWithoutResourcesInput = {
   updatedAt?: Date | string
   examBoard: Prisma.ExamBoardCreateNestedOneWithoutQualificationsInput
   subjects?: Prisma.SubjectCreateNestedManyWithoutQualificationInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutQualificationInput
 }
 
 export type QualificationUncheckedCreateWithoutResourcesInput = {
@@ -598,6 +626,7 @@ export type QualificationUncheckedCreateWithoutResourcesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutQualificationInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
 }
 
 export type QualificationCreateOrConnectWithoutResourcesInput = {
@@ -625,6 +654,7 @@ export type QualificationUpdateWithoutResourcesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutQualificationsNestedInput
   subjects?: Prisma.SubjectUpdateManyWithoutQualificationNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutQualificationNestedInput
 }
 
 export type QualificationUncheckedUpdateWithoutResourcesInput = {
@@ -636,6 +666,71 @@ export type QualificationUncheckedUpdateWithoutResourcesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutQualificationNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
+}
+
+export type QualificationCreateWithoutFeeRulesInput = {
+  id?: string
+  name: string
+  level: string
+  code?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  examBoard: Prisma.ExamBoardCreateNestedOneWithoutQualificationsInput
+  subjects?: Prisma.SubjectCreateNestedManyWithoutQualificationInput
+  resources?: Prisma.ResourceCreateNestedManyWithoutQualificationInput
+}
+
+export type QualificationUncheckedCreateWithoutFeeRulesInput = {
+  id?: string
+  name: string
+  level: string
+  code?: string | null
+  examBoardId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  subjects?: Prisma.SubjectUncheckedCreateNestedManyWithoutQualificationInput
+  resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutQualificationInput
+}
+
+export type QualificationCreateOrConnectWithoutFeeRulesInput = {
+  where: Prisma.QualificationWhereUniqueInput
+  create: Prisma.XOR<Prisma.QualificationCreateWithoutFeeRulesInput, Prisma.QualificationUncheckedCreateWithoutFeeRulesInput>
+}
+
+export type QualificationUpsertWithoutFeeRulesInput = {
+  update: Prisma.XOR<Prisma.QualificationUpdateWithoutFeeRulesInput, Prisma.QualificationUncheckedUpdateWithoutFeeRulesInput>
+  create: Prisma.XOR<Prisma.QualificationCreateWithoutFeeRulesInput, Prisma.QualificationUncheckedCreateWithoutFeeRulesInput>
+  where?: Prisma.QualificationWhereInput
+}
+
+export type QualificationUpdateToOneWithWhereWithoutFeeRulesInput = {
+  where?: Prisma.QualificationWhereInput
+  data: Prisma.XOR<Prisma.QualificationUpdateWithoutFeeRulesInput, Prisma.QualificationUncheckedUpdateWithoutFeeRulesInput>
+}
+
+export type QualificationUpdateWithoutFeeRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutQualificationsNestedInput
+  subjects?: Prisma.SubjectUpdateManyWithoutQualificationNestedInput
+  resources?: Prisma.ResourceUpdateManyWithoutQualificationNestedInput
+}
+
+export type QualificationUncheckedUpdateWithoutFeeRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  subjects?: Prisma.SubjectUncheckedUpdateManyWithoutQualificationNestedInput
+  resources?: Prisma.ResourceUncheckedUpdateManyWithoutQualificationNestedInput
 }
 
 export type QualificationCreateManyExamBoardInput = {
@@ -656,6 +751,7 @@ export type QualificationUpdateWithoutExamBoardInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subjects?: Prisma.SubjectUpdateManyWithoutQualificationNestedInput
   resources?: Prisma.ResourceUpdateManyWithoutQualificationNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutQualificationNestedInput
 }
 
 export type QualificationUncheckedUpdateWithoutExamBoardInput = {
@@ -667,6 +763,7 @@ export type QualificationUncheckedUpdateWithoutExamBoardInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subjects?: Prisma.SubjectUncheckedUpdateManyWithoutQualificationNestedInput
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutQualificationNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
 }
 
 export type QualificationUncheckedUpdateManyWithoutExamBoardInput = {
@@ -686,11 +783,13 @@ export type QualificationUncheckedUpdateManyWithoutExamBoardInput = {
 export type QualificationCountOutputType = {
   subjects: number
   resources: number
+  feeRules: number
 }
 
 export type QualificationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   subjects?: boolean | QualificationCountOutputTypeCountSubjectsArgs
   resources?: boolean | QualificationCountOutputTypeCountResourcesArgs
+  feeRules?: boolean | QualificationCountOutputTypeCountFeeRulesArgs
 }
 
 /**
@@ -717,6 +816,13 @@ export type QualificationCountOutputTypeCountResourcesArgs<ExtArgs extends runti
   where?: Prisma.ResourceWhereInput
 }
 
+/**
+ * QualificationCountOutputType without action
+ */
+export type QualificationCountOutputTypeCountFeeRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeRuleWhereInput
+}
+
 
 export type QualificationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -729,6 +835,7 @@ export type QualificationSelect<ExtArgs extends runtime.Types.Extensions.Interna
   examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
   subjects?: boolean | Prisma.Qualification$subjectsArgs<ExtArgs>
   resources?: boolean | Prisma.Qualification$resourcesArgs<ExtArgs>
+  feeRules?: boolean | Prisma.Qualification$feeRulesArgs<ExtArgs>
   _count?: boolean | Prisma.QualificationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["qualification"]>
 
@@ -769,6 +876,7 @@ export type QualificationInclude<ExtArgs extends runtime.Types.Extensions.Intern
   examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
   subjects?: boolean | Prisma.Qualification$subjectsArgs<ExtArgs>
   resources?: boolean | Prisma.Qualification$resourcesArgs<ExtArgs>
+  feeRules?: boolean | Prisma.Qualification$feeRulesArgs<ExtArgs>
   _count?: boolean | Prisma.QualificationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type QualificationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -784,6 +892,7 @@ export type $QualificationPayload<ExtArgs extends runtime.Types.Extensions.Inter
     examBoard: Prisma.$ExamBoardPayload<ExtArgs>
     subjects: Prisma.$SubjectPayload<ExtArgs>[]
     resources: Prisma.$ResourcePayload<ExtArgs>[]
+    feeRules: Prisma.$FeeRulePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1190,6 +1299,7 @@ export interface Prisma__QualificationClient<T, Null = never, ExtArgs extends ru
   examBoard<T extends Prisma.ExamBoardDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamBoardDefaultArgs<ExtArgs>>): Prisma.Prisma__ExamBoardClient<runtime.Types.Result.GetResult<Prisma.$ExamBoardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   subjects<T extends Prisma.Qualification$subjectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Qualification$subjectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   resources<T extends Prisma.Qualification$resourcesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Qualification$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feeRules<T extends Prisma.Qualification$feeRulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Qualification$feeRulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1672,6 +1782,30 @@ export type Qualification$resourcesArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.ResourceScalarFieldEnum | Prisma.ResourceScalarFieldEnum[]
+}
+
+/**
+ * Qualification.feeRules
+ */
+export type Qualification$feeRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeeRule
+   */
+  select?: Prisma.FeeRuleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeeRule
+   */
+  omit?: Prisma.FeeRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeRuleInclude<ExtArgs> | null
+  where?: Prisma.FeeRuleWhereInput
+  orderBy?: Prisma.FeeRuleOrderByWithRelationInput | Prisma.FeeRuleOrderByWithRelationInput[]
+  cursor?: Prisma.FeeRuleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeRuleScalarFieldEnum | Prisma.FeeRuleScalarFieldEnum[]
 }
 
 /**

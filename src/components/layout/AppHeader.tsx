@@ -49,12 +49,20 @@ export function AppHeader() {
             Calendar
           </Link>
           {user?.role === "STUDENT" ? (
-            <Link
-              href="/student/registrations"
-              className="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100"
-            >
-              My Exam Registrations
-            </Link>
+            <>
+              <Link
+                href="/student/registrations"
+                className="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100"
+              >
+                My Exam Registrations
+              </Link>
+              <Link
+                href="/student/fee-statements"
+                className="rounded-md px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100"
+              >
+                Fee Statements
+              </Link>
+            </>
           ) : null}
           {user?.homePath && user.role !== "STUDENT" ? (
             <Link

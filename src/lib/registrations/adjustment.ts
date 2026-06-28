@@ -3,6 +3,10 @@ import {
   RegistrationAuditAction,
   RegistrationStatus,
 } from "@/generated/prisma/enums";
+import {
+  candidateRegistrationSnapshots,
+  resolveCandidateForRegistration,
+} from "@/lib/candidates/service";
 import { prisma } from "@/lib/prisma";
 import {
   createRegistrationAuditLog,
@@ -15,6 +19,12 @@ import {
 } from "@/lib/registrations/workspace";
 import type { AdjustmentSummaryPayload } from "@/lib/registrations/workspace-display";
 import { appendAdjustmentHistoryBatch } from "@/lib/registrations/adjustment-history";
+import { markStatementsNeedReview, markSupersededStatements } from "@/lib/fees/statement";
+import { assertStudentCanRegister } from "@/lib/students/archive";
+import {
+  postLockAuditActionForRole,
+  postLockSourceForRole,
+} from "@/lib/registrations/metadata";
 
 export interface PostLockAdjustmentInput {
   reason: string;
@@ -94,7 +104,17 @@ export async function applyPostLockAdjustment(
     throw new RegistrationError("Adjustments are only allowed for locked registrations", 400);
   }
 
+  const candidate = await resolveCandidateForRegistration({
+    candidateId: workspace.candidateId ?? undefined,
+    studentId: workspace.studentId ?? undefined,
+  });
+  const candidateSnaps = candidateRegistrationSnapshots(candidate);
+
   const addIds = input.addExamSessionIds ?? [];
+  if (addIds.length > 0 && candidate.candidateType === "INTERNAL" && workspace.studentId) {
+    await assertStudentCanRegister(workspace.studentId);
+  }
+
   const removeIds = input.removeRegistrationIds ?? [];
   const replacements = input.replacements ?? [];
 
@@ -104,6 +124,9 @@ export async function applyPostLockAdjustment(
 
   const summary: AdjustmentSummaryPayload = { added: [], removed: [], replaced: [] };
   const now = new Date();
+  const itemSource = postLockSourceForRole(performedBy.role);
+  const inheritVisibility = workspace.visibility ?? "STUDENT_AND_TEACHER";
+  const inheritBilling = workspace.billingScope ?? "NORMAL_BILLING";
 
   await prisma.$transaction(async (tx) => {
     for (const registrationId of removeIds) {
@@ -127,6 +150,7 @@ export async function applyPostLockAdjustment(
       await createRegistrationAuditLog(
         {
           registrationWorkspaceId: workspaceId,
+          candidateId: candidate.id,
           studentId: workspace.studentId,
           registrationId,
           examSessionId: registration.examSessionId,
@@ -134,6 +158,11 @@ export async function applyPostLockAdjustment(
           performedById: performedBy.id,
           performedByRole: performedBy.role,
           reason,
+          registrationSource: itemSource,
+          visibility: inheritVisibility,
+          billingScope: inheritBilling,
+          assessmentHubCandidateNumberSnapshot: candidateSnaps.assessmentHubCandidateNumberSnapshot,
+          candidateTypeSnapshot: candidateSnaps.candidateTypeSnapshot,
           beforeValue: before,
           afterValue: registrationAuditSnapshot(updated),
           note: "Removed after lock",
@@ -173,6 +202,7 @@ export async function applyPostLockAdjustment(
 
       const created = await tx.studentExamRegistration.create({
         data: {
+          candidateId: candidate.id,
           studentId: workspace.studentId,
           registrationWorkspaceId: workspaceId,
           examSessionId: newSession.id,
@@ -181,14 +211,16 @@ export async function applyPostLockAdjustment(
           examSeriesId: newSession.examSeriesId,
           subjectId: newSession.paper.subjectId,
           paperId: newSession.paper.id,
-          studentNameSnapshot: registration.studentNameSnapshot,
-          studentNoSnapshot: registration.studentNoSnapshot,
-          gradeSnapshot: registration.gradeSnapshot,
-          classNameSnapshot: registration.classNameSnapshot,
-          emailSnapshot: registration.emailSnapshot,
-          phoneSnapshot: registration.phoneSnapshot,
+          ...candidateSnaps,
           status: RegistrationStatus.LOCKED,
           lockedAt: registration.lockedAt ?? now,
+          registrationSource: itemSource,
+          visibility: inheritVisibility,
+          billingScope: inheritBilling,
+          addedByUserId: performedBy.id,
+          addedByRole: performedBy.role,
+          addedAt: now,
+          reason,
         },
         include: registrationInclude,
       });
@@ -201,6 +233,7 @@ export async function applyPostLockAdjustment(
       await createRegistrationAuditLog(
         {
           registrationWorkspaceId: workspaceId,
+          candidateId: candidate.id,
           studentId: workspace.studentId,
           registrationId: registration.id,
           examSessionId: registration.examSessionId,
@@ -208,20 +241,17 @@ export async function applyPostLockAdjustment(
           performedById: performedBy.id,
           performedByRole: performedBy.role,
           reason,
+          registrationSource: itemSource,
+          visibility: inheritVisibility,
+          billingScope: inheritBilling,
+          assessmentHubCandidateNumberSnapshot: candidateSnaps.assessmentHubCandidateNumberSnapshot,
+          candidateTypeSnapshot: candidateSnaps.candidateTypeSnapshot,
           beforeValue: before,
           afterValue: registrationAuditSnapshot(created),
           note: `Replaced with ${newSession.paper.code}`,
         },
         tx,
       );
-    }
-
-    const student = await tx.user.findUnique({
-      where: { id: workspace.studentId },
-      include: { studentProfile: true },
-    });
-    if (!student?.studentProfile) {
-      throw new RegistrationError("Student profile required", 400);
     }
 
     for (const examSessionId of addIds) {
@@ -236,12 +266,13 @@ export async function applyPostLockAdjustment(
         throw new RegistrationError(`Exam session ${examSessionId} not found`, 404);
       }
 
-      const existing = await tx.studentExamRegistration.findUnique({
+      const existing = await tx.studentExamRegistration.findFirst({
         where: {
-          studentId_examSessionId: {
-            studentId: workspace.studentId,
-            examSessionId,
-          },
+          examSessionId,
+          OR: [
+            { candidateId: candidate.id },
+            ...(workspace.studentId ? [{ studentId: workspace.studentId }] : []),
+          ],
         },
       });
       if (
@@ -252,32 +283,40 @@ export async function applyPostLockAdjustment(
         throw new RegistrationError(`Student already registered for session ${examSessionId}`, 409);
       }
 
+      const itemMeta = {
+        registrationSource: itemSource,
+        visibility: inheritVisibility,
+        billingScope: inheritBilling,
+        addedByUserId: performedBy.id,
+        addedByRole: performedBy.role,
+        addedAt: now,
+        reason,
+      };
+
       const lockedAt = workspace.lockedAt ?? now;
       const row =
         existing?.status === RegistrationStatus.CANCELLED
           ? await tx.studentExamRegistration.update({
               where: { id: existing.id },
               data: {
+                candidateId: candidate.id,
                 registrationWorkspaceId: workspaceId,
                 registrationWindowId: workspace.registrationWindowId,
                 examBoardId: session.paper.subject.qualification.examBoardId,
                 examSeriesId: session.examSeriesId,
                 subjectId: session.paper.subjectId,
                 paperId: session.paper.id,
-                studentNameSnapshot: student.name,
-                studentNoSnapshot: student.studentProfile.studentNo,
-                gradeSnapshot: student.studentProfile.currentGrade,
-                classNameSnapshot: student.studentProfile.currentClassName,
-                emailSnapshot: student.studentProfile.email ?? student.email,
-                phoneSnapshot: student.studentProfile.phone ?? student.phone,
+                ...candidateSnaps,
                 status: RegistrationStatus.LOCKED,
                 lockedAt,
                 cancelledAt: null,
+                ...itemMeta,
               },
               include: registrationInclude,
             })
           : await tx.studentExamRegistration.create({
               data: {
+                candidateId: candidate.id,
                 studentId: workspace.studentId,
                 registrationWorkspaceId: workspaceId,
                 examSessionId,
@@ -286,14 +325,10 @@ export async function applyPostLockAdjustment(
                 examSeriesId: session.examSeriesId,
                 subjectId: session.paper.subjectId,
                 paperId: session.paper.id,
-                studentNameSnapshot: student.name,
-                studentNoSnapshot: student.studentProfile.studentNo,
-                gradeSnapshot: student.studentProfile.currentGrade,
-                classNameSnapshot: student.studentProfile.currentClassName,
-                emailSnapshot: student.studentProfile.email ?? student.email,
-                phoneSnapshot: student.studentProfile.phone ?? student.phone,
+                ...candidateSnaps,
                 status: RegistrationStatus.LOCKED,
                 lockedAt,
+                ...itemMeta,
               },
               include: registrationInclude,
             });
@@ -303,6 +338,7 @@ export async function applyPostLockAdjustment(
       await createRegistrationAuditLog(
         {
           registrationWorkspaceId: workspaceId,
+          candidateId: candidate.id,
           studentId: workspace.studentId,
           registrationId: row.id,
           examSessionId,
@@ -310,6 +346,11 @@ export async function applyPostLockAdjustment(
           performedById: performedBy.id,
           performedByRole: performedBy.role,
           reason,
+          registrationSource: itemSource,
+          visibility: inheritVisibility,
+          billingScope: inheritBilling,
+          assessmentHubCandidateNumberSnapshot: candidateSnaps.assessmentHubCandidateNumberSnapshot,
+          candidateTypeSnapshot: candidateSnaps.candidateTypeSnapshot,
           afterValue: registrationAuditSnapshot(row),
           note: "Added after lock",
         },
@@ -321,6 +362,35 @@ export async function applyPostLockAdjustment(
       where: { id: performedBy.id },
       select: { name: true },
     });
+
+    const summarySessionId =
+      addIds[0] ??
+      workspace.registrations.find((row) => removeIds.includes(row.id))?.examSessionId ??
+      workspace.registrations[0]?.examSessionId;
+
+    if (summarySessionId) {
+      const summaryAuditAction = postLockAuditActionForRole(performedBy.role);
+      await createRegistrationAuditLog(
+        {
+          registrationWorkspaceId: workspaceId,
+          candidateId: candidate.id,
+          studentId: workspace.studentId,
+          examSessionId: summarySessionId,
+          action: summaryAuditAction as RegistrationAuditAction,
+          performedById: performedBy.id,
+          performedByRole: performedBy.role,
+          reason,
+          registrationSource: itemSource,
+          visibility: inheritVisibility,
+          billingScope: inheritBilling,
+          assessmentHubCandidateNumberSnapshot: candidateSnaps.assessmentHubCandidateNumberSnapshot,
+          candidateTypeSnapshot: candidateSnaps.candidateTypeSnapshot,
+          afterValue: summary,
+          note: "Post-lock adjustment summary",
+        },
+        tx,
+      );
+    }
 
     await tx.registrationWorkspace.update({
       where: { id: workspaceId },
@@ -351,6 +421,9 @@ export async function applyPostLockAdjustment(
       },
     });
   });
+
+  await markSupersededStatements(workspaceId);
+  await markStatementsNeedReview(workspaceId);
 
   const { getRegistrationWorkspaceById } = await import("@/lib/registrations/workspace");
   return getRegistrationWorkspaceById(workspaceId);

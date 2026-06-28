@@ -1,13 +1,19 @@
 import { RegistrationList } from "@/components/registrations/RegistrationList";
 import { PendingTeacherChangeRequests } from "@/components/registrations/PendingTeacherChangeRequests";
-import { HelpStudentRegisterButton } from "@/components/registrations/HelpStudentRegisterButton";
+import { AddRegistrationDropdown } from "@/components/registrations/AddRegistrationDropdown";
 import { RegistrationWorkspaceList } from "@/components/registrations/RegistrationWorkspaceList";
+import { RegistrationFeeBatchWidget } from "@/components/fees/RegistrationFeeBatchWidget";
 import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function AdminRegistrationsPage() {
   return (
     <div className="space-y-6">
       <PageHeader title="Student registrations" description="View, adjust, and export exam registrations." />
+      <p className="text-sm">
+        <a href="/admin/students" className="text-indigo-600 hover:underline">
+          Manage students (graduate, archive, reactivate)
+        </a>
+      </p>
       <PendingTeacherChangeRequests
         apiPath="/api/admin/change-requests"
         detailBasePath="/admin/registrations"
@@ -15,12 +21,16 @@ export default function AdminRegistrationsPage() {
       />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div />
-        <HelpStudentRegisterButton
-          apiPath="/api/admin/late-registrations"
+        <AddRegistrationDropdown
+          assistedApiPath="/api/admin/assisted-registrations"
+          officeOnlyApiPath="/api/admin/office-only-registrations"
+          externalApiPath="/api/admin/external-candidate-registrations"
+          workspacesApiPath="/api/admin/registrations/workspaces"
           detailBasePath="/admin/registrations"
         />
       </div>
       <RegistrationWorkspaceList apiPath="/api/admin/registrations/workspaces" detailBasePath="/admin/registrations" />
+      <RegistrationFeeBatchWidget feeRulesBasePath="/admin/registration-windows" />
       <RegistrationList apiPath="/api/admin/registrations" exportPath="/api/admin/registrations" />
     </div>
   );

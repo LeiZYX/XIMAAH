@@ -23,6 +23,7 @@ async function main() {
       username: "admin",
       passwordHash: await hashPassword(adminPassword),
       role: "ADMIN",
+      isActive: true,
       mustChangePassword: false,
     },
     create: {
@@ -31,6 +32,7 @@ async function main() {
       name: adminName,
       passwordHash: await hashPassword(adminPassword),
       role: "ADMIN",
+      isActive: true,
       mustChangePassword: false,
     },
   });
@@ -419,6 +421,7 @@ async function main() {
       email: "exam.officer@xima.local",
       passwordHash: await hashPassword("password123"),
       role: "EXAM_OFFICER",
+      isActive: true,
       mustChangePassword: false,
     },
     create: {
@@ -427,6 +430,7 @@ async function main() {
       name: "Exam Officer",
       passwordHash: await hashPassword("password123"),
       role: "EXAM_OFFICER",
+      isActive: true,
       mustChangePassword: false,
     },
   });
@@ -438,6 +442,7 @@ async function main() {
       phone: "+8613800000001",
       passwordHash: await hashPassword("password123"),
       role: "SUBJECT_TEACHER",
+      isActive: true,
       mustChangePassword: false,
     },
     create: {
@@ -446,6 +451,7 @@ async function main() {
       name: "Physics Teacher",
       passwordHash: await hashPassword("password123"),
       role: "SUBJECT_TEACHER",
+      isActive: true,
       mustChangePassword: false,
     },
   });
@@ -458,6 +464,7 @@ async function main() {
       phone: "+8613800000002",
       passwordHash: await hashPassword("password123"),
       role: "STUDENT",
+      isActive: true,
       mustChangePassword: false,
     },
     create: {
@@ -467,6 +474,7 @@ async function main() {
       phone: "+8613800000002",
       passwordHash: await hashPassword("password123"),
       role: "STUDENT",
+      isActive: true,
       mustChangePassword: false,
     },
   });
@@ -479,6 +487,8 @@ async function main() {
       currentClassName: "12A",
       email: "student@xima.local",
       phone: "+8613800000002",
+      status: "ACTIVE",
+      entryYear: 2024,
     },
     create: {
       userId: student.id,
@@ -487,6 +497,8 @@ async function main() {
       currentClassName: "12A",
       email: "student@xima.local",
       phone: "+8613800000002",
+      status: "ACTIVE",
+      entryYear: 2024,
     },
   });
 
@@ -498,6 +510,7 @@ async function main() {
       phone: "+8613800000003",
       passwordHash: await hashPassword("password123"),
       role: "STUDENT",
+      isActive: true,
       mustChangePassword: false,
     },
     create: {
@@ -507,6 +520,7 @@ async function main() {
       phone: "+8613800000003",
       passwordHash: await hashPassword("password123"),
       role: "STUDENT",
+      isActive: true,
       mustChangePassword: false,
     },
   });
@@ -519,6 +533,8 @@ async function main() {
       currentClassName: "11B",
       email: "student2@xima.local",
       phone: "+8613800000003",
+      status: "ACTIVE",
+      entryYear: 2025,
     },
     create: {
       userId: studentTwo.id,
@@ -527,6 +543,8 @@ async function main() {
       currentClassName: "11B",
       email: "student2@xima.local",
       phone: "+8613800000003",
+      status: "ACTIVE",
+      entryYear: 2025,
     },
   });
 
@@ -610,6 +628,10 @@ async function main() {
   console.log(`Teacher: teacher@xima.local or +8613800000001 — password123 (assigned: Physics, all grades/boards)`);
   console.log(`Student 1: S2026001 or student@xima.local — password123 (Year 12 · 12A)`);
   console.log(`Student 2: S2026002 or student2@xima.local — password123 (Year 11 · 11B)`);
+
+  const { backfillCandidatesFromStudents } = await import("../src/lib/candidates/service");
+  const candidateBackfill = await backfillCandidatesFromStudents();
+  console.log(`Candidates backfilled: ${candidateBackfill.created} created, ${candidateBackfill.processed} students processed.`);
 }
 
 main()

@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { AqaImportPanel } from "@/components/admin/AqaImportPanel";
 import { EdexcelImportPanel } from "@/components/admin/EdexcelImportPanel";
+import { ImportPreviewPanel } from "@/components/admin/ImportPreviewPanel";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -67,6 +68,32 @@ export default function ImportPage() {
       <AqaImportPanel />
 
       <EdexcelImportPanel />
+
+      <ImportPreviewPanel
+        title="Pearson Edexcel (Excel preview)"
+        description="Parse an official Pearson Edexcel XLSX timetable via the Python data-processor, validate rows, then confirm import."
+        accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        previewEndpoint="/api/import/preview/pearson-excel"
+        source="pearson-excel"
+        accent="sky"
+      />
+
+      <ImportPreviewPanel
+        title="Cambridge International (PDF preview)"
+        description="Parse a Cambridge IGCSE/A Level timetable PDF, review extracted sessions, then import."
+        accept="application/pdf,.pdf"
+        previewEndpoint="/api/import/preview/cambridge-pdf"
+        source="cambridge-pdf"
+        accent="violet"
+      />
+
+      <ImportPreviewPanel
+        title="Oxford AQA (PDF preview)"
+        description="Parse an Oxford AQA timetable PDF with preview and validation before committing to the database."
+        accept="application/pdf,.pdf"
+        previewEndpoint="/api/import/preview/oxfordaqa-pdf"
+        source="oxfordaqa-pdf"
+      />
 
       <Card className="mb-6 border-indigo-100 bg-indigo-50">
         <h2 className="text-sm font-semibold text-indigo-900">Recommended workflow</h2>

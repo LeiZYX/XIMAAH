@@ -16,6 +16,10 @@ const adminLinks = [
   { href: "/admin/key-dates", label: "Key Dates" },
   { href: "/admin/registration-windows", label: "Registration Windows" },
   { href: "/admin/registrations", label: "Registrations" },
+  { href: "/admin/candidates", label: "Candidates" },
+  { href: "/admin/fee-summary", label: "Fee Summary" },
+  { href: "/admin/fee-statements", label: "Fee Statements" },
+  { href: "/admin/students", label: "Students" },
   { href: "/admin/import", label: "Import" },
 ];
 

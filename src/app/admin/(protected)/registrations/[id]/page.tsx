@@ -19,6 +19,7 @@ export default async function AdminRegistrationWorkspacePage({
         apiBase="/api/admin/registrations"
         backHref="/admin/registrations"
         canAdjust
+        feeRulesHrefBase="/admin/registration-windows"
       />
     </div>
   );

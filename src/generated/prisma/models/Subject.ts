@@ -197,6 +197,7 @@ export type SubjectWhereInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionListRelationFilter
   teacherAssignments?: Prisma.TeacherAssignmentListRelationFilter
   studentExamRegistrations?: Prisma.StudentExamRegistrationListRelationFilter
+  feeRules?: Prisma.FeeRuleListRelationFilter
 }
 
 export type SubjectOrderByWithRelationInput = {
@@ -213,6 +214,7 @@ export type SubjectOrderByWithRelationInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionOrderByRelationAggregateInput
   teacherAssignments?: Prisma.TeacherAssignmentOrderByRelationAggregateInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationOrderByRelationAggregateInput
+  feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
 }
 
 export type SubjectWhereUniqueInput = Prisma.AtLeast<{
@@ -232,6 +234,7 @@ export type SubjectWhereUniqueInput = Prisma.AtLeast<{
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionListRelationFilter
   teacherAssignments?: Prisma.TeacherAssignmentListRelationFilter
   studentExamRegistrations?: Prisma.StudentExamRegistrationListRelationFilter
+  feeRules?: Prisma.FeeRuleListRelationFilter
 }, "id">
 
 export type SubjectOrderByWithAggregationInput = {
@@ -271,6 +274,7 @@ export type SubjectCreateInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateInput = {
@@ -286,6 +290,7 @@ export type SubjectUncheckedCreateInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUpdateInput = {
@@ -301,6 +306,7 @@ export type SubjectUpdateInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateInput = {
@@ -316,6 +322,7 @@ export type SubjectUncheckedUpdateInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateManyInput = {
@@ -521,6 +528,22 @@ export type SubjectUpdateOneWithoutResourcesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.SubjectUpdateToOneWithWhereWithoutResourcesInput, Prisma.SubjectUpdateWithoutResourcesInput>, Prisma.SubjectUncheckedUpdateWithoutResourcesInput>
 }
 
+export type SubjectCreateNestedOneWithoutFeeRulesInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutFeeRulesInput, Prisma.SubjectUncheckedCreateWithoutFeeRulesInput>
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutFeeRulesInput
+  connect?: Prisma.SubjectWhereUniqueInput
+}
+
+export type SubjectUpdateOneWithoutFeeRulesNestedInput = {
+  create?: Prisma.XOR<Prisma.SubjectCreateWithoutFeeRulesInput, Prisma.SubjectUncheckedCreateWithoutFeeRulesInput>
+  connectOrCreate?: Prisma.SubjectCreateOrConnectWithoutFeeRulesInput
+  upsert?: Prisma.SubjectUpsertWithoutFeeRulesInput
+  disconnect?: Prisma.SubjectWhereInput | boolean
+  delete?: Prisma.SubjectWhereInput | boolean
+  connect?: Prisma.SubjectWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SubjectUpdateToOneWithWhereWithoutFeeRulesInput, Prisma.SubjectUpdateWithoutFeeRulesInput>, Prisma.SubjectUncheckedUpdateWithoutFeeRulesInput>
+}
+
 export type SubjectCreateWithoutTeacherAssignmentsInput = {
   id?: string
   name: string
@@ -533,6 +556,7 @@ export type SubjectCreateWithoutTeacherAssignmentsInput = {
   resources?: Prisma.ResourceCreateNestedManyWithoutSubjectInput
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutTeacherAssignmentsInput = {
@@ -547,6 +571,7 @@ export type SubjectUncheckedCreateWithoutTeacherAssignmentsInput = {
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutSubjectInput
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectCreateOrConnectWithoutTeacherAssignmentsInput = {
@@ -577,6 +602,7 @@ export type SubjectUpdateWithoutTeacherAssignmentsInput = {
   resources?: Prisma.ResourceUpdateManyWithoutSubjectNestedInput
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutTeacherAssignmentsInput = {
@@ -591,6 +617,7 @@ export type SubjectUncheckedUpdateWithoutTeacherAssignmentsInput = {
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutSubjectNestedInput
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateWithoutStudentExamRegistrationsInput = {
@@ -605,6 +632,7 @@ export type SubjectCreateWithoutStudentExamRegistrationsInput = {
   resources?: Prisma.ResourceCreateNestedManyWithoutSubjectInput
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutStudentExamRegistrationsInput = {
@@ -619,6 +647,7 @@ export type SubjectUncheckedCreateWithoutStudentExamRegistrationsInput = {
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutSubjectInput
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectCreateOrConnectWithoutStudentExamRegistrationsInput = {
@@ -649,6 +678,7 @@ export type SubjectUpdateWithoutStudentExamRegistrationsInput = {
   resources?: Prisma.ResourceUpdateManyWithoutSubjectNestedInput
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutStudentExamRegistrationsInput = {
@@ -663,6 +693,7 @@ export type SubjectUncheckedUpdateWithoutStudentExamRegistrationsInput = {
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutSubjectNestedInput
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateWithoutQualificationInput = {
@@ -677,6 +708,7 @@ export type SubjectCreateWithoutQualificationInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutQualificationInput = {
@@ -691,6 +723,7 @@ export type SubjectUncheckedCreateWithoutQualificationInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectCreateOrConnectWithoutQualificationInput = {
@@ -743,6 +776,7 @@ export type SubjectCreateWithoutCalendarSubjectSelectionsInput = {
   resources?: Prisma.ResourceCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutCalendarSubjectSelectionsInput = {
@@ -757,6 +791,7 @@ export type SubjectUncheckedCreateWithoutCalendarSubjectSelectionsInput = {
   resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectCreateOrConnectWithoutCalendarSubjectSelectionsInput = {
@@ -787,6 +822,7 @@ export type SubjectUpdateWithoutCalendarSubjectSelectionsInput = {
   resources?: Prisma.ResourceUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutCalendarSubjectSelectionsInput = {
@@ -801,6 +837,7 @@ export type SubjectUncheckedUpdateWithoutCalendarSubjectSelectionsInput = {
   resources?: Prisma.ResourceUncheckedUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateWithoutPapersInput = {
@@ -815,6 +852,7 @@ export type SubjectCreateWithoutPapersInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutPapersInput = {
@@ -829,6 +867,7 @@ export type SubjectUncheckedCreateWithoutPapersInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectCreateOrConnectWithoutPapersInput = {
@@ -859,6 +898,7 @@ export type SubjectUpdateWithoutPapersInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutPapersInput = {
@@ -873,6 +913,7 @@ export type SubjectUncheckedUpdateWithoutPapersInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateWithoutKeyDatesInput = {
@@ -887,6 +928,7 @@ export type SubjectCreateWithoutKeyDatesInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutKeyDatesInput = {
@@ -901,6 +943,7 @@ export type SubjectUncheckedCreateWithoutKeyDatesInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectCreateOrConnectWithoutKeyDatesInput = {
@@ -931,6 +974,7 @@ export type SubjectUpdateWithoutKeyDatesInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutKeyDatesInput = {
@@ -945,6 +989,7 @@ export type SubjectUncheckedUpdateWithoutKeyDatesInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectCreateWithoutResourcesInput = {
@@ -959,6 +1004,7 @@ export type SubjectCreateWithoutResourcesInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectUncheckedCreateWithoutResourcesInput = {
@@ -973,6 +1019,7 @@ export type SubjectUncheckedCreateWithoutResourcesInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedCreateNestedManyWithoutSubjectInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutSubjectInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutSubjectInput
+  feeRules?: Prisma.FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
 }
 
 export type SubjectCreateOrConnectWithoutResourcesInput = {
@@ -1003,6 +1050,7 @@ export type SubjectUpdateWithoutResourcesInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutResourcesInput = {
@@ -1014,6 +1062,83 @@ export type SubjectUncheckedUpdateWithoutResourcesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   papers?: Prisma.PaperUncheckedUpdateManyWithoutSubjectNestedInput
   keyDates?: Prisma.KeyDateUncheckedUpdateManyWithoutSubjectNestedInput
+  calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedUpdateManyWithoutSubjectNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
+}
+
+export type SubjectCreateWithoutFeeRulesInput = {
+  id?: string
+  name: string
+  code: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  qualification: Prisma.QualificationCreateNestedOneWithoutSubjectsInput
+  papers?: Prisma.PaperCreateNestedManyWithoutSubjectInput
+  keyDates?: Prisma.KeyDateCreateNestedManyWithoutSubjectInput
+  resources?: Prisma.ResourceCreateNestedManyWithoutSubjectInput
+  calendarSubjectSelections?: Prisma.CalendarSubjectSelectionCreateNestedManyWithoutSubjectInput
+  teacherAssignments?: Prisma.TeacherAssignmentCreateNestedManyWithoutSubjectInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutSubjectInput
+}
+
+export type SubjectUncheckedCreateWithoutFeeRulesInput = {
+  id?: string
+  name: string
+  code: string
+  qualificationId: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  papers?: Prisma.PaperUncheckedCreateNestedManyWithoutSubjectInput
+  keyDates?: Prisma.KeyDateUncheckedCreateNestedManyWithoutSubjectInput
+  resources?: Prisma.ResourceUncheckedCreateNestedManyWithoutSubjectInput
+  calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedCreateNestedManyWithoutSubjectInput
+  teacherAssignments?: Prisma.TeacherAssignmentUncheckedCreateNestedManyWithoutSubjectInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutSubjectInput
+}
+
+export type SubjectCreateOrConnectWithoutFeeRulesInput = {
+  where: Prisma.SubjectWhereUniqueInput
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutFeeRulesInput, Prisma.SubjectUncheckedCreateWithoutFeeRulesInput>
+}
+
+export type SubjectUpsertWithoutFeeRulesInput = {
+  update: Prisma.XOR<Prisma.SubjectUpdateWithoutFeeRulesInput, Prisma.SubjectUncheckedUpdateWithoutFeeRulesInput>
+  create: Prisma.XOR<Prisma.SubjectCreateWithoutFeeRulesInput, Prisma.SubjectUncheckedCreateWithoutFeeRulesInput>
+  where?: Prisma.SubjectWhereInput
+}
+
+export type SubjectUpdateToOneWithWhereWithoutFeeRulesInput = {
+  where?: Prisma.SubjectWhereInput
+  data: Prisma.XOR<Prisma.SubjectUpdateWithoutFeeRulesInput, Prisma.SubjectUncheckedUpdateWithoutFeeRulesInput>
+}
+
+export type SubjectUpdateWithoutFeeRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  qualification?: Prisma.QualificationUpdateOneRequiredWithoutSubjectsNestedInput
+  papers?: Prisma.PaperUpdateManyWithoutSubjectNestedInput
+  keyDates?: Prisma.KeyDateUpdateManyWithoutSubjectNestedInput
+  resources?: Prisma.ResourceUpdateManyWithoutSubjectNestedInput
+  calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUpdateManyWithoutSubjectNestedInput
+  teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutSubjectNestedInput
+  studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutSubjectNestedInput
+}
+
+export type SubjectUncheckedUpdateWithoutFeeRulesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  qualificationId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  papers?: Prisma.PaperUncheckedUpdateManyWithoutSubjectNestedInput
+  keyDates?: Prisma.KeyDateUncheckedUpdateManyWithoutSubjectNestedInput
+  resources?: Prisma.ResourceUncheckedUpdateManyWithoutSubjectNestedInput
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutSubjectNestedInput
@@ -1039,6 +1164,7 @@ export type SubjectUpdateWithoutQualificationInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateWithoutQualificationInput = {
@@ -1053,6 +1179,7 @@ export type SubjectUncheckedUpdateWithoutQualificationInput = {
   calendarSubjectSelections?: Prisma.CalendarSubjectSelectionUncheckedUpdateManyWithoutSubjectNestedInput
   teacherAssignments?: Prisma.TeacherAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutSubjectNestedInput
+  feeRules?: Prisma.FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
 }
 
 export type SubjectUncheckedUpdateManyWithoutQualificationInput = {
@@ -1075,6 +1202,7 @@ export type SubjectCountOutputType = {
   calendarSubjectSelections: number
   teacherAssignments: number
   studentExamRegistrations: number
+  feeRules: number
 }
 
 export type SubjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1084,6 +1212,7 @@ export type SubjectCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   calendarSubjectSelections?: boolean | SubjectCountOutputTypeCountCalendarSubjectSelectionsArgs
   teacherAssignments?: boolean | SubjectCountOutputTypeCountTeacherAssignmentsArgs
   studentExamRegistrations?: boolean | SubjectCountOutputTypeCountStudentExamRegistrationsArgs
+  feeRules?: boolean | SubjectCountOutputTypeCountFeeRulesArgs
 }
 
 /**
@@ -1138,6 +1267,13 @@ export type SubjectCountOutputTypeCountStudentExamRegistrationsArgs<ExtArgs exte
   where?: Prisma.StudentExamRegistrationWhereInput
 }
 
+/**
+ * SubjectCountOutputType without action
+ */
+export type SubjectCountOutputTypeCountFeeRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeRuleWhereInput
+}
+
 
 export type SubjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1153,6 +1289,7 @@ export type SubjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   calendarSubjectSelections?: boolean | Prisma.Subject$calendarSubjectSelectionsArgs<ExtArgs>
   teacherAssignments?: boolean | Prisma.Subject$teacherAssignmentsArgs<ExtArgs>
   studentExamRegistrations?: boolean | Prisma.Subject$studentExamRegistrationsArgs<ExtArgs>
+  feeRules?: boolean | Prisma.Subject$feeRulesArgs<ExtArgs>
   _count?: boolean | Prisma.SubjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subject"]>
 
@@ -1194,6 +1331,7 @@ export type SubjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   calendarSubjectSelections?: boolean | Prisma.Subject$calendarSubjectSelectionsArgs<ExtArgs>
   teacherAssignments?: boolean | Prisma.Subject$teacherAssignmentsArgs<ExtArgs>
   studentExamRegistrations?: boolean | Prisma.Subject$studentExamRegistrationsArgs<ExtArgs>
+  feeRules?: boolean | Prisma.Subject$feeRulesArgs<ExtArgs>
   _count?: boolean | Prisma.SubjectCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type SubjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1213,6 +1351,7 @@ export type $SubjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     calendarSubjectSelections: Prisma.$CalendarSubjectSelectionPayload<ExtArgs>[]
     teacherAssignments: Prisma.$TeacherAssignmentPayload<ExtArgs>[]
     studentExamRegistrations: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
+    feeRules: Prisma.$FeeRulePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1622,6 +1761,7 @@ export interface Prisma__SubjectClient<T, Null = never, ExtArgs extends runtime.
   calendarSubjectSelections<T extends Prisma.Subject$calendarSubjectSelectionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subject$calendarSubjectSelectionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarSubjectSelectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   teacherAssignments<T extends Prisma.Subject$teacherAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subject$teacherAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   studentExamRegistrations<T extends Prisma.Subject$studentExamRegistrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subject$studentExamRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feeRules<T extends Prisma.Subject$feeRulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Subject$feeRulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2199,6 +2339,30 @@ export type Subject$studentExamRegistrationsArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.StudentExamRegistrationScalarFieldEnum | Prisma.StudentExamRegistrationScalarFieldEnum[]
+}
+
+/**
+ * Subject.feeRules
+ */
+export type Subject$feeRulesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeeRule
+   */
+  select?: Prisma.FeeRuleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeeRule
+   */
+  omit?: Prisma.FeeRuleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeRuleInclude<ExtArgs> | null
+  where?: Prisma.FeeRuleWhereInput
+  orderBy?: Prisma.FeeRuleOrderByWithRelationInput | Prisma.FeeRuleOrderByWithRelationInput[]
+  cursor?: Prisma.FeeRuleWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeRuleScalarFieldEnum | Prisma.FeeRuleScalarFieldEnum[]
 }
 
 /**

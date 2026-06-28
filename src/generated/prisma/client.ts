@@ -57,6 +57,16 @@ export type PasswordResetToken = Prisma.PasswordResetTokenModel
  */
 export type StudentProfile = Prisma.StudentProfileModel
 /**
+ * Model Candidate
+ * 
+ */
+export type Candidate = Prisma.CandidateModel
+/**
+ * Model CandidateExamIdentity
+ * 
+ */
+export type CandidateExamIdentity = Prisma.CandidateExamIdentityModel
+/**
  * Model TeacherAssignment
  * 
  */
@@ -141,3 +151,28 @@ export type Resource = Prisma.ResourceModel
  * 
  */
 export type SourceDocument = Prisma.SourceDocumentModel
+/**
+ * Model FeeRule
+ * 
+ */
+export type FeeRule = Prisma.FeeRuleModel
+/**
+ * Model ExchangeRate
+ * 
+ */
+export type ExchangeRate = Prisma.ExchangeRateModel
+/**
+ * Model FeeStatement
+ * 
+ */
+export type FeeStatement = Prisma.FeeStatementModel
+/**
+ * Model FeeStatementItem
+ * 
+ */
+export type FeeStatementItem = Prisma.FeeStatementItemModel
+/**
+ * Model FeeAuditLog
+ * 
+ */
+export type FeeAuditLog = Prisma.FeeAuditLogModel

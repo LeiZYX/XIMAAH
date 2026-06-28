@@ -31,6 +31,10 @@ export async function POST(request: NextRequest) {
       return jsonError("Invalid credentials", 401);
     }
 
+    if (user.role === "STUDENT" && user.isActive === false) {
+      return jsonError("This account is inactive. Contact the Exams Office if you need access.", 403);
+    }
+
     const token = await createSessionToken({
       id: user.id,
       email: user.email,

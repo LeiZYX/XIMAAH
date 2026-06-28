@@ -26,6 +26,7 @@ export type AggregateRegistrationWorkspace = {
 
 export type RegistrationWorkspaceMinAggregateOutputType = {
   id: string | null
+  candidateId: string | null
   studentId: string | null
   registrationWindowId: string | null
   lockedAt: Date | null
@@ -36,12 +37,16 @@ export type RegistrationWorkspaceMinAggregateOutputType = {
   lastAdjustmentSummary: string | null
   hasPostLockAdjustment: boolean | null
   isLateRegistration: boolean | null
+  registrationSource: $Enums.RegistrationSource | null
+  visibility: $Enums.RegistrationVisibility | null
+  billingScope: $Enums.BillingScope | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type RegistrationWorkspaceMaxAggregateOutputType = {
   id: string | null
+  candidateId: string | null
   studentId: string | null
   registrationWindowId: string | null
   lockedAt: Date | null
@@ -52,12 +57,16 @@ export type RegistrationWorkspaceMaxAggregateOutputType = {
   lastAdjustmentSummary: string | null
   hasPostLockAdjustment: boolean | null
   isLateRegistration: boolean | null
+  registrationSource: $Enums.RegistrationSource | null
+  visibility: $Enums.RegistrationVisibility | null
+  billingScope: $Enums.BillingScope | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type RegistrationWorkspaceCountAggregateOutputType = {
   id: number
+  candidateId: number
   studentId: number
   registrationWindowId: number
   lockedAt: number
@@ -68,6 +77,9 @@ export type RegistrationWorkspaceCountAggregateOutputType = {
   lastAdjustmentSummary: number
   hasPostLockAdjustment: number
   isLateRegistration: number
+  registrationSource: number
+  visibility: number
+  billingScope: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -76,6 +88,7 @@ export type RegistrationWorkspaceCountAggregateOutputType = {
 
 export type RegistrationWorkspaceMinAggregateInputType = {
   id?: true
+  candidateId?: true
   studentId?: true
   registrationWindowId?: true
   lockedAt?: true
@@ -86,12 +99,16 @@ export type RegistrationWorkspaceMinAggregateInputType = {
   lastAdjustmentSummary?: true
   hasPostLockAdjustment?: true
   isLateRegistration?: true
+  registrationSource?: true
+  visibility?: true
+  billingScope?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type RegistrationWorkspaceMaxAggregateInputType = {
   id?: true
+  candidateId?: true
   studentId?: true
   registrationWindowId?: true
   lockedAt?: true
@@ -102,12 +119,16 @@ export type RegistrationWorkspaceMaxAggregateInputType = {
   lastAdjustmentSummary?: true
   hasPostLockAdjustment?: true
   isLateRegistration?: true
+  registrationSource?: true
+  visibility?: true
+  billingScope?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type RegistrationWorkspaceCountAggregateInputType = {
   id?: true
+  candidateId?: true
   studentId?: true
   registrationWindowId?: true
   lockedAt?: true
@@ -118,6 +139,9 @@ export type RegistrationWorkspaceCountAggregateInputType = {
   lastAdjustmentSummary?: true
   hasPostLockAdjustment?: true
   isLateRegistration?: true
+  registrationSource?: true
+  visibility?: true
+  billingScope?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -197,7 +221,8 @@ export type RegistrationWorkspaceGroupByArgs<ExtArgs extends runtime.Types.Exten
 
 export type RegistrationWorkspaceGroupByOutputType = {
   id: string
-  studentId: string
+  candidateId: string | null
+  studentId: string | null
   registrationWindowId: string
   lockedAt: Date | null
   lastAdjustedByUserId: string | null
@@ -207,6 +232,9 @@ export type RegistrationWorkspaceGroupByOutputType = {
   lastAdjustmentSummary: string | null
   hasPostLockAdjustment: boolean
   isLateRegistration: boolean
+  registrationSource: $Enums.RegistrationSource
+  visibility: $Enums.RegistrationVisibility
+  billingScope: $Enums.BillingScope
   createdAt: Date
   updatedAt: Date
   _count: RegistrationWorkspaceCountAggregateOutputType | null
@@ -234,7 +262,8 @@ export type RegistrationWorkspaceWhereInput = {
   OR?: Prisma.RegistrationWorkspaceWhereInput[]
   NOT?: Prisma.RegistrationWorkspaceWhereInput | Prisma.RegistrationWorkspaceWhereInput[]
   id?: Prisma.StringFilter<"RegistrationWorkspace"> | string
-  studentId?: Prisma.StringFilter<"RegistrationWorkspace"> | string
+  candidateId?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
+  studentId?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
   registrationWindowId?: Prisma.StringFilter<"RegistrationWorkspace"> | string
   lockedAt?: Prisma.DateTimeNullableFilter<"RegistrationWorkspace"> | Date | string | null
   lastAdjustedByUserId?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
@@ -244,19 +273,25 @@ export type RegistrationWorkspaceWhereInput = {
   lastAdjustmentSummary?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
   hasPostLockAdjustment?: Prisma.BoolFilter<"RegistrationWorkspace"> | boolean
   isLateRegistration?: Prisma.BoolFilter<"RegistrationWorkspace"> | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFilter<"RegistrationWorkspace"> | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFilter<"RegistrationWorkspace"> | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFilter<"RegistrationWorkspace"> | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFilter<"RegistrationWorkspace"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RegistrationWorkspace"> | Date | string
-  student?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  candidate?: Prisma.XOR<Prisma.CandidateNullableScalarRelationFilter, Prisma.CandidateWhereInput> | null
+  student?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   registrationWindow?: Prisma.XOR<Prisma.RegistrationWindowScalarRelationFilter, Prisma.RegistrationWindowWhereInput>
   lastAdjustedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   registrations?: Prisma.StudentExamRegistrationListRelationFilter
   auditLogs?: Prisma.RegistrationAuditLogListRelationFilter
   changeRequests?: Prisma.RegistrationChangeRequestListRelationFilter
+  feeStatements?: Prisma.FeeStatementListRelationFilter
 }
 
 export type RegistrationWorkspaceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrderInput | Prisma.SortOrder
+  studentId?: Prisma.SortOrderInput | Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastAdjustedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -266,23 +301,30 @@ export type RegistrationWorkspaceOrderByWithRelationInput = {
   lastAdjustmentSummary?: Prisma.SortOrderInput | Prisma.SortOrder
   hasPostLockAdjustment?: Prisma.SortOrder
   isLateRegistration?: Prisma.SortOrder
+  registrationSource?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  billingScope?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  candidate?: Prisma.CandidateOrderByWithRelationInput
   student?: Prisma.UserOrderByWithRelationInput
   registrationWindow?: Prisma.RegistrationWindowOrderByWithRelationInput
   lastAdjustedByUser?: Prisma.UserOrderByWithRelationInput
   registrations?: Prisma.StudentExamRegistrationOrderByRelationAggregateInput
   auditLogs?: Prisma.RegistrationAuditLogOrderByRelationAggregateInput
   changeRequests?: Prisma.RegistrationChangeRequestOrderByRelationAggregateInput
+  feeStatements?: Prisma.FeeStatementOrderByRelationAggregateInput
 }
 
 export type RegistrationWorkspaceWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  candidateId_registrationWindowId?: Prisma.RegistrationWorkspaceCandidateIdRegistrationWindowIdCompoundUniqueInput
   studentId_registrationWindowId?: Prisma.RegistrationWorkspaceStudentIdRegistrationWindowIdCompoundUniqueInput
   AND?: Prisma.RegistrationWorkspaceWhereInput | Prisma.RegistrationWorkspaceWhereInput[]
   OR?: Prisma.RegistrationWorkspaceWhereInput[]
   NOT?: Prisma.RegistrationWorkspaceWhereInput | Prisma.RegistrationWorkspaceWhereInput[]
-  studentId?: Prisma.StringFilter<"RegistrationWorkspace"> | string
+  candidateId?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
+  studentId?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
   registrationWindowId?: Prisma.StringFilter<"RegistrationWorkspace"> | string
   lockedAt?: Prisma.DateTimeNullableFilter<"RegistrationWorkspace"> | Date | string | null
   lastAdjustedByUserId?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
@@ -292,19 +334,25 @@ export type RegistrationWorkspaceWhereUniqueInput = Prisma.AtLeast<{
   lastAdjustmentSummary?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
   hasPostLockAdjustment?: Prisma.BoolFilter<"RegistrationWorkspace"> | boolean
   isLateRegistration?: Prisma.BoolFilter<"RegistrationWorkspace"> | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFilter<"RegistrationWorkspace"> | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFilter<"RegistrationWorkspace"> | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFilter<"RegistrationWorkspace"> | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFilter<"RegistrationWorkspace"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RegistrationWorkspace"> | Date | string
-  student?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  candidate?: Prisma.XOR<Prisma.CandidateNullableScalarRelationFilter, Prisma.CandidateWhereInput> | null
+  student?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   registrationWindow?: Prisma.XOR<Prisma.RegistrationWindowScalarRelationFilter, Prisma.RegistrationWindowWhereInput>
   lastAdjustedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   registrations?: Prisma.StudentExamRegistrationListRelationFilter
   auditLogs?: Prisma.RegistrationAuditLogListRelationFilter
   changeRequests?: Prisma.RegistrationChangeRequestListRelationFilter
-}, "id" | "studentId_registrationWindowId">
+  feeStatements?: Prisma.FeeStatementListRelationFilter
+}, "id" | "candidateId_registrationWindowId" | "studentId_registrationWindowId">
 
 export type RegistrationWorkspaceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrderInput | Prisma.SortOrder
+  studentId?: Prisma.SortOrderInput | Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   lastAdjustedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -314,6 +362,9 @@ export type RegistrationWorkspaceOrderByWithAggregationInput = {
   lastAdjustmentSummary?: Prisma.SortOrderInput | Prisma.SortOrder
   hasPostLockAdjustment?: Prisma.SortOrder
   isLateRegistration?: Prisma.SortOrder
+  registrationSource?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  billingScope?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.RegistrationWorkspaceCountOrderByAggregateInput
@@ -326,7 +377,8 @@ export type RegistrationWorkspaceScalarWhereWithAggregatesInput = {
   OR?: Prisma.RegistrationWorkspaceScalarWhereWithAggregatesInput[]
   NOT?: Prisma.RegistrationWorkspaceScalarWhereWithAggregatesInput | Prisma.RegistrationWorkspaceScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"RegistrationWorkspace"> | string
-  studentId?: Prisma.StringWithAggregatesFilter<"RegistrationWorkspace"> | string
+  candidateId?: Prisma.StringNullableWithAggregatesFilter<"RegistrationWorkspace"> | string | null
+  studentId?: Prisma.StringNullableWithAggregatesFilter<"RegistrationWorkspace"> | string | null
   registrationWindowId?: Prisma.StringWithAggregatesFilter<"RegistrationWorkspace"> | string
   lockedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"RegistrationWorkspace"> | Date | string | null
   lastAdjustedByUserId?: Prisma.StringNullableWithAggregatesFilter<"RegistrationWorkspace"> | string | null
@@ -336,6 +388,9 @@ export type RegistrationWorkspaceScalarWhereWithAggregatesInput = {
   lastAdjustmentSummary?: Prisma.StringNullableWithAggregatesFilter<"RegistrationWorkspace"> | string | null
   hasPostLockAdjustment?: Prisma.BoolWithAggregatesFilter<"RegistrationWorkspace"> | boolean
   isLateRegistration?: Prisma.BoolWithAggregatesFilter<"RegistrationWorkspace"> | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceWithAggregatesFilter<"RegistrationWorkspace"> | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityWithAggregatesFilter<"RegistrationWorkspace"> | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeWithAggregatesFilter<"RegistrationWorkspace"> | $Enums.BillingScope
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RegistrationWorkspace"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"RegistrationWorkspace"> | Date | string
 }
@@ -349,19 +404,25 @@ export type RegistrationWorkspaceCreateInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutRegistrationWorkspacesInput
+  student?: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutWorkspacesInput
   lastAdjustedByUser?: Prisma.UserCreateNestedOneWithoutWorkspacesLastAdjustedInput
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceUncheckedCreateInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWindowId: string
   lockedAt?: Date | string | null
   lastAdjustedByUserId?: string | null
@@ -371,11 +432,15 @@ export type RegistrationWorkspaceUncheckedCreateInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceUpdateInput = {
@@ -387,19 +452,25 @@ export type RegistrationWorkspaceUpdateInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutRegistrationWorkspacesNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutRegistrationWorkspacesNestedInput
+  student?: Prisma.UserUpdateOneWithoutRegistrationWorkspacesNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutWorkspacesNestedInput
   lastAdjustedByUser?: Prisma.UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -409,16 +480,21 @@ export type RegistrationWorkspaceUncheckedUpdateInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceCreateManyInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWindowId: string
   lockedAt?: Date | string | null
   lastAdjustedByUserId?: string | null
@@ -428,6 +504,9 @@ export type RegistrationWorkspaceCreateManyInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -441,13 +520,17 @@ export type RegistrationWorkspaceUpdateManyMutationInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type RegistrationWorkspaceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -457,6 +540,9 @@ export type RegistrationWorkspaceUncheckedUpdateManyInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -471,6 +557,11 @@ export type RegistrationWorkspaceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type RegistrationWorkspaceCandidateIdRegistrationWindowIdCompoundUniqueInput = {
+  candidateId: string
+  registrationWindowId: string
+}
+
 export type RegistrationWorkspaceStudentIdRegistrationWindowIdCompoundUniqueInput = {
   studentId: string
   registrationWindowId: string
@@ -478,6 +569,7 @@ export type RegistrationWorkspaceStudentIdRegistrationWindowIdCompoundUniqueInpu
 
 export type RegistrationWorkspaceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrder
@@ -488,12 +580,16 @@ export type RegistrationWorkspaceCountOrderByAggregateInput = {
   lastAdjustmentSummary?: Prisma.SortOrder
   hasPostLockAdjustment?: Prisma.SortOrder
   isLateRegistration?: Prisma.SortOrder
+  registrationSource?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  billingScope?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type RegistrationWorkspaceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrder
@@ -504,12 +600,16 @@ export type RegistrationWorkspaceMaxOrderByAggregateInput = {
   lastAdjustmentSummary?: Prisma.SortOrder
   hasPostLockAdjustment?: Prisma.SortOrder
   isLateRegistration?: Prisma.SortOrder
+  registrationSource?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  billingScope?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type RegistrationWorkspaceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrder
@@ -520,6 +620,9 @@ export type RegistrationWorkspaceMinOrderByAggregateInput = {
   lastAdjustmentSummary?: Prisma.SortOrder
   hasPostLockAdjustment?: Prisma.SortOrder
   isLateRegistration?: Prisma.SortOrder
+  registrationSource?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  billingScope?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -527,6 +630,11 @@ export type RegistrationWorkspaceMinOrderByAggregateInput = {
 export type RegistrationWorkspaceNullableScalarRelationFilter = {
   is?: Prisma.RegistrationWorkspaceWhereInput | null
   isNot?: Prisma.RegistrationWorkspaceWhereInput | null
+}
+
+export type RegistrationWorkspaceScalarRelationFilter = {
+  is?: Prisma.RegistrationWorkspaceWhereInput
+  isNot?: Prisma.RegistrationWorkspaceWhereInput
 }
 
 export type RegistrationWorkspaceCreateNestedManyWithoutStudentInput = {
@@ -613,6 +721,48 @@ export type RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNes
   deleteMany?: Prisma.RegistrationWorkspaceScalarWhereInput | Prisma.RegistrationWorkspaceScalarWhereInput[]
 }
 
+export type RegistrationWorkspaceCreateNestedManyWithoutCandidateInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutCandidateInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutCandidateInput> | Prisma.RegistrationWorkspaceCreateWithoutCandidateInput[] | Prisma.RegistrationWorkspaceUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.RegistrationWorkspaceCreateOrConnectWithoutCandidateInput | Prisma.RegistrationWorkspaceCreateOrConnectWithoutCandidateInput[]
+  createMany?: Prisma.RegistrationWorkspaceCreateManyCandidateInputEnvelope
+  connect?: Prisma.RegistrationWorkspaceWhereUniqueInput | Prisma.RegistrationWorkspaceWhereUniqueInput[]
+}
+
+export type RegistrationWorkspaceUncheckedCreateNestedManyWithoutCandidateInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutCandidateInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutCandidateInput> | Prisma.RegistrationWorkspaceCreateWithoutCandidateInput[] | Prisma.RegistrationWorkspaceUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.RegistrationWorkspaceCreateOrConnectWithoutCandidateInput | Prisma.RegistrationWorkspaceCreateOrConnectWithoutCandidateInput[]
+  createMany?: Prisma.RegistrationWorkspaceCreateManyCandidateInputEnvelope
+  connect?: Prisma.RegistrationWorkspaceWhereUniqueInput | Prisma.RegistrationWorkspaceWhereUniqueInput[]
+}
+
+export type RegistrationWorkspaceUpdateManyWithoutCandidateNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutCandidateInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutCandidateInput> | Prisma.RegistrationWorkspaceCreateWithoutCandidateInput[] | Prisma.RegistrationWorkspaceUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.RegistrationWorkspaceCreateOrConnectWithoutCandidateInput | Prisma.RegistrationWorkspaceCreateOrConnectWithoutCandidateInput[]
+  upsert?: Prisma.RegistrationWorkspaceUpsertWithWhereUniqueWithoutCandidateInput | Prisma.RegistrationWorkspaceUpsertWithWhereUniqueWithoutCandidateInput[]
+  createMany?: Prisma.RegistrationWorkspaceCreateManyCandidateInputEnvelope
+  set?: Prisma.RegistrationWorkspaceWhereUniqueInput | Prisma.RegistrationWorkspaceWhereUniqueInput[]
+  disconnect?: Prisma.RegistrationWorkspaceWhereUniqueInput | Prisma.RegistrationWorkspaceWhereUniqueInput[]
+  delete?: Prisma.RegistrationWorkspaceWhereUniqueInput | Prisma.RegistrationWorkspaceWhereUniqueInput[]
+  connect?: Prisma.RegistrationWorkspaceWhereUniqueInput | Prisma.RegistrationWorkspaceWhereUniqueInput[]
+  update?: Prisma.RegistrationWorkspaceUpdateWithWhereUniqueWithoutCandidateInput | Prisma.RegistrationWorkspaceUpdateWithWhereUniqueWithoutCandidateInput[]
+  updateMany?: Prisma.RegistrationWorkspaceUpdateManyWithWhereWithoutCandidateInput | Prisma.RegistrationWorkspaceUpdateManyWithWhereWithoutCandidateInput[]
+  deleteMany?: Prisma.RegistrationWorkspaceScalarWhereInput | Prisma.RegistrationWorkspaceScalarWhereInput[]
+}
+
+export type RegistrationWorkspaceUncheckedUpdateManyWithoutCandidateNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutCandidateInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutCandidateInput> | Prisma.RegistrationWorkspaceCreateWithoutCandidateInput[] | Prisma.RegistrationWorkspaceUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.RegistrationWorkspaceCreateOrConnectWithoutCandidateInput | Prisma.RegistrationWorkspaceCreateOrConnectWithoutCandidateInput[]
+  upsert?: Prisma.RegistrationWorkspaceUpsertWithWhereUniqueWithoutCandidateInput | Prisma.RegistrationWorkspaceUpsertWithWhereUniqueWithoutCandidateInput[]
+  createMany?: Prisma.RegistrationWorkspaceCreateManyCandidateInputEnvelope
+  set?: Prisma.RegistrationWorkspaceWhereUniqueInput | Prisma.RegistrationWorkspaceWhereUniqueInput[]
+  disconnect?: Prisma.RegistrationWorkspaceWhereUniqueInput | Prisma.RegistrationWorkspaceWhereUniqueInput[]
+  delete?: Prisma.RegistrationWorkspaceWhereUniqueInput | Prisma.RegistrationWorkspaceWhereUniqueInput[]
+  connect?: Prisma.RegistrationWorkspaceWhereUniqueInput | Prisma.RegistrationWorkspaceWhereUniqueInput[]
+  update?: Prisma.RegistrationWorkspaceUpdateWithWhereUniqueWithoutCandidateInput | Prisma.RegistrationWorkspaceUpdateWithWhereUniqueWithoutCandidateInput[]
+  updateMany?: Prisma.RegistrationWorkspaceUpdateManyWithWhereWithoutCandidateInput | Prisma.RegistrationWorkspaceUpdateManyWithWhereWithoutCandidateInput[]
+  deleteMany?: Prisma.RegistrationWorkspaceScalarWhereInput | Prisma.RegistrationWorkspaceScalarWhereInput[]
+}
+
 export type RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput = {
   create?: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutRegistrationWindowInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutRegistrationWindowInput> | Prisma.RegistrationWorkspaceCreateWithoutRegistrationWindowInput[] | Prisma.RegistrationWorkspaceUncheckedCreateWithoutRegistrationWindowInput[]
   connectOrCreate?: Prisma.RegistrationWorkspaceCreateOrConnectWithoutRegistrationWindowInput | Prisma.RegistrationWorkspaceCreateOrConnectWithoutRegistrationWindowInput[]
@@ -657,6 +807,18 @@ export type RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNes
 
 export type NullableEnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole | null
+}
+
+export type EnumRegistrationSourceFieldUpdateOperationsInput = {
+  set?: $Enums.RegistrationSource
+}
+
+export type EnumRegistrationVisibilityFieldUpdateOperationsInput = {
+  set?: $Enums.RegistrationVisibility
+}
+
+export type EnumBillingScopeFieldUpdateOperationsInput = {
+  set?: $Enums.BillingScope
 }
 
 export type RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput = {
@@ -707,6 +869,20 @@ export type RegistrationWorkspaceUpdateOneWithoutChangeRequestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.RegistrationWorkspaceUpdateToOneWithWhereWithoutChangeRequestsInput, Prisma.RegistrationWorkspaceUpdateWithoutChangeRequestsInput>, Prisma.RegistrationWorkspaceUncheckedUpdateWithoutChangeRequestsInput>
 }
 
+export type RegistrationWorkspaceCreateNestedOneWithoutFeeStatementsInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutFeeStatementsInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutFeeStatementsInput>
+  connectOrCreate?: Prisma.RegistrationWorkspaceCreateOrConnectWithoutFeeStatementsInput
+  connect?: Prisma.RegistrationWorkspaceWhereUniqueInput
+}
+
+export type RegistrationWorkspaceUpdateOneRequiredWithoutFeeStatementsNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutFeeStatementsInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutFeeStatementsInput>
+  connectOrCreate?: Prisma.RegistrationWorkspaceCreateOrConnectWithoutFeeStatementsInput
+  upsert?: Prisma.RegistrationWorkspaceUpsertWithoutFeeStatementsInput
+  connect?: Prisma.RegistrationWorkspaceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RegistrationWorkspaceUpdateToOneWithWhereWithoutFeeStatementsInput, Prisma.RegistrationWorkspaceUpdateWithoutFeeStatementsInput>, Prisma.RegistrationWorkspaceUncheckedUpdateWithoutFeeStatementsInput>
+}
+
 export type RegistrationWorkspaceCreateWithoutStudentInput = {
   id?: string
   lockedAt?: Date | string | null
@@ -716,17 +892,23 @@ export type RegistrationWorkspaceCreateWithoutStudentInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
+  candidate?: Prisma.CandidateCreateNestedOneWithoutRegistrationWorkspacesInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutWorkspacesInput
   lastAdjustedByUser?: Prisma.UserCreateNestedOneWithoutWorkspacesLastAdjustedInput
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceUncheckedCreateWithoutStudentInput = {
   id?: string
+  candidateId?: string | null
   registrationWindowId: string
   lockedAt?: Date | string | null
   lastAdjustedByUserId?: string | null
@@ -736,11 +918,15 @@ export type RegistrationWorkspaceUncheckedCreateWithoutStudentInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceCreateOrConnectWithoutStudentInput = {
@@ -762,18 +948,24 @@ export type RegistrationWorkspaceCreateWithoutLastAdjustedByUserInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutRegistrationWorkspacesInput
+  student?: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutWorkspacesInput
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceUncheckedCreateWithoutLastAdjustedByUserInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWindowId: string
   lockedAt?: Date | string | null
   lastAdjustedByRole?: $Enums.UserRole | null
@@ -782,11 +974,15 @@ export type RegistrationWorkspaceUncheckedCreateWithoutLastAdjustedByUserInput =
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceCreateOrConnectWithoutLastAdjustedByUserInput = {
@@ -820,7 +1016,8 @@ export type RegistrationWorkspaceScalarWhereInput = {
   OR?: Prisma.RegistrationWorkspaceScalarWhereInput[]
   NOT?: Prisma.RegistrationWorkspaceScalarWhereInput | Prisma.RegistrationWorkspaceScalarWhereInput[]
   id?: Prisma.StringFilter<"RegistrationWorkspace"> | string
-  studentId?: Prisma.StringFilter<"RegistrationWorkspace"> | string
+  candidateId?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
+  studentId?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
   registrationWindowId?: Prisma.StringFilter<"RegistrationWorkspace"> | string
   lockedAt?: Prisma.DateTimeNullableFilter<"RegistrationWorkspace"> | Date | string | null
   lastAdjustedByUserId?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
@@ -830,6 +1027,9 @@ export type RegistrationWorkspaceScalarWhereInput = {
   lastAdjustmentSummary?: Prisma.StringNullableFilter<"RegistrationWorkspace"> | string | null
   hasPostLockAdjustment?: Prisma.BoolFilter<"RegistrationWorkspace"> | boolean
   isLateRegistration?: Prisma.BoolFilter<"RegistrationWorkspace"> | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFilter<"RegistrationWorkspace"> | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFilter<"RegistrationWorkspace"> | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFilter<"RegistrationWorkspace"> | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFilter<"RegistrationWorkspace"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RegistrationWorkspace"> | Date | string
 }
@@ -850,6 +1050,78 @@ export type RegistrationWorkspaceUpdateManyWithWhereWithoutLastAdjustedByUserInp
   data: Prisma.XOR<Prisma.RegistrationWorkspaceUpdateManyMutationInput, Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserInput>
 }
 
+export type RegistrationWorkspaceCreateWithoutCandidateInput = {
+  id?: string
+  lockedAt?: Date | string | null
+  lastAdjustedByRole?: $Enums.UserRole | null
+  lastAdjustedAt?: Date | string | null
+  lastAdjustmentReason?: string | null
+  lastAdjustmentSummary?: string | null
+  hasPostLockAdjustment?: boolean
+  isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  student?: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
+  registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutWorkspacesInput
+  lastAdjustedByUser?: Prisma.UserCreateNestedOneWithoutWorkspacesLastAdjustedInput
+  registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
+  auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
+  changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+}
+
+export type RegistrationWorkspaceUncheckedCreateWithoutCandidateInput = {
+  id?: string
+  studentId?: string | null
+  registrationWindowId: string
+  lockedAt?: Date | string | null
+  lastAdjustedByUserId?: string | null
+  lastAdjustedByRole?: $Enums.UserRole | null
+  lastAdjustedAt?: Date | string | null
+  lastAdjustmentReason?: string | null
+  lastAdjustmentSummary?: string | null
+  hasPostLockAdjustment?: boolean
+  isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+}
+
+export type RegistrationWorkspaceCreateOrConnectWithoutCandidateInput = {
+  where: Prisma.RegistrationWorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutCandidateInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutCandidateInput>
+}
+
+export type RegistrationWorkspaceCreateManyCandidateInputEnvelope = {
+  data: Prisma.RegistrationWorkspaceCreateManyCandidateInput | Prisma.RegistrationWorkspaceCreateManyCandidateInput[]
+  skipDuplicates?: boolean
+}
+
+export type RegistrationWorkspaceUpsertWithWhereUniqueWithoutCandidateInput = {
+  where: Prisma.RegistrationWorkspaceWhereUniqueInput
+  update: Prisma.XOR<Prisma.RegistrationWorkspaceUpdateWithoutCandidateInput, Prisma.RegistrationWorkspaceUncheckedUpdateWithoutCandidateInput>
+  create: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutCandidateInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutCandidateInput>
+}
+
+export type RegistrationWorkspaceUpdateWithWhereUniqueWithoutCandidateInput = {
+  where: Prisma.RegistrationWorkspaceWhereUniqueInput
+  data: Prisma.XOR<Prisma.RegistrationWorkspaceUpdateWithoutCandidateInput, Prisma.RegistrationWorkspaceUncheckedUpdateWithoutCandidateInput>
+}
+
+export type RegistrationWorkspaceUpdateManyWithWhereWithoutCandidateInput = {
+  where: Prisma.RegistrationWorkspaceScalarWhereInput
+  data: Prisma.XOR<Prisma.RegistrationWorkspaceUpdateManyMutationInput, Prisma.RegistrationWorkspaceUncheckedUpdateManyWithoutCandidateInput>
+}
+
 export type RegistrationWorkspaceCreateWithoutRegistrationWindowInput = {
   id?: string
   lockedAt?: Date | string | null
@@ -859,18 +1131,24 @@ export type RegistrationWorkspaceCreateWithoutRegistrationWindowInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutRegistrationWorkspacesInput
+  student?: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
   lastAdjustedByUser?: Prisma.UserCreateNestedOneWithoutWorkspacesLastAdjustedInput
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceUncheckedCreateWithoutRegistrationWindowInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   lockedAt?: Date | string | null
   lastAdjustedByUserId?: string | null
   lastAdjustedByRole?: $Enums.UserRole | null
@@ -879,11 +1157,15 @@ export type RegistrationWorkspaceUncheckedCreateWithoutRegistrationWindowInput =
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceCreateOrConnectWithoutRegistrationWindowInput = {
@@ -921,18 +1203,24 @@ export type RegistrationWorkspaceCreateWithoutRegistrationsInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutRegistrationWorkspacesInput
+  student?: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutWorkspacesInput
   lastAdjustedByUser?: Prisma.UserCreateNestedOneWithoutWorkspacesLastAdjustedInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceUncheckedCreateWithoutRegistrationsInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWindowId: string
   lockedAt?: Date | string | null
   lastAdjustedByUserId?: string | null
@@ -942,10 +1230,14 @@ export type RegistrationWorkspaceUncheckedCreateWithoutRegistrationsInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceCreateOrConnectWithoutRegistrationsInput = {
@@ -973,18 +1265,24 @@ export type RegistrationWorkspaceUpdateWithoutRegistrationsInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutRegistrationWorkspacesNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutRegistrationWorkspacesNestedInput
+  student?: Prisma.UserUpdateOneWithoutRegistrationWorkspacesNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutWorkspacesNestedInput
   lastAdjustedByUser?: Prisma.UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceUncheckedUpdateWithoutRegistrationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -994,10 +1292,14 @@ export type RegistrationWorkspaceUncheckedUpdateWithoutRegistrationsInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceCreateWithoutAuditLogsInput = {
@@ -1009,18 +1311,24 @@ export type RegistrationWorkspaceCreateWithoutAuditLogsInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutRegistrationWorkspacesInput
+  student?: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutWorkspacesInput
   lastAdjustedByUser?: Prisma.UserCreateNestedOneWithoutWorkspacesLastAdjustedInput
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceUncheckedCreateWithoutAuditLogsInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWindowId: string
   lockedAt?: Date | string | null
   lastAdjustedByUserId?: string | null
@@ -1030,10 +1338,14 @@ export type RegistrationWorkspaceUncheckedCreateWithoutAuditLogsInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceCreateOrConnectWithoutAuditLogsInput = {
@@ -1061,18 +1373,24 @@ export type RegistrationWorkspaceUpdateWithoutAuditLogsInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutRegistrationWorkspacesNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutRegistrationWorkspacesNestedInput
+  student?: Prisma.UserUpdateOneWithoutRegistrationWorkspacesNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutWorkspacesNestedInput
   lastAdjustedByUser?: Prisma.UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1082,10 +1400,14 @@ export type RegistrationWorkspaceUncheckedUpdateWithoutAuditLogsInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceCreateWithoutChangeRequestsInput = {
@@ -1097,18 +1419,24 @@ export type RegistrationWorkspaceCreateWithoutChangeRequestsInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutRegistrationWorkspacesInput
+  student?: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutWorkspacesInput
   lastAdjustedByUser?: Prisma.UserCreateNestedOneWithoutWorkspacesLastAdjustedInput
   registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceUncheckedCreateWithoutChangeRequestsInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWindowId: string
   lockedAt?: Date | string | null
   lastAdjustedByUserId?: string | null
@@ -1118,10 +1446,14 @@ export type RegistrationWorkspaceUncheckedCreateWithoutChangeRequestsInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  feeStatements?: Prisma.FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
 }
 
 export type RegistrationWorkspaceCreateOrConnectWithoutChangeRequestsInput = {
@@ -1149,18 +1481,24 @@ export type RegistrationWorkspaceUpdateWithoutChangeRequestsInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutRegistrationWorkspacesNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutRegistrationWorkspacesNestedInput
+  student?: Prisma.UserUpdateOneWithoutRegistrationWorkspacesNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutWorkspacesNestedInput
   lastAdjustedByUser?: Prisma.UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceUncheckedUpdateWithoutChangeRequestsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1170,14 +1508,43 @@ export type RegistrationWorkspaceUncheckedUpdateWithoutChangeRequestsInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
-export type RegistrationWorkspaceCreateManyStudentInput = {
+export type RegistrationWorkspaceCreateWithoutFeeStatementsInput = {
   id?: string
+  lockedAt?: Date | string | null
+  lastAdjustedByRole?: $Enums.UserRole | null
+  lastAdjustedAt?: Date | string | null
+  lastAdjustmentReason?: string | null
+  lastAdjustmentSummary?: string | null
+  hasPostLockAdjustment?: boolean
+  isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  candidate?: Prisma.CandidateCreateNestedOneWithoutRegistrationWorkspacesInput
+  student?: Prisma.UserCreateNestedOneWithoutRegistrationWorkspacesInput
+  registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutWorkspacesInput
+  lastAdjustedByUser?: Prisma.UserCreateNestedOneWithoutWorkspacesLastAdjustedInput
+  registrations?: Prisma.StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
+  auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
+  changeRequests?: Prisma.RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+}
+
+export type RegistrationWorkspaceUncheckedCreateWithoutFeeStatementsInput = {
+  id?: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWindowId: string
   lockedAt?: Date | string | null
   lastAdjustedByUserId?: string | null
@@ -1187,13 +1554,101 @@ export type RegistrationWorkspaceCreateManyStudentInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+}
+
+export type RegistrationWorkspaceCreateOrConnectWithoutFeeStatementsInput = {
+  where: Prisma.RegistrationWorkspaceWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutFeeStatementsInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutFeeStatementsInput>
+}
+
+export type RegistrationWorkspaceUpsertWithoutFeeStatementsInput = {
+  update: Prisma.XOR<Prisma.RegistrationWorkspaceUpdateWithoutFeeStatementsInput, Prisma.RegistrationWorkspaceUncheckedUpdateWithoutFeeStatementsInput>
+  create: Prisma.XOR<Prisma.RegistrationWorkspaceCreateWithoutFeeStatementsInput, Prisma.RegistrationWorkspaceUncheckedCreateWithoutFeeStatementsInput>
+  where?: Prisma.RegistrationWorkspaceWhereInput
+}
+
+export type RegistrationWorkspaceUpdateToOneWithWhereWithoutFeeStatementsInput = {
+  where?: Prisma.RegistrationWorkspaceWhereInput
+  data: Prisma.XOR<Prisma.RegistrationWorkspaceUpdateWithoutFeeStatementsInput, Prisma.RegistrationWorkspaceUncheckedUpdateWithoutFeeStatementsInput>
+}
+
+export type RegistrationWorkspaceUpdateWithoutFeeStatementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastAdjustedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  lastAdjustedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastAdjustmentReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  candidate?: Prisma.CandidateUpdateOneWithoutRegistrationWorkspacesNestedInput
+  student?: Prisma.UserUpdateOneWithoutRegistrationWorkspacesNestedInput
+  registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutWorkspacesNestedInput
+  lastAdjustedByUser?: Prisma.UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput
+  registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
+  auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+}
+
+export type RegistrationWorkspaceUncheckedUpdateWithoutFeeStatementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastAdjustedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  lastAdjustedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastAdjustmentReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+}
+
+export type RegistrationWorkspaceCreateManyStudentInput = {
+  id?: string
+  candidateId?: string | null
+  registrationWindowId: string
+  lockedAt?: Date | string | null
+  lastAdjustedByUserId?: string | null
+  lastAdjustedByRole?: $Enums.UserRole | null
+  lastAdjustedAt?: Date | string | null
+  lastAdjustmentReason?: string | null
+  lastAdjustmentSummary?: string | null
+  hasPostLockAdjustment?: boolean
+  isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type RegistrationWorkspaceCreateManyLastAdjustedByUserInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWindowId: string
   lockedAt?: Date | string | null
   lastAdjustedByRole?: $Enums.UserRole | null
@@ -1202,6 +1657,9 @@ export type RegistrationWorkspaceCreateManyLastAdjustedByUserInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1215,17 +1673,23 @@ export type RegistrationWorkspaceUpdateWithoutStudentInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  candidate?: Prisma.CandidateUpdateOneWithoutRegistrationWorkspacesNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutWorkspacesNestedInput
   lastAdjustedByUser?: Prisma.UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1235,15 +1699,20 @@ export type RegistrationWorkspaceUncheckedUpdateWithoutStudentInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1253,6 +1722,9 @@ export type RegistrationWorkspaceUncheckedUpdateManyWithoutStudentInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1266,18 +1738,24 @@ export type RegistrationWorkspaceUpdateWithoutLastAdjustedByUserInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutRegistrationWorkspacesNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutRegistrationWorkspacesNestedInput
+  student?: Prisma.UserUpdateOneWithoutRegistrationWorkspacesNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutWorkspacesNestedInput
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceUncheckedUpdateWithoutLastAdjustedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
@@ -1286,16 +1764,21 @@ export type RegistrationWorkspaceUncheckedUpdateWithoutLastAdjustedByUserInput =
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
@@ -1304,13 +1787,17 @@ export type RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserInp
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type RegistrationWorkspaceCreateManyRegistrationWindowInput = {
+export type RegistrationWorkspaceCreateManyCandidateInput = {
   id?: string
-  studentId: string
+  studentId?: string | null
+  registrationWindowId: string
   lockedAt?: Date | string | null
   lastAdjustedByUserId?: string | null
   lastAdjustedByRole?: $Enums.UserRole | null
@@ -1319,6 +1806,93 @@ export type RegistrationWorkspaceCreateManyRegistrationWindowInput = {
   lastAdjustmentSummary?: string | null
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RegistrationWorkspaceUpdateWithoutCandidateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastAdjustedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  lastAdjustedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastAdjustmentReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  student?: Prisma.UserUpdateOneWithoutRegistrationWorkspacesNestedInput
+  registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutWorkspacesNestedInput
+  lastAdjustedByUser?: Prisma.UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput
+  registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
+  auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+}
+
+export type RegistrationWorkspaceUncheckedUpdateWithoutCandidateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastAdjustedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  lastAdjustedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastAdjustmentReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+}
+
+export type RegistrationWorkspaceUncheckedUpdateManyWithoutCandidateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastAdjustedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  lastAdjustedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastAdjustmentReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type RegistrationWorkspaceCreateManyRegistrationWindowInput = {
+  id?: string
+  candidateId?: string | null
+  studentId?: string | null
+  lockedAt?: Date | string | null
+  lastAdjustedByUserId?: string | null
+  lastAdjustedByRole?: $Enums.UserRole | null
+  lastAdjustedAt?: Date | string | null
+  lastAdjustmentReason?: string | null
+  lastAdjustmentSummary?: string | null
+  hasPostLockAdjustment?: boolean
+  isLateRegistration?: boolean
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1332,18 +1906,24 @@ export type RegistrationWorkspaceUpdateWithoutRegistrationWindowInput = {
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutRegistrationWorkspacesNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutRegistrationWorkspacesNestedInput
+  student?: Prisma.UserUpdateOneWithoutRegistrationWorkspacesNestedInput
   lastAdjustedByUser?: Prisma.UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput
   registrations?: Prisma.StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceUncheckedUpdateWithoutRegistrationWindowInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastAdjustedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
@@ -1352,16 +1932,21 @@ export type RegistrationWorkspaceUncheckedUpdateWithoutRegistrationWindowInput =
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   changeRequests?: Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  feeStatements?: Prisma.FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
 }
 
 export type RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   lastAdjustedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lastAdjustedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
@@ -1370,6 +1955,9 @@ export type RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowInp
   lastAdjustmentSummary?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   hasPostLockAdjustment?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isLateRegistration?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1383,12 +1971,14 @@ export type RegistrationWorkspaceCountOutputType = {
   registrations: number
   auditLogs: number
   changeRequests: number
+  feeStatements: number
 }
 
 export type RegistrationWorkspaceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrations?: boolean | RegistrationWorkspaceCountOutputTypeCountRegistrationsArgs
   auditLogs?: boolean | RegistrationWorkspaceCountOutputTypeCountAuditLogsArgs
   changeRequests?: boolean | RegistrationWorkspaceCountOutputTypeCountChangeRequestsArgs
+  feeStatements?: boolean | RegistrationWorkspaceCountOutputTypeCountFeeStatementsArgs
 }
 
 /**
@@ -1422,9 +2012,17 @@ export type RegistrationWorkspaceCountOutputTypeCountChangeRequestsArgs<ExtArgs 
   where?: Prisma.RegistrationChangeRequestWhereInput
 }
 
+/**
+ * RegistrationWorkspaceCountOutputType without action
+ */
+export type RegistrationWorkspaceCountOutputTypeCountFeeStatementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeeStatementWhereInput
+}
+
 
 export type RegistrationWorkspaceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  candidateId?: boolean
   studentId?: boolean
   registrationWindowId?: boolean
   lockedAt?: boolean
@@ -1435,19 +2033,25 @@ export type RegistrationWorkspaceSelect<ExtArgs extends runtime.Types.Extensions
   lastAdjustmentSummary?: boolean
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: boolean
+  visibility?: boolean
+  billingScope?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationWorkspace$studentArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
   lastAdjustedByUser?: boolean | Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>
   registrations?: boolean | Prisma.RegistrationWorkspace$registrationsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.RegistrationWorkspace$auditLogsArgs<ExtArgs>
   changeRequests?: boolean | Prisma.RegistrationWorkspace$changeRequestsArgs<ExtArgs>
+  feeStatements?: boolean | Prisma.RegistrationWorkspace$feeStatementsArgs<ExtArgs>
   _count?: boolean | Prisma.RegistrationWorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["registrationWorkspace"]>
 
 export type RegistrationWorkspaceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  candidateId?: boolean
   studentId?: boolean
   registrationWindowId?: boolean
   lockedAt?: boolean
@@ -1458,15 +2062,20 @@ export type RegistrationWorkspaceSelectCreateManyAndReturn<ExtArgs extends runti
   lastAdjustmentSummary?: boolean
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: boolean
+  visibility?: boolean
+  billingScope?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationWorkspace$studentArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
   lastAdjustedByUser?: boolean | Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["registrationWorkspace"]>
 
 export type RegistrationWorkspaceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  candidateId?: boolean
   studentId?: boolean
   registrationWindowId?: boolean
   lockedAt?: boolean
@@ -1477,15 +2086,20 @@ export type RegistrationWorkspaceSelectUpdateManyAndReturn<ExtArgs extends runti
   lastAdjustmentSummary?: boolean
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: boolean
+  visibility?: boolean
+  billingScope?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationWorkspace$studentArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
   lastAdjustedByUser?: boolean | Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["registrationWorkspace"]>
 
 export type RegistrationWorkspaceSelectScalar = {
   id?: boolean
+  candidateId?: boolean
   studentId?: boolean
   registrationWindowId?: boolean
   lockedAt?: boolean
@@ -1496,27 +2110,34 @@ export type RegistrationWorkspaceSelectScalar = {
   lastAdjustmentSummary?: boolean
   hasPostLockAdjustment?: boolean
   isLateRegistration?: boolean
+  registrationSource?: boolean
+  visibility?: boolean
+  billingScope?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RegistrationWorkspaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "registrationWindowId" | "lockedAt" | "lastAdjustedByUserId" | "lastAdjustedByRole" | "lastAdjustedAt" | "lastAdjustmentReason" | "lastAdjustmentSummary" | "hasPostLockAdjustment" | "isLateRegistration" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationWorkspace"]>
+export type RegistrationWorkspaceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "candidateId" | "studentId" | "registrationWindowId" | "lockedAt" | "lastAdjustedByUserId" | "lastAdjustedByRole" | "lastAdjustedAt" | "lastAdjustmentReason" | "lastAdjustmentSummary" | "hasPostLockAdjustment" | "isLateRegistration" | "registrationSource" | "visibility" | "billingScope" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationWorkspace"]>
 export type RegistrationWorkspaceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationWorkspace$studentArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
   lastAdjustedByUser?: boolean | Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>
   registrations?: boolean | Prisma.RegistrationWorkspace$registrationsArgs<ExtArgs>
   auditLogs?: boolean | Prisma.RegistrationWorkspace$auditLogsArgs<ExtArgs>
   changeRequests?: boolean | Prisma.RegistrationWorkspace$changeRequestsArgs<ExtArgs>
+  feeStatements?: boolean | Prisma.RegistrationWorkspace$feeStatementsArgs<ExtArgs>
   _count?: boolean | Prisma.RegistrationWorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RegistrationWorkspaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationWorkspace$studentArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
   lastAdjustedByUser?: boolean | Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>
 }
 export type RegistrationWorkspaceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationWorkspace$studentArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
   lastAdjustedByUser?: boolean | Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>
 }
@@ -1524,16 +2145,19 @@ export type RegistrationWorkspaceIncludeUpdateManyAndReturn<ExtArgs extends runt
 export type $RegistrationWorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RegistrationWorkspace"
   objects: {
-    student: Prisma.$UserPayload<ExtArgs>
+    candidate: Prisma.$CandidatePayload<ExtArgs> | null
+    student: Prisma.$UserPayload<ExtArgs> | null
     registrationWindow: Prisma.$RegistrationWindowPayload<ExtArgs>
     lastAdjustedByUser: Prisma.$UserPayload<ExtArgs> | null
     registrations: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
     auditLogs: Prisma.$RegistrationAuditLogPayload<ExtArgs>[]
     changeRequests: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
+    feeStatements: Prisma.$FeeStatementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    studentId: string
+    candidateId: string | null
+    studentId: string | null
     registrationWindowId: string
     lockedAt: Date | null
     lastAdjustedByUserId: string | null
@@ -1543,6 +2167,9 @@ export type $RegistrationWorkspacePayload<ExtArgs extends runtime.Types.Extensio
     lastAdjustmentSummary: string | null
     hasPostLockAdjustment: boolean
     isLateRegistration: boolean
+    registrationSource: $Enums.RegistrationSource
+    visibility: $Enums.RegistrationVisibility
+    billingScope: $Enums.BillingScope
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["registrationWorkspace"]>
@@ -1939,12 +2566,14 @@ readonly fields: RegistrationWorkspaceFieldRefs;
  */
 export interface Prisma__RegistrationWorkspaceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  student<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  candidate<T extends Prisma.RegistrationWorkspace$candidateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>>): Prisma.Prisma__CandidateClient<runtime.Types.Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  student<T extends Prisma.RegistrationWorkspace$studentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWorkspace$studentArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   registrationWindow<T extends Prisma.RegistrationWindowDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWindowDefaultArgs<ExtArgs>>): Prisma.Prisma__RegistrationWindowClient<runtime.Types.Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   lastAdjustedByUser<T extends Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   registrations<T extends Prisma.RegistrationWorkspace$registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWorkspace$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.RegistrationWorkspace$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWorkspace$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   changeRequests<T extends Prisma.RegistrationWorkspace$changeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWorkspace$changeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feeStatements<T extends Prisma.RegistrationWorkspace$feeStatementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWorkspace$feeStatementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1975,6 +2604,7 @@ export interface Prisma__RegistrationWorkspaceClient<T, Null = never, ExtArgs ex
  */
 export interface RegistrationWorkspaceFieldRefs {
   readonly id: Prisma.FieldRef<"RegistrationWorkspace", 'String'>
+  readonly candidateId: Prisma.FieldRef<"RegistrationWorkspace", 'String'>
   readonly studentId: Prisma.FieldRef<"RegistrationWorkspace", 'String'>
   readonly registrationWindowId: Prisma.FieldRef<"RegistrationWorkspace", 'String'>
   readonly lockedAt: Prisma.FieldRef<"RegistrationWorkspace", 'DateTime'>
@@ -1985,6 +2615,9 @@ export interface RegistrationWorkspaceFieldRefs {
   readonly lastAdjustmentSummary: Prisma.FieldRef<"RegistrationWorkspace", 'String'>
   readonly hasPostLockAdjustment: Prisma.FieldRef<"RegistrationWorkspace", 'Boolean'>
   readonly isLateRegistration: Prisma.FieldRef<"RegistrationWorkspace", 'Boolean'>
+  readonly registrationSource: Prisma.FieldRef<"RegistrationWorkspace", 'RegistrationSource'>
+  readonly visibility: Prisma.FieldRef<"RegistrationWorkspace", 'RegistrationVisibility'>
+  readonly billingScope: Prisma.FieldRef<"RegistrationWorkspace", 'BillingScope'>
   readonly createdAt: Prisma.FieldRef<"RegistrationWorkspace", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"RegistrationWorkspace", 'DateTime'>
 }
@@ -2388,6 +3021,44 @@ export type RegistrationWorkspaceDeleteManyArgs<ExtArgs extends runtime.Types.Ex
 }
 
 /**
+ * RegistrationWorkspace.candidate
+ */
+export type RegistrationWorkspace$candidateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Candidate
+   */
+  select?: Prisma.CandidateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Candidate
+   */
+  omit?: Prisma.CandidateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CandidateInclude<ExtArgs> | null
+  where?: Prisma.CandidateWhereInput
+}
+
+/**
+ * RegistrationWorkspace.student
+ */
+export type RegistrationWorkspace$studentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
  * RegistrationWorkspace.lastAdjustedByUser
  */
 export type RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2476,6 +3147,30 @@ export type RegistrationWorkspace$changeRequestsArgs<ExtArgs extends runtime.Typ
   take?: number
   skip?: number
   distinct?: Prisma.RegistrationChangeRequestScalarFieldEnum | Prisma.RegistrationChangeRequestScalarFieldEnum[]
+}
+
+/**
+ * RegistrationWorkspace.feeStatements
+ */
+export type RegistrationWorkspace$feeStatementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeeStatement
+   */
+  select?: Prisma.FeeStatementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeeStatement
+   */
+  omit?: Prisma.FeeStatementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeeStatementInclude<ExtArgs> | null
+  where?: Prisma.FeeStatementWhereInput
+  orderBy?: Prisma.FeeStatementOrderByWithRelationInput | Prisma.FeeStatementOrderByWithRelationInput[]
+  cursor?: Prisma.FeeStatementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeeStatementScalarFieldEnum | Prisma.FeeStatementScalarFieldEnum[]
 }
 
 /**

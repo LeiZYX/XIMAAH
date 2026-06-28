@@ -26,6 +26,7 @@ export type AggregateStudentExamRegistration = {
 
 export type StudentExamRegistrationMinAggregateOutputType = {
   id: string | null
+  candidateId: string | null
   studentId: string | null
   registrationWorkspaceId: string | null
   examSessionId: string | null
@@ -40,15 +41,25 @@ export type StudentExamRegistrationMinAggregateOutputType = {
   classNameSnapshot: string | null
   emailSnapshot: string | null
   phoneSnapshot: string | null
+  assessmentHubCandidateNumberSnapshot: string | null
+  candidateTypeSnapshot: $Enums.CandidateType | null
   status: $Enums.RegistrationStatus | null
   lockedAt: Date | null
   cancelledAt: Date | null
+  registrationSource: $Enums.RegistrationSource | null
+  visibility: $Enums.RegistrationVisibility | null
+  billingScope: $Enums.BillingScope | null
+  addedByUserId: string | null
+  addedByRole: $Enums.UserRole | null
+  addedAt: Date | null
+  reason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type StudentExamRegistrationMaxAggregateOutputType = {
   id: string | null
+  candidateId: string | null
   studentId: string | null
   registrationWorkspaceId: string | null
   examSessionId: string | null
@@ -63,15 +74,25 @@ export type StudentExamRegistrationMaxAggregateOutputType = {
   classNameSnapshot: string | null
   emailSnapshot: string | null
   phoneSnapshot: string | null
+  assessmentHubCandidateNumberSnapshot: string | null
+  candidateTypeSnapshot: $Enums.CandidateType | null
   status: $Enums.RegistrationStatus | null
   lockedAt: Date | null
   cancelledAt: Date | null
+  registrationSource: $Enums.RegistrationSource | null
+  visibility: $Enums.RegistrationVisibility | null
+  billingScope: $Enums.BillingScope | null
+  addedByUserId: string | null
+  addedByRole: $Enums.UserRole | null
+  addedAt: Date | null
+  reason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
 
 export type StudentExamRegistrationCountAggregateOutputType = {
   id: number
+  candidateId: number
   studentId: number
   registrationWorkspaceId: number
   examSessionId: number
@@ -86,9 +107,18 @@ export type StudentExamRegistrationCountAggregateOutputType = {
   classNameSnapshot: number
   emailSnapshot: number
   phoneSnapshot: number
+  assessmentHubCandidateNumberSnapshot: number
+  candidateTypeSnapshot: number
   status: number
   lockedAt: number
   cancelledAt: number
+  registrationSource: number
+  visibility: number
+  billingScope: number
+  addedByUserId: number
+  addedByRole: number
+  addedAt: number
+  reason: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -97,6 +127,7 @@ export type StudentExamRegistrationCountAggregateOutputType = {
 
 export type StudentExamRegistrationMinAggregateInputType = {
   id?: true
+  candidateId?: true
   studentId?: true
   registrationWorkspaceId?: true
   examSessionId?: true
@@ -111,15 +142,25 @@ export type StudentExamRegistrationMinAggregateInputType = {
   classNameSnapshot?: true
   emailSnapshot?: true
   phoneSnapshot?: true
+  assessmentHubCandidateNumberSnapshot?: true
+  candidateTypeSnapshot?: true
   status?: true
   lockedAt?: true
   cancelledAt?: true
+  registrationSource?: true
+  visibility?: true
+  billingScope?: true
+  addedByUserId?: true
+  addedByRole?: true
+  addedAt?: true
+  reason?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type StudentExamRegistrationMaxAggregateInputType = {
   id?: true
+  candidateId?: true
   studentId?: true
   registrationWorkspaceId?: true
   examSessionId?: true
@@ -134,15 +175,25 @@ export type StudentExamRegistrationMaxAggregateInputType = {
   classNameSnapshot?: true
   emailSnapshot?: true
   phoneSnapshot?: true
+  assessmentHubCandidateNumberSnapshot?: true
+  candidateTypeSnapshot?: true
   status?: true
   lockedAt?: true
   cancelledAt?: true
+  registrationSource?: true
+  visibility?: true
+  billingScope?: true
+  addedByUserId?: true
+  addedByRole?: true
+  addedAt?: true
+  reason?: true
   createdAt?: true
   updatedAt?: true
 }
 
 export type StudentExamRegistrationCountAggregateInputType = {
   id?: true
+  candidateId?: true
   studentId?: true
   registrationWorkspaceId?: true
   examSessionId?: true
@@ -157,9 +208,18 @@ export type StudentExamRegistrationCountAggregateInputType = {
   classNameSnapshot?: true
   emailSnapshot?: true
   phoneSnapshot?: true
+  assessmentHubCandidateNumberSnapshot?: true
+  candidateTypeSnapshot?: true
   status?: true
   lockedAt?: true
   cancelledAt?: true
+  registrationSource?: true
+  visibility?: true
+  billingScope?: true
+  addedByUserId?: true
+  addedByRole?: true
+  addedAt?: true
+  reason?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -239,7 +299,8 @@ export type StudentExamRegistrationGroupByArgs<ExtArgs extends runtime.Types.Ext
 
 export type StudentExamRegistrationGroupByOutputType = {
   id: string
-  studentId: string
+  candidateId: string | null
+  studentId: string | null
   registrationWorkspaceId: string | null
   examSessionId: string
   registrationWindowId: string
@@ -253,9 +314,18 @@ export type StudentExamRegistrationGroupByOutputType = {
   classNameSnapshot: string
   emailSnapshot: string | null
   phoneSnapshot: string | null
+  assessmentHubCandidateNumberSnapshot: string | null
+  candidateTypeSnapshot: $Enums.CandidateType | null
   status: $Enums.RegistrationStatus
   lockedAt: Date | null
   cancelledAt: Date | null
+  registrationSource: $Enums.RegistrationSource
+  visibility: $Enums.RegistrationVisibility
+  billingScope: $Enums.BillingScope
+  addedByUserId: string | null
+  addedByRole: $Enums.UserRole | null
+  addedAt: Date | null
+  reason: string | null
   createdAt: Date
   updatedAt: Date
   _count: StudentExamRegistrationCountAggregateOutputType | null
@@ -283,7 +353,8 @@ export type StudentExamRegistrationWhereInput = {
   OR?: Prisma.StudentExamRegistrationWhereInput[]
   NOT?: Prisma.StudentExamRegistrationWhereInput | Prisma.StudentExamRegistrationWhereInput[]
   id?: Prisma.StringFilter<"StudentExamRegistration"> | string
-  studentId?: Prisma.StringFilter<"StudentExamRegistration"> | string
+  candidateId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  studentId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   registrationWorkspaceId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   examSessionId?: Prisma.StringFilter<"StudentExamRegistration"> | string
   registrationWindowId?: Prisma.StringFilter<"StudentExamRegistration"> | string
@@ -297,12 +368,22 @@ export type StudentExamRegistrationWhereInput = {
   classNameSnapshot?: Prisma.StringFilter<"StudentExamRegistration"> | string
   emailSnapshot?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   phoneSnapshot?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  candidateTypeSnapshot?: Prisma.EnumCandidateTypeNullableFilter<"StudentExamRegistration"> | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFilter<"StudentExamRegistration"> | $Enums.RegistrationStatus
   lockedAt?: Prisma.DateTimeNullableFilter<"StudentExamRegistration"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"StudentExamRegistration"> | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFilter<"StudentExamRegistration"> | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFilter<"StudentExamRegistration"> | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFilter<"StudentExamRegistration"> | $Enums.BillingScope
+  addedByUserId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  addedByRole?: Prisma.EnumUserRoleNullableFilter<"StudentExamRegistration"> | $Enums.UserRole | null
+  addedAt?: Prisma.DateTimeNullableFilter<"StudentExamRegistration"> | Date | string | null
+  reason?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentExamRegistration"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentExamRegistration"> | Date | string
-  student?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  candidate?: Prisma.XOR<Prisma.CandidateNullableScalarRelationFilter, Prisma.CandidateWhereInput> | null
+  student?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   registrationWorkspace?: Prisma.XOR<Prisma.RegistrationWorkspaceNullableScalarRelationFilter, Prisma.RegistrationWorkspaceWhereInput> | null
   examSession?: Prisma.XOR<Prisma.ExamSessionScalarRelationFilter, Prisma.ExamSessionWhereInput>
   registrationWindow?: Prisma.XOR<Prisma.RegistrationWindowScalarRelationFilter, Prisma.RegistrationWindowWhereInput>
@@ -310,12 +391,14 @@ export type StudentExamRegistrationWhereInput = {
   examSeries?: Prisma.XOR<Prisma.ExamSeriesScalarRelationFilter, Prisma.ExamSeriesWhereInput>
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
   paper?: Prisma.XOR<Prisma.PaperScalarRelationFilter, Prisma.PaperWhereInput>
+  addedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   auditLogs?: Prisma.RegistrationAuditLogListRelationFilter
 }
 
 export type StudentExamRegistrationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrderInput | Prisma.SortOrder
+  studentId?: Prisma.SortOrderInput | Prisma.SortOrder
   registrationWorkspaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   examSessionId?: Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrder
@@ -329,11 +412,21 @@ export type StudentExamRegistrationOrderByWithRelationInput = {
   classNameSnapshot?: Prisma.SortOrder
   emailSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
+  assessmentHubCandidateNumberSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
+  candidateTypeSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  registrationSource?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  billingScope?: Prisma.SortOrder
+  addedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  addedByRole?: Prisma.SortOrderInput | Prisma.SortOrder
+  addedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  candidate?: Prisma.CandidateOrderByWithRelationInput
   student?: Prisma.UserOrderByWithRelationInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceOrderByWithRelationInput
   examSession?: Prisma.ExamSessionOrderByWithRelationInput
@@ -342,16 +435,19 @@ export type StudentExamRegistrationOrderByWithRelationInput = {
   examSeries?: Prisma.ExamSeriesOrderByWithRelationInput
   subject?: Prisma.SubjectOrderByWithRelationInput
   paper?: Prisma.PaperOrderByWithRelationInput
+  addedByUser?: Prisma.UserOrderByWithRelationInput
   auditLogs?: Prisma.RegistrationAuditLogOrderByRelationAggregateInput
 }
 
 export type StudentExamRegistrationWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  candidateId_examSessionId?: Prisma.StudentExamRegistrationCandidateIdExamSessionIdCompoundUniqueInput
   studentId_examSessionId?: Prisma.StudentExamRegistrationStudentIdExamSessionIdCompoundUniqueInput
   AND?: Prisma.StudentExamRegistrationWhereInput | Prisma.StudentExamRegistrationWhereInput[]
   OR?: Prisma.StudentExamRegistrationWhereInput[]
   NOT?: Prisma.StudentExamRegistrationWhereInput | Prisma.StudentExamRegistrationWhereInput[]
-  studentId?: Prisma.StringFilter<"StudentExamRegistration"> | string
+  candidateId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  studentId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   registrationWorkspaceId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   examSessionId?: Prisma.StringFilter<"StudentExamRegistration"> | string
   registrationWindowId?: Prisma.StringFilter<"StudentExamRegistration"> | string
@@ -365,12 +461,22 @@ export type StudentExamRegistrationWhereUniqueInput = Prisma.AtLeast<{
   classNameSnapshot?: Prisma.StringFilter<"StudentExamRegistration"> | string
   emailSnapshot?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   phoneSnapshot?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  candidateTypeSnapshot?: Prisma.EnumCandidateTypeNullableFilter<"StudentExamRegistration"> | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFilter<"StudentExamRegistration"> | $Enums.RegistrationStatus
   lockedAt?: Prisma.DateTimeNullableFilter<"StudentExamRegistration"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"StudentExamRegistration"> | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFilter<"StudentExamRegistration"> | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFilter<"StudentExamRegistration"> | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFilter<"StudentExamRegistration"> | $Enums.BillingScope
+  addedByUserId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  addedByRole?: Prisma.EnumUserRoleNullableFilter<"StudentExamRegistration"> | $Enums.UserRole | null
+  addedAt?: Prisma.DateTimeNullableFilter<"StudentExamRegistration"> | Date | string | null
+  reason?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentExamRegistration"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentExamRegistration"> | Date | string
-  student?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  candidate?: Prisma.XOR<Prisma.CandidateNullableScalarRelationFilter, Prisma.CandidateWhereInput> | null
+  student?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   registrationWorkspace?: Prisma.XOR<Prisma.RegistrationWorkspaceNullableScalarRelationFilter, Prisma.RegistrationWorkspaceWhereInput> | null
   examSession?: Prisma.XOR<Prisma.ExamSessionScalarRelationFilter, Prisma.ExamSessionWhereInput>
   registrationWindow?: Prisma.XOR<Prisma.RegistrationWindowScalarRelationFilter, Prisma.RegistrationWindowWhereInput>
@@ -378,12 +484,14 @@ export type StudentExamRegistrationWhereUniqueInput = Prisma.AtLeast<{
   examSeries?: Prisma.XOR<Prisma.ExamSeriesScalarRelationFilter, Prisma.ExamSeriesWhereInput>
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
   paper?: Prisma.XOR<Prisma.PaperScalarRelationFilter, Prisma.PaperWhereInput>
+  addedByUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   auditLogs?: Prisma.RegistrationAuditLogListRelationFilter
-}, "id" | "studentId_examSessionId">
+}, "id" | "candidateId_examSessionId" | "studentId_examSessionId">
 
 export type StudentExamRegistrationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  studentId?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrderInput | Prisma.SortOrder
+  studentId?: Prisma.SortOrderInput | Prisma.SortOrder
   registrationWorkspaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   examSessionId?: Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrder
@@ -397,9 +505,18 @@ export type StudentExamRegistrationOrderByWithAggregationInput = {
   classNameSnapshot?: Prisma.SortOrder
   emailSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
+  assessmentHubCandidateNumberSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
+  candidateTypeSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   cancelledAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  registrationSource?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  billingScope?: Prisma.SortOrder
+  addedByUserId?: Prisma.SortOrderInput | Prisma.SortOrder
+  addedByRole?: Prisma.SortOrderInput | Prisma.SortOrder
+  addedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  reason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentExamRegistrationCountOrderByAggregateInput
@@ -412,7 +529,8 @@ export type StudentExamRegistrationScalarWhereWithAggregatesInput = {
   OR?: Prisma.StudentExamRegistrationScalarWhereWithAggregatesInput[]
   NOT?: Prisma.StudentExamRegistrationScalarWhereWithAggregatesInput | Prisma.StudentExamRegistrationScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"StudentExamRegistration"> | string
-  studentId?: Prisma.StringWithAggregatesFilter<"StudentExamRegistration"> | string
+  candidateId?: Prisma.StringNullableWithAggregatesFilter<"StudentExamRegistration"> | string | null
+  studentId?: Prisma.StringNullableWithAggregatesFilter<"StudentExamRegistration"> | string | null
   registrationWorkspaceId?: Prisma.StringNullableWithAggregatesFilter<"StudentExamRegistration"> | string | null
   examSessionId?: Prisma.StringWithAggregatesFilter<"StudentExamRegistration"> | string
   registrationWindowId?: Prisma.StringWithAggregatesFilter<"StudentExamRegistration"> | string
@@ -426,9 +544,18 @@ export type StudentExamRegistrationScalarWhereWithAggregatesInput = {
   classNameSnapshot?: Prisma.StringWithAggregatesFilter<"StudentExamRegistration"> | string
   emailSnapshot?: Prisma.StringNullableWithAggregatesFilter<"StudentExamRegistration"> | string | null
   phoneSnapshot?: Prisma.StringNullableWithAggregatesFilter<"StudentExamRegistration"> | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.StringNullableWithAggregatesFilter<"StudentExamRegistration"> | string | null
+  candidateTypeSnapshot?: Prisma.EnumCandidateTypeNullableWithAggregatesFilter<"StudentExamRegistration"> | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusWithAggregatesFilter<"StudentExamRegistration"> | $Enums.RegistrationStatus
   lockedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StudentExamRegistration"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StudentExamRegistration"> | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceWithAggregatesFilter<"StudentExamRegistration"> | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityWithAggregatesFilter<"StudentExamRegistration"> | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeWithAggregatesFilter<"StudentExamRegistration"> | $Enums.BillingScope
+  addedByUserId?: Prisma.StringNullableWithAggregatesFilter<"StudentExamRegistration"> | string | null
+  addedByRole?: Prisma.EnumUserRoleNullableWithAggregatesFilter<"StudentExamRegistration"> | $Enums.UserRole | null
+  addedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StudentExamRegistration"> | Date | string | null
+  reason?: Prisma.StringNullableWithAggregatesFilter<"StudentExamRegistration"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StudentExamRegistration"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StudentExamRegistration"> | Date | string
 }
@@ -441,12 +568,21 @@ export type StudentExamRegistrationCreateInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
   examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
@@ -454,12 +590,14 @@ export type StudentExamRegistrationCreateInput = {
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
   subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
   paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
 }
 
 export type StudentExamRegistrationUncheckedCreateInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -473,9 +611,18 @@ export type StudentExamRegistrationUncheckedCreateInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
@@ -489,12 +636,21 @@ export type StudentExamRegistrationUpdateInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentRegistrationsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
@@ -502,12 +658,14 @@ export type StudentExamRegistrationUpdateInput = {
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   paper?: Prisma.PaperUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
 }
 
 export type StudentExamRegistrationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -521,9 +679,18 @@ export type StudentExamRegistrationUncheckedUpdateInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
@@ -531,7 +698,8 @@ export type StudentExamRegistrationUncheckedUpdateInput = {
 
 export type StudentExamRegistrationCreateManyInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -545,9 +713,18 @@ export type StudentExamRegistrationCreateManyInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -560,16 +737,25 @@ export type StudentExamRegistrationUpdateManyMutationInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentExamRegistrationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -583,9 +769,18 @@ export type StudentExamRegistrationUncheckedUpdateManyInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -600,6 +795,11 @@ export type StudentExamRegistrationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type StudentExamRegistrationCandidateIdExamSessionIdCompoundUniqueInput = {
+  candidateId: string
+  examSessionId: string
+}
+
 export type StudentExamRegistrationStudentIdExamSessionIdCompoundUniqueInput = {
   studentId: string
   examSessionId: string
@@ -607,6 +807,7 @@ export type StudentExamRegistrationStudentIdExamSessionIdCompoundUniqueInput = {
 
 export type StudentExamRegistrationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   registrationWorkspaceId?: Prisma.SortOrder
   examSessionId?: Prisma.SortOrder
@@ -621,15 +822,25 @@ export type StudentExamRegistrationCountOrderByAggregateInput = {
   classNameSnapshot?: Prisma.SortOrder
   emailSnapshot?: Prisma.SortOrder
   phoneSnapshot?: Prisma.SortOrder
+  assessmentHubCandidateNumberSnapshot?: Prisma.SortOrder
+  candidateTypeSnapshot?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
+  registrationSource?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  billingScope?: Prisma.SortOrder
+  addedByUserId?: Prisma.SortOrder
+  addedByRole?: Prisma.SortOrder
+  addedAt?: Prisma.SortOrder
+  reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type StudentExamRegistrationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   registrationWorkspaceId?: Prisma.SortOrder
   examSessionId?: Prisma.SortOrder
@@ -644,15 +855,25 @@ export type StudentExamRegistrationMaxOrderByAggregateInput = {
   classNameSnapshot?: Prisma.SortOrder
   emailSnapshot?: Prisma.SortOrder
   phoneSnapshot?: Prisma.SortOrder
+  assessmentHubCandidateNumberSnapshot?: Prisma.SortOrder
+  candidateTypeSnapshot?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
+  registrationSource?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  billingScope?: Prisma.SortOrder
+  addedByUserId?: Prisma.SortOrder
+  addedByRole?: Prisma.SortOrder
+  addedAt?: Prisma.SortOrder
+  reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type StudentExamRegistrationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   registrationWorkspaceId?: Prisma.SortOrder
   examSessionId?: Prisma.SortOrder
@@ -667,9 +888,18 @@ export type StudentExamRegistrationMinOrderByAggregateInput = {
   classNameSnapshot?: Prisma.SortOrder
   emailSnapshot?: Prisma.SortOrder
   phoneSnapshot?: Prisma.SortOrder
+  assessmentHubCandidateNumberSnapshot?: Prisma.SortOrder
+  candidateTypeSnapshot?: Prisma.SortOrder
   status?: Prisma.SortOrder
   lockedAt?: Prisma.SortOrder
   cancelledAt?: Prisma.SortOrder
+  registrationSource?: Prisma.SortOrder
+  visibility?: Prisma.SortOrder
+  billingScope?: Prisma.SortOrder
+  addedByUserId?: Prisma.SortOrder
+  addedByRole?: Prisma.SortOrder
+  addedAt?: Prisma.SortOrder
+  reason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -686,10 +916,24 @@ export type StudentExamRegistrationCreateNestedManyWithoutStudentInput = {
   connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
 }
 
+export type StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput = {
+  create?: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutAddedByUserInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput> | Prisma.StudentExamRegistrationCreateWithoutAddedByUserInput[] | Prisma.StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput[]
+  connectOrCreate?: Prisma.StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput | Prisma.StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput[]
+  createMany?: Prisma.StudentExamRegistrationCreateManyAddedByUserInputEnvelope
+  connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+}
+
 export type StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput = {
   create?: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutStudentInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutStudentInput> | Prisma.StudentExamRegistrationCreateWithoutStudentInput[] | Prisma.StudentExamRegistrationUncheckedCreateWithoutStudentInput[]
   connectOrCreate?: Prisma.StudentExamRegistrationCreateOrConnectWithoutStudentInput | Prisma.StudentExamRegistrationCreateOrConnectWithoutStudentInput[]
   createMany?: Prisma.StudentExamRegistrationCreateManyStudentInputEnvelope
+  connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+}
+
+export type StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput = {
+  create?: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutAddedByUserInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput> | Prisma.StudentExamRegistrationCreateWithoutAddedByUserInput[] | Prisma.StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput[]
+  connectOrCreate?: Prisma.StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput | Prisma.StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput[]
+  createMany?: Prisma.StudentExamRegistrationCreateManyAddedByUserInputEnvelope
   connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
 }
 
@@ -707,6 +951,20 @@ export type StudentExamRegistrationUpdateManyWithoutStudentNestedInput = {
   deleteMany?: Prisma.StudentExamRegistrationScalarWhereInput | Prisma.StudentExamRegistrationScalarWhereInput[]
 }
 
+export type StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutAddedByUserInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput> | Prisma.StudentExamRegistrationCreateWithoutAddedByUserInput[] | Prisma.StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput[]
+  connectOrCreate?: Prisma.StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput | Prisma.StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput[]
+  upsert?: Prisma.StudentExamRegistrationUpsertWithWhereUniqueWithoutAddedByUserInput | Prisma.StudentExamRegistrationUpsertWithWhereUniqueWithoutAddedByUserInput[]
+  createMany?: Prisma.StudentExamRegistrationCreateManyAddedByUserInputEnvelope
+  set?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  disconnect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  delete?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  update?: Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutAddedByUserInput | Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutAddedByUserInput[]
+  updateMany?: Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutAddedByUserInput | Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutAddedByUserInput[]
+  deleteMany?: Prisma.StudentExamRegistrationScalarWhereInput | Prisma.StudentExamRegistrationScalarWhereInput[]
+}
+
 export type StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput = {
   create?: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutStudentInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutStudentInput> | Prisma.StudentExamRegistrationCreateWithoutStudentInput[] | Prisma.StudentExamRegistrationUncheckedCreateWithoutStudentInput[]
   connectOrCreate?: Prisma.StudentExamRegistrationCreateOrConnectWithoutStudentInput | Prisma.StudentExamRegistrationCreateOrConnectWithoutStudentInput[]
@@ -718,6 +976,62 @@ export type StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput 
   connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
   update?: Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutStudentInput | Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutStudentInput[]
   updateMany?: Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutStudentInput | Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutStudentInput[]
+  deleteMany?: Prisma.StudentExamRegistrationScalarWhereInput | Prisma.StudentExamRegistrationScalarWhereInput[]
+}
+
+export type StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutAddedByUserInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput> | Prisma.StudentExamRegistrationCreateWithoutAddedByUserInput[] | Prisma.StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput[]
+  connectOrCreate?: Prisma.StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput | Prisma.StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput[]
+  upsert?: Prisma.StudentExamRegistrationUpsertWithWhereUniqueWithoutAddedByUserInput | Prisma.StudentExamRegistrationUpsertWithWhereUniqueWithoutAddedByUserInput[]
+  createMany?: Prisma.StudentExamRegistrationCreateManyAddedByUserInputEnvelope
+  set?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  disconnect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  delete?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  update?: Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutAddedByUserInput | Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutAddedByUserInput[]
+  updateMany?: Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutAddedByUserInput | Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutAddedByUserInput[]
+  deleteMany?: Prisma.StudentExamRegistrationScalarWhereInput | Prisma.StudentExamRegistrationScalarWhereInput[]
+}
+
+export type StudentExamRegistrationCreateNestedManyWithoutCandidateInput = {
+  create?: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutCandidateInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutCandidateInput> | Prisma.StudentExamRegistrationCreateWithoutCandidateInput[] | Prisma.StudentExamRegistrationUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.StudentExamRegistrationCreateOrConnectWithoutCandidateInput | Prisma.StudentExamRegistrationCreateOrConnectWithoutCandidateInput[]
+  createMany?: Prisma.StudentExamRegistrationCreateManyCandidateInputEnvelope
+  connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+}
+
+export type StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput = {
+  create?: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutCandidateInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutCandidateInput> | Prisma.StudentExamRegistrationCreateWithoutCandidateInput[] | Prisma.StudentExamRegistrationUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.StudentExamRegistrationCreateOrConnectWithoutCandidateInput | Prisma.StudentExamRegistrationCreateOrConnectWithoutCandidateInput[]
+  createMany?: Prisma.StudentExamRegistrationCreateManyCandidateInputEnvelope
+  connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+}
+
+export type StudentExamRegistrationUpdateManyWithoutCandidateNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutCandidateInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutCandidateInput> | Prisma.StudentExamRegistrationCreateWithoutCandidateInput[] | Prisma.StudentExamRegistrationUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.StudentExamRegistrationCreateOrConnectWithoutCandidateInput | Prisma.StudentExamRegistrationCreateOrConnectWithoutCandidateInput[]
+  upsert?: Prisma.StudentExamRegistrationUpsertWithWhereUniqueWithoutCandidateInput | Prisma.StudentExamRegistrationUpsertWithWhereUniqueWithoutCandidateInput[]
+  createMany?: Prisma.StudentExamRegistrationCreateManyCandidateInputEnvelope
+  set?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  disconnect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  delete?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  update?: Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutCandidateInput | Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutCandidateInput[]
+  updateMany?: Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutCandidateInput | Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutCandidateInput[]
+  deleteMany?: Prisma.StudentExamRegistrationScalarWhereInput | Prisma.StudentExamRegistrationScalarWhereInput[]
+}
+
+export type StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutCandidateInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutCandidateInput> | Prisma.StudentExamRegistrationCreateWithoutCandidateInput[] | Prisma.StudentExamRegistrationUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.StudentExamRegistrationCreateOrConnectWithoutCandidateInput | Prisma.StudentExamRegistrationCreateOrConnectWithoutCandidateInput[]
+  upsert?: Prisma.StudentExamRegistrationUpsertWithWhereUniqueWithoutCandidateInput | Prisma.StudentExamRegistrationUpsertWithWhereUniqueWithoutCandidateInput[]
+  createMany?: Prisma.StudentExamRegistrationCreateManyCandidateInputEnvelope
+  set?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  disconnect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  delete?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  connect?: Prisma.StudentExamRegistrationWhereUniqueInput | Prisma.StudentExamRegistrationWhereUniqueInput[]
+  update?: Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutCandidateInput | Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutCandidateInput[]
+  updateMany?: Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutCandidateInput | Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutCandidateInput[]
   deleteMany?: Prisma.StudentExamRegistrationScalarWhereInput | Prisma.StudentExamRegistrationScalarWhereInput[]
 }
 
@@ -803,6 +1117,10 @@ export type StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspa
   update?: Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput | Prisma.StudentExamRegistrationUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput[]
   updateMany?: Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutRegistrationWorkspaceInput | Prisma.StudentExamRegistrationUpdateManyWithWhereWithoutRegistrationWorkspaceInput[]
   deleteMany?: Prisma.StudentExamRegistrationScalarWhereInput | Prisma.StudentExamRegistrationScalarWhereInput[]
+}
+
+export type NullableEnumCandidateTypeFieldUpdateOperationsInput = {
+  set?: $Enums.CandidateType | null
 }
 
 export type EnumRegistrationStatusFieldUpdateOperationsInput = {
@@ -1043,11 +1361,20 @@ export type StudentExamRegistrationCreateWithoutStudentInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
   examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
@@ -1055,11 +1382,13 @@ export type StudentExamRegistrationCreateWithoutStudentInput = {
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
   subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
   paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
 }
 
 export type StudentExamRegistrationUncheckedCreateWithoutStudentInput = {
   id?: string
+  candidateId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -1073,9 +1402,18 @@ export type StudentExamRegistrationUncheckedCreateWithoutStudentInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
@@ -1088,6 +1426,82 @@ export type StudentExamRegistrationCreateOrConnectWithoutStudentInput = {
 
 export type StudentExamRegistrationCreateManyStudentInputEnvelope = {
   data: Prisma.StudentExamRegistrationCreateManyStudentInput | Prisma.StudentExamRegistrationCreateManyStudentInput[]
+  skipDuplicates?: boolean
+}
+
+export type StudentExamRegistrationCreateWithoutAddedByUserInput = {
+  id?: string
+  studentNameSnapshot: string
+  studentNoSnapshot: string
+  gradeSnapshot: string
+  classNameSnapshot: string
+  emailSnapshot?: string | null
+  phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
+  status?: $Enums.RegistrationStatus
+  lockedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
+  examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
+  registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
+  examBoard: Prisma.ExamBoardCreateNestedOneWithoutStudentExamRegistrationsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
+  subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
+  paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
+}
+
+export type StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput = {
+  id?: string
+  candidateId?: string | null
+  studentId?: string | null
+  registrationWorkspaceId?: string | null
+  examSessionId: string
+  registrationWindowId: string
+  examBoardId: string
+  examSeriesId: string
+  subjectId: string
+  paperId: string
+  studentNameSnapshot: string
+  studentNoSnapshot: string
+  gradeSnapshot: string
+  classNameSnapshot: string
+  emailSnapshot?: string | null
+  phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
+  status?: $Enums.RegistrationStatus
+  lockedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
+}
+
+export type StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput = {
+  where: Prisma.StudentExamRegistrationWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutAddedByUserInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput>
+}
+
+export type StudentExamRegistrationCreateManyAddedByUserInputEnvelope = {
+  data: Prisma.StudentExamRegistrationCreateManyAddedByUserInput | Prisma.StudentExamRegistrationCreateManyAddedByUserInput[]
   skipDuplicates?: boolean
 }
 
@@ -1112,7 +1526,8 @@ export type StudentExamRegistrationScalarWhereInput = {
   OR?: Prisma.StudentExamRegistrationScalarWhereInput[]
   NOT?: Prisma.StudentExamRegistrationScalarWhereInput | Prisma.StudentExamRegistrationScalarWhereInput[]
   id?: Prisma.StringFilter<"StudentExamRegistration"> | string
-  studentId?: Prisma.StringFilter<"StudentExamRegistration"> | string
+  candidateId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  studentId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   registrationWorkspaceId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   examSessionId?: Prisma.StringFilter<"StudentExamRegistration"> | string
   registrationWindowId?: Prisma.StringFilter<"StudentExamRegistration"> | string
@@ -1126,11 +1541,128 @@ export type StudentExamRegistrationScalarWhereInput = {
   classNameSnapshot?: Prisma.StringFilter<"StudentExamRegistration"> | string
   emailSnapshot?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   phoneSnapshot?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  candidateTypeSnapshot?: Prisma.EnumCandidateTypeNullableFilter<"StudentExamRegistration"> | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFilter<"StudentExamRegistration"> | $Enums.RegistrationStatus
   lockedAt?: Prisma.DateTimeNullableFilter<"StudentExamRegistration"> | Date | string | null
   cancelledAt?: Prisma.DateTimeNullableFilter<"StudentExamRegistration"> | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFilter<"StudentExamRegistration"> | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFilter<"StudentExamRegistration"> | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFilter<"StudentExamRegistration"> | $Enums.BillingScope
+  addedByUserId?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
+  addedByRole?: Prisma.EnumUserRoleNullableFilter<"StudentExamRegistration"> | $Enums.UserRole | null
+  addedAt?: Prisma.DateTimeNullableFilter<"StudentExamRegistration"> | Date | string | null
+  reason?: Prisma.StringNullableFilter<"StudentExamRegistration"> | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentExamRegistration"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentExamRegistration"> | Date | string
+}
+
+export type StudentExamRegistrationUpsertWithWhereUniqueWithoutAddedByUserInput = {
+  where: Prisma.StudentExamRegistrationWhereUniqueInput
+  update: Prisma.XOR<Prisma.StudentExamRegistrationUpdateWithoutAddedByUserInput, Prisma.StudentExamRegistrationUncheckedUpdateWithoutAddedByUserInput>
+  create: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutAddedByUserInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput>
+}
+
+export type StudentExamRegistrationUpdateWithWhereUniqueWithoutAddedByUserInput = {
+  where: Prisma.StudentExamRegistrationWhereUniqueInput
+  data: Prisma.XOR<Prisma.StudentExamRegistrationUpdateWithoutAddedByUserInput, Prisma.StudentExamRegistrationUncheckedUpdateWithoutAddedByUserInput>
+}
+
+export type StudentExamRegistrationUpdateManyWithWhereWithoutAddedByUserInput = {
+  where: Prisma.StudentExamRegistrationScalarWhereInput
+  data: Prisma.XOR<Prisma.StudentExamRegistrationUpdateManyMutationInput, Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserInput>
+}
+
+export type StudentExamRegistrationCreateWithoutCandidateInput = {
+  id?: string
+  studentNameSnapshot: string
+  studentNoSnapshot: string
+  gradeSnapshot: string
+  classNameSnapshot: string
+  emailSnapshot?: string | null
+  phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
+  status?: $Enums.RegistrationStatus
+  lockedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
+  examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
+  registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
+  examBoard: Prisma.ExamBoardCreateNestedOneWithoutStudentExamRegistrationsInput
+  examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
+  subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
+  paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
+  auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
+}
+
+export type StudentExamRegistrationUncheckedCreateWithoutCandidateInput = {
+  id?: string
+  studentId?: string | null
+  registrationWorkspaceId?: string | null
+  examSessionId: string
+  registrationWindowId: string
+  examBoardId: string
+  examSeriesId: string
+  subjectId: string
+  paperId: string
+  studentNameSnapshot: string
+  studentNoSnapshot: string
+  gradeSnapshot: string
+  classNameSnapshot: string
+  emailSnapshot?: string | null
+  phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
+  status?: $Enums.RegistrationStatus
+  lockedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
+}
+
+export type StudentExamRegistrationCreateOrConnectWithoutCandidateInput = {
+  where: Prisma.StudentExamRegistrationWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutCandidateInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutCandidateInput>
+}
+
+export type StudentExamRegistrationCreateManyCandidateInputEnvelope = {
+  data: Prisma.StudentExamRegistrationCreateManyCandidateInput | Prisma.StudentExamRegistrationCreateManyCandidateInput[]
+  skipDuplicates?: boolean
+}
+
+export type StudentExamRegistrationUpsertWithWhereUniqueWithoutCandidateInput = {
+  where: Prisma.StudentExamRegistrationWhereUniqueInput
+  update: Prisma.XOR<Prisma.StudentExamRegistrationUpdateWithoutCandidateInput, Prisma.StudentExamRegistrationUncheckedUpdateWithoutCandidateInput>
+  create: Prisma.XOR<Prisma.StudentExamRegistrationCreateWithoutCandidateInput, Prisma.StudentExamRegistrationUncheckedCreateWithoutCandidateInput>
+}
+
+export type StudentExamRegistrationUpdateWithWhereUniqueWithoutCandidateInput = {
+  where: Prisma.StudentExamRegistrationWhereUniqueInput
+  data: Prisma.XOR<Prisma.StudentExamRegistrationUpdateWithoutCandidateInput, Prisma.StudentExamRegistrationUncheckedUpdateWithoutCandidateInput>
+}
+
+export type StudentExamRegistrationUpdateManyWithWhereWithoutCandidateInput = {
+  where: Prisma.StudentExamRegistrationScalarWhereInput
+  data: Prisma.XOR<Prisma.StudentExamRegistrationUpdateManyMutationInput, Prisma.StudentExamRegistrationUncheckedUpdateManyWithoutCandidateInput>
 }
 
 export type StudentExamRegistrationCreateWithoutRegistrationWindowInput = {
@@ -1141,24 +1673,35 @@ export type StudentExamRegistrationCreateWithoutRegistrationWindowInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
   examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
   examBoard: Prisma.ExamBoardCreateNestedOneWithoutStudentExamRegistrationsInput
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
   subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
   paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
 }
 
 export type StudentExamRegistrationUncheckedCreateWithoutRegistrationWindowInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   examBoardId: string
@@ -1171,9 +1714,18 @@ export type StudentExamRegistrationUncheckedCreateWithoutRegistrationWindowInput
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
@@ -1213,24 +1765,35 @@ export type StudentExamRegistrationCreateWithoutRegistrationWorkspaceInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
   examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
   examBoard: Prisma.ExamBoardCreateNestedOneWithoutStudentExamRegistrationsInput
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
   subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
   paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
 }
 
 export type StudentExamRegistrationUncheckedCreateWithoutRegistrationWorkspaceInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   examSessionId: string
   registrationWindowId: string
   examBoardId: string
@@ -1243,9 +1806,18 @@ export type StudentExamRegistrationUncheckedCreateWithoutRegistrationWorkspaceIn
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
@@ -1285,12 +1857,21 @@ export type StudentExamRegistrationCreateWithoutAuditLogsInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
   examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
@@ -1298,11 +1879,13 @@ export type StudentExamRegistrationCreateWithoutAuditLogsInput = {
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
   subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
   paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
 }
 
 export type StudentExamRegistrationUncheckedCreateWithoutAuditLogsInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -1316,9 +1899,18 @@ export type StudentExamRegistrationUncheckedCreateWithoutAuditLogsInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1347,12 +1939,21 @@ export type StudentExamRegistrationUpdateWithoutAuditLogsInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentRegistrationsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
@@ -1360,11 +1961,13 @@ export type StudentExamRegistrationUpdateWithoutAuditLogsInput = {
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   paper?: Prisma.PaperUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
 }
 
 export type StudentExamRegistrationUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1378,9 +1981,18 @@ export type StudentExamRegistrationUncheckedUpdateWithoutAuditLogsInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1393,24 +2005,35 @@ export type StudentExamRegistrationCreateWithoutExamBoardInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
   examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
   subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
   paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
 }
 
 export type StudentExamRegistrationUncheckedCreateWithoutExamBoardInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -1423,9 +2046,18 @@ export type StudentExamRegistrationUncheckedCreateWithoutExamBoardInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
@@ -1465,24 +2097,35 @@ export type StudentExamRegistrationCreateWithoutSubjectInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
   examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
   examBoard: Prisma.ExamBoardCreateNestedOneWithoutStudentExamRegistrationsInput
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
   paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
 }
 
 export type StudentExamRegistrationUncheckedCreateWithoutSubjectInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -1495,9 +2138,18 @@ export type StudentExamRegistrationUncheckedCreateWithoutSubjectInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
@@ -1537,24 +2189,35 @@ export type StudentExamRegistrationCreateWithoutPaperInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
   examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
   examBoard: Prisma.ExamBoardCreateNestedOneWithoutStudentExamRegistrationsInput
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
   subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
 }
 
 export type StudentExamRegistrationUncheckedCreateWithoutPaperInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -1567,9 +2230,18 @@ export type StudentExamRegistrationUncheckedCreateWithoutPaperInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
@@ -1609,24 +2281,35 @@ export type StudentExamRegistrationCreateWithoutExamSeriesInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
   examSession: Prisma.ExamSessionCreateNestedOneWithoutStudentExamRegistrationsInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
   examBoard: Prisma.ExamBoardCreateNestedOneWithoutStudentExamRegistrationsInput
   subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
   paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
 }
 
 export type StudentExamRegistrationUncheckedCreateWithoutExamSeriesInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -1639,9 +2322,18 @@ export type StudentExamRegistrationUncheckedCreateWithoutExamSeriesInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
@@ -1681,24 +2373,35 @@ export type StudentExamRegistrationCreateWithoutExamSessionInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  student: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutExamRegistrationsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentRegistrationsInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutRegistrationsInput
   registrationWindow: Prisma.RegistrationWindowCreateNestedOneWithoutRegistrationsInput
   examBoard: Prisma.ExamBoardCreateNestedOneWithoutStudentExamRegistrationsInput
   examSeries: Prisma.ExamSeriesCreateNestedOneWithoutStudentExamRegistrationsInput
   subject: Prisma.SubjectCreateNestedOneWithoutStudentExamRegistrationsInput
   paper: Prisma.PaperCreateNestedOneWithoutStudentExamRegistrationsInput
+  addedByUser?: Prisma.UserCreateNestedOneWithoutRegistrationsAddedInput
   auditLogs?: Prisma.RegistrationAuditLogCreateNestedManyWithoutRegistrationInput
 }
 
 export type StudentExamRegistrationUncheckedCreateWithoutExamSessionInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   registrationWindowId: string
   examBoardId: string
@@ -1711,9 +2414,18 @@ export type StudentExamRegistrationUncheckedCreateWithoutExamSessionInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationInput
@@ -1747,6 +2459,7 @@ export type StudentExamRegistrationUpdateManyWithWhereWithoutExamSessionInput = 
 
 export type StudentExamRegistrationCreateManyStudentInput = {
   id?: string
+  candidateId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -1760,9 +2473,50 @@ export type StudentExamRegistrationCreateManyStudentInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StudentExamRegistrationCreateManyAddedByUserInput = {
+  id?: string
+  candidateId?: string | null
+  studentId?: string | null
+  registrationWorkspaceId?: string | null
+  examSessionId: string
+  registrationWindowId: string
+  examBoardId: string
+  examSeriesId: string
+  subjectId: string
+  paperId: string
+  studentNameSnapshot: string
+  studentNoSnapshot: string
+  gradeSnapshot: string
+  classNameSnapshot: string
+  emailSnapshot?: string | null
+  phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
+  status?: $Enums.RegistrationStatus
+  lockedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1775,11 +2529,119 @@ export type StudentExamRegistrationUpdateWithoutStudentInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
+  examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
+  examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  paper?: Prisma.PaperUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
+  auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
+}
+
+export type StudentExamRegistrationUncheckedUpdateWithoutStudentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
+  examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNoSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
+}
+
+export type StudentExamRegistrationUncheckedUpdateManyWithoutStudentInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
+  examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNoSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StudentExamRegistrationUpdateWithoutAddedByUserInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNoSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
@@ -1790,8 +2652,10 @@ export type StudentExamRegistrationUpdateWithoutStudentInput = {
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
 }
 
-export type StudentExamRegistrationUncheckedUpdateWithoutStudentInput = {
+export type StudentExamRegistrationUncheckedUpdateWithoutAddedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1805,16 +2669,26 @@ export type StudentExamRegistrationUncheckedUpdateWithoutStudentInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
 }
 
-export type StudentExamRegistrationUncheckedUpdateManyWithoutStudentInput = {
+export type StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1828,16 +2702,155 @@ export type StudentExamRegistrationUncheckedUpdateManyWithoutStudentInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StudentExamRegistrationCreateManyCandidateInput = {
+  id?: string
+  studentId?: string | null
+  registrationWorkspaceId?: string | null
+  examSessionId: string
+  registrationWindowId: string
+  examBoardId: string
+  examSeriesId: string
+  subjectId: string
+  paperId: string
+  studentNameSnapshot: string
+  studentNoSnapshot: string
+  gradeSnapshot: string
+  classNameSnapshot: string
+  emailSnapshot?: string | null
+  phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
+  status?: $Enums.RegistrationStatus
+  lockedAt?: Date | string | null
+  cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StudentExamRegistrationUpdateWithoutCandidateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNoSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
+  registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
+  examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
+  examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  subject?: Prisma.SubjectUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  paper?: Prisma.PaperUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
+  auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
+}
+
+export type StudentExamRegistrationUncheckedUpdateWithoutCandidateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
+  examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNoSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
+}
+
+export type StudentExamRegistrationUncheckedUpdateManyWithoutCandidateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
+  examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSeriesId?: Prisma.StringFieldUpdateOperationsInput | string
+  subjectId?: Prisma.StringFieldUpdateOperationsInput | string
+  paperId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  studentNoSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  gradeSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
+  emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentExamRegistrationCreateManyRegistrationWindowInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   examBoardId: string
@@ -1850,9 +2863,18 @@ export type StudentExamRegistrationCreateManyRegistrationWindowInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1865,24 +2887,35 @@ export type StudentExamRegistrationUpdateWithoutRegistrationWindowInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentRegistrationsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   paper?: Prisma.PaperUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
 }
 
 export type StudentExamRegistrationUncheckedUpdateWithoutRegistrationWindowInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1895,9 +2928,18 @@ export type StudentExamRegistrationUncheckedUpdateWithoutRegistrationWindowInput
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
@@ -1905,7 +2947,8 @@ export type StudentExamRegistrationUncheckedUpdateWithoutRegistrationWindowInput
 
 export type StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1918,16 +2961,26 @@ export type StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowI
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentExamRegistrationCreateManyRegistrationWorkspaceInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   examSessionId: string
   registrationWindowId: string
   examBoardId: string
@@ -1940,9 +2993,18 @@ export type StudentExamRegistrationCreateManyRegistrationWorkspaceInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1955,24 +3017,35 @@ export type StudentExamRegistrationUpdateWithoutRegistrationWorkspaceInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentRegistrationsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
   examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   paper?: Prisma.PaperUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
 }
 
 export type StudentExamRegistrationUncheckedUpdateWithoutRegistrationWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1985,9 +3058,18 @@ export type StudentExamRegistrationUncheckedUpdateWithoutRegistrationWorkspaceIn
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
@@ -1995,7 +3077,8 @@ export type StudentExamRegistrationUncheckedUpdateWithoutRegistrationWorkspaceIn
 
 export type StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2008,16 +3091,26 @@ export type StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspa
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentExamRegistrationCreateManyExamBoardInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -2030,9 +3123,18 @@ export type StudentExamRegistrationCreateManyExamBoardInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2045,24 +3147,35 @@ export type StudentExamRegistrationUpdateWithoutExamBoardInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentRegistrationsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   paper?: Prisma.PaperUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
 }
 
 export type StudentExamRegistrationUncheckedUpdateWithoutExamBoardInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2075,9 +3188,18 @@ export type StudentExamRegistrationUncheckedUpdateWithoutExamBoardInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
@@ -2085,7 +3207,8 @@ export type StudentExamRegistrationUncheckedUpdateWithoutExamBoardInput = {
 
 export type StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2098,16 +3221,26 @@ export type StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentExamRegistrationCreateManySubjectInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -2120,9 +3253,18 @@ export type StudentExamRegistrationCreateManySubjectInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2135,24 +3277,35 @@ export type StudentExamRegistrationUpdateWithoutSubjectInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentRegistrationsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
   examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   paper?: Prisma.PaperUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
 }
 
 export type StudentExamRegistrationUncheckedUpdateWithoutSubjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2165,9 +3318,18 @@ export type StudentExamRegistrationUncheckedUpdateWithoutSubjectInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
@@ -2175,7 +3337,8 @@ export type StudentExamRegistrationUncheckedUpdateWithoutSubjectInput = {
 
 export type StudentExamRegistrationUncheckedUpdateManyWithoutSubjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2188,16 +3351,26 @@ export type StudentExamRegistrationUncheckedUpdateManyWithoutSubjectInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentExamRegistrationCreateManyPaperInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -2210,9 +3383,18 @@ export type StudentExamRegistrationCreateManyPaperInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2225,24 +3407,35 @@ export type StudentExamRegistrationUpdateWithoutPaperInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentRegistrationsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
   examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
 }
 
 export type StudentExamRegistrationUncheckedUpdateWithoutPaperInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2255,9 +3448,18 @@ export type StudentExamRegistrationUncheckedUpdateWithoutPaperInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
@@ -2265,7 +3467,8 @@ export type StudentExamRegistrationUncheckedUpdateWithoutPaperInput = {
 
 export type StudentExamRegistrationUncheckedUpdateManyWithoutPaperInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2278,16 +3481,26 @@ export type StudentExamRegistrationUncheckedUpdateManyWithoutPaperInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentExamRegistrationCreateManyExamSeriesInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   examSessionId: string
   registrationWindowId: string
@@ -2300,9 +3513,18 @@ export type StudentExamRegistrationCreateManyExamSeriesInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2315,24 +3537,35 @@ export type StudentExamRegistrationUpdateWithoutExamSeriesInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentRegistrationsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
   examSession?: Prisma.ExamSessionUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
   examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   paper?: Prisma.PaperUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
 }
 
 export type StudentExamRegistrationUncheckedUpdateWithoutExamSeriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2345,9 +3578,18 @@ export type StudentExamRegistrationUncheckedUpdateWithoutExamSeriesInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
@@ -2355,7 +3597,8 @@ export type StudentExamRegistrationUncheckedUpdateWithoutExamSeriesInput = {
 
 export type StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2368,16 +3611,26 @@ export type StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentExamRegistrationCreateManyExamSessionInput = {
   id?: string
-  studentId: string
+  candidateId?: string | null
+  studentId?: string | null
   registrationWorkspaceId?: string | null
   registrationWindowId: string
   examBoardId: string
@@ -2390,9 +3643,18 @@ export type StudentExamRegistrationCreateManyExamSessionInput = {
   classNameSnapshot: string
   emailSnapshot?: string | null
   phoneSnapshot?: string | null
+  assessmentHubCandidateNumberSnapshot?: string | null
+  candidateTypeSnapshot?: $Enums.CandidateType | null
   status?: $Enums.RegistrationStatus
   lockedAt?: Date | string | null
   cancelledAt?: Date | string | null
+  registrationSource?: $Enums.RegistrationSource
+  visibility?: $Enums.RegistrationVisibility
+  billingScope?: $Enums.BillingScope
+  addedByUserId?: string | null
+  addedByRole?: $Enums.UserRole | null
+  addedAt?: Date | string | null
+  reason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2405,24 +3667,35 @@ export type StudentExamRegistrationUpdateWithoutExamSessionInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentRegistrationsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutExamRegistrationsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentRegistrationsNestedInput
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutRegistrationsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneRequiredWithoutRegistrationsNestedInput
   examBoard?: Prisma.ExamBoardUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   examSeries?: Prisma.ExamSeriesUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
   paper?: Prisma.PaperUpdateOneRequiredWithoutStudentExamRegistrationsNestedInput
+  addedByUser?: Prisma.UserUpdateOneWithoutRegistrationsAddedNestedInput
   auditLogs?: Prisma.RegistrationAuditLogUpdateManyWithoutRegistrationNestedInput
 }
 
 export type StudentExamRegistrationUncheckedUpdateWithoutExamSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2435,9 +3708,18 @@ export type StudentExamRegistrationUncheckedUpdateWithoutExamSessionInput = {
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   auditLogs?: Prisma.RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationNestedInput
@@ -2445,7 +3727,8 @@ export type StudentExamRegistrationUncheckedUpdateWithoutExamSessionInput = {
 
 export type StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.StringFieldUpdateOperationsInput | string
   examBoardId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2458,9 +3741,18 @@ export type StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionInput = 
   classNameSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   emailSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  assessmentHubCandidateNumberSnapshot?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateTypeSnapshot?: Prisma.NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   lockedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  registrationSource?: Prisma.EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+  visibility?: Prisma.EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+  billingScope?: Prisma.EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+  addedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  addedByRole?: Prisma.NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+  addedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2498,6 +3790,7 @@ export type StudentExamRegistrationCountOutputTypeCountAuditLogsArgs<ExtArgs ext
 
 export type StudentExamRegistrationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  candidateId?: boolean
   studentId?: boolean
   registrationWorkspaceId?: boolean
   examSessionId?: boolean
@@ -2512,12 +3805,22 @@ export type StudentExamRegistrationSelect<ExtArgs extends runtime.Types.Extensio
   classNameSnapshot?: boolean
   emailSnapshot?: boolean
   phoneSnapshot?: boolean
+  assessmentHubCandidateNumberSnapshot?: boolean
+  candidateTypeSnapshot?: boolean
   status?: boolean
   lockedAt?: boolean
   cancelledAt?: boolean
+  registrationSource?: boolean
+  visibility?: boolean
+  billingScope?: boolean
+  addedByUserId?: boolean
+  addedByRole?: boolean
+  addedAt?: boolean
+  reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.StudentExamRegistration$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.StudentExamRegistration$studentArgs<ExtArgs>
   registrationWorkspace?: boolean | Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
@@ -2525,12 +3828,14 @@ export type StudentExamRegistrationSelect<ExtArgs extends runtime.Types.Extensio
   examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
+  addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
   auditLogs?: boolean | Prisma.StudentExamRegistration$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentExamRegistrationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentExamRegistration"]>
 
 export type StudentExamRegistrationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  candidateId?: boolean
   studentId?: boolean
   registrationWorkspaceId?: boolean
   examSessionId?: boolean
@@ -2545,12 +3850,22 @@ export type StudentExamRegistrationSelectCreateManyAndReturn<ExtArgs extends run
   classNameSnapshot?: boolean
   emailSnapshot?: boolean
   phoneSnapshot?: boolean
+  assessmentHubCandidateNumberSnapshot?: boolean
+  candidateTypeSnapshot?: boolean
   status?: boolean
   lockedAt?: boolean
   cancelledAt?: boolean
+  registrationSource?: boolean
+  visibility?: boolean
+  billingScope?: boolean
+  addedByUserId?: boolean
+  addedByRole?: boolean
+  addedAt?: boolean
+  reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.StudentExamRegistration$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.StudentExamRegistration$studentArgs<ExtArgs>
   registrationWorkspace?: boolean | Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
@@ -2558,10 +3873,12 @@ export type StudentExamRegistrationSelectCreateManyAndReturn<ExtArgs extends run
   examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
+  addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["studentExamRegistration"]>
 
 export type StudentExamRegistrationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  candidateId?: boolean
   studentId?: boolean
   registrationWorkspaceId?: boolean
   examSessionId?: boolean
@@ -2576,12 +3893,22 @@ export type StudentExamRegistrationSelectUpdateManyAndReturn<ExtArgs extends run
   classNameSnapshot?: boolean
   emailSnapshot?: boolean
   phoneSnapshot?: boolean
+  assessmentHubCandidateNumberSnapshot?: boolean
+  candidateTypeSnapshot?: boolean
   status?: boolean
   lockedAt?: boolean
   cancelledAt?: boolean
+  registrationSource?: boolean
+  visibility?: boolean
+  billingScope?: boolean
+  addedByUserId?: boolean
+  addedByRole?: boolean
+  addedAt?: boolean
+  reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.StudentExamRegistration$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.StudentExamRegistration$studentArgs<ExtArgs>
   registrationWorkspace?: boolean | Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
@@ -2589,10 +3916,12 @@ export type StudentExamRegistrationSelectUpdateManyAndReturn<ExtArgs extends run
   examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
+  addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
 }, ExtArgs["result"]["studentExamRegistration"]>
 
 export type StudentExamRegistrationSelectScalar = {
   id?: boolean
+  candidateId?: boolean
   studentId?: boolean
   registrationWorkspaceId?: boolean
   examSessionId?: boolean
@@ -2607,16 +3936,26 @@ export type StudentExamRegistrationSelectScalar = {
   classNameSnapshot?: boolean
   emailSnapshot?: boolean
   phoneSnapshot?: boolean
+  assessmentHubCandidateNumberSnapshot?: boolean
+  candidateTypeSnapshot?: boolean
   status?: boolean
   lockedAt?: boolean
   cancelledAt?: boolean
+  registrationSource?: boolean
+  visibility?: boolean
+  billingScope?: boolean
+  addedByUserId?: boolean
+  addedByRole?: boolean
+  addedAt?: boolean
+  reason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StudentExamRegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "registrationWorkspaceId" | "examSessionId" | "registrationWindowId" | "examBoardId" | "examSeriesId" | "subjectId" | "paperId" | "studentNameSnapshot" | "studentNoSnapshot" | "gradeSnapshot" | "classNameSnapshot" | "emailSnapshot" | "phoneSnapshot" | "status" | "lockedAt" | "cancelledAt" | "createdAt" | "updatedAt", ExtArgs["result"]["studentExamRegistration"]>
+export type StudentExamRegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "candidateId" | "studentId" | "registrationWorkspaceId" | "examSessionId" | "registrationWindowId" | "examBoardId" | "examSeriesId" | "subjectId" | "paperId" | "studentNameSnapshot" | "studentNoSnapshot" | "gradeSnapshot" | "classNameSnapshot" | "emailSnapshot" | "phoneSnapshot" | "assessmentHubCandidateNumberSnapshot" | "candidateTypeSnapshot" | "status" | "lockedAt" | "cancelledAt" | "registrationSource" | "visibility" | "billingScope" | "addedByUserId" | "addedByRole" | "addedAt" | "reason" | "createdAt" | "updatedAt", ExtArgs["result"]["studentExamRegistration"]>
 export type StudentExamRegistrationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.StudentExamRegistration$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.StudentExamRegistration$studentArgs<ExtArgs>
   registrationWorkspace?: boolean | Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
@@ -2624,11 +3963,13 @@ export type StudentExamRegistrationInclude<ExtArgs extends runtime.Types.Extensi
   examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
+  addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
   auditLogs?: boolean | Prisma.StudentExamRegistration$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentExamRegistrationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StudentExamRegistrationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.StudentExamRegistration$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.StudentExamRegistration$studentArgs<ExtArgs>
   registrationWorkspace?: boolean | Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
@@ -2636,9 +3977,11 @@ export type StudentExamRegistrationIncludeCreateManyAndReturn<ExtArgs extends ru
   examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
+  addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
 }
 export type StudentExamRegistrationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  candidate?: boolean | Prisma.StudentExamRegistration$candidateArgs<ExtArgs>
+  student?: boolean | Prisma.StudentExamRegistration$studentArgs<ExtArgs>
   registrationWorkspace?: boolean | Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
@@ -2646,12 +3989,14 @@ export type StudentExamRegistrationIncludeUpdateManyAndReturn<ExtArgs extends ru
   examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
   paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
+  addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
 }
 
 export type $StudentExamRegistrationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StudentExamRegistration"
   objects: {
-    student: Prisma.$UserPayload<ExtArgs>
+    candidate: Prisma.$CandidatePayload<ExtArgs> | null
+    student: Prisma.$UserPayload<ExtArgs> | null
     registrationWorkspace: Prisma.$RegistrationWorkspacePayload<ExtArgs> | null
     examSession: Prisma.$ExamSessionPayload<ExtArgs>
     registrationWindow: Prisma.$RegistrationWindowPayload<ExtArgs>
@@ -2659,11 +4004,13 @@ export type $StudentExamRegistrationPayload<ExtArgs extends runtime.Types.Extens
     examSeries: Prisma.$ExamSeriesPayload<ExtArgs>
     subject: Prisma.$SubjectPayload<ExtArgs>
     paper: Prisma.$PaperPayload<ExtArgs>
+    addedByUser: Prisma.$UserPayload<ExtArgs> | null
     auditLogs: Prisma.$RegistrationAuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    studentId: string
+    candidateId: string | null
+    studentId: string | null
     registrationWorkspaceId: string | null
     examSessionId: string
     registrationWindowId: string
@@ -2677,9 +4024,18 @@ export type $StudentExamRegistrationPayload<ExtArgs extends runtime.Types.Extens
     classNameSnapshot: string
     emailSnapshot: string | null
     phoneSnapshot: string | null
+    assessmentHubCandidateNumberSnapshot: string | null
+    candidateTypeSnapshot: $Enums.CandidateType | null
     status: $Enums.RegistrationStatus
     lockedAt: Date | null
     cancelledAt: Date | null
+    registrationSource: $Enums.RegistrationSource
+    visibility: $Enums.RegistrationVisibility
+    billingScope: $Enums.BillingScope
+    addedByUserId: string | null
+    addedByRole: $Enums.UserRole | null
+    addedAt: Date | null
+    reason: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["studentExamRegistration"]>
@@ -3076,7 +4432,8 @@ readonly fields: StudentExamRegistrationFieldRefs;
  */
 export interface Prisma__StudentExamRegistrationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  student<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  candidate<T extends Prisma.StudentExamRegistration$candidateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentExamRegistration$candidateArgs<ExtArgs>>): Prisma.Prisma__CandidateClient<runtime.Types.Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  student<T extends Prisma.StudentExamRegistration$studentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentExamRegistration$studentArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   registrationWorkspace<T extends Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>>): Prisma.Prisma__RegistrationWorkspaceClient<runtime.Types.Result.GetResult<Prisma.$RegistrationWorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   examSession<T extends Prisma.ExamSessionDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSessionDefaultArgs<ExtArgs>>): Prisma.Prisma__ExamSessionClient<runtime.Types.Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   registrationWindow<T extends Prisma.RegistrationWindowDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationWindowDefaultArgs<ExtArgs>>): Prisma.Prisma__RegistrationWindowClient<runtime.Types.Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -3084,6 +4441,7 @@ export interface Prisma__StudentExamRegistrationClient<T, Null = never, ExtArgs 
   examSeries<T extends Prisma.ExamSeriesDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ExamSeriesDefaultArgs<ExtArgs>>): Prisma.Prisma__ExamSeriesClient<runtime.Types.Result.GetResult<Prisma.$ExamSeriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   subject<T extends Prisma.SubjectDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SubjectDefaultArgs<ExtArgs>>): Prisma.Prisma__SubjectClient<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   paper<T extends Prisma.PaperDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PaperDefaultArgs<ExtArgs>>): Prisma.Prisma__PaperClient<runtime.Types.Result.GetResult<Prisma.$PaperPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  addedByUser<T extends Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   auditLogs<T extends Prisma.StudentExamRegistration$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentExamRegistration$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3115,6 +4473,7 @@ export interface Prisma__StudentExamRegistrationClient<T, Null = never, ExtArgs 
  */
 export interface StudentExamRegistrationFieldRefs {
   readonly id: Prisma.FieldRef<"StudentExamRegistration", 'String'>
+  readonly candidateId: Prisma.FieldRef<"StudentExamRegistration", 'String'>
   readonly studentId: Prisma.FieldRef<"StudentExamRegistration", 'String'>
   readonly registrationWorkspaceId: Prisma.FieldRef<"StudentExamRegistration", 'String'>
   readonly examSessionId: Prisma.FieldRef<"StudentExamRegistration", 'String'>
@@ -3129,9 +4488,18 @@ export interface StudentExamRegistrationFieldRefs {
   readonly classNameSnapshot: Prisma.FieldRef<"StudentExamRegistration", 'String'>
   readonly emailSnapshot: Prisma.FieldRef<"StudentExamRegistration", 'String'>
   readonly phoneSnapshot: Prisma.FieldRef<"StudentExamRegistration", 'String'>
+  readonly assessmentHubCandidateNumberSnapshot: Prisma.FieldRef<"StudentExamRegistration", 'String'>
+  readonly candidateTypeSnapshot: Prisma.FieldRef<"StudentExamRegistration", 'CandidateType'>
   readonly status: Prisma.FieldRef<"StudentExamRegistration", 'RegistrationStatus'>
   readonly lockedAt: Prisma.FieldRef<"StudentExamRegistration", 'DateTime'>
   readonly cancelledAt: Prisma.FieldRef<"StudentExamRegistration", 'DateTime'>
+  readonly registrationSource: Prisma.FieldRef<"StudentExamRegistration", 'RegistrationSource'>
+  readonly visibility: Prisma.FieldRef<"StudentExamRegistration", 'RegistrationVisibility'>
+  readonly billingScope: Prisma.FieldRef<"StudentExamRegistration", 'BillingScope'>
+  readonly addedByUserId: Prisma.FieldRef<"StudentExamRegistration", 'String'>
+  readonly addedByRole: Prisma.FieldRef<"StudentExamRegistration", 'UserRole'>
+  readonly addedAt: Prisma.FieldRef<"StudentExamRegistration", 'DateTime'>
+  readonly reason: Prisma.FieldRef<"StudentExamRegistration", 'String'>
   readonly createdAt: Prisma.FieldRef<"StudentExamRegistration", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"StudentExamRegistration", 'DateTime'>
 }
@@ -3535,6 +4903,44 @@ export type StudentExamRegistrationDeleteManyArgs<ExtArgs extends runtime.Types.
 }
 
 /**
+ * StudentExamRegistration.candidate
+ */
+export type StudentExamRegistration$candidateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Candidate
+   */
+  select?: Prisma.CandidateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Candidate
+   */
+  omit?: Prisma.CandidateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CandidateInclude<ExtArgs> | null
+  where?: Prisma.CandidateWhereInput
+}
+
+/**
+ * StudentExamRegistration.student
+ */
+export type StudentExamRegistration$studentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
  * StudentExamRegistration.registrationWorkspace
  */
 export type StudentExamRegistration$registrationWorkspaceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3551,6 +4957,25 @@ export type StudentExamRegistration$registrationWorkspaceArgs<ExtArgs extends ru
    */
   include?: Prisma.RegistrationWorkspaceInclude<ExtArgs> | null
   where?: Prisma.RegistrationWorkspaceWhereInput
+}
+
+/**
+ * StudentExamRegistration.addedByUser
+ */
+export type StudentExamRegistration$addedByUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

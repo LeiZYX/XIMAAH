@@ -19,6 +19,7 @@ export default async function ExamOfficeRegistrationWorkspacePage({
         apiBase="/api/exam-office/registrations"
         backHref="/exam-office/registrations"
         canAdjust
+        feeRulesHrefBase="/exam-office/registration-windows"
       />
     </div>
   );

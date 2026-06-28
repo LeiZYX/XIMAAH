@@ -50,3 +50,26 @@ export function isSubjectVisibleOnCalendar(
 
   return filter.subjectIds.has(subjectId);
 }
+
+export async function getCalendarSubjectsForExamBoard(examBoardId: string) {
+  const filterState = await getCalendarSubjectFilterState();
+  const filter = filterState.get(examBoardId);
+
+  return prisma.subject.findMany({
+    where: {
+      qualification: { examBoardId },
+      ...(filter?.enabled && filter.subjectIds.size > 0
+        ? { id: { in: [...filter.subjectIds] } }
+        : {}),
+    },
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      qualification: {
+        select: { id: true, name: true, level: true },
+      },
+    },
+    orderBy: [{ qualification: { level: "asc" } }, { name: "asc" }],
+  });
+}

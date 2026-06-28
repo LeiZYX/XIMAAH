@@ -1,0 +1,90 @@
+{
+  "password": "TestPass123!",
+  "accounts": {
+    "admin": {
+      "identifier": "admin@xima.test",
+      "homePath": "/admin",
+      "userId": "test-user-admin"
+    },
+    "examOfficer": {
+      "identifier": "examofficer@xima.test",
+      "homePath": "/exam-office",
+      "userId": "test-user-eo"
+    },
+    "teacher": {
+      "identifier": "teacher@xima.test",
+      "homePath": "/teacher",
+      "userId": "test-user-teacher"
+    },
+    "internalStudent": {
+      "identifier": "S2026888",
+      "homePath": "/student",
+      "userId": "test-user-student-internal",
+      "studentNo": "S2026888"
+    },
+    "assistedStudent": {
+      "identifier": "S2026889",
+      "homePath": "/student",
+      "userId": "test-user-student-assisted",
+      "studentNo": "S2026889"
+    },
+    "externalCandidate": {
+      "identifier": "external.candidate@xima.test",
+      "candidateId": "test-candidate-external",
+      "assessmentHubCandidateNumber": "AH-TEST-EXT-001"
+    }
+  },
+  "ids": {
+    "admin": "test-user-admin",
+    "examOfficer": "test-user-eo",
+    "teacher": "test-user-teacher",
+    "studentInternal": "test-user-student-internal",
+    "studentAssisted": "test-user-student-assisted",
+    "boardPearson": "test-board-pearson",
+    "boardCambridge": "test-board-cambridge",
+    "boardOxfordAqa": "test-board-oxfordaqa",
+    "qualPearson": "test-qual-pearson-maths",
+    "qualCambridge": "test-qual-cambridge-maths",
+    "qualOxford": "test-qual-oxford-maths",
+    "subjectPearson": "test-subject-pearson-maths",
+    "subjectCambridge": "test-subject-cambridge-maths",
+    "subjectOxford": "test-subject-oxford-maths",
+    "paperPearson": "test-paper-pearson-maths-1",
+    "paperPearson2": "test-paper-pearson-maths-2",
+    "paperCambridge": "test-paper-cambridge-maths-1",
+    "paperOxford": "test-paper-oxford-maths-1",
+    "seriesPearson": "test-series-pearson-2026",
+    "seriesCambridge": "test-series-cambridge-2026",
+    "seriesOxford": "test-series-oxford-2026",
+    "sessionOpen": "test-session-open-maths",
+    "sessionClosed1": "test-session-closed-maths-1",
+    "sessionClosed2": "test-session-closed-maths-2",
+    "sessionOfficeOnly": "test-session-office-only",
+    "windowOpen": "test-window-open",
+    "windowClosed": "test-window-closed",
+    "workspaceLocked": "test-workspace-locked",
+    "registrationLocked": "test-registration-locked",
+    "candidateExternal": "test-candidate-external",
+    "feeRuleClosed": "test-fee-rule-closed-maths",
+    "exchangeRateClosed": "test-exchange-rate-closed",
+    "internalCandidateId": "cmqxv54ic00033alzy2qfxpye",
+    "assistedCandidateId": "cmqxv54ie00043alzeauubdzt"
+  },
+  "examBoards": {
+    "pearson": {
+      "id": "test-board-pearson",
+      "code": "EDEXCEL",
+      "name": "Pearson Edexcel"
+    },
+    "cambridge": {
+      "id": "test-board-cambridge",
+      "code": "CIE",
+      "name": "Cambridge International"
+    },
+    "oxfordAqa": {
+      "id": "test-board-oxfordaqa",
+      "code": "OXFORDAQA",
+      "name": "OxfordAQA"
+    }
+  }
+}

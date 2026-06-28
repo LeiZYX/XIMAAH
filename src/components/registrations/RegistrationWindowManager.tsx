@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -14,7 +15,13 @@ interface WindowRow {
   examSeries: { id: string; name: string; year: number };
 }
 
-export function RegistrationWindowManager() {
+interface RegistrationWindowManagerProps {
+  feesBasePath?: "/admin/registration-windows" | "/exam-office/registration-windows";
+}
+
+export function RegistrationWindowManager({
+  feesBasePath = "/admin/registration-windows",
+}: RegistrationWindowManagerProps) {
   const [windows, setWindows] = useState<WindowRow[]>([]);
   const [boards, setBoards] = useState<{ id: string; code: string }[]>([]);
   const [series, setSeries] = useState<{ id: string; name: string; year: number; examBoardId: string }[]>([]);
@@ -148,6 +155,7 @@ export function RegistrationWindowManager() {
               <th className="py-2 pr-4 text-left">Period</th>
               <th className="py-2 pr-4 text-left">Status</th>
               <th className="py-2 pr-4 text-left">Actions</th>
+              <th className="py-2 pr-4 text-left">Fees</th>
             </tr>
           </thead>
           <tbody>
@@ -184,6 +192,14 @@ export function RegistrationWindowManager() {
                       </button>
                     ) : null}
                   </div>
+                </td>
+                <td className="py-2 pr-4">
+                  <Link
+                    href={`${feesBasePath}/${window.id}/fees`}
+                    className="text-indigo-600 hover:underline"
+                  >
+                    Fee rules
+                  </Link>
                 </td>
               </tr>
             ))}

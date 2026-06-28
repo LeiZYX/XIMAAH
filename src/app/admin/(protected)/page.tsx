@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { buildFeeDashboardMetrics } from "@/lib/fees/reporting";
+import { formatMoney } from "@/lib/fees/money";
 
 export const dynamic = "force-dynamic";
 
@@ -60,6 +62,18 @@ async function loadCounts(): Promise<{ counts: StatCounts | null; dbError: strin
 
 export default async function AdminDashboardPage() {
   const { counts, dbError } = await loadCounts();
+  let feeMetrics = null;
+  if (!dbError) {
+    try {
+      feeMetrics = await buildFeeDashboardMetrics();
+    } catch {
+      feeMetrics = null;
+    }
+  }
+
+  const feeSummaryHref = feeMetrics?.currentWindowId
+    ? `/admin/fee-summary?registrationWindowId=${feeMetrics.currentWindowId}`
+    : "/admin/fee-summary";
 
   return (
     <div>
@@ -114,6 +128,49 @@ npm run db:seed`}
             After seeding, refresh this page — AQA, CIE, and Edexcel will appear automatically.
           </p>
         </Card>
+      ) : null}
+
+      {feeMetrics ? (
+        <>
+          <h2 className="mb-3 text-lg font-semibold text-slate-900">Fee management</h2>
+          <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <Link href={`${feeSummaryHref}&statementStatus=DRAFT`}>
+              <Card className="transition hover:border-indigo-200 hover:shadow-md">
+                <p className="text-sm font-medium text-slate-500">Fee statements pending</p>
+                <p className="mt-2 text-3xl font-semibold text-slate-900">
+                  {feeMetrics.feeStatementsPending}
+                </p>
+              </Card>
+            </Link>
+            <Link href={`${feeSummaryHref}`}>
+              <Card className="transition hover:border-indigo-200 hover:shadow-md">
+                <p className="text-sm font-medium text-slate-500">Missing fee rules</p>
+                <p className="mt-2 text-3xl font-semibold text-slate-900">
+                  {feeMetrics.missingFeeRules}
+                </p>
+              </Card>
+            </Link>
+            <Link href={feeSummaryHref}>
+              <Card className="transition hover:border-indigo-200 hover:shadow-md">
+                <p className="text-sm font-medium text-slate-500">
+                  Total fees ({feeMetrics.currentWindowTitle ?? "current window"})
+                </p>
+                <p className="mt-2 text-lg font-semibold text-slate-900">
+                  {formatMoney(feeMetrics.totalFeesCurrentWindowGbp, "GBP")} ·{" "}
+                  {formatMoney(feeMetrics.totalFeesCurrentWindowCny, "CNY")}
+                </p>
+              </Card>
+            </Link>
+            <Link href={`${feeSummaryHref}&statementStatus=ISSUED`}>
+              <Card className="transition hover:border-indigo-200 hover:shadow-md">
+                <p className="text-sm font-medium text-slate-500">Unpaid statements</p>
+                <p className="mt-2 text-3xl font-semibold text-slate-900">
+                  {feeMetrics.unpaidStatements}
+                </p>
+              </Card>
+            </Link>
+          </div>
+        </>
       ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

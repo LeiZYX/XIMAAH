@@ -44,20 +44,41 @@ export async function lockRegistrationsForWindow(windowId: string, performedById
       let workspaceId: string | null = null;
 
       if (workspaceReady) {
-        const workspace = await tx.registrationWorkspace.upsert({
-          where: {
-            studentId_registrationWindowId: {
+        let workspace;
+        if (registration.candidateId) {
+          workspace = await tx.registrationWorkspace.upsert({
+            where: {
+              candidateId_registrationWindowId: {
+                candidateId: registration.candidateId,
+                registrationWindowId: windowId,
+              },
+            },
+            create: {
+              candidateId: registration.candidateId,
               studentId: registration.studentId,
               registrationWindowId: windowId,
+              lockedAt: now,
             },
-          },
-          create: {
-            studentId: registration.studentId,
-            registrationWindowId: windowId,
-            lockedAt: now,
-          },
-          update: { lockedAt: now },
-        });
+            update: { lockedAt: now },
+          });
+        } else if (registration.studentId) {
+          workspace = await tx.registrationWorkspace.upsert({
+            where: {
+              studentId_registrationWindowId: {
+                studentId: registration.studentId,
+                registrationWindowId: windowId,
+              },
+            },
+            create: {
+              studentId: registration.studentId,
+              registrationWindowId: windowId,
+              lockedAt: now,
+            },
+            update: { lockedAt: now },
+          });
+        } else {
+          throw new RegistrationError("Registration missing candidate and student", 500);
+        }
         workspaceId = workspace.id;
       }
 
@@ -73,6 +94,7 @@ export async function lockRegistrationsForWindow(windowId: string, performedById
       await createRegistrationAuditLog(
         {
           registrationWorkspaceId: workspaceId,
+          candidateId: registration.candidateId,
           studentId: registration.studentId,
           registrationId: registration.id,
           examSessionId: registration.examSessionId,
@@ -81,6 +103,9 @@ export async function lockRegistrationsForWindow(windowId: string, performedById
             : RegistrationAuditAction.LOCK,
           performedById: performerId,
           performedByRole: workspaceReady ? "ADMIN" : undefined,
+          assessmentHubCandidateNumberSnapshot:
+            registration.assessmentHubCandidateNumberSnapshot,
+          candidateTypeSnapshot: registration.candidateTypeSnapshot,
           beforeValue: registrationAuditSnapshot(registration),
           afterValue: registrationAuditSnapshot(updated),
           note: "Registration window closed",

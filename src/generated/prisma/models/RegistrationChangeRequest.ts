@@ -29,6 +29,7 @@ export type RegistrationChangeRequestMinAggregateOutputType = {
   registrationWorkspaceId: string | null
   registrationWindowId: string | null
   studentId: string | null
+  candidateId: string | null
   requestedByUserId: string | null
   requestedByRole: $Enums.UserRole | null
   requestType: $Enums.RegistrationChangeRequestType | null
@@ -49,6 +50,7 @@ export type RegistrationChangeRequestMaxAggregateOutputType = {
   registrationWorkspaceId: string | null
   registrationWindowId: string | null
   studentId: string | null
+  candidateId: string | null
   requestedByUserId: string | null
   requestedByRole: $Enums.UserRole | null
   requestType: $Enums.RegistrationChangeRequestType | null
@@ -69,6 +71,7 @@ export type RegistrationChangeRequestCountAggregateOutputType = {
   registrationWorkspaceId: number
   registrationWindowId: number
   studentId: number
+  candidateId: number
   requestedByUserId: number
   requestedByRole: number
   requestType: number
@@ -91,6 +94,7 @@ export type RegistrationChangeRequestMinAggregateInputType = {
   registrationWorkspaceId?: true
   registrationWindowId?: true
   studentId?: true
+  candidateId?: true
   requestedByUserId?: true
   requestedByRole?: true
   requestType?: true
@@ -111,6 +115,7 @@ export type RegistrationChangeRequestMaxAggregateInputType = {
   registrationWorkspaceId?: true
   registrationWindowId?: true
   studentId?: true
+  candidateId?: true
   requestedByUserId?: true
   requestedByRole?: true
   requestType?: true
@@ -131,6 +136,7 @@ export type RegistrationChangeRequestCountAggregateInputType = {
   registrationWorkspaceId?: true
   registrationWindowId?: true
   studentId?: true
+  candidateId?: true
   requestedByUserId?: true
   requestedByRole?: true
   requestType?: true
@@ -223,7 +229,8 @@ export type RegistrationChangeRequestGroupByOutputType = {
   id: string
   registrationWorkspaceId: string | null
   registrationWindowId: string | null
-  studentId: string
+  studentId: string | null
+  candidateId: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -264,7 +271,8 @@ export type RegistrationChangeRequestWhereInput = {
   id?: Prisma.StringFilter<"RegistrationChangeRequest"> | string
   registrationWorkspaceId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
   registrationWindowId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
-  studentId?: Prisma.StringFilter<"RegistrationChangeRequest"> | string
+  studentId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
+  candidateId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
   requestedByUserId?: Prisma.StringFilter<"RegistrationChangeRequest"> | string
   requestedByRole?: Prisma.EnumUserRoleFilter<"RegistrationChangeRequest"> | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFilter<"RegistrationChangeRequest"> | $Enums.RegistrationChangeRequestType
@@ -280,7 +288,8 @@ export type RegistrationChangeRequestWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"RegistrationChangeRequest"> | Date | string
   registrationWorkspace?: Prisma.XOR<Prisma.RegistrationWorkspaceNullableScalarRelationFilter, Prisma.RegistrationWorkspaceWhereInput> | null
   registrationWindow?: Prisma.XOR<Prisma.RegistrationWindowNullableScalarRelationFilter, Prisma.RegistrationWindowWhereInput> | null
-  student?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  student?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  candidate?: Prisma.XOR<Prisma.CandidateNullableScalarRelationFilter, Prisma.CandidateWhereInput> | null
   requestedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   targetExamSession?: Prisma.XOR<Prisma.ExamSessionNullableScalarRelationFilter, Prisma.ExamSessionWhereInput> | null
   replacementExamSession?: Prisma.XOR<Prisma.ExamSessionNullableScalarRelationFilter, Prisma.ExamSessionWhereInput> | null
@@ -292,7 +301,8 @@ export type RegistrationChangeRequestOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   registrationWorkspaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrderInput | Prisma.SortOrder
-  studentId?: Prisma.SortOrder
+  studentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  candidateId?: Prisma.SortOrderInput | Prisma.SortOrder
   requestedByUserId?: Prisma.SortOrder
   requestedByRole?: Prisma.SortOrder
   requestType?: Prisma.SortOrder
@@ -309,6 +319,7 @@ export type RegistrationChangeRequestOrderByWithRelationInput = {
   registrationWorkspace?: Prisma.RegistrationWorkspaceOrderByWithRelationInput
   registrationWindow?: Prisma.RegistrationWindowOrderByWithRelationInput
   student?: Prisma.UserOrderByWithRelationInput
+  candidate?: Prisma.CandidateOrderByWithRelationInput
   requestedBy?: Prisma.UserOrderByWithRelationInput
   targetExamSession?: Prisma.ExamSessionOrderByWithRelationInput
   replacementExamSession?: Prisma.ExamSessionOrderByWithRelationInput
@@ -323,7 +334,8 @@ export type RegistrationChangeRequestWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.RegistrationChangeRequestWhereInput | Prisma.RegistrationChangeRequestWhereInput[]
   registrationWorkspaceId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
   registrationWindowId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
-  studentId?: Prisma.StringFilter<"RegistrationChangeRequest"> | string
+  studentId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
+  candidateId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
   requestedByUserId?: Prisma.StringFilter<"RegistrationChangeRequest"> | string
   requestedByRole?: Prisma.EnumUserRoleFilter<"RegistrationChangeRequest"> | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFilter<"RegistrationChangeRequest"> | $Enums.RegistrationChangeRequestType
@@ -339,7 +351,8 @@ export type RegistrationChangeRequestWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"RegistrationChangeRequest"> | Date | string
   registrationWorkspace?: Prisma.XOR<Prisma.RegistrationWorkspaceNullableScalarRelationFilter, Prisma.RegistrationWorkspaceWhereInput> | null
   registrationWindow?: Prisma.XOR<Prisma.RegistrationWindowNullableScalarRelationFilter, Prisma.RegistrationWindowWhereInput> | null
-  student?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  student?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  candidate?: Prisma.XOR<Prisma.CandidateNullableScalarRelationFilter, Prisma.CandidateWhereInput> | null
   requestedBy?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   targetExamSession?: Prisma.XOR<Prisma.ExamSessionNullableScalarRelationFilter, Prisma.ExamSessionWhereInput> | null
   replacementExamSession?: Prisma.XOR<Prisma.ExamSessionNullableScalarRelationFilter, Prisma.ExamSessionWhereInput> | null
@@ -351,7 +364,8 @@ export type RegistrationChangeRequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   registrationWorkspaceId?: Prisma.SortOrderInput | Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrderInput | Prisma.SortOrder
-  studentId?: Prisma.SortOrder
+  studentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  candidateId?: Prisma.SortOrderInput | Prisma.SortOrder
   requestedByUserId?: Prisma.SortOrder
   requestedByRole?: Prisma.SortOrder
   requestType?: Prisma.SortOrder
@@ -377,7 +391,8 @@ export type RegistrationChangeRequestScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"RegistrationChangeRequest"> | string
   registrationWorkspaceId?: Prisma.StringNullableWithAggregatesFilter<"RegistrationChangeRequest"> | string | null
   registrationWindowId?: Prisma.StringNullableWithAggregatesFilter<"RegistrationChangeRequest"> | string | null
-  studentId?: Prisma.StringWithAggregatesFilter<"RegistrationChangeRequest"> | string
+  studentId?: Prisma.StringNullableWithAggregatesFilter<"RegistrationChangeRequest"> | string | null
+  candidateId?: Prisma.StringNullableWithAggregatesFilter<"RegistrationChangeRequest"> | string | null
   requestedByUserId?: Prisma.StringWithAggregatesFilter<"RegistrationChangeRequest"> | string
   requestedByRole?: Prisma.EnumUserRoleWithAggregatesFilter<"RegistrationChangeRequest"> | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeWithAggregatesFilter<"RegistrationChangeRequest"> | $Enums.RegistrationChangeRequestType
@@ -406,7 +421,8 @@ export type RegistrationChangeRequestCreateInput = {
   updatedAt?: Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutChangeRequestsInput
   registrationWindow?: Prisma.RegistrationWindowCreateNestedOneWithoutChangeRequestsInput
-  student: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutChangeRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutRegistrationChangeRequestsInput
   targetExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestTargetsInput
   replacementExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestReplacementsInput
@@ -418,7 +434,8 @@ export type RegistrationChangeRequestUncheckedCreateInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -448,7 +465,8 @@ export type RegistrationChangeRequestUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutChangeRequestsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneWithoutChangeRequestsNestedInput
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentChangeRequestsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentChangeRequestsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutChangeRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutRegistrationChangeRequestsNestedInput
   targetExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestTargetsNestedInput
   replacementExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestReplacementsNestedInput
@@ -460,7 +478,8 @@ export type RegistrationChangeRequestUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -481,7 +500,8 @@ export type RegistrationChangeRequestCreateManyInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -514,7 +534,8 @@ export type RegistrationChangeRequestUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -545,6 +566,7 @@ export type RegistrationChangeRequestCountOrderByAggregateInput = {
   registrationWorkspaceId?: Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrder
   requestedByUserId?: Prisma.SortOrder
   requestedByRole?: Prisma.SortOrder
   requestType?: Prisma.SortOrder
@@ -565,6 +587,7 @@ export type RegistrationChangeRequestMaxOrderByAggregateInput = {
   registrationWorkspaceId?: Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrder
   requestedByUserId?: Prisma.SortOrder
   requestedByRole?: Prisma.SortOrder
   requestType?: Prisma.SortOrder
@@ -585,6 +608,7 @@ export type RegistrationChangeRequestMinOrderByAggregateInput = {
   registrationWorkspaceId?: Prisma.SortOrder
   registrationWindowId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  candidateId?: Prisma.SortOrder
   requestedByUserId?: Prisma.SortOrder
   requestedByRole?: Prisma.SortOrder
   requestType?: Prisma.SortOrder
@@ -728,6 +752,48 @@ export type RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInpu
   connect?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
   update?: Prisma.RegistrationChangeRequestUpdateWithWhereUniqueWithoutStudentInput | Prisma.RegistrationChangeRequestUpdateWithWhereUniqueWithoutStudentInput[]
   updateMany?: Prisma.RegistrationChangeRequestUpdateManyWithWhereWithoutStudentInput | Prisma.RegistrationChangeRequestUpdateManyWithWhereWithoutStudentInput[]
+  deleteMany?: Prisma.RegistrationChangeRequestScalarWhereInput | Prisma.RegistrationChangeRequestScalarWhereInput[]
+}
+
+export type RegistrationChangeRequestCreateNestedManyWithoutCandidateInput = {
+  create?: Prisma.XOR<Prisma.RegistrationChangeRequestCreateWithoutCandidateInput, Prisma.RegistrationChangeRequestUncheckedCreateWithoutCandidateInput> | Prisma.RegistrationChangeRequestCreateWithoutCandidateInput[] | Prisma.RegistrationChangeRequestUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.RegistrationChangeRequestCreateOrConnectWithoutCandidateInput | Prisma.RegistrationChangeRequestCreateOrConnectWithoutCandidateInput[]
+  createMany?: Prisma.RegistrationChangeRequestCreateManyCandidateInputEnvelope
+  connect?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
+}
+
+export type RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput = {
+  create?: Prisma.XOR<Prisma.RegistrationChangeRequestCreateWithoutCandidateInput, Prisma.RegistrationChangeRequestUncheckedCreateWithoutCandidateInput> | Prisma.RegistrationChangeRequestCreateWithoutCandidateInput[] | Prisma.RegistrationChangeRequestUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.RegistrationChangeRequestCreateOrConnectWithoutCandidateInput | Prisma.RegistrationChangeRequestCreateOrConnectWithoutCandidateInput[]
+  createMany?: Prisma.RegistrationChangeRequestCreateManyCandidateInputEnvelope
+  connect?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
+}
+
+export type RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationChangeRequestCreateWithoutCandidateInput, Prisma.RegistrationChangeRequestUncheckedCreateWithoutCandidateInput> | Prisma.RegistrationChangeRequestCreateWithoutCandidateInput[] | Prisma.RegistrationChangeRequestUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.RegistrationChangeRequestCreateOrConnectWithoutCandidateInput | Prisma.RegistrationChangeRequestCreateOrConnectWithoutCandidateInput[]
+  upsert?: Prisma.RegistrationChangeRequestUpsertWithWhereUniqueWithoutCandidateInput | Prisma.RegistrationChangeRequestUpsertWithWhereUniqueWithoutCandidateInput[]
+  createMany?: Prisma.RegistrationChangeRequestCreateManyCandidateInputEnvelope
+  set?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
+  disconnect?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
+  delete?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
+  connect?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
+  update?: Prisma.RegistrationChangeRequestUpdateWithWhereUniqueWithoutCandidateInput | Prisma.RegistrationChangeRequestUpdateWithWhereUniqueWithoutCandidateInput[]
+  updateMany?: Prisma.RegistrationChangeRequestUpdateManyWithWhereWithoutCandidateInput | Prisma.RegistrationChangeRequestUpdateManyWithWhereWithoutCandidateInput[]
+  deleteMany?: Prisma.RegistrationChangeRequestScalarWhereInput | Prisma.RegistrationChangeRequestScalarWhereInput[]
+}
+
+export type RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationChangeRequestCreateWithoutCandidateInput, Prisma.RegistrationChangeRequestUncheckedCreateWithoutCandidateInput> | Prisma.RegistrationChangeRequestCreateWithoutCandidateInput[] | Prisma.RegistrationChangeRequestUncheckedCreateWithoutCandidateInput[]
+  connectOrCreate?: Prisma.RegistrationChangeRequestCreateOrConnectWithoutCandidateInput | Prisma.RegistrationChangeRequestCreateOrConnectWithoutCandidateInput[]
+  upsert?: Prisma.RegistrationChangeRequestUpsertWithWhereUniqueWithoutCandidateInput | Prisma.RegistrationChangeRequestUpsertWithWhereUniqueWithoutCandidateInput[]
+  createMany?: Prisma.RegistrationChangeRequestCreateManyCandidateInputEnvelope
+  set?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
+  disconnect?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
+  delete?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
+  connect?: Prisma.RegistrationChangeRequestWhereUniqueInput | Prisma.RegistrationChangeRequestWhereUniqueInput[]
+  update?: Prisma.RegistrationChangeRequestUpdateWithWhereUniqueWithoutCandidateInput | Prisma.RegistrationChangeRequestUpdateWithWhereUniqueWithoutCandidateInput[]
+  updateMany?: Prisma.RegistrationChangeRequestUpdateManyWithWhereWithoutCandidateInput | Prisma.RegistrationChangeRequestUpdateManyWithWhereWithoutCandidateInput[]
   deleteMany?: Prisma.RegistrationChangeRequestScalarWhereInput | Prisma.RegistrationChangeRequestScalarWhereInput[]
 }
 
@@ -934,7 +1000,8 @@ export type RegistrationChangeRequestCreateWithoutRequestedByInput = {
   updatedAt?: Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutChangeRequestsInput
   registrationWindow?: Prisma.RegistrationWindowCreateNestedOneWithoutChangeRequestsInput
-  student: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutChangeRequestsInput
   targetExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestTargetsInput
   replacementExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestReplacementsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedChangeRequestsInput
@@ -945,7 +1012,8 @@ export type RegistrationChangeRequestUncheckedCreateWithoutRequestedByInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
   targetExamSessionId?: string | null
@@ -984,7 +1052,8 @@ export type RegistrationChangeRequestCreateWithoutReviewedByInput = {
   updatedAt?: Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutChangeRequestsInput
   registrationWindow?: Prisma.RegistrationWindowCreateNestedOneWithoutChangeRequestsInput
-  student: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutChangeRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutRegistrationChangeRequestsInput
   targetExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestTargetsInput
   replacementExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestReplacementsInput
@@ -995,7 +1064,8 @@ export type RegistrationChangeRequestUncheckedCreateWithoutReviewedByInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1034,6 +1104,7 @@ export type RegistrationChangeRequestCreateWithoutStudentInput = {
   updatedAt?: Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutChangeRequestsInput
   registrationWindow?: Prisma.RegistrationWindowCreateNestedOneWithoutChangeRequestsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutChangeRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutRegistrationChangeRequestsInput
   targetExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestTargetsInput
   replacementExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestReplacementsInput
@@ -1045,6 +1116,7 @@ export type RegistrationChangeRequestUncheckedCreateWithoutStudentInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1094,7 +1166,8 @@ export type RegistrationChangeRequestScalarWhereInput = {
   id?: Prisma.StringFilter<"RegistrationChangeRequest"> | string
   registrationWorkspaceId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
   registrationWindowId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
-  studentId?: Prisma.StringFilter<"RegistrationChangeRequest"> | string
+  studentId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
+  candidateId?: Prisma.StringNullableFilter<"RegistrationChangeRequest"> | string | null
   requestedByUserId?: Prisma.StringFilter<"RegistrationChangeRequest"> | string
   requestedByRole?: Prisma.EnumUserRoleFilter<"RegistrationChangeRequest"> | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFilter<"RegistrationChangeRequest"> | $Enums.RegistrationChangeRequestType
@@ -1142,6 +1215,74 @@ export type RegistrationChangeRequestUpdateManyWithWhereWithoutStudentInput = {
   data: Prisma.XOR<Prisma.RegistrationChangeRequestUpdateManyMutationInput, Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutStudentInput>
 }
 
+export type RegistrationChangeRequestCreateWithoutCandidateInput = {
+  id?: string
+  requestedByRole: $Enums.UserRole
+  requestType: $Enums.RegistrationChangeRequestType
+  targetRegistrationId?: string | null
+  reason: string
+  status?: $Enums.RegistrationChangeRequestStatus
+  reviewedAt?: Date | string | null
+  reviewNote?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutChangeRequestsInput
+  registrationWindow?: Prisma.RegistrationWindowCreateNestedOneWithoutChangeRequestsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  requestedBy: Prisma.UserCreateNestedOneWithoutRegistrationChangeRequestsInput
+  targetExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestTargetsInput
+  replacementExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestReplacementsInput
+  reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedChangeRequestsInput
+  examSessions?: Prisma.RegistrationChangeRequestExamSessionCreateNestedManyWithoutChangeRequestInput
+}
+
+export type RegistrationChangeRequestUncheckedCreateWithoutCandidateInput = {
+  id?: string
+  registrationWorkspaceId?: string | null
+  registrationWindowId?: string | null
+  studentId?: string | null
+  requestedByUserId: string
+  requestedByRole: $Enums.UserRole
+  requestType: $Enums.RegistrationChangeRequestType
+  targetExamSessionId?: string | null
+  targetRegistrationId?: string | null
+  replacementExamSessionId?: string | null
+  reason: string
+  status?: $Enums.RegistrationChangeRequestStatus
+  reviewedByUserId?: string | null
+  reviewedAt?: Date | string | null
+  reviewNote?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  examSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutChangeRequestInput
+}
+
+export type RegistrationChangeRequestCreateOrConnectWithoutCandidateInput = {
+  where: Prisma.RegistrationChangeRequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationChangeRequestCreateWithoutCandidateInput, Prisma.RegistrationChangeRequestUncheckedCreateWithoutCandidateInput>
+}
+
+export type RegistrationChangeRequestCreateManyCandidateInputEnvelope = {
+  data: Prisma.RegistrationChangeRequestCreateManyCandidateInput | Prisma.RegistrationChangeRequestCreateManyCandidateInput[]
+  skipDuplicates?: boolean
+}
+
+export type RegistrationChangeRequestUpsertWithWhereUniqueWithoutCandidateInput = {
+  where: Prisma.RegistrationChangeRequestWhereUniqueInput
+  update: Prisma.XOR<Prisma.RegistrationChangeRequestUpdateWithoutCandidateInput, Prisma.RegistrationChangeRequestUncheckedUpdateWithoutCandidateInput>
+  create: Prisma.XOR<Prisma.RegistrationChangeRequestCreateWithoutCandidateInput, Prisma.RegistrationChangeRequestUncheckedCreateWithoutCandidateInput>
+}
+
+export type RegistrationChangeRequestUpdateWithWhereUniqueWithoutCandidateInput = {
+  where: Prisma.RegistrationChangeRequestWhereUniqueInput
+  data: Prisma.XOR<Prisma.RegistrationChangeRequestUpdateWithoutCandidateInput, Prisma.RegistrationChangeRequestUncheckedUpdateWithoutCandidateInput>
+}
+
+export type RegistrationChangeRequestUpdateManyWithWhereWithoutCandidateInput = {
+  where: Prisma.RegistrationChangeRequestScalarWhereInput
+  data: Prisma.XOR<Prisma.RegistrationChangeRequestUpdateManyMutationInput, Prisma.RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateInput>
+}
+
 export type RegistrationChangeRequestCreateWithoutRegistrationWindowInput = {
   id?: string
   requestedByRole: $Enums.UserRole
@@ -1154,7 +1295,8 @@ export type RegistrationChangeRequestCreateWithoutRegistrationWindowInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutChangeRequestsInput
-  student: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutChangeRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutRegistrationChangeRequestsInput
   targetExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestTargetsInput
   replacementExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestReplacementsInput
@@ -1165,7 +1307,8 @@ export type RegistrationChangeRequestCreateWithoutRegistrationWindowInput = {
 export type RegistrationChangeRequestUncheckedCreateWithoutRegistrationWindowInput = {
   id?: string
   registrationWorkspaceId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1220,7 +1363,8 @@ export type RegistrationChangeRequestCreateWithoutRegistrationWorkspaceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrationWindow?: Prisma.RegistrationWindowCreateNestedOneWithoutChangeRequestsInput
-  student: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutChangeRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutRegistrationChangeRequestsInput
   targetExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestTargetsInput
   replacementExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestReplacementsInput
@@ -1231,7 +1375,8 @@ export type RegistrationChangeRequestCreateWithoutRegistrationWorkspaceInput = {
 export type RegistrationChangeRequestUncheckedCreateWithoutRegistrationWorkspaceInput = {
   id?: string
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1287,7 +1432,8 @@ export type RegistrationChangeRequestCreateWithoutExamSessionsInput = {
   updatedAt?: Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutChangeRequestsInput
   registrationWindow?: Prisma.RegistrationWindowCreateNestedOneWithoutChangeRequestsInput
-  student: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutChangeRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutRegistrationChangeRequestsInput
   targetExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestTargetsInput
   replacementExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestReplacementsInput
@@ -1298,7 +1444,8 @@ export type RegistrationChangeRequestUncheckedCreateWithoutExamSessionsInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1343,7 +1490,8 @@ export type RegistrationChangeRequestUpdateWithoutExamSessionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutChangeRequestsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneWithoutChangeRequestsNestedInput
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentChangeRequestsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentChangeRequestsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutChangeRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutRegistrationChangeRequestsNestedInput
   targetExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestTargetsNestedInput
   replacementExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestReplacementsNestedInput
@@ -1354,7 +1502,8 @@ export type RegistrationChangeRequestUncheckedUpdateWithoutExamSessionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -1383,7 +1532,8 @@ export type RegistrationChangeRequestCreateWithoutTargetExamSessionInput = {
   updatedAt?: Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutChangeRequestsInput
   registrationWindow?: Prisma.RegistrationWindowCreateNestedOneWithoutChangeRequestsInput
-  student: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutChangeRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutRegistrationChangeRequestsInput
   replacementExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestReplacementsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedChangeRequestsInput
@@ -1394,7 +1544,8 @@ export type RegistrationChangeRequestUncheckedCreateWithoutTargetExamSessionInpu
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1433,7 +1584,8 @@ export type RegistrationChangeRequestCreateWithoutReplacementExamSessionInput = 
   updatedAt?: Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceCreateNestedOneWithoutChangeRequestsInput
   registrationWindow?: Prisma.RegistrationWindowCreateNestedOneWithoutChangeRequestsInput
-  student: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  student?: Prisma.UserCreateNestedOneWithoutStudentChangeRequestsInput
+  candidate?: Prisma.CandidateCreateNestedOneWithoutChangeRequestsInput
   requestedBy: Prisma.UserCreateNestedOneWithoutRegistrationChangeRequestsInput
   targetExamSession?: Prisma.ExamSessionCreateNestedOneWithoutChangeRequestTargetsInput
   reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedChangeRequestsInput
@@ -1444,7 +1596,8 @@ export type RegistrationChangeRequestUncheckedCreateWithoutReplacementExamSessio
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1506,7 +1659,8 @@ export type RegistrationChangeRequestCreateManyRequestedByInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
   targetExamSessionId?: string | null
@@ -1525,7 +1679,8 @@ export type RegistrationChangeRequestCreateManyReviewedByInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1544,6 +1699,7 @@ export type RegistrationChangeRequestCreateManyStudentInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1572,7 +1728,8 @@ export type RegistrationChangeRequestUpdateWithoutRequestedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutChangeRequestsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneWithoutChangeRequestsNestedInput
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentChangeRequestsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentChangeRequestsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutChangeRequestsNestedInput
   targetExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestTargetsNestedInput
   replacementExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestReplacementsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutReviewedChangeRequestsNestedInput
@@ -1583,7 +1740,8 @@ export type RegistrationChangeRequestUncheckedUpdateWithoutRequestedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
   targetExamSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1603,7 +1761,8 @@ export type RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByInput 
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
   targetExamSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1631,7 +1790,8 @@ export type RegistrationChangeRequestUpdateWithoutReviewedByInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutChangeRequestsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneWithoutChangeRequestsNestedInput
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentChangeRequestsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentChangeRequestsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutChangeRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutRegistrationChangeRequestsNestedInput
   targetExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestTargetsNestedInput
   replacementExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestReplacementsNestedInput
@@ -1642,7 +1802,8 @@ export type RegistrationChangeRequestUncheckedUpdateWithoutReviewedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -1662,7 +1823,8 @@ export type RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByInput =
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -1690,6 +1852,7 @@ export type RegistrationChangeRequestUpdateWithoutStudentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutChangeRequestsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneWithoutChangeRequestsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutChangeRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutRegistrationChangeRequestsNestedInput
   targetExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestTargetsNestedInput
   replacementExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestReplacementsNestedInput
@@ -1701,6 +1864,7 @@ export type RegistrationChangeRequestUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -1721,6 +1885,89 @@ export type RegistrationChangeRequestUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
+  targetExamSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetRegistrationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replacementExamSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRegistrationChangeRequestStatusFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestStatus
+  reviewedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type RegistrationChangeRequestCreateManyCandidateInput = {
+  id?: string
+  registrationWorkspaceId?: string | null
+  registrationWindowId?: string | null
+  studentId?: string | null
+  requestedByUserId: string
+  requestedByRole: $Enums.UserRole
+  requestType: $Enums.RegistrationChangeRequestType
+  targetExamSessionId?: string | null
+  targetRegistrationId?: string | null
+  replacementExamSessionId?: string | null
+  reason: string
+  status?: $Enums.RegistrationChangeRequestStatus
+  reviewedByUserId?: string | null
+  reviewedAt?: Date | string | null
+  reviewNote?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RegistrationChangeRequestUpdateWithoutCandidateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
+  targetRegistrationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRegistrationChangeRequestStatusFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestStatus
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutChangeRequestsNestedInput
+  registrationWindow?: Prisma.RegistrationWindowUpdateOneWithoutChangeRequestsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentChangeRequestsNestedInput
+  requestedBy?: Prisma.UserUpdateOneRequiredWithoutRegistrationChangeRequestsNestedInput
+  targetExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestTargetsNestedInput
+  replacementExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestReplacementsNestedInput
+  reviewedBy?: Prisma.UserUpdateOneWithoutReviewedChangeRequestsNestedInput
+  examSessions?: Prisma.RegistrationChangeRequestExamSessionUpdateManyWithoutChangeRequestNestedInput
+}
+
+export type RegistrationChangeRequestUncheckedUpdateWithoutCandidateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
+  targetExamSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetRegistrationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  replacementExamSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reason?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRegistrationChangeRequestStatusFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestStatus
+  reviewedByUserId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  reviewNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  examSessions?: Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutChangeRequestNestedInput
+}
+
+export type RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -1739,7 +1986,8 @@ export type RegistrationChangeRequestUncheckedUpdateManyWithoutStudentInput = {
 export type RegistrationChangeRequestCreateManyRegistrationWindowInput = {
   id?: string
   registrationWorkspaceId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1767,7 +2015,8 @@ export type RegistrationChangeRequestUpdateWithoutRegistrationWindowInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutChangeRequestsNestedInput
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentChangeRequestsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentChangeRequestsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutChangeRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutRegistrationChangeRequestsNestedInput
   targetExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestTargetsNestedInput
   replacementExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestReplacementsNestedInput
@@ -1778,7 +2027,8 @@ export type RegistrationChangeRequestUpdateWithoutRegistrationWindowInput = {
 export type RegistrationChangeRequestUncheckedUpdateWithoutRegistrationWindowInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -1798,7 +2048,8 @@ export type RegistrationChangeRequestUncheckedUpdateWithoutRegistrationWindowInp
 export type RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -1817,7 +2068,8 @@ export type RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindo
 export type RegistrationChangeRequestCreateManyRegistrationWorkspaceInput = {
   id?: string
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1845,7 +2097,8 @@ export type RegistrationChangeRequestUpdateWithoutRegistrationWorkspaceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationWindow?: Prisma.RegistrationWindowUpdateOneWithoutChangeRequestsNestedInput
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentChangeRequestsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentChangeRequestsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutChangeRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutRegistrationChangeRequestsNestedInput
   targetExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestTargetsNestedInput
   replacementExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestReplacementsNestedInput
@@ -1856,7 +2109,8 @@ export type RegistrationChangeRequestUpdateWithoutRegistrationWorkspaceInput = {
 export type RegistrationChangeRequestUncheckedUpdateWithoutRegistrationWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -1876,7 +2130,8 @@ export type RegistrationChangeRequestUncheckedUpdateWithoutRegistrationWorkspace
 export type RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -1896,7 +2151,8 @@ export type RegistrationChangeRequestCreateManyTargetExamSessionInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1915,7 +2171,8 @@ export type RegistrationChangeRequestCreateManyReplacementExamSessionInput = {
   id?: string
   registrationWorkspaceId?: string | null
   registrationWindowId?: string | null
-  studentId: string
+  studentId?: string | null
+  candidateId?: string | null
   requestedByUserId: string
   requestedByRole: $Enums.UserRole
   requestType: $Enums.RegistrationChangeRequestType
@@ -1943,7 +2200,8 @@ export type RegistrationChangeRequestUpdateWithoutTargetExamSessionInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutChangeRequestsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneWithoutChangeRequestsNestedInput
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentChangeRequestsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentChangeRequestsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutChangeRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutRegistrationChangeRequestsNestedInput
   replacementExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestReplacementsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutReviewedChangeRequestsNestedInput
@@ -1954,7 +2212,8 @@ export type RegistrationChangeRequestUncheckedUpdateWithoutTargetExamSessionInpu
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -1974,7 +2233,8 @@ export type RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSession
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -2002,7 +2262,8 @@ export type RegistrationChangeRequestUpdateWithoutReplacementExamSessionInput = 
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrationWorkspace?: Prisma.RegistrationWorkspaceUpdateOneWithoutChangeRequestsNestedInput
   registrationWindow?: Prisma.RegistrationWindowUpdateOneWithoutChangeRequestsNestedInput
-  student?: Prisma.UserUpdateOneRequiredWithoutStudentChangeRequestsNestedInput
+  student?: Prisma.UserUpdateOneWithoutStudentChangeRequestsNestedInput
+  candidate?: Prisma.CandidateUpdateOneWithoutChangeRequestsNestedInput
   requestedBy?: Prisma.UserUpdateOneRequiredWithoutRegistrationChangeRequestsNestedInput
   targetExamSession?: Prisma.ExamSessionUpdateOneWithoutChangeRequestTargetsNestedInput
   reviewedBy?: Prisma.UserUpdateOneWithoutReviewedChangeRequestsNestedInput
@@ -2013,7 +2274,8 @@ export type RegistrationChangeRequestUncheckedUpdateWithoutReplacementExamSessio
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -2033,7 +2295,8 @@ export type RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSe
   id?: Prisma.StringFieldUpdateOperationsInput | string
   registrationWorkspaceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registrationWindowId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  candidateId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   requestedByUserId?: Prisma.StringFieldUpdateOperationsInput | string
   requestedByRole?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
   requestType?: Prisma.EnumRegistrationChangeRequestTypeFieldUpdateOperationsInput | $Enums.RegistrationChangeRequestType
@@ -2084,6 +2347,7 @@ export type RegistrationChangeRequestSelect<ExtArgs extends runtime.Types.Extens
   registrationWorkspaceId?: boolean
   registrationWindowId?: boolean
   studentId?: boolean
+  candidateId?: boolean
   requestedByUserId?: boolean
   requestedByRole?: boolean
   requestType?: boolean
@@ -2099,7 +2363,8 @@ export type RegistrationChangeRequestSelect<ExtArgs extends runtime.Types.Extens
   updatedAt?: boolean
   registrationWorkspace?: boolean | Prisma.RegistrationChangeRequest$registrationWorkspaceArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationChangeRequest$registrationWindowArgs<ExtArgs>
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationChangeRequest$studentArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationChangeRequest$candidateArgs<ExtArgs>
   requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   targetExamSession?: boolean | Prisma.RegistrationChangeRequest$targetExamSessionArgs<ExtArgs>
   replacementExamSession?: boolean | Prisma.RegistrationChangeRequest$replacementExamSessionArgs<ExtArgs>
@@ -2113,6 +2378,7 @@ export type RegistrationChangeRequestSelectCreateManyAndReturn<ExtArgs extends r
   registrationWorkspaceId?: boolean
   registrationWindowId?: boolean
   studentId?: boolean
+  candidateId?: boolean
   requestedByUserId?: boolean
   requestedByRole?: boolean
   requestType?: boolean
@@ -2128,7 +2394,8 @@ export type RegistrationChangeRequestSelectCreateManyAndReturn<ExtArgs extends r
   updatedAt?: boolean
   registrationWorkspace?: boolean | Prisma.RegistrationChangeRequest$registrationWorkspaceArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationChangeRequest$registrationWindowArgs<ExtArgs>
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationChangeRequest$studentArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationChangeRequest$candidateArgs<ExtArgs>
   requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   targetExamSession?: boolean | Prisma.RegistrationChangeRequest$targetExamSessionArgs<ExtArgs>
   replacementExamSession?: boolean | Prisma.RegistrationChangeRequest$replacementExamSessionArgs<ExtArgs>
@@ -2140,6 +2407,7 @@ export type RegistrationChangeRequestSelectUpdateManyAndReturn<ExtArgs extends r
   registrationWorkspaceId?: boolean
   registrationWindowId?: boolean
   studentId?: boolean
+  candidateId?: boolean
   requestedByUserId?: boolean
   requestedByRole?: boolean
   requestType?: boolean
@@ -2155,7 +2423,8 @@ export type RegistrationChangeRequestSelectUpdateManyAndReturn<ExtArgs extends r
   updatedAt?: boolean
   registrationWorkspace?: boolean | Prisma.RegistrationChangeRequest$registrationWorkspaceArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationChangeRequest$registrationWindowArgs<ExtArgs>
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationChangeRequest$studentArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationChangeRequest$candidateArgs<ExtArgs>
   requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   targetExamSession?: boolean | Prisma.RegistrationChangeRequest$targetExamSessionArgs<ExtArgs>
   replacementExamSession?: boolean | Prisma.RegistrationChangeRequest$replacementExamSessionArgs<ExtArgs>
@@ -2167,6 +2436,7 @@ export type RegistrationChangeRequestSelectScalar = {
   registrationWorkspaceId?: boolean
   registrationWindowId?: boolean
   studentId?: boolean
+  candidateId?: boolean
   requestedByUserId?: boolean
   requestedByRole?: boolean
   requestType?: boolean
@@ -2182,11 +2452,12 @@ export type RegistrationChangeRequestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type RegistrationChangeRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "registrationWorkspaceId" | "registrationWindowId" | "studentId" | "requestedByUserId" | "requestedByRole" | "requestType" | "targetExamSessionId" | "targetRegistrationId" | "replacementExamSessionId" | "reason" | "status" | "reviewedByUserId" | "reviewedAt" | "reviewNote" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationChangeRequest"]>
+export type RegistrationChangeRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "registrationWorkspaceId" | "registrationWindowId" | "studentId" | "candidateId" | "requestedByUserId" | "requestedByRole" | "requestType" | "targetExamSessionId" | "targetRegistrationId" | "replacementExamSessionId" | "reason" | "status" | "reviewedByUserId" | "reviewedAt" | "reviewNote" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationChangeRequest"]>
 export type RegistrationChangeRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationWorkspace?: boolean | Prisma.RegistrationChangeRequest$registrationWorkspaceArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationChangeRequest$registrationWindowArgs<ExtArgs>
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationChangeRequest$studentArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationChangeRequest$candidateArgs<ExtArgs>
   requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   targetExamSession?: boolean | Prisma.RegistrationChangeRequest$targetExamSessionArgs<ExtArgs>
   replacementExamSession?: boolean | Prisma.RegistrationChangeRequest$replacementExamSessionArgs<ExtArgs>
@@ -2197,7 +2468,8 @@ export type RegistrationChangeRequestInclude<ExtArgs extends runtime.Types.Exten
 export type RegistrationChangeRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationWorkspace?: boolean | Prisma.RegistrationChangeRequest$registrationWorkspaceArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationChangeRequest$registrationWindowArgs<ExtArgs>
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationChangeRequest$studentArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationChangeRequest$candidateArgs<ExtArgs>
   requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   targetExamSession?: boolean | Prisma.RegistrationChangeRequest$targetExamSessionArgs<ExtArgs>
   replacementExamSession?: boolean | Prisma.RegistrationChangeRequest$replacementExamSessionArgs<ExtArgs>
@@ -2206,7 +2478,8 @@ export type RegistrationChangeRequestIncludeCreateManyAndReturn<ExtArgs extends 
 export type RegistrationChangeRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationWorkspace?: boolean | Prisma.RegistrationChangeRequest$registrationWorkspaceArgs<ExtArgs>
   registrationWindow?: boolean | Prisma.RegistrationChangeRequest$registrationWindowArgs<ExtArgs>
-  student?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  student?: boolean | Prisma.RegistrationChangeRequest$studentArgs<ExtArgs>
+  candidate?: boolean | Prisma.RegistrationChangeRequest$candidateArgs<ExtArgs>
   requestedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   targetExamSession?: boolean | Prisma.RegistrationChangeRequest$targetExamSessionArgs<ExtArgs>
   replacementExamSession?: boolean | Prisma.RegistrationChangeRequest$replacementExamSessionArgs<ExtArgs>
@@ -2218,7 +2491,8 @@ export type $RegistrationChangeRequestPayload<ExtArgs extends runtime.Types.Exte
   objects: {
     registrationWorkspace: Prisma.$RegistrationWorkspacePayload<ExtArgs> | null
     registrationWindow: Prisma.$RegistrationWindowPayload<ExtArgs> | null
-    student: Prisma.$UserPayload<ExtArgs>
+    student: Prisma.$UserPayload<ExtArgs> | null
+    candidate: Prisma.$CandidatePayload<ExtArgs> | null
     requestedBy: Prisma.$UserPayload<ExtArgs>
     targetExamSession: Prisma.$ExamSessionPayload<ExtArgs> | null
     replacementExamSession: Prisma.$ExamSessionPayload<ExtArgs> | null
@@ -2229,7 +2503,8 @@ export type $RegistrationChangeRequestPayload<ExtArgs extends runtime.Types.Exte
     id: string
     registrationWorkspaceId: string | null
     registrationWindowId: string | null
-    studentId: string
+    studentId: string | null
+    candidateId: string | null
     requestedByUserId: string
     requestedByRole: $Enums.UserRole
     requestType: $Enums.RegistrationChangeRequestType
@@ -2639,7 +2914,8 @@ export interface Prisma__RegistrationChangeRequestClient<T, Null = never, ExtArg
   readonly [Symbol.toStringTag]: "PrismaPromise"
   registrationWorkspace<T extends Prisma.RegistrationChangeRequest$registrationWorkspaceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationChangeRequest$registrationWorkspaceArgs<ExtArgs>>): Prisma.Prisma__RegistrationWorkspaceClient<runtime.Types.Result.GetResult<Prisma.$RegistrationWorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   registrationWindow<T extends Prisma.RegistrationChangeRequest$registrationWindowArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationChangeRequest$registrationWindowArgs<ExtArgs>>): Prisma.Prisma__RegistrationWindowClient<runtime.Types.Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  student<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  student<T extends Prisma.RegistrationChangeRequest$studentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationChangeRequest$studentArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  candidate<T extends Prisma.RegistrationChangeRequest$candidateArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationChangeRequest$candidateArgs<ExtArgs>>): Prisma.Prisma__CandidateClient<runtime.Types.Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   requestedBy<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   targetExamSession<T extends Prisma.RegistrationChangeRequest$targetExamSessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationChangeRequest$targetExamSessionArgs<ExtArgs>>): Prisma.Prisma__ExamSessionClient<runtime.Types.Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   replacementExamSession<T extends Prisma.RegistrationChangeRequest$replacementExamSessionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RegistrationChangeRequest$replacementExamSessionArgs<ExtArgs>>): Prisma.Prisma__ExamSessionClient<runtime.Types.Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2678,6 +2954,7 @@ export interface RegistrationChangeRequestFieldRefs {
   readonly registrationWorkspaceId: Prisma.FieldRef<"RegistrationChangeRequest", 'String'>
   readonly registrationWindowId: Prisma.FieldRef<"RegistrationChangeRequest", 'String'>
   readonly studentId: Prisma.FieldRef<"RegistrationChangeRequest", 'String'>
+  readonly candidateId: Prisma.FieldRef<"RegistrationChangeRequest", 'String'>
   readonly requestedByUserId: Prisma.FieldRef<"RegistrationChangeRequest", 'String'>
   readonly requestedByRole: Prisma.FieldRef<"RegistrationChangeRequest", 'UserRole'>
   readonly requestType: Prisma.FieldRef<"RegistrationChangeRequest", 'RegistrationChangeRequestType'>
@@ -3127,6 +3404,44 @@ export type RegistrationChangeRequest$registrationWindowArgs<ExtArgs extends run
    */
   include?: Prisma.RegistrationWindowInclude<ExtArgs> | null
   where?: Prisma.RegistrationWindowWhereInput
+}
+
+/**
+ * RegistrationChangeRequest.student
+ */
+export type RegistrationChangeRequest$studentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * RegistrationChangeRequest.candidate
+ */
+export type RegistrationChangeRequest$candidateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Candidate
+   */
+  select?: Prisma.CandidateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Candidate
+   */
+  omit?: Prisma.CandidateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CandidateInclude<ExtArgs> | null
+  where?: Prisma.CandidateWhereInput
 }
 
 /**
