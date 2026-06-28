@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 const LOAD_ERROR =
-  "Could not load data. Check that PostgreSQL is running and run npm run db:push.";
+  "Could not load data. Check that MySQL is running and run npm run db:migrate.";
 
 export async function fetchJsonList<T>(endpoint: string): Promise<T[]> {
   const response = await fetch(endpoint);

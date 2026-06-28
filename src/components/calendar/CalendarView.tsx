@@ -309,7 +309,7 @@ export function CalendarView() {
       setError(
         loadError instanceof Error
           ? loadError.message
-          : "Could not load events. Ensure PostgreSQL is running and data has been seeded.",
+          : "Could not load events. Ensure MySQL is running and data has been seeded.",
       );
     } finally {
       hasLoadedEventsRef.current = true;

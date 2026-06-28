@@ -12,11 +12,11 @@ function prismaErrorMessage(error: unknown, code: string): string | null {
   }
 
   if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2021") {
-    return "Database tables are missing. Run: npm run db:push";
+    return "Database tables are missing. Run: npm run db:migrate";
   }
 
   if (error instanceof Error && error.message.includes("ECONNREFUSED")) {
-    return "Cannot connect to PostgreSQL. Start the database first.";
+    return "Cannot connect to MySQL. Start the database first.";
   }
 
   return null;

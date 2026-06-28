@@ -7,7 +7,7 @@ Exam planning and scheduling for assessment centres. Manage exam boards, qualifi
 - **Next.js 16** (App Router)
 - **TypeScript**
 - **Tailwind CSS**
-- **PostgreSQL** + **Prisma**
+- **MySQL** + **Prisma**
 - **FullCalendar**
 
 ## Getting Started
@@ -15,7 +15,7 @@ Exam planning and scheduling for assessment centres. Manage exam boards, qualifi
 ### Prerequisites
 
 - Node.js 20+
-- PostgreSQL database
+- MySQL database
 
 ### Setup
 
@@ -31,16 +31,18 @@ npm install
 cp .env.example .env
 ```
 
-3. Start PostgreSQL (Docker):
+3. Start MySQL and phpMyAdmin (Docker):
 
 ```bash
-docker compose up -d
+docker compose up -d mysql phpmyadmin
 ```
 
-4. Push the schema and seed sample data:
+phpMyAdmin: http://localhost:8080 (root / rootpassword)
+
+4. Apply migrations and seed sample data:
 
 ```bash
-npm run db:push
+npm run db:migrate
 npm run db:seed
 ```
 
@@ -90,8 +92,8 @@ ExamBoard
 |---------|-------------|
 | `npm run dev` | Start dev server |
 | `npm run build` | Generate Prisma client and build |
-| `npm run db:push` | Push schema to database |
-| `npm run db:migrate` | Run migrations |
+| `npm run db:migrate` | Apply migrations (preferred) |
+| `npm run db:push` | Push schema without migration files |
 | `npm run db:seed` | Seed sample data |
 | `npm run db:studio` | Open Prisma Studio |
 

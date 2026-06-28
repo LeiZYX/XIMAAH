@@ -55,7 +55,7 @@ async function loadCounts(): Promise<{ counts: StatCounts | null; dbError: strin
     return {
       counts: null,
       dbError:
-        "Cannot connect to PostgreSQL. Start the database, then run npm run db:push and npm run db:seed.",
+        "Cannot connect to MySQL. Start the database, then run npm run db:migrate and npm run db:seed.",
     };
   }
 }
@@ -91,33 +91,22 @@ export default async function AdminDashboardPage() {
             <div>
               <p className="font-medium">Option A — Docker (recommended)</p>
               <pre className="mt-2 overflow-x-auto rounded-lg bg-white p-4 text-xs text-slate-700">
-{`docker compose up -d
-npm run db:push
+{`docker compose up -d mysql
+npm run db:migrate
 npm run db:seed`}
               </pre>
             </div>
             <div>
-              <p className="font-medium">Option B — Postgres.app (Mac, no Docker)</p>
+              <p className="font-medium">Option B — Local MySQL</p>
               <ol className="mt-2 list-decimal space-y-1 pl-5 text-amber-800">
-                <li>
-                  Download Postgres.app from{" "}
-                  <a
-                    href="https://postgresapp.com"
-                    className="underline"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    postgresapp.com
-                  </a>
-                </li>
-                <li>Open it and click Start</li>
+                <li>Install MySQL 8 locally and create the database</li>
                 <li>
                   Set <code className="rounded bg-white px-1">DATABASE_URL</code> in{" "}
                   <code className="rounded bg-white px-1">.env</code> to your local connection
                   string
                 </li>
                 <li>
-                  Run <code className="rounded bg-white px-1">npm run db:push</code> then{" "}
+                  Run <code className="rounded bg-white px-1">npm run db:migrate</code> then{" "}
                   <code className="rounded bg-white px-1">npm run db:seed</code>
                 </li>
               </ol>
