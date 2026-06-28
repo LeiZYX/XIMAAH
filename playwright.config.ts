@@ -32,7 +32,7 @@ export default defineConfig({
     timeout: 180_000,
     env: {
       ...process.env,
-      DATABASE_URL: process.env.DATABASE_URL,
+      DATABASE_URL: process.env.DATABASE_URL ?? "mysql://root:rootpassword@localhost:3306/xima_assessment_hub_test",
       AUTH_SECRET: process.env.AUTH_SECRET ?? "test-auth-secret-not-for-production",
     },
   },

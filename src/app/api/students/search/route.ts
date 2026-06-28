@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/require-auth";
+import { containsFilter } from "@/lib/db/string-filters";
 import { buildActiveStudentUserWhere } from "@/lib/students/archive";
 import { prisma } from "@/lib/prisma";
 
@@ -22,11 +23,11 @@ export async function GET(request: NextRequest) {
     where: {
       ...baseWhere,
       OR: [
-        { name: { contains: q, mode: "insensitive" } },
-        { email: { contains: q, mode: "insensitive" } },
-        { studentNo: { contains: q, mode: "insensitive" } },
-        { studentProfile: { is: { studentNo: { contains: q, mode: "insensitive" } } } },
-        { studentProfile: { is: { email: { contains: q, mode: "insensitive" } } } },
+        { name: containsFilter(q) },
+        { email: containsFilter(q) },
+        { studentNo: containsFilter(q) },
+        { studentProfile: { is: { studentNo: containsFilter(q) } } },
+        { studentProfile: { is: { email: containsFilter(q) } } },
       ],
     },
     include: {

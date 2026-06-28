@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { createPasswordResetToken, sendPasswordResetEmail } from "@/lib/auth/password-reset";
+import { equalsFilter } from "@/lib/db/string-filters";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(request: NextRequest) {
@@ -10,7 +11,7 @@ export async function POST(request: NextRequest) {
 
   const email = data.email.trim().toLowerCase();
   const user = await prisma.user.findFirst({
-    where: { email: { equals: email, mode: "insensitive" } },
+    where: { email: equalsFilter(email) },
   });
 
   if (user?.email) {

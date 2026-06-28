@@ -2,6 +2,7 @@ import type { CandidateStatus, CandidateType, Prisma } from "@/generated/prisma/
 import { RegistrationStatus } from "@/generated/prisma/enums";
 import { ensureInternalCandidatesSynced } from "@/lib/candidates/service";
 import { buildPaginationMeta } from "@/lib/pagination";
+import { containsFilter } from "@/lib/db/string-filters";
 import { prisma } from "@/lib/prisma";
 
 export interface CandidateListFilters {
@@ -46,23 +47,20 @@ export function buildCandidateWhere(filters: CandidateListFilters): Prisma.Candi
   if (filters.grade) where.grade = filters.grade;
   if (filters.className) where.className = filters.className;
   if (filters.assessmentHubCandidateNumber) {
-    where.assessmentHubCandidateNumber = {
-      contains: filters.assessmentHubCandidateNumber,
-      mode: "insensitive",
-    };
+    where.assessmentHubCandidateNumber = containsFilter(filters.assessmentHubCandidateNumber);
   }
   if (filters.studentNumber) {
-    where.studentNumber = { contains: filters.studentNumber, mode: "insensitive" };
+    where.studentNumber = containsFilter(filters.studentNumber);
   }
-  if (filters.email) where.email = { contains: filters.email, mode: "insensitive" };
-  if (filters.phone) where.phone = { contains: filters.phone, mode: "insensitive" };
+  if (filters.email) where.email = containsFilter(filters.email);
+  if (filters.phone) where.phone = containsFilter(filters.phone);
   if (filters.q) {
     where.OR = [
-      { englishName: { contains: filters.q, mode: "insensitive" } },
-      { chineseName: { contains: filters.q, mode: "insensitive" } },
-      { assessmentHubCandidateNumber: { contains: filters.q, mode: "insensitive" } },
-      { studentNumber: { contains: filters.q, mode: "insensitive" } },
-      { email: { contains: filters.q, mode: "insensitive" } },
+      { englishName: containsFilter(filters.q) },
+      { chineseName: containsFilter(filters.q) },
+      { assessmentHubCandidateNumber: containsFilter(filters.q) },
+      { studentNumber: containsFilter(filters.q) },
+      { email: containsFilter(filters.q) },
     ];
   }
   return where;

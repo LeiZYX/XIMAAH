@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { equalsFilter } from "@/lib/db/string-filters";
 
 function normalizeIdentifier(raw: string): string {
   return raw.trim();
@@ -17,10 +18,10 @@ export async function findUserByLoginIdentifier(identifier: string) {
   return prisma.user.findFirst({
     where: {
       OR: [
-        { email: { equals: email, mode: "insensitive" } },
-        { username: { equals: value, mode: "insensitive" } },
+        { email: equalsFilter(email) },
+        { username: equalsFilter(value) },
         { phone: value },
-        { studentNo: { equals: value, mode: "insensitive" } },
+        { studentNo: equalsFilter(value) },
       ],
     },
   });

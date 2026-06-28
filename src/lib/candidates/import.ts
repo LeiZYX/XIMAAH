@@ -1,4 +1,5 @@
 import type { Prisma } from "@/generated/prisma/client";
+import { equalsFilter } from "@/lib/db/string-filters";
 import { prisma } from "@/lib/prisma";
 import {
   createExternalCandidate,
@@ -37,7 +38,7 @@ export async function importInternalCandidates(
 
     try {
       const user = await prisma.user.findFirst({
-        where: { studentNo: { equals: studentNumber, mode: "insensitive" } },
+        where: { studentNo: equalsFilter(studentNumber) },
         include: { studentProfile: true, candidate: true },
       });
 

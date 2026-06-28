@@ -5,6 +5,7 @@ import {
   type StudentStatusFilter,
 } from "@/lib/students/archive";
 import { buildPaginationMeta } from "@/lib/pagination";
+import { containsFilter } from "@/lib/db/string-filters";
 import { prisma } from "@/lib/prisma";
 
 export interface StudentListFilters {
@@ -40,10 +41,10 @@ export async function listStudents(filters: StudentListFilters, page = 1, pageSi
 
   if (filters.q) {
     where.OR = [
-      { name: { contains: filters.q, mode: "insensitive" } },
-      { email: { contains: filters.q, mode: "insensitive" } },
-      { studentNo: { contains: filters.q, mode: "insensitive" } },
-      { studentProfile: { is: { studentNo: { contains: filters.q, mode: "insensitive" } } } },
+      { name: containsFilter(filters.q) },
+      { email: containsFilter(filters.q) },
+      { studentNo: containsFilter(filters.q) },
+      { studentProfile: { is: { studentNo: containsFilter(filters.q) } } },
     ];
   }
 

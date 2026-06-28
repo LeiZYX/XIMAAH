@@ -397,6 +397,7 @@ export async function buildFeeDetailsReport(
     );
 
     for (const item of statement.items) {
+      if (!item.examSessionId) continue;
       const regMeta = matchingRegs.get(item.examSessionId);
       if (filters.registrationSource && regMeta?.registrationSource !== filters.registrationSource) {
         continue;

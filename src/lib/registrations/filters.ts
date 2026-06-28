@@ -1,4 +1,5 @@
 import type { Prisma } from "@/generated/prisma/client";
+import { containsFilter, equalsFilter } from "@/lib/db/string-filters";
 import { prisma } from "@/lib/prisma";
 import { AUTO_BILLING_SCOPES, STUDENT_VISIBLE, TEACHER_VISIBLE } from "@/lib/registrations/metadata";
 
@@ -52,16 +53,13 @@ export function buildRegistrationWhere(
     where.candidateTypeSnapshot = "EXTERNAL";
   }
   if (filters.assessmentHubCandidateNumber) {
-    where.assessmentHubCandidateNumberSnapshot = {
-      contains: filters.assessmentHubCandidateNumber,
-      mode: "insensitive",
-    };
+    where.assessmentHubCandidateNumberSnapshot = containsFilter(filters.assessmentHubCandidateNumber);
   }
   if (filters.studentNo) {
-    where.studentNoSnapshot = { contains: filters.studentNo, mode: "insensitive" };
+    where.studentNoSnapshot = containsFilter(filters.studentNo);
   }
   if (filters.studentName) {
-    where.studentNameSnapshot = { contains: filters.studentName, mode: "insensitive" };
+    where.studentNameSnapshot = containsFilter(filters.studentName);
   }
 
   if (filters.year || filters.month) {
@@ -126,7 +124,7 @@ export async function buildTeacherRegistrationWhere(
 
   const subjectFilter: Prisma.StudentExamRegistrationWhereInput = {
     OR: subjectNames.map((name) => ({
-      subject: { name: { equals: name, mode: "insensitive" } },
+      subject: { name: equalsFilter(name) },
     })),
   };
 
