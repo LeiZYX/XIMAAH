@@ -320,6 +320,7 @@ export type StudentProfileOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.StudentProfileOrderByRelevanceInput
 }
 
 export type StudentProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -516,6 +517,12 @@ export type StudentProfileUncheckedUpdateManyInput = {
 export type StudentProfileNullableScalarRelationFilter = {
   is?: Prisma.StudentProfileWhereInput | null
   isNot?: Prisma.StudentProfileWhereInput | null
+}
+
+export type StudentProfileOrderByRelevanceInput = {
+  fields: Prisma.StudentProfileOrderByRelevanceFieldEnum | Prisma.StudentProfileOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type StudentProfileCountOrderByAggregateInput = {
@@ -731,43 +738,7 @@ export type StudentProfileSelect<ExtArgs extends runtime.Types.Extensions.Intern
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentProfile"]>
 
-export type StudentProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  userId?: boolean
-  studentNo?: boolean
-  currentGrade?: boolean
-  currentClassName?: boolean
-  email?: boolean
-  phone?: boolean
-  status?: boolean
-  entryYear?: boolean
-  graduationYear?: boolean
-  graduatedAt?: boolean
-  leftAt?: boolean
-  archivedAt?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["studentProfile"]>
 
-export type StudentProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  userId?: boolean
-  studentNo?: boolean
-  currentGrade?: boolean
-  currentClassName?: boolean
-  email?: boolean
-  phone?: boolean
-  status?: boolean
-  entryYear?: boolean
-  graduationYear?: boolean
-  graduatedAt?: boolean
-  leftAt?: boolean
-  archivedAt?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["studentProfile"]>
 
 export type StudentProfileSelectScalar = {
   id?: boolean
@@ -789,12 +760,6 @@ export type StudentProfileSelectScalar = {
 
 export type StudentProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "studentNo" | "currentGrade" | "currentClassName" | "email" | "phone" | "status" | "entryYear" | "graduationYear" | "graduatedAt" | "leftAt" | "archivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["studentProfile"]>
 export type StudentProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type StudentProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type StudentProfileIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -937,30 +902,6 @@ export interface StudentProfileDelegate<ExtArgs extends runtime.Types.Extensions
   createMany<T extends StudentProfileCreateManyArgs>(args?: Prisma.SelectSubset<T, StudentProfileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many StudentProfiles and returns the data saved in the database.
-   * @param {StudentProfileCreateManyAndReturnArgs} args - Arguments to create many StudentProfiles.
-   * @example
-   * // Create many StudentProfiles
-   * const studentProfile = await prisma.studentProfile.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many StudentProfiles and only return the `id`
-   * const studentProfileWithIdOnly = await prisma.studentProfile.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends StudentProfileCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, StudentProfileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a StudentProfile.
    * @param {StudentProfileDeleteArgs} args - Arguments to delete one StudentProfile.
    * @example
@@ -1023,36 +964,6 @@ export interface StudentProfileDelegate<ExtArgs extends runtime.Types.Extensions
    * 
    */
   updateMany<T extends StudentProfileUpdateManyArgs>(args: Prisma.SelectSubset<T, StudentProfileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more StudentProfiles and returns the data updated in the database.
-   * @param {StudentProfileUpdateManyAndReturnArgs} args - Arguments to update many StudentProfiles.
-   * @example
-   * // Update many StudentProfiles
-   * const studentProfile = await prisma.studentProfile.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more StudentProfiles and only return the `id`
-   * const studentProfileWithIdOnly = await prisma.studentProfile.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends StudentProfileUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, StudentProfileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentProfilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one StudentProfile.
@@ -1496,29 +1407,6 @@ export type StudentProfileCreateManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
- * StudentProfile createManyAndReturn
- */
-export type StudentProfileCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentProfile
-   */
-  select?: Prisma.StudentProfileSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentProfile
-   */
-  omit?: Prisma.StudentProfileOmit<ExtArgs> | null
-  /**
-   * The data used to create many StudentProfiles.
-   */
-  data: Prisma.StudentProfileCreateManyInput | Prisma.StudentProfileCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentProfileIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * StudentProfile update
  */
 export type StudentProfileUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1560,36 +1448,6 @@ export type StudentProfileUpdateManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many StudentProfiles to update.
    */
   limit?: number
-}
-
-/**
- * StudentProfile updateManyAndReturn
- */
-export type StudentProfileUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentProfile
-   */
-  select?: Prisma.StudentProfileSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentProfile
-   */
-  omit?: Prisma.StudentProfileOmit<ExtArgs> | null
-  /**
-   * The data used to update StudentProfiles.
-   */
-  data: Prisma.XOR<Prisma.StudentProfileUpdateManyMutationInput, Prisma.StudentProfileUncheckedUpdateManyInput>
-  /**
-   * Filter which StudentProfiles to update
-   */
-  where?: Prisma.StudentProfileWhereInput
-  /**
-   * Limit how many StudentProfiles to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentProfileIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

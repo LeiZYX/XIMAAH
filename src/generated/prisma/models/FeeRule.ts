@@ -387,6 +387,7 @@ export type FeeRuleOrderByWithRelationInput = {
   paper?: Prisma.PaperOrderByWithRelationInput
   examSession?: Prisma.ExamSessionOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.FeeRuleOrderByRelevanceInput
 }
 
 export type FeeRuleWhereUniqueInput = Prisma.AtLeast<{
@@ -638,6 +639,12 @@ export type FeeRuleListRelationFilter = {
 
 export type FeeRuleOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type FeeRuleOrderByRelevanceInput = {
+  fields: Prisma.FeeRuleOrderByRelevanceFieldEnum | Prisma.FeeRuleOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type FeeRuleCountOrderByAggregateInput = {
@@ -2410,67 +2417,7 @@ export type FeeRuleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   createdBy?: boolean | Prisma.FeeRule$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["feeRule"]>
 
-export type FeeRuleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  registrationWindowId?: boolean
-  examBoardId?: boolean
-  examSeriesId?: boolean
-  qualificationId?: boolean
-  subjectId?: boolean
-  paperId?: boolean
-  examSessionId?: boolean
-  entryType?: boolean
-  costCurrency?: boolean
-  costAmount?: boolean
-  exchangeRateToCny?: boolean
-  markupType?: boolean
-  markupValue?: boolean
-  salesCurrency?: boolean
-  salesAmount?: boolean
-  isActive?: boolean
-  createdByUserId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  qualification?: boolean | Prisma.QualificationDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.FeeRule$subjectArgs<ExtArgs>
-  paper?: boolean | Prisma.FeeRule$paperArgs<ExtArgs>
-  examSession?: boolean | Prisma.FeeRule$examSessionArgs<ExtArgs>
-  createdBy?: boolean | Prisma.FeeRule$createdByArgs<ExtArgs>
-}, ExtArgs["result"]["feeRule"]>
 
-export type FeeRuleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  registrationWindowId?: boolean
-  examBoardId?: boolean
-  examSeriesId?: boolean
-  qualificationId?: boolean
-  subjectId?: boolean
-  paperId?: boolean
-  examSessionId?: boolean
-  entryType?: boolean
-  costCurrency?: boolean
-  costAmount?: boolean
-  exchangeRateToCny?: boolean
-  markupType?: boolean
-  markupValue?: boolean
-  salesCurrency?: boolean
-  salesAmount?: boolean
-  isActive?: boolean
-  createdByUserId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  qualification?: boolean | Prisma.QualificationDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.FeeRule$subjectArgs<ExtArgs>
-  paper?: boolean | Prisma.FeeRule$paperArgs<ExtArgs>
-  examSession?: boolean | Prisma.FeeRule$examSessionArgs<ExtArgs>
-  createdBy?: boolean | Prisma.FeeRule$createdByArgs<ExtArgs>
-}, ExtArgs["result"]["feeRule"]>
 
 export type FeeRuleSelectScalar = {
   id?: boolean
@@ -2497,26 +2444,6 @@ export type FeeRuleSelectScalar = {
 
 export type FeeRuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "registrationWindowId" | "examBoardId" | "examSeriesId" | "qualificationId" | "subjectId" | "paperId" | "examSessionId" | "entryType" | "costCurrency" | "costAmount" | "exchangeRateToCny" | "markupType" | "markupValue" | "salesCurrency" | "salesAmount" | "isActive" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["feeRule"]>
 export type FeeRuleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  qualification?: boolean | Prisma.QualificationDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.FeeRule$subjectArgs<ExtArgs>
-  paper?: boolean | Prisma.FeeRule$paperArgs<ExtArgs>
-  examSession?: boolean | Prisma.FeeRule$examSessionArgs<ExtArgs>
-  createdBy?: boolean | Prisma.FeeRule$createdByArgs<ExtArgs>
-}
-export type FeeRuleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  qualification?: boolean | Prisma.QualificationDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.FeeRule$subjectArgs<ExtArgs>
-  paper?: boolean | Prisma.FeeRule$paperArgs<ExtArgs>
-  examSession?: boolean | Prisma.FeeRule$examSessionArgs<ExtArgs>
-  createdBy?: boolean | Prisma.FeeRule$createdByArgs<ExtArgs>
-}
-export type FeeRuleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
   examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
   examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
@@ -2678,30 +2605,6 @@ export interface FeeRuleDelegate<ExtArgs extends runtime.Types.Extensions.Intern
   createMany<T extends FeeRuleCreateManyArgs>(args?: Prisma.SelectSubset<T, FeeRuleCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many FeeRules and returns the data saved in the database.
-   * @param {FeeRuleCreateManyAndReturnArgs} args - Arguments to create many FeeRules.
-   * @example
-   * // Create many FeeRules
-   * const feeRule = await prisma.feeRule.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many FeeRules and only return the `id`
-   * const feeRuleWithIdOnly = await prisma.feeRule.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends FeeRuleCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, FeeRuleCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a FeeRule.
    * @param {FeeRuleDeleteArgs} args - Arguments to delete one FeeRule.
    * @example
@@ -2764,36 +2667,6 @@ export interface FeeRuleDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * 
    */
   updateMany<T extends FeeRuleUpdateManyArgs>(args: Prisma.SelectSubset<T, FeeRuleUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more FeeRules and returns the data updated in the database.
-   * @param {FeeRuleUpdateManyAndReturnArgs} args - Arguments to update many FeeRules.
-   * @example
-   * // Update many FeeRules
-   * const feeRule = await prisma.feeRule.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more FeeRules and only return the `id`
-   * const feeRuleWithIdOnly = await prisma.feeRule.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends FeeRuleUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, FeeRuleUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one FeeRule.
@@ -3249,29 +3122,6 @@ export type FeeRuleCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * FeeRule createManyAndReturn
- */
-export type FeeRuleCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FeeRule
-   */
-  select?: Prisma.FeeRuleSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the FeeRule
-   */
-  omit?: Prisma.FeeRuleOmit<ExtArgs> | null
-  /**
-   * The data used to create many FeeRules.
-   */
-  data: Prisma.FeeRuleCreateManyInput | Prisma.FeeRuleCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FeeRuleIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * FeeRule update
  */
 export type FeeRuleUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3313,36 +3163,6 @@ export type FeeRuleUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many FeeRules to update.
    */
   limit?: number
-}
-
-/**
- * FeeRule updateManyAndReturn
- */
-export type FeeRuleUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FeeRule
-   */
-  select?: Prisma.FeeRuleSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the FeeRule
-   */
-  omit?: Prisma.FeeRuleOmit<ExtArgs> | null
-  /**
-   * The data used to update FeeRules.
-   */
-  data: Prisma.XOR<Prisma.FeeRuleUpdateManyMutationInput, Prisma.FeeRuleUncheckedUpdateManyInput>
-  /**
-   * Filter which FeeRules to update
-   */
-  where?: Prisma.FeeRuleWhereInput
-  /**
-   * Limit how many FeeRules to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FeeRuleIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

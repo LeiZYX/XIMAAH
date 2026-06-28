@@ -264,6 +264,7 @@ export type ExamBoardOrderByWithRelationInput = {
   studentExamRegistrations?: Prisma.StudentExamRegistrationOrderByRelationAggregateInput
   feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
   candidateExamIdentities?: Prisma.CandidateExamIdentityOrderByRelationAggregateInput
+  _relevance?: Prisma.ExamBoardOrderByRelevanceInput
 }
 
 export type ExamBoardWhereUniqueInput = Prisma.AtLeast<{
@@ -468,6 +469,12 @@ export type ExamBoardUncheckedUpdateManyInput = {
 export type ExamBoardScalarRelationFilter = {
   is?: Prisma.ExamBoardWhereInput
   isNot?: Prisma.ExamBoardWhereInput
+}
+
+export type ExamBoardOrderByRelevanceInput = {
+  fields: Prisma.ExamBoardOrderByRelevanceFieldEnum | Prisma.ExamBoardOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ExamBoardCountOrderByAggregateInput = {
@@ -1880,33 +1887,7 @@ export type ExamBoardSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   _count?: boolean | Prisma.ExamBoardCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["examBoard"]>
 
-export type ExamBoardSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  name?: boolean
-  code?: boolean
-  description?: boolean
-  country?: boolean
-  region?: boolean
-  website?: boolean
-  timezone?: boolean
-  calendarSubjectFilterEnabled?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-}, ExtArgs["result"]["examBoard"]>
 
-export type ExamBoardSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  name?: boolean
-  code?: boolean
-  description?: boolean
-  country?: boolean
-  region?: boolean
-  website?: boolean
-  timezone?: boolean
-  calendarSubjectFilterEnabled?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-}, ExtArgs["result"]["examBoard"]>
 
 export type ExamBoardSelectScalar = {
   id?: boolean
@@ -1936,8 +1917,6 @@ export type ExamBoardInclude<ExtArgs extends runtime.Types.Extensions.InternalAr
   candidateExamIdentities?: boolean | Prisma.ExamBoard$candidateExamIdentitiesArgs<ExtArgs>
   _count?: boolean | Prisma.ExamBoardCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type ExamBoardIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type ExamBoardIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $ExamBoardPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "ExamBoard"
@@ -2083,30 +2062,6 @@ export interface ExamBoardDelegate<ExtArgs extends runtime.Types.Extensions.Inte
   createMany<T extends ExamBoardCreateManyArgs>(args?: Prisma.SelectSubset<T, ExamBoardCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many ExamBoards and returns the data saved in the database.
-   * @param {ExamBoardCreateManyAndReturnArgs} args - Arguments to create many ExamBoards.
-   * @example
-   * // Create many ExamBoards
-   * const examBoard = await prisma.examBoard.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many ExamBoards and only return the `id`
-   * const examBoardWithIdOnly = await prisma.examBoard.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends ExamBoardCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ExamBoardCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamBoardPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a ExamBoard.
    * @param {ExamBoardDeleteArgs} args - Arguments to delete one ExamBoard.
    * @example
@@ -2169,36 +2124,6 @@ export interface ExamBoardDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * 
    */
   updateMany<T extends ExamBoardUpdateManyArgs>(args: Prisma.SelectSubset<T, ExamBoardUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more ExamBoards and returns the data updated in the database.
-   * @param {ExamBoardUpdateManyAndReturnArgs} args - Arguments to update many ExamBoards.
-   * @example
-   * // Update many ExamBoards
-   * const examBoard = await prisma.examBoard.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more ExamBoards and only return the `id`
-   * const examBoardWithIdOnly = await prisma.examBoard.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends ExamBoardUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ExamBoardUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamBoardPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one ExamBoard.
@@ -2647,25 +2572,6 @@ export type ExamBoardCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * ExamBoard createManyAndReturn
- */
-export type ExamBoardCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ExamBoard
-   */
-  select?: Prisma.ExamBoardSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the ExamBoard
-   */
-  omit?: Prisma.ExamBoardOmit<ExtArgs> | null
-  /**
-   * The data used to create many ExamBoards.
-   */
-  data: Prisma.ExamBoardCreateManyInput | Prisma.ExamBoardCreateManyInput[]
-  skipDuplicates?: boolean
-}
-
-/**
  * ExamBoard update
  */
 export type ExamBoardUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2695,32 +2601,6 @@ export type ExamBoardUpdateArgs<ExtArgs extends runtime.Types.Extensions.Interna
  * ExamBoard updateMany
  */
 export type ExamBoardUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * The data used to update ExamBoards.
-   */
-  data: Prisma.XOR<Prisma.ExamBoardUpdateManyMutationInput, Prisma.ExamBoardUncheckedUpdateManyInput>
-  /**
-   * Filter which ExamBoards to update
-   */
-  where?: Prisma.ExamBoardWhereInput
-  /**
-   * Limit how many ExamBoards to update.
-   */
-  limit?: number
-}
-
-/**
- * ExamBoard updateManyAndReturn
- */
-export type ExamBoardUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ExamBoard
-   */
-  select?: Prisma.ExamBoardSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the ExamBoard
-   */
-  omit?: Prisma.ExamBoardOmit<ExtArgs> | null
   /**
    * The data used to update ExamBoards.
    */

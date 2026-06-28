@@ -255,6 +255,7 @@ export type RegistrationWindowOrderByWithRelationInput = {
   exchangeRates?: Prisma.ExchangeRateOrderByRelationAggregateInput
   feeStatements?: Prisma.FeeStatementOrderByRelationAggregateInput
   feeAuditLogs?: Prisma.FeeAuditLogOrderByRelationAggregateInput
+  _relevance?: Prisma.RegistrationWindowOrderByRelevanceInput
 }
 
 export type RegistrationWindowWhereUniqueInput = Prisma.AtLeast<{
@@ -439,6 +440,12 @@ export type RegistrationWindowListRelationFilter = {
 
 export type RegistrationWindowOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type RegistrationWindowOrderByRelevanceInput = {
+  fields: Prisma.RegistrationWindowOrderByRelevanceFieldEnum | Prisma.RegistrationWindowOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type RegistrationWindowCountOrderByAggregateInput = {
@@ -1869,37 +1876,7 @@ export type RegistrationWindowSelect<ExtArgs extends runtime.Types.Extensions.In
   _count?: boolean | Prisma.RegistrationWindowCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["registrationWindow"]>
 
-export type RegistrationWindowSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  examBoardId?: boolean
-  examSeriesId?: boolean
-  title?: boolean
-  startAt?: boolean
-  endAt?: boolean
-  status?: boolean
-  createdById?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  createdBy?: boolean | Prisma.RegistrationWindow$createdByArgs<ExtArgs>
-}, ExtArgs["result"]["registrationWindow"]>
 
-export type RegistrationWindowSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  examBoardId?: boolean
-  examSeriesId?: boolean
-  title?: boolean
-  startAt?: boolean
-  endAt?: boolean
-  status?: boolean
-  createdById?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  createdBy?: boolean | Prisma.RegistrationWindow$createdByArgs<ExtArgs>
-}, ExtArgs["result"]["registrationWindow"]>
 
 export type RegistrationWindowSelectScalar = {
   id?: boolean
@@ -1927,16 +1904,6 @@ export type RegistrationWindowInclude<ExtArgs extends runtime.Types.Extensions.I
   feeStatements?: boolean | Prisma.RegistrationWindow$feeStatementsArgs<ExtArgs>
   feeAuditLogs?: boolean | Prisma.RegistrationWindow$feeAuditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.RegistrationWindowCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type RegistrationWindowIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  createdBy?: boolean | Prisma.RegistrationWindow$createdByArgs<ExtArgs>
-}
-export type RegistrationWindowIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  createdBy?: boolean | Prisma.RegistrationWindow$createdByArgs<ExtArgs>
 }
 
 export type $RegistrationWindowPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2082,30 +2049,6 @@ export interface RegistrationWindowDelegate<ExtArgs extends runtime.Types.Extens
   createMany<T extends RegistrationWindowCreateManyArgs>(args?: Prisma.SelectSubset<T, RegistrationWindowCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many RegistrationWindows and returns the data saved in the database.
-   * @param {RegistrationWindowCreateManyAndReturnArgs} args - Arguments to create many RegistrationWindows.
-   * @example
-   * // Create many RegistrationWindows
-   * const registrationWindow = await prisma.registrationWindow.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many RegistrationWindows and only return the `id`
-   * const registrationWindowWithIdOnly = await prisma.registrationWindow.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends RegistrationWindowCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, RegistrationWindowCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a RegistrationWindow.
    * @param {RegistrationWindowDeleteArgs} args - Arguments to delete one RegistrationWindow.
    * @example
@@ -2168,36 +2111,6 @@ export interface RegistrationWindowDelegate<ExtArgs extends runtime.Types.Extens
    * 
    */
   updateMany<T extends RegistrationWindowUpdateManyArgs>(args: Prisma.SelectSubset<T, RegistrationWindowUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more RegistrationWindows and returns the data updated in the database.
-   * @param {RegistrationWindowUpdateManyAndReturnArgs} args - Arguments to update many RegistrationWindows.
-   * @example
-   * // Update many RegistrationWindows
-   * const registrationWindow = await prisma.registrationWindow.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more RegistrationWindows and only return the `id`
-   * const registrationWindowWithIdOnly = await prisma.registrationWindow.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends RegistrationWindowUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, RegistrationWindowUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one RegistrationWindow.
@@ -2645,29 +2558,6 @@ export type RegistrationWindowCreateManyArgs<ExtArgs extends runtime.Types.Exten
 }
 
 /**
- * RegistrationWindow createManyAndReturn
- */
-export type RegistrationWindowCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the RegistrationWindow
-   */
-  select?: Prisma.RegistrationWindowSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the RegistrationWindow
-   */
-  omit?: Prisma.RegistrationWindowOmit<ExtArgs> | null
-  /**
-   * The data used to create many RegistrationWindows.
-   */
-  data: Prisma.RegistrationWindowCreateManyInput | Prisma.RegistrationWindowCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RegistrationWindowIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * RegistrationWindow update
  */
 export type RegistrationWindowUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2709,36 +2599,6 @@ export type RegistrationWindowUpdateManyArgs<ExtArgs extends runtime.Types.Exten
    * Limit how many RegistrationWindows to update.
    */
   limit?: number
-}
-
-/**
- * RegistrationWindow updateManyAndReturn
- */
-export type RegistrationWindowUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the RegistrationWindow
-   */
-  select?: Prisma.RegistrationWindowSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the RegistrationWindow
-   */
-  omit?: Prisma.RegistrationWindowOmit<ExtArgs> | null
-  /**
-   * The data used to update RegistrationWindows.
-   */
-  data: Prisma.XOR<Prisma.RegistrationWindowUpdateManyMutationInput, Prisma.RegistrationWindowUncheckedUpdateManyInput>
-  /**
-   * Filter which RegistrationWindows to update
-   */
-  where?: Prisma.RegistrationWindowWhereInput
-  /**
-   * Limit how many RegistrationWindows to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RegistrationWindowIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

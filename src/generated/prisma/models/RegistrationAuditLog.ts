@@ -337,6 +337,7 @@ export type RegistrationAuditLogOrderByWithRelationInput = {
   registration?: Prisma.StudentExamRegistrationOrderByWithRelationInput
   examSession?: Prisma.ExamSessionOrderByWithRelationInput
   performedBy?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.RegistrationAuditLogOrderByRelevanceInput
 }
 
 export type RegistrationAuditLogWhereUniqueInput = Prisma.AtLeast<{
@@ -586,6 +587,12 @@ export type RegistrationAuditLogListRelationFilter = {
 
 export type RegistrationAuditLogOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type RegistrationAuditLogOrderByRelevanceInput = {
+  fields: Prisma.RegistrationAuditLogOrderByRelevanceFieldEnum | Prisma.RegistrationAuditLogOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type RegistrationAuditLogCountOrderByAggregateInput = {
@@ -1930,63 +1937,7 @@ export type RegistrationAuditLogSelect<ExtArgs extends runtime.Types.Extensions.
   performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["registrationAuditLog"]>
 
-export type RegistrationAuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  registrationWorkspaceId?: boolean
-  candidateId?: boolean
-  studentId?: boolean
-  registrationId?: boolean
-  examSessionId?: boolean
-  action?: boolean
-  performedById?: boolean
-  performedByRole?: boolean
-  performedAt?: boolean
-  beforeValue?: boolean
-  afterValue?: boolean
-  reason?: boolean
-  registrationSource?: boolean
-  visibility?: boolean
-  billingScope?: boolean
-  assessmentHubCandidateNumberSnapshot?: boolean
-  candidateTypeSnapshot?: boolean
-  note?: boolean
-  createdAt?: boolean
-  registrationWorkspace?: boolean | Prisma.RegistrationAuditLog$registrationWorkspaceArgs<ExtArgs>
-  candidate?: boolean | Prisma.RegistrationAuditLog$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.RegistrationAuditLog$studentArgs<ExtArgs>
-  registration?: boolean | Prisma.RegistrationAuditLog$registrationArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-  performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["registrationAuditLog"]>
 
-export type RegistrationAuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  registrationWorkspaceId?: boolean
-  candidateId?: boolean
-  studentId?: boolean
-  registrationId?: boolean
-  examSessionId?: boolean
-  action?: boolean
-  performedById?: boolean
-  performedByRole?: boolean
-  performedAt?: boolean
-  beforeValue?: boolean
-  afterValue?: boolean
-  reason?: boolean
-  registrationSource?: boolean
-  visibility?: boolean
-  billingScope?: boolean
-  assessmentHubCandidateNumberSnapshot?: boolean
-  candidateTypeSnapshot?: boolean
-  note?: boolean
-  createdAt?: boolean
-  registrationWorkspace?: boolean | Prisma.RegistrationAuditLog$registrationWorkspaceArgs<ExtArgs>
-  candidate?: boolean | Prisma.RegistrationAuditLog$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.RegistrationAuditLog$studentArgs<ExtArgs>
-  registration?: boolean | Prisma.RegistrationAuditLog$registrationArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-  performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["registrationAuditLog"]>
 
 export type RegistrationAuditLogSelectScalar = {
   id?: boolean
@@ -2013,22 +1964,6 @@ export type RegistrationAuditLogSelectScalar = {
 
 export type RegistrationAuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "registrationWorkspaceId" | "candidateId" | "studentId" | "registrationId" | "examSessionId" | "action" | "performedById" | "performedByRole" | "performedAt" | "beforeValue" | "afterValue" | "reason" | "registrationSource" | "visibility" | "billingScope" | "assessmentHubCandidateNumberSnapshot" | "candidateTypeSnapshot" | "note" | "createdAt", ExtArgs["result"]["registrationAuditLog"]>
 export type RegistrationAuditLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  registrationWorkspace?: boolean | Prisma.RegistrationAuditLog$registrationWorkspaceArgs<ExtArgs>
-  candidate?: boolean | Prisma.RegistrationAuditLog$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.RegistrationAuditLog$studentArgs<ExtArgs>
-  registration?: boolean | Prisma.RegistrationAuditLog$registrationArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-  performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type RegistrationAuditLogIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  registrationWorkspace?: boolean | Prisma.RegistrationAuditLog$registrationWorkspaceArgs<ExtArgs>
-  candidate?: boolean | Prisma.RegistrationAuditLog$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.RegistrationAuditLog$studentArgs<ExtArgs>
-  registration?: boolean | Prisma.RegistrationAuditLog$registrationArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-  performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type RegistrationAuditLogIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationWorkspace?: boolean | Prisma.RegistrationAuditLog$registrationWorkspaceArgs<ExtArgs>
   candidate?: boolean | Prisma.RegistrationAuditLog$candidateArgs<ExtArgs>
   student?: boolean | Prisma.RegistrationAuditLog$studentArgs<ExtArgs>
@@ -2186,30 +2121,6 @@ export interface RegistrationAuditLogDelegate<ExtArgs extends runtime.Types.Exte
   createMany<T extends RegistrationAuditLogCreateManyArgs>(args?: Prisma.SelectSubset<T, RegistrationAuditLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many RegistrationAuditLogs and returns the data saved in the database.
-   * @param {RegistrationAuditLogCreateManyAndReturnArgs} args - Arguments to create many RegistrationAuditLogs.
-   * @example
-   * // Create many RegistrationAuditLogs
-   * const registrationAuditLog = await prisma.registrationAuditLog.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many RegistrationAuditLogs and only return the `id`
-   * const registrationAuditLogWithIdOnly = await prisma.registrationAuditLog.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends RegistrationAuditLogCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, RegistrationAuditLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a RegistrationAuditLog.
    * @param {RegistrationAuditLogDeleteArgs} args - Arguments to delete one RegistrationAuditLog.
    * @example
@@ -2272,36 +2183,6 @@ export interface RegistrationAuditLogDelegate<ExtArgs extends runtime.Types.Exte
    * 
    */
   updateMany<T extends RegistrationAuditLogUpdateManyArgs>(args: Prisma.SelectSubset<T, RegistrationAuditLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more RegistrationAuditLogs and returns the data updated in the database.
-   * @param {RegistrationAuditLogUpdateManyAndReturnArgs} args - Arguments to update many RegistrationAuditLogs.
-   * @example
-   * // Update many RegistrationAuditLogs
-   * const registrationAuditLog = await prisma.registrationAuditLog.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more RegistrationAuditLogs and only return the `id`
-   * const registrationAuditLogWithIdOnly = await prisma.registrationAuditLog.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends RegistrationAuditLogUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, RegistrationAuditLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one RegistrationAuditLog.
@@ -2755,29 +2636,6 @@ export type RegistrationAuditLogCreateManyArgs<ExtArgs extends runtime.Types.Ext
 }
 
 /**
- * RegistrationAuditLog createManyAndReturn
- */
-export type RegistrationAuditLogCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the RegistrationAuditLog
-   */
-  select?: Prisma.RegistrationAuditLogSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the RegistrationAuditLog
-   */
-  omit?: Prisma.RegistrationAuditLogOmit<ExtArgs> | null
-  /**
-   * The data used to create many RegistrationAuditLogs.
-   */
-  data: Prisma.RegistrationAuditLogCreateManyInput | Prisma.RegistrationAuditLogCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RegistrationAuditLogIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * RegistrationAuditLog update
  */
 export type RegistrationAuditLogUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2819,36 +2677,6 @@ export type RegistrationAuditLogUpdateManyArgs<ExtArgs extends runtime.Types.Ext
    * Limit how many RegistrationAuditLogs to update.
    */
   limit?: number
-}
-
-/**
- * RegistrationAuditLog updateManyAndReturn
- */
-export type RegistrationAuditLogUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the RegistrationAuditLog
-   */
-  select?: Prisma.RegistrationAuditLogSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the RegistrationAuditLog
-   */
-  omit?: Prisma.RegistrationAuditLogOmit<ExtArgs> | null
-  /**
-   * The data used to update RegistrationAuditLogs.
-   */
-  data: Prisma.XOR<Prisma.RegistrationAuditLogUpdateManyMutationInput, Prisma.RegistrationAuditLogUncheckedUpdateManyInput>
-  /**
-   * Filter which RegistrationAuditLogs to update
-   */
-  where?: Prisma.RegistrationAuditLogWhereInput
-  /**
-   * Limit how many RegistrationAuditLogs to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RegistrationAuditLogIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

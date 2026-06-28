@@ -1,15 +1,8 @@
 import "dotenv/config";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
-import { PrismaClient } from "../src/generated/prisma/client";
+import { createPrismaClient, exitAfterPrismaScript } from "../src/lib/create-prisma-client";
 import { hashPassword } from "../src/lib/auth/password";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
-
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = createPrismaClient();
 
 async function main() {
   const adminEmail = (process.env.ADMIN_EMAIL ?? "admin@xima.local").toLowerCase();
@@ -635,11 +628,8 @@ async function main() {
 }
 
 main()
+  .then(() => exitAfterPrismaScript(prisma, 0))
   .catch((error) => {
     console.error(error);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-    await pool.end();
+    void exitAfterPrismaScript(prisma, 1);
   });

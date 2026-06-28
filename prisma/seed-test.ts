@@ -2,16 +2,13 @@ import "dotenv/config";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
-import { PrismaClient } from "../src/generated/prisma/client";
+import { createPrismaClient, exitAfterPrismaScript } from "../src/lib/create-prisma-client";
 import { hashPassword } from "../src/lib/auth/password";
 import { lockRegistrationsForWindow } from "../src/lib/registrations/lock";
 
 const TEST_PASSWORD = "TestPass123!";
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
+const prisma = createPrismaClient();
 
 const IDS = {
   admin: "test-user-admin",
@@ -627,11 +624,8 @@ async function main() {
 }
 
 main()
+  .then(() => exitAfterPrismaScript(prisma, 0))
   .catch((error) => {
     console.error(error);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-    await pool.end();
+    void exitAfterPrismaScript(prisma, 1);
   });

@@ -437,6 +437,7 @@ export type StudentExamRegistrationOrderByWithRelationInput = {
   paper?: Prisma.PaperOrderByWithRelationInput
   addedByUser?: Prisma.UserOrderByWithRelationInput
   auditLogs?: Prisma.RegistrationAuditLogOrderByRelationAggregateInput
+  _relevance?: Prisma.StudentExamRegistrationOrderByRelevanceInput
 }
 
 export type StudentExamRegistrationWhereUniqueInput = Prisma.AtLeast<{
@@ -793,6 +794,12 @@ export type StudentExamRegistrationListRelationFilter = {
 
 export type StudentExamRegistrationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type StudentExamRegistrationOrderByRelevanceInput = {
+  fields: Prisma.StudentExamRegistrationOrderByRelevanceFieldEnum | Prisma.StudentExamRegistrationOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type StudentExamRegistrationCandidateIdExamSessionIdCompoundUniqueInput = {
@@ -3833,91 +3840,7 @@ export type StudentExamRegistrationSelect<ExtArgs extends runtime.Types.Extensio
   _count?: boolean | Prisma.StudentExamRegistrationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["studentExamRegistration"]>
 
-export type StudentExamRegistrationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  candidateId?: boolean
-  studentId?: boolean
-  registrationWorkspaceId?: boolean
-  examSessionId?: boolean
-  registrationWindowId?: boolean
-  examBoardId?: boolean
-  examSeriesId?: boolean
-  subjectId?: boolean
-  paperId?: boolean
-  studentNameSnapshot?: boolean
-  studentNoSnapshot?: boolean
-  gradeSnapshot?: boolean
-  classNameSnapshot?: boolean
-  emailSnapshot?: boolean
-  phoneSnapshot?: boolean
-  assessmentHubCandidateNumberSnapshot?: boolean
-  candidateTypeSnapshot?: boolean
-  status?: boolean
-  lockedAt?: boolean
-  cancelledAt?: boolean
-  registrationSource?: boolean
-  visibility?: boolean
-  billingScope?: boolean
-  addedByUserId?: boolean
-  addedByRole?: boolean
-  addedAt?: boolean
-  reason?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  candidate?: boolean | Prisma.StudentExamRegistration$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.StudentExamRegistration$studentArgs<ExtArgs>
-  registrationWorkspace?: boolean | Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-  paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
-  addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
-}, ExtArgs["result"]["studentExamRegistration"]>
 
-export type StudentExamRegistrationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  candidateId?: boolean
-  studentId?: boolean
-  registrationWorkspaceId?: boolean
-  examSessionId?: boolean
-  registrationWindowId?: boolean
-  examBoardId?: boolean
-  examSeriesId?: boolean
-  subjectId?: boolean
-  paperId?: boolean
-  studentNameSnapshot?: boolean
-  studentNoSnapshot?: boolean
-  gradeSnapshot?: boolean
-  classNameSnapshot?: boolean
-  emailSnapshot?: boolean
-  phoneSnapshot?: boolean
-  assessmentHubCandidateNumberSnapshot?: boolean
-  candidateTypeSnapshot?: boolean
-  status?: boolean
-  lockedAt?: boolean
-  cancelledAt?: boolean
-  registrationSource?: boolean
-  visibility?: boolean
-  billingScope?: boolean
-  addedByUserId?: boolean
-  addedByRole?: boolean
-  addedAt?: boolean
-  reason?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  candidate?: boolean | Prisma.StudentExamRegistration$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.StudentExamRegistration$studentArgs<ExtArgs>
-  registrationWorkspace?: boolean | Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-  paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
-  addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
-}, ExtArgs["result"]["studentExamRegistration"]>
 
 export type StudentExamRegistrationSelectScalar = {
   id?: boolean
@@ -3966,30 +3889,6 @@ export type StudentExamRegistrationInclude<ExtArgs extends runtime.Types.Extensi
   addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
   auditLogs?: boolean | Prisma.StudentExamRegistration$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentExamRegistrationCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type StudentExamRegistrationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  candidate?: boolean | Prisma.StudentExamRegistration$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.StudentExamRegistration$studentArgs<ExtArgs>
-  registrationWorkspace?: boolean | Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-  paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
-  addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
-}
-export type StudentExamRegistrationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  candidate?: boolean | Prisma.StudentExamRegistration$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.StudentExamRegistration$studentArgs<ExtArgs>
-  registrationWorkspace?: boolean | Prisma.StudentExamRegistration$registrationWorkspaceArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-  paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
-  addedByUser?: boolean | Prisma.StudentExamRegistration$addedByUserArgs<ExtArgs>
 }
 
 export type $StudentExamRegistrationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4156,30 +4055,6 @@ export interface StudentExamRegistrationDelegate<ExtArgs extends runtime.Types.E
   createMany<T extends StudentExamRegistrationCreateManyArgs>(args?: Prisma.SelectSubset<T, StudentExamRegistrationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many StudentExamRegistrations and returns the data saved in the database.
-   * @param {StudentExamRegistrationCreateManyAndReturnArgs} args - Arguments to create many StudentExamRegistrations.
-   * @example
-   * // Create many StudentExamRegistrations
-   * const studentExamRegistration = await prisma.studentExamRegistration.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many StudentExamRegistrations and only return the `id`
-   * const studentExamRegistrationWithIdOnly = await prisma.studentExamRegistration.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends StudentExamRegistrationCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, StudentExamRegistrationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a StudentExamRegistration.
    * @param {StudentExamRegistrationDeleteArgs} args - Arguments to delete one StudentExamRegistration.
    * @example
@@ -4242,36 +4117,6 @@ export interface StudentExamRegistrationDelegate<ExtArgs extends runtime.Types.E
    * 
    */
   updateMany<T extends StudentExamRegistrationUpdateManyArgs>(args: Prisma.SelectSubset<T, StudentExamRegistrationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more StudentExamRegistrations and returns the data updated in the database.
-   * @param {StudentExamRegistrationUpdateManyAndReturnArgs} args - Arguments to update many StudentExamRegistrations.
-   * @example
-   * // Update many StudentExamRegistrations
-   * const studentExamRegistration = await prisma.studentExamRegistration.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more StudentExamRegistrations and only return the `id`
-   * const studentExamRegistrationWithIdOnly = await prisma.studentExamRegistration.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends StudentExamRegistrationUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, StudentExamRegistrationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one StudentExamRegistration.
@@ -4740,29 +4585,6 @@ export type StudentExamRegistrationCreateManyArgs<ExtArgs extends runtime.Types.
 }
 
 /**
- * StudentExamRegistration createManyAndReturn
- */
-export type StudentExamRegistrationCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentExamRegistration
-   */
-  select?: Prisma.StudentExamRegistrationSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentExamRegistration
-   */
-  omit?: Prisma.StudentExamRegistrationOmit<ExtArgs> | null
-  /**
-   * The data used to create many StudentExamRegistrations.
-   */
-  data: Prisma.StudentExamRegistrationCreateManyInput | Prisma.StudentExamRegistrationCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentExamRegistrationIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * StudentExamRegistration update
  */
 export type StudentExamRegistrationUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4804,36 +4626,6 @@ export type StudentExamRegistrationUpdateManyArgs<ExtArgs extends runtime.Types.
    * Limit how many StudentExamRegistrations to update.
    */
   limit?: number
-}
-
-/**
- * StudentExamRegistration updateManyAndReturn
- */
-export type StudentExamRegistrationUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the StudentExamRegistration
-   */
-  select?: Prisma.StudentExamRegistrationSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the StudentExamRegistration
-   */
-  omit?: Prisma.StudentExamRegistrationOmit<ExtArgs> | null
-  /**
-   * The data used to update StudentExamRegistrations.
-   */
-  data: Prisma.XOR<Prisma.StudentExamRegistrationUpdateManyMutationInput, Prisma.StudentExamRegistrationUncheckedUpdateManyInput>
-  /**
-   * Filter which StudentExamRegistrations to update
-   */
-  where?: Prisma.StudentExamRegistrationWhereInput
-  /**
-   * Limit how many StudentExamRegistrations to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StudentExamRegistrationIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

@@ -276,6 +276,7 @@ export type ExamSeriesOrderByWithRelationInput = {
   registrationWindows?: Prisma.RegistrationWindowOrderByRelationAggregateInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationOrderByRelationAggregateInput
   feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
+  _relevance?: Prisma.ExamSeriesOrderByRelevanceInput
 }
 
 export type ExamSeriesWhereUniqueInput = Prisma.AtLeast<{
@@ -452,6 +453,12 @@ export type ExamSeriesListRelationFilter = {
 
 export type ExamSeriesOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ExamSeriesOrderByRelevanceInput = {
+  fields: Prisma.ExamSeriesOrderByRelevanceFieldEnum | Prisma.ExamSeriesOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ExamSeriesCountOrderByAggregateInput = {
@@ -1531,33 +1538,7 @@ export type ExamSeriesSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   _count?: boolean | Prisma.ExamSeriesCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["examSeries"]>
 
-export type ExamSeriesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  name?: boolean
-  year?: boolean
-  examBoardId?: boolean
-  startDate?: boolean
-  endDate?: boolean
-  sourceDocumentId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.ExamSeries$sourceDocumentArgs<ExtArgs>
-}, ExtArgs["result"]["examSeries"]>
 
-export type ExamSeriesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  name?: boolean
-  year?: boolean
-  examBoardId?: boolean
-  startDate?: boolean
-  endDate?: boolean
-  sourceDocumentId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.ExamSeries$sourceDocumentArgs<ExtArgs>
-}, ExtArgs["result"]["examSeries"]>
 
 export type ExamSeriesSelectScalar = {
   id?: boolean
@@ -1582,14 +1563,6 @@ export type ExamSeriesInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   studentExamRegistrations?: boolean | Prisma.ExamSeries$studentExamRegistrationsArgs<ExtArgs>
   feeRules?: boolean | Prisma.ExamSeries$feeRulesArgs<ExtArgs>
   _count?: boolean | Prisma.ExamSeriesCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type ExamSeriesIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.ExamSeries$sourceDocumentArgs<ExtArgs>
-}
-export type ExamSeriesIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.ExamSeries$sourceDocumentArgs<ExtArgs>
 }
 
 export type $ExamSeriesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1732,30 +1705,6 @@ export interface ExamSeriesDelegate<ExtArgs extends runtime.Types.Extensions.Int
   createMany<T extends ExamSeriesCreateManyArgs>(args?: Prisma.SelectSubset<T, ExamSeriesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many ExamSeries and returns the data saved in the database.
-   * @param {ExamSeriesCreateManyAndReturnArgs} args - Arguments to create many ExamSeries.
-   * @example
-   * // Create many ExamSeries
-   * const examSeries = await prisma.examSeries.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many ExamSeries and only return the `id`
-   * const examSeriesWithIdOnly = await prisma.examSeries.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends ExamSeriesCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ExamSeriesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamSeriesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a ExamSeries.
    * @param {ExamSeriesDeleteArgs} args - Arguments to delete one ExamSeries.
    * @example
@@ -1818,36 +1767,6 @@ export interface ExamSeriesDelegate<ExtArgs extends runtime.Types.Extensions.Int
    * 
    */
   updateMany<T extends ExamSeriesUpdateManyArgs>(args: Prisma.SelectSubset<T, ExamSeriesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more ExamSeries and returns the data updated in the database.
-   * @param {ExamSeriesUpdateManyAndReturnArgs} args - Arguments to update many ExamSeries.
-   * @example
-   * // Update many ExamSeries
-   * const examSeries = await prisma.examSeries.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more ExamSeries and only return the `id`
-   * const examSeriesWithIdOnly = await prisma.examSeries.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends ExamSeriesUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ExamSeriesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamSeriesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one ExamSeries.
@@ -2292,29 +2211,6 @@ export type ExamSeriesCreateManyArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
- * ExamSeries createManyAndReturn
- */
-export type ExamSeriesCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ExamSeries
-   */
-  select?: Prisma.ExamSeriesSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the ExamSeries
-   */
-  omit?: Prisma.ExamSeriesOmit<ExtArgs> | null
-  /**
-   * The data used to create many ExamSeries.
-   */
-  data: Prisma.ExamSeriesCreateManyInput | Prisma.ExamSeriesCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ExamSeriesIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * ExamSeries update
  */
 export type ExamSeriesUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2356,36 +2252,6 @@ export type ExamSeriesUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many ExamSeries to update.
    */
   limit?: number
-}
-
-/**
- * ExamSeries updateManyAndReturn
- */
-export type ExamSeriesUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ExamSeries
-   */
-  select?: Prisma.ExamSeriesSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the ExamSeries
-   */
-  omit?: Prisma.ExamSeriesOmit<ExtArgs> | null
-  /**
-   * The data used to update ExamSeries.
-   */
-  data: Prisma.XOR<Prisma.ExamSeriesUpdateManyMutationInput, Prisma.ExamSeriesUncheckedUpdateManyInput>
-  /**
-   * Filter which ExamSeries to update
-   */
-  where?: Prisma.ExamSeriesWhereInput
-  /**
-   * Limit how many ExamSeries to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ExamSeriesIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

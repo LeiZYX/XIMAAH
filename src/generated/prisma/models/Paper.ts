@@ -263,6 +263,7 @@ export type PaperOrderByWithRelationInput = {
   resources?: Prisma.ResourceOrderByRelationAggregateInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationOrderByRelationAggregateInput
   feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
+  _relevance?: Prisma.PaperOrderByRelevanceInput
 }
 
 export type PaperWhereUniqueInput = Prisma.AtLeast<{
@@ -419,6 +420,12 @@ export type PaperListRelationFilter = {
 
 export type PaperOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type PaperOrderByRelevanceInput = {
+  fields: Prisma.PaperOrderByRelevanceFieldEnum | Prisma.PaperOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type PaperCountOrderByAggregateInput = {
@@ -1193,31 +1200,7 @@ export type PaperSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   _count?: boolean | Prisma.PaperCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paper"]>
 
-export type PaperSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  code?: boolean
-  title?: boolean
-  duration?: boolean
-  subjectId?: boolean
-  sourceDocumentId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.Paper$sourceDocumentArgs<ExtArgs>
-}, ExtArgs["result"]["paper"]>
 
-export type PaperSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  code?: boolean
-  title?: boolean
-  duration?: boolean
-  subjectId?: boolean
-  sourceDocumentId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.Paper$sourceDocumentArgs<ExtArgs>
-}, ExtArgs["result"]["paper"]>
 
 export type PaperSelectScalar = {
   id?: boolean
@@ -1239,14 +1222,6 @@ export type PaperInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   studentExamRegistrations?: boolean | Prisma.Paper$studentExamRegistrationsArgs<ExtArgs>
   feeRules?: boolean | Prisma.Paper$feeRulesArgs<ExtArgs>
   _count?: boolean | Prisma.PaperCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type PaperIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.Paper$sourceDocumentArgs<ExtArgs>
-}
-export type PaperIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.Paper$sourceDocumentArgs<ExtArgs>
 }
 
 export type $PaperPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1386,30 +1361,6 @@ export interface PaperDelegate<ExtArgs extends runtime.Types.Extensions.Internal
   createMany<T extends PaperCreateManyArgs>(args?: Prisma.SelectSubset<T, PaperCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many Papers and returns the data saved in the database.
-   * @param {PaperCreateManyAndReturnArgs} args - Arguments to create many Papers.
-   * @example
-   * // Create many Papers
-   * const paper = await prisma.paper.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many Papers and only return the `id`
-   * const paperWithIdOnly = await prisma.paper.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends PaperCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, PaperCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaperPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a Paper.
    * @param {PaperDeleteArgs} args - Arguments to delete one Paper.
    * @example
@@ -1472,36 +1423,6 @@ export interface PaperDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * 
    */
   updateMany<T extends PaperUpdateManyArgs>(args: Prisma.SelectSubset<T, PaperUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more Papers and returns the data updated in the database.
-   * @param {PaperUpdateManyAndReturnArgs} args - Arguments to update many Papers.
-   * @example
-   * // Update many Papers
-   * const paper = await prisma.paper.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more Papers and only return the `id`
-   * const paperWithIdOnly = await prisma.paper.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends PaperUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, PaperUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaperPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Paper.
@@ -1943,29 +1864,6 @@ export type PaperCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * Paper createManyAndReturn
- */
-export type PaperCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Paper
-   */
-  select?: Prisma.PaperSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Paper
-   */
-  omit?: Prisma.PaperOmit<ExtArgs> | null
-  /**
-   * The data used to create many Papers.
-   */
-  data: Prisma.PaperCreateManyInput | Prisma.PaperCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PaperIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * Paper update
  */
 export type PaperUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2007,36 +1905,6 @@ export type PaperUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Papers to update.
    */
   limit?: number
-}
-
-/**
- * Paper updateManyAndReturn
- */
-export type PaperUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Paper
-   */
-  select?: Prisma.PaperSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Paper
-   */
-  omit?: Prisma.PaperOmit<ExtArgs> | null
-  /**
-   * The data used to update Papers.
-   */
-  data: Prisma.XOR<Prisma.PaperUpdateManyMutationInput, Prisma.PaperUncheckedUpdateManyInput>
-  /**
-   * Filter which Papers to update
-   */
-  where?: Prisma.PaperWhereInput
-  /**
-   * Limit how many Papers to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.PaperIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

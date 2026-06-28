@@ -264,6 +264,7 @@ export type ExchangeRateOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   registrationWindow?: Prisma.RegistrationWindowOrderByWithRelationInput
   createdBy?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.ExchangeRateOrderByRelevanceInput
 }
 
 export type ExchangeRateWhereUniqueInput = Prisma.AtLeast<{
@@ -405,6 +406,12 @@ export type ExchangeRateListRelationFilter = {
 
 export type ExchangeRateOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ExchangeRateOrderByRelevanceInput = {
+  fields: Prisma.ExchangeRateOrderByRelevanceFieldEnum | Prisma.ExchangeRateOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ExchangeRateCountOrderByAggregateInput = {
@@ -750,33 +757,7 @@ export type ExchangeRateSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdBy?: boolean | Prisma.ExchangeRate$createdByArgs<ExtArgs>
 }, ExtArgs["result"]["exchangeRate"]>
 
-export type ExchangeRateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  registrationWindowId?: boolean
-  baseCurrency?: boolean
-  targetCurrency?: boolean
-  rate?: boolean
-  effectiveDate?: boolean
-  createdByUserId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  createdBy?: boolean | Prisma.ExchangeRate$createdByArgs<ExtArgs>
-}, ExtArgs["result"]["exchangeRate"]>
 
-export type ExchangeRateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  registrationWindowId?: boolean
-  baseCurrency?: boolean
-  targetCurrency?: boolean
-  rate?: boolean
-  effectiveDate?: boolean
-  createdByUserId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  createdBy?: boolean | Prisma.ExchangeRate$createdByArgs<ExtArgs>
-}, ExtArgs["result"]["exchangeRate"]>
 
 export type ExchangeRateSelectScalar = {
   id?: boolean
@@ -792,14 +773,6 @@ export type ExchangeRateSelectScalar = {
 
 export type ExchangeRateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "registrationWindowId" | "baseCurrency" | "targetCurrency" | "rate" | "effectiveDate" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["exchangeRate"]>
 export type ExchangeRateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  createdBy?: boolean | Prisma.ExchangeRate$createdByArgs<ExtArgs>
-}
-export type ExchangeRateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  createdBy?: boolean | Prisma.ExchangeRate$createdByArgs<ExtArgs>
-}
-export type ExchangeRateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
   createdBy?: boolean | Prisma.ExchangeRate$createdByArgs<ExtArgs>
 }
@@ -938,30 +911,6 @@ export interface ExchangeRateDelegate<ExtArgs extends runtime.Types.Extensions.I
   createMany<T extends ExchangeRateCreateManyArgs>(args?: Prisma.SelectSubset<T, ExchangeRateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many ExchangeRates and returns the data saved in the database.
-   * @param {ExchangeRateCreateManyAndReturnArgs} args - Arguments to create many ExchangeRates.
-   * @example
-   * // Create many ExchangeRates
-   * const exchangeRate = await prisma.exchangeRate.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many ExchangeRates and only return the `id`
-   * const exchangeRateWithIdOnly = await prisma.exchangeRate.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends ExchangeRateCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ExchangeRateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a ExchangeRate.
    * @param {ExchangeRateDeleteArgs} args - Arguments to delete one ExchangeRate.
    * @example
@@ -1024,36 +973,6 @@ export interface ExchangeRateDelegate<ExtArgs extends runtime.Types.Extensions.I
    * 
    */
   updateMany<T extends ExchangeRateUpdateManyArgs>(args: Prisma.SelectSubset<T, ExchangeRateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more ExchangeRates and returns the data updated in the database.
-   * @param {ExchangeRateUpdateManyAndReturnArgs} args - Arguments to update many ExchangeRates.
-   * @example
-   * // Update many ExchangeRates
-   * const exchangeRate = await prisma.exchangeRate.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more ExchangeRates and only return the `id`
-   * const exchangeRateWithIdOnly = await prisma.exchangeRate.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends ExchangeRateUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ExchangeRateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExchangeRatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one ExchangeRate.
@@ -1492,29 +1411,6 @@ export type ExchangeRateCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
- * ExchangeRate createManyAndReturn
- */
-export type ExchangeRateCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ExchangeRate
-   */
-  select?: Prisma.ExchangeRateSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the ExchangeRate
-   */
-  omit?: Prisma.ExchangeRateOmit<ExtArgs> | null
-  /**
-   * The data used to create many ExchangeRates.
-   */
-  data: Prisma.ExchangeRateCreateManyInput | Prisma.ExchangeRateCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ExchangeRateIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * ExchangeRate update
  */
 export type ExchangeRateUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1556,36 +1452,6 @@ export type ExchangeRateUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many ExchangeRates to update.
    */
   limit?: number
-}
-
-/**
- * ExchangeRate updateManyAndReturn
- */
-export type ExchangeRateUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ExchangeRate
-   */
-  select?: Prisma.ExchangeRateSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the ExchangeRate
-   */
-  omit?: Prisma.ExchangeRateOmit<ExtArgs> | null
-  /**
-   * The data used to update ExchangeRates.
-   */
-  data: Prisma.XOR<Prisma.ExchangeRateUpdateManyMutationInput, Prisma.ExchangeRateUncheckedUpdateManyInput>
-  /**
-   * Filter which ExchangeRates to update
-   */
-  where?: Prisma.ExchangeRateWhereInput
-  /**
-   * Limit how many ExchangeRates to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ExchangeRateIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

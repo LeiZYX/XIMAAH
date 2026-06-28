@@ -314,6 +314,7 @@ export type RegistrationWorkspaceOrderByWithRelationInput = {
   auditLogs?: Prisma.RegistrationAuditLogOrderByRelationAggregateInput
   changeRequests?: Prisma.RegistrationChangeRequestOrderByRelationAggregateInput
   feeStatements?: Prisma.FeeStatementOrderByRelationAggregateInput
+  _relevance?: Prisma.RegistrationWorkspaceOrderByRelevanceInput
 }
 
 export type RegistrationWorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -555,6 +556,12 @@ export type RegistrationWorkspaceListRelationFilter = {
 
 export type RegistrationWorkspaceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type RegistrationWorkspaceOrderByRelevanceInput = {
+  fields: Prisma.RegistrationWorkspaceOrderByRelevanceFieldEnum | Prisma.RegistrationWorkspaceOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type RegistrationWorkspaceCandidateIdRegistrationWindowIdCompoundUniqueInput = {
@@ -2049,53 +2056,7 @@ export type RegistrationWorkspaceSelect<ExtArgs extends runtime.Types.Extensions
   _count?: boolean | Prisma.RegistrationWorkspaceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["registrationWorkspace"]>
 
-export type RegistrationWorkspaceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  candidateId?: boolean
-  studentId?: boolean
-  registrationWindowId?: boolean
-  lockedAt?: boolean
-  lastAdjustedByUserId?: boolean
-  lastAdjustedByRole?: boolean
-  lastAdjustedAt?: boolean
-  lastAdjustmentReason?: boolean
-  lastAdjustmentSummary?: boolean
-  hasPostLockAdjustment?: boolean
-  isLateRegistration?: boolean
-  registrationSource?: boolean
-  visibility?: boolean
-  billingScope?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  candidate?: boolean | Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.RegistrationWorkspace$studentArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  lastAdjustedByUser?: boolean | Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>
-}, ExtArgs["result"]["registrationWorkspace"]>
 
-export type RegistrationWorkspaceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  candidateId?: boolean
-  studentId?: boolean
-  registrationWindowId?: boolean
-  lockedAt?: boolean
-  lastAdjustedByUserId?: boolean
-  lastAdjustedByRole?: boolean
-  lastAdjustedAt?: boolean
-  lastAdjustmentReason?: boolean
-  lastAdjustmentSummary?: boolean
-  hasPostLockAdjustment?: boolean
-  isLateRegistration?: boolean
-  registrationSource?: boolean
-  visibility?: boolean
-  billingScope?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  candidate?: boolean | Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.RegistrationWorkspace$studentArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  lastAdjustedByUser?: boolean | Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>
-}, ExtArgs["result"]["registrationWorkspace"]>
 
 export type RegistrationWorkspaceSelectScalar = {
   id?: boolean
@@ -2128,18 +2089,6 @@ export type RegistrationWorkspaceInclude<ExtArgs extends runtime.Types.Extension
   changeRequests?: boolean | Prisma.RegistrationWorkspace$changeRequestsArgs<ExtArgs>
   feeStatements?: boolean | Prisma.RegistrationWorkspace$feeStatementsArgs<ExtArgs>
   _count?: boolean | Prisma.RegistrationWorkspaceCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type RegistrationWorkspaceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  candidate?: boolean | Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.RegistrationWorkspace$studentArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  lastAdjustedByUser?: boolean | Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>
-}
-export type RegistrationWorkspaceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  candidate?: boolean | Prisma.RegistrationWorkspace$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.RegistrationWorkspace$studentArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  lastAdjustedByUser?: boolean | Prisma.RegistrationWorkspace$lastAdjustedByUserArgs<ExtArgs>
 }
 
 export type $RegistrationWorkspacePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2290,30 +2239,6 @@ export interface RegistrationWorkspaceDelegate<ExtArgs extends runtime.Types.Ext
   createMany<T extends RegistrationWorkspaceCreateManyArgs>(args?: Prisma.SelectSubset<T, RegistrationWorkspaceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many RegistrationWorkspaces and returns the data saved in the database.
-   * @param {RegistrationWorkspaceCreateManyAndReturnArgs} args - Arguments to create many RegistrationWorkspaces.
-   * @example
-   * // Create many RegistrationWorkspaces
-   * const registrationWorkspace = await prisma.registrationWorkspace.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many RegistrationWorkspaces and only return the `id`
-   * const registrationWorkspaceWithIdOnly = await prisma.registrationWorkspace.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends RegistrationWorkspaceCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, RegistrationWorkspaceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationWorkspacePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a RegistrationWorkspace.
    * @param {RegistrationWorkspaceDeleteArgs} args - Arguments to delete one RegistrationWorkspace.
    * @example
@@ -2376,36 +2301,6 @@ export interface RegistrationWorkspaceDelegate<ExtArgs extends runtime.Types.Ext
    * 
    */
   updateMany<T extends RegistrationWorkspaceUpdateManyArgs>(args: Prisma.SelectSubset<T, RegistrationWorkspaceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more RegistrationWorkspaces and returns the data updated in the database.
-   * @param {RegistrationWorkspaceUpdateManyAndReturnArgs} args - Arguments to update many RegistrationWorkspaces.
-   * @example
-   * // Update many RegistrationWorkspaces
-   * const registrationWorkspace = await prisma.registrationWorkspace.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more RegistrationWorkspaces and only return the `id`
-   * const registrationWorkspaceWithIdOnly = await prisma.registrationWorkspace.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends RegistrationWorkspaceUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, RegistrationWorkspaceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationWorkspacePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one RegistrationWorkspace.
@@ -2858,29 +2753,6 @@ export type RegistrationWorkspaceCreateManyArgs<ExtArgs extends runtime.Types.Ex
 }
 
 /**
- * RegistrationWorkspace createManyAndReturn
- */
-export type RegistrationWorkspaceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the RegistrationWorkspace
-   */
-  select?: Prisma.RegistrationWorkspaceSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the RegistrationWorkspace
-   */
-  omit?: Prisma.RegistrationWorkspaceOmit<ExtArgs> | null
-  /**
-   * The data used to create many RegistrationWorkspaces.
-   */
-  data: Prisma.RegistrationWorkspaceCreateManyInput | Prisma.RegistrationWorkspaceCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RegistrationWorkspaceIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * RegistrationWorkspace update
  */
 export type RegistrationWorkspaceUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2922,36 +2794,6 @@ export type RegistrationWorkspaceUpdateManyArgs<ExtArgs extends runtime.Types.Ex
    * Limit how many RegistrationWorkspaces to update.
    */
   limit?: number
-}
-
-/**
- * RegistrationWorkspace updateManyAndReturn
- */
-export type RegistrationWorkspaceUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the RegistrationWorkspace
-   */
-  select?: Prisma.RegistrationWorkspaceSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the RegistrationWorkspace
-   */
-  omit?: Prisma.RegistrationWorkspaceOmit<ExtArgs> | null
-  /**
-   * The data used to update RegistrationWorkspaces.
-   */
-  data: Prisma.XOR<Prisma.RegistrationWorkspaceUpdateManyMutationInput, Prisma.RegistrationWorkspaceUncheckedUpdateManyInput>
-  /**
-   * Filter which RegistrationWorkspaces to update
-   */
-  where?: Prisma.RegistrationWorkspaceWhereInput
-  /**
-   * Limit how many RegistrationWorkspaces to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RegistrationWorkspaceIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

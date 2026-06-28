@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { config } from "dotenv";
 import { resolve } from "node:path";
-import { Pool } from "pg";
+import mariadb from "mariadb";
 
 config({ path: resolve(process.cwd(), ".env.test") });
 
@@ -15,29 +15,54 @@ if (!databaseUrl.includes("_test") && !databaseUrl.includes("test")) {
   process.exit(1);
 }
 
-async function resetSchema() {
-  const pool = new Pool({ connectionString: databaseUrl });
+function parseMysqlUrl(url: string) {
+  const parsed = new URL(url.replace(/^mysql:\/\//, "http://"));
+  const database = parsed.pathname.replace(/^\//, "");
+  if (!database) {
+    throw new Error("DATABASE_URL must include a database name.");
+  }
+
+  return {
+    host: parsed.hostname,
+    port: parsed.port ? Number(parsed.port) : 3306,
+    user: decodeURIComponent(parsed.username),
+    password: decodeURIComponent(parsed.password),
+    database,
+  };
+}
+
+async function resetDatabase() {
+  const config = parseMysqlUrl(databaseUrl);
+  const connection = await mariadb.createConnection({
+    host: config.host,
+    port: config.port,
+    user: config.user,
+    password: config.password,
+    multipleStatements: true,
+  });
+
   try {
-    console.log("Dropping and recreating public schema on test database...");
-    await pool.query(`DROP SCHEMA IF EXISTS public CASCADE`);
-    await pool.query(`CREATE SCHEMA public`);
-    await pool.query(`GRANT ALL ON SCHEMA public TO public`);
+    console.log(`Dropping and recreating MySQL database "${config.database}"...`);
+    await connection.query(`DROP DATABASE IF EXISTS \`${config.database}\``);
+    await connection.query(
+      `CREATE DATABASE \`${config.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
+    );
   } finally {
-    await pool.end();
+    await connection.end();
   }
 }
 
 async function main() {
-  await resetSchema();
+  await resetDatabase();
 
   console.log("Applying schema...");
-  const push = spawnSync("npx", ["prisma", "db", "push"], {
+  const migrate = spawnSync("npx", ["prisma", "migrate", "deploy"], {
     stdio: "inherit",
     env: process.env,
   });
 
-  if (push.status !== 0) {
-    process.exit(push.status ?? 1);
+  if (migrate.status !== 0) {
+    process.exit(migrate.status ?? 1);
   }
 
   console.log("Seeding test database...");

@@ -216,6 +216,7 @@ export type QualificationOrderByWithRelationInput = {
   subjects?: Prisma.SubjectOrderByRelationAggregateInput
   resources?: Prisma.ResourceOrderByRelationAggregateInput
   feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
+  _relevance?: Prisma.QualificationOrderByRelevanceInput
 }
 
 export type QualificationWhereUniqueInput = Prisma.AtLeast<{
@@ -350,6 +351,12 @@ export type QualificationListRelationFilter = {
 
 export type QualificationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type QualificationOrderByRelevanceInput = {
+  fields: Prisma.QualificationOrderByRelevanceFieldEnum | Prisma.QualificationOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type QualificationCountOrderByAggregateInput = {
@@ -839,27 +846,7 @@ export type QualificationSelect<ExtArgs extends runtime.Types.Extensions.Interna
   _count?: boolean | Prisma.QualificationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["qualification"]>
 
-export type QualificationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  name?: boolean
-  level?: boolean
-  code?: boolean
-  examBoardId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["qualification"]>
 
-export type QualificationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  name?: boolean
-  level?: boolean
-  code?: boolean
-  examBoardId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["qualification"]>
 
 export type QualificationSelectScalar = {
   id?: boolean
@@ -878,12 +865,6 @@ export type QualificationInclude<ExtArgs extends runtime.Types.Extensions.Intern
   resources?: boolean | Prisma.Qualification$resourcesArgs<ExtArgs>
   feeRules?: boolean | Prisma.Qualification$feeRulesArgs<ExtArgs>
   _count?: boolean | Prisma.QualificationCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type QualificationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-}
-export type QualificationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
 }
 
 export type $QualificationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1020,30 +1001,6 @@ export interface QualificationDelegate<ExtArgs extends runtime.Types.Extensions.
   createMany<T extends QualificationCreateManyArgs>(args?: Prisma.SelectSubset<T, QualificationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many Qualifications and returns the data saved in the database.
-   * @param {QualificationCreateManyAndReturnArgs} args - Arguments to create many Qualifications.
-   * @example
-   * // Create many Qualifications
-   * const qualification = await prisma.qualification.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many Qualifications and only return the `id`
-   * const qualificationWithIdOnly = await prisma.qualification.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends QualificationCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, QualificationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QualificationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a Qualification.
    * @param {QualificationDeleteArgs} args - Arguments to delete one Qualification.
    * @example
@@ -1106,36 +1063,6 @@ export interface QualificationDelegate<ExtArgs extends runtime.Types.Extensions.
    * 
    */
   updateMany<T extends QualificationUpdateManyArgs>(args: Prisma.SelectSubset<T, QualificationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more Qualifications and returns the data updated in the database.
-   * @param {QualificationUpdateManyAndReturnArgs} args - Arguments to update many Qualifications.
-   * @example
-   * // Update many Qualifications
-   * const qualification = await prisma.qualification.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more Qualifications and only return the `id`
-   * const qualificationWithIdOnly = await prisma.qualification.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends QualificationUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, QualificationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$QualificationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Qualification.
@@ -1574,29 +1501,6 @@ export type QualificationCreateManyArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 /**
- * Qualification createManyAndReturn
- */
-export type QualificationCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Qualification
-   */
-  select?: Prisma.QualificationSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Qualification
-   */
-  omit?: Prisma.QualificationOmit<ExtArgs> | null
-  /**
-   * The data used to create many Qualifications.
-   */
-  data: Prisma.QualificationCreateManyInput | Prisma.QualificationCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.QualificationIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * Qualification update
  */
 export type QualificationUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1638,36 +1542,6 @@ export type QualificationUpdateManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Qualifications to update.
    */
   limit?: number
-}
-
-/**
- * Qualification updateManyAndReturn
- */
-export type QualificationUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Qualification
-   */
-  select?: Prisma.QualificationSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Qualification
-   */
-  omit?: Prisma.QualificationOmit<ExtArgs> | null
-  /**
-   * The data used to update Qualifications.
-   */
-  data: Prisma.XOR<Prisma.QualificationUpdateManyMutationInput, Prisma.QualificationUncheckedUpdateManyInput>
-  /**
-   * Filter which Qualifications to update
-   */
-  where?: Prisma.QualificationWhereInput
-  /**
-   * Limit how many Qualifications to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.QualificationIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

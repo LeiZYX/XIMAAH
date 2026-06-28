@@ -292,6 +292,7 @@ export type ResourceOrderByWithRelationInput = {
   paper?: Prisma.PaperOrderByWithRelationInput
   examSeries?: Prisma.ExamSeriesOrderByWithRelationInput
   sourceDocument?: Prisma.SourceDocumentOrderByWithRelationInput
+  _relevance?: Prisma.ResourceOrderByRelevanceInput
 }
 
 export type ResourceWhereUniqueInput = Prisma.AtLeast<{
@@ -491,6 +492,12 @@ export type ResourceListRelationFilter = {
 
 export type ResourceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ResourceOrderByRelevanceInput = {
+  fields: Prisma.ResourceOrderByRelevanceFieldEnum | Prisma.ResourceOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ResourceCountOrderByAggregateInput = {
@@ -1618,53 +1625,7 @@ export type ResourceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   sourceDocument?: boolean | Prisma.Resource$sourceDocumentArgs<ExtArgs>
 }, ExtArgs["result"]["resource"]>
 
-export type ResourceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  title?: boolean
-  description?: boolean
-  url?: boolean
-  filePath?: boolean
-  type?: boolean
-  language?: boolean
-  examBoardId?: boolean
-  qualificationId?: boolean
-  subjectId?: boolean
-  paperId?: boolean
-  examSeriesId?: boolean
-  sourceDocumentId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.Resource$examBoardArgs<ExtArgs>
-  qualification?: boolean | Prisma.Resource$qualificationArgs<ExtArgs>
-  subject?: boolean | Prisma.Resource$subjectArgs<ExtArgs>
-  paper?: boolean | Prisma.Resource$paperArgs<ExtArgs>
-  examSeries?: boolean | Prisma.Resource$examSeriesArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.Resource$sourceDocumentArgs<ExtArgs>
-}, ExtArgs["result"]["resource"]>
 
-export type ResourceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  title?: boolean
-  description?: boolean
-  url?: boolean
-  filePath?: boolean
-  type?: boolean
-  language?: boolean
-  examBoardId?: boolean
-  qualificationId?: boolean
-  subjectId?: boolean
-  paperId?: boolean
-  examSeriesId?: boolean
-  sourceDocumentId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.Resource$examBoardArgs<ExtArgs>
-  qualification?: boolean | Prisma.Resource$qualificationArgs<ExtArgs>
-  subject?: boolean | Prisma.Resource$subjectArgs<ExtArgs>
-  paper?: boolean | Prisma.Resource$paperArgs<ExtArgs>
-  examSeries?: boolean | Prisma.Resource$examSeriesArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.Resource$sourceDocumentArgs<ExtArgs>
-}, ExtArgs["result"]["resource"]>
 
 export type ResourceSelectScalar = {
   id?: boolean
@@ -1686,22 +1647,6 @@ export type ResourceSelectScalar = {
 
 export type ResourceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "url" | "filePath" | "type" | "language" | "examBoardId" | "qualificationId" | "subjectId" | "paperId" | "examSeriesId" | "sourceDocumentId" | "createdAt" | "updatedAt", ExtArgs["result"]["resource"]>
 export type ResourceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.Resource$examBoardArgs<ExtArgs>
-  qualification?: boolean | Prisma.Resource$qualificationArgs<ExtArgs>
-  subject?: boolean | Prisma.Resource$subjectArgs<ExtArgs>
-  paper?: boolean | Prisma.Resource$paperArgs<ExtArgs>
-  examSeries?: boolean | Prisma.Resource$examSeriesArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.Resource$sourceDocumentArgs<ExtArgs>
-}
-export type ResourceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.Resource$examBoardArgs<ExtArgs>
-  qualification?: boolean | Prisma.Resource$qualificationArgs<ExtArgs>
-  subject?: boolean | Prisma.Resource$subjectArgs<ExtArgs>
-  paper?: boolean | Prisma.Resource$paperArgs<ExtArgs>
-  examSeries?: boolean | Prisma.Resource$examSeriesArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.Resource$sourceDocumentArgs<ExtArgs>
-}
-export type ResourceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   examBoard?: boolean | Prisma.Resource$examBoardArgs<ExtArgs>
   qualification?: boolean | Prisma.Resource$qualificationArgs<ExtArgs>
   subject?: boolean | Prisma.Resource$subjectArgs<ExtArgs>
@@ -1854,30 +1799,6 @@ export interface ResourceDelegate<ExtArgs extends runtime.Types.Extensions.Inter
   createMany<T extends ResourceCreateManyArgs>(args?: Prisma.SelectSubset<T, ResourceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many Resources and returns the data saved in the database.
-   * @param {ResourceCreateManyAndReturnArgs} args - Arguments to create many Resources.
-   * @example
-   * // Create many Resources
-   * const resource = await prisma.resource.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many Resources and only return the `id`
-   * const resourceWithIdOnly = await prisma.resource.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends ResourceCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ResourceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a Resource.
    * @param {ResourceDeleteArgs} args - Arguments to delete one Resource.
    * @example
@@ -1940,36 +1861,6 @@ export interface ResourceDelegate<ExtArgs extends runtime.Types.Extensions.Inter
    * 
    */
   updateMany<T extends ResourceUpdateManyArgs>(args: Prisma.SelectSubset<T, ResourceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more Resources and returns the data updated in the database.
-   * @param {ResourceUpdateManyAndReturnArgs} args - Arguments to update many Resources.
-   * @example
-   * // Update many Resources
-   * const resource = await prisma.resource.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more Resources and only return the `id`
-   * const resourceWithIdOnly = await prisma.resource.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends ResourceUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ResourceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Resource.
@@ -2418,29 +2309,6 @@ export type ResourceCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * Resource createManyAndReturn
- */
-export type ResourceCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Resource
-   */
-  select?: Prisma.ResourceSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Resource
-   */
-  omit?: Prisma.ResourceOmit<ExtArgs> | null
-  /**
-   * The data used to create many Resources.
-   */
-  data: Prisma.ResourceCreateManyInput | Prisma.ResourceCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ResourceIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * Resource update
  */
 export type ResourceUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2482,36 +2350,6 @@ export type ResourceUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many Resources to update.
    */
   limit?: number
-}
-
-/**
- * Resource updateManyAndReturn
- */
-export type ResourceUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Resource
-   */
-  select?: Prisma.ResourceSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Resource
-   */
-  omit?: Prisma.ResourceOmit<ExtArgs> | null
-  /**
-   * The data used to update Resources.
-   */
-  data: Prisma.XOR<Prisma.ResourceUpdateManyMutationInput, Prisma.ResourceUncheckedUpdateManyInput>
-  /**
-   * Filter which Resources to update
-   */
-  where?: Prisma.ResourceWhereInput
-  /**
-   * Limit how many Resources to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ResourceIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

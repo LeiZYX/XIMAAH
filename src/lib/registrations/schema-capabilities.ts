@@ -6,7 +6,7 @@ export async function hasWorkspaceSchema(): Promise<boolean> {
   if (workspaceSchemaReady !== null) return workspaceSchemaReady;
 
   try {
-    await prisma.$queryRaw`SELECT 1 FROM "RegistrationWorkspace" LIMIT 1`;
+    await prisma.registrationWorkspace.findFirst({ select: { id: true } });
     workspaceSchemaReady = true;
   } catch {
     workspaceSchemaReady = false;

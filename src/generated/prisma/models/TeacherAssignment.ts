@@ -194,6 +194,7 @@ export type TeacherAssignmentOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   teacher?: Prisma.UserOrderByWithRelationInput
   subject?: Prisma.SubjectOrderByWithRelationInput
+  _relevance?: Prisma.TeacherAssignmentOrderByRelevanceInput
 }
 
 export type TeacherAssignmentWhereUniqueInput = Prisma.AtLeast<{
@@ -294,6 +295,12 @@ export type TeacherAssignmentListRelationFilter = {
 
 export type TeacherAssignmentOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type TeacherAssignmentOrderByRelevanceInput = {
+  fields: Prisma.TeacherAssignmentOrderByRelevanceFieldEnum | Prisma.TeacherAssignmentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type TeacherAssignmentTeacherIdSubjectIdCompoundUniqueInput = {
@@ -568,25 +575,7 @@ export type TeacherAssignmentSelect<ExtArgs extends runtime.Types.Extensions.Int
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["teacherAssignment"]>
 
-export type TeacherAssignmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  teacherId?: boolean
-  subjectId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["teacherAssignment"]>
 
-export type TeacherAssignmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  teacherId?: boolean
-  subjectId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["teacherAssignment"]>
 
 export type TeacherAssignmentSelectScalar = {
   id?: boolean
@@ -598,14 +587,6 @@ export type TeacherAssignmentSelectScalar = {
 
 export type TeacherAssignmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teacherId" | "subjectId" | "createdAt" | "updatedAt", ExtArgs["result"]["teacherAssignment"]>
 export type TeacherAssignmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-}
-export type TeacherAssignmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
-}
-export type TeacherAssignmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
 }
@@ -740,30 +721,6 @@ export interface TeacherAssignmentDelegate<ExtArgs extends runtime.Types.Extensi
   createMany<T extends TeacherAssignmentCreateManyArgs>(args?: Prisma.SelectSubset<T, TeacherAssignmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many TeacherAssignments and returns the data saved in the database.
-   * @param {TeacherAssignmentCreateManyAndReturnArgs} args - Arguments to create many TeacherAssignments.
-   * @example
-   * // Create many TeacherAssignments
-   * const teacherAssignment = await prisma.teacherAssignment.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many TeacherAssignments and only return the `id`
-   * const teacherAssignmentWithIdOnly = await prisma.teacherAssignment.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends TeacherAssignmentCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, TeacherAssignmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherAssignmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a TeacherAssignment.
    * @param {TeacherAssignmentDeleteArgs} args - Arguments to delete one TeacherAssignment.
    * @example
@@ -826,36 +783,6 @@ export interface TeacherAssignmentDelegate<ExtArgs extends runtime.Types.Extensi
    * 
    */
   updateMany<T extends TeacherAssignmentUpdateManyArgs>(args: Prisma.SelectSubset<T, TeacherAssignmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more TeacherAssignments and returns the data updated in the database.
-   * @param {TeacherAssignmentUpdateManyAndReturnArgs} args - Arguments to update many TeacherAssignments.
-   * @example
-   * // Update many TeacherAssignments
-   * const teacherAssignment = await prisma.teacherAssignment.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more TeacherAssignments and only return the `id`
-   * const teacherAssignmentWithIdOnly = await prisma.teacherAssignment.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends TeacherAssignmentUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, TeacherAssignmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherAssignmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one TeacherAssignment.
@@ -1290,29 +1217,6 @@ export type TeacherAssignmentCreateManyArgs<ExtArgs extends runtime.Types.Extens
 }
 
 /**
- * TeacherAssignment createManyAndReturn
- */
-export type TeacherAssignmentCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TeacherAssignment
-   */
-  select?: Prisma.TeacherAssignmentSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the TeacherAssignment
-   */
-  omit?: Prisma.TeacherAssignmentOmit<ExtArgs> | null
-  /**
-   * The data used to create many TeacherAssignments.
-   */
-  data: Prisma.TeacherAssignmentCreateManyInput | Prisma.TeacherAssignmentCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TeacherAssignmentIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * TeacherAssignment update
  */
 export type TeacherAssignmentUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1354,36 +1258,6 @@ export type TeacherAssignmentUpdateManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many TeacherAssignments to update.
    */
   limit?: number
-}
-
-/**
- * TeacherAssignment updateManyAndReturn
- */
-export type TeacherAssignmentUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TeacherAssignment
-   */
-  select?: Prisma.TeacherAssignmentSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the TeacherAssignment
-   */
-  omit?: Prisma.TeacherAssignmentOmit<ExtArgs> | null
-  /**
-   * The data used to update TeacherAssignments.
-   */
-  data: Prisma.XOR<Prisma.TeacherAssignmentUpdateManyMutationInput, Prisma.TeacherAssignmentUncheckedUpdateManyInput>
-  /**
-   * Filter which TeacherAssignments to update
-   */
-  where?: Prisma.TeacherAssignmentWhereInput
-  /**
-   * Limit how many TeacherAssignments to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TeacherAssignmentIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

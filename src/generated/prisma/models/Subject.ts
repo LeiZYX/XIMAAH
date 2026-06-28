@@ -215,6 +215,7 @@ export type SubjectOrderByWithRelationInput = {
   teacherAssignments?: Prisma.TeacherAssignmentOrderByRelationAggregateInput
   studentExamRegistrations?: Prisma.StudentExamRegistrationOrderByRelationAggregateInput
   feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
+  _relevance?: Prisma.SubjectOrderByRelevanceInput
 }
 
 export type SubjectWhereUniqueInput = Prisma.AtLeast<{
@@ -364,6 +365,12 @@ export type SubjectListRelationFilter = {
 
 export type SubjectOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type SubjectOrderByRelevanceInput = {
+  fields: Prisma.SubjectOrderByRelevanceFieldEnum | Prisma.SubjectOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type SubjectCountOrderByAggregateInput = {
@@ -1293,25 +1300,7 @@ export type SubjectSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   _count?: boolean | Prisma.SubjectCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subject"]>
 
-export type SubjectSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  name?: boolean
-  code?: boolean
-  qualificationId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  qualification?: boolean | Prisma.QualificationDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["subject"]>
 
-export type SubjectSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  name?: boolean
-  code?: boolean
-  qualificationId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  qualification?: boolean | Prisma.QualificationDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["subject"]>
 
 export type SubjectSelectScalar = {
   id?: boolean
@@ -1333,12 +1322,6 @@ export type SubjectInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   studentExamRegistrations?: boolean | Prisma.Subject$studentExamRegistrationsArgs<ExtArgs>
   feeRules?: boolean | Prisma.Subject$feeRulesArgs<ExtArgs>
   _count?: boolean | Prisma.SubjectCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type SubjectIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  qualification?: boolean | Prisma.QualificationDefaultArgs<ExtArgs>
-}
-export type SubjectIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  qualification?: boolean | Prisma.QualificationDefaultArgs<ExtArgs>
 }
 
 export type $SubjectPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1478,30 +1461,6 @@ export interface SubjectDelegate<ExtArgs extends runtime.Types.Extensions.Intern
   createMany<T extends SubjectCreateManyArgs>(args?: Prisma.SelectSubset<T, SubjectCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many Subjects and returns the data saved in the database.
-   * @param {SubjectCreateManyAndReturnArgs} args - Arguments to create many Subjects.
-   * @example
-   * // Create many Subjects
-   * const subject = await prisma.subject.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many Subjects and only return the `id`
-   * const subjectWithIdOnly = await prisma.subject.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends SubjectCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SubjectCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a Subject.
    * @param {SubjectDeleteArgs} args - Arguments to delete one Subject.
    * @example
@@ -1564,36 +1523,6 @@ export interface SubjectDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * 
    */
   updateMany<T extends SubjectUpdateManyArgs>(args: Prisma.SelectSubset<T, SubjectUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more Subjects and returns the data updated in the database.
-   * @param {SubjectUpdateManyAndReturnArgs} args - Arguments to update many Subjects.
-   * @example
-   * // Update many Subjects
-   * const subject = await prisma.subject.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more Subjects and only return the `id`
-   * const subjectWithIdOnly = await prisma.subject.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends SubjectUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SubjectUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Subject.
@@ -2035,29 +1964,6 @@ export type SubjectCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Subject createManyAndReturn
- */
-export type SubjectCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Subject
-   */
-  select?: Prisma.SubjectSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Subject
-   */
-  omit?: Prisma.SubjectOmit<ExtArgs> | null
-  /**
-   * The data used to create many Subjects.
-   */
-  data: Prisma.SubjectCreateManyInput | Prisma.SubjectCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SubjectIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * Subject update
  */
 export type SubjectUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2099,36 +2005,6 @@ export type SubjectUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Subjects to update.
    */
   limit?: number
-}
-
-/**
- * Subject updateManyAndReturn
- */
-export type SubjectUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Subject
-   */
-  select?: Prisma.SubjectSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the Subject
-   */
-  omit?: Prisma.SubjectOmit<ExtArgs> | null
-  /**
-   * The data used to update Subjects.
-   */
-  data: Prisma.XOR<Prisma.SubjectUpdateManyMutationInput, Prisma.SubjectUncheckedUpdateManyInput>
-  /**
-   * Filter which Subjects to update
-   */
-  where?: Prisma.SubjectWhereInput
-  /**
-   * Limit how many Subjects to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SubjectIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

@@ -230,6 +230,7 @@ export type CandidateExamIdentityOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   candidate?: Prisma.CandidateOrderByWithRelationInput
   examBoard?: Prisma.ExamBoardOrderByWithRelationInput
+  _relevance?: Prisma.CandidateExamIdentityOrderByRelevanceInput
 }
 
 export type CandidateExamIdentityWhereUniqueInput = Prisma.AtLeast<{
@@ -370,6 +371,12 @@ export type CandidateExamIdentityListRelationFilter = {
 
 export type CandidateExamIdentityOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type CandidateExamIdentityOrderByRelevanceInput = {
+  fields: Prisma.CandidateExamIdentityOrderByRelevanceFieldEnum | Prisma.CandidateExamIdentityOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type CandidateExamIdentityCandidateIdExamBoardIdCompoundUniqueInput = {
@@ -712,33 +719,7 @@ export type CandidateExamIdentitySelect<ExtArgs extends runtime.Types.Extensions
   examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["candidateExamIdentity"]>
 
-export type CandidateExamIdentitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  candidateId?: boolean
-  examBoardId?: boolean
-  centreNumber?: boolean
-  boardCandidateNumber?: boolean
-  uci?: boolean
-  notes?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  candidate?: boolean | Prisma.CandidateDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["candidateExamIdentity"]>
 
-export type CandidateExamIdentitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  candidateId?: boolean
-  examBoardId?: boolean
-  centreNumber?: boolean
-  boardCandidateNumber?: boolean
-  uci?: boolean
-  notes?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  candidate?: boolean | Prisma.CandidateDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["candidateExamIdentity"]>
 
 export type CandidateExamIdentitySelectScalar = {
   id?: boolean
@@ -754,14 +735,6 @@ export type CandidateExamIdentitySelectScalar = {
 
 export type CandidateExamIdentityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "candidateId" | "examBoardId" | "centreNumber" | "boardCandidateNumber" | "uci" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["candidateExamIdentity"]>
 export type CandidateExamIdentityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  candidate?: boolean | Prisma.CandidateDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-}
-export type CandidateExamIdentityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  candidate?: boolean | Prisma.CandidateDefaultArgs<ExtArgs>
-  examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
-}
-export type CandidateExamIdentityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   candidate?: boolean | Prisma.CandidateDefaultArgs<ExtArgs>
   examBoard?: boolean | Prisma.ExamBoardDefaultArgs<ExtArgs>
 }
@@ -900,30 +873,6 @@ export interface CandidateExamIdentityDelegate<ExtArgs extends runtime.Types.Ext
   createMany<T extends CandidateExamIdentityCreateManyArgs>(args?: Prisma.SelectSubset<T, CandidateExamIdentityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many CandidateExamIdentities and returns the data saved in the database.
-   * @param {CandidateExamIdentityCreateManyAndReturnArgs} args - Arguments to create many CandidateExamIdentities.
-   * @example
-   * // Create many CandidateExamIdentities
-   * const candidateExamIdentity = await prisma.candidateExamIdentity.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many CandidateExamIdentities and only return the `id`
-   * const candidateExamIdentityWithIdOnly = await prisma.candidateExamIdentity.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends CandidateExamIdentityCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, CandidateExamIdentityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CandidateExamIdentityPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a CandidateExamIdentity.
    * @param {CandidateExamIdentityDeleteArgs} args - Arguments to delete one CandidateExamIdentity.
    * @example
@@ -986,36 +935,6 @@ export interface CandidateExamIdentityDelegate<ExtArgs extends runtime.Types.Ext
    * 
    */
   updateMany<T extends CandidateExamIdentityUpdateManyArgs>(args: Prisma.SelectSubset<T, CandidateExamIdentityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more CandidateExamIdentities and returns the data updated in the database.
-   * @param {CandidateExamIdentityUpdateManyAndReturnArgs} args - Arguments to update many CandidateExamIdentities.
-   * @example
-   * // Update many CandidateExamIdentities
-   * const candidateExamIdentity = await prisma.candidateExamIdentity.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more CandidateExamIdentities and only return the `id`
-   * const candidateExamIdentityWithIdOnly = await prisma.candidateExamIdentity.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends CandidateExamIdentityUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, CandidateExamIdentityUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CandidateExamIdentityPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one CandidateExamIdentity.
@@ -1454,29 +1373,6 @@ export type CandidateExamIdentityCreateManyArgs<ExtArgs extends runtime.Types.Ex
 }
 
 /**
- * CandidateExamIdentity createManyAndReturn
- */
-export type CandidateExamIdentityCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the CandidateExamIdentity
-   */
-  select?: Prisma.CandidateExamIdentitySelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the CandidateExamIdentity
-   */
-  omit?: Prisma.CandidateExamIdentityOmit<ExtArgs> | null
-  /**
-   * The data used to create many CandidateExamIdentities.
-   */
-  data: Prisma.CandidateExamIdentityCreateManyInput | Prisma.CandidateExamIdentityCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CandidateExamIdentityIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * CandidateExamIdentity update
  */
 export type CandidateExamIdentityUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1518,36 +1414,6 @@ export type CandidateExamIdentityUpdateManyArgs<ExtArgs extends runtime.Types.Ex
    * Limit how many CandidateExamIdentities to update.
    */
   limit?: number
-}
-
-/**
- * CandidateExamIdentity updateManyAndReturn
- */
-export type CandidateExamIdentityUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the CandidateExamIdentity
-   */
-  select?: Prisma.CandidateExamIdentitySelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the CandidateExamIdentity
-   */
-  omit?: Prisma.CandidateExamIdentityOmit<ExtArgs> | null
-  /**
-   * The data used to update CandidateExamIdentities.
-   */
-  data: Prisma.XOR<Prisma.CandidateExamIdentityUpdateManyMutationInput, Prisma.CandidateExamIdentityUncheckedUpdateManyInput>
-  /**
-   * Filter which CandidateExamIdentities to update
-   */
-  where?: Prisma.CandidateExamIdentityWhereInput
-  /**
-   * Limit how many CandidateExamIdentities to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CandidateExamIdentityIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

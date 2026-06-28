@@ -276,6 +276,7 @@ export type SourceDocumentOrderByWithRelationInput = {
   examSessions?: Prisma.ExamSessionOrderByRelationAggregateInput
   keyDates?: Prisma.KeyDateOrderByRelationAggregateInput
   resources?: Prisma.ResourceOrderByRelationAggregateInput
+  _relevance?: Prisma.SourceDocumentOrderByRelevanceInput
 }
 
 export type SourceDocumentWhereUniqueInput = Prisma.AtLeast<{
@@ -485,6 +486,12 @@ export type SourceDocumentOrderByRelationAggregateInput = {
 export type SourceDocumentNullableScalarRelationFilter = {
   is?: Prisma.SourceDocumentWhereInput | null
   isNot?: Prisma.SourceDocumentWhereInput | null
+}
+
+export type SourceDocumentOrderByRelevanceInput = {
+  fields: Prisma.SourceDocumentOrderByRelevanceFieldEnum | Prisma.SourceDocumentOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type SourceDocumentCountOrderByAggregateInput = {
@@ -1565,41 +1572,7 @@ export type SourceDocumentSelect<ExtArgs extends runtime.Types.Extensions.Intern
   _count?: boolean | Prisma.SourceDocumentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["sourceDocument"]>
 
-export type SourceDocumentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  title?: boolean
-  type?: boolean
-  sourceUrl?: boolean
-  fileName?: boolean
-  fileHash?: boolean
-  publishedAt?: boolean
-  fetchedAt?: boolean
-  notes?: boolean
-  examBoardId?: boolean
-  uploadedById?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.SourceDocument$examBoardArgs<ExtArgs>
-  uploadedBy?: boolean | Prisma.SourceDocument$uploadedByArgs<ExtArgs>
-}, ExtArgs["result"]["sourceDocument"]>
 
-export type SourceDocumentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  title?: boolean
-  type?: boolean
-  sourceUrl?: boolean
-  fileName?: boolean
-  fileHash?: boolean
-  publishedAt?: boolean
-  fetchedAt?: boolean
-  notes?: boolean
-  examBoardId?: boolean
-  uploadedById?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.SourceDocument$examBoardArgs<ExtArgs>
-  uploadedBy?: boolean | Prisma.SourceDocument$uploadedByArgs<ExtArgs>
-}, ExtArgs["result"]["sourceDocument"]>
 
 export type SourceDocumentSelectScalar = {
   id?: boolean
@@ -1627,14 +1600,6 @@ export type SourceDocumentInclude<ExtArgs extends runtime.Types.Extensions.Inter
   keyDates?: boolean | Prisma.SourceDocument$keyDatesArgs<ExtArgs>
   resources?: boolean | Prisma.SourceDocument$resourcesArgs<ExtArgs>
   _count?: boolean | Prisma.SourceDocumentCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type SourceDocumentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.SourceDocument$examBoardArgs<ExtArgs>
-  uploadedBy?: boolean | Prisma.SourceDocument$uploadedByArgs<ExtArgs>
-}
-export type SourceDocumentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.SourceDocument$examBoardArgs<ExtArgs>
-  uploadedBy?: boolean | Prisma.SourceDocument$uploadedByArgs<ExtArgs>
 }
 
 export type $SourceDocumentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1780,30 +1745,6 @@ export interface SourceDocumentDelegate<ExtArgs extends runtime.Types.Extensions
   createMany<T extends SourceDocumentCreateManyArgs>(args?: Prisma.SelectSubset<T, SourceDocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many SourceDocuments and returns the data saved in the database.
-   * @param {SourceDocumentCreateManyAndReturnArgs} args - Arguments to create many SourceDocuments.
-   * @example
-   * // Create many SourceDocuments
-   * const sourceDocument = await prisma.sourceDocument.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many SourceDocuments and only return the `id`
-   * const sourceDocumentWithIdOnly = await prisma.sourceDocument.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends SourceDocumentCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SourceDocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SourceDocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a SourceDocument.
    * @param {SourceDocumentDeleteArgs} args - Arguments to delete one SourceDocument.
    * @example
@@ -1866,36 +1807,6 @@ export interface SourceDocumentDelegate<ExtArgs extends runtime.Types.Extensions
    * 
    */
   updateMany<T extends SourceDocumentUpdateManyArgs>(args: Prisma.SelectSubset<T, SourceDocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more SourceDocuments and returns the data updated in the database.
-   * @param {SourceDocumentUpdateManyAndReturnArgs} args - Arguments to update many SourceDocuments.
-   * @example
-   * // Update many SourceDocuments
-   * const sourceDocument = await prisma.sourceDocument.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more SourceDocuments and only return the `id`
-   * const sourceDocumentWithIdOnly = await prisma.sourceDocument.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends SourceDocumentUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SourceDocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SourceDocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one SourceDocument.
@@ -2343,29 +2254,6 @@ export type SourceDocumentCreateManyArgs<ExtArgs extends runtime.Types.Extension
 }
 
 /**
- * SourceDocument createManyAndReturn
- */
-export type SourceDocumentCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the SourceDocument
-   */
-  select?: Prisma.SourceDocumentSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the SourceDocument
-   */
-  omit?: Prisma.SourceDocumentOmit<ExtArgs> | null
-  /**
-   * The data used to create many SourceDocuments.
-   */
-  data: Prisma.SourceDocumentCreateManyInput | Prisma.SourceDocumentCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SourceDocumentIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * SourceDocument update
  */
 export type SourceDocumentUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2407,36 +2295,6 @@ export type SourceDocumentUpdateManyArgs<ExtArgs extends runtime.Types.Extension
    * Limit how many SourceDocuments to update.
    */
   limit?: number
-}
-
-/**
- * SourceDocument updateManyAndReturn
- */
-export type SourceDocumentUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the SourceDocument
-   */
-  select?: Prisma.SourceDocumentSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the SourceDocument
-   */
-  omit?: Prisma.SourceDocumentOmit<ExtArgs> | null
-  /**
-   * The data used to update SourceDocuments.
-   */
-  data: Prisma.XOR<Prisma.SourceDocumentUpdateManyMutationInput, Prisma.SourceDocumentUncheckedUpdateManyInput>
-  /**
-   * Filter which SourceDocuments to update
-   */
-  where?: Prisma.SourceDocumentWhereInput
-  /**
-   * Limit how many SourceDocuments to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.SourceDocumentIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

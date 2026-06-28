@@ -261,6 +261,7 @@ export type KeyDateOrderByWithRelationInput = {
   subject?: Prisma.SubjectOrderByWithRelationInput
   examSeries?: Prisma.ExamSeriesOrderByWithRelationInput
   sourceDocument?: Prisma.SourceDocumentOrderByWithRelationInput
+  _relevance?: Prisma.KeyDateOrderByRelevanceInput
 }
 
 export type KeyDateWhereUniqueInput = Prisma.AtLeast<{
@@ -430,6 +431,12 @@ export type KeyDateListRelationFilter = {
 
 export type KeyDateOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type KeyDateOrderByRelevanceInput = {
+  fields: Prisma.KeyDateOrderByRelevanceFieldEnum | Prisma.KeyDateOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type KeyDateCountOrderByAggregateInput = {
@@ -1128,43 +1135,7 @@ export type KeyDateSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   sourceDocument?: boolean | Prisma.KeyDate$sourceDocumentArgs<ExtArgs>
 }, ExtArgs["result"]["keyDate"]>
 
-export type KeyDateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  title?: boolean
-  date?: boolean
-  type?: boolean
-  description?: boolean
-  timezone?: boolean
-  examBoardId?: boolean
-  subjectId?: boolean
-  examSeriesId?: boolean
-  sourceDocumentId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.KeyDate$examBoardArgs<ExtArgs>
-  subject?: boolean | Prisma.KeyDate$subjectArgs<ExtArgs>
-  examSeries?: boolean | Prisma.KeyDate$examSeriesArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.KeyDate$sourceDocumentArgs<ExtArgs>
-}, ExtArgs["result"]["keyDate"]>
 
-export type KeyDateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  title?: boolean
-  date?: boolean
-  type?: boolean
-  description?: boolean
-  timezone?: boolean
-  examBoardId?: boolean
-  subjectId?: boolean
-  examSeriesId?: boolean
-  sourceDocumentId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  examBoard?: boolean | Prisma.KeyDate$examBoardArgs<ExtArgs>
-  subject?: boolean | Prisma.KeyDate$subjectArgs<ExtArgs>
-  examSeries?: boolean | Prisma.KeyDate$examSeriesArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.KeyDate$sourceDocumentArgs<ExtArgs>
-}, ExtArgs["result"]["keyDate"]>
 
 export type KeyDateSelectScalar = {
   id?: boolean
@@ -1183,18 +1154,6 @@ export type KeyDateSelectScalar = {
 
 export type KeyDateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "date" | "type" | "description" | "timezone" | "examBoardId" | "subjectId" | "examSeriesId" | "sourceDocumentId" | "createdAt" | "updatedAt", ExtArgs["result"]["keyDate"]>
 export type KeyDateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.KeyDate$examBoardArgs<ExtArgs>
-  subject?: boolean | Prisma.KeyDate$subjectArgs<ExtArgs>
-  examSeries?: boolean | Prisma.KeyDate$examSeriesArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.KeyDate$sourceDocumentArgs<ExtArgs>
-}
-export type KeyDateIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  examBoard?: boolean | Prisma.KeyDate$examBoardArgs<ExtArgs>
-  subject?: boolean | Prisma.KeyDate$subjectArgs<ExtArgs>
-  examSeries?: boolean | Prisma.KeyDate$examSeriesArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.KeyDate$sourceDocumentArgs<ExtArgs>
-}
-export type KeyDateIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   examBoard?: boolean | Prisma.KeyDate$examBoardArgs<ExtArgs>
   subject?: boolean | Prisma.KeyDate$subjectArgs<ExtArgs>
   examSeries?: boolean | Prisma.KeyDate$examSeriesArgs<ExtArgs>
@@ -1340,30 +1299,6 @@ export interface KeyDateDelegate<ExtArgs extends runtime.Types.Extensions.Intern
   createMany<T extends KeyDateCreateManyArgs>(args?: Prisma.SelectSubset<T, KeyDateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many KeyDates and returns the data saved in the database.
-   * @param {KeyDateCreateManyAndReturnArgs} args - Arguments to create many KeyDates.
-   * @example
-   * // Create many KeyDates
-   * const keyDate = await prisma.keyDate.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many KeyDates and only return the `id`
-   * const keyDateWithIdOnly = await prisma.keyDate.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends KeyDateCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, KeyDateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KeyDatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a KeyDate.
    * @param {KeyDateDeleteArgs} args - Arguments to delete one KeyDate.
    * @example
@@ -1426,36 +1361,6 @@ export interface KeyDateDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * 
    */
   updateMany<T extends KeyDateUpdateManyArgs>(args: Prisma.SelectSubset<T, KeyDateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more KeyDates and returns the data updated in the database.
-   * @param {KeyDateUpdateManyAndReturnArgs} args - Arguments to update many KeyDates.
-   * @example
-   * // Update many KeyDates
-   * const keyDate = await prisma.keyDate.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more KeyDates and only return the `id`
-   * const keyDateWithIdOnly = await prisma.keyDate.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends KeyDateUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, KeyDateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$KeyDatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one KeyDate.
@@ -1899,29 +1804,6 @@ export type KeyDateCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * KeyDate createManyAndReturn
- */
-export type KeyDateCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the KeyDate
-   */
-  select?: Prisma.KeyDateSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the KeyDate
-   */
-  omit?: Prisma.KeyDateOmit<ExtArgs> | null
-  /**
-   * The data used to create many KeyDates.
-   */
-  data: Prisma.KeyDateCreateManyInput | Prisma.KeyDateCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.KeyDateIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * KeyDate update
  */
 export type KeyDateUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1963,36 +1845,6 @@ export type KeyDateUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many KeyDates to update.
    */
   limit?: number
-}
-
-/**
- * KeyDate updateManyAndReturn
- */
-export type KeyDateUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the KeyDate
-   */
-  select?: Prisma.KeyDateSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the KeyDate
-   */
-  omit?: Prisma.KeyDateOmit<ExtArgs> | null
-  /**
-   * The data used to update KeyDates.
-   */
-  data: Prisma.XOR<Prisma.KeyDateUpdateManyMutationInput, Prisma.KeyDateUncheckedUpdateManyInput>
-  /**
-   * Filter which KeyDates to update
-   */
-  where?: Prisma.KeyDateWhereInput
-  /**
-   * Limit how many KeyDates to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.KeyDateIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

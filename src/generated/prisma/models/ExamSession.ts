@@ -273,6 +273,7 @@ export type ExamSessionOrderByWithRelationInput = {
   changeRequestExamSessions?: Prisma.RegistrationChangeRequestExamSessionOrderByRelationAggregateInput
   feeRules?: Prisma.FeeRuleOrderByRelationAggregateInput
   feeStatementItems?: Prisma.FeeStatementItemOrderByRelationAggregateInput
+  _relevance?: Prisma.ExamSessionOrderByRelevanceInput
 }
 
 export type ExamSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -487,6 +488,12 @@ export type ExamSessionListRelationFilter = {
 
 export type ExamSessionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type ExamSessionOrderByRelevanceInput = {
+  fields: Prisma.ExamSessionOrderByRelevanceFieldEnum | Prisma.ExamSessionOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type ExamSessionCountOrderByAggregateInput = {
@@ -2009,41 +2016,7 @@ export type ExamSessionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   _count?: boolean | Prisma.ExamSessionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["examSession"]>
 
-export type ExamSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  date?: boolean
-  startTime?: boolean
-  endTime?: boolean
-  timezone?: boolean
-  venue?: boolean
-  notes?: boolean
-  paperId?: boolean
-  examSeriesId?: boolean
-  sourceDocumentId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.ExamSession$sourceDocumentArgs<ExtArgs>
-}, ExtArgs["result"]["examSession"]>
 
-export type ExamSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  date?: boolean
-  startTime?: boolean
-  endTime?: boolean
-  timezone?: boolean
-  venue?: boolean
-  notes?: boolean
-  paperId?: boolean
-  examSeriesId?: boolean
-  sourceDocumentId?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.ExamSession$sourceDocumentArgs<ExtArgs>
-}, ExtArgs["result"]["examSession"]>
 
 export type ExamSessionSelectScalar = {
   id?: boolean
@@ -2073,16 +2046,6 @@ export type ExamSessionInclude<ExtArgs extends runtime.Types.Extensions.Internal
   feeRules?: boolean | Prisma.ExamSession$feeRulesArgs<ExtArgs>
   feeStatementItems?: boolean | Prisma.ExamSession$feeStatementItemsArgs<ExtArgs>
   _count?: boolean | Prisma.ExamSessionCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type ExamSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.ExamSession$sourceDocumentArgs<ExtArgs>
-}
-export type ExamSessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  paper?: boolean | Prisma.PaperDefaultArgs<ExtArgs>
-  examSeries?: boolean | Prisma.ExamSeriesDefaultArgs<ExtArgs>
-  sourceDocument?: boolean | Prisma.ExamSession$sourceDocumentArgs<ExtArgs>
 }
 
 export type $ExamSessionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2230,30 +2193,6 @@ export interface ExamSessionDelegate<ExtArgs extends runtime.Types.Extensions.In
   createMany<T extends ExamSessionCreateManyArgs>(args?: Prisma.SelectSubset<T, ExamSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many ExamSessions and returns the data saved in the database.
-   * @param {ExamSessionCreateManyAndReturnArgs} args - Arguments to create many ExamSessions.
-   * @example
-   * // Create many ExamSessions
-   * const examSession = await prisma.examSession.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many ExamSessions and only return the `id`
-   * const examSessionWithIdOnly = await prisma.examSession.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends ExamSessionCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ExamSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a ExamSession.
    * @param {ExamSessionDeleteArgs} args - Arguments to delete one ExamSession.
    * @example
@@ -2316,36 +2255,6 @@ export interface ExamSessionDelegate<ExtArgs extends runtime.Types.Extensions.In
    * 
    */
   updateMany<T extends ExamSessionUpdateManyArgs>(args: Prisma.SelectSubset<T, ExamSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more ExamSessions and returns the data updated in the database.
-   * @param {ExamSessionUpdateManyAndReturnArgs} args - Arguments to update many ExamSessions.
-   * @example
-   * // Update many ExamSessions
-   * const examSession = await prisma.examSession.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more ExamSessions and only return the `id`
-   * const examSessionWithIdOnly = await prisma.examSession.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends ExamSessionUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ExamSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one ExamSession.
@@ -2795,29 +2704,6 @@ export type ExamSessionCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
- * ExamSession createManyAndReturn
- */
-export type ExamSessionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ExamSession
-   */
-  select?: Prisma.ExamSessionSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the ExamSession
-   */
-  omit?: Prisma.ExamSessionOmit<ExtArgs> | null
-  /**
-   * The data used to create many ExamSessions.
-   */
-  data: Prisma.ExamSessionCreateManyInput | Prisma.ExamSessionCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ExamSessionIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * ExamSession update
  */
 export type ExamSessionUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2859,36 +2745,6 @@ export type ExamSessionUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many ExamSessions to update.
    */
   limit?: number
-}
-
-/**
- * ExamSession updateManyAndReturn
- */
-export type ExamSessionUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the ExamSession
-   */
-  select?: Prisma.ExamSessionSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the ExamSession
-   */
-  omit?: Prisma.ExamSessionOmit<ExtArgs> | null
-  /**
-   * The data used to update ExamSessions.
-   */
-  data: Prisma.XOR<Prisma.ExamSessionUpdateManyMutationInput, Prisma.ExamSessionUncheckedUpdateManyInput>
-  /**
-   * Filter which ExamSessions to update
-   */
-  where?: Prisma.ExamSessionWhereInput
-  /**
-   * Limit how many ExamSessions to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.ExamSessionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

@@ -415,6 +415,7 @@ export type FeeStatementOrderByWithRelationInput = {
   registrationWindow?: Prisma.RegistrationWindowOrderByWithRelationInput
   generatedBy?: Prisma.UserOrderByWithRelationInput
   items?: Prisma.FeeStatementItemOrderByRelationAggregateInput
+  _relevance?: Prisma.FeeStatementOrderByRelevanceInput
 }
 
 export type FeeStatementWhereUniqueInput = Prisma.AtLeast<{
@@ -711,6 +712,12 @@ export type FeeStatementListRelationFilter = {
 
 export type FeeStatementOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type FeeStatementOrderByRelevanceInput = {
+  fields: Prisma.FeeStatementOrderByRelevanceFieldEnum | Prisma.FeeStatementOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type FeeStatementCountOrderByAggregateInput = {
@@ -2192,69 +2199,7 @@ export type FeeStatementSelect<ExtArgs extends runtime.Types.Extensions.Internal
   _count?: boolean | Prisma.FeeStatementCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["feeStatement"]>
 
-export type FeeStatementSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  candidateId?: boolean
-  studentId?: boolean
-  registrationWorkspaceId?: boolean
-  registrationWindowId?: boolean
-  statementNo?: boolean
-  displayCurrency?: boolean
-  exchangeRateSnapshot?: boolean
-  studentNameSnapshot?: boolean
-  studentNoSnapshot?: boolean
-  gradeSnapshot?: boolean
-  classNameSnapshot?: boolean
-  emailSnapshot?: boolean
-  assessmentHubCandidateNumberSnapshot?: boolean
-  candidateTypeSnapshot?: boolean
-  status?: boolean
-  totalGbpAmount?: boolean
-  totalCnyAmount?: boolean
-  paymentNotes?: boolean
-  generatedByUserId?: boolean
-  generatedAt?: boolean
-  issuedAt?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  candidate?: boolean | Prisma.FeeStatement$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.FeeStatement$studentArgs<ExtArgs>
-  registrationWorkspace?: boolean | Prisma.RegistrationWorkspaceDefaultArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  generatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["feeStatement"]>
 
-export type FeeStatementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  candidateId?: boolean
-  studentId?: boolean
-  registrationWorkspaceId?: boolean
-  registrationWindowId?: boolean
-  statementNo?: boolean
-  displayCurrency?: boolean
-  exchangeRateSnapshot?: boolean
-  studentNameSnapshot?: boolean
-  studentNoSnapshot?: boolean
-  gradeSnapshot?: boolean
-  classNameSnapshot?: boolean
-  emailSnapshot?: boolean
-  assessmentHubCandidateNumberSnapshot?: boolean
-  candidateTypeSnapshot?: boolean
-  status?: boolean
-  totalGbpAmount?: boolean
-  totalCnyAmount?: boolean
-  paymentNotes?: boolean
-  generatedByUserId?: boolean
-  generatedAt?: boolean
-  issuedAt?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
-  candidate?: boolean | Prisma.FeeStatement$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.FeeStatement$studentArgs<ExtArgs>
-  registrationWorkspace?: boolean | Prisma.RegistrationWorkspaceDefaultArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  generatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["feeStatement"]>
 
 export type FeeStatementSelectScalar = {
   id?: boolean
@@ -2292,20 +2237,6 @@ export type FeeStatementInclude<ExtArgs extends runtime.Types.Extensions.Interna
   generatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   items?: boolean | Prisma.FeeStatement$itemsArgs<ExtArgs>
   _count?: boolean | Prisma.FeeStatementCountOutputTypeDefaultArgs<ExtArgs>
-}
-export type FeeStatementIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  candidate?: boolean | Prisma.FeeStatement$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.FeeStatement$studentArgs<ExtArgs>
-  registrationWorkspace?: boolean | Prisma.RegistrationWorkspaceDefaultArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  generatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type FeeStatementIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  candidate?: boolean | Prisma.FeeStatement$candidateArgs<ExtArgs>
-  student?: boolean | Prisma.FeeStatement$studentArgs<ExtArgs>
-  registrationWorkspace?: boolean | Prisma.RegistrationWorkspaceDefaultArgs<ExtArgs>
-  registrationWindow?: boolean | Prisma.RegistrationWindowDefaultArgs<ExtArgs>
-  generatedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $FeeStatementPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2461,30 +2392,6 @@ export interface FeeStatementDelegate<ExtArgs extends runtime.Types.Extensions.I
   createMany<T extends FeeStatementCreateManyArgs>(args?: Prisma.SelectSubset<T, FeeStatementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many FeeStatements and returns the data saved in the database.
-   * @param {FeeStatementCreateManyAndReturnArgs} args - Arguments to create many FeeStatements.
-   * @example
-   * // Create many FeeStatements
-   * const feeStatement = await prisma.feeStatement.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many FeeStatements and only return the `id`
-   * const feeStatementWithIdOnly = await prisma.feeStatement.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends FeeStatementCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, FeeStatementCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a FeeStatement.
    * @param {FeeStatementDeleteArgs} args - Arguments to delete one FeeStatement.
    * @example
@@ -2547,36 +2454,6 @@ export interface FeeStatementDelegate<ExtArgs extends runtime.Types.Extensions.I
    * 
    */
   updateMany<T extends FeeStatementUpdateManyArgs>(args: Prisma.SelectSubset<T, FeeStatementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more FeeStatements and returns the data updated in the database.
-   * @param {FeeStatementUpdateManyAndReturnArgs} args - Arguments to update many FeeStatements.
-   * @example
-   * // Update many FeeStatements
-   * const feeStatement = await prisma.feeStatement.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more FeeStatements and only return the `id`
-   * const feeStatementWithIdOnly = await prisma.feeStatement.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends FeeStatementUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, FeeStatementUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one FeeStatement.
@@ -3034,29 +2911,6 @@ export type FeeStatementCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
- * FeeStatement createManyAndReturn
- */
-export type FeeStatementCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FeeStatement
-   */
-  select?: Prisma.FeeStatementSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the FeeStatement
-   */
-  omit?: Prisma.FeeStatementOmit<ExtArgs> | null
-  /**
-   * The data used to create many FeeStatements.
-   */
-  data: Prisma.FeeStatementCreateManyInput | Prisma.FeeStatementCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FeeStatementIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * FeeStatement update
  */
 export type FeeStatementUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3098,36 +2952,6 @@ export type FeeStatementUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many FeeStatements to update.
    */
   limit?: number
-}
-
-/**
- * FeeStatement updateManyAndReturn
- */
-export type FeeStatementUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FeeStatement
-   */
-  select?: Prisma.FeeStatementSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the FeeStatement
-   */
-  omit?: Prisma.FeeStatementOmit<ExtArgs> | null
-  /**
-   * The data used to update FeeStatements.
-   */
-  data: Prisma.XOR<Prisma.FeeStatementUpdateManyMutationInput, Prisma.FeeStatementUncheckedUpdateManyInput>
-  /**
-   * Filter which FeeStatements to update
-   */
-  where?: Prisma.FeeStatementWhereInput
-  /**
-   * Limit how many FeeStatements to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FeeStatementIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

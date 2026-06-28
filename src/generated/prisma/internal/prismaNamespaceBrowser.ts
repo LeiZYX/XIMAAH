@@ -612,18 +612,378 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-export const QueryMode = {
-  default: 'default',
-  insensitive: 'insensitive'
-} as const
-
-export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const UserOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  username: 'username',
+  email: 'email',
+  phone: 'phone',
+  studentNo: 'studentNo',
+  passwordHash: 'passwordHash'
+} as const
+
+export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
+
+
+export const PasswordResetTokenOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash'
+} as const
+
+export type PasswordResetTokenOrderByRelevanceFieldEnum = (typeof PasswordResetTokenOrderByRelevanceFieldEnum)[keyof typeof PasswordResetTokenOrderByRelevanceFieldEnum]
+
+
+export const StudentProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  studentNo: 'studentNo',
+  currentGrade: 'currentGrade',
+  currentClassName: 'currentClassName',
+  email: 'email',
+  phone: 'phone'
+} as const
+
+export type StudentProfileOrderByRelevanceFieldEnum = (typeof StudentProfileOrderByRelevanceFieldEnum)[keyof typeof StudentProfileOrderByRelevanceFieldEnum]
+
+
+export const CandidateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  assessmentHubCandidateNumber: 'assessmentHubCandidateNumber',
+  userId: 'userId',
+  studentNumber: 'studentNumber',
+  englishName: 'englishName',
+  chineseName: 'chineseName',
+  email: 'email',
+  phone: 'phone',
+  gender: 'gender',
+  idNumber: 'idNumber',
+  passportNumber: 'passportNumber',
+  schoolName: 'schoolName',
+  grade: 'grade',
+  className: 'className',
+  sourceSystem: 'sourceSystem',
+  externalId: 'externalId'
+} as const
+
+export type CandidateOrderByRelevanceFieldEnum = (typeof CandidateOrderByRelevanceFieldEnum)[keyof typeof CandidateOrderByRelevanceFieldEnum]
+
+
+export const CandidateExamIdentityOrderByRelevanceFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  centreNumber: 'centreNumber',
+  boardCandidateNumber: 'boardCandidateNumber',
+  uci: 'uci',
+  notes: 'notes'
+} as const
+
+export type CandidateExamIdentityOrderByRelevanceFieldEnum = (typeof CandidateExamIdentityOrderByRelevanceFieldEnum)[keyof typeof CandidateExamIdentityOrderByRelevanceFieldEnum]
+
+
+export const TeacherAssignmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  subjectId: 'subjectId'
+} as const
+
+export type TeacherAssignmentOrderByRelevanceFieldEnum = (typeof TeacherAssignmentOrderByRelevanceFieldEnum)[keyof typeof TeacherAssignmentOrderByRelevanceFieldEnum]
+
+
+export const RegistrationWindowOrderByRelevanceFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  title: 'title',
+  createdById: 'createdById'
+} as const
+
+export type RegistrationWindowOrderByRelevanceFieldEnum = (typeof RegistrationWindowOrderByRelevanceFieldEnum)[keyof typeof RegistrationWindowOrderByRelevanceFieldEnum]
+
+
+export const RegistrationWorkspaceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  studentId: 'studentId',
+  registrationWindowId: 'registrationWindowId',
+  lastAdjustedByUserId: 'lastAdjustedByUserId',
+  lastAdjustmentReason: 'lastAdjustmentReason',
+  lastAdjustmentSummary: 'lastAdjustmentSummary'
+} as const
+
+export type RegistrationWorkspaceOrderByRelevanceFieldEnum = (typeof RegistrationWorkspaceOrderByRelevanceFieldEnum)[keyof typeof RegistrationWorkspaceOrderByRelevanceFieldEnum]
+
+
+export const StudentExamRegistrationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  studentId: 'studentId',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  examSessionId: 'examSessionId',
+  registrationWindowId: 'registrationWindowId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  studentNameSnapshot: 'studentNameSnapshot',
+  studentNoSnapshot: 'studentNoSnapshot',
+  gradeSnapshot: 'gradeSnapshot',
+  classNameSnapshot: 'classNameSnapshot',
+  emailSnapshot: 'emailSnapshot',
+  phoneSnapshot: 'phoneSnapshot',
+  assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
+  addedByUserId: 'addedByUserId',
+  reason: 'reason'
+} as const
+
+export type StudentExamRegistrationOrderByRelevanceFieldEnum = (typeof StudentExamRegistrationOrderByRelevanceFieldEnum)[keyof typeof StudentExamRegistrationOrderByRelevanceFieldEnum]
+
+
+export const RegistrationAuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  candidateId: 'candidateId',
+  studentId: 'studentId',
+  registrationId: 'registrationId',
+  examSessionId: 'examSessionId',
+  performedById: 'performedById',
+  beforeValue: 'beforeValue',
+  afterValue: 'afterValue',
+  reason: 'reason',
+  assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
+  note: 'note'
+} as const
+
+export type RegistrationAuditLogOrderByRelevanceFieldEnum = (typeof RegistrationAuditLogOrderByRelevanceFieldEnum)[keyof typeof RegistrationAuditLogOrderByRelevanceFieldEnum]
+
+
+export const RegistrationChangeRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
+  studentId: 'studentId',
+  candidateId: 'candidateId',
+  requestedByUserId: 'requestedByUserId',
+  targetExamSessionId: 'targetExamSessionId',
+  targetRegistrationId: 'targetRegistrationId',
+  replacementExamSessionId: 'replacementExamSessionId',
+  reason: 'reason',
+  reviewedByUserId: 'reviewedByUserId',
+  reviewNote: 'reviewNote'
+} as const
+
+export type RegistrationChangeRequestOrderByRelevanceFieldEnum = (typeof RegistrationChangeRequestOrderByRelevanceFieldEnum)[keyof typeof RegistrationChangeRequestOrderByRelevanceFieldEnum]
+
+
+export const RegistrationChangeRequestExamSessionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  changeRequestId: 'changeRequestId',
+  examSessionId: 'examSessionId'
+} as const
+
+export type RegistrationChangeRequestExamSessionOrderByRelevanceFieldEnum = (typeof RegistrationChangeRequestExamSessionOrderByRelevanceFieldEnum)[keyof typeof RegistrationChangeRequestExamSessionOrderByRelevanceFieldEnum]
+
+
+export const ExamBoardOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  description: 'description',
+  country: 'country',
+  region: 'region',
+  website: 'website',
+  timezone: 'timezone'
+} as const
+
+export type ExamBoardOrderByRelevanceFieldEnum = (typeof ExamBoardOrderByRelevanceFieldEnum)[keyof typeof ExamBoardOrderByRelevanceFieldEnum]
+
+
+export const QualificationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  level: 'level',
+  code: 'code',
+  examBoardId: 'examBoardId'
+} as const
+
+export type QualificationOrderByRelevanceFieldEnum = (typeof QualificationOrderByRelevanceFieldEnum)[keyof typeof QualificationOrderByRelevanceFieldEnum]
+
+
+export const SubjectOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  code: 'code',
+  qualificationId: 'qualificationId'
+} as const
+
+export type SubjectOrderByRelevanceFieldEnum = (typeof SubjectOrderByRelevanceFieldEnum)[keyof typeof SubjectOrderByRelevanceFieldEnum]
+
+
+export const CalendarSubjectSelectionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  subjectId: 'subjectId'
+} as const
+
+export type CalendarSubjectSelectionOrderByRelevanceFieldEnum = (typeof CalendarSubjectSelectionOrderByRelevanceFieldEnum)[keyof typeof CalendarSubjectSelectionOrderByRelevanceFieldEnum]
+
+
+export const PaperOrderByRelevanceFieldEnum = {
+  id: 'id',
+  code: 'code',
+  title: 'title',
+  subjectId: 'subjectId',
+  sourceDocumentId: 'sourceDocumentId'
+} as const
+
+export type PaperOrderByRelevanceFieldEnum = (typeof PaperOrderByRelevanceFieldEnum)[keyof typeof PaperOrderByRelevanceFieldEnum]
+
+
+export const ExamSeriesOrderByRelevanceFieldEnum = {
+  id: 'id',
+  name: 'name',
+  examBoardId: 'examBoardId',
+  sourceDocumentId: 'sourceDocumentId'
+} as const
+
+export type ExamSeriesOrderByRelevanceFieldEnum = (typeof ExamSeriesOrderByRelevanceFieldEnum)[keyof typeof ExamSeriesOrderByRelevanceFieldEnum]
+
+
+export const ExamSessionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  timezone: 'timezone',
+  venue: 'venue',
+  notes: 'notes',
+  paperId: 'paperId',
+  examSeriesId: 'examSeriesId',
+  sourceDocumentId: 'sourceDocumentId'
+} as const
+
+export type ExamSessionOrderByRelevanceFieldEnum = (typeof ExamSessionOrderByRelevanceFieldEnum)[keyof typeof ExamSessionOrderByRelevanceFieldEnum]
+
+
+export const KeyDateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  timezone: 'timezone',
+  examBoardId: 'examBoardId',
+  subjectId: 'subjectId',
+  examSeriesId: 'examSeriesId',
+  sourceDocumentId: 'sourceDocumentId'
+} as const
+
+export type KeyDateOrderByRelevanceFieldEnum = (typeof KeyDateOrderByRelevanceFieldEnum)[keyof typeof KeyDateOrderByRelevanceFieldEnum]
+
+
+export const ResourceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  url: 'url',
+  filePath: 'filePath',
+  language: 'language',
+  examBoardId: 'examBoardId',
+  qualificationId: 'qualificationId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  examSeriesId: 'examSeriesId',
+  sourceDocumentId: 'sourceDocumentId'
+} as const
+
+export type ResourceOrderByRelevanceFieldEnum = (typeof ResourceOrderByRelevanceFieldEnum)[keyof typeof ResourceOrderByRelevanceFieldEnum]
+
+
+export const SourceDocumentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  title: 'title',
+  sourceUrl: 'sourceUrl',
+  fileName: 'fileName',
+  fileHash: 'fileHash',
+  notes: 'notes',
+  examBoardId: 'examBoardId',
+  uploadedById: 'uploadedById'
+} as const
+
+export type SourceDocumentOrderByRelevanceFieldEnum = (typeof SourceDocumentOrderByRelevanceFieldEnum)[keyof typeof SourceDocumentOrderByRelevanceFieldEnum]
+
+
+export const FeeRuleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  qualificationId: 'qualificationId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  examSessionId: 'examSessionId',
+  createdByUserId: 'createdByUserId'
+} as const
+
+export type FeeRuleOrderByRelevanceFieldEnum = (typeof FeeRuleOrderByRelevanceFieldEnum)[keyof typeof FeeRuleOrderByRelevanceFieldEnum]
+
+
+export const ExchangeRateOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  createdByUserId: 'createdByUserId'
+} as const
+
+export type ExchangeRateOrderByRelevanceFieldEnum = (typeof ExchangeRateOrderByRelevanceFieldEnum)[keyof typeof ExchangeRateOrderByRelevanceFieldEnum]
+
+
+export const FeeStatementOrderByRelevanceFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  studentId: 'studentId',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
+  statementNo: 'statementNo',
+  studentNameSnapshot: 'studentNameSnapshot',
+  studentNoSnapshot: 'studentNoSnapshot',
+  gradeSnapshot: 'gradeSnapshot',
+  classNameSnapshot: 'classNameSnapshot',
+  emailSnapshot: 'emailSnapshot',
+  assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
+  paymentNotes: 'paymentNotes',
+  generatedByUserId: 'generatedByUserId'
+} as const
+
+export type FeeStatementOrderByRelevanceFieldEnum = (typeof FeeStatementOrderByRelevanceFieldEnum)[keyof typeof FeeStatementOrderByRelevanceFieldEnum]
+
+
+export const FeeStatementItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  feeStatementId: 'feeStatementId',
+  examSessionId: 'examSessionId',
+  examBoardSnapshot: 'examBoardSnapshot',
+  qualificationSnapshot: 'qualificationSnapshot',
+  subjectSnapshot: 'subjectSnapshot',
+  paperCodeSnapshot: 'paperCodeSnapshot',
+  paperTitleSnapshot: 'paperTitleSnapshot'
+} as const
+
+export type FeeStatementItemOrderByRelevanceFieldEnum = (typeof FeeStatementItemOrderByRelevanceFieldEnum)[keyof typeof FeeStatementItemOrderByRelevanceFieldEnum]
+
+
+export const FeeAuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  performedByUserId: 'performedByUserId',
+  metadata: 'metadata',
+  note: 'note'
+} as const
+
+export type FeeAuditLogOrderByRelevanceFieldEnum = (typeof FeeAuditLogOrderByRelevanceFieldEnum)[keyof typeof FeeAuditLogOrderByRelevanceFieldEnum]
 

@@ -212,6 +212,7 @@ export type FeeAuditLogOrderByWithRelationInput = {
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   registrationWindow?: Prisma.RegistrationWindowOrderByWithRelationInput
   performedBy?: Prisma.UserOrderByWithRelationInput
+  _relevance?: Prisma.FeeAuditLogOrderByRelevanceInput
 }
 
 export type FeeAuditLogWhereUniqueInput = Prisma.AtLeast<{
@@ -331,6 +332,12 @@ export type FeeAuditLogListRelationFilter = {
 
 export type FeeAuditLogOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type FeeAuditLogOrderByRelevanceInput = {
+  fields: Prisma.FeeAuditLogOrderByRelevanceFieldEnum | Prisma.FeeAuditLogOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type FeeAuditLogCountOrderByAggregateInput = {
@@ -638,29 +645,7 @@ export type FeeAuditLogSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["feeAuditLog"]>
 
-export type FeeAuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  action?: boolean
-  registrationWindowId?: boolean
-  performedByUserId?: boolean
-  performedAt?: boolean
-  metadata?: boolean
-  note?: boolean
-  registrationWindow?: boolean | Prisma.FeeAuditLog$registrationWindowArgs<ExtArgs>
-  performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["feeAuditLog"]>
 
-export type FeeAuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  action?: boolean
-  registrationWindowId?: boolean
-  performedByUserId?: boolean
-  performedAt?: boolean
-  metadata?: boolean
-  note?: boolean
-  registrationWindow?: boolean | Prisma.FeeAuditLog$registrationWindowArgs<ExtArgs>
-  performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["feeAuditLog"]>
 
 export type FeeAuditLogSelectScalar = {
   id?: boolean
@@ -674,14 +659,6 @@ export type FeeAuditLogSelectScalar = {
 
 export type FeeAuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "action" | "registrationWindowId" | "performedByUserId" | "performedAt" | "metadata" | "note", ExtArgs["result"]["feeAuditLog"]>
 export type FeeAuditLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  registrationWindow?: boolean | Prisma.FeeAuditLog$registrationWindowArgs<ExtArgs>
-  performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type FeeAuditLogIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  registrationWindow?: boolean | Prisma.FeeAuditLog$registrationWindowArgs<ExtArgs>
-  performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-}
-export type FeeAuditLogIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrationWindow?: boolean | Prisma.FeeAuditLog$registrationWindowArgs<ExtArgs>
   performedBy?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -818,30 +795,6 @@ export interface FeeAuditLogDelegate<ExtArgs extends runtime.Types.Extensions.In
   createMany<T extends FeeAuditLogCreateManyArgs>(args?: Prisma.SelectSubset<T, FeeAuditLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many FeeAuditLogs and returns the data saved in the database.
-   * @param {FeeAuditLogCreateManyAndReturnArgs} args - Arguments to create many FeeAuditLogs.
-   * @example
-   * // Create many FeeAuditLogs
-   * const feeAuditLog = await prisma.feeAuditLog.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many FeeAuditLogs and only return the `id`
-   * const feeAuditLogWithIdOnly = await prisma.feeAuditLog.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends FeeAuditLogCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, FeeAuditLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeAuditLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a FeeAuditLog.
    * @param {FeeAuditLogDeleteArgs} args - Arguments to delete one FeeAuditLog.
    * @example
@@ -904,36 +857,6 @@ export interface FeeAuditLogDelegate<ExtArgs extends runtime.Types.Extensions.In
    * 
    */
   updateMany<T extends FeeAuditLogUpdateManyArgs>(args: Prisma.SelectSubset<T, FeeAuditLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more FeeAuditLogs and returns the data updated in the database.
-   * @param {FeeAuditLogUpdateManyAndReturnArgs} args - Arguments to update many FeeAuditLogs.
-   * @example
-   * // Update many FeeAuditLogs
-   * const feeAuditLog = await prisma.feeAuditLog.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more FeeAuditLogs and only return the `id`
-   * const feeAuditLogWithIdOnly = await prisma.feeAuditLog.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends FeeAuditLogUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, FeeAuditLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeAuditLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one FeeAuditLog.
@@ -1370,29 +1293,6 @@ export type FeeAuditLogCreateManyArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
- * FeeAuditLog createManyAndReturn
- */
-export type FeeAuditLogCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FeeAuditLog
-   */
-  select?: Prisma.FeeAuditLogSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the FeeAuditLog
-   */
-  omit?: Prisma.FeeAuditLogOmit<ExtArgs> | null
-  /**
-   * The data used to create many FeeAuditLogs.
-   */
-  data: Prisma.FeeAuditLogCreateManyInput | Prisma.FeeAuditLogCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FeeAuditLogIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * FeeAuditLog update
  */
 export type FeeAuditLogUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1434,36 +1334,6 @@ export type FeeAuditLogUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many FeeAuditLogs to update.
    */
   limit?: number
-}
-
-/**
- * FeeAuditLog updateManyAndReturn
- */
-export type FeeAuditLogUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FeeAuditLog
-   */
-  select?: Prisma.FeeAuditLogSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the FeeAuditLog
-   */
-  omit?: Prisma.FeeAuditLogOmit<ExtArgs> | null
-  /**
-   * The data used to update FeeAuditLogs.
-   */
-  data: Prisma.XOR<Prisma.FeeAuditLogUpdateManyMutationInput, Prisma.FeeAuditLogUncheckedUpdateManyInput>
-  /**
-   * Filter which FeeAuditLogs to update
-   */
-  where?: Prisma.FeeAuditLogWhereInput
-  /**
-   * Limit how many FeeAuditLogs to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FeeAuditLogIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

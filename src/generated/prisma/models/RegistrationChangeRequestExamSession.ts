@@ -185,6 +185,7 @@ export type RegistrationChangeRequestExamSessionOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   changeRequest?: Prisma.RegistrationChangeRequestOrderByWithRelationInput
   examSession?: Prisma.ExamSessionOrderByWithRelationInput
+  _relevance?: Prisma.RegistrationChangeRequestExamSessionOrderByRelevanceInput
 }
 
 export type RegistrationChangeRequestExamSessionWhereUniqueInput = Prisma.AtLeast<{
@@ -275,6 +276,12 @@ export type RegistrationChangeRequestExamSessionListRelationFilter = {
 
 export type RegistrationChangeRequestExamSessionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type RegistrationChangeRequestExamSessionOrderByRelevanceInput = {
+  fields: Prisma.RegistrationChangeRequestExamSessionOrderByRelevanceFieldEnum | Prisma.RegistrationChangeRequestExamSessionOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type RegistrationChangeRequestExamSessionChangeRequestIdExamSessionIdCompoundUniqueInput = {
@@ -532,23 +539,7 @@ export type RegistrationChangeRequestExamSessionSelect<ExtArgs extends runtime.T
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["registrationChangeRequestExamSession"]>
 
-export type RegistrationChangeRequestExamSessionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  changeRequestId?: boolean
-  examSessionId?: boolean
-  createdAt?: boolean
-  changeRequest?: boolean | Prisma.RegistrationChangeRequestDefaultArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["registrationChangeRequestExamSession"]>
 
-export type RegistrationChangeRequestExamSessionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  changeRequestId?: boolean
-  examSessionId?: boolean
-  createdAt?: boolean
-  changeRequest?: boolean | Prisma.RegistrationChangeRequestDefaultArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-}, ExtArgs["result"]["registrationChangeRequestExamSession"]>
 
 export type RegistrationChangeRequestExamSessionSelectScalar = {
   id?: boolean
@@ -559,14 +550,6 @@ export type RegistrationChangeRequestExamSessionSelectScalar = {
 
 export type RegistrationChangeRequestExamSessionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "changeRequestId" | "examSessionId" | "createdAt", ExtArgs["result"]["registrationChangeRequestExamSession"]>
 export type RegistrationChangeRequestExamSessionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  changeRequest?: boolean | Prisma.RegistrationChangeRequestDefaultArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-}
-export type RegistrationChangeRequestExamSessionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  changeRequest?: boolean | Prisma.RegistrationChangeRequestDefaultArgs<ExtArgs>
-  examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
-}
-export type RegistrationChangeRequestExamSessionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   changeRequest?: boolean | Prisma.RegistrationChangeRequestDefaultArgs<ExtArgs>
   examSession?: boolean | Prisma.ExamSessionDefaultArgs<ExtArgs>
 }
@@ -700,30 +683,6 @@ export interface RegistrationChangeRequestExamSessionDelegate<ExtArgs extends ru
   createMany<T extends RegistrationChangeRequestExamSessionCreateManyArgs>(args?: Prisma.SelectSubset<T, RegistrationChangeRequestExamSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many RegistrationChangeRequestExamSessions and returns the data saved in the database.
-   * @param {RegistrationChangeRequestExamSessionCreateManyAndReturnArgs} args - Arguments to create many RegistrationChangeRequestExamSessions.
-   * @example
-   * // Create many RegistrationChangeRequestExamSessions
-   * const registrationChangeRequestExamSession = await prisma.registrationChangeRequestExamSession.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many RegistrationChangeRequestExamSessions and only return the `id`
-   * const registrationChangeRequestExamSessionWithIdOnly = await prisma.registrationChangeRequestExamSession.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends RegistrationChangeRequestExamSessionCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, RegistrationChangeRequestExamSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestExamSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a RegistrationChangeRequestExamSession.
    * @param {RegistrationChangeRequestExamSessionDeleteArgs} args - Arguments to delete one RegistrationChangeRequestExamSession.
    * @example
@@ -786,36 +745,6 @@ export interface RegistrationChangeRequestExamSessionDelegate<ExtArgs extends ru
    * 
    */
   updateMany<T extends RegistrationChangeRequestExamSessionUpdateManyArgs>(args: Prisma.SelectSubset<T, RegistrationChangeRequestExamSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more RegistrationChangeRequestExamSessions and returns the data updated in the database.
-   * @param {RegistrationChangeRequestExamSessionUpdateManyAndReturnArgs} args - Arguments to update many RegistrationChangeRequestExamSessions.
-   * @example
-   * // Update many RegistrationChangeRequestExamSessions
-   * const registrationChangeRequestExamSession = await prisma.registrationChangeRequestExamSession.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more RegistrationChangeRequestExamSessions and only return the `id`
-   * const registrationChangeRequestExamSessionWithIdOnly = await prisma.registrationChangeRequestExamSession.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends RegistrationChangeRequestExamSessionUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, RegistrationChangeRequestExamSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationChangeRequestExamSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one RegistrationChangeRequestExamSession.
@@ -1249,29 +1178,6 @@ export type RegistrationChangeRequestExamSessionCreateManyArgs<ExtArgs extends r
 }
 
 /**
- * RegistrationChangeRequestExamSession createManyAndReturn
- */
-export type RegistrationChangeRequestExamSessionCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the RegistrationChangeRequestExamSession
-   */
-  select?: Prisma.RegistrationChangeRequestExamSessionSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the RegistrationChangeRequestExamSession
-   */
-  omit?: Prisma.RegistrationChangeRequestExamSessionOmit<ExtArgs> | null
-  /**
-   * The data used to create many RegistrationChangeRequestExamSessions.
-   */
-  data: Prisma.RegistrationChangeRequestExamSessionCreateManyInput | Prisma.RegistrationChangeRequestExamSessionCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RegistrationChangeRequestExamSessionIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * RegistrationChangeRequestExamSession update
  */
 export type RegistrationChangeRequestExamSessionUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1313,36 +1219,6 @@ export type RegistrationChangeRequestExamSessionUpdateManyArgs<ExtArgs extends r
    * Limit how many RegistrationChangeRequestExamSessions to update.
    */
   limit?: number
-}
-
-/**
- * RegistrationChangeRequestExamSession updateManyAndReturn
- */
-export type RegistrationChangeRequestExamSessionUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the RegistrationChangeRequestExamSession
-   */
-  select?: Prisma.RegistrationChangeRequestExamSessionSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the RegistrationChangeRequestExamSession
-   */
-  omit?: Prisma.RegistrationChangeRequestExamSessionOmit<ExtArgs> | null
-  /**
-   * The data used to update RegistrationChangeRequestExamSessions.
-   */
-  data: Prisma.XOR<Prisma.RegistrationChangeRequestExamSessionUpdateManyMutationInput, Prisma.RegistrationChangeRequestExamSessionUncheckedUpdateManyInput>
-  /**
-   * Filter which RegistrationChangeRequestExamSessions to update
-   */
-  where?: Prisma.RegistrationChangeRequestExamSessionWhereInput
-  /**
-   * Limit how many RegistrationChangeRequestExamSessions to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.RegistrationChangeRequestExamSessionIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

@@ -1,7 +1,5 @@
 import { describe, expect, it, afterAll } from "vitest";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
-import { PrismaClient } from "@/generated/prisma/client";
+import { createPrismaClient, disconnectPrismaClient } from "@/lib/create-prisma-client";
 import { createRegistrationAuditLog } from "@/lib/registrations/audit";
 import { RegistrationError } from "@/lib/registrations/errors";
 import { createStudentRegistration } from "@/lib/registrations/service";
@@ -12,8 +10,7 @@ import {
 } from "@/lib/registrations/workflows";
 import { testIds } from "../../fixtures/manifest";
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
+const prisma = createPrismaClient();
 
 describe.sequential("registration workflows integration", () => {
   it("assigns STUDENT_SUBMITTED source for student registration", async () => {
@@ -91,6 +88,5 @@ describe.sequential("registration workflows integration", () => {
 });
 
 afterAll(async () => {
-  await prisma.$disconnect();
-  await pool.end();
+  await disconnectPrismaClient(prisma);
 });

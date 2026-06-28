@@ -306,7 +306,7 @@ export type FeeStatementItemGroupByArgs<ExtArgs extends runtime.Types.Extensions
 export type FeeStatementItemGroupByOutputType = {
   id: string
   feeStatementId: string
-  examSessionId: string
+  examSessionId: string | null
   examBoardSnapshot: string
   qualificationSnapshot: string
   subjectSnapshot: string
@@ -353,7 +353,7 @@ export type FeeStatementItemWhereInput = {
   NOT?: Prisma.FeeStatementItemWhereInput | Prisma.FeeStatementItemWhereInput[]
   id?: Prisma.StringFilter<"FeeStatementItem"> | string
   feeStatementId?: Prisma.StringFilter<"FeeStatementItem"> | string
-  examSessionId?: Prisma.StringFilter<"FeeStatementItem"> | string
+  examSessionId?: Prisma.StringNullableFilter<"FeeStatementItem"> | string | null
   examBoardSnapshot?: Prisma.StringFilter<"FeeStatementItem"> | string
   qualificationSnapshot?: Prisma.StringFilter<"FeeStatementItem"> | string
   subjectSnapshot?: Prisma.StringFilter<"FeeStatementItem"> | string
@@ -379,7 +379,7 @@ export type FeeStatementItemWhereInput = {
 export type FeeStatementItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   feeStatementId?: Prisma.SortOrder
-  examSessionId?: Prisma.SortOrder
+  examSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   examBoardSnapshot?: Prisma.SortOrder
   qualificationSnapshot?: Prisma.SortOrder
   subjectSnapshot?: Prisma.SortOrder
@@ -400,6 +400,7 @@ export type FeeStatementItemOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   feeStatement?: Prisma.FeeStatementOrderByWithRelationInput
   examSession?: Prisma.ExamSessionOrderByWithRelationInput
+  _relevance?: Prisma.FeeStatementItemOrderByRelevanceInput
 }
 
 export type FeeStatementItemWhereUniqueInput = Prisma.AtLeast<{
@@ -408,7 +409,7 @@ export type FeeStatementItemWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.FeeStatementItemWhereInput[]
   NOT?: Prisma.FeeStatementItemWhereInput | Prisma.FeeStatementItemWhereInput[]
   feeStatementId?: Prisma.StringFilter<"FeeStatementItem"> | string
-  examSessionId?: Prisma.StringFilter<"FeeStatementItem"> | string
+  examSessionId?: Prisma.StringNullableFilter<"FeeStatementItem"> | string | null
   examBoardSnapshot?: Prisma.StringFilter<"FeeStatementItem"> | string
   qualificationSnapshot?: Prisma.StringFilter<"FeeStatementItem"> | string
   subjectSnapshot?: Prisma.StringFilter<"FeeStatementItem"> | string
@@ -434,7 +435,7 @@ export type FeeStatementItemWhereUniqueInput = Prisma.AtLeast<{
 export type FeeStatementItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   feeStatementId?: Prisma.SortOrder
-  examSessionId?: Prisma.SortOrder
+  examSessionId?: Prisma.SortOrderInput | Prisma.SortOrder
   examBoardSnapshot?: Prisma.SortOrder
   qualificationSnapshot?: Prisma.SortOrder
   subjectSnapshot?: Prisma.SortOrder
@@ -466,7 +467,7 @@ export type FeeStatementItemScalarWhereWithAggregatesInput = {
   NOT?: Prisma.FeeStatementItemScalarWhereWithAggregatesInput | Prisma.FeeStatementItemScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"FeeStatementItem"> | string
   feeStatementId?: Prisma.StringWithAggregatesFilter<"FeeStatementItem"> | string
-  examSessionId?: Prisma.StringWithAggregatesFilter<"FeeStatementItem"> | string
+  examSessionId?: Prisma.StringNullableWithAggregatesFilter<"FeeStatementItem"> | string | null
   examBoardSnapshot?: Prisma.StringWithAggregatesFilter<"FeeStatementItem"> | string
   qualificationSnapshot?: Prisma.StringWithAggregatesFilter<"FeeStatementItem"> | string
   subjectSnapshot?: Prisma.StringWithAggregatesFilter<"FeeStatementItem"> | string
@@ -514,7 +515,7 @@ export type FeeStatementItemCreateInput = {
 export type FeeStatementItemUncheckedCreateInput = {
   id?: string
   feeStatementId: string
-  examSessionId: string
+  examSessionId?: string | null
   examBoardSnapshot: string
   qualificationSnapshot: string
   subjectSnapshot: string
@@ -562,7 +563,7 @@ export type FeeStatementItemUpdateInput = {
 export type FeeStatementItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   feeStatementId?: Prisma.StringFieldUpdateOperationsInput | string
-  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examBoardSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   qualificationSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   subjectSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
@@ -586,7 +587,7 @@ export type FeeStatementItemUncheckedUpdateInput = {
 export type FeeStatementItemCreateManyInput = {
   id?: string
   feeStatementId: string
-  examSessionId: string
+  examSessionId?: string | null
   examBoardSnapshot: string
   qualificationSnapshot: string
   subjectSnapshot: string
@@ -632,7 +633,7 @@ export type FeeStatementItemUpdateManyMutationInput = {
 export type FeeStatementItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   feeStatementId?: Prisma.StringFieldUpdateOperationsInput | string
-  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examBoardSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   qualificationSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   subjectSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
@@ -661,6 +662,12 @@ export type FeeStatementItemListRelationFilter = {
 
 export type FeeStatementItemOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type FeeStatementItemOrderByRelevanceInput = {
+  fields: Prisma.FeeStatementItemOrderByRelevanceFieldEnum | Prisma.FeeStatementItemOrderByRelevanceFieldEnum[]
+  sort: Prisma.SortOrder
+  search: string
 }
 
 export type FeeStatementItemCountOrderByAggregateInput = {
@@ -919,7 +926,7 @@ export type FeeStatementItemScalarWhereInput = {
   NOT?: Prisma.FeeStatementItemScalarWhereInput | Prisma.FeeStatementItemScalarWhereInput[]
   id?: Prisma.StringFilter<"FeeStatementItem"> | string
   feeStatementId?: Prisma.StringFilter<"FeeStatementItem"> | string
-  examSessionId?: Prisma.StringFilter<"FeeStatementItem"> | string
+  examSessionId?: Prisma.StringNullableFilter<"FeeStatementItem"> | string | null
   examBoardSnapshot?: Prisma.StringFilter<"FeeStatementItem"> | string
   qualificationSnapshot?: Prisma.StringFilter<"FeeStatementItem"> | string
   subjectSnapshot?: Prisma.StringFilter<"FeeStatementItem"> | string
@@ -965,7 +972,7 @@ export type FeeStatementItemCreateWithoutFeeStatementInput = {
 
 export type FeeStatementItemUncheckedCreateWithoutFeeStatementInput = {
   id?: string
-  examSessionId: string
+  examSessionId?: string | null
   examBoardSnapshot: string
   qualificationSnapshot: string
   subjectSnapshot: string
@@ -1106,7 +1113,7 @@ export type FeeStatementItemUncheckedUpdateManyWithoutExamSessionInput = {
 
 export type FeeStatementItemCreateManyFeeStatementInput = {
   id?: string
-  examSessionId: string
+  examSessionId?: string | null
   examBoardSnapshot: string
   qualificationSnapshot: string
   subjectSnapshot: string
@@ -1152,7 +1159,7 @@ export type FeeStatementItemUpdateWithoutFeeStatementInput = {
 
 export type FeeStatementItemUncheckedUpdateWithoutFeeStatementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examBoardSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   qualificationSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   subjectSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1175,7 +1182,7 @@ export type FeeStatementItemUncheckedUpdateWithoutFeeStatementInput = {
 
 export type FeeStatementItemUncheckedUpdateManyWithoutFeeStatementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  examSessionId?: Prisma.StringFieldUpdateOperationsInput | string
+  examSessionId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   examBoardSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   qualificationSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
   subjectSnapshot?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1224,57 +1231,7 @@ export type FeeStatementItemSelect<ExtArgs extends runtime.Types.Extensions.Inte
   examSession?: boolean | Prisma.FeeStatementItem$examSessionArgs<ExtArgs>
 }, ExtArgs["result"]["feeStatementItem"]>
 
-export type FeeStatementItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  feeStatementId?: boolean
-  examSessionId?: boolean
-  examBoardSnapshot?: boolean
-  qualificationSnapshot?: boolean
-  subjectSnapshot?: boolean
-  paperCodeSnapshot?: boolean
-  paperTitleSnapshot?: boolean
-  entryTypeSnapshot?: boolean
-  costCurrencySnapshot?: boolean
-  costAmountSnapshot?: boolean
-  exchangeRateSnapshot?: boolean
-  markupTypeSnapshot?: boolean
-  markupValueSnapshot?: boolean
-  salesGbpAmountSnapshot?: boolean
-  salesCnyAmountSnapshot?: boolean
-  displayCurrencySnapshot?: boolean
-  lineTotalGbp?: boolean
-  lineTotalCny?: boolean
-  quantity?: boolean
-  createdAt?: boolean
-  feeStatement?: boolean | Prisma.FeeStatementDefaultArgs<ExtArgs>
-  examSession?: boolean | Prisma.FeeStatementItem$examSessionArgs<ExtArgs>
-}, ExtArgs["result"]["feeStatementItem"]>
 
-export type FeeStatementItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  feeStatementId?: boolean
-  examSessionId?: boolean
-  examBoardSnapshot?: boolean
-  qualificationSnapshot?: boolean
-  subjectSnapshot?: boolean
-  paperCodeSnapshot?: boolean
-  paperTitleSnapshot?: boolean
-  entryTypeSnapshot?: boolean
-  costCurrencySnapshot?: boolean
-  costAmountSnapshot?: boolean
-  exchangeRateSnapshot?: boolean
-  markupTypeSnapshot?: boolean
-  markupValueSnapshot?: boolean
-  salesGbpAmountSnapshot?: boolean
-  salesCnyAmountSnapshot?: boolean
-  displayCurrencySnapshot?: boolean
-  lineTotalGbp?: boolean
-  lineTotalCny?: boolean
-  quantity?: boolean
-  createdAt?: boolean
-  feeStatement?: boolean | Prisma.FeeStatementDefaultArgs<ExtArgs>
-  examSession?: boolean | Prisma.FeeStatementItem$examSessionArgs<ExtArgs>
-}, ExtArgs["result"]["feeStatementItem"]>
 
 export type FeeStatementItemSelectScalar = {
   id?: boolean
@@ -1305,14 +1262,6 @@ export type FeeStatementItemInclude<ExtArgs extends runtime.Types.Extensions.Int
   feeStatement?: boolean | Prisma.FeeStatementDefaultArgs<ExtArgs>
   examSession?: boolean | Prisma.FeeStatementItem$examSessionArgs<ExtArgs>
 }
-export type FeeStatementItemIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  feeStatement?: boolean | Prisma.FeeStatementDefaultArgs<ExtArgs>
-  examSession?: boolean | Prisma.FeeStatementItem$examSessionArgs<ExtArgs>
-}
-export type FeeStatementItemIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  feeStatement?: boolean | Prisma.FeeStatementDefaultArgs<ExtArgs>
-  examSession?: boolean | Prisma.FeeStatementItem$examSessionArgs<ExtArgs>
-}
 
 export type $FeeStatementItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FeeStatementItem"
@@ -1323,7 +1272,7 @@ export type $FeeStatementItemPayload<ExtArgs extends runtime.Types.Extensions.In
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     feeStatementId: string
-    examSessionId: string
+    examSessionId: string | null
     examBoardSnapshot: string
     qualificationSnapshot: string
     subjectSnapshot: string
@@ -1460,30 +1409,6 @@ export interface FeeStatementItemDelegate<ExtArgs extends runtime.Types.Extensio
   createMany<T extends FeeStatementItemCreateManyArgs>(args?: Prisma.SelectSubset<T, FeeStatementItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
-   * Create many FeeStatementItems and returns the data saved in the database.
-   * @param {FeeStatementItemCreateManyAndReturnArgs} args - Arguments to create many FeeStatementItems.
-   * @example
-   * // Create many FeeStatementItems
-   * const feeStatementItem = await prisma.feeStatementItem.createManyAndReturn({
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Create many FeeStatementItems and only return the `id`
-   * const feeStatementItemWithIdOnly = await prisma.feeStatementItem.createManyAndReturn({
-   *   select: { id: true },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  createManyAndReturn<T extends FeeStatementItemCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, FeeStatementItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeStatementItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-  /**
    * Delete a FeeStatementItem.
    * @param {FeeStatementItemDeleteArgs} args - Arguments to delete one FeeStatementItem.
    * @example
@@ -1546,36 +1471,6 @@ export interface FeeStatementItemDelegate<ExtArgs extends runtime.Types.Extensio
    * 
    */
   updateMany<T extends FeeStatementItemUpdateManyArgs>(args: Prisma.SelectSubset<T, FeeStatementItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
-
-  /**
-   * Update zero or more FeeStatementItems and returns the data updated in the database.
-   * @param {FeeStatementItemUpdateManyAndReturnArgs} args - Arguments to update many FeeStatementItems.
-   * @example
-   * // Update many FeeStatementItems
-   * const feeStatementItem = await prisma.feeStatementItem.updateManyAndReturn({
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * 
-   * // Update zero or more FeeStatementItems and only return the `id`
-   * const feeStatementItemWithIdOnly = await prisma.feeStatementItem.updateManyAndReturn({
-   *   select: { id: true },
-   *   where: {
-   *     // ... provide filter here
-   *   },
-   *   data: [
-   *     // ... provide data here
-   *   ]
-   * })
-   * Note, that providing `undefined` is treated as the value not being there.
-   * Read more here: https://pris.ly/d/null-undefined
-   * 
-   */
-  updateManyAndReturn<T extends FeeStatementItemUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, FeeStatementItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeeStatementItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one FeeStatementItem.
@@ -2026,29 +1921,6 @@ export type FeeStatementItemCreateManyArgs<ExtArgs extends runtime.Types.Extensi
 }
 
 /**
- * FeeStatementItem createManyAndReturn
- */
-export type FeeStatementItemCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FeeStatementItem
-   */
-  select?: Prisma.FeeStatementItemSelectCreateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the FeeStatementItem
-   */
-  omit?: Prisma.FeeStatementItemOmit<ExtArgs> | null
-  /**
-   * The data used to create many FeeStatementItems.
-   */
-  data: Prisma.FeeStatementItemCreateManyInput | Prisma.FeeStatementItemCreateManyInput[]
-  skipDuplicates?: boolean
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FeeStatementItemIncludeCreateManyAndReturn<ExtArgs> | null
-}
-
-/**
  * FeeStatementItem update
  */
 export type FeeStatementItemUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2090,36 +1962,6 @@ export type FeeStatementItemUpdateManyArgs<ExtArgs extends runtime.Types.Extensi
    * Limit how many FeeStatementItems to update.
    */
   limit?: number
-}
-
-/**
- * FeeStatementItem updateManyAndReturn
- */
-export type FeeStatementItemUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the FeeStatementItem
-   */
-  select?: Prisma.FeeStatementItemSelectUpdateManyAndReturn<ExtArgs> | null
-  /**
-   * Omit specific fields from the FeeStatementItem
-   */
-  omit?: Prisma.FeeStatementItemOmit<ExtArgs> | null
-  /**
-   * The data used to update FeeStatementItems.
-   */
-  data: Prisma.XOR<Prisma.FeeStatementItemUpdateManyMutationInput, Prisma.FeeStatementItemUncheckedUpdateManyInput>
-  /**
-   * Filter which FeeStatementItems to update
-   */
-  where?: Prisma.FeeStatementItemWhereInput
-  /**
-   * Limit how many FeeStatementItems to update.
-   */
-  limit?: number
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.FeeStatementItemIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
