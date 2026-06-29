@@ -2,13 +2,11 @@ import "dotenv/config";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createPrismaClient, exitAfterPrismaScript } from "../src/lib/create-prisma-client";
+import { exitAfterPrismaScript, prisma } from "../src/lib/prisma";
 import { hashPassword } from "../src/lib/auth/password";
 import { lockRegistrationsForWindow } from "../src/lib/registrations/lock";
 
 const TEST_PASSWORD = "TestPass123!";
-
-const prisma = createPrismaClient();
 
 const IDS = {
   admin: "test-user-admin",

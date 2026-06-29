@@ -1,8 +1,6 @@
 import "dotenv/config";
-import { createPrismaClient, exitAfterPrismaScript } from "../src/lib/create-prisma-client";
+import { exitAfterPrismaScript, prisma } from "../src/lib/prisma";
 import { hashPassword } from "../src/lib/auth/password";
-
-const prisma = createPrismaClient();
 
 async function main() {
   const adminEmail = (process.env.ADMIN_EMAIL ?? "admin@xima.local").toLowerCase();

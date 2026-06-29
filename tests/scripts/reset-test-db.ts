@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { config } from "dotenv";
 import { resolve } from "node:path";
-import mariadb from "mariadb";
+import mysql from "mysql2/promise";
 
 config({ path: resolve(process.cwd(), ".env.test") });
 
@@ -32,20 +32,20 @@ function parseMysqlUrl(url: string) {
 }
 
 async function resetDatabase() {
-  const config = parseMysqlUrl(databaseUrl);
-  const connection = await mariadb.createConnection({
-    host: config.host,
-    port: config.port,
-    user: config.user,
-    password: config.password,
+  const dbConfig = parseMysqlUrl(databaseUrl);
+  const connection = await mysql.createConnection({
+    host: dbConfig.host,
+    port: dbConfig.port,
+    user: dbConfig.user,
+    password: dbConfig.password,
     multipleStatements: true,
   });
 
   try {
-    console.log(`Dropping and recreating MySQL database "${config.database}"...`);
-    await connection.query(`DROP DATABASE IF EXISTS \`${config.database}\``);
+    console.log(`Dropping and recreating MySQL database "${dbConfig.database}"...`);
+    await connection.query(`DROP DATABASE IF EXISTS \`${dbConfig.database}\``);
     await connection.query(
-      `CREATE DATABASE \`${config.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
+      `CREATE DATABASE \`${dbConfig.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
     );
   } finally {
     await connection.end();

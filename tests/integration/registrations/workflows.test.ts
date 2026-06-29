@@ -1,5 +1,5 @@
 import { describe, expect, it, afterAll } from "vitest";
-import { createPrismaClient, disconnectPrismaClient } from "@/lib/create-prisma-client";
+import { disconnectPrismaClient, prisma } from "@/lib/prisma";
 import { createRegistrationAuditLog } from "@/lib/registrations/audit";
 import { RegistrationError } from "@/lib/registrations/errors";
 import { createStudentRegistration } from "@/lib/registrations/service";
@@ -9,8 +9,6 @@ import {
   applyOfficeOnlyInternalRegistration,
 } from "@/lib/registrations/workflows";
 import { testIds } from "../../fixtures/manifest";
-
-const prisma = createPrismaClient();
 
 describe.sequential("registration workflows integration", () => {
   it("assigns STUDENT_SUBMITTED source for student registration", async () => {

@@ -1,44 +1,32 @@
-import { createPrismaClient } from "@/lib/create-prisma-client";
 import { PrismaClient } from "@/generated/prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined;
+  prisma?: PrismaClient;
 };
 
-function isStalePrismaClient(client: PrismaClient): boolean {
-  const extended = client as {
-    candidate?: { findMany?: unknown };
-    registrationFeeStage?: { findMany?: unknown };
-    registrationStage?: { findMany?: unknown };
-  };
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["query", "warn", "error"]
+        : ["error"],
+  });
 
-  // After schema changes (e.g. adding Candidate), a cached dev client may lack new delegates.
-  if (typeof extended.candidate?.findMany !== "function") {
-    return true;
-  }
-
-  // Registration window timing refactor: RegistrationStage → RegistrationFeeStage.
-  if (typeof extended.registrationFeeStage?.findMany !== "function") {
-    return true;
-  }
-  if (typeof extended.registrationStage?.findMany === "function") {
-    return true;
-  }
-
-  return false;
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
 }
 
-function getPrismaClient(): PrismaClient {
-  const cached = globalForPrisma.prisma;
-  if (cached && !isStalePrismaClient(cached)) {
-    return cached;
-  }
-
-  const client = createPrismaClient();
-  if (process.env.NODE_ENV !== "production") {
-    globalForPrisma.prisma = client;
-  }
-  return client;
+export async function disconnectPrismaClient(client: PrismaClient) {
+  await Promise.race([
+    client.$disconnect(),
+    new Promise<void>((resolve) => {
+      setTimeout(resolve, 2_000);
+    }),
+  ]);
 }
 
-export const prisma = getPrismaClient();
+export async function exitAfterPrismaScript(client: PrismaClient, code: number) {
+  await disconnectPrismaClient(client);
+  process.exit(code);
+}

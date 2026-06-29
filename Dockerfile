@@ -40,7 +40,7 @@ RUN echo "=== [2/4] npm version ===" \
   && echo "=== [2/4] done ==="
 
 RUN echo "=== [3/4] prisma generate ===" \
-  && npx prisma generate \
+  && npm run db:generate \
   && echo "=== [3/4] done ==="
 
 # Line-buffered output so Ubuntu/BuildKit shows logs as they are produced.
@@ -65,7 +65,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/package-lock.json ./package-lock.json
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/src/generated ./src/generated
 COPY --from=builder /app/src/lib ./src/lib
