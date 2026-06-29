@@ -92,8 +92,11 @@ export async function getSessionUserFromRequest(
 }
 
 function shouldUseSecureCookie(): boolean {
-  const appUrl = process.env.APP_URL || process.env.NEXTAUTH_URL || "";
-  return appUrl.startsWith("https://");
+  const url =
+    process.env.APP_URL ||
+    process.env.NEXTAUTH_URL ||
+    "";
+  return url.startsWith("https://");
 }
 
 export function sessionCookieOptions(token: string) {
