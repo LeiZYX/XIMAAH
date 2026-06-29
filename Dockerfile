@@ -1,4 +1,17 @@
+# Verbose Docker build (run on the Ubuntu host for plain, uncompressed BuildKit logs):
+#   DOCKER_BUILDKIT=1 \
+#   BUILDKIT_PROGRESS=plain \
+#   BUILDKIT_STEP_LOG_MAX_SIZE=-1 \
+#   BUILDKIT_STEP_LOG_MAX_SPEED=-1 \
+#   docker compose build --progress=plain --no-cache app
+#
+# Or without BuildKit:
+#   DOCKER_BUILDKIT=0 docker compose build --no-cache app
+
 FROM node:20-bookworm-slim AS base
+RUN apt-get update && \
+    apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -7,12 +20,34 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 FROM base AS builder
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+ENV CI=1
+ENV NPM_CONFIG_LOGLEVEL=verbose
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PRIVATE_BUILD_VERBOSE=1
 ENV NODE_OPTIONS=--max-old-space-size=1024
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npx prisma generate
-RUN npm run build
+
+RUN echo "=== [1/4] node version ===" \
+  && node --version \
+  && echo "=== [1/4] done ==="
+
+RUN echo "=== [2/4] npm version ===" \
+  && npm --version \
+  && echo "=== [2/4] done ==="
+
+RUN echo "=== [3/4] prisma generate ===" \
+  && npx prisma generate \
+  && echo "=== [3/4] done ==="
+
+# Line-buffered output so Ubuntu/BuildKit shows logs as they are produced.
+# next build --debug (-d) is supported by Next.js 16 for verbose build output.
+RUN echo "=== [4/4] next build (debug) starting at $(date -u +%Y-%m-%dT%H:%M:%SZ) ===" \
+  && stdbuf -oL -eL npm run build -- --debug \
+  && echo "=== [4/4] next build done at $(date -u +%Y-%m-%dT%H:%M:%SZ) ==="
 
 FROM base AS runner
 ENV NODE_ENV=production
