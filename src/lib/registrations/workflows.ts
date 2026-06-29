@@ -22,7 +22,11 @@ import {
   officeOnlyAuditActionForRole,
   officeOnlySourceForRole,
 } from "@/lib/registrations/metadata";
-import { canRegisterInWindow } from "@/lib/registrations/window";
+import { isRegistrationWindowOpenForStaff, isStudentRegistrationPeriodClosed } from "@/lib/registrations/window";
+import {
+  resolveEntryTypeForRegistration,
+  type RegistrationFeeStageRecord,
+} from "@/lib/registrations/fee-stages";
 import {
   ensureRegistrationWorkspaceForCandidate,
   getRegistrationWorkspaceById,
@@ -36,6 +40,7 @@ export interface StaffRegistrationInput {
   registrationWindowId: string;
   examSessionIds: string[];
   reason: string;
+  entryTypeOverride?: import("@/generated/prisma/enums").FeeEntryType;
   teacherRequestedBy?: { name: string; role: UserRole };
 }
 
@@ -154,7 +159,12 @@ interface WorkflowMetadata {
 async function applyCandidateRegistrationWorkflow(
   performedBy: { id: string; role: UserRole },
   candidate: Candidate,
-  input: { registrationWindowId: string; examSessionIds: string[]; reason: string },
+  input: {
+    registrationWindowId: string;
+    examSessionIds: string[];
+    reason: string;
+    entryTypeOverride?: import("@/generated/prisma/enums").FeeEntryType;
+  },
   metadata: WorkflowMetadata,
 ) {
   if (!["ADMIN", "EXAM_OFFICER"].includes(performedBy.role)) {
@@ -172,9 +182,33 @@ async function applyCandidateRegistrationWorkflow(
   const { window, sessions } = await loadSessionsForWindow(input.registrationWindowId, uniqueSessionIds);
   await assertNoDuplicateSessions(candidate.id, uniqueSessionIds);
 
-  const windowOpen = window.status === "OPEN" && canRegisterInWindow(window);
-  const lockImmediately = metadata.lockImmediately || !windowOpen;
   const now = new Date();
+  const feeStages = await prisma.registrationFeeStage.findMany({
+    where: { registrationWindowId: window.id },
+    orderBy: { sequence: "asc" },
+  });
+
+  const windowOpen = isRegistrationWindowOpenForStaff(window, now);
+  if (!windowOpen) {
+    throw new RegistrationError("Registration window is closed for staff actions", 400);
+  }
+
+  const studentPeriodClosed = isStudentRegistrationPeriodClosed(window, now);
+  if (studentPeriodClosed && !reason) {
+    throw new RegistrationError("Reason is required after student registration closes", 400);
+  }
+
+  const staffOverrideAllowed = ["ADMIN", "EXAM_OFFICER"].includes(performedBy.role);
+
+  const entryResolution = resolveEntryTypeForRegistration({
+    feeStages: feeStages as RegistrationFeeStageRecord[],
+    now,
+    overrideEntryType: input.entryTypeOverride,
+    allowOverride: staffOverrideAllowed && Boolean(input.entryTypeOverride),
+  });
+
+  const lockImmediately =
+    metadata.lockImmediately || studentPeriodClosed;
   const snapshots = candidateRegistrationSnapshots(candidate);
   const studentId = candidate.userId ?? null;
 
@@ -194,7 +228,11 @@ async function applyCandidateRegistrationWorkflow(
         visibility: metadata.visibility,
         billingScope: metadata.billingScope,
         lockedAt: lockImmediately ? now : null,
-        isLateRegistration: lockImmediately && !windowOpen,
+        isLateRegistration: entryResolution.isLateRegistration,
+        entryType: entryResolution.entryType,
+        feeStageId: entryResolution.feeStageId,
+        entryTypeOverridden: entryResolution.entryTypeOverridden,
+        entryTypeOverrideReason: entryResolution.entryTypeOverridden ? reason : null,
         lastAdjustedByUserId: performedBy.id,
         lastAdjustedByRole: performedBy.role,
         lastAdjustedAt: now,
@@ -224,6 +262,10 @@ async function applyCandidateRegistrationWorkflow(
           addedByRole: performedBy.role,
           addedAt: now,
           reason,
+          entryType: entryResolution.entryType,
+          feeStageId: entryResolution.feeStageId,
+          entryTypeOverridden: entryResolution.entryTypeOverridden,
+          entryTypeOverrideReason: entryResolution.entryTypeOverridden ? reason : null,
         },
         include: registrationInclude,
       });
@@ -235,13 +277,17 @@ async function applyCandidateRegistrationWorkflow(
           studentId,
           registrationId: row.id,
           examSessionId: session.id,
-          action: metadata.auditAction,
+          action: entryResolution.entryTypeOverridden
+            ? RegistrationAuditAction.ENTRY_TYPE_OVERRIDDEN
+            : metadata.auditAction,
           performedById: performedBy.id,
           performedByRole: performedBy.role,
           reason,
           registrationSource: metadata.registrationSource,
           visibility: metadata.visibility,
           billingScope: metadata.billingScope,
+          entryType: entryResolution.entryType,
+          feeStageId: entryResolution.feeStageId,
           assessmentHubCandidateNumberSnapshot: candidate.assessmentHubCandidateNumber,
           candidateTypeSnapshot: candidate.candidateType,
           afterValue: registrationAuditSnapshot(row),
@@ -249,6 +295,31 @@ async function applyCandidateRegistrationWorkflow(
         },
         tx,
       );
+
+      if (!entryResolution.entryTypeOverridden) {
+        await createRegistrationAuditLog(
+          {
+            registrationWorkspaceId: workspace!.id,
+            candidateId: candidate.id,
+            studentId,
+            registrationId: row.id,
+            examSessionId: session.id,
+            feeStageId: entryResolution.feeStageId,
+            action: entryResolution.defaultedToNormal
+            ? RegistrationAuditAction.ENTRY_TYPE_DEFAULTED_TO_NORMAL
+            : RegistrationAuditAction.ENTRY_TYPE_AUTO_ASSIGNED,
+            performedById: performedBy.id,
+            performedByRole: performedBy.role,
+            entryType: entryResolution.entryType,
+            reason,
+            registrationSource: metadata.registrationSource,
+            visibility: metadata.visibility,
+            billingScope: metadata.billingScope,
+            note: entryResolution.entryType,
+          },
+          tx,
+        );
+      }
     }
   });
 

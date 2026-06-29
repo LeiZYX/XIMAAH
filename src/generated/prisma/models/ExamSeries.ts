@@ -580,14 +580,6 @@ export type ExamSeriesUncheckedUpdateManyWithoutExamBoardNestedInput = {
   deleteMany?: Prisma.ExamSeriesScalarWhereInput | Prisma.ExamSeriesScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type ExamSeriesCreateNestedOneWithoutExamSessionsInput = {
   create?: Prisma.XOR<Prisma.ExamSeriesCreateWithoutExamSessionsInput, Prisma.ExamSeriesUncheckedCreateWithoutExamSessionsInput>
   connectOrCreate?: Prisma.ExamSeriesCreateOrConnectWithoutExamSessionsInput

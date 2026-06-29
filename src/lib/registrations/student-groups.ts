@@ -28,8 +28,9 @@ export interface StudentRegistrationRow {
     id: string;
     title: string;
     status: RegistrationWindowStatus | string;
-    startAt: string;
-    endAt: string;
+    studentRegistrationOpenAt: string;
+    studentRegistrationCloseAt: string;
+    registrationCloseAt: string;
   };
   registrationWorkspace?: {
     id: string;
@@ -64,7 +65,8 @@ export function isRegistrationWindowOpen(
 ): boolean {
   if (window.status !== "OPEN") return false;
   return (
-    now >= new Date(window.startAt).getTime() && now <= new Date(window.endAt).getTime()
+    now >= new Date(window.studentRegistrationOpenAt).getTime() &&
+    now <= new Date(window.registrationCloseAt).getTime()
   );
 }
 

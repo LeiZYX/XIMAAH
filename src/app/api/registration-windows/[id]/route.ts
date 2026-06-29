@@ -2,10 +2,42 @@ import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { canManageRegistrationWindows } from "@/lib/auth/permissions";
-import { lockRegistrationsForWindow } from "@/lib/registrations/lock";
+import { lockRegistrationsForWindow, ensureExpiredWindowsLocked } from "@/lib/registrations/lock";
+import { assertRegistrationWindowTimingValid } from "@/lib/registrations/fee-stages";
+import type { RegistrationWindowTimingSource } from "@/lib/registrations/sync-fee-stages-from-window";
+import { summarizeRegistrationWindow } from "@/lib/registrations/window-summary";
 import { prisma } from "@/lib/prisma";
 
 type RouteParams = { params: Promise<{ id: string }> };
+
+async function syncFeeStagesFromWindow(
+  windowId: string,
+  window: RegistrationWindowTimingSource,
+): Promise<void> {
+  const stages = await prisma.registrationFeeStage.findMany({
+    where: { registrationWindowId: windowId },
+  });
+
+  for (const stage of stages) {
+    if (stage.stageCode === "NORMAL") {
+      await prisma.registrationFeeStage.update({
+        where: { id: stage.id },
+        data: {
+          startAt: window.studentRegistrationOpenAt,
+          endAt: window.studentRegistrationCloseAt,
+        },
+      });
+      continue;
+    }
+
+    if (stage.stageCode === "HIGH_LATE") {
+      await prisma.registrationFeeStage.update({
+        where: { id: stage.id },
+        data: { endAt: window.registrationCloseAt },
+      });
+    }
+  }
+}
 
 export async function GET(_request: NextRequest, { params }: RouteParams) {
   const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
@@ -18,12 +50,22 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
     include: {
       examBoard: { select: { id: true, name: true, code: true } },
       examSeries: { select: { id: true, name: true, year: true } },
+      feeStages: { orderBy: { sequence: "asc" } },
+      _count: { select: { registrations: true } },
     },
   });
 
   if (!window) return jsonError("Registration window not found", 404);
 
-  return NextResponse.json(window);
+  const summary = summarizeRegistrationWindow(window, window.feeStages);
+
+  return NextResponse.json({
+    ...window,
+    studentState: summary.studentState,
+    studentStateLabel: summary.studentStateLabel,
+    currentFeeStage: summary.currentFeeStage,
+    totalRegistrations: window._count.registrations,
+  });
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
@@ -37,34 +79,93 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   const body = await request.json();
   const data = parseJsonBody<{
     title?: string;
-    startAt?: string;
-    endAt?: string;
+    studentRegistrationOpenAt?: string;
+    studentRegistrationCloseAt?: string;
+    registrationCloseAt?: string;
     status?: string;
+    studentSelfRegistrationEnabled?: boolean;
+    eoAssistedRegistrationEnabled?: boolean;
+    officeOnlyRegistrationEnabled?: boolean;
+    postLockAdjustmentEnabled?: boolean;
   }>(body, []);
 
   if (!data) return jsonError("Invalid body");
 
   const previous = await prisma.registrationWindow.findUnique({ where: { id } });
+  if (!previous) return jsonError("Registration window not found", 404);
+
+  const studentRegistrationOpenAt = data.studentRegistrationOpenAt
+    ? new Date(data.studentRegistrationOpenAt)
+    : previous.studentRegistrationOpenAt;
+  const studentRegistrationCloseAt = data.studentRegistrationCloseAt
+    ? new Date(data.studentRegistrationCloseAt)
+    : previous.studentRegistrationCloseAt;
+  const registrationCloseAt = data.registrationCloseAt
+    ? new Date(data.registrationCloseAt)
+    : previous.registrationCloseAt;
+
+  assertRegistrationWindowTimingValid({
+    studentRegistrationOpenAt,
+    studentRegistrationCloseAt,
+    registrationCloseAt,
+  });
 
   const window = await prisma.registrationWindow.update({
     where: { id },
     data: {
-      ...(data.title ? { title: data.title } : {}),
-      ...(data.startAt ? { startAt: new Date(data.startAt) } : {}),
-      ...(data.endAt ? { endAt: new Date(data.endAt) } : {}),
-      ...(data.status ? { status: data.status as "DRAFT" | "OPEN" | "CLOSED" } : {}),
+      ...(data.title !== undefined ? { title: data.title } : {}),
+      studentRegistrationOpenAt,
+      studentRegistrationCloseAt,
+      registrationCloseAt,
+      ...(data.status
+        ? { status: data.status as "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED" }
+        : {}),
+      ...(data.studentSelfRegistrationEnabled !== undefined
+        ? { studentSelfRegistrationEnabled: data.studentSelfRegistrationEnabled }
+        : {}),
+      ...(data.eoAssistedRegistrationEnabled !== undefined
+        ? { eoAssistedRegistrationEnabled: data.eoAssistedRegistrationEnabled }
+        : {}),
+      ...(data.officeOnlyRegistrationEnabled !== undefined
+        ? { officeOnlyRegistrationEnabled: data.officeOnlyRegistrationEnabled }
+        : {}),
+      ...(data.postLockAdjustmentEnabled !== undefined
+        ? { postLockAdjustmentEnabled: data.postLockAdjustmentEnabled }
+        : {}),
     },
     include: {
       examBoard: { select: { id: true, name: true, code: true } },
       examSeries: { select: { id: true, name: true, year: true } },
+      feeStages: { orderBy: { sequence: "asc" } },
     },
   });
 
-  if (data.status === "CLOSED" && previous?.status !== "CLOSED") {
+  await syncFeeStagesFromWindow(window.id, {
+    studentRegistrationOpenAt: window.studentRegistrationOpenAt,
+    studentRegistrationCloseAt: window.studentRegistrationCloseAt,
+    registrationCloseAt: window.registrationCloseAt,
+  });
+
+  const refreshedFeeStages = await prisma.registrationFeeStage.findMany({
+    where: { registrationWindowId: window.id },
+    orderBy: { sequence: "asc" },
+  });
+
+  if (data.status === "CLOSED" && previous.status !== "CLOSED") {
     await lockRegistrationsForWindow(window.id, auth.user.id);
+  } else {
+    await ensureExpiredWindowsLocked();
   }
 
-  return NextResponse.json(window);
+  const summary = summarizeRegistrationWindow(window, refreshedFeeStages);
+
+  return NextResponse.json({
+    ...window,
+    feeStages: refreshedFeeStages,
+    studentState: summary.studentState,
+    studentStateLabel: summary.studentStateLabel,
+    currentFeeStage: summary.currentFeeStage,
+  });
 }
 
 export async function DELETE(_request: NextRequest, { params }: RouteParams) {

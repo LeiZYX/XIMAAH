@@ -1,5 +1,7 @@
 import type { FeeRuleMatchContext, FeeRuleRecord } from "@/lib/fees/types";
 
+import type { FeeEntryType } from "@/generated/prisma/enums";
+
 function ruleMatchesRegistration(rule: FeeRuleRecord, ctx: FeeRuleMatchContext): boolean {
   if (!rule.isActive) return false;
   if (rule.examBoardId !== ctx.examBoardId) return false;
@@ -39,6 +41,21 @@ export function findMatchingFeeRule(
   return null;
 }
 
-export function resolveEntryTypeForWorkspace(isLateRegistration: boolean): "NORMAL" | "LATE" {
-  return isLateRegistration ? "LATE" : "NORMAL";
+export function resolveEntryTypeForWorkspace(workspace: {
+  entryType?: FeeEntryType | null;
+  isLateRegistration?: boolean;
+}): FeeEntryType {
+  if (workspace.entryType) return workspace.entryType;
+  return workspace.isLateRegistration ? "LATE" : "NORMAL";
+}
+
+export function resolveEntryTypeForRegistration(
+  registration: { entryType?: FeeEntryType | null },
+  workspace: {
+    entryType?: FeeEntryType | null;
+    isLateRegistration?: boolean;
+  },
+): FeeEntryType {
+  if (registration.entryType) return registration.entryType;
+  return resolveEntryTypeForWorkspace(workspace);
 }

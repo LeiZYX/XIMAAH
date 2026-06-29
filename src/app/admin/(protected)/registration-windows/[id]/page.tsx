@@ -1,0 +1,10 @@
+import { RegistrationWindowGeneral } from "@/components/registrations/RegistrationWindowGeneral";
+
+export default async function AdminRegistrationWindowGeneralPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  return <RegistrationWindowGeneral windowId={id} />;
+}

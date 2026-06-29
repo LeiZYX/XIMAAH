@@ -159,8 +159,9 @@ interface WorkspaceData {
   registrationWindow: {
     id: string;
     title: string;
-    startAt: string;
-    endAt: string;
+    studentRegistrationOpenAt: string;
+    studentRegistrationCloseAt: string;
+    registrationCloseAt: string;
     examBoard: { name: string };
     examSeries: { id: string; name: string; year: number };
   };
@@ -358,8 +359,8 @@ export function RegistrationWorkspaceDetail({
         id: workspace.registrationWindow.id,
         title: workspace.registrationWindow.title,
         status: "CLOSED",
-        startAt: workspace.registrationWindow.startAt,
-        endAt: workspace.registrationWindow.endAt,
+        startAt: workspace.registrationWindow.studentRegistrationOpenAt,
+        endAt: workspace.registrationWindow.registrationCloseAt,
       },
       examSeries: workspace.registrationWindow.examSeries,
       registrations: workspace.registrations.map((row) => ({
@@ -377,8 +378,8 @@ export function RegistrationWorkspaceDetail({
           id: workspace.registrationWindow.id,
           title: workspace.registrationWindow.title,
           status: "CLOSED",
-          startAt: workspace.registrationWindow.startAt,
-          endAt: workspace.registrationWindow.endAt,
+        startAt: workspace.registrationWindow.studentRegistrationOpenAt,
+        endAt: workspace.registrationWindow.registrationCloseAt,
         },
       })),
       lastUpdatedAt: lastUpdated ?? new Date().toISOString(),
@@ -660,7 +661,7 @@ export function RegistrationWorkspaceDetail({
           <dl className="grid gap-2 text-sm">
             <div><dt className="text-slate-500">Exam Board</dt><dd className="font-medium">{workspace.registrationWindow.examBoard.name}</dd></div>
             <div><dt className="text-slate-500">Exam Series</dt><dd className="font-medium">{workspace.registrationWindow.examSeries.name} ({workspace.registrationWindow.examSeries.year})</dd></div>
-            <div><dt className="text-slate-500">Registration Window</dt><dd className="font-medium">{formatWindowRange(workspace.registrationWindow.startAt, workspace.registrationWindow.endAt)}</dd></div>
+            <div><dt className="text-slate-500">Registration Window</dt><dd className="font-medium">{formatWindowRange(workspace.registrationWindow.studentRegistrationOpenAt, workspace.registrationWindow.registrationCloseAt)}</dd></div>
             <div><dt className="text-slate-500">Status</dt><dd className="font-medium">{isLocked ? "Locked" : "Open"}</dd></div>
             <div><dt className="text-slate-500">Selected Exams</dt><dd className="font-medium">{workspace.registrations.length}</dd></div>
             <div><dt className="text-slate-500">Locked On</dt><dd className="font-medium">{lockedOn ? new Date(lockedOn).toLocaleString() : "—"}</dd></div>

@@ -17,7 +17,8 @@ import {
   getCalendarSubjectFilterState,
   isSubjectVisibleOnCalendar,
 } from "@/lib/calendar-subject-selections";
-import { canRegisterInWindow } from "@/lib/registrations/window";
+import { canStudentRegisterInWindow, describeStudentRegistrationAvailability } from "@/lib/registrations/window";
+import type { RegistrationFeeStageRecord } from "@/lib/registrations/fee-stages";
 import type { CalendarEvent } from "@/lib/types";
 
 export interface CalendarQueryParams {
@@ -85,7 +86,18 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
   const [openWindows, studentRegistrations] = await Promise.all([
     prisma.registrationWindow.findMany({
       where: { status: "OPEN" },
-      select: { id: true, examBoardId: true, examSeriesId: true, startAt: true, endAt: true, status: true, title: true },
+      select: {
+        id: true,
+        examBoardId: true,
+        examSeriesId: true,
+        studentRegistrationOpenAt: true,
+        studentRegistrationCloseAt: true,
+        registrationCloseAt: true,
+        status: true,
+        title: true,
+        studentSelfRegistrationEnabled: true,
+        feeStages: { orderBy: { sequence: "asc" } },
+      },
     }),
     studentId
       ? prisma.studentExamRegistration.findMany({
@@ -106,10 +118,35 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
 
   const openWindowKey = (boardId: string, seriesId: string) => `${boardId}:${seriesId}`;
   const openWindowMap = new Map<string, (typeof openWindows)[number]>();
+
   for (const window of openWindows) {
-    if (canRegisterInWindow(window, now)) {
+    const eligibleForStudent = studentId
+      ? canStudentRegisterInWindow(window, [], now)
+      : now >= window.studentRegistrationOpenAt && now <= window.registrationCloseAt;
+
+    if (eligibleForStudent) {
       openWindowMap.set(openWindowKey(window.examBoardId, window.examSeriesId), window);
     }
+  }
+
+  const allWindowsForMatch = await prisma.registrationWindow.findMany({
+    where: { status: { in: ["OPEN", "DRAFT", "CLOSED"] } },
+    select: {
+      id: true,
+      title: true,
+      examBoardId: true,
+      examSeriesId: true,
+      studentRegistrationOpenAt: true,
+      studentRegistrationCloseAt: true,
+      registrationCloseAt: true,
+      status: true,
+      studentSelfRegistrationEnabled: true,
+      feeStages: { orderBy: { sequence: "asc" } },
+    },
+  });
+  const anyWindowByBoardSeries = new Map<string, (typeof allWindowsForMatch)[number]>();
+  for (const window of allWindowsForMatch) {
+    anyWindowByBoardSeries.set(openWindowKey(window.examBoardId, window.examSeriesId), window);
   }
 
   const sessionWhere = {
@@ -205,6 +242,17 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
       const window = openWindowMap.get(
         openWindowKey(qualification.examBoard.id, session.examSeries.id),
       );
+      const matchedWindow = anyWindowByBoardSeries.get(
+        openWindowKey(qualification.examBoard.id, session.examSeries.id),
+      );
+      const availability =
+        studentId && matchedWindow
+          ? describeStudentRegistrationAvailability(
+              matchedWindow,
+              (matchedWindow.feeStages ?? []) as RegistrationFeeStageRecord[],
+              now,
+            )
+          : null;
       const isActive = registration?.status === RegistrationStatus.ACTIVE;
       const isLocked = registration?.status === RegistrationStatus.LOCKED;
 
@@ -245,9 +293,13 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
           startTime: session.startTime,
           endTime: session.endTime,
           notes: session.notes,
-          registrationOpen: Boolean(window && studentId),
-          registrationWindowId: window?.id,
-          registrationWindowTitle: window?.title,
+          registrationOpen: studentId ? (availability?.open ?? false) : false,
+          registrationClosedReason: availability?.open === false ? availability.reason : null,
+          registrationCurrentStage: availability?.currentFeeStage ?? null,
+          showStaffContactHint: availability?.showStaffContactHint ?? false,
+          studentListLocked: availability?.studentListLocked ?? false,
+          registrationWindowId: window?.id ?? matchedWindow?.id,
+          registrationWindowTitle: window?.title ?? matchedWindow?.title,
           isRegistered: Boolean(registration),
           isActive,
           isLocked,

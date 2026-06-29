@@ -412,11 +412,17 @@ export function CalendarView() {
     selectedEvent?.type === "session" &&
     selectedProps.registrationOpen &&
     !selectedProps.isRegistered;
+  const showLatePhaseAddHint =
+    isStudent &&
+    selectedEvent?.type === "session" &&
+    selectedProps.showStaffContactHint &&
+    !selectedProps.isRegistered &&
+    !selectedProps.isActive;
   const canRemoveFromList =
     isStudent &&
     selectedEvent?.type === "session" &&
     selectedProps.isActive &&
-    selectedProps.registrationOpen;
+    !selectedProps.studentListLocked;
 
   async function handleAddToList() {
     if (!selectedEvent || selectedEvent.type !== "session") return;
@@ -800,9 +806,25 @@ export function CalendarView() {
                       {selectedProps.registrationWindowTitle
                         ? ` — ${String(selectedProps.registrationWindowTitle)}`
                         : ""}
+                      {selectedProps.registrationCurrentStage
+                        ? ` (${String(selectedProps.registrationCurrentStage)})`
+                        : ""}
                     </p>
                   ) : (
-                    <p className="text-slate-500">Registration is not open for this exam.</p>
+                    <div className="space-y-1 text-slate-500">
+                      <p>Registration is not open for this exam.</p>
+                      {selectedProps.registrationClosedReason ? (
+                        <p className="text-xs text-amber-700">{String(selectedProps.registrationClosedReason)}</p>
+                      ) : null}
+                      {selectedProps.registrationWindowTitle ? (
+                        <p className="text-xs">
+                          Window: {String(selectedProps.registrationWindowTitle)}
+                          {selectedProps.registrationCurrentStage
+                            ? ` · ${String(selectedProps.registrationCurrentStage)}`
+                            : ""}
+                        </p>
+                      ) : null}
+                    </div>
                   )}
                   {canRegister ? (
                     <button
@@ -813,6 +835,21 @@ export function CalendarView() {
                     >
                       Add to list
                     </button>
+                  ) : showLatePhaseAddHint ? (
+                    <div className="space-y-2">
+                      <button
+                        type="button"
+                        disabled
+                        className="cursor-not-allowed rounded-lg bg-slate-200 px-3 py-2 text-sm font-medium text-slate-500"
+                      >
+                        Add to list
+                      </button>
+                      {selectedProps.registrationClosedReason ? (
+                        <p className="text-xs text-amber-700">
+                          {String(selectedProps.registrationClosedReason)}
+                        </p>
+                      ) : null}
+                    </div>
                   ) : null}
                   {canRemoveFromList ? (
                     <button

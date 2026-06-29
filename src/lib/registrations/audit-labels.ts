@@ -58,6 +58,26 @@ export function auditActionLabel(action: RegistrationAuditAction | string): stri
       return "Student submitted registration";
     case "EXTERNAL_CANDIDATE_REGISTRATION_CREATED":
       return "External candidate registration created";
+    case "FEE_STAGE_CREATED":
+      return "Fee stage created";
+    case "FEE_STAGE_UPDATED":
+      return "Fee stage updated";
+    case "STUDENT_REGISTRATION_OPENED":
+      return "Student registration opened";
+    case "STUDENT_REGISTRATION_CLOSED":
+      return "Student registration closed";
+    case "REGISTRATION_WINDOW_CLOSED":
+      return "Registration window closed";
+    case "ENTRY_TYPE_DEFAULTED_TO_NORMAL":
+      return "Entry type defaulted to Normal";
+    case "POST_STUDENT_CLOSE_ADJUSTMENT":
+      return "Post-student-close adjustment";
+    case "POST_WINDOW_CLOSE_OVERRIDE":
+      return "Post-window-close override";
+    case "ENTRY_TYPE_AUTO_ASSIGNED":
+      return "Entry stage assigned automatically";
+    case "ENTRY_TYPE_OVERRIDDEN":
+      return "Entry stage overridden by staff";
     case "ADMIN_ADJUST":
       return "Admin adjustment";
     case "UPDATE":

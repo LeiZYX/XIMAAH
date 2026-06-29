@@ -6,8 +6,26 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function isStalePrismaClient(client: PrismaClient): boolean {
+  const extended = client as {
+    candidate?: { findMany?: unknown };
+    registrationFeeStage?: { findMany?: unknown };
+    registrationStage?: { findMany?: unknown };
+  };
+
   // After schema changes (e.g. adding Candidate), a cached dev client may lack new delegates.
-  return typeof (client as { candidate?: { findMany?: unknown } }).candidate?.findMany !== "function";
+  if (typeof extended.candidate?.findMany !== "function") {
+    return true;
+  }
+
+  // Registration window timing refactor: RegistrationStage → RegistrationFeeStage.
+  if (typeof extended.registrationFeeStage?.findMany !== "function") {
+    return true;
+  }
+  if (typeof extended.registrationStage?.findMany === "function") {
+    return true;
+  }
+
+  return false;
 }
 
 function getPrismaClient(): PrismaClient {

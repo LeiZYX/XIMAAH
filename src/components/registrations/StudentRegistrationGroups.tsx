@@ -108,7 +108,7 @@ function WindowCard({
           <div>
             <dt className="text-slate-500">Registration window</dt>
             <dd className="font-medium text-slate-800">
-              {formatWindowRange(group.window.startAt, group.window.endAt)}
+              {formatWindowRange(group.window.studentRegistrationOpenAt, group.window.registrationCloseAt)}
             </dd>
           </div>
           <div>

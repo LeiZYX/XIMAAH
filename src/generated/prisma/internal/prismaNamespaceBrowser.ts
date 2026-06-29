@@ -58,6 +58,7 @@ export const ModelName = {
   CandidateExamIdentity: 'CandidateExamIdentity',
   TeacherAssignment: 'TeacherAssignment',
   RegistrationWindow: 'RegistrationWindow',
+  RegistrationFeeStage: 'RegistrationFeeStage',
   RegistrationWorkspace: 'RegistrationWorkspace',
   StudentExamRegistration: 'StudentExamRegistration',
   RegistrationAuditLog: 'RegistrationAuditLog',
@@ -206,15 +207,37 @@ export const RegistrationWindowScalarFieldEnum = {
   examBoardId: 'examBoardId',
   examSeriesId: 'examSeriesId',
   title: 'title',
-  startAt: 'startAt',
-  endAt: 'endAt',
+  studentRegistrationOpenAt: 'studentRegistrationOpenAt',
+  studentRegistrationCloseAt: 'studentRegistrationCloseAt',
+  registrationCloseAt: 'registrationCloseAt',
   status: 'status',
+  studentSelfRegistrationEnabled: 'studentSelfRegistrationEnabled',
+  eoAssistedRegistrationEnabled: 'eoAssistedRegistrationEnabled',
+  officeOnlyRegistrationEnabled: 'officeOnlyRegistrationEnabled',
+  postLockAdjustmentEnabled: 'postLockAdjustmentEnabled',
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type RegistrationWindowScalarFieldEnum = (typeof RegistrationWindowScalarFieldEnum)[keyof typeof RegistrationWindowScalarFieldEnum]
+
+
+export const RegistrationFeeStageScalarFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  stageCode: 'stageCode',
+  stageName: 'stageName',
+  sequence: 'sequence',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  enabled: 'enabled',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RegistrationFeeStageScalarFieldEnum = (typeof RegistrationFeeStageScalarFieldEnum)[keyof typeof RegistrationFeeStageScalarFieldEnum]
 
 
 export const RegistrationWorkspaceScalarFieldEnum = {
@@ -230,6 +253,10 @@ export const RegistrationWorkspaceScalarFieldEnum = {
   lastAdjustmentSummary: 'lastAdjustmentSummary',
   hasPostLockAdjustment: 'hasPostLockAdjustment',
   isLateRegistration: 'isLateRegistration',
+  entryType: 'entryType',
+  feeStageId: 'feeStageId',
+  entryTypeOverridden: 'entryTypeOverridden',
+  entryTypeOverrideReason: 'entryTypeOverrideReason',
   registrationSource: 'registrationSource',
   visibility: 'visibility',
   billingScope: 'billingScope',
@@ -269,6 +296,10 @@ export const StudentExamRegistrationScalarFieldEnum = {
   addedByRole: 'addedByRole',
   addedAt: 'addedAt',
   reason: 'reason',
+  entryType: 'entryType',
+  feeStageId: 'feeStageId',
+  entryTypeOverridden: 'entryTypeOverridden',
+  entryTypeOverrideReason: 'entryTypeOverrideReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -279,14 +310,17 @@ export type StudentExamRegistrationScalarFieldEnum = (typeof StudentExamRegistra
 export const RegistrationAuditLogScalarFieldEnum = {
   id: 'id',
   registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
   candidateId: 'candidateId',
   studentId: 'studentId',
   registrationId: 'registrationId',
+  feeStageId: 'feeStageId',
   examSessionId: 'examSessionId',
   action: 'action',
   performedById: 'performedById',
   performedByRole: 'performedByRole',
   performedAt: 'performedAt',
+  entryType: 'entryType',
   beforeValue: 'beforeValue',
   afterValue: 'afterValue',
   reason: 'reason',
@@ -710,6 +744,16 @@ export const RegistrationWindowOrderByRelevanceFieldEnum = {
 export type RegistrationWindowOrderByRelevanceFieldEnum = (typeof RegistrationWindowOrderByRelevanceFieldEnum)[keyof typeof RegistrationWindowOrderByRelevanceFieldEnum]
 
 
+export const RegistrationFeeStageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  stageName: 'stageName',
+  notes: 'notes'
+} as const
+
+export type RegistrationFeeStageOrderByRelevanceFieldEnum = (typeof RegistrationFeeStageOrderByRelevanceFieldEnum)[keyof typeof RegistrationFeeStageOrderByRelevanceFieldEnum]
+
+
 export const RegistrationWorkspaceOrderByRelevanceFieldEnum = {
   id: 'id',
   candidateId: 'candidateId',
@@ -717,7 +761,9 @@ export const RegistrationWorkspaceOrderByRelevanceFieldEnum = {
   registrationWindowId: 'registrationWindowId',
   lastAdjustedByUserId: 'lastAdjustedByUserId',
   lastAdjustmentReason: 'lastAdjustmentReason',
-  lastAdjustmentSummary: 'lastAdjustmentSummary'
+  lastAdjustmentSummary: 'lastAdjustmentSummary',
+  feeStageId: 'feeStageId',
+  entryTypeOverrideReason: 'entryTypeOverrideReason'
 } as const
 
 export type RegistrationWorkspaceOrderByRelevanceFieldEnum = (typeof RegistrationWorkspaceOrderByRelevanceFieldEnum)[keyof typeof RegistrationWorkspaceOrderByRelevanceFieldEnum]
@@ -742,7 +788,9 @@ export const StudentExamRegistrationOrderByRelevanceFieldEnum = {
   phoneSnapshot: 'phoneSnapshot',
   assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
   addedByUserId: 'addedByUserId',
-  reason: 'reason'
+  reason: 'reason',
+  feeStageId: 'feeStageId',
+  entryTypeOverrideReason: 'entryTypeOverrideReason'
 } as const
 
 export type StudentExamRegistrationOrderByRelevanceFieldEnum = (typeof StudentExamRegistrationOrderByRelevanceFieldEnum)[keyof typeof StudentExamRegistrationOrderByRelevanceFieldEnum]
@@ -751,9 +799,11 @@ export type StudentExamRegistrationOrderByRelevanceFieldEnum = (typeof StudentEx
 export const RegistrationAuditLogOrderByRelevanceFieldEnum = {
   id: 'id',
   registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
   candidateId: 'candidateId',
   studentId: 'studentId',
   registrationId: 'registrationId',
+  feeStageId: 'feeStageId',
   examSessionId: 'examSessionId',
   performedById: 'performedById',
   beforeValue: 'beforeValue',

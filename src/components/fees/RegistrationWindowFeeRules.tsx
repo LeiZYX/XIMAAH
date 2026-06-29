@@ -2,10 +2,9 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/Card";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { RegistrationWindowDetailNav } from "@/components/fees/RegistrationWindowDetailNav";
 import { RegistrationWindowFeeToolbar } from "@/components/fees/RegistrationWindowFeeToolbar";
 import { formatMoney } from "@/lib/fees/money";
+import { STAGE_CODE_OPTIONS, entryTypeLabel } from "@/lib/registrations/stage-labels";
 
 interface FeeRuleRow {
   id: string;
@@ -72,6 +71,17 @@ const emptyForm = {
   ...bulkTemplateDefaults,
 };
 
+const emptyEditForm = {
+  costCurrency: "GBP",
+  costAmount: "",
+  exchangeRateToCny: "",
+  markupType: "PERCENTAGE",
+  markupValue: "",
+  salesCurrency: "GBP",
+  salesAmount: "",
+  isActive: true,
+};
+
 export function RegistrationWindowFeeRules({
   windowId,
   basePath,
@@ -91,6 +101,8 @@ export function RegistrationWindowFeeRules({
   const [error, setError] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [showBulkForm, setShowBulkForm] = useState(false);
+  const [editingRule, setEditingRule] = useState<FeeRuleRow | null>(null);
+  const [editForm, setEditForm] = useState(emptyEditForm);
   const [bulkTemplate, setBulkTemplate] = useState(bulkTemplateDefaults);
   const [bulkSaving, setBulkSaving] = useState(false);
 
@@ -143,6 +155,42 @@ export function RegistrationWindowFeeRules({
     [calendarSubjects, rules, bulkTemplate.entryType],
   );
 
+  const groupedRules = useMemo(() => {
+    const groups = new Map<
+      string,
+      {
+        subjectCode: string;
+        subjectName: string;
+        paperCode: string | null;
+        paperTitle: string | null;
+        qualification: string;
+        byEntryType: Record<string, FeeRuleRow | undefined>;
+      }
+    >();
+
+    for (const rule of rules) {
+      const subjectCode = rule.subject?.code ?? "—";
+      const paperCode = rule.paper?.code ?? null;
+      const key = `${subjectCode}|${paperCode ?? ""}`;
+      const existing = groups.get(key) ?? {
+        subjectCode,
+        subjectName: rule.subject?.name ?? "—",
+        paperCode,
+        paperTitle: rule.paper?.title ?? null,
+        qualification: rule.qualification.name,
+        byEntryType: {},
+      };
+      existing.byEntryType[rule.entryType] = rule;
+      groups.set(key, existing);
+    }
+
+    return [...groups.values()].sort((a, b) => {
+      const subjectCmp = a.subjectCode.localeCompare(b.subjectCode);
+      if (subjectCmp !== 0) return subjectCmp;
+      return (a.paperCode ?? "").localeCompare(b.paperCode ?? "");
+    });
+  }, [rules]);
+
   async function handleCreateRule(event: FormEvent) {
     event.preventDefault();
     if (!windowInfo || !canConfigure) return;
@@ -177,6 +225,78 @@ export function RegistrationWindowFeeRules({
     setForm(emptyForm);
     setShowForm(false);
     setMessage("Fee rule created.");
+    load();
+  }
+
+  function renderSalesCell(rule: FeeRuleRow | undefined) {
+    if (!rule) return "—";
+    return rule.salesAmount !== undefined && rule.salesAmount !== null
+      ? formatMoney(Number(rule.salesAmount), (rule.salesCurrency ?? "GBP") as "GBP" | "CNY")
+      : "Calculated";
+  }
+
+  function openEdit(rule: FeeRuleRow) {
+    setEditingRule(rule);
+    setEditForm({
+      costCurrency: rule.costCurrency ?? "GBP",
+      costAmount: rule.costAmount !== undefined ? String(rule.costAmount) : "",
+      exchangeRateToCny:
+        rule.exchangeRateToCny !== undefined && rule.exchangeRateToCny !== null
+          ? String(rule.exchangeRateToCny)
+          : "",
+      markupType: rule.markupType ?? "PERCENTAGE",
+      markupValue:
+        rule.markupValue !== undefined && rule.markupValue !== null ? String(rule.markupValue) : "",
+      salesCurrency: rule.salesCurrency ?? "GBP",
+      salesAmount:
+        rule.salesAmount !== undefined && rule.salesAmount !== null ? String(rule.salesAmount) : "",
+      isActive: rule.isActive,
+    });
+    setShowForm(false);
+    setShowBulkForm(false);
+  }
+
+  function openConfigure(subjectCode: string, entryType: string) {
+    const subject = calendarSubjects.find((item) => item.code === subjectCode);
+    setForm({
+      ...bulkTemplateDefaults,
+      subjectId: subject?.id ?? "",
+      entryType,
+    });
+    setEditingRule(null);
+    setShowBulkForm(false);
+    setShowForm(true);
+  }
+
+  async function handleUpdateRule(event: FormEvent) {
+    event.preventDefault();
+    if (!editingRule || !canConfigure) return;
+    setError(null);
+    setMessage(null);
+
+    const response = await fetch(`${apiBase}/fee-rules/${editingRule.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        costCurrency: editForm.costCurrency,
+        costAmount: editForm.costAmount,
+        exchangeRateToCny: editForm.exchangeRateToCny || null,
+        markupType: editForm.markupType,
+        markupValue: editForm.markupValue || null,
+        salesCurrency: editForm.salesCurrency,
+        salesAmount: editForm.salesAmount || null,
+        isActive: editForm.isActive,
+      }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      setError(data.error ?? "Failed to update fee rule");
+      return;
+    }
+
+    setEditingRule(null);
+    setMessage("Fee rule updated.");
     load();
   }
 
@@ -280,17 +400,6 @@ export function RegistrationWindowFeeRules({
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={windowInfo ? `Fee rules — ${windowInfo.title}` : "Fee rules"}
-        description={
-          windowInfo
-            ? `${windowInfo.examBoard.code} · ${windowInfo.examSeries.name} (${windowInfo.examSeries.year})`
-            : "Configure exam fees per registration window."
-        }
-      />
-
-      <RegistrationWindowDetailNav windowId={windowId} basePath={basePath} />
-
       <RegistrationWindowFeeToolbar
         windowId={windowId}
         basePath={basePath.startsWith("/admin") ? "/admin" : "/exam-office"}
@@ -344,6 +453,7 @@ export function RegistrationWindowFeeRules({
           <div>
             <h2 className="text-lg font-semibold text-slate-900">Fee rules</h2>
             <p className="mt-1 text-sm text-slate-600">
+              Configure fees per subject and entry stage (Normal Entry, Late Entry, High Late Entry).
               Bulk add calendar subjects, export to Excel, edit fees, then import to update all rules at once.
             </p>
           </div>
@@ -354,6 +464,7 @@ export function RegistrationWindowFeeRules({
                 onClick={() => {
                   setShowBulkForm((value) => !value);
                   setShowForm(false);
+                  setEditingRule(null);
                 }}
                 className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
               >
@@ -364,6 +475,7 @@ export function RegistrationWindowFeeRules({
                 onClick={() => {
                   setShowForm((value) => !value);
                   setShowBulkForm(false);
+                  setEditingRule(null);
                 }}
                 className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700"
               >
@@ -416,7 +528,7 @@ export function RegistrationWindowFeeRules({
           <form onSubmit={handleBulkCreate} className="space-y-3 rounded-lg border border-indigo-200 bg-indigo-50/40 p-4">
             <p className="text-sm text-slate-700">
               Create fee rules for all calendar subjects that do not already have a{" "}
-              <span className="font-medium">{bulkTemplate.entryType}</span> rule.
+              <span className="font-medium">{entryTypeLabel(bulkTemplate.entryType)}</span> rule.
               {missingBulkCount > 0
                 ? ` ${missingBulkCount} subject${missingBulkCount === 1 ? "" : "s"} will be added.`
                 : " All calendar subjects already have a matching rule."}
@@ -427,9 +539,11 @@ export function RegistrationWindowFeeRules({
                 onChange={(e) => setBulkTemplate({ ...bulkTemplate, entryType: e.target.value })}
                 className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
               >
-                <option value="NORMAL">Normal</option>
-                <option value="LATE">Late</option>
-                <option value="HIGH_LATE">High late</option>
+                {STAGE_CODE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
               </select>
               {showCosts ? (
                 <>
@@ -551,9 +665,11 @@ export function RegistrationWindowFeeRules({
               onChange={(e) => setForm({ ...form, entryType: e.target.value })}
               className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
             >
-              <option value="NORMAL">Normal</option>
-              <option value="LATE">Late</option>
-              <option value="HIGH_LATE">High late</option>
+              {STAGE_CODE_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
             </select>
             {showCosts ? (
               <>
@@ -627,75 +743,194 @@ export function RegistrationWindowFeeRules({
           </form>
         ) : null}
 
+        {editingRule && canConfigure ? (
+          <form onSubmit={handleUpdateRule} className="space-y-3 rounded-lg border border-amber-200 bg-amber-50/40 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-sm font-medium text-slate-900">
+                Edit fee rule — {editingRule.subject?.code ?? "—"} · {entryTypeLabel(editingRule.entryType)}
+              </p>
+              <button
+                type="button"
+                onClick={() => setEditingRule(null)}
+                className="text-sm text-slate-600 hover:text-slate-900"
+              >
+                Cancel
+              </button>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {showCosts ? (
+                <>
+                  <select
+                    value={editForm.costCurrency}
+                    onChange={(e) => setEditForm({ ...editForm, costCurrency: e.target.value })}
+                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  >
+                    <option value="GBP">Cost GBP</option>
+                    <option value="CNY">Cost CNY</option>
+                  </select>
+                  <input
+                    required
+                    type="number"
+                    step="0.01"
+                    placeholder="Cost amount"
+                    value={editForm.costAmount}
+                    onChange={(e) => setEditForm({ ...editForm, costAmount: e.target.value })}
+                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  />
+                  <input
+                    type="number"
+                    step="0.0001"
+                    placeholder="Exchange rate override"
+                    value={editForm.exchangeRateToCny}
+                    onChange={(e) => setEditForm({ ...editForm, exchangeRateToCny: e.target.value })}
+                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  />
+                  <select
+                    value={editForm.markupType}
+                    onChange={(e) => setEditForm({ ...editForm, markupType: e.target.value })}
+                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  >
+                    <option value="PERCENTAGE">Markup %</option>
+                    <option value="FIXED_AMOUNT">Markup fixed</option>
+                    <option value="MANUAL">Manual sales price</option>
+                  </select>
+                  <input
+                    type="number"
+                    step="0.01"
+                    placeholder="Markup value"
+                    value={editForm.markupValue}
+                    onChange={(e) => setEditForm({ ...editForm, markupValue: e.target.value })}
+                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  />
+                </>
+              ) : null}
+              <select
+                value={editForm.salesCurrency}
+                onChange={(e) => setEditForm({ ...editForm, salesCurrency: e.target.value })}
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              >
+                <option value="GBP">Sales GBP</option>
+                <option value="CNY">Sales CNY</option>
+              </select>
+              {editForm.markupType === "MANUAL" ? (
+                <input
+                  required
+                  type="number"
+                  step="0.01"
+                  placeholder="Sales amount"
+                  value={editForm.salesAmount}
+                  onChange={(e) => setEditForm({ ...editForm, salesAmount: e.target.value })}
+                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                />
+              ) : null}
+              <label className="flex items-center gap-2 text-sm text-slate-700 sm:col-span-2 lg:col-span-3">
+                <input
+                  type="checkbox"
+                  checked={editForm.isActive}
+                  onChange={(e) => setEditForm({ ...editForm, isActive: e.target.checked })}
+                />
+                Active
+              </label>
+              <button
+                type="submit"
+                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white sm:col-span-2 lg:col-span-3"
+              >
+                Save changes
+              </button>
+            </div>
+          </form>
+        ) : null}
+
         <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="border-b text-left text-xs uppercase text-slate-500">
-                <th className="py-2 pr-3">Board</th>
-                <th className="py-2 pr-3">Qualification</th>
-                <th className="py-2 pr-3">Subject</th>
-                <th className="py-2 pr-3">Paper</th>
-                <th className="py-2 pr-3">Entry</th>
-                {showCosts ? (
-                  <>
-                    <th className="py-2 pr-3">Cost</th>
-                    <th className="py-2 pr-3">Rate</th>
-                    <th className="py-2 pr-3">Markup</th>
-                  </>
-                ) : null}
-                <th className="py-2 pr-3">Sales</th>
-                <th className="py-2 pr-3">Active</th>
-                {canConfigure ? <th className="py-2 pr-3">Actions</th> : null}
-              </tr>
-            </thead>
-            <tbody>
-              {rules.length === 0 ? (
-                <tr>
-                  <td colSpan={showCosts ? 11 : 8} className="py-6 text-center text-slate-500">
-                    No fee rules configured yet.
-                  </td>
-                </tr>
-              ) : (
-                rules.map((rule) => (
-                  <tr key={rule.id} className="border-b border-slate-100">
-                    <td className="py-2 pr-3">{rule.examBoard.code}</td>
-                    <td className="py-2 pr-3">{rule.qualification.name}</td>
-                    <td className="py-2 pr-3">{rule.subject?.code ?? "—"}</td>
-                    <td className="py-2 pr-3">{rule.paper?.code ?? "—"}</td>
-                    <td className="py-2 pr-3">{rule.entryType}</td>
-                    {showCosts ? (
-                      <>
-                        <td className="py-2 pr-3">
-                          {rule.costCurrency && rule.costAmount !== undefined
-                            ? formatMoney(Number(rule.costAmount), rule.costCurrency as "GBP" | "CNY")
-                            : "—"}
-                        </td>
-                        <td className="py-2 pr-3">{rule.exchangeRateToCny ?? latestGbpToCny?.rate ?? "—"}</td>
-                        <td className="py-2 pr-3">
-                          {rule.markupType === "MANUAL"
-                            ? "Manual"
-                            : `${rule.markupType} ${rule.markupValue ?? ""}`}
-                        </td>
-                      </>
-                    ) : null}
-                    <td className="py-2 pr-3">
-                      {rule.salesAmount !== undefined && rule.salesAmount !== null
-                        ? formatMoney(Number(rule.salesAmount), (rule.salesCurrency ?? "GBP") as "GBP" | "CNY")
-                        : "Calculated"}
-                    </td>
-                    <td className="py-2 pr-3">{rule.isActive ? "Yes" : "No"}</td>
-                    {canConfigure ? (
-                      <td className="py-2 pr-3">
-                        <button type="button" onClick={() => void toggleActive(rule)} className="text-indigo-600">
-                          {rule.isActive ? "Deactivate" : "Activate"}
-                        </button>
-                      </td>
-                    ) : null}
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+          {groupedRules.length === 0 ? (
+            <p className="py-6 text-center text-sm text-slate-500">No fee rules configured yet.</p>
+          ) : (
+            groupedRules.map((group) => (
+              <div key={`${group.subjectCode}|${group.paperCode ?? ""}`} className="mb-6 last:mb-0">
+                <h3 className="mb-2 text-sm font-semibold text-slate-900">
+                  {group.subjectCode} — {group.subjectName}
+                  {group.paperCode ? ` · Paper ${group.paperCode}` : ""}
+                  <span className="ml-2 font-normal text-slate-500">({group.qualification})</span>
+                </h3>
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="border-b text-left text-xs uppercase text-slate-500">
+                      <th className="py-2 pr-3">Entry stage</th>
+                      {showCosts ? (
+                        <>
+                          <th className="py-2 pr-3">Cost</th>
+                          <th className="py-2 pr-3">Rate</th>
+                          <th className="py-2 pr-3">Markup</th>
+                        </>
+                      ) : null}
+                      <th className="py-2 pr-3">Sales</th>
+                      <th className="py-2 pr-3">Active</th>
+                      {canConfigure ? <th className="py-2 pr-3">Actions</th> : null}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {STAGE_CODE_OPTIONS.map((stage) => {
+                      const rule = group.byEntryType[stage.value];
+                      return (
+                        <tr key={stage.value} className="border-b border-slate-100">
+                          <td className="py-2 pr-3">{stage.label}</td>
+                          {showCosts ? (
+                            <>
+                              <td className="py-2 pr-3">
+                                {rule?.costCurrency && rule.costAmount !== undefined
+                                  ? formatMoney(Number(rule.costAmount), rule.costCurrency as "GBP" | "CNY")
+                                  : "—"}
+                              </td>
+                              <td className="py-2 pr-3">{rule?.exchangeRateToCny ?? latestGbpToCny?.rate ?? "—"}</td>
+                              <td className="py-2 pr-3">
+                                {rule
+                                  ? rule.markupType === "MANUAL"
+                                    ? "Manual"
+                                    : `${rule.markupType} ${rule.markupValue ?? ""}`
+                                  : "—"}
+                              </td>
+                            </>
+                          ) : null}
+                          <td className="py-2 pr-3">{renderSalesCell(rule)}</td>
+                          <td className="py-2 pr-3">{rule ? (rule.isActive ? "Yes" : "No") : "—"}</td>
+                          {canConfigure ? (
+                            <td className="py-2 pr-3">
+                              {rule ? (
+                                <div className="flex flex-wrap gap-3">
+                                  <button
+                                    type="button"
+                                    onClick={() => openEdit(rule)}
+                                    className="text-indigo-600"
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => void toggleActive(rule)}
+                                    className="text-indigo-600"
+                                  >
+                                    {rule.isActive ? "Deactivate" : "Activate"}
+                                  </button>
+                                </div>
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => openConfigure(group.subjectCode, stage.value)}
+                                  className="text-indigo-600"
+                                >
+                                  Configure
+                                </button>
+                              )}
+                            </td>
+                          ) : null}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ))
+          )}
         </div>
       </Card>
     </div>

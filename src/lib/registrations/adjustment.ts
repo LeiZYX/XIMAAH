@@ -22,6 +22,11 @@ import { appendAdjustmentHistoryBatch } from "@/lib/registrations/adjustment-his
 import { markStatementsNeedReview, markSupersededStatements } from "@/lib/fees/statement";
 import { assertStudentCanRegister } from "@/lib/students/archive";
 import {
+  resolveEntryTypeForRegistration,
+  type RegistrationFeeStageRecord,
+} from "@/lib/registrations/fee-stages";
+import { isStudentRegistrationPeriodClosed } from "@/lib/registrations/window";
+import {
   postLockAuditActionForRole,
   postLockSourceForRole,
 } from "@/lib/registrations/metadata";
@@ -99,10 +104,25 @@ export async function applyPostLockAdjustment(
     (row) => row.status === RegistrationStatus.LOCKED,
   );
   const windowClosed = workspace.registrationWindow.status === "CLOSED";
+  const now = new Date();
 
-  if (!hasLockedRows && !windowClosed) {
+  const feeStages = await prisma.registrationFeeStage.findMany({
+    where: { registrationWindowId: workspace.registrationWindowId },
+    orderBy: { sequence: "asc" },
+  });
+
+  if (
+    !hasLockedRows &&
+    !windowClosed &&
+    !isStudentRegistrationPeriodClosed(workspace.registrationWindow, now)
+  ) {
     throw new RegistrationError("Adjustments are only allowed for locked registrations", 400);
   }
+
+  const entryResolution = resolveEntryTypeForRegistration({
+    feeStages: feeStages as RegistrationFeeStageRecord[],
+    now,
+  });
 
   const candidate = await resolveCandidateForRegistration({
     candidateId: workspace.candidateId ?? undefined,
@@ -123,7 +143,6 @@ export async function applyPostLockAdjustment(
   }
 
   const summary: AdjustmentSummaryPayload = { added: [], removed: [], replaced: [] };
-  const now = new Date();
   const itemSource = postLockSourceForRole(performedBy.role);
   const inheritVisibility = workspace.visibility ?? "STUDENT_AND_TEACHER";
   const inheritBilling = workspace.billingScope ?? "NORMAL_BILLING";
@@ -221,6 +240,8 @@ export async function applyPostLockAdjustment(
           addedByRole: performedBy.role,
           addedAt: now,
           reason,
+          entryType: entryResolution.entryType,
+          feeStageId: entryResolution.feeStageId,
         },
         include: registrationInclude,
       });
@@ -291,6 +312,8 @@ export async function applyPostLockAdjustment(
         addedByRole: performedBy.role,
         addedAt: now,
         reason,
+        entryType: entryResolution.entryType,
+        feeStageId: entryResolution.feeStageId,
       };
 
       const lockedAt = workspace.lockedAt ?? now;
@@ -395,6 +418,7 @@ export async function applyPostLockAdjustment(
     await tx.registrationWorkspace.update({
       where: { id: workspaceId },
       data: {
+        lockedAt: workspace.lockedAt ?? now,
         hasPostLockAdjustment: true,
         lastAdjustedByUserId: performedBy.id,
         lastAdjustedByRole: performedBy.role,

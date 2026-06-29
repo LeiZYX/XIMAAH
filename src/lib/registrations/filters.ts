@@ -1,6 +1,5 @@
 import type { Prisma } from "@/generated/prisma/client";
-import { containsFilter, equalsFilter } from "@/lib/db/string-filters";
-import { prisma } from "@/lib/prisma";
+import { containsFilter } from "@/lib/db/string-filters";
 import { AUTO_BILLING_SCOPES, STUDENT_VISIBLE, TEACHER_VISIBLE } from "@/lib/registrations/metadata";
 
 export interface RegistrationListFilters {
@@ -107,34 +106,15 @@ export function buildTeacherVisibleRegistrationWhere(
   };
 }
 
-export async function buildTeacherRegistrationWhere(
-  teacherId: string,
+export function buildTeacherRegistrationWhere(
   filters: RegistrationListFilters,
-): Promise<Prisma.StudentExamRegistrationWhereInput> {
-  const assignments = await prisma.teacherAssignment.findMany({
-    where: { teacherId },
-    include: { subject: { select: { name: true } } },
-  });
+): Prisma.StudentExamRegistrationWhereInput {
   const base = buildRegistrationWhere(filters);
-  const subjectNames = [...new Set(assignments.map((assignment) => assignment.subject.name))];
-
-  if (subjectNames.length === 0) {
-    return { id: "__no_access__" };
-  }
-
-  const subjectFilter: Prisma.StudentExamRegistrationWhereInput = {
-    OR: subjectNames.map((name) => ({
-      subject: { name: equalsFilter(name) },
-    })),
-  };
-
   if (Object.keys(base).length === 0) {
-    return buildTeacherVisibleRegistrationWhere(subjectFilter);
+    return buildTeacherVisibleRegistrationWhere({});
   }
 
-  return buildTeacherVisibleRegistrationWhere({
-    AND: [base, subjectFilter],
-  });
+  return buildTeacherVisibleRegistrationWhere(base);
 }
 
 export function parseRegistrationFilters(searchParams: URLSearchParams): RegistrationListFilters {

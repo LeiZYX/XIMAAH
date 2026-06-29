@@ -53,6 +53,11 @@ export type TeacherAssignment = Prisma.TeacherAssignmentModel
  */
 export type RegistrationWindow = Prisma.RegistrationWindowModel
 /**
+ * Model RegistrationFeeStage
+ * 
+ */
+export type RegistrationFeeStage = Prisma.RegistrationFeeStageModel
+/**
  * Model RegistrationWorkspace
  * 
  */

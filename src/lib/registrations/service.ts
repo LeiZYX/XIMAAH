@@ -7,7 +7,15 @@ import {
 } from "@/lib/registrations/audit";
 import { ensureExpiredWindowsLocked } from "@/lib/registrations/lock";
 import { buildStudentVisibleRegistrationWhere } from "@/lib/registrations/filters";
-import { canRegisterInWindow } from "@/lib/registrations/window";
+import {
+  canRegisterInWindow,
+  canStudentEditRegistrationList,
+  canStudentRegisterInWindow,
+} from "@/lib/registrations/window";
+import {
+  resolveEntryTypeForRegistration,
+  type RegistrationFeeStageRecord,
+} from "@/lib/registrations/fee-stages";
 import { ensureRegistrationWorkspace } from "@/lib/registrations/workspace";
 import { hasWorkspaceSchema } from "@/lib/registrations/schema-capabilities";
 import { assertStudentCanRegister } from "@/lib/students/archive";
@@ -43,6 +51,28 @@ export async function getOpenWindowsForSession(examSessionId: string, now = new 
   return windows.filter((window) => canRegisterInWindow(window, now));
 }
 
+export async function getStudentEligibleWindowsForSession(
+  examSessionId: string,
+  now = new Date(),
+) {
+  const openWindows = await getOpenWindowsForSession(examSessionId, now);
+  const eligible = [];
+
+  for (const window of openWindows) {
+    if (
+      canStudentRegisterInWindow(
+        { ...window, studentSelfRegistrationEnabled: window.studentSelfRegistrationEnabled ?? true },
+        [],
+        now,
+      )
+    ) {
+      eligible.push(window);
+    }
+  }
+
+  return eligible;
+}
+
 function buildRegistrationData(
   student: { id: string; name: string; email: string | null; phone: string | null },
   profile: {
@@ -63,6 +93,11 @@ function buildRegistrationData(
   },
   registrationWindowId: string,
   candidate: { id: string; assessmentHubCandidateNumber: string; candidateType: CandidateType },
+  entry: {
+    entryType: import("@/generated/prisma/enums").FeeEntryType;
+    feeStageId: string | null;
+    entryTypeOverridden: boolean;
+  },
 ) {
   const snapshots = candidateRegistrationSnapshots({
     englishName: student.name,
@@ -91,6 +126,9 @@ function buildRegistrationData(
     registrationSource: "STUDENT_SUBMITTED" as const,
     visibility: "STUDENT_AND_TEACHER" as const,
     billingScope: "NORMAL_BILLING" as const,
+    entryType: entry.entryType,
+    feeStageId: entry.feeStageId,
+    entryTypeOverridden: entry.entryTypeOverridden,
   };
 }
 
@@ -144,12 +182,19 @@ export async function createStudentRegistration(studentId: string, examSessionId
     throw new RegistrationError("Registration is locked for this exam session", 409);
   }
 
-  const openWindows = await getOpenWindowsForSession(examSessionId, now);
+  const openWindows = await getStudentEligibleWindowsForSession(examSessionId, now);
   if (openWindows.length === 0) {
     throw new RegistrationError("No open registration window for this exam", 400);
   }
 
   const registrationWindow = openWindows[0];
+  const feeStages = await prisma.registrationFeeStage.findMany({
+    where: { registrationWindowId: registrationWindow.id },
+  });
+  const entry = resolveEntryTypeForRegistration({
+    feeStages: feeStages as RegistrationFeeStageRecord[],
+    now,
+  });
   const candidate = await syncCandidateFromStudentUser(studentId);
   if (!candidate) {
     throw new RegistrationError("Could not resolve candidate profile", 400);
@@ -161,6 +206,7 @@ export async function createStudentRegistration(studentId: string, examSessionId
     session,
     registrationWindow.id,
     candidate,
+    entry,
   );
 
   if (existing?.status === RegistrationStatus.CANCELLED) {
@@ -265,8 +311,16 @@ export async function cancelStudentRegistration(studentId: string, registrationI
     throw new RegistrationError("Registration cannot be changed", 400);
   }
 
-  if (!canRegisterInWindow(registration.registrationWindow)) {
-    throw new RegistrationError("Registration window is closed", 400);
+  if (
+    !canStudentEditRegistrationList(
+      registration.registrationWindow,
+      [],
+    )
+  ) {
+    throw new RegistrationError(
+      "Student registration has closed — contact your subject teacher or the Exams Office to change your list.",
+      400,
+    );
   }
 
   return prisma.$transaction(async (tx) => {
@@ -332,7 +386,7 @@ export async function listStudentVisibleRegistrations(studentId: string) {
         }
       : registrationInclude,
     orderBy: [
-      { registrationWindow: { startAt: "desc" } },
+      { registrationWindow: { studentRegistrationOpenAt: "desc" } },
       { updatedAt: "desc" },
     ],
   });

@@ -5,6 +5,7 @@ import {
   buildWorkspaceWhereFromFeeFilters,
 } from "@/lib/fees/filters";
 import { findMatchingFeeRule, resolveEntryTypeForWorkspace } from "@/lib/fees/match";
+import { loadWorkspacesWithEntryType } from "@/lib/fees/workspace-entry-type";
 import { toNumber } from "@/lib/fees/money";
 import type { Prisma } from "@/generated/prisma/client";
 import { FeeStatementStatus } from "@/generated/prisma/enums";
@@ -96,22 +97,36 @@ type RegRow = {
   examSession: { date: Date };
   examBoard: { name: string };
   examSeries: { name: string; year: number };
-  registrationWindow: { id: string; title: string; isLateRegistration?: boolean };
+  registrationWindow: {
+    id: string;
+    title: string;
+    entryType?: import("@/generated/prisma/enums").FeeEntryType;
+    isLateRegistration?: boolean;
+  };
 };
+
+function resolveRegEntryType(reg: RegRow): import("@/generated/prisma/enums").FeeEntryType {
+  return resolveEntryTypeForWorkspace({
+    entryType: reg.registrationWindow.entryType ?? null,
+    isLateRegistration: reg.registrationWindow.isLateRegistration ?? false,
+  });
+}
 
 async function loadBillableRegistrations(filters: FeeReportFilters): Promise<RegRow[]> {
   const workspaceWhere = buildWorkspaceWhereFromFeeFilters(filters);
   const regWhere = buildRegistrationWhereFromFeeFilters(filters);
 
-  const workspaces = await prisma.registrationWorkspace.findMany({
-    where: workspaceWhere,
-    select: { id: true, isLateRegistration: true },
-  });
+  const workspaces = await loadWorkspacesWithEntryType(workspaceWhere);
 
   if (workspaces.length === 0) return [];
 
   const workspaceIds = workspaces.map((w) => w.id);
-  const lateByWorkspace = new Map(workspaces.map((w) => [w.id, w.isLateRegistration]));
+  const entryByWorkspace = new Map(
+    workspaces.map((w) => [
+      w.id,
+      resolveEntryTypeForWorkspace({ entryType: w.entryType, isLateRegistration: w.isLateRegistration }),
+    ]),
+  );
 
   return prisma.studentExamRegistration.findMany({
     where: {
@@ -132,8 +147,11 @@ async function loadBillableRegistrations(filters: FeeReportFilters): Promise<Reg
       registrationWindow: {
         ...row.registrationWindow,
         isLateRegistration: row.registrationWorkspaceId
-          ? lateByWorkspace.get(row.registrationWorkspaceId) ?? false
+          ? entryByWorkspace.get(row.registrationWorkspaceId) !== "NORMAL"
           : false,
+        entryType: row.registrationWorkspaceId
+          ? entryByWorkspace.get(row.registrationWorkspaceId)
+          : "NORMAL",
       },
     })),
   ) as Promise<RegRow[]>;
@@ -206,7 +224,7 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
 
   for (const reg of registrations) {
     allCandidates.add(candidateKey(reg));
-    const entryType = resolveEntryTypeForWorkspace(reg.registrationWindow.isLateRegistration ?? false);
+    const entryType = resolveRegEntryType(reg);
     const match = findMatchingFeeRule(rules, {
       examBoardId: reg.examBoardId,
       examSeriesId: reg.examSeriesId,
@@ -460,9 +478,7 @@ export async function buildFeeDetailsReport(
     });
 
     for (const reg of registrations) {
-      const entryType = resolveEntryTypeForWorkspace(
-        reg.registrationWindow.isLateRegistration ?? false,
-      );
+      const entryType = resolveRegEntryType(reg);
       const match = findMatchingFeeRule(rules, {
         examBoardId: reg.examBoardId,
         examSeriesId: reg.examSeriesId,
@@ -659,7 +675,7 @@ export async function buildFeeDashboardMetrics(): Promise<{
 }> {
   const openWindow = await prisma.registrationWindow.findFirst({
     where: { status: { in: ["OPEN", "CLOSED"] } },
-    orderBy: { endAt: "desc" },
+    orderBy: { registrationCloseAt: "desc" },
     select: { id: true, title: true },
   });
 

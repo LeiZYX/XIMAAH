@@ -2,12 +2,14 @@ import { RegistrationList } from "@/components/registrations/RegistrationList";
 import { PendingTeacherChangeRequests } from "@/components/registrations/PendingTeacherChangeRequests";
 import { AddRegistrationDropdown } from "@/components/registrations/AddRegistrationDropdown";
 import { RegistrationWorkspaceList } from "@/components/registrations/RegistrationWorkspaceList";
+import { RegistrationsRefreshProvider } from "@/components/registrations/registrations-refresh";
 import { RegistrationFeeBatchWidget } from "@/components/fees/RegistrationFeeBatchWidget";
 import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function ExamOfficeRegistrationsPage() {
   return (
-    <div className="space-y-6">
+    <RegistrationsRefreshProvider>
+      <div className="space-y-6">
       <PageHeader title="Registrations" description="View, adjust, and export student exam registrations." />
       <p className="text-sm">
         <a href="/exam-office/candidates" className="text-indigo-600 hover:underline">
@@ -39,6 +41,7 @@ export default function ExamOfficeRegistrationsPage() {
         apiPath="/api/exam-office/registrations"
         exportPath="/api/exam-office/registrations"
       />
-    </div>
+      </div>
+    </RegistrationsRefreshProvider>
   );
 }

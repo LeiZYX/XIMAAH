@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
+import { useRegistrationsRefresh } from "@/components/registrations/registrations-refresh";
 import {
   changeRequestTypeLabel,
   formatExamSessionSummary,
@@ -60,6 +61,7 @@ export function PendingTeacherChangeRequests({
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [rejectNote, setRejectNote] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const { bumpWorkspaceList } = useRegistrationsRefresh();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -98,6 +100,7 @@ export function PendingTeacherChangeRequests({
       setRejectingId(null);
       setRejectNote("");
       await load();
+      bumpWorkspaceList();
     } catch (reviewError) {
       setError(reviewError instanceof Error ? reviewError.message : "Could not review request");
     } finally {

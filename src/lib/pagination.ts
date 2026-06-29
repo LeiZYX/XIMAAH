@@ -1,4 +1,5 @@
 export const LIST_PAGE_SIZES = [50, 100] as const;
+export const TEACHER_STUDENT_PAGE_SIZES = [25, 50, 100] as const;
 
 export function parseListPagination(searchParams: URLSearchParams): {
   page: number;
@@ -9,6 +10,20 @@ export function parseListPagination(searchParams: URLSearchParams): {
   const pageSize = LIST_PAGE_SIZES.includes(rawSize as (typeof LIST_PAGE_SIZES)[number])
     ? rawSize
     : 50;
+  return { page, pageSize };
+}
+
+export function parseTeacherStudentPagination(searchParams: URLSearchParams): {
+  page: number;
+  pageSize: number;
+} {
+  const page = Math.max(1, Number(searchParams.get("page") ?? "1") || 1);
+  const rawSize = Number(searchParams.get("pageSize") ?? "25") || 25;
+  const pageSize = TEACHER_STUDENT_PAGE_SIZES.includes(
+    rawSize as (typeof TEACHER_STUDENT_PAGE_SIZES)[number],
+  )
+    ? rawSize
+    : 25;
   return { page, pageSize };
 }
 

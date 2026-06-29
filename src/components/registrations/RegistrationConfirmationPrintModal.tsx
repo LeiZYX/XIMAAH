@@ -196,7 +196,7 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
             <SummaryField label="Exam Board" value={group.boardSummary} />
             <SummaryField label="Registration Name" value={group.window.title || group.examSeries.name} />
             <SummaryField label="Exam Series" value={`${group.examSeries.name} (${group.examSeries.year})`} />
-            <SummaryField label="Registration Window" value={formatWindowRange(group.window.startAt, group.window.endAt)} />
+            <SummaryField label="Registration Window" value={formatWindowRange(group.window.studentRegistrationOpenAt, group.window.registrationCloseAt)} />
             <SummaryField label="Status" value="Locked" />
             <SummaryField label="Selected Exams" value={String(group.registrations.length)} />
             <SummaryField label="Locked On" value={lockedOn ? new Date(lockedOn).toLocaleString() : "—"} />

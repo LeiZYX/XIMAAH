@@ -404,20 +404,25 @@ async function main() {
   const closedEnd = new Date(now);
   closedEnd.setDate(closedEnd.getDate() - 14);
 
+  const studentClose = new Date(now);
+  studentClose.setDate(studentClose.getDate() + 14);
+
   await prisma.registrationWindow.upsert({
     where: { id: IDS.windowOpen },
     update: {
       status: "OPEN",
-      startAt: openStart,
-      endAt: openEnd,
+      studentRegistrationOpenAt: openStart,
+      studentRegistrationCloseAt: studentClose,
+      registrationCloseAt: openEnd,
     },
     create: {
       id: IDS.windowOpen,
       title: "Test Open Registration Window",
       examBoardId: pearson.id,
       examSeriesId: seriesPearson.id,
-      startAt: openStart,
-      endAt: openEnd,
+      studentRegistrationOpenAt: openStart,
+      studentRegistrationCloseAt: studentClose,
+      registrationCloseAt: openEnd,
       status: "OPEN",
       createdById: admin.id,
     },
@@ -427,20 +432,69 @@ async function main() {
     where: { id: IDS.windowClosed },
     update: {
       status: "CLOSED",
-      startAt: closedStart,
-      endAt: closedEnd,
+      studentRegistrationOpenAt: closedStart,
+      studentRegistrationCloseAt: closedEnd,
+      registrationCloseAt: closedEnd,
     },
     create: {
       id: IDS.windowClosed,
       title: "Test Closed Registration Window",
       examBoardId: pearson.id,
       examSeriesId: seriesPearson.id,
-      startAt: closedStart,
-      endAt: closedEnd,
+      studentRegistrationOpenAt: closedStart,
+      studentRegistrationCloseAt: closedEnd,
+      registrationCloseAt: closedEnd,
       status: "CLOSED",
       createdById: admin.id,
     },
   });
+
+  for (const [windowId, startAt, endAt, enableAll] of [
+    [IDS.windowOpen, openStart, openEnd, true],
+    [IDS.windowClosed, closedStart, closedEnd, false],
+  ] as const) {
+    const durationMs = endAt.getTime() - startAt.getTime();
+    const third = Math.floor(durationMs / 3);
+    const templates = [
+      { stageCode: "NORMAL" as const, stageName: "Normal", sequence: 1 },
+      { stageCode: "LATE" as const, stageName: "Late", sequence: 2 },
+      { stageCode: "HIGH_LATE" as const, stageName: "High Late", sequence: 3 },
+    ];
+
+    for (const [index, template] of templates.entries()) {
+      const stageStart =
+        index === 0 ? startAt : new Date(startAt.getTime() + third * index);
+      const stageEnd =
+        index === templates.length - 1
+          ? endAt
+          : new Date(startAt.getTime() + third * (index + 1) - 1);
+
+      await prisma.registrationFeeStage.upsert({
+        where: {
+          registrationWindowId_stageCode: {
+            registrationWindowId: windowId,
+            stageCode: template.stageCode,
+          },
+        },
+        update: {
+          stageName: template.stageName,
+          sequence: template.sequence,
+          startAt: stageStart,
+          endAt: stageEnd,
+          enabled: enableAll,
+        },
+        create: {
+          registrationWindowId: windowId,
+          stageCode: template.stageCode,
+          stageName: template.stageName,
+          sequence: template.sequence,
+          startAt: stageStart,
+          endAt: stageEnd,
+          enabled: enableAll,
+        },
+      });
+    }
+  }
 
   await prisma.teacherAssignment.upsert({
     where: {

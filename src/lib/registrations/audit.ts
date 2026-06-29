@@ -44,7 +44,7 @@ export async function createRegistrationAuditLog(
     candidateId?: string | null;
     studentId?: string | null;
     registrationId?: string | null;
-    examSessionId: string;
+    examSessionId: string | null;
     action: RegistrationAuditAction;
     performedById: string;
     performedByRole?: string | null;
@@ -57,6 +57,10 @@ export async function createRegistrationAuditLog(
     billingScope?: string | null;
     assessmentHubCandidateNumberSnapshot?: string | null;
     candidateTypeSnapshot?: string | null;
+    registrationStageId?: string | null;
+    feeStageId?: string | null;
+    entryType?: string | null;
+    registrationWindowId?: string | null;
   },
   client: AuditClient = prisma,
 ) {
@@ -87,6 +91,9 @@ export async function createRegistrationAuditLog(
     data.assessmentHubCandidateNumberSnapshot =
       params.assessmentHubCandidateNumberSnapshot ?? null;
     data.candidateTypeSnapshot = params.candidateTypeSnapshot ?? null;
+    data.feeStageId = params.feeStageId ?? params.registrationStageId ?? null;
+    data.entryType = params.entryType ?? null;
+    data.registrationWindowId = params.registrationWindowId ?? null;
   }
 
   return client.registrationAuditLog.create({

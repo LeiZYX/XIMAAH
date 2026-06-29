@@ -555,12 +555,17 @@ async function main() {
     },
   });
 
+  const windowTiming = {
+    studentRegistrationOpenAt: new Date("2026-01-01"),
+    studentRegistrationCloseAt: new Date("2026-09-30"),
+    registrationCloseAt: new Date("2026-12-31"),
+  };
+
   await prisma.registrationWindow.upsert({
     where: { id: "seed-window-aqa-summer" },
     update: {
       title: "AQA Summer 2026 Registration",
-      startAt: new Date("2026-01-01"),
-      endAt: new Date("2026-12-31"),
+      ...windowTiming,
       status: "OPEN",
     },
     create: {
@@ -568,8 +573,7 @@ async function main() {
       examBoardId: aqa.id,
       examSeriesId: aqaSummer2026.id,
       title: "AQA Summer 2026 Registration",
-      startAt: new Date("2026-01-01"),
-      endAt: new Date("2026-12-31"),
+      ...windowTiming,
       status: "OPEN",
       createdById: adminUser.id,
     },
@@ -579,8 +583,7 @@ async function main() {
     where: { id: "seed-window-cie-june" },
     update: {
       title: "Cambridge June 2026 Registration",
-      startAt: new Date("2026-01-01"),
-      endAt: new Date("2026-12-31"),
+      ...windowTiming,
       status: "OPEN",
     },
     create: {
@@ -588,8 +591,7 @@ async function main() {
       examBoardId: cie.id,
       examSeriesId: cieJune2026.id,
       title: "Cambridge June 2026 Registration",
-      startAt: new Date("2026-01-01"),
-      endAt: new Date("2026-12-31"),
+      ...windowTiming,
       status: "OPEN",
       createdById: adminUser.id,
     },
@@ -599,8 +601,7 @@ async function main() {
     where: { id: "seed-window-edexcel-summer" },
     update: {
       title: "Edexcel Summer 2026 Registration",
-      startAt: new Date("2026-01-01"),
-      endAt: new Date("2026-12-31"),
+      ...windowTiming,
       status: "OPEN",
     },
     create: {
@@ -608,12 +609,63 @@ async function main() {
       examBoardId: edexcel.id,
       examSeriesId: edexcelSummer2026.id,
       title: "Edexcel Summer 2026 Registration",
-      startAt: new Date("2026-01-01"),
-      endAt: new Date("2026-12-31"),
+      ...windowTiming,
       status: "OPEN",
       createdById: adminUser.id,
     },
   });
+
+  const seedWindows = [
+    { id: "seed-window-aqa-summer", ...windowTiming },
+    { id: "seed-window-cie-june", ...windowTiming },
+    { id: "seed-window-edexcel-summer", ...windowTiming },
+  ];
+
+  for (const window of seedWindows) {
+    const durationMs = window.registrationCloseAt.getTime() - window.studentRegistrationOpenAt.getTime();
+    const third = Math.floor(durationMs / 3);
+    const templates = [
+      { stageCode: "NORMAL" as const, stageName: "Normal", sequence: 1, enabled: true },
+      { stageCode: "LATE" as const, stageName: "Late", sequence: 2, enabled: true },
+      { stageCode: "HIGH_LATE" as const, stageName: "High Late", sequence: 3, enabled: true },
+    ];
+
+    for (const [index, template] of templates.entries()) {
+      const stageStart =
+        index === 0
+          ? window.studentRegistrationOpenAt
+          : new Date(window.studentRegistrationOpenAt.getTime() + third * index);
+      const stageEnd =
+        index === templates.length - 1
+          ? window.registrationCloseAt
+          : new Date(window.studentRegistrationOpenAt.getTime() + third * (index + 1) - 1);
+
+      await prisma.registrationFeeStage.upsert({
+        where: {
+          registrationWindowId_stageCode: {
+            registrationWindowId: window.id,
+            stageCode: template.stageCode,
+          },
+        },
+        update: {
+          stageName: template.stageName,
+          sequence: template.sequence,
+          startAt: stageStart,
+          endAt: stageEnd,
+          enabled: template.enabled,
+        },
+        create: {
+          registrationWindowId: window.id,
+          stageCode: template.stageCode,
+          stageName: template.stageName,
+          sequence: template.sequence,
+          startAt: stageStart,
+          endAt: stageEnd,
+          enabled: template.enabled,
+        },
+      });
+    }
+  }
 
   console.log("Seed complete: exam boards, sample users, and registration windows.");
   console.log(`Admin: admin / ${adminEmail} — password from ADMIN_PASSWORD (default admin123)`);

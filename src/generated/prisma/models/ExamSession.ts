@@ -561,10 +561,12 @@ export type ExamSessionCreateNestedOneWithoutRegistrationAuditLogsInput = {
   connect?: Prisma.ExamSessionWhereUniqueInput
 }
 
-export type ExamSessionUpdateOneRequiredWithoutRegistrationAuditLogsNestedInput = {
+export type ExamSessionUpdateOneWithoutRegistrationAuditLogsNestedInput = {
   create?: Prisma.XOR<Prisma.ExamSessionCreateWithoutRegistrationAuditLogsInput, Prisma.ExamSessionUncheckedCreateWithoutRegistrationAuditLogsInput>
   connectOrCreate?: Prisma.ExamSessionCreateOrConnectWithoutRegistrationAuditLogsInput
   upsert?: Prisma.ExamSessionUpsertWithoutRegistrationAuditLogsInput
+  disconnect?: Prisma.ExamSessionWhereInput | boolean
+  delete?: Prisma.ExamSessionWhereInput | boolean
   connect?: Prisma.ExamSessionWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ExamSessionUpdateToOneWithWhereWithoutRegistrationAuditLogsInput, Prisma.ExamSessionUpdateWithoutRegistrationAuditLogsInput>, Prisma.ExamSessionUncheckedUpdateWithoutRegistrationAuditLogsInput>
 }

@@ -391,6 +391,7 @@ export const ModelName = {
   CandidateExamIdentity: 'CandidateExamIdentity',
   TeacherAssignment: 'TeacherAssignment',
   RegistrationWindow: 'RegistrationWindow',
+  RegistrationFeeStage: 'RegistrationFeeStage',
   RegistrationWorkspace: 'RegistrationWorkspace',
   StudentExamRegistration: 'StudentExamRegistration',
   RegistrationAuditLog: 'RegistrationAuditLog',
@@ -426,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "passwordResetToken" | "studentProfile" | "candidate" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "feeStatementItem" | "feeAuditLog"
+    modelProps: "user" | "passwordResetToken" | "studentProfile" | "candidate" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "feeStatementItem" | "feeAuditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -889,6 +890,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.RegistrationWindowCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.RegistrationWindowCountAggregateOutputType> | number
+        }
+      }
+    }
+    RegistrationFeeStage: {
+      payload: Prisma.$RegistrationFeeStagePayload<ExtArgs>
+      fields: Prisma.RegistrationFeeStageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RegistrationFeeStageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationFeeStagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RegistrationFeeStageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationFeeStagePayload>
+        }
+        findFirst: {
+          args: Prisma.RegistrationFeeStageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationFeeStagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RegistrationFeeStageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationFeeStagePayload>
+        }
+        findMany: {
+          args: Prisma.RegistrationFeeStageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationFeeStagePayload>[]
+        }
+        create: {
+          args: Prisma.RegistrationFeeStageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationFeeStagePayload>
+        }
+        createMany: {
+          args: Prisma.RegistrationFeeStageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.RegistrationFeeStageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationFeeStagePayload>
+        }
+        update: {
+          args: Prisma.RegistrationFeeStageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationFeeStagePayload>
+        }
+        deleteMany: {
+          args: Prisma.RegistrationFeeStageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RegistrationFeeStageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.RegistrationFeeStageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RegistrationFeeStagePayload>
+        }
+        aggregate: {
+          args: Prisma.RegistrationFeeStageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRegistrationFeeStage>
+        }
+        groupBy: {
+          args: Prisma.RegistrationFeeStageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RegistrationFeeStageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RegistrationFeeStageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RegistrationFeeStageCountAggregateOutputType> | number
         }
       }
     }
@@ -2361,15 +2428,37 @@ export const RegistrationWindowScalarFieldEnum = {
   examBoardId: 'examBoardId',
   examSeriesId: 'examSeriesId',
   title: 'title',
-  startAt: 'startAt',
-  endAt: 'endAt',
+  studentRegistrationOpenAt: 'studentRegistrationOpenAt',
+  studentRegistrationCloseAt: 'studentRegistrationCloseAt',
+  registrationCloseAt: 'registrationCloseAt',
   status: 'status',
+  studentSelfRegistrationEnabled: 'studentSelfRegistrationEnabled',
+  eoAssistedRegistrationEnabled: 'eoAssistedRegistrationEnabled',
+  officeOnlyRegistrationEnabled: 'officeOnlyRegistrationEnabled',
+  postLockAdjustmentEnabled: 'postLockAdjustmentEnabled',
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type RegistrationWindowScalarFieldEnum = (typeof RegistrationWindowScalarFieldEnum)[keyof typeof RegistrationWindowScalarFieldEnum]
+
+
+export const RegistrationFeeStageScalarFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  stageCode: 'stageCode',
+  stageName: 'stageName',
+  sequence: 'sequence',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  enabled: 'enabled',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RegistrationFeeStageScalarFieldEnum = (typeof RegistrationFeeStageScalarFieldEnum)[keyof typeof RegistrationFeeStageScalarFieldEnum]
 
 
 export const RegistrationWorkspaceScalarFieldEnum = {
@@ -2385,6 +2474,10 @@ export const RegistrationWorkspaceScalarFieldEnum = {
   lastAdjustmentSummary: 'lastAdjustmentSummary',
   hasPostLockAdjustment: 'hasPostLockAdjustment',
   isLateRegistration: 'isLateRegistration',
+  entryType: 'entryType',
+  feeStageId: 'feeStageId',
+  entryTypeOverridden: 'entryTypeOverridden',
+  entryTypeOverrideReason: 'entryTypeOverrideReason',
   registrationSource: 'registrationSource',
   visibility: 'visibility',
   billingScope: 'billingScope',
@@ -2424,6 +2517,10 @@ export const StudentExamRegistrationScalarFieldEnum = {
   addedByRole: 'addedByRole',
   addedAt: 'addedAt',
   reason: 'reason',
+  entryType: 'entryType',
+  feeStageId: 'feeStageId',
+  entryTypeOverridden: 'entryTypeOverridden',
+  entryTypeOverrideReason: 'entryTypeOverrideReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2434,14 +2531,17 @@ export type StudentExamRegistrationScalarFieldEnum = (typeof StudentExamRegistra
 export const RegistrationAuditLogScalarFieldEnum = {
   id: 'id',
   registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
   candidateId: 'candidateId',
   studentId: 'studentId',
   registrationId: 'registrationId',
+  feeStageId: 'feeStageId',
   examSessionId: 'examSessionId',
   action: 'action',
   performedById: 'performedById',
   performedByRole: 'performedByRole',
   performedAt: 'performedAt',
+  entryType: 'entryType',
   beforeValue: 'beforeValue',
   afterValue: 'afterValue',
   reason: 'reason',
@@ -2865,6 +2965,16 @@ export const RegistrationWindowOrderByRelevanceFieldEnum = {
 export type RegistrationWindowOrderByRelevanceFieldEnum = (typeof RegistrationWindowOrderByRelevanceFieldEnum)[keyof typeof RegistrationWindowOrderByRelevanceFieldEnum]
 
 
+export const RegistrationFeeStageOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  stageName: 'stageName',
+  notes: 'notes'
+} as const
+
+export type RegistrationFeeStageOrderByRelevanceFieldEnum = (typeof RegistrationFeeStageOrderByRelevanceFieldEnum)[keyof typeof RegistrationFeeStageOrderByRelevanceFieldEnum]
+
+
 export const RegistrationWorkspaceOrderByRelevanceFieldEnum = {
   id: 'id',
   candidateId: 'candidateId',
@@ -2872,7 +2982,9 @@ export const RegistrationWorkspaceOrderByRelevanceFieldEnum = {
   registrationWindowId: 'registrationWindowId',
   lastAdjustedByUserId: 'lastAdjustedByUserId',
   lastAdjustmentReason: 'lastAdjustmentReason',
-  lastAdjustmentSummary: 'lastAdjustmentSummary'
+  lastAdjustmentSummary: 'lastAdjustmentSummary',
+  feeStageId: 'feeStageId',
+  entryTypeOverrideReason: 'entryTypeOverrideReason'
 } as const
 
 export type RegistrationWorkspaceOrderByRelevanceFieldEnum = (typeof RegistrationWorkspaceOrderByRelevanceFieldEnum)[keyof typeof RegistrationWorkspaceOrderByRelevanceFieldEnum]
@@ -2897,7 +3009,9 @@ export const StudentExamRegistrationOrderByRelevanceFieldEnum = {
   phoneSnapshot: 'phoneSnapshot',
   assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
   addedByUserId: 'addedByUserId',
-  reason: 'reason'
+  reason: 'reason',
+  feeStageId: 'feeStageId',
+  entryTypeOverrideReason: 'entryTypeOverrideReason'
 } as const
 
 export type StudentExamRegistrationOrderByRelevanceFieldEnum = (typeof StudentExamRegistrationOrderByRelevanceFieldEnum)[keyof typeof StudentExamRegistrationOrderByRelevanceFieldEnum]
@@ -2906,9 +3020,11 @@ export type StudentExamRegistrationOrderByRelevanceFieldEnum = (typeof StudentEx
 export const RegistrationAuditLogOrderByRelevanceFieldEnum = {
   id: 'id',
   registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
   candidateId: 'candidateId',
   studentId: 'studentId',
   registrationId: 'registrationId',
+  feeStageId: 'feeStageId',
   examSessionId: 'examSessionId',
   performedById: 'performedById',
   beforeValue: 'beforeValue',
@@ -3213,6 +3329,13 @@ export type EnumRegistrationWindowStatusFieldRefInput<$PrismaModel> = FieldRefIn
 
 
 /**
+ * Reference to a field of type 'FeeEntryType'
+ */
+export type EnumFeeEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeEntryType'>
+    
+
+
+/**
  * Reference to a field of type 'RegistrationSource'
  */
 export type EnumRegistrationSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationSource'>
@@ -3279,13 +3402,6 @@ export type EnumResourceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'SourceDocumentType'
  */
 export type EnumSourceDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SourceDocumentType'>
-    
-
-
-/**
- * Reference to a field of type 'FeeEntryType'
- */
-export type EnumFeeEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeEntryType'>
     
 
 
@@ -3454,6 +3570,7 @@ export type GlobalOmitConfig = {
   candidateExamIdentity?: Prisma.CandidateExamIdentityOmit
   teacherAssignment?: Prisma.TeacherAssignmentOmit
   registrationWindow?: Prisma.RegistrationWindowOmit
+  registrationFeeStage?: Prisma.RegistrationFeeStageOmit
   registrationWorkspace?: Prisma.RegistrationWorkspaceOmit
   studentExamRegistration?: Prisma.StudentExamRegistrationOmit
   registrationAuditLog?: Prisma.RegistrationAuditLogOmit

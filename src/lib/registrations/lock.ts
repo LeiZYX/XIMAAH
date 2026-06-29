@@ -5,7 +5,11 @@ import {
   createRegistrationAuditLog,
   registrationAuditSnapshot,
 } from "@/lib/registrations/audit";
-import { canRegisterInWindow } from "@/lib/registrations/window";
+import {
+  canStudentEditRegistrationList,
+  isRegistrationWindowOpenForStaff,
+  isStudentRegistrationPeriodClosed,
+} from "@/lib/registrations/window";
 import { hasWorkspaceSchema } from "@/lib/registrations/schema-capabilities";
 import { RegistrationError } from "@/lib/registrations/errors";
 
@@ -25,7 +29,12 @@ async function resolveLockPerformer(windowId: string): Promise<string> {
   throw new RegistrationError("Cannot resolve audit performer for lock operation", 500);
 }
 
-export async function lockRegistrationsForWindow(windowId: string, performedById?: string) {
+export async function lockRegistrationsForWindow(
+  windowId: string,
+  performedById?: string,
+  note = "Registration window closed",
+  auditAction: RegistrationAuditAction = RegistrationAuditAction.SYSTEM_LOCK,
+) {
   const performerId = performedById ?? (await resolveLockPerformer(windowId));
   const actives = await prisma.studentExamRegistration.findMany({
     where: {
@@ -94,13 +103,12 @@ export async function lockRegistrationsForWindow(windowId: string, performedById
       await createRegistrationAuditLog(
         {
           registrationWorkspaceId: workspaceId,
+          registrationWindowId: windowId,
           candidateId: registration.candidateId,
           studentId: registration.studentId,
           registrationId: registration.id,
           examSessionId: registration.examSessionId,
-          action: workspaceReady
-            ? RegistrationAuditAction.SYSTEM_LOCK
-            : RegistrationAuditAction.LOCK,
+          action: workspaceReady ? auditAction : RegistrationAuditAction.LOCK,
           performedById: performerId,
           performedByRole: workspaceReady ? "ADMIN" : undefined,
           assessmentHubCandidateNumberSnapshot:
@@ -108,7 +116,7 @@ export async function lockRegistrationsForWindow(windowId: string, performedById
           candidateTypeSnapshot: registration.candidateTypeSnapshot,
           beforeValue: registrationAuditSnapshot(registration),
           afterValue: registrationAuditSnapshot(updated),
-          note: "Registration window closed",
+          note,
         },
         tx,
       );
@@ -118,26 +126,63 @@ export async function lockRegistrationsForWindow(windowId: string, performedById
   return actives.length;
 }
 
-export async function ensureExpiredWindowsLocked() {
-  const now = new Date();
-
+/** Lock student lists once student self-registration closes. */
+export async function ensurePostStudentRegistrationCloseLocks(now = new Date()) {
   const windows = await prisma.registrationWindow.findMany({
-    where: {
-      OR: [{ status: "CLOSED" }, { status: "OPEN", endAt: { lt: now } }],
-    },
+    where: { status: "OPEN" },
   });
 
   let lockedCount = 0;
+  for (const window of windows) {
+    if (!isStudentRegistrationPeriodClosed(window, now)) continue;
+    if (now <= window.studentRegistrationCloseAt) continue;
+    lockedCount += await lockRegistrationsForWindow(
+      window.id,
+      undefined,
+      "Student registration closed — student registration list locked",
+      RegistrationAuditAction.STUDENT_REGISTRATION_CLOSED,
+    );
+  }
+  return lockedCount;
+}
+
+/** @deprecated Use ensurePostStudentRegistrationCloseLocks */
+export const ensurePostNormalEntryLocks = ensurePostStudentRegistrationCloseLocks;
+
+export async function ensureExpiredWindowsLocked() {
+  const now = new Date();
+
+  let lockedCount = await ensurePostStudentRegistrationCloseLocks(now);
+
+  const windows = await prisma.registrationWindow.findMany({
+    where: {
+      OR: [{ status: "CLOSED" }, { status: "OPEN", registrationCloseAt: { lt: now } }],
+    },
+  });
 
   for (const window of windows) {
-    if (window.status === "OPEN" && window.endAt < now) {
+    if (window.status === "OPEN" && window.registrationCloseAt < now) {
       await prisma.registrationWindow.update({
         where: { id: window.id },
         data: { status: "CLOSED" },
       });
+
+      await createRegistrationAuditLog({
+        registrationWindowId: window.id,
+        performedById: window.createdById ?? (await resolveLockPerformer(window.id)),
+        performedByRole: "ADMIN",
+        action: RegistrationAuditAction.REGISTRATION_WINDOW_CLOSED,
+        examSessionId: "",
+        note: "Registration window reached registration close time",
+      });
     }
 
-    lockedCount += await lockRegistrationsForWindow(window.id);
+    lockedCount += await lockRegistrationsForWindow(
+      window.id,
+      undefined,
+      "Registration window closed",
+      RegistrationAuditAction.REGISTRATION_WINDOW_CLOSED,
+    );
   }
 
   return lockedCount;
@@ -145,11 +190,29 @@ export async function ensureExpiredWindowsLocked() {
 
 export function isStudentEditableRegistration(
   registration: { status: string },
-  window: { status: RegistrationWindowStatus; startAt: Date; endAt: Date },
+  window: {
+    status: RegistrationWindowStatus;
+    studentRegistrationOpenAt: Date;
+    studentRegistrationCloseAt: Date;
+    registrationCloseAt: Date;
+    studentSelfRegistrationEnabled?: boolean;
+  },
   now = new Date(),
 ): boolean {
   return (
     registration.status === RegistrationStatus.ACTIVE &&
-    canRegisterInWindow(window, now)
+    canStudentEditRegistrationList(window, [], now)
   );
+}
+
+export function isStaffRegistrationAllowed(
+  window: {
+    status: RegistrationWindowStatus;
+    studentRegistrationOpenAt: Date;
+    studentRegistrationCloseAt: Date;
+    registrationCloseAt: Date;
+  },
+  now = new Date(),
+): boolean {
+  return isRegistrationWindowOpenForStaff(window, now);
 }

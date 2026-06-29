@@ -44,6 +44,7 @@ enum RegistrationWindowStatus {
   DRAFT
   OPEN
   CLOSED
+  ARCHIVED
 }
 
 enum RegistrationStatus {
@@ -111,6 +112,19 @@ enum RegistrationAuditAction {
   ADMIN_POST_LOCK_ADJUSTMENT
   STUDENT_REGISTRATION_SUBMITTED
   EXTERNAL_CANDIDATE_REGISTRATION_CREATED
+  REGISTRATION_STAGE_CREATED
+  REGISTRATION_STAGE_UPDATED
+  REGISTRATION_STAGE_DISABLED
+  FEE_STAGE_CREATED
+  FEE_STAGE_UPDATED
+  STUDENT_REGISTRATION_OPENED
+  STUDENT_REGISTRATION_CLOSED
+  REGISTRATION_WINDOW_CLOSED
+  ENTRY_TYPE_AUTO_ASSIGNED
+  ENTRY_TYPE_OVERRIDDEN
+  ENTRY_TYPE_DEFAULTED_TO_NORMAL
+  POST_STUDENT_CLOSE_ADJUSTMENT
+  POST_WINDOW_CLOSE_OVERRIDE
 }
 
 enum RegistrationChangeRequestType {
@@ -346,9 +360,14 @@ model RegistrationWindow {
   examSeriesId String
   examSeries   ExamSeries               @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
   title        String
-  startAt      DateTime
-  endAt        DateTime
+  studentRegistrationOpenAt  DateTime
+  studentRegistrationCloseAt DateTime
+  registrationCloseAt        DateTime
   status       RegistrationWindowStatus @default(DRAFT)
+  studentSelfRegistrationEnabled Boolean @default(true)
+  eoAssistedRegistrationEnabled  Boolean @default(true)
+  officeOnlyRegistrationEnabled  Boolean @default(true)
+  postLockAdjustmentEnabled      Boolean @default(true)
   createdById  String?
   createdBy    User?                    @relation("RegistrationWindowCreator", fields: [createdById], references: [id], onDelete: SetNull)
   createdAt    DateTime                 @default(now())
@@ -357,6 +376,8 @@ model RegistrationWindow {
   registrations StudentExamRegistration[]
   workspaces    RegistrationWorkspace[]
   changeRequests RegistrationChangeRequest[]
+  feeStages     RegistrationFeeStage[]
+  registrationAuditLogs RegistrationAuditLog[]
   feeRules       FeeRule[]
   exchangeRates  ExchangeRate[]
   feeStatements  FeeStatement[]
@@ -365,7 +386,31 @@ model RegistrationWindow {
   @@index([examBoardId])
   @@index([examSeriesId])
   @@index([status])
-  @@index([startAt, endAt])
+  @@index([studentRegistrationOpenAt, studentRegistrationCloseAt, registrationCloseAt], map: "RegistrationWindow_timing_idx")
+}
+
+model RegistrationFeeStage {
+  id                   String           @id @default(cuid())
+  registrationWindowId String
+  registrationWindow   RegistrationWindow @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  stageCode            FeeEntryType
+  stageName            String
+  sequence             Int
+  startAt              DateTime
+  endAt                DateTime
+  enabled              Boolean          @default(true)
+  notes                String?          @db.Text
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  workspaces    RegistrationWorkspace[]
+  registrations StudentExamRegistration[]
+  auditLogs     RegistrationAuditLog[]
+
+  @@unique([registrationWindowId, stageCode])
+  @@index([registrationWindowId])
+  @@index([enabled])
+  @@index([sequence])
 }
 
 model RegistrationWorkspace {
@@ -386,6 +431,11 @@ model RegistrationWorkspace {
   lastAdjustmentSummary String?   @db.Text
   hasPostLockAdjustment Boolean   @default(false)
   isLateRegistration    Boolean   @default(false)
+  entryType             FeeEntryType @default(NORMAL)
+  feeStageId            String?
+  feeStage              RegistrationFeeStage? @relation(fields: [feeStageId], references: [id], onDelete: SetNull)
+  entryTypeOverridden   Boolean   @default(false)
+  entryTypeOverrideReason String? @db.Text
   registrationSource    RegistrationSource     @default(STUDENT_SUBMITTED)
   visibility            RegistrationVisibility @default(STUDENT_AND_TEACHER)
   billingScope          BillingScope           @default(NORMAL_BILLING)
@@ -407,6 +457,8 @@ model RegistrationWorkspace {
   @@index([registrationSource])
   @@index([visibility])
   @@index([billingScope])
+  @@index([entryType])
+  @@index([feeStageId])
 }
 
 model StudentExamRegistration {
@@ -450,6 +502,11 @@ model StudentExamRegistration {
   addedByRole        UserRole?
   addedAt            DateTime?
   reason             String?   @db.Text
+  entryType          FeeEntryType @default(NORMAL)
+  feeStageId         String?
+  feeStage           RegistrationFeeStage? @relation(fields: [feeStageId], references: [id], onDelete: SetNull)
+  entryTypeOverridden Boolean  @default(false)
+  entryTypeOverrideReason String? @db.Text
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
 
@@ -471,25 +528,32 @@ model StudentExamRegistration {
   @@index([billingScope])
   @@index([gradeSnapshot, classNameSnapshot])
   @@index([studentNoSnapshot])
+  @@index([entryType])
+  @@index([feeStageId])
 }
 
 model RegistrationAuditLog {
   id                      String                  @id @default(cuid())
   registrationWorkspaceId String?
   registrationWorkspace   RegistrationWorkspace?  @relation(fields: [registrationWorkspaceId], references: [id], onDelete: SetNull)
+  registrationWindowId    String?
+  registrationWindow      RegistrationWindow?     @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
   candidateId             String?
   candidate               Candidate?              @relation(fields: [candidateId], references: [id], onDelete: Cascade)
   studentId               String?
   student                 User?                   @relation("RegistrationAuditStudent", fields: [studentId], references: [id], onDelete: Cascade)
   registrationId          String?
   registration            StudentExamRegistration? @relation(fields: [registrationId], references: [id], onDelete: SetNull)
-  examSessionId           String
-  examSession             ExamSession             @relation(fields: [examSessionId], references: [id], onDelete: Cascade)
+  feeStageId              String?
+  feeStage                RegistrationFeeStage?   @relation(fields: [feeStageId], references: [id], onDelete: SetNull)
+  examSessionId           String?
+  examSession             ExamSession?            @relation(fields: [examSessionId], references: [id], onDelete: Cascade)
   action                  RegistrationAuditAction
   performedById             String
   performedBy               User                    @relation("RegistrationAuditPerformer", fields: [performedById], references: [id], onDelete: Cascade)
   performedByRole           UserRole?
   performedAt               DateTime                @default(now())
+  entryType                 FeeEntryType?
   beforeValue               String?   @db.Text
   afterValue                String?   @db.Text
   reason                    String?   @db.Text
@@ -502,9 +566,11 @@ model RegistrationAuditLog {
   createdAt                 DateTime                @default(now())
 
   @@index([registrationWorkspaceId])
+  @@index([registrationWindowId])
   @@index([candidateId])
   @@index([studentId])
   @@index([registrationId])
+  @@index([feeStageId])
   @@index([examSessionId])
   @@index([performedById])
   @@index([performedAt])

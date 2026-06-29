@@ -1,7 +1,7 @@
 import type { FeeStatementDisplayCurrency } from "@/generated/prisma/enums";
 import { calculateFeeAmounts } from "@/lib/fees/calculate";
 import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-currency";
-import { findMatchingFeeRule, resolveEntryTypeForWorkspace } from "@/lib/fees/match";
+import { findMatchingFeeRule, resolveEntryTypeForRegistration } from "@/lib/fees/match";
 import type {
   CalculatedFeeLine,
   ExchangeRateRecord,
@@ -61,11 +61,11 @@ export async function validateWorkspaceFees(workspaceId: string): Promise<{
     orderBy: { effectiveDate: "desc" },
   });
 
-  const entryType = resolveEntryTypeForWorkspace(workspace.isLateRegistration);
   const warnings: MissingFeeRuleWarning[] = [];
 
   for (const reg of workspace.registrations) {
     const qualificationId = reg.subject.qualificationId;
+    const entryType = resolveEntryTypeForRegistration(reg, workspace);
     const match = findMatchingFeeRule(rules, {
       examBoardId: reg.examBoardId,
       examSeriesId: reg.examSeriesId,
@@ -137,13 +137,13 @@ export async function buildFeeLinesForWorkspace(
     orderBy: { effectiveDate: "desc" },
   });
 
-  const entryType = resolveEntryTypeForWorkspace(workspace.isLateRegistration);
   const lines: CalculatedFeeLine[] = [];
   const warnings: MissingFeeRuleWarning[] = [];
   let exchangeRateSnapshot: number | null = null;
 
   for (const reg of workspace.registrations) {
     const qualificationId = reg.subject.qualificationId;
+    const entryType = resolveEntryTypeForRegistration(reg, workspace);
     const rule = findMatchingFeeRule(rules, {
       examBoardId: reg.examBoardId,
       examSeriesId: reg.examSeriesId,

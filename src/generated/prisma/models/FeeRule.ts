@@ -1066,10 +1066,6 @@ export type FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput = {
   deleteMany?: Prisma.FeeRuleScalarWhereInput | Prisma.FeeRuleScalarWhereInput[]
 }
 
-export type EnumFeeEntryTypeFieldUpdateOperationsInput = {
-  set?: $Enums.FeeEntryType
-}
-
 export type EnumFeeCurrencyFieldUpdateOperationsInput = {
   set?: $Enums.FeeCurrency
 }

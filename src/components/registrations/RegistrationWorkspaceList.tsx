@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
+import { useRegistrationsRefresh } from "@/components/registrations/registrations-refresh";
 import { formatAdjusterLabel } from "@/lib/registrations/workspace-display";
 
 interface WorkspaceRow {
@@ -31,13 +32,24 @@ export function RegistrationWorkspaceList({
 }) {
   const [rows, setRows] = useState<WorkspaceRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const { workspaceRefreshKey } = useRegistrationsRefresh();
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${apiPath}?lockedOnly=true`);
+      const data = await response.json();
+      setRows(response.ok && Array.isArray(data) ? data : []);
+    } catch {
+      setRows([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [apiPath]);
 
   useEffect(() => {
-    fetch(`${apiPath}?lockedOnly=true`)
-      .then((r) => r.json())
-      .then((data) => setRows(Array.isArray(data) ? data : []))
-      .finally(() => setLoading(false));
-  }, [apiPath]);
+    void load();
+  }, [load, workspaceRefreshKey]);
 
   const pendingCount = (row: WorkspaceRow) =>
     row.changeRequests.filter((request) => request.status === "PENDING").length;

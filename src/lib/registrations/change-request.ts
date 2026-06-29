@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 import { applyPostLockAdjustment } from "@/lib/registrations/adjustment";
 import { createRegistrationAuditLog } from "@/lib/registrations/audit";
 import { RegistrationError } from "@/lib/registrations/errors";
+import { canTeacherSubmitChangeRequest, isStudentRegistrationPeriodClosed } from "@/lib/registrations/window";
 import {
   applyLateRegistration,
   assertLateRegistrationAllowed,
@@ -109,6 +110,7 @@ async function assertTeacherCanRequestChange(teacherId: string, registrationWork
     prisma.registrationWorkspace.findUnique({
       where: { id: registrationWorkspaceId },
       include: {
+        registrationWindow: true,
         registrations: {
           where: { status: { in: [RegistrationStatus.ACTIVE, RegistrationStatus.LOCKED] } },
           include: { subject: { select: { name: true } } },
@@ -121,11 +123,16 @@ async function assertTeacherCanRequestChange(teacherId: string, registrationWork
     throw new RegistrationError("Registration workspace not found", 404);
   }
 
+  if (!canTeacherSubmitChangeRequest(workspace.registrationWindow)) {
+    throw new RegistrationError("Registration window is closed for teacher change requests", 400);
+  }
+
   const isLocked =
     Boolean(workspace.lockedAt) ||
-    workspace.registrations.some((registration) => registration.status === RegistrationStatus.LOCKED);
+    workspace.registrations.some((registration) => registration.status === RegistrationStatus.LOCKED) ||
+    isStudentRegistrationPeriodClosed(workspace.registrationWindow);
   if (!isLocked) {
-    throw new RegistrationError("Change requests are only allowed for locked registrations", 400);
+    throw new RegistrationError("Change requests are only allowed after student registration closes", 400);
   }
 
   const assignedSubjects = new Set(
