@@ -4,6 +4,9 @@ import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { createSessionToken, getSessionUser, sessionCookieOptions } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(request: NextRequest) {
   const auth = await getSessionUser();
   if (!auth) return jsonError("Authentication required", 401);

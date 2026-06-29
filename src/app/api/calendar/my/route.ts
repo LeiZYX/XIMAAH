@@ -3,6 +3,9 @@ import { jsonError } from "@/lib/api";
 import { buildCalendarEvents, parseCalendarSearchParams } from "@/lib/calendar/build-events";
 import { requireAuth } from "@/lib/auth/require-auth";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   const auth = await requireAuth(["STUDENT"]);
   if (auth.error) return auth.error;

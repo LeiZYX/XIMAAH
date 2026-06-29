@@ -1,5 +1,8 @@
 import { RegistrationWindowAuditLog } from "@/components/registrations/RegistrationWindowAuditLog";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function AdminRegistrationWindowAuditLogPage({
   params,
 }: {

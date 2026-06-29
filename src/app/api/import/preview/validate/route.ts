@@ -8,6 +8,9 @@ import {
 } from "@/lib/data-processor/client";
 import type { ImportPreviewSource, TimetableMetaDto, TimetableRowDto } from "@/lib/data-processor/types";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {

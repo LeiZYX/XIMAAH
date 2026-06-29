@@ -4,6 +4,9 @@ import { createPasswordResetToken, sendPasswordResetEmail } from "@/lib/auth/pas
 import { equalsFilter } from "@/lib/db/string-filters";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(request: NextRequest) {
   const body = await request.json();
   const data = parseJsonBody<{ email: string }>(body, ["email"]);

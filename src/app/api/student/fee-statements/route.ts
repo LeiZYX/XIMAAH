@@ -4,6 +4,9 @@ import { requireAuth } from "@/lib/auth/require-auth";
 import { canViewStudentFeeStatements } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   const auth = await requireAuth(["STUDENT"]);
   if (auth.error) return auth.error;

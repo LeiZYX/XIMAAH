@@ -7,6 +7,9 @@ import {
   RegistrationError,
 } from "@/lib/registrations/service";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(request: NextRequest) {
   const auth = await requireAuth(["STUDENT"]);
   if (auth.error) return auth.error;

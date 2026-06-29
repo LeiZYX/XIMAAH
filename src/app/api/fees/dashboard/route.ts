@@ -4,6 +4,9 @@ import { requireAuth } from "@/lib/auth/require-auth";
 import { canGenerateFeeStatements } from "@/lib/auth/permissions";
 import { buildFeeDashboardMetrics } from "@/lib/fees/reporting";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
   if (auth.error) return auth.error;

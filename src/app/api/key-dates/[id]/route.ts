@@ -3,6 +3,9 @@ import { KeyDateType } from "@/generated/prisma/client";
 import { jsonError, parseDate, parseJsonBody } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type RouteContext = { params: Promise<{ id: string }> };
 
 const KEY_DATE_TYPES = new Set<string>(Object.values(KeyDateType));

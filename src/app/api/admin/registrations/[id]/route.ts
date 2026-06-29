@@ -5,6 +5,9 @@ import { applyPostLockAdjustment } from "@/lib/registrations/adjustment";
 import { RegistrationError } from "@/lib/registrations/errors";
 import { getRegistrationWorkspaceById } from "@/lib/registrations/workspace";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },

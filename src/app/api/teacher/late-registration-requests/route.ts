@@ -4,6 +4,9 @@ import { requireAuth } from "@/lib/auth/require-auth";
 import { submitTeacherLateRegistrationRequest } from "@/lib/registrations/change-request";
 import { RegistrationError } from "@/lib/registrations/errors";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(request: NextRequest) {
   const auth = await requireAuth(["SUBJECT_TEACHER"]);
   if (auth.error) return auth.error;

@@ -8,6 +8,9 @@ import {
   getEdexcelTimetable,
 } from "@/lib/edexcel/timetables";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   return NextResponse.json({
     timetables: EDEXCEL_TIMETABLES.map(({ id, label, seriesName, year, qualificationLevel }) => ({

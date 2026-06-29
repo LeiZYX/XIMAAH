@@ -6,6 +6,9 @@ import { RegistrationsRefreshProvider } from "@/components/registrations/registr
 import { RegistrationFeeBatchWidget } from "@/components/fees/RegistrationFeeBatchWidget";
 import { PageHeader } from "@/components/ui/PageHeader";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function ExamOfficeRegistrationsPage() {
   return (
     <RegistrationsRefreshProvider>

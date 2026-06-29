@@ -4,6 +4,9 @@ import { requireAuth } from "@/lib/auth/require-auth";
 import { applyLateRegistration } from "@/lib/registrations/late-registration";
 import { RegistrationError } from "@/lib/registrations/errors";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(request: NextRequest) {
   const auth = await requireAuth(["ADMIN"]);
   if (auth.error) return auth.error;

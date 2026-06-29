@@ -8,6 +8,9 @@ import type { RegistrationWindowTimingSource } from "@/lib/registrations/sync-fe
 import { summarizeRegistrationWindow } from "@/lib/registrations/window-summary";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type RouteParams = { params: Promise<{ id: string }> };
 
 async function syncFeeStagesFromWindow(

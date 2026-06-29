@@ -10,6 +10,9 @@ import {
   validateImportPreview,
 } from "@/lib/data-processor/client";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const runtime = "nodejs";
 
 async function requireAdminImport() {

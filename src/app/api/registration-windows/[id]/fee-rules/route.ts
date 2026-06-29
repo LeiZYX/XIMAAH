@@ -6,6 +6,9 @@ import { getCalendarSubjectsForExamBoard } from "@/lib/calendar-subject-selectio
 import { normalizeFeeRuleTemplateInput } from "@/lib/fees/fee-rules-spreadsheet";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type RouteParams = { params: Promise<{ id: string }> };
 
 const feeRuleInclude = {

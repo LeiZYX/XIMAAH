@@ -3,6 +3,9 @@ import { jsonError } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   const auth = await requireAuth(["SUBJECT_TEACHER"]);
   if (auth.error) return auth.error;

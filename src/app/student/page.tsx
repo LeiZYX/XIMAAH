@@ -2,6 +2,9 @@ import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function StudentHomePage() {
   return (
     <div className="space-y-6">

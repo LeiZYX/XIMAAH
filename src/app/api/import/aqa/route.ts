@@ -3,6 +3,9 @@ import { jsonError } from "@/lib/api";
 import { importAqaRows } from "@/lib/aqa/importer";
 import { parseAqaTimetablePdf } from "@/lib/aqa/parser";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {

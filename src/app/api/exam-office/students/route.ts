@@ -5,6 +5,9 @@ import { canViewAllRegistrations } from "@/lib/auth/permissions";
 import { listStudents, parseStudentListFilters } from "@/lib/students/list";
 import { parseListPagination } from "@/lib/pagination";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
   if (auth.error) return auth.error;

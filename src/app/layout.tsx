@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "XIMA Assessment Hub",
   description: "Exam planning, scheduling, and key dates for assessment centres",

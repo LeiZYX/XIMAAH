@@ -4,6 +4,9 @@ import { canManageExamData } from "@/lib/auth/permissions";
 import { jsonError } from "@/lib/api";
 import { checkDataProcessorHealth } from "@/lib/data-processor/client";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   const auth = await requireAuth(["ADMIN"]);
   if (auth.error) return auth.error;

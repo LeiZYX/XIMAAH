@@ -7,6 +7,9 @@ import { importTimetableRows } from "@/lib/import/generic-timetable-importer";
 import { toImporterMeta, toImporterRows } from "@/lib/data-processor/types";
 import type { ImportPreviewSource, TimetableMetaDto, TimetableRowDto } from "@/lib/data-processor/types";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const runtime = "nodejs";
 
 const BOARD_BY_SOURCE: Record<ImportPreviewSource, string | null> = {

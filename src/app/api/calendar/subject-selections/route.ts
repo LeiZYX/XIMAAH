@@ -3,6 +3,9 @@ import { jsonError, parseJsonBody } from "@/lib/api";
 import { getCalendarSubjectFilterState } from "@/lib/calendar-subject-selections";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   try {
     const [examBoards, subjects, filterState] = await Promise.all([

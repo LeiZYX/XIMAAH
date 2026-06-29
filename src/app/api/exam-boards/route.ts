@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 function prismaErrorMessage(error: unknown, code: string): string | null {
   if (
     error instanceof Prisma.PrismaClientKnownRequestError &&

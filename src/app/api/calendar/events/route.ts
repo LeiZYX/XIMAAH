@@ -3,6 +3,9 @@ import { jsonError } from "@/lib/api";
 import { buildCalendarEvents, parseCalendarSearchParams } from "@/lib/calendar/build-events";
 import { getSessionUserFromRequest } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   try {
     const params = parseCalendarSearchParams(request.nextUrl.searchParams);

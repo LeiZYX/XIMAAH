@@ -3,6 +3,9 @@ import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { importInternalCandidates } from "@/lib/candidates/import";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(request: NextRequest) {
   const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
   if (auth.error) return auth.error;

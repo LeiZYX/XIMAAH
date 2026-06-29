@@ -5,6 +5,9 @@ import { canConfigureFeeRules } from "@/lib/auth/permissions";
 import { upsertCalendarSubjectFeeRulesFromRows } from "@/lib/fees/fee-rules-spreadsheet";
 import * as XLSX from "xlsx";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type RouteParams = { params: Promise<{ id: string }> };
 
 export async function POST(request: NextRequest, { params }: RouteParams) {

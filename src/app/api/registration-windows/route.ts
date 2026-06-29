@@ -6,6 +6,9 @@ import { assertRegistrationWindowTimingValid } from "@/lib/registrations/fee-sta
 import { summarizeRegistrationWindow } from "@/lib/registrations/window-summary";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   try {
     const windows = await prisma.registrationWindow.findMany({

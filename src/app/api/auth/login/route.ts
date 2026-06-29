@@ -11,6 +11,9 @@ import {
 import { homePathForRole } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {

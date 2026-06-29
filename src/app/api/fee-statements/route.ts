@@ -16,6 +16,9 @@ import {
 import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-currency";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
   if (auth.error) return auth.error;

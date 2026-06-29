@@ -6,6 +6,7 @@ import { buildFeeDashboardMetrics } from "@/lib/fees/reporting";
 import { formatMoney } from "@/lib/fees/money";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const STAT_LINKS = [
   { key: "examBoardCount", label: "Exam Boards", href: "/admin/exam-boards" },

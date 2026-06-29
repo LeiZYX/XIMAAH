@@ -6,6 +6,9 @@ import { getCandidateById } from "@/lib/candidates/list";
 import { updateCandidate, upsertCandidateExamIdentity } from "@/lib/candidates/import";
 import { backfillCandidatesFromStudents } from "@/lib/candidates/service";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },

@@ -3,6 +3,9 @@ import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { FeeManagementNav } from "@/components/fees/FeeManagementNav";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function ExamOfficeFeeRulesPage() {
   return (
     <div className="space-y-6">

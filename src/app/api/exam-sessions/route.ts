@@ -3,6 +3,9 @@ import { jsonError, parseDate, parseJsonBody } from "@/lib/api";
 import { filterExamSessions, EXAM_SESSION_SEARCH_LIMIT } from "@/lib/exam-session-search";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   const examSeriesId = request.nextUrl.searchParams.get("examSeriesId");
   const paperId = request.nextUrl.searchParams.get("paperId");

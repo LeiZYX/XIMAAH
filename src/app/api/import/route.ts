@@ -3,6 +3,9 @@ import { KeyDateType } from "@/generated/prisma/client";
 import { jsonError } from "@/lib/api";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 interface ImportRow {
   entity: string;
   [key: string]: string;

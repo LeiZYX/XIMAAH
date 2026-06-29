@@ -1,6 +1,9 @@
 import { AppHeader } from "@/components/layout/AppHeader";
 import { ExamOfficeSidebar } from "@/components/layout/ExamOfficeSidebar";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function ExamOfficeLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen">

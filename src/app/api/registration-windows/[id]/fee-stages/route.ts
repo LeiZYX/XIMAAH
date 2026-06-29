@@ -13,6 +13,9 @@ import {
 import { applyWindowTimingToFeeStages } from "@/lib/registrations/sync-fee-stages-from-window";
 import { prisma } from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type RouteParams = { params: Promise<{ id: string }> };
 
 export async function GET(_request: NextRequest, { params }: RouteParams) {

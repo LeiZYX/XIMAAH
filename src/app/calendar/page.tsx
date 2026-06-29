@@ -3,6 +3,9 @@ import { AppHeader } from "@/components/layout/AppHeader";
 import { CalendarView } from "@/components/calendar/CalendarView";
 import { PageHeader } from "@/components/ui/PageHeader";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function CalendarPage() {
   return (
     <div className="min-h-screen">

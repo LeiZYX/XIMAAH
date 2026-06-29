@@ -4,6 +4,9 @@ import { requireAuth } from "@/lib/auth/require-auth";
 import { reviewChangeRequest } from "@/lib/registrations/change-request";
 import { RegistrationError } from "@/lib/registrations/errors";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string; requestId: string }> },

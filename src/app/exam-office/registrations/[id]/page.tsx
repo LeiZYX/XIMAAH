@@ -1,6 +1,9 @@
 import { RegistrationWorkspaceDetail } from "@/components/registrations/RegistrationWorkspaceDetail";
 import { PageHeader } from "@/components/ui/PageHeader";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function ExamOfficeRegistrationWorkspacePage({
   params,
 }: {

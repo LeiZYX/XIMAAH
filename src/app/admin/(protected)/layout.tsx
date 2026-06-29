@@ -1,6 +1,9 @@
 import { AppHeader } from "@/components/layout/AppHeader";
 import { AdminSidebar } from "@/components/layout/AdminSidebar";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function AdminLayout({
   children,
 }: {

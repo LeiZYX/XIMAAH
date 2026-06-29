@@ -1,6 +1,9 @@
 import { RegistrationWindowFeeRules } from "@/components/fees/RegistrationWindowFeeRules";
 import { examOfficerCanConfigureFeeRules } from "@/lib/config/fees";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function ExamOfficeRegistrationWindowFeesPage({
   params,
 }: {

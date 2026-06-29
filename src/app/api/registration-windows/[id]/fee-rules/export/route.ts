@@ -7,6 +7,9 @@ import {
   feeRuleSpreadsheetToBuffer,
 } from "@/lib/fees/fee-rules-spreadsheet";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 type RouteParams = { params: Promise<{ id: string }> };
 
 export async function GET(_request: NextRequest, { params }: RouteParams) {

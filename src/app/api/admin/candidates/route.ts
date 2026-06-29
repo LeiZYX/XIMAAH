@@ -6,6 +6,9 @@ import { listCandidates, parseCandidateListFilters } from "@/lib/candidates/list
 import { createExternalCandidate } from "@/lib/candidates/service";
 import { parseListPagination } from "@/lib/pagination";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
   if (auth.error) return auth.error;

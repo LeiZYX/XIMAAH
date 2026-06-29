@@ -1,5 +1,8 @@
 import { CandidateDetailView } from "@/components/candidates/CandidateDetailView";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function AdminCandidateDetailPage({
   params,
 }: {
