@@ -91,13 +91,18 @@ export async function getSessionUserFromRequest(
   return verifySessionToken(token);
 }
 
+function shouldUseSecureCookie(): boolean {
+  const appUrl = process.env.APP_URL || process.env.NEXTAUTH_URL || "";
+  return appUrl.startsWith("https://");
+}
+
 export function sessionCookieOptions(token: string) {
   return {
     name: SESSION_COOKIE,
     value: token,
     httpOnly: true,
     sameSite: "lax" as const,
-    secure: process.env.NODE_ENV === "production",
+    secure: shouldUseSecureCookie(),
     path: "/",
     maxAge: SESSION_MAX_AGE_SECONDS,
   };
@@ -109,7 +114,7 @@ export function clearSessionCookieOptions() {
     value: "",
     httpOnly: true,
     sameSite: "lax" as const,
-    secure: process.env.NODE_ENV === "production",
+    secure: shouldUseSecureCookie(),
     path: "/",
     maxAge: 0,
   };
