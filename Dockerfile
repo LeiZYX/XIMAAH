@@ -9,7 +9,9 @@
 #   DOCKER_BUILDKIT=0 docker compose build --no-cache app
 
 FROM node:20-bookworm-slim AS base
-RUN apt-get update && \
+RUN sed -i 's|http://deb.debian.org/debian|http://mirrors.aliyun.com/debian|g' /etc/apt/sources.list.d/debian.sources && \
+    sed -i 's|http://deb.debian.org/debian-security|http://mirrors.aliyun.com/debian-security|g' /etc/apt/sources.list.d/debian.sources && \
+    apt-get update && \
     apt-get install -y openssl && \
     rm -rf /var/lib/apt/lists/*
 WORKDIR /app
