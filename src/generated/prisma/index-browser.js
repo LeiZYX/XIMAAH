@@ -339,6 +339,7 @@ exports.Prisma.RegistrationWorkspaceScalarFieldEnum = {
   visibility: 'visibility',
   billingScope: 'billingScope',
   registrationType: 'registrationType',
+  reason: 'reason',
   visibleToStudent: 'visibleToStudent',
   visibleToTeacher: 'visibleToTeacher',
   visibleInStudentPortal: 'visibleInStudentPortal',
@@ -350,6 +351,9 @@ exports.Prisma.RegistrationWorkspaceScalarFieldEnum = {
   restrictedCreatedAt: 'restrictedCreatedAt',
   restrictedUpdatedById: 'restrictedUpdatedById',
   restrictedUpdatedAt: 'restrictedUpdatedAt',
+  includeCandidateRegistrationFee: 'includeCandidateRegistrationFee',
+  registrationNumber: 'registrationNumber',
+  confirmationNumber: 'confirmationNumber',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -420,6 +424,10 @@ exports.Prisma.RegistrationAuditLogScalarFieldEnum = {
   billingScope: 'billingScope',
   assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
   candidateTypeSnapshot: 'candidateTypeSnapshot',
+  registrationType: 'registrationType',
+  registrationNumber: 'registrationNumber',
+  feeStatementNumber: 'feeStatementNumber',
+  issueNumber: 'issueNumber',
   note: 'note',
   createdAt: 'createdAt'
 };
@@ -625,10 +633,12 @@ exports.Prisma.ExchangeRateScalarFieldEnum = {
 
 exports.Prisma.FeeStatementScalarFieldEnum = {
   id: 'id',
+  businessType: 'businessType',
   candidateId: 'candidateId',
   studentId: 'studentId',
   registrationWorkspaceId: 'registrationWorkspaceId',
   registrationWindowId: 'registrationWindowId',
+  reviewWindowId: 'reviewWindowId',
   statementNo: 'statementNo',
   statementKind: 'statementKind',
   displayCurrency: 'displayCurrency',
@@ -641,12 +651,18 @@ exports.Prisma.FeeStatementScalarFieldEnum = {
   assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
   candidateTypeSnapshot: 'candidateTypeSnapshot',
   status: 'status',
+  studentVisible: 'studentVisible',
   totalGbpAmount: 'totalGbpAmount',
   totalCnyAmount: 'totalCnyAmount',
   paymentNotes: 'paymentNotes',
   generatedByUserId: 'generatedByUserId',
   generatedAt: 'generatedAt',
   issuedAt: 'issuedAt',
+  revisedFromStatementId: 'revisedFromStatementId',
+  revisedToStatementId: 'revisedToStatementId',
+  regenerationReason: 'regenerationReason',
+  regenerationChangedByUserId: 'regenerationChangedByUserId',
+  regenerationChangedAt: 'regenerationChangedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -654,6 +670,10 @@ exports.Prisma.FeeStatementScalarFieldEnum = {
 exports.Prisma.FeeStatementItemScalarFieldEnum = {
   id: 'id',
   feeStatementId: 'feeStatementId',
+  serviceType: 'serviceType',
+  feeScheduleId: 'feeScheduleId',
+  feeScheduleVersionSnapshot: 'feeScheduleVersionSnapshot',
+  serviceNameSnapshot: 'serviceNameSnapshot',
   examSessionId: 'examSessionId',
   examBoardSnapshot: 'examBoardSnapshot',
   qualificationSnapshot: 'qualificationSnapshot',
@@ -666,6 +686,8 @@ exports.Prisma.FeeStatementItemScalarFieldEnum = {
   exchangeRateSnapshot: 'exchangeRateSnapshot',
   markupTypeSnapshot: 'markupTypeSnapshot',
   markupValueSnapshot: 'markupValueSnapshot',
+  salesCurrencySnapshot: 'salesCurrencySnapshot',
+  salesAmountSnapshot: 'salesAmountSnapshot',
   salesGbpAmountSnapshot: 'salesGbpAmountSnapshot',
   salesCnyAmountSnapshot: 'salesCnyAmountSnapshot',
   displayCurrencySnapshot: 'displayCurrencySnapshot',
@@ -683,6 +705,159 @@ exports.Prisma.FeeAuditLogScalarFieldEnum = {
   performedAt: 'performedAt',
   metadata: 'metadata',
   note: 'note'
+};
+
+exports.Prisma.ReviewWindowScalarFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  title: 'title',
+  resultsReleaseDate: 'resultsReleaseDate',
+  openAt: 'openAt',
+  closeAt: 'closeAt',
+  status: 'status',
+  notes: 'notes',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReviewWindowServiceScalarFieldEnum = {
+  id: 'id',
+  reviewWindowId: 'reviewWindowId',
+  serviceType: 'serviceType',
+  enabled: 'enabled',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ReviewRequestScalarFieldEnum = {
+  id: 'id',
+  reviewWindowId: 'reviewWindowId',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  registrationItemId: 'registrationItemId',
+  examSessionId: 'examSessionId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  serviceType: 'serviceType',
+  reviewType: 'reviewType',
+  priority: 'priority',
+  status: 'status',
+  requestedByUserId: 'requestedByUserId',
+  reviewedByUserId: 'reviewedByUserId',
+  resultOutcome: 'resultOutcome',
+  reason: 'reason',
+  notes: 'notes',
+  feeStatementId: 'feeStatementId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CashInRequestScalarFieldEnum = {
+  id: 'id',
+  reviewWindowId: 'reviewWindowId',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  qualificationId: 'qualificationId',
+  subjectId: 'subjectId',
+  status: 'status',
+  requestedByUserId: 'requestedByUserId',
+  reason: 'reason',
+  notes: 'notes',
+  feeStatementId: 'feeStatementId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.AccessToScriptRequestScalarFieldEnum = {
+  id: 'id',
+  reviewWindowId: 'reviewWindowId',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  registrationItemId: 'registrationItemId',
+  examSessionId: 'examSessionId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  status: 'status',
+  requestedByUserId: 'requestedByUserId',
+  notes: 'notes',
+  feeStatementId: 'feeStatementId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CertificateRequestScalarFieldEnum = {
+  id: 'id',
+  reviewWindowId: 'reviewWindowId',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  requestType: 'requestType',
+  status: 'status',
+  requestedByUserId: 'requestedByUserId',
+  notes: 'notes',
+  feeStatementId: 'feeStatementId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CandidateBoardRegistrationScalarFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  registered: 'registered',
+  registrationFeePaid: 'registrationFeePaid',
+  registrationFeePaidAt: 'registrationFeePaidAt',
+  feeStatementId: 'feeStatementId',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FeeScheduleScalarFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  serviceType: 'serviceType',
+  qualificationId: 'qualificationId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  entryType: 'entryType',
+  reviewType: 'reviewType',
+  version: 'version',
+  effectiveFrom: 'effectiveFrom',
+  effectiveTo: 'effectiveTo',
+  status: 'status',
+  costCurrency: 'costCurrency',
+  costAmount: 'costAmount',
+  salesCurrency: 'salesCurrency',
+  salesAmount: 'salesAmount',
+  markupType: 'markupType',
+  markupValue: 'markupValue',
+  exchangeRateToCny: 'exchangeRateToCny',
+  createdByUserId: 'createdByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PostResultsAuditLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  registrationWindowId: 'registrationWindowId',
+  reviewWindowId: 'reviewWindowId',
+  serviceType: 'serviceType',
+  performedByUserId: 'performedByUserId',
+  performedAt: 'performedAt',
+  reason: 'reason',
+  notes: 'notes',
+  metadata: 'metadata'
 };
 
 exports.Prisma.SortOrder = {
@@ -850,9 +1025,12 @@ exports.Prisma.RegistrationWorkspaceOrderByRelevanceFieldEnum = {
   lastAdjustmentSummary: 'lastAdjustmentSummary',
   feeStageId: 'feeStageId',
   entryTypeOverrideReason: 'entryTypeOverrideReason',
+  reason: 'reason',
   restrictedReason: 'restrictedReason',
   restrictedCreatedById: 'restrictedCreatedById',
-  restrictedUpdatedById: 'restrictedUpdatedById'
+  restrictedUpdatedById: 'restrictedUpdatedById',
+  registrationNumber: 'registrationNumber',
+  confirmationNumber: 'confirmationNumber'
 };
 
 exports.Prisma.StudentExamRegistrationOrderByRelevanceFieldEnum = {
@@ -893,6 +1071,9 @@ exports.Prisma.RegistrationAuditLogOrderByRelevanceFieldEnum = {
   afterValue: 'afterValue',
   reason: 'reason',
   assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
+  registrationNumber: 'registrationNumber',
+  feeStatementNumber: 'feeStatementNumber',
+  issueNumber: 'issueNumber',
   note: 'note'
 };
 
@@ -1046,6 +1227,7 @@ exports.Prisma.FeeStatementOrderByRelevanceFieldEnum = {
   studentId: 'studentId',
   registrationWorkspaceId: 'registrationWorkspaceId',
   registrationWindowId: 'registrationWindowId',
+  reviewWindowId: 'reviewWindowId',
   statementNo: 'statementNo',
   studentNameSnapshot: 'studentNameSnapshot',
   studentNoSnapshot: 'studentNoSnapshot',
@@ -1054,12 +1236,18 @@ exports.Prisma.FeeStatementOrderByRelevanceFieldEnum = {
   emailSnapshot: 'emailSnapshot',
   assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
   paymentNotes: 'paymentNotes',
-  generatedByUserId: 'generatedByUserId'
+  generatedByUserId: 'generatedByUserId',
+  revisedFromStatementId: 'revisedFromStatementId',
+  revisedToStatementId: 'revisedToStatementId',
+  regenerationReason: 'regenerationReason',
+  regenerationChangedByUserId: 'regenerationChangedByUserId'
 };
 
 exports.Prisma.FeeStatementItemOrderByRelevanceFieldEnum = {
   id: 'id',
   feeStatementId: 'feeStatementId',
+  feeScheduleId: 'feeScheduleId',
+  serviceNameSnapshot: 'serviceNameSnapshot',
   examSessionId: 'examSessionId',
   examBoardSnapshot: 'examBoardSnapshot',
   qualificationSnapshot: 'qualificationSnapshot',
@@ -1074,6 +1262,112 @@ exports.Prisma.FeeAuditLogOrderByRelevanceFieldEnum = {
   performedByUserId: 'performedByUserId',
   metadata: 'metadata',
   note: 'note'
+};
+
+exports.Prisma.ReviewWindowOrderByRelevanceFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  title: 'title',
+  notes: 'notes',
+  createdByUserId: 'createdByUserId'
+};
+
+exports.Prisma.ReviewWindowServiceOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reviewWindowId: 'reviewWindowId',
+  notes: 'notes'
+};
+
+exports.Prisma.ReviewRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reviewWindowId: 'reviewWindowId',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  registrationItemId: 'registrationItemId',
+  examSessionId: 'examSessionId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  reviewType: 'reviewType',
+  requestedByUserId: 'requestedByUserId',
+  reviewedByUserId: 'reviewedByUserId',
+  resultOutcome: 'resultOutcome',
+  reason: 'reason',
+  notes: 'notes',
+  feeStatementId: 'feeStatementId'
+};
+
+exports.Prisma.CashInRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reviewWindowId: 'reviewWindowId',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  qualificationId: 'qualificationId',
+  subjectId: 'subjectId',
+  requestedByUserId: 'requestedByUserId',
+  reason: 'reason',
+  notes: 'notes',
+  feeStatementId: 'feeStatementId'
+};
+
+exports.Prisma.AccessToScriptRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reviewWindowId: 'reviewWindowId',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  registrationItemId: 'registrationItemId',
+  examSessionId: 'examSessionId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  requestedByUserId: 'requestedByUserId',
+  notes: 'notes',
+  feeStatementId: 'feeStatementId'
+};
+
+exports.Prisma.CertificateRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  reviewWindowId: 'reviewWindowId',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  requestType: 'requestType',
+  requestedByUserId: 'requestedByUserId',
+  notes: 'notes',
+  feeStatementId: 'feeStatementId'
+};
+
+exports.Prisma.CandidateBoardRegistrationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  feeStatementId: 'feeStatementId',
+  notes: 'notes'
+};
+
+exports.Prisma.FeeScheduleOrderByRelevanceFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  qualificationId: 'qualificationId',
+  subjectId: 'subjectId',
+  paperId: 'paperId',
+  reviewType: 'reviewType',
+  createdByUserId: 'createdByUserId'
+};
+
+exports.Prisma.PostResultsAuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  registrationWindowId: 'registrationWindowId',
+  reviewWindowId: 'reviewWindowId',
+  performedByUserId: 'performedByUserId',
+  reason: 'reason',
+  notes: 'notes',
+  metadata: 'metadata'
 };
 exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
@@ -1207,14 +1501,15 @@ exports.RegistrationVisibility = exports.$Enums.RegistrationVisibility = {
 
 exports.BillingScope = exports.$Enums.BillingScope = {
   NORMAL_BILLING: 'NORMAL_BILLING',
-  OFFICE_ONLY_BILLING: 'OFFICE_ONLY_BILLING',
+  RESTRICTED_BILLING: 'RESTRICTED_BILLING',
+  EXTERNAL_BILLING: 'EXTERNAL_BILLING',
   NO_BILLING: 'NO_BILLING',
   MANUAL_REVIEW: 'MANUAL_REVIEW'
 };
 
 exports.RegistrationType = exports.$Enums.RegistrationType = {
-  NORMAL: 'NORMAL',
-  RESTRICTED: 'RESTRICTED',
+  INTERNAL_NORMAL: 'INTERNAL_NORMAL',
+  RESTRICTED_INTERNAL: 'RESTRICTED_INTERNAL',
   EXTERNAL: 'EXTERNAL'
 };
 
@@ -1252,6 +1547,12 @@ exports.RegistrationAuditAction = exports.$Enums.RegistrationAuditAction = {
   ADMIN_LATE_REGISTRATION_CREATED: 'ADMIN_LATE_REGISTRATION_CREATED',
   EO_ASSISTED_REGISTRATION_CREATED: 'EO_ASSISTED_REGISTRATION_CREATED',
   ADMIN_ASSISTED_REGISTRATION_CREATED: 'ADMIN_ASSISTED_REGISTRATION_CREATED',
+  INTERNAL_NORMAL_REGISTRATION_CREATED: 'INTERNAL_NORMAL_REGISTRATION_CREATED',
+  RESTRICTED_INTERNAL_REGISTRATION_CREATED: 'RESTRICTED_INTERNAL_REGISTRATION_CREATED',
+  EXTERNAL_REGISTRATION_CREATED: 'EXTERNAL_REGISTRATION_CREATED',
+  INTERNAL_NORMAL_REGISTRATION_UPDATED: 'INTERNAL_NORMAL_REGISTRATION_UPDATED',
+  RESTRICTED_INTERNAL_REGISTRATION_UPDATED: 'RESTRICTED_INTERNAL_REGISTRATION_UPDATED',
+  EXTERNAL_REGISTRATION_UPDATED: 'EXTERNAL_REGISTRATION_UPDATED',
   EO_OFFICE_ONLY_REGISTRATION_CREATED: 'EO_OFFICE_ONLY_REGISTRATION_CREATED',
   ADMIN_OFFICE_ONLY_REGISTRATION_CREATED: 'ADMIN_OFFICE_ONLY_REGISTRATION_CREATED',
   EO_RESTRICTED_REGISTRATION_CREATED: 'EO_RESTRICTED_REGISTRATION_CREATED',
@@ -1274,7 +1575,9 @@ exports.RegistrationAuditAction = exports.$Enums.RegistrationAuditAction = {
   ENTRY_TYPE_OVERRIDDEN: 'ENTRY_TYPE_OVERRIDDEN',
   ENTRY_TYPE_DEFAULTED_TO_NORMAL: 'ENTRY_TYPE_DEFAULTED_TO_NORMAL',
   POST_STUDENT_CLOSE_ADJUSTMENT: 'POST_STUDENT_CLOSE_ADJUSTMENT',
-  POST_WINDOW_CLOSE_OVERRIDE: 'POST_WINDOW_CLOSE_OVERRIDE'
+  POST_WINDOW_CLOSE_OVERRIDE: 'POST_WINDOW_CLOSE_OVERRIDE',
+  CANDIDATE_REGISTRATION_FEE_ADDED: 'CANDIDATE_REGISTRATION_FEE_ADDED',
+  CANDIDATE_REGISTRATION_FEE_REMOVED: 'CANDIDATE_REGISTRATION_FEE_REMOVED'
 };
 
 exports.RegistrationChangeRequestType = exports.$Enums.RegistrationChangeRequestType = {
@@ -1327,6 +1630,11 @@ exports.FeeMarkupType = exports.$Enums.FeeMarkupType = {
   MANUAL: 'MANUAL'
 };
 
+exports.FeeStatementBusinessType = exports.$Enums.FeeStatementBusinessType = {
+  REGISTRATION: 'REGISTRATION',
+  POST_RESULTS: 'POST_RESULTS'
+};
+
 exports.FeeStatementKind = exports.$Enums.FeeStatementKind = {
   NORMAL: 'NORMAL',
   RESTRICTED: 'RESTRICTED',
@@ -1345,7 +1653,19 @@ exports.FeeStatementStatus = exports.$Enums.FeeStatementStatus = {
   PAID: 'PAID',
   CANCELLED: 'CANCELLED',
   REVISED: 'REVISED',
-  NEEDS_REVIEW: 'NEEDS_REVIEW'
+  NEEDS_REGENERATION: 'NEEDS_REGENERATION'
+};
+
+exports.FeeScheduleServiceType = exports.$Enums.FeeScheduleServiceType = {
+  CANDIDATE_REGISTRATION: 'CANDIDATE_REGISTRATION',
+  EXAM_ENTRY: 'EXAM_ENTRY',
+  REVIEW: 'REVIEW',
+  PRIORITY_REVIEW: 'PRIORITY_REVIEW',
+  CLERICAL_CHECK: 'CLERICAL_CHECK',
+  ACCESS_TO_SCRIPT: 'ACCESS_TO_SCRIPT',
+  CASH_IN: 'CASH_IN',
+  CERTIFICATE: 'CERTIFICATE',
+  ADMINISTRATIVE: 'ADMINISTRATIVE'
 };
 
 exports.FeeAuditAction = exports.$Enums.FeeAuditAction = {
@@ -1356,7 +1676,78 @@ exports.FeeAuditAction = exports.$Enums.FeeAuditAction = {
   FEE_STATEMENT_BATCH_GENERATED: 'FEE_STATEMENT_BATCH_GENERATED',
   FEE_STATEMENT_PRINTED: 'FEE_STATEMENT_PRINTED',
   FEE_SUMMARY_EXPORTED: 'FEE_SUMMARY_EXPORTED',
-  FEE_DETAILS_EXPORTED: 'FEE_DETAILS_EXPORTED'
+  FEE_DETAILS_EXPORTED: 'FEE_DETAILS_EXPORTED',
+  FEE_SCHEDULE_VERSION_CREATED: 'FEE_SCHEDULE_VERSION_CREATED',
+  REGISTRATION_FEE_STATEMENT_GENERATED: 'REGISTRATION_FEE_STATEMENT_GENERATED',
+  POST_RESULTS_FEE_STATEMENT_GENERATED: 'POST_RESULTS_FEE_STATEMENT_GENERATED',
+  FEE_STATEMENT_MARKED_NEEDS_REGENERATION: 'FEE_STATEMENT_MARKED_NEEDS_REGENERATION',
+  FEE_STATEMENT_REGENERATED_REVISED: 'FEE_STATEMENT_REGENERATED_REVISED',
+  FEE_STATEMENT_ISSUED: 'FEE_STATEMENT_ISSUED',
+  EXAM_ADDED: 'EXAM_ADDED',
+  EXAM_REMOVED: 'EXAM_REMOVED',
+  EXAM_REPLACED: 'EXAM_REPLACED',
+  CANDIDATE_REGISTRATION_FEE_ADDED: 'CANDIDATE_REGISTRATION_FEE_ADDED',
+  CANDIDATE_REGISTRATION_FEE_REMOVED: 'CANDIDATE_REGISTRATION_FEE_REMOVED',
+  ADDITIONAL_SERVICE_ADDED: 'ADDITIONAL_SERVICE_ADDED',
+  ADDITIONAL_SERVICE_REMOVED: 'ADDITIONAL_SERVICE_REMOVED'
+};
+
+exports.ReviewWindowStatus = exports.$Enums.ReviewWindowStatus = {
+  DRAFT: 'DRAFT',
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED',
+  LOCKED: 'LOCKED'
+};
+
+exports.PostResultServiceType = exports.$Enums.PostResultServiceType = {
+  REVIEW: 'REVIEW',
+  PRIORITY_REVIEW: 'PRIORITY_REVIEW',
+  CLERICAL_CHECK: 'CLERICAL_CHECK',
+  ACCESS_TO_SCRIPT: 'ACCESS_TO_SCRIPT',
+  CASH_IN: 'CASH_IN',
+  CERTIFICATE: 'CERTIFICATE',
+  ADMINISTRATIVE: 'ADMINISTRATIVE'
+};
+
+exports.ReviewRequestStatus = exports.$Enums.ReviewRequestStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  APPROVED: 'APPROVED',
+  SENT_TO_BOARD: 'SENT_TO_BOARD',
+  COMPLETED: 'COMPLETED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.PostResultRequestStatus = exports.$Enums.PostResultRequestStatus = {
+  DRAFT: 'DRAFT',
+  SUBMITTED: 'SUBMITTED',
+  SENT_TO_BOARD: 'SENT_TO_BOARD',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.FeeScheduleStatus = exports.$Enums.FeeScheduleStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE',
+  ARCHIVED: 'ARCHIVED'
+};
+
+exports.PostResultsAuditAction = exports.$Enums.PostResultsAuditAction = {
+  REVIEW_WINDOW_CREATED: 'REVIEW_WINDOW_CREATED',
+  REVIEW_WINDOW_UPDATED: 'REVIEW_WINDOW_UPDATED',
+  REVIEW_WINDOW_LOCKED: 'REVIEW_WINDOW_LOCKED',
+  REVIEW_SERVICE_ENABLED: 'REVIEW_SERVICE_ENABLED',
+  REVIEW_SERVICE_DISABLED: 'REVIEW_SERVICE_DISABLED',
+  REVIEW_REQUEST_CREATED: 'REVIEW_REQUEST_CREATED',
+  REVIEW_REQUEST_UPDATED: 'REVIEW_REQUEST_UPDATED',
+  REVIEW_REQUEST_SUBMITTED: 'REVIEW_REQUEST_SUBMITTED',
+  CASH_IN_REQUEST_CREATED: 'CASH_IN_REQUEST_CREATED',
+  ACCESS_TO_SCRIPT_REQUEST_CREATED: 'ACCESS_TO_SCRIPT_REQUEST_CREATED',
+  CERTIFICATE_REQUEST_CREATED: 'CERTIFICATE_REQUEST_CREATED',
+  FEE_SCHEDULE_VERSION_CREATED: 'FEE_SCHEDULE_VERSION_CREATED',
+  REGISTRATION_FEE_STATEMENT_GENERATED: 'REGISTRATION_FEE_STATEMENT_GENERATED',
+  POST_RESULTS_FEE_STATEMENT_GENERATED: 'POST_RESULTS_FEE_STATEMENT_GENERATED'
 };
 
 exports.Prisma.ModelName = {
@@ -1393,7 +1784,16 @@ exports.Prisma.ModelName = {
   ExchangeRate: 'ExchangeRate',
   FeeStatement: 'FeeStatement',
   FeeStatementItem: 'FeeStatementItem',
-  FeeAuditLog: 'FeeAuditLog'
+  FeeAuditLog: 'FeeAuditLog',
+  ReviewWindow: 'ReviewWindow',
+  ReviewWindowService: 'ReviewWindowService',
+  ReviewRequest: 'ReviewRequest',
+  CashInRequest: 'CashInRequest',
+  AccessToScriptRequest: 'AccessToScriptRequest',
+  CertificateRequest: 'CertificateRequest',
+  CandidateBoardRegistration: 'CandidateBoardRegistration',
+  FeeSchedule: 'FeeSchedule',
+  PostResultsAuditLog: 'PostResultsAuditLog'
 };
 
 /**

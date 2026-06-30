@@ -47,11 +47,17 @@ export function parseExamDocumentFilters(searchParams: URLSearchParams): ExamDoc
     candidateType:
       candidateType === "INTERNAL" || candidateType === "EXTERNAL" ? candidateType : undefined,
     registrationType:
-      registrationType === "NORMAL" ||
-      registrationType === "RESTRICTED" ||
+      registrationType === "INTERNAL_NORMAL" ||
+      registrationType === "RESTRICTED_INTERNAL" ||
       registrationType === "EXTERNAL" ||
-      registrationType === "ALL"
-        ? registrationType
+      registrationType === "ALL" ||
+      registrationType === "NORMAL" ||
+      registrationType === "RESTRICTED"
+        ? registrationType === "NORMAL"
+          ? "INTERNAL_NORMAL"
+          : registrationType === "RESTRICTED"
+            ? "RESTRICTED_INTERNAL"
+            : registrationType
         : undefined,
     room: searchParams.get("room")?.trim() || undefined,
     date: searchParams.get("date")?.trim() || undefined,
@@ -68,9 +74,9 @@ function buildBaseWhere(
   };
 
   if (options.restrictedOnly) {
-    where.registrationType = "RESTRICTED";
+    where.registrationType = "RESTRICTED_INTERNAL";
   } else if (options.normalDocuments !== false) {
-    where.registrationType = { not: "RESTRICTED" };
+    where.registrationType = { notIn: ["RESTRICTED_INTERNAL", "EXTERNAL"] };
   }
 
   if (filters.registrationType && filters.registrationType !== "ALL" && !options.restrictedOnly) {
@@ -168,7 +174,7 @@ export function groupRegistrationsByCandidate<
   return [...map.entries()].map(([key, registrations]) => ({
     key,
     registrations,
-    registrationType: registrations[0]?.registrationType ?? "NORMAL",
+    registrationType: registrations[0]?.registrationType ?? "INTERNAL_NORMAL",
     isRestricted: isRestrictedRegistrationType(registrations[0]?.registrationType),
   }));
 }

@@ -5,6 +5,7 @@ import {
   buildTeacherRegistrationWhere,
   type RegistrationListFilters,
 } from "@/lib/registrations/filters";
+import { buildTeacherRegistrationWhereForTeacher } from "@/lib/registrations/visibility";
 import { registrationInclude } from "@/lib/registrations/include";
 import {
   groupRegistrationsByWindow,
@@ -339,11 +340,18 @@ async function loadTeacherPendingRequests(teacherId: string) {
   });
 }
 
-function buildTeacherFilteredWhere(
+async function buildTeacherFilteredWhere(
   filters: RegistrationListFilters,
-): Prisma.StudentExamRegistrationWhereInput {
+  teacherId: string,
+): Promise<Prisma.StudentExamRegistrationWhereInput> {
   return {
-    AND: [buildTeacherRegistrationWhere(filters), teacherRegistrationStatusFilter],
+    AND: [
+      await buildTeacherRegistrationWhereForTeacher(
+        buildTeacherRegistrationWhere(filters),
+        teacherId,
+      ),
+      teacherRegistrationStatusFilter,
+    ],
   };
 }
 
@@ -353,7 +361,7 @@ export async function listTeacherStudentSummaries(
   pageSize: number,
   teacherId: string,
 ) {
-  const where = buildTeacherFilteredWhere(filters);
+  const where = await buildTeacherFilteredWhere(filters, teacherId);
 
   const [rows, pendingRequests] = await Promise.all([
     prisma.studentExamRegistration.findMany({
@@ -389,7 +397,7 @@ export async function getTeacherStudentDetail(
 ) {
   const studentWhere = parseTeacherStudentKey(studentKey);
   const where = {
-    AND: [buildTeacherFilteredWhere(filters), studentWhere],
+    AND: [await buildTeacherFilteredWhere(filters, teacherId), studentWhere],
   };
 
   const [registrations, pendingRequests] = await Promise.all([

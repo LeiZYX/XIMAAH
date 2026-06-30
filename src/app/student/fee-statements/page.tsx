@@ -19,6 +19,39 @@ interface FeeStatementSummary {
   };
 }
 
+interface UpdatingEntry {
+  status: "UPDATING";
+  message: string;
+  registrationWindow: FeeStatementSummary["registrationWindow"] & { id?: string };
+}
+
+function UpdatingCard({ entry }: { entry: UpdatingEntry }) {
+  return (
+    <article className="rounded-lg border border-amber-200 bg-amber-50 p-4 shadow-sm">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-amber-700">Fee statement</p>
+          <p className="font-semibold text-amber-950">Updating</p>
+        </div>
+        <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-900">
+          Updating
+        </span>
+      </div>
+      <p className="mt-3 text-sm text-amber-950">{entry.message}</p>
+      <dl className="mt-3 space-y-2 text-sm">
+        <div>
+          <dt className="text-amber-800">Registration window</dt>
+          <dd className="font-medium text-amber-950">{entry.registrationWindow.title}</dd>
+          <dd className="text-xs text-amber-800">
+            {entry.registrationWindow.examBoard.code} · {entry.registrationWindow.examSeries.name} (
+            {entry.registrationWindow.examSeries.year})
+          </dd>
+        </div>
+      </dl>
+    </article>
+  );
+}
+
 function FeeStatementCard({ statement }: { statement: FeeStatementSummary }) {
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
@@ -68,6 +101,7 @@ function FeeStatementCard({ statement }: { statement: FeeStatementSummary }) {
 
 export default function StudentFeeStatementsPage() {
   const [statements, setStatements] = useState<FeeStatementSummary[]>([]);
+  const [updating, setUpdating] = useState<UpdatingEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -80,10 +114,18 @@ export default function StudentFeeStatementsPage() {
         const data = await response.json().catch(() => ({}));
         throw new Error(data.error ?? "Could not load fee statements");
       }
-      setStatements(await response.json());
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setStatements(data);
+        setUpdating([]);
+      } else {
+        setStatements(Array.isArray(data.statements) ? data.statements : []);
+        setUpdating(Array.isArray(data.updating) ? data.updating : []);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not load fee statements");
       setStatements([]);
+      setUpdating([]);
     } finally {
       setLoading(false);
     }
@@ -92,6 +134,8 @@ export default function StudentFeeStatementsPage() {
   useEffect(() => {
     load();
   }, [load]);
+
+  const hasContent = statements.length > 0 || updating.length > 0;
 
   return (
     <div className="space-y-6">
@@ -108,13 +152,16 @@ export default function StudentFeeStatementsPage() {
 
       {loading ? (
         <p className="text-sm text-slate-600">Loading...</p>
-      ) : statements.length === 0 ? (
+      ) : !hasContent ? (
         <Card>
           <p className="text-sm text-slate-600">No issued fee statements yet.</p>
         </Card>
       ) : (
         <>
           <div className="space-y-3 md:hidden">
+            {updating.map((entry, index) => (
+              <UpdatingCard key={`updating-${index}`} entry={entry} />
+            ))}
             {statements.map((statement) => (
               <FeeStatementCard key={statement.id} statement={statement} />
             ))}
@@ -131,6 +178,18 @@ export default function StudentFeeStatementsPage() {
                 </tr>
               </thead>
               <tbody>
+                {updating.map((entry, index) => (
+                  <tr key={`updating-${index}`} className="border-b border-amber-100 bg-amber-50/60">
+                    <td className="py-2 pr-4 font-medium text-amber-950">Updating</td>
+                    <td className="py-2 pr-4 text-amber-950">
+                      {entry.registrationWindow.title}
+                      <span className="block text-xs text-amber-800">{entry.message}</span>
+                    </td>
+                    <td className="py-2 pr-4">—</td>
+                    <td className="py-2 pr-4">—</td>
+                    <td className="py-2 pr-4">—</td>
+                  </tr>
+                ))}
                 {statements.map((statement) => (
                   <tr key={statement.id} className="border-b border-slate-100">
                     <td className="py-2 pr-4">{statement.statementNo}</td>

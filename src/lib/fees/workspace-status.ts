@@ -5,36 +5,30 @@ export interface FeeStatementStatusRow {
   status: FeeStatementStatus | string;
   generatedAt: Date | string;
   statementNo?: string;
+  regenerationReason?: string | null;
+  regenerationChangedAt?: Date | string | null;
+  regenerationChangedBy?: { name: string } | null;
 }
 
-const ACTIVE_STATUSES = new Set<FeeStatementStatus | string>(["DRAFT", "ISSUED", "PAID"]);
+const CURRENT_VALID_STATUSES = new Set<FeeStatementStatus | string>(["ISSUED", "PAID"]);
 
 export function needsFeeStatementRegeneration(
   statements: FeeStatementStatusRow[],
-  lastAdjustedAt: Date | string | null | undefined,
+  _lastAdjustedAt?: Date | string | null | undefined,
 ): boolean {
-  if (!lastAdjustedAt || statements.length === 0) return false;
+  return statements.some((statement) => statement.status === "NEEDS_REGENERATION");
+}
 
-  const adjustedAt = new Date(lastAdjustedAt).getTime();
-  const hasCurrentStatement = statements.some(
-    (statement) =>
-      ACTIVE_STATUSES.has(statement.status) &&
-      new Date(statement.generatedAt).getTime() >= adjustedAt,
-  );
-
-  if (hasCurrentStatement) return false;
-
-  return statements.some((statement) => statement.status === "NEEDS_REVIEW") ||
-    statements.some((statement) => statement.status === "REVISED") ||
-    statements.some(
-      (statement) =>
-        ACTIVE_STATUSES.has(statement.status) &&
-        new Date(statement.generatedAt).getTime() < adjustedAt,
-    );
+export function getOutdatedFeeStatement(statements: FeeStatementStatusRow[]) {
+  return statements.find((statement) => statement.status === "NEEDS_REGENERATION") ?? null;
 }
 
 export function hasIssuedFeeStatement(statements: FeeStatementStatusRow[]): boolean {
-  return statements.some((statement) => statement.status === "ISSUED" || statement.status === "PAID");
+  return statements.some((statement) => CURRENT_VALID_STATUSES.has(statement.status));
+}
+
+export function hasCurrentValidFeeStatement(statements: FeeStatementStatusRow[]): boolean {
+  return statements.some((statement) => CURRENT_VALID_STATUSES.has(statement.status));
 }
 
 export function feeStatementStatusLabel(status: string): string {
@@ -47,8 +41,8 @@ export function feeStatementStatusLabel(status: string): string {
       return "Paid";
     case "REVISED":
       return "Superseded";
-    case "NEEDS_REVIEW":
-      return "Needs review";
+    case "NEEDS_REGENERATION":
+      return "Needs Regeneration";
     case "CANCELLED":
       return "Cancelled";
     default:
@@ -63,7 +57,7 @@ export function feeStatementStatusClass(status: string): string {
       return "bg-emerald-100 text-emerald-800";
     case "DRAFT":
       return "bg-slate-100 text-slate-700";
-    case "NEEDS_REVIEW":
+    case "NEEDS_REGENERATION":
       return "bg-amber-100 text-amber-900";
     case "REVISED":
       return "bg-orange-100 text-orange-900";
@@ -73,3 +67,7 @@ export function feeStatementStatusClass(status: string): string {
       return "bg-slate-100 text-slate-700";
   }
 }
+
+export const REPORTABLE_FEE_STATEMENT_STATUSES = ["ISSUED", "PAID"] as const;
+
+export const PENDING_REVISION_FEE_STATEMENT_STATUS = "NEEDS_REGENERATION" as const;

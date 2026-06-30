@@ -9,12 +9,29 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "0.4.0";
+export const CURRENT_VERSION = "0.5.0";
 
 export const releaseNotes: ReleaseNote[] = [
   {
-    version: "0.4.0",
+    version: "0.5.0",
     releaseDate: "2026-06-26",
+    summary:
+      "Restricted and external registration workflows, visibility rules, fee schedules, post-results modules, and calendar board label refinements.",
+    changes: [
+      "Fixed restricted internal and external candidate registration submit flows with audit log compatibility",
+      "Enforced student, teacher, and exam office visibility rules across registration lists and calendars",
+      "Added candidate registration fee selection, billing preview, and fee schedule management",
+      "Added post-results review windows, cash-in, access-to-script, and certificate request modules",
+      "Calendar event cards and board filters now use compact board codes (EDEXCEL, CIE, AQA)",
+      "Registration numbering (REG-IN/RI/EX) and enriched registration audit payloads",
+    ],
+    knownIssues: [
+      "Run pending Prisma migrations through 20260713120000_audit_log_billing_scope after pulling this release.",
+    ],
+  },
+  {
+    version: "0.4.0",
+    releaseDate: "2026-07-05",
     summary:
       "Academic year registration window selector, mobile-friendly student and teacher UI, and About/Help documentation.",
     changes: [

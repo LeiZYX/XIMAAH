@@ -3,6 +3,7 @@ import {
   assistedSourceForRole,
   officeOnlySourceForRole,
   postLockSourceForRole,
+  restrictedAuditActionForRole,
   STUDENT_VISIBLE,
   TEACHER_VISIBLE,
 } from "@/lib/registrations/metadata";
@@ -21,6 +22,13 @@ describe("registrationSource assignment helpers", () => {
   it("maps post-lock adjustment source by role", () => {
     expect(postLockSourceForRole("EXAM_OFFICER")).toBe("EO_POST_LOCK_ADJUSTMENT");
     expect(postLockSourceForRole("ADMIN")).toBe("ADMIN_POST_LOCK_ADJUSTMENT");
+  });
+
+  it("uses restricted internal audit action for office-only registrations", () => {
+    expect(restrictedAuditActionForRole("EXAM_OFFICER")).toBe(
+      "RESTRICTED_INTERNAL_REGISTRATION_CREATED",
+    );
+    expect(restrictedAuditActionForRole("ADMIN")).toBe("RESTRICTED_INTERNAL_REGISTRATION_CREATED");
   });
 });
 

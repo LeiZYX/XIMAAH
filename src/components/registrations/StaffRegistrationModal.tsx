@@ -6,6 +6,19 @@ import {
   useRegistrationWindowSelector,
 } from "@/components/registrations/RegistrationWindowSelector";
 import {
+  BillingPreviewPanel,
+  type BillingPreviewLine,
+} from "@/components/registrations/BillingPreviewPanel";
+import { CandidateRegistrationFeeSection } from "@/components/registrations/CandidateRegistrationFeeSection";
+import {
+  DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+  type FeeStatementDisplayCurrencyOption,
+} from "@/lib/fees/display-currency";
+import {
+  logRegistrationSubmitPayload,
+  readSubmitErrorMessage,
+} from "@/lib/registrations/submit-response";
+import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
   formatExamSessionOptionLabel,
@@ -67,8 +80,15 @@ export function StaffRegistrationModal({
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [selectedSessionIds, setSelectedSessionIds] = useState<string[]>([]);
   const [reason, setReason] = useState("");
+  const [includeCandidateRegistrationFee, setIncludeCandidateRegistrationFee] = useState(false);
+  const [candidateRegistrationFeeReason, setCandidateRegistrationFeeReason] = useState("");
+  const [displayCurrency, setDisplayCurrency] = useState<FeeStatementDisplayCurrencyOption>(
+    DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+  );
+  const [billingPreviewLines, setBillingPreviewLines] = useState<BillingPreviewLine[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
 
   useEffect(() => {
     if (candidateQuery.trim().length < 2) {
@@ -123,6 +143,37 @@ export function StaffRegistrationModal({
     );
   }, [sessions, sessionQuery, subjectFilter]);
 
+  useEffect(() => {
+    if (!registrationWindowId) {
+      setBillingPreviewLines([]);
+      return;
+    }
+
+    let cancelled = false;
+    fetch("/api/registrations/billing-preview", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        registrationWindowId,
+        examSessionIds: selectedSessionIds,
+        includeCandidateRegistrationFee,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!cancelled) {
+          setBillingPreviewLines(Array.isArray(data.lines) ? data.lines : []);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setBillingPreviewLines([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [registrationWindowId, selectedSessionIds, includeCandidateRegistrationFee]);
+
   function toggleSession(id: string) {
     setSelectedSessionIds((current) =>
       current.includes(id) ? current.filter((value) => value !== id) : [...current, id],
@@ -131,6 +182,7 @@ export function StaffRegistrationModal({
 
   async function handleSubmit() {
     setError(null);
+    setWarning(null);
     if (!selectedCandidate) {
       setError("Please select an internal candidate.");
       return;
@@ -147,6 +199,10 @@ export function StaffRegistrationModal({
       setError("Reason is required.");
       return;
     }
+    if (includeCandidateRegistrationFee && !candidateRegistrationFeeReason.trim()) {
+      setError("Reason for adding Candidate Registration Fee is required.");
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -155,16 +211,33 @@ export function StaffRegistrationModal({
         registrationWindowId,
         examSessionIds: selectedSessionIds,
         reason: reason.trim(),
+        includeCandidateRegistrationFee,
+        candidateRegistrationFeeReason: candidateRegistrationFeeReason.trim() || undefined,
+        ...(isOfficeOnly
+          ? {
+              registrationType: "RESTRICTED_INTERNAL",
+              visibility: "EXAM_OFFICE_ONLY",
+              billingScope: "RESTRICTED_BILLING",
+              registrationSource: apiPath.includes("/admin/")
+                ? "ADMIN_FORCED_INTERNAL"
+                : "EO_FORCED_INTERNAL",
+            }
+          : {}),
       };
+
+      logRegistrationSubmitPayload(isOfficeOnly ? "restricted-internal" : "assisted-internal", body);
 
       const response = await fetch(apiPath, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(data.error || "Could not submit registration");
+        throw new Error(await readSubmitErrorMessage(response));
+      }
+      const data = await response.json().catch(() => ({}));
+      if (data.feeWarning) {
+        setWarning(String(data.feeWarning));
       }
       onSubmitted({ workspaceId: data.id });
       onClose();
@@ -271,6 +344,26 @@ export function StaffRegistrationModal({
             </div>
           </label>
 
+          <CandidateRegistrationFeeSection
+            examBoardId={selectedWindow?.examBoard.id ?? null}
+            examBoardName={selectedWindow?.examBoard.name ?? null}
+            registrationWindowId={registrationWindowId || null}
+            savedIncluded={false}
+            pendingIncluded={includeCandidateRegistrationFee}
+            onPendingIncludedChange={setIncludeCandidateRegistrationFee}
+            feeReason={candidateRegistrationFeeReason}
+            onFeeReasonChange={setCandidateRegistrationFeeReason}
+            displayCurrency={displayCurrency}
+            onDisplayCurrencyChange={setDisplayCurrency}
+            showDisplayCurrencySelector
+            disabled={submitting}
+          />
+
+          <BillingPreviewPanel
+            lines={billingPreviewLines}
+            displayCurrency={displayCurrency}
+          />
+
           <label className="block text-sm">
             <span className="mb-1 block font-medium text-slate-700">Reason *</span>
             <textarea
@@ -283,6 +376,7 @@ export function StaffRegistrationModal({
         </div>
 
         {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
+        {warning ? <p className="mt-3 text-sm text-amber-700">{warning}</p> : null}
 
         <div className="mt-6 flex justify-end gap-2">
           <button type="button" onClick={onClose} disabled={submitting} className="rounded-lg border border-slate-300 px-4 py-2 text-sm">

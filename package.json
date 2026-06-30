@@ -15,7 +15,8 @@
     "db:generate": "prisma generate && node scripts/post-prisma-generate.mjs",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts",
+    "db:clear-registrations": "tsx scripts/clear-registrations.ts",
+    "db:backfill-registration-numbers": "tsx scripts/backfill-registration-numbers.ts",
     "db:studio": "prisma studio"
   },
   "dependencies": {

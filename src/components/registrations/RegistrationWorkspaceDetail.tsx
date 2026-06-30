@@ -32,6 +32,18 @@ import {
   type ExamSessionSearchable,
 } from "@/lib/exam-session-search";
 import { FeeStatementPanel } from "@/components/fees/FeeStatementPanel";
+import {
+  BillingPreviewPanel,
+  type BillingPreviewLine,
+} from "@/components/registrations/BillingPreviewPanel";
+import {
+  CandidateRegistrationFeeSection,
+} from "@/components/registrations/CandidateRegistrationFeeSection";
+import {
+  DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+  type FeeStatementDisplayCurrencyOption,
+} from "@/lib/fees/display-currency";
+import { findCandidateRegistrationFeeAuditInfo } from "@/lib/registrations/candidate-registration-fee-audit";
 
 interface WorkspaceDetailProps {
   workspaceId: string;
@@ -129,8 +141,10 @@ function ExamSessionSearchPicker({
 
 interface WorkspaceData {
   id: string;
+  registrationNumber: string | null;
   registrationType: string;
   lockedAt: string | null;
+  includeCandidateRegistrationFee: boolean;
   hasPostLockAdjustment: boolean;
   lastAdjustedAt: string | null;
   lastAdjustmentReason: string | null;
@@ -163,7 +177,7 @@ interface WorkspaceData {
     studentRegistrationOpenAt: string;
     studentRegistrationCloseAt: string;
     registrationCloseAt: string;
-    examBoard: { name: string };
+    examBoard: { id: string; name: string };
     examSeries: { id: string; name: string; year: number };
   };
   registrations: Array<{
@@ -193,6 +207,13 @@ interface WorkspaceData {
     performedAt: string;
     reason: string | null;
     note: string | null;
+    registrationType?: string | null;
+    registrationNumber?: string | null;
+    feeStatementNumber?: string | null;
+    issueNumber?: string | null;
+    registrationSource?: string | null;
+    visibility?: string | null;
+    billingScope?: string | null;
     performedByRole?: string | null;
     performedBy: { name: string; role?: string | null };
     examSession?: {
@@ -261,6 +282,19 @@ export function RegistrationWorkspaceDetail({
   const [feeNeedsRegeneration, setFeeNeedsRegeneration] = useState(false);
   const [feeHasIssuedStatement, setFeeHasIssuedStatement] = useState(false);
   const [confirmFeeImpact, setConfirmFeeImpact] = useState(false);
+  const [includeCandidateRegistrationFee, setIncludeCandidateRegistrationFee] = useState(false);
+  const [candidateRegistrationFeeReason, setCandidateRegistrationFeeReason] = useState("");
+  const [savingFeeSelection, setSavingFeeSelection] = useState(false);
+  const [displayCurrency, setDisplayCurrency] = useState<FeeStatementDisplayCurrencyOption>(
+    DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+  );
+  const [billingPreviewLines, setBillingPreviewLines] = useState<BillingPreviewLine[]>([]);
+  const [billingPreviewLoading, setBillingPreviewLoading] = useState(false);
+
+  const allowPostLockAdjustment = useMemo(
+    () => canAdjust && workspace?.registrationType === "INTERNAL_NORMAL",
+    [canAdjust, workspace?.registrationType],
+  );
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -278,6 +312,48 @@ export function RegistrationWorkspaceDetail({
   }, [apiBase, workspaceId]);
 
   useEffect(() => { load(); }, [load]);
+
+  useEffect(() => {
+    if (!workspace) return;
+    setIncludeCandidateRegistrationFee(workspace.includeCandidateRegistrationFee);
+    setCandidateRegistrationFeeReason("");
+  }, [workspace?.id, workspace?.includeCandidateRegistrationFee]);
+
+  useEffect(() => {
+    if (!workspace || !allowPostLockAdjustment) return;
+
+    let cancelled = false;
+    setBillingPreviewLoading(true);
+    const params = new URLSearchParams({
+      includeCandidateRegistrationFee: String(includeCandidateRegistrationFee),
+    });
+    fetch(`${apiBase}/${workspaceId}/billing-preview?${params.toString()}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (!cancelled) {
+          setBillingPreviewLines(Array.isArray(data.lines) ? data.lines : []);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setBillingPreviewLines([]);
+      })
+      .finally(() => {
+        if (!cancelled) setBillingPreviewLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    apiBase,
+    workspace,
+    workspaceId,
+    includeCandidateRegistrationFee,
+    allowPostLockAdjustment,
+    pendingAdd.length,
+    pendingRemove.length,
+    pendingReplace.length,
+  ]);
 
   useEffect(() => {
     if (!workspace || !adjustMode || (adjustMode !== "add" && adjustMode !== "replace")) return;
@@ -337,6 +413,8 @@ export function RegistrationWorkspaceDetail({
           addExamSessionIds: pendingAdd,
           removeRegistrationIds: pendingRemove,
           replacements: pendingReplace,
+          includeCandidateRegistrationFee,
+          candidateRegistrationFeeReason: candidateRegistrationFeeReason.trim() || undefined,
         }),
       });
       if (!response.ok) {
@@ -372,17 +450,76 @@ export function RegistrationWorkspaceDetail({
 
     const hasPendingChanges =
       pendingAdd.length > 0 || pendingRemove.length > 0 || pendingReplace.length > 0;
-    if (!hasPendingChanges) {
+    const feeSelectionChanged =
+      includeCandidateRegistrationFee !== workspace?.includeCandidateRegistrationFee;
+    if (!hasPendingChanges && !feeSelectionChanged) {
       setError("No changes to apply.");
       return;
     }
 
-    if (feeHasIssuedStatement && !confirmFeeImpact) {
+    if (!hasPendingChanges && feeSelectionChanged) {
+      await saveFeeSelectionOnly();
+      return;
+    }
+
+    if (feeSelectionChanged && !candidateRegistrationFeeReason.trim()) {
+      setError(
+        includeCandidateRegistrationFee
+          ? "Reason for adding Candidate Registration Fee is required."
+          : "Reason for removing Candidate Registration Fee is required.",
+      );
+      return;
+    }
+
+    if (feeHasIssuedStatement && !confirmFeeImpact && hasPendingChanges) {
       setConfirmFeeImpact(true);
       return;
     }
 
     await executeApplyChanges();
+  }
+
+  async function saveFeeSelectionOnly() {
+    if (!workspace) return;
+    if (includeCandidateRegistrationFee === workspace.includeCandidateRegistrationFee) {
+      setError("No fee changes to save.");
+      return;
+    }
+    if (!candidateRegistrationFeeReason.trim()) {
+      setError(
+        includeCandidateRegistrationFee
+          ? "Reason for adding Candidate Registration Fee is required."
+          : "Reason for removing Candidate Registration Fee is required.",
+      );
+      return;
+    }
+
+    setSavingFeeSelection(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      const response = await fetch(`${apiBase}/${workspaceId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          includeCandidateRegistrationFee,
+          candidateRegistrationFeeReason: candidateRegistrationFeeReason.trim() || undefined,
+        }),
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.error ?? "Could not save fee selection");
+      }
+      setWorkspace(await response.json());
+      setCandidateRegistrationFeeReason("");
+      setFeeStatementRefreshKey((key) => key + 1);
+      setFeeNeedsRegeneration(true);
+      setSuccess("Candidate Registration Fee selection saved. Regenerate the fee statement if one already exists.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save fee selection");
+    } finally {
+      setSavingFeeSelection(false);
+    }
   }
 
   function queueAdd() {
@@ -498,6 +635,7 @@ export function RegistrationWorkspaceDetail({
   const displayStudentNo =
     candidate?.studentNumber ?? profile?.studentNo ?? candidate?.assessmentHubCandidateNumber ?? "—";
   const adjustment = parseAdjustmentSummary(workspace.lastAdjustmentSummary);
+  const feeAuditInfo = findCandidateRegistrationFeeAuditInfo(workspace.auditLogs);
 
   return (
     <div className="space-y-6">
@@ -507,13 +645,14 @@ export function RegistrationWorkspaceDetail({
 
       {feeNeedsRegeneration ? (
         <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-          <p className="font-medium">Fee statement needs to be regenerated</p>
+          <p className="font-medium">⚠ Fee Statement Needs Regeneration</p>
           <p className="mt-1">
-            Exam subjects no longer match the last fee statement. Scroll to{" "}
+            Registration billing items have changed since the last fee statement was generated.
+            Scroll to{" "}
             <a href="#fee-statements-panel" className="font-medium text-amber-900 underline">
               Fee statements
             </a>{" "}
-            and use <strong>Regenerate revised</strong>, then issue the new statement.
+            and use <strong>Regenerate Revised Statement</strong>.
           </p>
         </div>
       ) : null}
@@ -522,8 +661,8 @@ export function RegistrationWorkspaceDetail({
         <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-4 text-sm text-amber-950">
           <p className="font-medium">This will affect the issued fee statement</p>
           <p className="mt-2">
-            This registration already has an issued fee statement. Changing exam subjects will mark it
-            as superseded. You will need to regenerate and re-issue the fee statement afterwards.
+            This registration already has an issued fee statement. Changing billing items will mark
+            it as needing regeneration. You will need to regenerate a revised statement afterwards.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <button
@@ -582,6 +721,7 @@ export function RegistrationWorkspaceDetail({
         <Card>
           <h2 className="mb-3 text-lg font-semibold text-slate-900">Registration Summary</h2>
           <dl className="grid gap-2 text-sm">
+            <div><dt className="text-slate-500">Registration #</dt><dd className="font-medium font-mono text-xs sm:text-sm">{workspace.registrationNumber ?? "—"}</dd></div>
             <div><dt className="text-slate-500">Exam Board</dt><dd className="font-medium">{workspace.registrationWindow.examBoard.name}</dd></div>
             <div><dt className="text-slate-500">Exam Series</dt><dd className="font-medium">{workspace.registrationWindow.examSeries.name} ({workspace.registrationWindow.examSeries.year})</dd></div>
             <div><dt className="text-slate-500">Registration Window</dt><dd className="font-medium">{formatWindowRange(workspace.registrationWindow.studentRegistrationOpenAt, workspace.registrationWindow.registrationCloseAt)}</dd></div>
@@ -621,7 +761,35 @@ export function RegistrationWorkspaceDetail({
         </div>
       </Card>
 
-      {canAdjust && isLocked ? (
+      {allowPostLockAdjustment ? (
+        <Card className="space-y-4">
+          <CandidateRegistrationFeeSection
+            examBoardId={workspace.registrationWindow.examBoard.id}
+            examBoardName={workspace.registrationWindow.examBoard.name}
+            registrationWindowId={workspace.registrationWindow.id}
+            savedIncluded={workspace.includeCandidateRegistrationFee}
+            pendingIncluded={includeCandidateRegistrationFee}
+            onPendingIncludedChange={setIncludeCandidateRegistrationFee}
+            feeReason={candidateRegistrationFeeReason}
+            onFeeReasonChange={setCandidateRegistrationFeeReason}
+            savedAuditInfo={workspace.includeCandidateRegistrationFee ? feeAuditInfo : null}
+            displayCurrency={displayCurrency}
+            onDisplayCurrencyChange={setDisplayCurrency}
+            showDisplayCurrencySelector
+            disabled={savingFeeSelection || applying}
+            showSaveButton
+            saving={savingFeeSelection}
+            onSave={() => void saveFeeSelectionOnly()}
+          />
+          <BillingPreviewPanel
+            lines={billingPreviewLines}
+            displayCurrency={displayCurrency}
+            loading={billingPreviewLoading}
+          />
+        </Card>
+      ) : null}
+
+      {allowPostLockAdjustment && isLocked ? (
         <Card>
           <h2 className="mb-3 text-lg font-semibold text-slate-900">Adjustment Panel</h2>
           <div className="flex flex-wrap gap-2">
@@ -680,16 +848,41 @@ export function RegistrationWorkspaceDetail({
             </div>
           ) : null}
 
-          {(pendingAdd.length > 0 || pendingRemove.length > 0 || pendingReplace.length > 0) ? (
+          {(pendingAdd.length > 0 ||
+            pendingRemove.length > 0 ||
+            pendingReplace.length > 0 ||
+            includeCandidateRegistrationFee !== workspace.includeCandidateRegistrationFee) ? (
             <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm">
               <p className="font-medium text-slate-900">Preview changes</p>
               {pendingAdd.length > 0 ? <p className="mt-2">Add: {pendingAdd.length} session(s)</p> : null}
               {pendingRemove.length > 0 ? <p className="mt-1">Remove: {pendingRemove.length} registration(s)</p> : null}
               {pendingReplace.length > 0 ? <p className="mt-1">Replace: {pendingReplace.length} exam(s)</p> : null}
+              {includeCandidateRegistrationFee !== workspace.includeCandidateRegistrationFee ? (
+                <p className="mt-1">
+                  Candidate Registration Fee:{" "}
+                  {includeCandidateRegistrationFee ? "add" : "remove"}
+                </p>
+              ) : null}
               <label className="mt-3 block">
                 <span className="mb-1 block font-medium text-slate-700">Adjustment reason *</span>
-                <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={3} className="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Required reason for this adjustment" />
+                <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={3} className="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Required reason for exam adjustments" />
               </label>
+              {includeCandidateRegistrationFee !== workspace.includeCandidateRegistrationFee ? (
+                <label className="mt-3 block">
+                  <span className="mb-1 block font-medium text-slate-700">
+                    {includeCandidateRegistrationFee
+                      ? "Reason for adding Candidate Registration Fee"
+                      : "Reason for removing Candidate Registration Fee"}{" "}
+                    *
+                  </span>
+                  <textarea
+                    value={candidateRegistrationFeeReason}
+                    onChange={(e) => setCandidateRegistrationFeeReason(e.target.value)}
+                    rows={2}
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2"
+                  />
+                </label>
+              ) : null}
               <button type="button" disabled={applying} onClick={applyChanges} className="mt-3 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50">
                 {applying ? "Applying..." : "Apply Changes"}
               </button>
@@ -823,7 +1016,7 @@ export function RegistrationWorkspaceDetail({
         )}
       </Card>
 
-      {workspace && workspace.registrationType === "NORMAL" ? (
+      {workspace && workspace.registrationType === "INTERNAL_NORMAL" ? (
         <div id="fee-statement">
           <FeeStatementPanel
             workspaceId={workspace.id}
@@ -849,6 +1042,17 @@ export function RegistrationWorkspaceDetail({
               <li key={log.id} className="rounded-lg border border-slate-200 px-3 py-2">
                 <p className="font-medium text-slate-900">{auditActionLabel(log.action)}</p>
                 <p className="text-slate-600">{log.performedBy.name} · {new Date(log.performedAt).toLocaleString()}</p>
+                {log.registrationType && log.registrationType !== "INTERNAL_NORMAL" ? (
+                  <p className="mt-1 text-xs font-medium uppercase tracking-wide text-amber-800">
+                    {log.registrationType === "EXTERNAL" ? "External Candidate" : "Restricted Internal"}
+                  </p>
+                ) : null}
+                <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+                  {log.registrationNumber ? <span>Reg: {log.registrationNumber}</span> : null}
+                  {log.issueNumber ? <span>Issue: {log.issueNumber}</span> : null}
+                  {log.feeStatementNumber ? <span>FS: {log.feeStatementNumber}</span> : null}
+                  {log.registrationSource ? <span>Source: {log.registrationSource}</span> : null}
+                </div>
                 {log.reason ? <p className="mt-1 text-slate-700">Reason: {log.reason}</p> : null}
                 {log.note ? <p className="text-slate-500">{log.note}</p> : null}
               </li>

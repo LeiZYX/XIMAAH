@@ -1,5 +1,13 @@
 import type { FeeStatementDisplayCurrency } from "@/generated/prisma/enums";
 import { calculateFeeAmounts } from "@/lib/fees/calculate";
+import {
+  buildCandidateRegistrationFeeLine,
+  CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
+  candidateRegistrationFeeWarningMessage,
+  loadCandidateRegistrationFeeSchedule,
+  previewCandidateRegistrationFee,
+  validateCandidateRegistrationFeeForWorkspace,
+} from "@/lib/fees/candidate-registration-fee";
 import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-currency";
 import { findMatchingFeeRuleWithFallback, resolveEntryTypeForRegistration } from "@/lib/fees/match";
 import type {
@@ -12,6 +20,15 @@ import type { Prisma } from "@/generated/prisma/client";
 import type { BillingScope } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
 import { AUTO_BILLING_SCOPES } from "@/lib/registrations/metadata";
+import {
+  feeStatementStudentVisible,
+  isOfficeOnlyRegistrationType,
+  normalizeRegistrationType,
+  statementKindForRegistrationType,
+} from "@/lib/registrations/registration-type";
+import { generateFeeStatementNumber } from "@/lib/registrations/numbering";
+import { createFeeAuditLog } from "@/lib/fees/audit";
+import { finalizeRevisedFeeStatement } from "@/lib/fees/statement-lifecycle";
 
 export class FeeError extends Error {
   constructor(message: string) {
@@ -62,6 +79,11 @@ async function loadQualificationId(subjectId: string): Promise<string> {
 export async function validateWorkspaceFees(workspaceId: string): Promise<{
   warnings: MissingFeeRuleWarning[];
   canGenerate: boolean;
+  candidateRegistrationFeeWarning: string | null;
+  candidateRegistrationFeePreview: Awaited<
+    ReturnType<typeof previewCandidateRegistrationFee>
+  > | null;
+  includeCandidateRegistrationFee: boolean;
 }> {
   const workspace = await prisma.registrationWorkspace.findUnique({
     where: { id: workspaceId },
@@ -120,7 +142,22 @@ export async function validateWorkspaceFees(workspaceId: string): Promise<{
     }
   }
 
-  return { warnings, canGenerate: warnings.length === 0 };
+  const feeValidation = await validateCandidateRegistrationFeeForWorkspace(workspaceId);
+  const candidateRegistrationFeeWarning = candidateRegistrationFeeWarningMessage(feeValidation);
+  const candidateRegistrationFeePreview = workspace.includeCandidateRegistrationFee
+    ? await previewCandidateRegistrationFee(
+        workspace.registrationWindow.examBoardId,
+        workspace.registrationWindowId,
+      )
+    : null;
+
+  return {
+    warnings,
+    canGenerate: warnings.length === 0 && !candidateRegistrationFeeWarning,
+    candidateRegistrationFeeWarning,
+    candidateRegistrationFeePreview,
+    includeCandidateRegistrationFee: workspace.includeCandidateRegistrationFee,
+  };
 }
 
 export async function buildFeeLinesForWorkspace(
@@ -224,8 +261,42 @@ export async function buildFeeLinesForWorkspace(
     });
   }
 
+  if (workspace.includeCandidateRegistrationFee) {
+    const schedule = await loadCandidateRegistrationFeeSchedule(
+      workspace.registrationWindow.examBoardId,
+    );
+    if (!schedule) {
+      warnings.push({
+        examSessionId: "",
+        subject: CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
+        paperCode: "",
+        paperTitle: "",
+        entryType: "NORMAL",
+      });
+    } else {
+      lines.push(
+        buildCandidateRegistrationFeeLine(
+          schedule,
+          workspace.registrationWindow.examBoard.code,
+          exchangeRates,
+          displayCurrency,
+        ),
+      );
+      if (exchangeRateSnapshot === null) {
+        exchangeRateSnapshot = lines[lines.length - 1]!.exchangeRateSnapshot ?? null;
+      }
+    }
+  }
+
   return { lines, exchangeRateSnapshot, warnings };
 }
+
+export {
+  markFeeStatementsNeedsRegeneration,
+  loadFeeStatementVersionHistory,
+  feeStatementChangeReasonLabel,
+  type FeeStatementChangeReasonCode,
+} from "@/lib/fees/statement-lifecycle";
 
 export async function generateStatementNumber(registrationWindowId: string): Promise<string> {
   const window = await prisma.registrationWindow.findUnique({
@@ -241,35 +312,16 @@ export async function generateStatementNumber(registrationWindowId: string): Pro
   return `${prefix}-${String(count + 1).padStart(5, "0")}`;
 }
 
-export async function markSupersededStatements(workspaceId: string): Promise<void> {
-  await prisma.feeStatement.updateMany({
-    where: {
-      registrationWorkspaceId: workspaceId,
-      status: { in: ["ISSUED", "PAID"] },
-    },
-    data: { status: "REVISED" },
+export async function regenerateRevisedFeeStatement(params: {
+  workspaceId: string;
+  generatedByUserId: string;
+  displayCurrency?: FeeStatementDisplayCurrency;
+}) {
+  return generateFeeStatement({
+    ...params,
+    regenerate: true,
+    issue: true,
   });
-}
-
-export async function markStatementsNeedReview(workspaceId: string): Promise<void> {
-  await prisma.feeStatement.updateMany({
-    where: {
-      registrationWorkspaceId: workspaceId,
-      status: "DRAFT",
-    },
-    data: { status: "NEEDS_REVIEW" },
-  });
-}
-
-function billableRegistrationFilter(includeManual = false): Prisma.StudentExamRegistrationWhereInput {
-  return {
-    registrationType: { not: "RESTRICTED" },
-    billingScope: {
-      in: includeManual
-        ? (["NORMAL_BILLING", "OFFICE_ONLY_BILLING", "MANUAL_REVIEW"] as BillingScope[])
-        : [...AUTO_BILLING_SCOPES],
-    },
-  };
 }
 
 export async function generateFeeStatement(params: {
@@ -283,10 +335,11 @@ export async function generateFeeStatement(params: {
     workspaceId,
     generatedByUserId,
     displayCurrency = DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
-    issue = false,
+    issue: issueRequested = false,
     regenerate: regenerateRequested = false,
   } = params;
   let regenerate = regenerateRequested;
+  let issue = issueRequested;
 
   const workspace = await prisma.registrationWorkspace.findUnique({
     where: { id: workspaceId },
@@ -305,9 +358,10 @@ export async function generateFeeStatement(params: {
   });
 
   if (!workspace) throw new FeeError("Registration workspace not found");
-  if (workspace.registrationType === "RESTRICTED") {
+  const registrationType = normalizeRegistrationType(workspace.registrationType);
+  if (isOfficeOnlyRegistrationType(registrationType)) {
     throw new FeeError(
-      "Restricted registrations use Restricted Invoice instead of a normal fee statement",
+      "Restricted and external registrations use a separate fee statement instead of a normal fee statement",
     );
   }
   await ensureWorkspaceLockedForBilling(workspaceId);
@@ -315,14 +369,14 @@ export async function generateFeeStatement(params: {
   const existingDraft = await prisma.feeStatement.findFirst({
     where: {
       registrationWorkspaceId: workspaceId,
-      status: { in: ["DRAFT", "NEEDS_REVIEW"] },
+      status: { in: ["DRAFT", "NEEDS_REGENERATION"] },
     },
   });
 
   if (existingDraft && !regenerate) {
-    if (existingDraft.status === "NEEDS_REVIEW") {
+    if (existingDraft.status === "NEEDS_REGENERATION") {
       throw new FeeError(
-        "The fee statement is out of date after a registration change. Use regenerate to create a revised statement.",
+        "The fee statement is outdated after a registration change. Use Regenerate Revised Statement.",
       );
     }
     throw new FeeError("A draft fee statement already exists. Issue or regenerate it.");
@@ -337,13 +391,22 @@ export async function generateFeeStatement(params: {
 
   if (existingIssued && !regenerate) {
     throw new FeeError(
-      "An issued fee statement already exists. Use regenerate to create a revised statement.",
+      "An issued fee statement already exists. Use Regenerate Revised Statement.",
     );
   }
+
+  const needsRegenerationStatement = await prisma.feeStatement.findFirst({
+    where: {
+      registrationWorkspaceId: workspaceId,
+      status: "NEEDS_REGENERATION",
+    },
+    orderBy: { generatedAt: "desc" },
+  });
 
   const onlySuperseded =
     !existingDraft &&
     !existingIssued &&
+    !needsRegenerationStatement &&
     (await prisma.feeStatement.findFirst({
       where: {
         registrationWorkspaceId: workspaceId,
@@ -354,6 +417,10 @@ export async function generateFeeStatement(params: {
     }));
   if (onlySuperseded) {
     regenerate = true;
+  }
+
+  if (regenerate && needsRegenerationStatement && !issue) {
+    issue = true;
   }
 
   const { lines, exchangeRateSnapshot, warnings } = await buildFeeLinesForWorkspace(
@@ -367,11 +434,7 @@ export async function generateFeeStatement(params: {
     );
   }
 
-  if (regenerate && existingIssued) {
-    await markSupersededStatements(workspaceId);
-  }
-
-  if (existingDraft && regenerate) {
+  if (regenerate && existingDraft && existingDraft.status === "DRAFT" && !existingDraft.issuedAt) {
     await prisma.feeStatementItem.deleteMany({ where: { feeStatementId: existingDraft.id } });
     await prisma.feeStatement.delete({ where: { id: existingDraft.id } });
   }
@@ -412,7 +475,8 @@ export async function generateFeeStatement(params: {
   const candidateType =
     snapshot?.candidateTypeSnapshot ?? candidate?.candidateType ?? null;
 
-  const statementNo = await generateStatementNumber(workspace.registrationWindowId);
+  const statementNo = await generateFeeStatementNumber(registrationType);
+  const statementKind = statementKindForRegistrationType(registrationType);
 
   const statement = await prisma.feeStatement.create({
     data: {
@@ -421,7 +485,8 @@ export async function generateFeeStatement(params: {
       registrationWorkspaceId: workspaceId,
       registrationWindowId: workspace.registrationWindowId,
       statementNo,
-      statementKind: "NORMAL",
+      statementKind,
+      studentVisible: feeStatementStudentVisible(registrationType),
       displayCurrency,
       exchangeRateSnapshot,
       studentNameSnapshot: studentName,
@@ -437,26 +502,7 @@ export async function generateFeeStatement(params: {
       generatedByUserId,
       issuedAt: issue ? new Date() : null,
       items: {
-        create: lines.map((line) => ({
-          examSessionId: line.examSessionId,
-          examBoardSnapshot: line.examBoardSnapshot,
-          qualificationSnapshot: line.qualificationSnapshot,
-          subjectSnapshot: line.subjectSnapshot,
-          paperCodeSnapshot: line.paperCodeSnapshot,
-          paperTitleSnapshot: line.paperTitleSnapshot,
-          entryTypeSnapshot: line.entryTypeSnapshot,
-          costCurrencySnapshot: line.costCurrencySnapshot,
-          costAmountSnapshot: line.costAmountSnapshot,
-          exchangeRateSnapshot: line.exchangeRateSnapshot,
-          markupTypeSnapshot: line.markupTypeSnapshot,
-          markupValueSnapshot: line.markupValueSnapshot,
-          salesGbpAmountSnapshot: line.salesGbpAmountSnapshot,
-          salesCnyAmountSnapshot: line.salesCnyAmountSnapshot,
-          displayCurrencySnapshot: line.displayCurrencySnapshot,
-          lineTotalGbp: line.lineTotalGbp,
-          lineTotalCny: line.lineTotalCny,
-          quantity: line.quantity,
-        })),
+        create: lines.map((line) => mapFeeLineToStatementItemCreate(line)),
       },
     },
     include: {
@@ -470,7 +516,74 @@ export async function generateFeeStatement(params: {
     },
   });
 
+  if (regenerate) {
+    await finalizeRevisedFeeStatement({
+      workspaceId,
+      newStatementId: statement.id,
+      performedByUserId: generatedByUserId,
+      registrationWindowId: workspace.registrationWindowId,
+    });
+  }
+
+  if (issue) {
+    await createFeeAuditLog({
+      action: "FEE_STATEMENT_ISSUED",
+      performedByUserId: generatedByUserId,
+      registrationWindowId: workspace.registrationWindowId,
+      metadata: { statementId: statement.id, statementNo: statement.statementNo, regenerate },
+    }).catch((error) => {
+      console.error("Fee audit log failed:", error);
+    });
+  }
+
   return statement;
+}
+
+function billableRegistrationFilter(includeManual = false): Prisma.StudentExamRegistrationWhereInput {
+  return {
+    registrationType: "INTERNAL_NORMAL",
+    billingScope: {
+      in: includeManual
+        ? (["NORMAL_BILLING", "MANUAL_REVIEW"] as BillingScope[])
+        : [...AUTO_BILLING_SCOPES],
+    },
+  };
+}
+
+function mapFeeLineToStatementItemCreate(
+  line: CalculatedFeeLine,
+): Prisma.FeeStatementItemCreateWithoutFeeStatementInput {
+  const item: Prisma.FeeStatementItemCreateWithoutFeeStatementInput = {
+    serviceType: line.serviceType ?? null,
+    feeScheduleVersionSnapshot: line.feeScheduleVersionSnapshot ?? null,
+    serviceNameSnapshot: line.serviceNameSnapshot ?? null,
+    examBoardSnapshot: line.examBoardSnapshot,
+    qualificationSnapshot: line.qualificationSnapshot ?? null,
+    subjectSnapshot: line.subjectSnapshot ?? null,
+    paperCodeSnapshot: line.paperCodeSnapshot ?? null,
+    paperTitleSnapshot: line.paperTitleSnapshot ?? null,
+    entryTypeSnapshot: line.entryTypeSnapshot ?? null,
+    costCurrencySnapshot: line.costCurrencySnapshot,
+    costAmountSnapshot: line.costAmountSnapshot,
+    exchangeRateSnapshot: line.exchangeRateSnapshot,
+    markupTypeSnapshot: line.markupTypeSnapshot ?? null,
+    markupValueSnapshot: line.markupValueSnapshot,
+    salesGbpAmountSnapshot: line.salesGbpAmountSnapshot,
+    salesCnyAmountSnapshot: line.salesCnyAmountSnapshot,
+    displayCurrencySnapshot: line.displayCurrencySnapshot,
+    lineTotalGbp: line.lineTotalGbp,
+    lineTotalCny: line.lineTotalCny,
+    quantity: line.quantity,
+  };
+
+  if (line.feeScheduleId) {
+    item.feeSchedule = { connect: { id: line.feeScheduleId } };
+  }
+  if (line.examSessionId) {
+    item.examSession = { connect: { id: line.examSessionId } };
+  }
+
+  return item;
 }
 
 export async function issueFeeStatement(statementId: string) {
@@ -486,15 +599,27 @@ export async function issueFeeStatement(statementId: string) {
   if (statement.status === "REVISED" || statement.status === "CANCELLED") {
     throw new FeeError("Cannot issue a revised or cancelled statement");
   }
+  if (statement.status === "NEEDS_REGENERATION") {
+    throw new FeeError("Cannot issue an outdated statement. Regenerate a revised statement instead.");
+  }
   if (statement.items.length === 0) {
     throw new FeeError("Fee statement has no line items");
   }
 
+  if (!statement.registrationWorkspaceId) {
+    throw new FeeError("Cannot issue registration fee statement without a workspace");
+  }
+
   const validation = await validateWorkspaceFees(statement.registrationWorkspaceId);
   if (!validation.canGenerate) {
-    throw new FeeError(
-      `Cannot issue: missing fee rules for ${validation.warnings.length} exam(s).`,
-    );
+    const parts: string[] = [];
+    if (validation.warnings.length > 0) {
+      parts.push(`missing fee rules for ${validation.warnings.length} exam(s)`);
+    }
+    if (validation.candidateRegistrationFeeWarning) {
+      parts.push(validation.candidateRegistrationFeeWarning);
+    }
+    throw new FeeError(`Cannot issue: ${parts.join("; ")}.`);
   }
 
   return prisma.feeStatement.update({

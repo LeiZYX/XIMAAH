@@ -6,6 +6,10 @@ import {
   RegistrationError,
   registrationInclude,
 } from "@/lib/registrations/service";
+import {
+  canRoleViewRegistration,
+  loadTeacherRegistrationScope,
+} from "@/lib/registrations/visibility";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -47,6 +51,16 @@ export async function GET(
   if (!registration) return jsonError("Not found", 404);
   if (auth.user.role === "STUDENT" && registration.studentId !== auth.user.id) {
     return jsonError("Forbidden", 403);
+  }
+
+  if (auth.user.role === "STUDENT" || auth.user.role === "SUBJECT_TEACHER") {
+    const scope =
+      auth.user.role === "SUBJECT_TEACHER"
+        ? await loadTeacherRegistrationScope(auth.user.id)
+        : undefined;
+    if (!canRoleViewRegistration(auth.user.role, registration, scope)) {
+      return jsonError("Forbidden", 403);
+    }
   }
 
   return NextResponse.json(registration);

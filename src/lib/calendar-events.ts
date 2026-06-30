@@ -1,5 +1,6 @@
 import type { LevelCategory } from "@/lib/level-categories";
-import { examBoardAccent, examBoardCalendarLabel } from "@/lib/exam-board-colors";
+import { getCalendarBoardLabel } from "@/lib/calendar/board-label";
+import { examBoardAccent } from "@/lib/exam-board-colors";
 import { resolveLevelCategory, sessionColorsForLevel } from "@/lib/level-categories";
 
 export interface SessionEventAppearance {
@@ -18,13 +19,12 @@ export function sessionEventAppearance(
 ): SessionEventAppearance {
   const levelColors = sessionColorsForLevel(level, paperTitle);
   const board = examBoardAccent(examBoardCode);
-  const displayName = examBoardName?.trim() || board.label;
 
   return {
     backgroundColor: levelColors.bg,
     borderColor: board.accent,
     boardAccent: board.accent,
-    boardLabel: displayName,
+    boardLabel: getCalendarBoardLabel({ code: examBoardCode, name: examBoardName }),
     levelCategory: levelColors.levelCategory,
   };
 }
@@ -59,6 +59,15 @@ export function sessionCalendarDetailLabel(
 ): string {
   const levelAbbrev = levelCategoryAbbrev(resolveLevelCategory(level, paperTitle));
   return [levelAbbrev, subjectName, paperCode].filter(Boolean).join(" ");
+}
+
+export function sessionCalendarSubjectLine(
+  level: string,
+  subjectName: string,
+  paperTitle?: string,
+): string {
+  const levelAbbrev = levelCategoryAbbrev(resolveLevelCategory(level, paperTitle));
+  return [levelAbbrev, subjectName].filter(Boolean).join(" ");
 }
 
 export function sessionCalendarLabel(subjectName: string, paperCode: string): string {

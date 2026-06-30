@@ -68,6 +68,9 @@ test.describe("Exam officer registration workflows", () => {
     const workspace = await response.json();
     expect(workspace.registrationSource).toBe("EO_ASSISTED");
     expect(workspace.visibility).toBe("STUDENT_AND_TEACHER");
+    expect(workspace.billingScope).toBe("NORMAL_BILLING");
+    expect(workspace.registrationType).toBe("INTERNAL_NORMAL");
+    expect(workspace.registrationNumber).toMatch(/^REG-IN-\d{4}-\d{6}$/);
   });
 
   test("EO can create office-only registration", async ({ request }) => {
@@ -87,6 +90,9 @@ test.describe("Exam officer registration workflows", () => {
     const workspace = await response.json();
     expect(workspace.registrationSource).toBe("EO_FORCED_INTERNAL");
     expect(workspace.visibility).toBe("EXAM_OFFICE_ONLY");
+    expect(workspace.billingScope).toBe("RESTRICTED_BILLING");
+    expect(workspace.registrationType).toBe("RESTRICTED_INTERNAL");
+    expect(workspace.registrationNumber).toMatch(/^REG-RI-\d{4}-\d{6}$/);
   });
 
   test("office-only registration is hidden from student and teacher", async ({ request }) => {
@@ -132,6 +138,10 @@ test.describe("Exam officer registration workflows", () => {
     expect(create.status()).toBe(201);
     const workspace = await create.json();
     expect(workspace.registrationSource).toBe("EXTERNAL_CANDIDATE");
+    expect(workspace.visibility).toBe("EXAM_OFFICE_ONLY");
+    expect(workspace.billingScope).toBe("EXTERNAL_BILLING");
+    expect(workspace.registrationType).toBe("EXTERNAL");
+    expect(workspace.registrationNumber).toMatch(/^REG-EX-\d{4}-\d{6}$/);
 
     const eoList = await request.get(
       "/api/exam-office/registrations?registrationSource=EXTERNAL_CANDIDATE",

@@ -33,6 +33,8 @@ const PARTNERSHIP_LOGO = "/logos/shssip-rugby-logo.png";
 export interface ConfirmationPrintData {
   group: RegistrationWindowGroup;
   workspaceId?: string;
+  registrationNumber?: string | null;
+  confirmationNumber?: string | null;
   hasPostLockAdjustment?: boolean;
   lastAdjustedAt?: string | null;
   lastAdjustedByName?: string | null;
@@ -194,6 +196,12 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
         <section>
           <h4 className="border-b border-slate-200 pb-2 text-sm font-semibold uppercase tracking-wide text-indigo-700">Registration Summary</h4>
           <dl className="mt-3 grid gap-3 sm:grid-cols-2">
+            {data.registrationNumber ? (
+              <SummaryField label="Registration #" value={data.registrationNumber} />
+            ) : null}
+            {data.confirmationNumber ? (
+              <SummaryField label="Issue / Confirmation #" value={data.confirmationNumber} />
+            ) : null}
             <SummaryField label="Exam Board" value={group.boardSummary} />
             <SummaryField label="Registration Name" value={group.window.title || group.examSeries.name} />
             <SummaryField label="Exam Series" value={`${group.examSeries.name} (${group.examSeries.year})`} />
@@ -326,6 +334,8 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
 
 export function buildWorkspaceConfirmationPrintData(workspace: {
   id: string;
+  registrationNumber?: string | null;
+  confirmationNumber?: string | null;
   hasPostLockAdjustment: boolean;
   lastAdjustedAt: string | Date | null;
   lastAdjustedByUser: { name: string } | null;
@@ -464,6 +474,8 @@ export function buildWorkspaceConfirmationPrintData(workspace: {
   return {
     ...buildConfirmationPrintData(group as never, {
       id: workspace.id,
+      registrationNumber: workspace.registrationNumber ?? null,
+      confirmationNumber: workspace.confirmationNumber ?? null,
       hasPostLockAdjustment: workspace.hasPostLockAdjustment,
       lastAdjustedAt: workspace.lastAdjustedAt,
       lastAdjustedByUser: workspace.lastAdjustedByUser,
@@ -483,6 +495,8 @@ export function buildConfirmationPrintData(
   group: RegistrationWindowGroup,
   workspace?: {
     id?: string;
+    registrationNumber?: string | null;
+    confirmationNumber?: string | null;
     hasPostLockAdjustment?: boolean;
     lastAdjustedAt?: string | Date | null;
     lastAdjustedByUser?: { name?: string | null } | null;
@@ -515,6 +529,8 @@ export function buildConfirmationPrintData(
   return {
     group,
     workspaceId: workspace?.id,
+    registrationNumber: workspace?.registrationNumber ?? group.registrationNumber ?? null,
+    confirmationNumber: workspace?.confirmationNumber ?? group.confirmationNumber ?? null,
     hasPostLockAdjustment: workspace?.hasPostLockAdjustment ?? postLockAdjustments.length > 0,
     lastAdjustedAt: workspace?.lastAdjustedAt ? String(workspace.lastAdjustedAt) : null,
     lastAdjustedByName,

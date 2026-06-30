@@ -5,5 +5,5 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function POST(request: NextRequest) {
-  return createExternalCandidateRegistrationHandler(request, "ADMIN");
+  return createExternalCandidateRegistrationHandler(request);
 }

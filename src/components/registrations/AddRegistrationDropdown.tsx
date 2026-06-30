@@ -65,7 +65,7 @@ export function AddRegistrationDropdown({
               aria-label="Close menu"
               onClick={() => setOpen(false)}
             />
-            <div className="absolute right-0 z-50 mt-2 w-72 origin-top-right rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
+            <div className="absolute right-0 z-50 mt-2 w-96 origin-top-right rounded-lg border border-slate-200 bg-white py-1 shadow-lg">
               <button
                 type="button"
                 className="block w-full px-4 py-2 text-left text-sm hover:bg-slate-50"
@@ -75,7 +75,9 @@ export function AddRegistrationDropdown({
                 }}
               >
                 Register on behalf of internal student
-                <span className="mt-0.5 block text-xs text-slate-500">Normal internal registration</span>
+                <span className="mt-0.5 block text-xs text-slate-500">
+                  Student-visible registration. Same as student self-registration, created by Exams Office.
+                </span>
               </button>
               <button
                 type="button"
@@ -86,6 +88,9 @@ export function AddRegistrationDropdown({
                 }}
               >
                 Restricted registration for internal student
+                <span className="mt-0.5 block text-xs text-slate-500">
+                  Office-only internal registration. Hidden from student and teachers. Billed separately.
+                </span>
               </button>
               <button
                 type="button"
@@ -96,6 +101,9 @@ export function AddRegistrationDropdown({
                 }}
               >
                 Register external candidate
+                <span className="mt-0.5 block text-xs text-slate-500">
+                  External candidate registration. No student portal access. Billed separately.
+                </span>
               </button>
               <button
                 type="button"
@@ -106,6 +114,10 @@ export function AddRegistrationDropdown({
                 }}
               >
                 Adjust locked registration
+                <span className="mt-0.5 block text-xs text-slate-500">
+                  Modify an existing locked normal/internal registration. Changes remain merged with the original
+                  student-visible registration.
+                </span>
               </button>
             </div>
           </>

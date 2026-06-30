@@ -7,12 +7,14 @@ import {
   FeeError,
   generateFeeStatement,
   issueFeeStatement,
+  regenerateRevisedFeeStatement,
   validateWorkspaceFees,
 } from "@/lib/fees/statement";
 import {
   hasIssuedFeeStatement,
   needsFeeStatementRegeneration,
 } from "@/lib/fees/workspace-status";
+import { repairDuplicateIssuedFeeStatements } from "@/lib/fees/statement-lifecycle";
 import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-currency";
 import {
   findLockedWorkspacesForBilling,
@@ -29,7 +31,7 @@ export const revalidate = 0;
 
 async function runOfficeInvoiceBatch(input: {
   registrationWindowId: string;
-  registrationType: "RESTRICTED" | "EXTERNAL";
+  registrationType: "RESTRICTED_INTERNAL" | "EXTERNAL";
   statementKind: FeeStatementKind;
   generatedByUserId: string;
   displayCurrency: "GBP" | "CNY" | "BOTH";
@@ -125,6 +127,10 @@ export async function GET(request: NextRequest) {
 
   const statementInclude = {
     items: true,
+    generatedBy: { select: { id: true, name: true } },
+    regenerationChangedBy: { select: { id: true, name: true } },
+    revisedFromStatement: { select: { id: true, statementNo: true, status: true } },
+    revisedToStatement: { select: { id: true, statementNo: true, status: true } },
     registrationWindow: {
       include: {
         examBoard: { select: { name: true, code: true } },
@@ -149,10 +155,12 @@ export async function GET(request: NextRequest) {
     ...(registrationWindowId ? { registrationWindowId } : {}),
     ...(workspaceId ? { registrationWorkspaceId: workspaceId } : {}),
     ...(statementKind ? { statementKind } : {}),
-    ...(!includeSuperseded ? { status: { not: "REVISED" } } : {}),
+    ...(!includeSuperseded ? { status: { notIn: ["REVISED", "CANCELLED"] } } : {}),
   };
 
   if (workspaceId) {
+    await repairDuplicateIssuedFeeStatements(workspaceId);
+
     const statements = await prisma.feeStatement.findMany({
       where,
       include: statementInclude,
@@ -163,13 +171,23 @@ export async function GET(request: NextRequest) {
       select: { lastAdjustedAt: true },
     });
 
+    const outdated = statements.find((row) => row.status === "NEEDS_REGENERATION");
+
     const meta = {
-      needsRegeneration: needsFeeStatementRegeneration(
-        statements,
-        workspace?.lastAdjustedAt ?? null,
-      ),
+      needsRegeneration: needsFeeStatementRegeneration(statements, workspace?.lastAdjustedAt ?? null),
       hasIssuedStatement: hasIssuedFeeStatement(statements),
       lastAdjustedAt: workspace?.lastAdjustedAt?.toISOString() ?? null,
+      outdatedStatement: outdated
+        ? {
+            id: outdated.id,
+            statementNo: outdated.statementNo,
+            status: outdated.status,
+            generatedAt: outdated.generatedAt,
+            regenerationReason: outdated.regenerationReason,
+            regenerationChangedAt: outdated.regenerationChangedAt,
+            regenerationChangedBy: outdated.regenerationChangedBy,
+          }
+        : null,
     };
 
     return NextResponse.json({ statements, meta });
@@ -184,7 +202,7 @@ export async function GET(request: NextRequest) {
         statementKindParam === "EXTERNAL"
           ? { statementKind: statementKindParam }
           : {}),
-        ...(!includeSuperseded ? { status: { not: "REVISED" } } : {}),
+        ...(!includeSuperseded ? { status: { notIn: ["REVISED", "CANCELLED"] } } : {}),
       },
       include: statementInclude,
       orderBy: [{ generatedAt: "desc" }],
@@ -262,7 +280,7 @@ export async function POST(request: NextRequest) {
     if (data.action === "batch" && data.registrationWindowId) {
       const workspaces = await findLockedWorkspacesForBilling(
         data.registrationWindowId,
-        "NORMAL",
+        "INTERNAL_NORMAL",
       );
 
       const results: {
@@ -380,7 +398,7 @@ export async function POST(request: NextRequest) {
     if (data.action === "batch-restricted" && data.registrationWindowId) {
       const results = await runOfficeInvoiceBatch({
         registrationWindowId: data.registrationWindowId,
-        registrationType: "RESTRICTED",
+        registrationType: "RESTRICTED_INTERNAL",
         generate: generateRestrictedInvoice,
         generatedByUserId: auth.user.id,
         displayCurrency:
@@ -405,6 +423,26 @@ export async function POST(request: NextRequest) {
       });
 
       return NextResponse.json({ results });
+    }
+
+    if (data.action === "regenerate-revised" && data.workspaceId) {
+      const statement = await regenerateRevisedFeeStatement({
+        workspaceId: data.workspaceId,
+        generatedByUserId: auth.user.id,
+        displayCurrency:
+          (data.displayCurrency as "GBP" | "CNY" | "BOTH") ?? DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+      });
+
+      await createFeeAuditLog({
+        action: "FEE_STATEMENT_REGENERATED_REVISED",
+        performedByUserId: auth.user.id,
+        registrationWindowId: statement.registrationWindowId,
+        metadata: { statementId: statement.id, statementNo: statement.statementNo },
+      }).catch((auditError) => {
+        console.error("Fee audit log failed:", auditError);
+      });
+
+      return NextResponse.json(statement, { status: 201 });
     }
 
     if (!data.workspaceId) {

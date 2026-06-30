@@ -7,7 +7,9 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
+  startTransition,
   type ReactNode,
 } from "react";
 import { Card } from "@/components/ui/Card";
@@ -79,7 +81,9 @@ function syncUrlParams(
     }
   }
   const query = params.toString();
-  router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  startTransition(() => {
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+  });
 }
 
 export function RegistrationsRefreshProvider({ children }: { children: ReactNode }) {
@@ -105,17 +109,28 @@ export function RegistrationsRefreshProvider({ children }: { children: ReactNode
     setWorkspaceRefreshKey((current) => current + 1);
   }, []);
 
+  const urlSyncReadyRef = useRef(false);
+  useEffect(() => {
+    urlSyncReadyRef.current = true;
+  }, []);
+
   useEffect(() => {
     setRegistrationTypesState(parseStaffRegistrationTypes(searchParams));
   }, [searchParams]);
 
   useEffect(() => {
+    if (!urlSyncReadyRef.current) return;
     if (!windowSelector.registrationWindowId) return;
     if (searchParams.get("registrationWindowId") === windowSelector.registrationWindowId) return;
-    syncUrlParams(router, pathname, searchParams, {
-      registrationWindowId: windowSelector.registrationWindowId,
-      academicYear: windowSelector.academicYear,
-    });
+
+    const timer = window.setTimeout(() => {
+      syncUrlParams(router, pathname, searchParams, {
+        registrationWindowId: windowSelector.registrationWindowId,
+        academicYear: windowSelector.academicYear,
+      });
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, [
     pathname,
     router,
@@ -158,18 +173,15 @@ export function RegistrationsRefreshProvider({ children }: { children: ReactNode
 
   const toggleRegistrationType = useCallback(
     (type: StaffRegistrationTypeFilter) => {
-      setRegistrationTypesState((current) => {
-        const hasType = current.includes(type);
-        const next = hasType
-          ? current.filter((item) => item !== type)
-          : [...current, type];
-        const resolved =
-          next.length > 0 ? next : [...DEFAULT_STAFF_REGISTRATION_TYPES];
-        syncUrlParams(router, pathname, searchParams, { registrationTypes: resolved });
-        return resolved;
-      });
+      const next = registrationTypes.includes(type)
+        ? registrationTypes.filter((item) => item !== type)
+        : [...registrationTypes, type];
+      const resolved =
+        next.length > 0 ? next : [...DEFAULT_STAFF_REGISTRATION_TYPES];
+      setRegistrationTypesState(resolved);
+      syncUrlParams(router, pathname, searchParams, { registrationTypes: resolved });
     },
-    [pathname, router, searchParams],
+    [pathname, registrationTypes, router, searchParams],
   );
 
   const selectorForUi = useMemo(
@@ -288,8 +300,8 @@ export function RegistrationWindowFilterBar() {
           })}
         </div>
         <p className="mt-2 text-xs text-slate-500">
-          Default view shows normal internal students only. Select additional types to include
-          restricted or external candidate registrations.
+          All registration types are shown by default. Narrow the workspace and detail lists using
+          these type chips or the filters below.
         </p>
       </div>
     </Card>

@@ -5,7 +5,7 @@ export function examOfficerCanConfigureFeeRules(): boolean {
 }
 
 export function studentFeeStatementsEnabled(): boolean {
-  return process.env.STUDENT_FEE_STATEMENTS_ENABLED === "true";
+  return process.env.STUDENT_FEE_STATEMENTS_ENABLED !== "false";
 }
 
 export function canConfigureFeeRules(role: UserRole): boolean {

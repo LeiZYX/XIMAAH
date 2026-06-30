@@ -31,7 +31,7 @@ export function resolveBillingScopes(filters: FeeReportFilters): BillingScope[] 
     return filters.billingScope === "NO_BILLING" ? [] : [filters.billingScope];
   }
   const scopes: BillingScope[] = [...AUTO_BILLING_SCOPES];
-  if (filters.includeOfficeOnly) scopes.push("OFFICE_ONLY_BILLING");
+  if (filters.includeOfficeOnly) scopes.push("RESTRICTED_BILLING", "EXTERNAL_BILLING");
   if (filters.includeManualReview) scopes.push("MANUAL_REVIEW");
   return scopes;
 }

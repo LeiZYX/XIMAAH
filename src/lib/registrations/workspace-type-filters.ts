@@ -1,33 +1,37 @@
 import type { RegistrationType } from "@/generated/prisma/enums";
 import type { Prisma } from "@/generated/prisma/client";
+import { registrationTypeBadgeLabel } from "@/lib/registrations/registration-type";
 
-export const STAFF_REGISTRATION_TYPE_FILTERS = ["NORMAL", "RESTRICTED", "EXTERNAL"] as const;
+export const STAFF_REGISTRATION_TYPE_FILTERS = [
+  "INTERNAL_NORMAL",
+  "RESTRICTED_INTERNAL",
+  "EXTERNAL",
+] as const;
+
 export type StaffRegistrationTypeFilter = (typeof STAFF_REGISTRATION_TYPE_FILTERS)[number];
 
-export const DEFAULT_STAFF_REGISTRATION_TYPES: StaffRegistrationTypeFilter[] = ["NORMAL"];
+export const DEFAULT_STAFF_REGISTRATION_TYPES: StaffRegistrationTypeFilter[] = [
+  ...STAFF_REGISTRATION_TYPE_FILTERS,
+];
 
 export const REGISTRATION_TYPE_FILTER_LABELS: Record<StaffRegistrationTypeFilter, string> = {
-  NORMAL: "Normal/Internal Student",
-  RESTRICTED: "Restricted",
-  EXTERNAL: "External Candidate",
+  INTERNAL_NORMAL: "Internal normal",
+  RESTRICTED_INTERNAL: "Restricted internal",
+  EXTERNAL: "External",
 };
 
-export function isStaffRegistrationTypeFilter(
-  value: string,
-): value is StaffRegistrationTypeFilter {
-  return STAFF_REGISTRATION_TYPE_FILTERS.includes(value as StaffRegistrationTypeFilter);
+export function isStaffRegistrationTypeFilter(value: string): value is StaffRegistrationTypeFilter {
+  return (STAFF_REGISTRATION_TYPE_FILTERS as readonly string[]).includes(value);
 }
 
-export function parseStaffRegistrationTypes(
-  searchParams: URLSearchParams,
-): StaffRegistrationTypeFilter[] {
+export function parseStaffRegistrationTypes(searchParams: URLSearchParams): StaffRegistrationTypeFilter[] {
   const raw = searchParams.get("registrationTypes");
   if (!raw) return [...DEFAULT_STAFF_REGISTRATION_TYPES];
-  const types = raw
+  const parsed = raw
     .split(",")
     .map((part) => part.trim())
     .filter(isStaffRegistrationTypeFilter);
-  return types.length > 0 ? types : [...DEFAULT_STAFF_REGISTRATION_TYPES];
+  return parsed.length > 0 ? parsed : [...DEFAULT_STAFF_REGISTRATION_TYPES];
 }
 
 export function serializeStaffRegistrationTypes(types: StaffRegistrationTypeFilter[]): string {
@@ -37,39 +41,75 @@ export function serializeStaffRegistrationTypes(types: StaffRegistrationTypeFilt
 export function buildWorkspaceRegistrationTypeWhere(
   types: StaffRegistrationTypeFilter[],
 ): Prisma.RegistrationWorkspaceWhereInput {
-  if (types.length === 0 || types.length === STAFF_REGISTRATION_TYPE_FILTERS.length) {
-    return {};
-  }
+  if (types.length === 0) return {};
   return {
     registrationType: { in: types as RegistrationType[] },
   };
 }
 
-export function workspaceListTitle(types: StaffRegistrationTypeFilter[]): string {
+export function registrationTypeFilterDescription(types: StaffRegistrationTypeFilter[]): string {
+  if (types.length === STAFF_REGISTRATION_TYPE_FILTERS.length) return "All registration types";
   if (types.length === 1) {
     switch (types[0]) {
-      case "NORMAL":
-        return "Internal Student Registrations";
-      case "RESTRICTED":
-        return "Restricted Registrations";
+      case "INTERNAL_NORMAL":
+        return "Internal normal only";
+      case "RESTRICTED_INTERNAL":
+        return "Restricted internal only";
       case "EXTERNAL":
-        return "External Candidate Registrations";
+        return "External only";
     }
   }
-  return "Registrations";
+  return types.map((type) => REGISTRATION_TYPE_FILTER_LABELS[type]).join(", ");
 }
 
-export function workspaceListDescription(types: StaffRegistrationTypeFilter[]): string {
-  if (types.length === 1 && types[0] === "NORMAL") {
-    return "Student-visible registrations for fee statements, confirmation print, and post-lock adjustments.";
+export function registrationTypeBadgeClass(type: string): string {
+  switch (type) {
+    case "RESTRICTED_INTERNAL":
+      return "bg-amber-100 text-amber-900";
+    case "EXTERNAL":
+      return "bg-purple-100 text-purple-900";
+    default:
+      return "bg-emerald-100 text-emerald-800";
   }
-  if (types.length === 1 && types[0] === "RESTRICTED") {
-    return "Office-only restricted registrations. Use restricted invoices — not normal student fee statements.";
-  }
-  if (types.length === 1 && types[0] === "EXTERNAL") {
-    return "External candidate registrations managed by Admin and Exam Officer only.";
-  }
-  return "Registrations for the selected registration window and type filters.";
+}
+
+export { registrationTypeBadgeLabel };
+
+export function includesInternalNormal(types: StaffRegistrationTypeFilter[]): boolean {
+  return types.includes("INTERNAL_NORMAL");
+}
+
+export function includesRestrictedInternal(types: StaffRegistrationTypeFilter[]): boolean {
+  return types.includes("RESTRICTED_INTERNAL");
+}
+
+export function includesExternal(types: StaffRegistrationTypeFilter[]): boolean {
+  return types.includes("EXTERNAL");
+}
+
+export function primaryRegistrationTypeFilter(
+  types: StaffRegistrationTypeFilter[],
+): StaffRegistrationTypeFilter {
+  if (types.length === 1) return types[0]!;
+  return "INTERNAL_NORMAL";
+}
+
+export const REGISTRATION_TYPE_MENU_LABELS = {
+  INTERNAL_NORMAL: "Internal / Normal",
+  RESTRICTED_INTERNAL: "Restricted internal",
+  EXTERNAL: "External",
+} as const;
+
+export const FEE_STATEMENT_TYPE_RADIO_LABELS: Record<StaffRegistrationTypeFilter, string> = {
+  INTERNAL_NORMAL: "Internal normal (FS-IN)",
+  RESTRICTED_INTERNAL: "Restricted internal (FS-RI)",
+  EXTERNAL: "External candidate (FS-EX)",
+};
+
+export function parseFeeStatementType(searchParams: URLSearchParams): StaffRegistrationTypeFilter {
+  const raw = searchParams.get("statementType");
+  if (raw && isStaffRegistrationTypeFilter(raw)) return raw;
+  return "INTERNAL_NORMAL";
 }
 
 export type WorkspaceTableView = "normal" | "restricted" | "external" | "mixed";
@@ -78,57 +118,44 @@ export function resolveWorkspaceTableView(
   types: StaffRegistrationTypeFilter[],
 ): WorkspaceTableView {
   if (types.length === 1) {
-    if (types[0] === "NORMAL") return "normal";
-    if (types[0] === "RESTRICTED") return "restricted";
-    return "external";
+    switch (types[0]) {
+      case "RESTRICTED_INTERNAL":
+        return "restricted";
+      case "EXTERNAL":
+        return "external";
+      default:
+        return "normal";
+    }
   }
   return "mixed";
 }
 
-export function registrationTypeBadgeClass(type: string): string {
-  switch (type) {
-    case "RESTRICTED":
-      return "bg-sky-100 text-sky-800 ring-1 ring-inset ring-sky-200";
-    case "EXTERNAL":
-      return "bg-violet-100 text-violet-800 ring-1 ring-inset ring-violet-200";
+export function workspaceListTitle(types: StaffRegistrationTypeFilter[]): string {
+  const view = resolveWorkspaceTableView(types);
+  switch (view) {
+    case "restricted":
+      return "Restricted internal registrations";
+    case "external":
+      return "External candidate registrations";
+    case "mixed":
+      return "All registration workspaces";
     default:
-      return "bg-slate-100 text-slate-700 ring-1 ring-inset ring-slate-200";
+      return "Internal normal registrations";
   }
 }
 
-export function registrationTypeBadgeLabel(type: string): string {
-  switch (type) {
-    case "RESTRICTED":
-      return "Restricted";
-    case "EXTERNAL":
-      return "External";
+export function workspaceListDescription(types: StaffRegistrationTypeFilter[]): string {
+  const view = resolveWorkspaceTableView(types);
+  switch (view) {
+    case "restricted":
+      return "Office-only registrations hidden from students and teachers. Billed on FS-RI statements.";
+    case "external":
+      return "External candidate registrations with no student portal access. Billed on FS-EX statements.";
+    case "mixed":
+      return registrationTypeFilterDescription(types);
     default:
-      return "Normal";
+      return "Student-visible internal registrations, including assisted and post-lock adjustments. Billed on FS-IN statements.";
   }
 }
 
-export function includesNormalRegistrations(types: StaffRegistrationTypeFilter[]): boolean {
-  return types.includes("NORMAL");
-}
-
-export function includesRestrictedRegistrations(types: StaffRegistrationTypeFilter[]): boolean {
-  return types.includes("RESTRICTED");
-}
-
-export function includesExternalRegistrations(types: StaffRegistrationTypeFilter[]): boolean {
-  return types.includes("EXTERNAL");
-}
-
-export function parseFeeStatementType(searchParams: URLSearchParams): StaffRegistrationTypeFilter {
-  const raw = searchParams.get("statementType");
-  if (raw && isStaffRegistrationTypeFilter(raw)) {
-    return raw;
-  }
-  return "NORMAL";
-}
-
-export const FEE_STATEMENT_TYPE_RADIO_LABELS: Record<StaffRegistrationTypeFilter, string> = {
-  NORMAL: "Internal / Normal",
-  RESTRICTED: "Restricted",
-  EXTERNAL: "External",
-};
+export const includesNormalRegistrations = includesInternalNormal;

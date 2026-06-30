@@ -39,6 +39,7 @@ interface WorkspaceRegistration {
 
 interface WorkspaceRow {
   id: string;
+  registrationNumber: string | null;
   lockedAt: string | null;
   hasPostLockAdjustment: boolean;
   lastAdjustedAt: string | null;
@@ -357,7 +358,7 @@ export function RegistrationWorkspaceList({
     return (
       <div className="flex flex-wrap items-center justify-end gap-2">
         <ActionButton href={detailHref}>Open detail</ActionButton>
-        {row.registrationType === "NORMAL" ? (
+        {row.registrationType === "INTERNAL_NORMAL" ? (
           <>
             <ActionButton disabled={busy} onClick={() => void openPrintModal(row.id, false)}>
               Preview
@@ -365,7 +366,7 @@ export function RegistrationWorkspaceList({
             <ActionButton href={`${detailHref}#fee-statement`}>Fee statement</ActionButton>
           </>
         ) : null}
-        {row.registrationType === "RESTRICTED" ? (
+        {row.registrationType === "RESTRICTED_INTERNAL" ? (
           <ActionButton
             disabled={busy}
             onClick={() => void generateRestrictedInvoice(row.id, false)}
@@ -391,6 +392,7 @@ export function RegistrationWorkspaceList({
           <thead>
             <tr className="border-b border-slate-200 text-slate-600">
               <th className="py-2 pr-4 font-medium">Student</th>
+              <th className="py-2 pr-4 font-medium">Registration #</th>
               <th className="py-2 pr-4 font-medium">Student No.</th>
               <th className="py-2 pr-4 font-medium">Grade</th>
               <th className="py-2 pr-4 font-medium">Class</th>
@@ -409,6 +411,7 @@ export function RegistrationWorkspaceList({
                 <td className="py-2 pr-4 font-medium text-slate-900">
                   {workspaceStudentLabel(row)}
                 </td>
+                <td className="py-2 pr-4 font-mono text-xs">{row.registrationNumber ?? "—"}</td>
                 <td className="py-2 pr-4">{workspaceStudentNo(row) ?? "—"}</td>
                 <td className="py-2 pr-4">{gradeLabel(row)}</td>
                 <td className="py-2 pr-4">{classLabel(row)}</td>
@@ -447,8 +450,9 @@ export function RegistrationWorkspaceList({
           <thead>
             <tr className="border-b border-slate-200 text-slate-600">
               <th className="py-2 pr-4 font-medium">Student</th>
+              <th className="py-2 pr-4 font-medium">Registration #</th>
               <th className="py-2 pr-4 font-medium">Student No.</th>
-              <th className="py-2 pr-4 font-medium">Registration</th>
+              <th className="py-2 pr-4 font-medium">Window</th>
               <th className="py-2 pr-4 font-medium">Restricted reason</th>
               <th className="py-2 pr-4 font-medium">Exams</th>
               <th className="py-2 pr-4 font-medium">Created by</th>
@@ -462,9 +466,10 @@ export function RegistrationWorkspaceList({
                 <td className="py-2 pr-4 font-medium text-slate-900">
                   <div className="flex flex-col gap-1">
                     <span>{workspaceStudentLabel(row)}</span>
-                    <TypeBadge type="RESTRICTED" />
+                    <TypeBadge type="RESTRICTED_INTERNAL" />
                   </div>
                 </td>
+                <td className="py-2 pr-4 font-mono text-xs">{row.registrationNumber ?? "—"}</td>
                 <td className="py-2 pr-4">{workspaceStudentNo(row) ?? "—"}</td>
                 <td className="py-2 pr-4">
                   {row.registrationWindow.title}
@@ -496,6 +501,7 @@ export function RegistrationWorkspaceList({
           <thead>
             <tr className="border-b border-slate-200 text-slate-600">
               <th className="py-2 pr-4 font-medium">Candidate</th>
+              <th className="py-2 pr-4 font-medium">Registration #</th>
               <th className="py-2 pr-4 font-medium">Candidate No.</th>
               <th className="py-2 pr-4 font-medium">Contact</th>
               <th className="py-2 pr-4 font-medium">Exam Board</th>
@@ -514,6 +520,7 @@ export function RegistrationWorkspaceList({
                     <TypeBadge type="EXTERNAL" />
                   </div>
                 </td>
+                <td className="py-2 pr-4 font-mono text-xs">{row.registrationNumber ?? "—"}</td>
                 <td className="py-2 pr-4">
                   {row.candidate?.assessmentHubCandidateNumber ||
                     workspaceStudentNo(row) ||
@@ -537,6 +544,7 @@ export function RegistrationWorkspaceList({
         <thead>
           <tr className="border-b border-slate-200 text-slate-600">
             <th className="py-2 pr-4 font-medium">Type</th>
+            <th className="py-2 pr-4 font-medium">Registration #</th>
             <th className="py-2 pr-4 font-medium">Candidate/Student</th>
             <th className="py-2 pr-4 font-medium">Registration</th>
             <th className="py-2 pr-4 font-medium">Exams</th>
@@ -550,6 +558,7 @@ export function RegistrationWorkspaceList({
               <td className="py-2 pr-4">
                 <TypeBadge type={row.registrationType} />
               </td>
+              <td className="py-2 pr-4 font-mono text-xs">{row.registrationNumber ?? "—"}</td>
               <td className="py-2 pr-4 font-medium text-slate-900">
                 {workspaceStudentLabel(row)}
                 {workspaceStudentNo(row) ? (

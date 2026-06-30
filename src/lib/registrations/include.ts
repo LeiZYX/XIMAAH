@@ -21,4 +21,12 @@ export const registrationInclude = {
   subject: { include: { qualification: true } },
   paper: true,
   student: { include: { studentProfile: true } },
+  registrationWorkspace: {
+    select: {
+      id: true,
+      registrationNumber: true,
+      confirmationNumber: true,
+      registrationType: true,
+    },
+  },
 };

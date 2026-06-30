@@ -51,6 +51,8 @@ function WindowCard({
           data={{
             ...buildConfirmationPrintData(group, {
               id: group.workspaceId,
+              registrationNumber: group.registrationNumber,
+              confirmationNumber: group.confirmationNumber,
               hasPostLockAdjustment: group.hasPostLockAdjustment,
               lastAdjustedAt: group.lastAdjustedAt,
               lastAdjustedByUser: group.lastAdjustedByName ? { name: group.lastAdjustedByName } : null,
@@ -107,6 +109,12 @@ function WindowCard({
               {new Date(group.lastAdjustedAt).toLocaleString()}.
             </div>
           ) : null}
+          <div>
+            <dt className="text-slate-500">Registration #</dt>
+            <dd className="font-medium font-mono text-xs text-slate-800 sm:text-sm">
+              {group.registrationNumber ?? "—"}
+            </dd>
+          </div>
           <div>
             <dt className="text-slate-500">Registration window</dt>
             <dd className="font-medium text-slate-800">
@@ -207,6 +215,26 @@ function WindowCard({
               </div>
             </div>
           ))}
+          {group.candidateRegistrationFee ? (
+            <div>
+              <h3 className="mb-2 text-sm font-semibold text-slate-800">Additional Services</h3>
+              <ul className="space-y-2">
+                <li className="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-slate-200 px-3 py-2.5">
+                  <div>
+                    <p className="font-medium text-slate-900">
+                      {group.candidateRegistrationFee.serviceName}
+                    </p>
+                    <p className="text-sm text-slate-600">
+                      {group.candidateRegistrationFee.boardName}
+                    </p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      {isLocked ? "Locked after deadline" : "Selected"}
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </Card>

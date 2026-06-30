@@ -30,7 +30,7 @@ export function FeeStatementsListView({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [statementType, setStatementTypeState] = useState<StaffRegistrationTypeFilter>("NORMAL");
+  const [statementType, setStatementTypeState] = useState<StaffRegistrationTypeFilter>("INTERNAL_NORMAL");
 
   const windowFromUrl = searchParams.get("registrationWindowId") ?? "";
   const yearFromUrl = searchParams.get("academicYear") ?? undefined;
@@ -60,7 +60,7 @@ export function FeeStatementsListView({
         params.set("academicYear", updates.academicYear);
       }
       if (updates.statementType !== undefined) {
-        if (updates.statementType === "NORMAL") {
+        if (updates.statementType === "INTERNAL_NORMAL") {
           params.delete("statementType");
         } else {
           params.set("statementType", updates.statementType);

@@ -20,6 +20,7 @@ import {
   type LevelCategory,
 } from "@/lib/level-categories";
 import { examBoardAccent } from "@/lib/exam-board-colors";
+import { getCalendarBoardLabel } from "@/lib/calendar/board-label";
 import { Card } from "@/components/ui/Card";
 import {
   sessionEventContent,
@@ -652,7 +653,8 @@ export function CalendarView() {
               </button>
               {examBoards.map((board) => {
                 const active = filters.examBoardIds.includes(board.id);
-                const { accent, label: boardLabel } = examBoardAccent(board.code, board.name);
+                const { accent } = examBoardAccent(board.code, board.name);
+                const boardLabel = getCalendarBoardLabel({ code: board.code, name: board.name });
                 return (
                   <button
                     key={board.id}

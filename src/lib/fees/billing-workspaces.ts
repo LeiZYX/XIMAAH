@@ -1,7 +1,7 @@
 import type { FeeStatementKind, RegistrationType } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
 
-const ACTIVE_STATEMENT_STATUSES = ["DRAFT", "ISSUED", "PAID", "NEEDS_REVIEW"] as const;
+const ACTIVE_STATEMENT_STATUSES = ["DRAFT", "ISSUED", "PAID", "NEEDS_REGENERATION"] as const;
 
 export async function findLockedWorkspacesForBilling(
   registrationWindowId: string,
@@ -42,6 +42,16 @@ export async function shouldRegenerateFeeStatement(
   workspaceId: string,
   statementKind: FeeStatementKind = "NORMAL",
 ): Promise<boolean> {
+  const needsRegeneration = await prisma.feeStatement.findFirst({
+    where: {
+      registrationWorkspaceId: workspaceId,
+      statementKind,
+      status: "NEEDS_REGENERATION",
+    },
+    select: { id: true },
+  });
+  if (needsRegeneration) return true;
+
   if (await hasActiveFeeStatement(workspaceId, statementKind)) {
     return false;
   }

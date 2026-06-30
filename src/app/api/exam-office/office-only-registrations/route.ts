@@ -5,5 +5,5 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function POST(request: NextRequest) {
-  return createOfficeOnlyInternalHandler(request, "EXAM_OFFICER");
+  return createOfficeOnlyInternalHandler(request);
 }

@@ -134,7 +134,8 @@ export function FeeReportFiltersForm({
       >
         <option value="">Default billing (normal)</option>
         <option value="NORMAL_BILLING">Normal billing</option>
-        <option value="OFFICE_ONLY_BILLING">Restricted billing</option>
+        <option value="RESTRICTED_BILLING">Restricted billing</option>
+        <option value="EXTERNAL_BILLING">External billing</option>
         <option value="MANUAL_REVIEW">Manual review</option>
       </select>
       {showStatementStatus ? (
@@ -147,7 +148,7 @@ export function FeeReportFiltersForm({
           <option value="DRAFT">Draft</option>
           <option value="ISSUED">Issued</option>
           <option value="PAID">Paid</option>
-          <option value="NEEDS_REVIEW">Needs review</option>
+          <option value="NEEDS_REGENERATION">Pending Revision</option>
         </select>
       ) : null}
       {showBatchOptions ? (

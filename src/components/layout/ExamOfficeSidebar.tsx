@@ -3,15 +3,16 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import {
+  StaffSidebarNav,
+  adminStaffSections,
+} from "@/components/layout/StaffSidebarNav";
 
-const examOfficeLinks = [
+const topLinks = [
   { href: "/exam-office/registrations", label: "Registrations" },
   { href: "/exam-office/exam-documents", label: "Exam Documents" },
   { href: "/exam-office/candidates", label: "Candidates" },
   { href: "/exam-office/exam-boards", label: "Exam Boards" },
-  { href: "/exam-office/registration-windows", label: "Registration Windows" },
-  { href: "/exam-office/fee-summary", label: "Fee Summary" },
-  { href: "/exam-office/fee-statements", label: "Fee Statements" },
 ];
 
 export function ExamOfficeSidebar() {
@@ -34,12 +35,13 @@ export function ExamOfficeSidebar() {
 
   return (
     <aside className="flex w-64 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
-      <div className="sticky top-0 flex flex-1 flex-col p-4">
+      <div className="sticky top-0 flex max-h-screen flex-1 flex-col overflow-y-auto p-4">
         <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
           Exam Office
         </p>
-        <nav className="space-y-1">
-          {examOfficeLinks.map((link) => {
+
+        <div className="mb-5 space-y-1">
+          {topLinks.map((link) => {
             const active =
               pathname === link.href || pathname.startsWith(`${link.href}/`);
 
@@ -57,7 +59,9 @@ export function ExamOfficeSidebar() {
               </Link>
             );
           })}
-        </nav>
+        </div>
+
+        <StaffSidebarNav sections={adminStaffSections("/exam-office")} />
 
         <div className="mt-auto border-t border-slate-200 pt-4">
           {userName ? (

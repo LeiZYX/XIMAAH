@@ -97,7 +97,7 @@ export function buildStudentVisibleRegistrationWhere(
 ): Prisma.StudentExamRegistrationWhereInput {
   return {
     status: { in: ["ACTIVE", "LOCKED"] },
-    registrationType: { not: "RESTRICTED" },
+    registrationType: "INTERNAL_NORMAL",
     visibleToStudent: true,
     visibleInStudentPortal: true,
     visibility: { in: STUDENT_VISIBLE },
@@ -111,7 +111,7 @@ export function buildTeacherVisibleRegistrationWhere(
   return {
     AND: [
       base,
-      { registrationType: { not: "RESTRICTED" } },
+      { registrationType: "INTERNAL_NORMAL" },
       { visibleToTeacher: true },
       { visibleInTeacherPortal: true },
       { visibility: { in: TEACHER_VISIBLE } },

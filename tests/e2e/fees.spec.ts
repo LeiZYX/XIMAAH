@@ -16,7 +16,7 @@ test.describe("Fee statements and reporting", () => {
 
     expect(response.status()).toBe(201);
     const statement = await response.json();
-    expect(statement.statementNo).toMatch(/^FS-/);
+    expect(statement.statementNo).toMatch(/^FS-IN-\d{4}-\d{6}$/);
     expect(statement.status).toBe("DRAFT");
   });
 

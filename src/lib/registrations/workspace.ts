@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { buildPostLockAdjustmentHistoryFromAuditLogs } from "@/lib/registrations/adjustment-history";
 import { registrationInclude } from "@/lib/registrations/include";
 import { flagsForRegistrationType } from "@/lib/registrations/metadata";
+import { billingScopeForRegistrationType, generateConfirmationNumber, generateRegistrationNumber } from "@/lib/registrations/numbering";
 import type { AdjustmentSummaryPayload } from "@/lib/registrations/workspace-display";
 
 export type { AdjustmentSummaryPayload } from "@/lib/registrations/workspace-display";
@@ -58,13 +59,38 @@ function workspaceDefaultsForType(registrationType: RegistrationType) {
     registrationType,
     ...visibilityFlags,
     visibility:
-      registrationType === "NORMAL" ? ("STUDENT_AND_TEACHER" as const) : ("EXAM_OFFICE_ONLY" as const),
-    billingScope:
-      registrationType === "NORMAL" ? ("NORMAL_BILLING" as const) : ("MANUAL_REVIEW" as const),
+      registrationType === "INTERNAL_NORMAL"
+        ? ("STUDENT_AND_TEACHER" as const)
+        : ("EXAM_OFFICE_ONLY" as const),
+    billingScope: billingScopeForRegistrationType(registrationType),
   };
 }
 
 type WorkspaceClient = Prisma.TransactionClient | typeof prisma;
+
+export async function ensureWorkspaceConfirmationNumber(
+  workspace: {
+    id: string;
+    confirmationNumber: string | null;
+    lockedAt: Date | null;
+    registrationType: RegistrationType;
+  },
+  client: WorkspaceClient = prisma,
+): Promise<string | null> {
+  if (workspace.confirmationNumber) return workspace.confirmationNumber;
+  if (!workspace.lockedAt) return null;
+
+  const confirmationNumber = await generateConfirmationNumber(
+    workspace.registrationType,
+    workspace.lockedAt.getFullYear(),
+    client,
+  );
+  await client.registrationWorkspace.update({
+    where: { id: workspace.id },
+    data: { confirmationNumber },
+  });
+  return confirmationNumber;
+}
 
 async function findRegistrationWorkspace(
   client: WorkspaceClient,
@@ -101,7 +127,7 @@ export async function ensureRegistrationWorkspaceForCandidate(
   candidateId: string,
   registrationWindowId: string,
   studentId?: string | null,
-  registrationType: RegistrationType = "NORMAL",
+  registrationType: RegistrationType = "INTERNAL_NORMAL",
   client: WorkspaceClient = prisma,
 ) {
   const existing = await findRegistrationWorkspace(client, {
@@ -111,6 +137,15 @@ export async function ensureRegistrationWorkspaceForCandidate(
     studentId,
   });
   if (existing) {
+    if (!existing.registrationNumber) {
+      return client.registrationWorkspace.update({
+        where: { id: existing.id },
+        data: {
+          registrationNumber: await generateRegistrationNumber(registrationType, undefined, client),
+          ...(studentId && !existing.studentId ? { studentId } : {}),
+        },
+      });
+    }
     if (studentId && !existing.studentId) {
       return client.registrationWorkspace.update({
         where: { id: existing.id },
@@ -125,6 +160,7 @@ export async function ensureRegistrationWorkspaceForCandidate(
       candidateId,
       studentId: studentId ?? null,
       registrationWindowId,
+      registrationNumber: await generateRegistrationNumber(registrationType, undefined, client),
       ...workspaceDefaultsForType(registrationType),
     },
   });
@@ -133,7 +169,7 @@ export async function ensureRegistrationWorkspaceForCandidate(
 export async function ensureRegistrationWorkspace(
   studentId: string,
   registrationWindowId: string,
-  registrationType: RegistrationType = "NORMAL",
+  registrationType: RegistrationType = "INTERNAL_NORMAL",
 ) {
   const { syncCandidateFromStudentUser } = await import("@/lib/candidates/service");
   const candidate = await syncCandidateFromStudentUser(studentId);
@@ -211,6 +247,7 @@ async function realignRegistrationWorkspacesByType() {
             candidateId: workspace.candidateId,
             studentId: workspace.studentId,
             registrationWindowId: workspace.registrationWindowId,
+            registrationNumber: await generateRegistrationNumber(registrationType),
             ...workspaceDefaultsForType(registrationType),
           },
         });
@@ -297,16 +334,26 @@ export async function backfillRegistrationWorkspaces() {
 export async function getRegistrationWorkspaceById(workspaceId: string) {
   await backfillRegistrationWorkspaces();
 
-  return prisma.registrationWorkspace.findUnique({
+  const workspace = await prisma.registrationWorkspace.findUnique({
     where: { id: workspaceId },
     include: workspaceInclude,
   });
+  if (!workspace) return null;
+
+  if (!workspace.confirmationNumber && workspace.lockedAt) {
+    const confirmationNumber = await ensureWorkspaceConfirmationNumber(workspace);
+    if (confirmationNumber) {
+      return { ...workspace, confirmationNumber };
+    }
+  }
+
+  return workspace;
 }
 
 export async function findWorkspaceForStudentWindow(
   studentId: string,
   registrationWindowId: string,
-  registrationType: RegistrationType = "NORMAL",
+  registrationType: RegistrationType = "INTERNAL_NORMAL",
 ) {
   await backfillRegistrationWorkspaces();
 

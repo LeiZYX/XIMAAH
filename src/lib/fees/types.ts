@@ -44,18 +44,22 @@ export interface ExchangeRateRecord {
 }
 
 export interface CalculatedFeeLine {
-  examSessionId: string;
+  examSessionId?: string | null;
+  serviceType?: import("@/generated/prisma/enums").FeeScheduleServiceType;
+  serviceNameSnapshot?: string;
+  feeScheduleId?: string | null;
+  feeScheduleVersionSnapshot?: number | null;
   examBoardSnapshot: string;
-  qualificationSnapshot: string;
-  subjectSnapshot: string;
-  paperCodeSnapshot: string;
-  paperTitleSnapshot: string;
-  entryTypeSnapshot: FeeEntryType;
+  qualificationSnapshot?: string;
+  subjectSnapshot?: string;
+  paperCodeSnapshot?: string;
+  paperTitleSnapshot?: string;
+  entryTypeSnapshot?: FeeEntryType;
   costCurrencySnapshot: FeeCurrency;
   costAmountSnapshot: number;
   exchangeRateSnapshot: number | null;
-  markupTypeSnapshot: FeeMarkupType;
-  markupValueSnapshot: number | null;
+  markupTypeSnapshot?: FeeMarkupType;
+  markupValueSnapshot?: number | null;
   salesGbpAmountSnapshot: number;
   salesCnyAmountSnapshot: number;
   displayCurrencySnapshot: FeeStatementDisplayCurrency;

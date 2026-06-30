@@ -20,7 +20,7 @@ export function FeeStatementsBatchWidget({
 
   const feeRulesHref = `${windowsBasePath}/${registrationWindowId}/fees`;
 
-  if (statementType === "NORMAL") {
+  if (statementType === "INTERNAL_NORMAL") {
     return (
       <FeeStatementsBatchPanel
         registrationWindowId={registrationWindowId}
@@ -29,15 +29,15 @@ export function FeeStatementsBatchWidget({
     );
   }
 
-  if (statementType === "RESTRICTED") {
+  if (statementType === "RESTRICTED_INTERNAL") {
     return (
       <CandidateInvoicesBatchPanel
         registrationWindowId={registrationWindowId}
         feeRulesHref={feeRulesHref}
         statementKind="RESTRICTED"
         batchAction="batch-restricted"
-        title="Restricted invoices"
-        description="Generate restricted invoices for office-only restricted registrations. Draft and issued invoices keep the same invoice number."
+        title="Restricted fee statements"
+        description="Generate restricted fee statements (FS-RI) for office-only restricted registrations."
         candidateColumnLabel="Student"
         itemLabel="invoices"
       />
@@ -50,8 +50,8 @@ export function FeeStatementsBatchWidget({
       feeRulesHref={feeRulesHref}
       statementKind="EXTERNAL"
       batchAction="batch-external"
-      title="External candidate invoices"
-      description="Generate invoices for external candidate registrations. Exam documents are managed separately under Exam Documents."
+      title="External candidate fee statements"
+      description="Generate external candidate fee statements (FS-EX). Exam documents are managed separately under Exam Documents."
       candidateColumnLabel="Candidate"
       itemLabel="invoices"
     />

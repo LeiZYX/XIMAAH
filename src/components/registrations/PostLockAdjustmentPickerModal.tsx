@@ -34,13 +34,14 @@ export function PostLockAdjustmentPickerModal({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${workspacesApiPath}?lockedOnly=true&all=true`)
+    fetch(`${workspacesApiPath}?lockedOnly=true&all=true&registrationTypes=INTERNAL_NORMAL`)
       .then((r) => r.json())
       .then((data) => setRows(Array.isArray(data) ? data : data?.workspaces ?? []))
       .finally(() => setLoading(false));
   }, [workspacesApiPath]);
 
   const filtered = rows.filter((row) => {
+    if (row.registrationType !== "INTERNAL_NORMAL") return false;
     const q = query.trim().toLowerCase();
     if (!q) return true;
     const name = workspaceStudentLabel(row).toLowerCase();
@@ -57,7 +58,7 @@ export function PostLockAdjustmentPickerModal({
       <div className="max-h-[80vh] w-full max-w-xl overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
         <h2 className="text-lg font-semibold text-slate-900">Adjust locked registration</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Select a locked registration workspace to add, remove, or replace exam sessions.
+          Select a locked internal normal registration to add, remove, or replace exam sessions.
         </p>
         <input
           value={query}
@@ -82,7 +83,7 @@ export function PostLockAdjustmentPickerModal({
                 {workspaceStudentNo(row) ? (
                   <span className="text-slate-500"> · {workspaceStudentNo(row)}</span>
                 ) : null}
-                {row.registrationType !== "NORMAL" ? (
+                {row.registrationType !== "INTERNAL_NORMAL" ? (
                   <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
                     {registrationTypeLabel(row.registrationType)}
                   </span>

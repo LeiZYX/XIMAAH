@@ -1,4 +1,9 @@
 import { calculateFeeAmounts } from "@/lib/fees/calculate";
+import {
+  CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
+  loadCandidateRegistrationFeeSchedule,
+  calculateFeeScheduleAmounts,
+} from "@/lib/fees/candidate-registration-fee";
 import type { FeeReportFilters } from "@/lib/fees/filters";
 import {
   buildRegistrationWhereFromFeeFilters,
@@ -192,7 +197,7 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
           : { in: windowIds },
         status: filters.statementStatus
           ? filters.statementStatus
-          : { in: ["DRAFT", "ISSUED", "PAID", "NEEDS_REVIEW"] },
+          : { in: ["ISSUED", "PAID", "NEEDS_REGENERATION"] },
       },
       select: {
         id: true,
@@ -204,8 +209,27 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
     }),
   ]);
 
+  const workspaceIdsFromRegs = [
+    ...new Set(registrations.map((r) => r.registrationWorkspaceId).filter(Boolean) as string[]),
+  ];
+  const candidateFeeWorkspaceIds = new Set(
+    workspaceIdsFromRegs.length === 0
+      ? []
+      : (
+          await prisma.registrationWorkspace.findMany({
+            where: {
+              id: { in: workspaceIdsFromRegs },
+              includeCandidateRegistrationFee: true,
+            },
+            select: { id: true },
+          })
+        ).map((row) => row.id),
+  );
+  const candidateFeeWorkspacesHandled = new Set<string>();
+
   const statementsByWorkspace = new Map<string, typeof statements>();
   for (const statement of statements) {
+    if (!statement.registrationWorkspaceId) continue;
     const list = statementsByWorkspace.get(statement.registrationWorkspaceId) ?? [];
     list.push(statement);
     statementsByWorkspace.set(statement.registrationWorkspaceId, list);
@@ -288,6 +312,72 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
         workspaceIds: new Set(reg.registrationWorkspaceId ? [reg.registrationWorkspaceId] : []),
       });
     }
+
+    if (
+      reg.registrationWorkspaceId &&
+      candidateFeeWorkspaceIds.has(reg.registrationWorkspaceId) &&
+      !candidateFeeWorkspacesHandled.has(reg.registrationWorkspaceId)
+    ) {
+      candidateFeeWorkspacesHandled.add(reg.registrationWorkspaceId);
+      const schedule = await loadCandidateRegistrationFeeSchedule(reg.examBoardId);
+      let feeGbp = 0;
+      let feeCny = 0;
+      let feeMissing = 0;
+      if (!schedule) {
+        feeMissing = 1;
+        missingFeeRules += 1;
+      } else {
+        const windowRates = exchangeRates.filter(
+          (rate) => rate.registrationWindowId === reg.registrationWindow.id,
+        );
+        const amounts = calculateFeeScheduleAmounts(schedule, windowRates);
+        feeGbp = amounts.salesGbp;
+        feeCny = amounts.salesCny;
+        totalGbp += feeGbp;
+        totalCny += feeCny;
+      }
+
+      const feeGroupKey = [
+        reg.registrationWindow.id,
+        reg.examBoard.name,
+        reg.examSeries.name,
+        reg.gradeSnapshot,
+        reg.classNameSnapshot,
+        reg.candidateTypeSnapshot ?? "INTERNAL",
+        CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
+      ].join("|");
+
+      const feeExisting = groupMap.get(feeGroupKey);
+      if (feeExisting) {
+        feeExisting.examEntryCount += 1;
+        feeExisting.totalGbp += feeGbp;
+        feeExisting.totalCny += feeCny;
+        feeExisting.missingFeeRuleCount += feeMissing;
+        feeExisting.candidateIds.add(candidateKey(reg));
+        feeExisting.workspaceIds.add(reg.registrationWorkspaceId);
+      } else {
+        groupMap.set(feeGroupKey, {
+          registrationWindowId: reg.registrationWindow.id,
+          registrationWindowTitle: reg.registrationWindow.title,
+          examBoardName: reg.examBoard.name,
+          examSeriesName: reg.examSeries.name,
+          examSeriesYear: reg.examSeries.year,
+          grade: reg.gradeSnapshot,
+          className: reg.classNameSnapshot,
+          candidateType: reg.candidateTypeSnapshot ?? "INTERNAL",
+          subjectName: CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
+          candidateCount: 0,
+          examEntryCount: 1,
+          totalGbp: feeGbp,
+          totalCny: feeCny,
+          missingFeeRuleCount: feeMissing,
+          statementCount: 0,
+          candidateIds: new Set([candidateKey(reg)]),
+          workspaceIds: new Set([reg.registrationWorkspaceId]),
+        });
+      }
+      allCandidates.add(candidateKey(reg));
+    }
   }
 
   for (const group of groupMap.values()) {
@@ -324,7 +414,7 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
   return {
     cards: {
       totalCandidates: allCandidates.size,
-      totalExamEntries: registrations.length,
+      totalExamEntries: registrations.length + candidateFeeWorkspaceIds.size,
       totalGbpAmount: Math.round(totalGbp * 100) / 100,
       totalCnyAmount: Math.round(totalCny * 100) / 100,
       paidAmount: Math.round(paidAmount * 100) / 100,
@@ -362,10 +452,9 @@ export async function buildFeeDetailsReport(
       ? filters.statementStatus
       : {
           in: [
-            FeeStatementStatus.DRAFT,
             FeeStatementStatus.ISSUED,
             FeeStatementStatus.PAID,
-            FeeStatementStatus.NEEDS_REVIEW,
+            FeeStatementStatus.NEEDS_REGENERATION,
           ],
         },
     registrationWorkspace: {
@@ -415,8 +504,13 @@ export async function buildFeeDetailsReport(
     );
 
     for (const item of statement.items) {
-      if (!item.examSessionId) continue;
-      const regMeta = matchingRegs.get(item.examSessionId);
+      const isCandidateFee = item.serviceType === "CANDIDATE_REGISTRATION";
+      if (!item.examSessionId && !isCandidateFee) continue;
+
+      const regMeta = item.examSessionId
+        ? matchingRegs.get(item.examSessionId)
+        : (statement.registrationWorkspace?.registrations[0] ?? null);
+
       if (filters.registrationSource && regMeta?.registrationSource !== filters.registrationSource) {
         continue;
       }
@@ -441,14 +535,18 @@ export async function buildFeeDetailsReport(
         registrationSource: regMeta?.registrationSource ?? null,
         visibility: regMeta?.visibility ?? null,
         billingScope: regMeta?.billingScope ?? null,
-        examBoardName: statement.registrationWindow.examBoard.name,
-        examSeriesName: statement.registrationWindow.examSeries.name,
-        examSeriesYear: statement.registrationWindow.examSeries.year,
-        subjectName: item.subjectSnapshot,
-        paperCode: item.paperCodeSnapshot,
-        paperTitle: item.paperTitleSnapshot,
-        entryType: item.entryTypeSnapshot,
-        examDate: item.examSession?.date?.toISOString() ?? null,
+        examBoardName: statement.registrationWindow?.examBoard.name ?? "",
+        examSeriesName: statement.registrationWindow?.examSeries.name ?? "",
+        examSeriesYear: statement.registrationWindow?.examSeries.year ?? 0,
+        subjectName: isCandidateFee
+          ? (item.serviceNameSnapshot ?? CANDIDATE_REGISTRATION_FEE_SERVICE_NAME)
+          : (item.subjectSnapshot ?? ""),
+        paperCode: isCandidateFee ? "" : (item.paperCodeSnapshot ?? ""),
+        paperTitle: isCandidateFee
+          ? (item.serviceNameSnapshot ?? CANDIDATE_REGISTRATION_FEE_SERVICE_NAME)
+          : (item.paperTitleSnapshot ?? ""),
+        entryType: isCandidateFee ? "—" : (item.entryTypeSnapshot ?? "NORMAL"),
+        examDate: isCandidateFee ? null : (item.examSession?.date?.toISOString() ?? null),
         costCurrency: showCosts ? item.costCurrencySnapshot : null,
         costAmount: showCosts ? toNumber(item.costAmountSnapshot) : null,
         exchangeRate: item.exchangeRateSnapshot ? toNumber(item.exchangeRateSnapshot) : null,
@@ -458,7 +556,7 @@ export async function buildFeeDetailsReport(
         salesCny: toNumber(item.salesCnyAmountSnapshot),
         statementStatus: statement.status,
         generatedAt: statement.generatedAt.toISOString(),
-        registrationWindowTitle: statement.registrationWindow.title,
+        registrationWindowTitle: statement.registrationWindow?.title ?? "",
       });
     }
   }
@@ -687,7 +785,7 @@ export async function buildFeeDashboardMetrics(): Promise<{
 
   const pendingStatements = await prisma.feeStatement.count({
     where: {
-      status: { in: ["DRAFT", "NEEDS_REVIEW"] },
+      status: { in: ["DRAFT", "NEEDS_REGENERATION"] },
       ...(openWindow ? { registrationWindowId: openWindow.id } : {}),
     },
   });

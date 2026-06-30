@@ -1,0 +1,50 @@
+-- Fee statement lifecycle: NEEDS_REGENERATION, version links, regeneration metadata
+
+ALTER TABLE `FeeStatement` MODIFY `status` ENUM('DRAFT', 'ISSUED', 'PAID', 'CANCELLED', 'REVISED', 'NEEDS_REVIEW', 'NEEDS_REGENERATION') NOT NULL DEFAULT 'DRAFT';
+
+UPDATE `FeeStatement` SET `status` = 'NEEDS_REGENERATION' WHERE `status` = 'NEEDS_REVIEW';
+
+ALTER TABLE `FeeStatement` MODIFY `status` ENUM('DRAFT', 'ISSUED', 'PAID', 'CANCELLED', 'REVISED', 'NEEDS_REGENERATION') NOT NULL DEFAULT 'DRAFT';
+
+ALTER TABLE `FeeStatement`
+  ADD COLUMN `revisedFromStatementId` VARCHAR(191) NULL,
+  ADD COLUMN `revisedToStatementId` VARCHAR(191) NULL,
+  ADD COLUMN `regenerationReason` TEXT NULL,
+  ADD COLUMN `regenerationChangedByUserId` VARCHAR(191) NULL,
+  ADD COLUMN `regenerationChangedAt` DATETIME(3) NULL;
+
+CREATE INDEX `FeeStatement_revisedFromStatementId_idx` ON `FeeStatement`(`revisedFromStatementId`);
+CREATE INDEX `FeeStatement_revisedToStatementId_idx` ON `FeeStatement`(`revisedToStatementId`);
+CREATE INDEX `FeeStatement_regenerationChangedByUserId_idx` ON `FeeStatement`(`regenerationChangedByUserId`);
+
+ALTER TABLE `FeeStatement`
+  ADD CONSTRAINT `FeeStatement_revisedFromStatementId_fkey`
+    FOREIGN KEY (`revisedFromStatementId`) REFERENCES `FeeStatement`(`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `FeeStatement_revisedToStatementId_fkey`
+    FOREIGN KEY (`revisedToStatementId`) REFERENCES `FeeStatement`(`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `FeeStatement_regenerationChangedByUserId_fkey`
+    FOREIGN KEY (`regenerationChangedByUserId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+ALTER TABLE `FeeAuditLog` MODIFY `action` ENUM(
+  'FEE_RULE_CREATED',
+  'FEE_RULE_UPDATED',
+  'EXCHANGE_RATE_UPDATED',
+  'FEE_STATEMENT_GENERATED',
+  'FEE_STATEMENT_BATCH_GENERATED',
+  'FEE_STATEMENT_PRINTED',
+  'FEE_SUMMARY_EXPORTED',
+  'FEE_DETAILS_EXPORTED',
+  'FEE_SCHEDULE_VERSION_CREATED',
+  'REGISTRATION_FEE_STATEMENT_GENERATED',
+  'POST_RESULTS_FEE_STATEMENT_GENERATED',
+  'FEE_STATEMENT_MARKED_NEEDS_REGENERATION',
+  'FEE_STATEMENT_REGENERATED_REVISED',
+  'FEE_STATEMENT_ISSUED',
+  'EXAM_ADDED',
+  'EXAM_REMOVED',
+  'EXAM_REPLACED',
+  'CANDIDATE_REGISTRATION_FEE_ADDED',
+  'CANDIDATE_REGISTRATION_FEE_REMOVED',
+  'ADDITIONAL_SERVICE_ADDED',
+  'ADDITIONAL_SERVICE_REMOVED'
+) NOT NULL;

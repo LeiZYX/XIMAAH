@@ -19,13 +19,20 @@ import {
 } from "@/lib/registrations/workspace";
 import type { AdjustmentSummaryPayload } from "@/lib/registrations/workspace-display";
 import { appendAdjustmentHistoryBatch } from "@/lib/registrations/adjustment-history";
-import { markStatementsNeedReview, markSupersededStatements } from "@/lib/fees/statement";
+import { markFeeStatementsNeedsRegeneration } from "@/lib/fees/statement";
+import type { FeeStatementChangeReasonCode } from "@/lib/fees/statement-lifecycle";
+import { applyCandidateRegistrationFeeSelection } from "@/lib/fees/candidate-registration-fee";
 import { assertStudentCanRegister } from "@/lib/students/archive";
 import {
   resolveEntryTypeForRegistration,
   type RegistrationFeeStageRecord,
 } from "@/lib/registrations/fee-stages";
 import { isStudentRegistrationPeriodClosed } from "@/lib/registrations/window";
+import type {
+  BillingScope,
+  RegistrationType,
+  RegistrationVisibility,
+} from "@/generated/prisma/enums";
 import {
   postLockAuditActionForRole,
   postLockSourceForRole,
@@ -36,6 +43,8 @@ export interface PostLockAdjustmentInput {
   addExamSessionIds?: string[];
   removeRegistrationIds?: string[];
   replacements?: Array<{ registrationId: string; newExamSessionId: string }>;
+  includeCandidateRegistrationFee?: boolean;
+  candidateRegistrationFeeReason?: string;
   teacherRequestedBy?: { name: string; role: UserRole };
 }
 
@@ -67,6 +76,30 @@ function examLine(session: {
     subject: session.paper.subject.name,
     paperCode: session.paper.code,
     paperTitle: session.paper.title,
+  };
+}
+
+function inheritedRegistrationFields(workspace: {
+  registrationType: RegistrationType;
+  visibility: RegistrationVisibility;
+  billingScope: BillingScope;
+  visibleToStudent: boolean;
+  visibleToTeacher: boolean;
+  visibleInStudentPortal: boolean;
+  visibleInTeacherPortal: boolean;
+  visibleInStudentDocuments: boolean;
+  visibleInStudentBilling: boolean;
+}) {
+  return {
+    registrationType: workspace.registrationType,
+    visibility: workspace.visibility,
+    billingScope: workspace.billingScope,
+    visibleToStudent: workspace.visibleToStudent,
+    visibleToTeacher: workspace.visibleToTeacher,
+    visibleInStudentPortal: workspace.visibleInStudentPortal,
+    visibleInTeacherPortal: workspace.visibleInTeacherPortal,
+    visibleInStudentDocuments: workspace.visibleInStudentDocuments,
+    visibleInStudentBilling: workspace.visibleInStudentBilling,
   };
 }
 
@@ -104,6 +137,16 @@ export async function applyPostLockAdjustment(
     throw new RegistrationError("Post-lock adjustment is disabled for this registration window", 400);
   }
 
+  if (workspace.registrationType !== "INTERNAL_NORMAL") {
+    throw new RegistrationError(
+      "Post-lock adjustment only applies to normal internal registrations",
+      400,
+    );
+  }
+
+  const registrationNumberBefore = workspace.registrationNumber;
+  const confirmationNumberBefore = workspace.confirmationNumber;
+
   const hasLockedRows = workspace.registrations.some(
     (row) => row.status === RegistrationStatus.LOCKED,
   );
@@ -132,6 +175,9 @@ export async function applyPostLockAdjustment(
     candidateId: workspace.candidateId ?? undefined,
     studentId: workspace.studentId ?? undefined,
   });
+  if (candidate.candidateType !== "INTERNAL") {
+    throw new RegistrationError("Post-lock adjustment only applies to internal students", 400);
+  }
   const candidateSnaps = candidateRegistrationSnapshots(candidate);
 
   const addIds = input.addExamSessionIds ?? [];
@@ -141,15 +187,20 @@ export async function applyPostLockAdjustment(
 
   const removeIds = input.removeRegistrationIds ?? [];
   const replacements = input.replacements ?? [];
+  const feeSelectionProvided = input.includeCandidateRegistrationFee !== undefined;
+  const feeSelectionChanged =
+    feeSelectionProvided &&
+    input.includeCandidateRegistrationFee !== workspace.includeCandidateRegistrationFee;
 
-  if (addIds.length === 0 && removeIds.length === 0 && replacements.length === 0) {
+  if (addIds.length === 0 && removeIds.length === 0 && replacements.length === 0 && !feeSelectionChanged) {
     throw new RegistrationError("No changes to apply", 400);
   }
 
   const summary: AdjustmentSummaryPayload = { added: [], removed: [], replaced: [] };
   const itemSource = postLockSourceForRole(performedBy.role);
-  const inheritVisibility = workspace.visibility ?? "STUDENT_AND_TEACHER";
-  const inheritBilling = workspace.billingScope ?? "NORMAL_BILLING";
+  const inherited = inheritedRegistrationFields(workspace);
+  const inheritVisibility = inherited.visibility;
+  const inheritBilling = inherited.billingScope;
 
   await prisma.$transaction(async (tx) => {
     for (const registrationId of removeIds) {
@@ -188,7 +239,7 @@ export async function applyPostLockAdjustment(
           candidateTypeSnapshot: candidateSnaps.candidateTypeSnapshot,
           beforeValue: before,
           afterValue: registrationAuditSnapshot(updated),
-          note: "Removed after lock",
+          note: `Post-lock adjustment · removed ${examLine(updated.examSession).paperCode}`,
         },
         tx,
       );
@@ -238,8 +289,7 @@ export async function applyPostLockAdjustment(
           status: RegistrationStatus.LOCKED,
           lockedAt: registration.lockedAt ?? now,
           registrationSource: itemSource,
-          visibility: inheritVisibility,
-          billingScope: inheritBilling,
+          ...inherited,
           addedByUserId: performedBy.id,
           addedByRole: performedBy.role,
           addedAt: now,
@@ -273,7 +323,7 @@ export async function applyPostLockAdjustment(
           candidateTypeSnapshot: candidateSnaps.candidateTypeSnapshot,
           beforeValue: before,
           afterValue: registrationAuditSnapshot(created),
-          note: `Replaced with ${newSession.paper.code}`,
+          note: `Post-lock adjustment · replaced with ${newSession.paper.code}`,
         },
         tx,
       );
@@ -310,8 +360,7 @@ export async function applyPostLockAdjustment(
 
       const itemMeta = {
         registrationSource: itemSource,
-        visibility: inheritVisibility,
-        billingScope: inheritBilling,
+        ...inherited,
         addedByUserId: performedBy.id,
         addedByRole: performedBy.role,
         addedAt: now,
@@ -379,7 +428,7 @@ export async function applyPostLockAdjustment(
           assessmentHubCandidateNumberSnapshot: candidateSnaps.assessmentHubCandidateNumberSnapshot,
           candidateTypeSnapshot: candidateSnaps.candidateTypeSnapshot,
           afterValue: registrationAuditSnapshot(row),
-          note: "Added after lock",
+          note: `Post-lock adjustment · added ${examLine(row.examSession).paperCode}`,
         },
         tx,
       );
@@ -423,7 +472,7 @@ export async function applyPostLockAdjustment(
       where: { id: workspaceId },
       data: {
         lockedAt: workspace.lockedAt ?? now,
-        hasPostLockAdjustment: true,
+        hasPostLockAdjustment: addIds.length > 0 || removeIds.length > 0 || replacements.length > 0,
         lastAdjustedByUserId: performedBy.id,
         lastAdjustedByRole: performedBy.role,
         lastAdjustedAt: now,
@@ -448,11 +497,56 @@ export async function applyPostLockAdjustment(
         ),
       },
     });
+
+    if (feeSelectionChanged) {
+      await applyCandidateRegistrationFeeSelection({
+        workspaceId,
+        includeCandidateRegistrationFee: input.includeCandidateRegistrationFee!,
+        performedBy,
+        reason: input.candidateRegistrationFeeReason?.trim() || reason,
+        tx,
+      });
+    }
   });
 
-  await markSupersededStatements(workspaceId);
-  await markStatementsNeedReview(workspaceId);
+  const hasExamChanges = addIds.length > 0 || removeIds.length > 0 || replacements.length > 0;
+  if (hasExamChanges || feeSelectionChanged) {
+    let reasonCode: FeeStatementChangeReasonCode = "MANUAL_BILLING_ADJUSTMENT";
+    if (feeSelectionChanged && !hasExamChanges) {
+      reasonCode = input.includeCandidateRegistrationFee
+        ? "CANDIDATE_REGISTRATION_FEE_ADDED"
+        : "CANDIDATE_REGISTRATION_FEE_REMOVED";
+    } else if (replacements.length > 0) {
+      reasonCode = "EXAM_REPLACED";
+    } else if (addIds.length > 0 && removeIds.length === 0) {
+      reasonCode = "EXAM_ADDED";
+    } else if (removeIds.length > 0 && addIds.length === 0) {
+      reasonCode = "EXAM_REMOVED";
+    }
+
+    await markFeeStatementsNeedsRegeneration({
+      workspaceId,
+      reasonCode,
+      performedByUserId: performedBy.id,
+      note: reason,
+    });
+  }
 
   const { getRegistrationWorkspaceById } = await import("@/lib/registrations/workspace");
-  return getRegistrationWorkspaceById(workspaceId);
+  const updated = await getRegistrationWorkspaceById(workspaceId);
+  if (
+    registrationNumberBefore &&
+    updated?.registrationNumber &&
+    updated.registrationNumber !== registrationNumberBefore
+  ) {
+    throw new RegistrationError("Post-lock adjustment must not change the registration number", 500);
+  }
+  if (
+    confirmationNumberBefore &&
+    updated?.confirmationNumber &&
+    updated.confirmationNumber !== confirmationNumberBefore
+  ) {
+    throw new RegistrationError("Post-lock adjustment must not change the confirmation number", 500);
+  }
+  return updated;
 }

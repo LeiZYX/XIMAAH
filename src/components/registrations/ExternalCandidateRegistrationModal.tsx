@@ -5,6 +5,19 @@ import {
   RegistrationWindowSelectorFields,
   useRegistrationWindowSelector,
 } from "@/components/registrations/RegistrationWindowSelector";
+import { CandidateRegistrationFeeSection } from "@/components/registrations/CandidateRegistrationFeeSection";
+import {
+  BillingPreviewPanel,
+  type BillingPreviewLine,
+} from "@/components/registrations/BillingPreviewPanel";
+import {
+  DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+  type FeeStatementDisplayCurrencyOption,
+} from "@/lib/fees/display-currency";
+import {
+  logRegistrationSubmitPayload,
+  readSubmitErrorMessage,
+} from "@/lib/registrations/submit-response";
 import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
@@ -48,13 +61,23 @@ export function ExternalCandidateRegistrationModal({
   });
   const windowSelector = useRegistrationWindowSelector({ scope: "external" });
   const registrationWindowId = windowSelector.registrationWindowId;
-  const selectedWindow = windowSelector.selectedWindow;
+  const selectedWindow = windowSelector.selectedWindow as {
+    examBoard?: { id: string; name: string };
+    examSeries?: { id: string };
+  } | null;
+  const [includeCandidateRegistrationFee, setIncludeCandidateRegistrationFee] = useState(false);
+  const [candidateRegistrationFeeReason, setCandidateRegistrationFeeReason] = useState("");
+  const [displayCurrency, setDisplayCurrency] = useState<FeeStatementDisplayCurrencyOption>(
+    DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+  );
+  const [billingPreviewLines, setBillingPreviewLines] = useState<BillingPreviewLine[]>([]);
   const [sessionQuery, setSessionQuery] = useState("");
   const [sessions, setSessions] = useState<ExamSessionOption[]>([]);
   const [selectedSessionIds, setSelectedSessionIds] = useState<string[]>([]);
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
 
   useEffect(() => {
     if (!useExisting || candidateQuery.trim().length < 2) {
@@ -86,8 +109,40 @@ export function ExternalCandidateRegistrationModal({
 
   const visibleSessions = useMemo(() => limitExamSessions(sessions, sessionQuery).items, [sessions, sessionQuery]);
 
+  useEffect(() => {
+    if (!registrationWindowId) {
+      setBillingPreviewLines([]);
+      return;
+    }
+
+    let cancelled = false;
+    fetch("/api/registrations/billing-preview", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        registrationWindowId,
+        examSessionIds: selectedSessionIds,
+        includeCandidateRegistrationFee,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!cancelled) {
+          setBillingPreviewLines(Array.isArray(data.lines) ? data.lines : []);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setBillingPreviewLines([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [registrationWindowId, selectedSessionIds, includeCandidateRegistrationFee]);
+
   async function handleSubmit() {
     setError(null);
+    setWarning(null);
     if (useExisting && !selectedCandidate) {
       setError("Select an existing external candidate or create a new one.");
       return;
@@ -96,26 +151,50 @@ export function ExternalCandidateRegistrationModal({
       setError("English name is required for new external candidate.");
       return;
     }
-    if (!registrationWindowId || selectedSessionIds.length === 0 || !reason.trim()) {
-      setError("Registration window, exam sessions, and reason are required.");
+    if (!registrationWindowId || selectedSessionIds.length === 0) {
+      setError("Registration window and at least one exam session are required.");
+      return;
+    }
+    if (!reason.trim()) {
+      setError("Reason is required.");
+      return;
+    }
+    if (includeCandidateRegistrationFee && !candidateRegistrationFeeReason.trim()) {
+      setError("Reason for adding Candidate Registration Fee is required.");
       return;
     }
 
     setSubmitting(true);
     try {
+      const body = {
+        candidateId: useExisting ? selectedCandidate?.id : undefined,
+        newCandidate: useExisting ? undefined : newCandidate,
+        registrationWindowId,
+        examSessionIds: selectedSessionIds,
+        reason: reason.trim(),
+        includeCandidateRegistrationFee,
+        candidateRegistrationFeeReason: candidateRegistrationFeeReason.trim() || undefined,
+        candidateType: "EXTERNAL",
+        registrationType: "EXTERNAL",
+        visibility: "EXAM_OFFICE_ONLY",
+        billingScope: "EXTERNAL_BILLING",
+        registrationSource: "EXTERNAL_CANDIDATE",
+      };
+
+      logRegistrationSubmitPayload("external-candidate", body);
+
       const response = await fetch(apiPath, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          candidateId: useExisting ? selectedCandidate?.id : undefined,
-          newCandidate: useExisting ? undefined : newCandidate,
-          registrationWindowId,
-          examSessionIds: selectedSessionIds,
-          reason: reason.trim(),
-        }),
+        body: JSON.stringify(body),
       });
+      if (!response.ok) {
+        throw new Error(await readSubmitErrorMessage(response));
+      }
       const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || "Could not submit registration");
+      if (data.feeWarning) {
+        setWarning(String(data.feeWarning));
+      }
       onSubmitted({ workspaceId: data.id });
       onClose();
     } catch (submitError) {
@@ -219,16 +298,40 @@ export function ExternalCandidateRegistrationModal({
             ))}
           </div>
 
-          <textarea
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            rows={3}
-            placeholder="Reason"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          <CandidateRegistrationFeeSection
+            examBoardId={selectedWindow?.examBoard?.id ?? null}
+            examBoardName={selectedWindow?.examBoard?.name ?? null}
+            registrationWindowId={registrationWindowId || null}
+            savedIncluded={false}
+            pendingIncluded={includeCandidateRegistrationFee}
+            onPendingIncludedChange={setIncludeCandidateRegistrationFee}
+            feeReason={candidateRegistrationFeeReason}
+            onFeeReasonChange={setCandidateRegistrationFeeReason}
+            displayCurrency={displayCurrency}
+            onDisplayCurrencyChange={setDisplayCurrency}
+            showDisplayCurrencySelector
+            disabled={submitting}
           />
+
+          <BillingPreviewPanel
+            lines={billingPreviewLines}
+            displayCurrency={displayCurrency}
+          />
+
+          <label className="block text-sm">
+            <span className="mb-1 block font-medium text-slate-700">Reason *</span>
+            <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              rows={3}
+              placeholder="Reason for external registration"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            />
+          </label>
         </div>
 
         {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
+        {warning ? <p className="mt-3 text-sm text-amber-700">{warning}</p> : null}
 
         <div className="mt-6 flex justify-end gap-2">
           <button type="button" onClick={onClose} className="rounded-lg border px-4 py-2 text-sm">

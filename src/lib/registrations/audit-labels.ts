@@ -46,6 +46,10 @@ export function auditActionLabel(action: RegistrationAuditAction | string): stri
       return "Exam Officer registered on behalf of student";
     case "ADMIN_ASSISTED_REGISTRATION_CREATED":
       return "Admin registered on behalf of student";
+    case "INTERNAL_NORMAL_REGISTRATION_CREATED":
+      return "Internal normal registration created";
+    case "INTERNAL_NORMAL_REGISTRATION_UPDATED":
+      return "Internal normal registration updated";
     case "EO_OFFICE_ONLY_REGISTRATION_CREATED":
       return "Exam Officer created restricted registration (legacy)";
     case "ADMIN_OFFICE_ONLY_REGISTRATION_CREATED":
@@ -54,6 +58,10 @@ export function auditActionLabel(action: RegistrationAuditAction | string): stri
       return "Exam Officer created restricted registration";
     case "ADMIN_RESTRICTED_REGISTRATION_CREATED":
       return "Admin created restricted registration";
+    case "RESTRICTED_INTERNAL_REGISTRATION_CREATED":
+      return "Restricted internal registration created";
+    case "RESTRICTED_INTERNAL_REGISTRATION_UPDATED":
+      return "Restricted internal registration updated";
     case "RESTRICTED_REGISTRATION_UPDATED":
       return "Restricted registration updated";
     case "RESTRICTED_REGISTRATION_CANCELLED":
@@ -66,6 +74,10 @@ export function auditActionLabel(action: RegistrationAuditAction | string): stri
       return "Student submitted registration";
     case "EXTERNAL_CANDIDATE_REGISTRATION_CREATED":
       return "External candidate registration created";
+    case "EXTERNAL_REGISTRATION_CREATED":
+      return "External candidate registration created";
+    case "EXTERNAL_REGISTRATION_UPDATED":
+      return "External candidate registration updated";
     case "FEE_STAGE_CREATED":
       return "Fee stage created";
     case "FEE_STAGE_UPDATED":
@@ -88,6 +100,10 @@ export function auditActionLabel(action: RegistrationAuditAction | string): stri
       return "Entry stage overridden by staff";
     case "ADMIN_ADJUST":
       return "Admin adjustment";
+    case "CANDIDATE_REGISTRATION_FEE_ADDED":
+      return "Candidate Registration Fee added";
+    case "CANDIDATE_REGISTRATION_FEE_REMOVED":
+      return "Candidate Registration Fee removed";
     case "UPDATE":
       return "Registration updated";
     case "REMOVE":

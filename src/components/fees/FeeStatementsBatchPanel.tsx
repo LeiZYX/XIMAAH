@@ -276,7 +276,7 @@ export function FeeStatementsBatchPanel({
                               Issue
                             </button>
                           ) : null}
-                          {statement.status === "NEEDS_REVIEW" ? (
+                          {statement.status === "NEEDS_REGENERATION" ? (
                             <span
                               className="text-xs text-slate-400"
                               title="Regenerate before issuing"

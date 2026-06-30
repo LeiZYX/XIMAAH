@@ -1,0 +1,19 @@
+import { ReviewWindowServices } from "@/components/review-windows/ReviewWindowServices";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+export default async function ExamOfficeReviewWindowServicesPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  return (
+    <ReviewWindowServices
+      windowId={id}
+      basePath="/exam-office/review-windows"
+      feeStatementsBasePath="/exam-office/fee-statements"
+    />
+  );
+}

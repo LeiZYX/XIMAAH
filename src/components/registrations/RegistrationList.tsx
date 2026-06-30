@@ -22,6 +22,9 @@ interface RegistrationRow {
   registrationSource?: string;
   visibility?: string;
   billingScope?: string;
+  registrationWorkspace?: {
+    registrationNumber: string | null;
+  } | null;
   examBoard: { name: string; code: string };
   examSeries: { name: string; year: number };
   subject: { name: string; code: string };
@@ -195,10 +198,13 @@ export function RegistrationList({
           >
             <option value="">All sources</option>
             <option value="STUDENT_SUBMITTED">Student submitted</option>
+            <option value="TEACHER_REQUEST_APPROVED">Teacher request approved</option>
             <option value="EO_ASSISTED">EO assisted</option>
             <option value="ADMIN_ASSISTED">Admin assisted</option>
             <option value="EO_FORCED_INTERNAL">EO restricted</option>
             <option value="ADMIN_FORCED_INTERNAL">Admin restricted</option>
+            <option value="EO_POST_LOCK_ADJUSTMENT">EO post-lock adjustment</option>
+            <option value="ADMIN_POST_LOCK_ADJUSTMENT">Admin post-lock adjustment</option>
             <option value="EXTERNAL_CANDIDATE">External candidate</option>
           </select>
           <select
@@ -219,8 +225,8 @@ export function RegistrationList({
             className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
           >
             <option value="">All registration types</option>
-            <option value="NORMAL">Normal</option>
-            <option value="RESTRICTED">Restricted</option>
+            <option value="INTERNAL_NORMAL">Internal normal</option>
+            <option value="RESTRICTED_INTERNAL">Restricted internal</option>
             <option value="EXTERNAL">External</option>
           </select>
           <select
@@ -231,7 +237,8 @@ export function RegistrationList({
             <option value="">All billing</option>
             <option value="NORMAL_BILLING">Normal billing</option>
             <option value="MANUAL_REVIEW">Manual review</option>
-            <option value="OFFICE_ONLY_BILLING">Restricted billing</option>
+            <option value="RESTRICTED_BILLING">Restricted billing</option>
+            <option value="EXTERNAL_BILLING">External billing</option>
             <option value="NO_BILLING">No billing</option>
           </select>
           <select
@@ -295,6 +302,7 @@ export function RegistrationList({
                   </>
                 ) : null}
                 <th className="py-2 pr-4">Board</th>
+                <th className="py-2 pr-4">Registration #</th>
                 <th className="py-2 pr-4">Series</th>
                 <th className="py-2 pr-4">Subject</th>
                 <th className="py-2 pr-4">Paper</th>
@@ -321,6 +329,9 @@ export function RegistrationList({
                     </>
                   ) : null}
                   <td className="py-2 pr-4">{row.examBoard.name}</td>
+                  <td className="py-2 pr-4 font-mono text-xs">
+                    {row.registrationWorkspace?.registrationNumber ?? "—"}
+                  </td>
                   <td className="py-2 pr-4">
                     {row.examSeries.name} ({row.examSeries.year})
                   </td>

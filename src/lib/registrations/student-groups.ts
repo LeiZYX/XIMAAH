@@ -1,5 +1,6 @@
 import type { RegistrationWindowStatus } from "@/generated/prisma/enums";
 import type { AdjustmentHistoryBatch } from "@/lib/registrations/adjustment-history";
+import { CANDIDATE_REGISTRATION_FEE_SERVICE_NAME } from "@/lib/fees/candidate-registration-fee-constants";
 
 export interface StudentRegistrationRow {
   id: string;
@@ -34,9 +35,13 @@ export interface StudentRegistrationRow {
   };
   registrationWorkspace?: {
     id: string;
+    registrationNumber?: string | null;
+    confirmationNumber?: string | null;
     hasPostLockAdjustment: boolean;
     isLateRegistration?: boolean;
     registrationSource?: string;
+    includeCandidateRegistrationFee?: boolean;
+    visibleInStudentBilling?: boolean;
     lastAdjustedAt: string | null;
     lastAdjustmentReason: string | null;
     lastAdjustmentSummary: string | null;
@@ -122,6 +127,8 @@ export function summarizeExamBoards(registrations: StudentRegistrationRow[]): st
 export interface RegistrationWindowGroup {
   windowId: string;
   workspaceId?: string;
+  registrationNumber?: string | null;
+  confirmationNumber?: string | null;
   window: StudentRegistrationRow["registrationWindow"];
   examSeries: StudentRegistrationRow["examSeries"];
   registrations: StudentRegistrationRow[];
@@ -137,6 +144,10 @@ export interface RegistrationWindowGroup {
   lastAdjustmentReason?: string | null;
   lastAdjustmentSummary?: string | null;
   postLockAdjustments?: AdjustmentHistoryBatch[];
+  candidateRegistrationFee?: {
+    serviceName: string;
+    boardName: string;
+  } | null;
 }
 
 export function groupRegistrationsByWindow(
@@ -150,8 +161,12 @@ export function groupRegistrationsByWindow(
     const workspace = (row as StudentRegistrationRow & {
       registrationWorkspace?: {
         id: string;
+        registrationNumber?: string | null;
+        confirmationNumber?: string | null;
         hasPostLockAdjustment: boolean;
         isLateRegistration?: boolean;
+        includeCandidateRegistrationFee?: boolean;
+        visibleInStudentBilling?: boolean;
         lastAdjustedAt: string | null;
         lastAdjustmentReason: string | null;
         lastAdjustmentSummary: string | null;
@@ -162,15 +177,28 @@ export function groupRegistrationsByWindow(
       } | null;
     }).registrationWorkspace;
 
+    const candidateRegistrationFee =
+      workspace?.includeCandidateRegistrationFee && workspace.visibleInStudentBilling !== false
+        ? {
+            serviceName: CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
+            boardName: row.examBoard.name,
+          }
+        : null;
+
     if (existing) {
       existing.registrations.push(row);
       if (new Date(row.updatedAt) > new Date(existing.lastUpdatedAt)) {
         existing.lastUpdatedAt = row.updatedAt;
       }
+      if (!existing.candidateRegistrationFee && candidateRegistrationFee) {
+        existing.candidateRegistrationFee = candidateRegistrationFee;
+      }
     } else {
       map.set(key, {
         windowId: key,
         workspaceId: workspace?.id,
+        registrationNumber: workspace?.registrationNumber ?? null,
+        confirmationNumber: workspace?.confirmationNumber ?? null,
         window: row.registrationWindow,
         examSeries: row.examSeries,
         registrations: [row],
@@ -186,6 +214,7 @@ export function groupRegistrationsByWindow(
         lastAdjustmentReason: workspace?.lastAdjustmentReason ?? null,
         lastAdjustmentSummary: workspace?.lastAdjustmentSummary ?? null,
         postLockAdjustments: workspace?.postLockAdjustments ?? [],
+        candidateRegistrationFee,
       });
     }
   }
@@ -194,6 +223,12 @@ export function groupRegistrationsByWindow(
     ...group,
     cardStatus: windowCardStatus(group.window, group.registrations),
     boardSummary: summarizeExamBoards(group.registrations),
+    candidateRegistrationFee: group.candidateRegistrationFee
+      ? {
+          ...group.candidateRegistrationFee,
+          boardName: summarizeExamBoards(group.registrations),
+        }
+      : null,
   }));
 
   return groups.sort(

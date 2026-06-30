@@ -13,32 +13,25 @@ import { prisma } from "@/lib/prisma";
 
 const OFFICE_INVOICE_CONFIG: Record<
   "RESTRICTED" | "EXTERNAL",
-  { registrationType: RegistrationType; statementKind: FeeStatementKind; numberPrefix: string; label: string }
+  { registrationType: RegistrationType; statementKind: FeeStatementKind; label: string }
 > = {
   RESTRICTED: {
-    registrationType: "RESTRICTED",
+    registrationType: "RESTRICTED_INTERNAL",
     statementKind: "RESTRICTED",
-    numberPrefix: "RINV",
-    label: "restricted invoice",
+    label: "restricted fee statement",
   },
   EXTERNAL: {
     registrationType: "EXTERNAL",
     statementKind: "EXTERNAL",
-    numberPrefix: "EINV",
-    label: "external invoice",
+    label: "external fee statement",
   },
 };
 
 export async function generateOfficeInvoiceNumber(
-  registrationWindowId: string,
-  statementKind: "RESTRICTED" | "EXTERNAL",
-  numberPrefix: string,
+  registrationType: RegistrationType,
 ): Promise<string> {
-  const year = new Date().getFullYear();
-  const count = await prisma.feeStatement.count({
-    where: { registrationWindowId, statementKind },
-  });
-  return `${numberPrefix}-${year}-${String(count + 1).padStart(4, "0")}`;
+  const { generateFeeStatementNumber } = await import("@/lib/registrations/numbering");
+  return generateFeeStatementNumber(registrationType);
 }
 
 export async function generateOfficeInvoice(params: {
@@ -73,7 +66,12 @@ export async function generateOfficeInvoice(params: {
   if (existingDraft) {
     if (issue) {
       const issued = await issueFeeStatement(existingDraft.id);
-      const centre = centreInfoFromExamBoard(existingDraft.registrationWindow.examBoard);
+      const centre = centreInfoFromExamBoard(
+        existingDraft.registrationWindow?.examBoard ??
+          (() => {
+            throw new FeeError("Registration window missing on fee statement");
+          })(),
+      );
       return { ...issued, centre };
     }
     throw new FeeError(`A draft ${config.label} already exists for this registration`);
@@ -93,7 +91,12 @@ export async function generateOfficeInvoice(params: {
 
   if (existingIssued) {
     if (issue) {
-      const centre = centreInfoFromExamBoard(existingIssued.registrationWindow.examBoard);
+      const centre = centreInfoFromExamBoard(
+        existingIssued.registrationWindow?.examBoard ??
+          (() => {
+            throw new FeeError("Registration window missing on fee statement");
+          })(),
+      );
       return { ...existingIssued, centre };
     }
     throw new FeeError(`An issued ${config.label} already exists for this registration`);
@@ -193,11 +196,7 @@ export async function generateOfficeInvoice(params: {
   }
 
   const snapshot = registrations[0]!;
-  const statementNo = await generateOfficeInvoiceNumber(
-    workspace.registrationWindowId,
-    kind,
-    config.numberPrefix,
-  );
+  const statementNo = await generateOfficeInvoiceNumber(config.registrationType);
   const totalGbp = lines.reduce((sum, line) => sum + line.lineTotalGbp, 0);
   const totalCny = lines.reduce((sum, line) => sum + line.lineTotalCny, 0);
 
@@ -209,6 +208,7 @@ export async function generateOfficeInvoice(params: {
       registrationWindowId: workspace.registrationWindowId,
       statementNo,
       statementKind: config.statementKind,
+      studentVisible: false,
       displayCurrency,
       exchangeRateSnapshot: lines[0]?.exchangeRateSnapshot ?? null,
       studentNameSnapshot: snapshot.studentNameSnapshot,
@@ -228,7 +228,12 @@ export async function generateOfficeInvoice(params: {
     include: { items: true, registrationWindow: { include: { examBoard: true } } },
   });
 
-  const centre = centreInfoFromExamBoard(statement.registrationWindow.examBoard);
+  const centre = centreInfoFromExamBoard(
+    statement.registrationWindow?.examBoard ??
+      (() => {
+        throw new FeeError("Registration window missing on fee statement");
+      })(),
+  );
 
   return { ...statement, centre };
 }
@@ -252,6 +257,5 @@ export function generateExternalInvoice(params: {
 }
 
 /** @deprecated */
-export const generateRestrictedInvoiceNumber = (
-  registrationWindowId: string,
-) => generateOfficeInvoiceNumber(registrationWindowId, "RESTRICTED", "RINV");
+export const generateRestrictedInvoiceNumber = () =>
+  generateOfficeInvoiceNumber("RESTRICTED_INTERNAL");

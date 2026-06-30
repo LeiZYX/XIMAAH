@@ -1,6 +1,13 @@
 import type { Prisma } from "@/generated/prisma/client";
 import type { RegistrationAuditAction } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
+import {
+  assertRegistrationAuditReason,
+  buildRegistrationAuditPayload,
+  formatRegistrationAuditNote,
+  loadRegistrationAuditContext,
+  wrapAuditDetail,
+} from "@/lib/registrations/audit-payload";
 import { hasWorkspaceSchema } from "@/lib/registrations/schema-capabilities";
 
 type AuditClient = Prisma.TransactionClient | typeof prisma;
@@ -29,12 +36,18 @@ const LEGACY_AUDIT_ACTION: Partial<Record<RegistrationAuditAction, RegistrationA
   ADMIN_OFFICE_ONLY_REGISTRATION_CREATED: "ADMIN_ADJUST",
   EO_RESTRICTED_REGISTRATION_CREATED: "ADMIN_ADJUST",
   ADMIN_RESTRICTED_REGISTRATION_CREATED: "ADMIN_ADJUST",
+  INTERNAL_NORMAL_REGISTRATION_CREATED: "ADMIN_ADJUST",
+  INTERNAL_NORMAL_REGISTRATION_UPDATED: "ADMIN_ADJUST",
+  RESTRICTED_INTERNAL_REGISTRATION_CREATED: "ADMIN_ADJUST",
+  RESTRICTED_INTERNAL_REGISTRATION_UPDATED: "ADMIN_ADJUST",
   RESTRICTED_REGISTRATION_UPDATED: "ADMIN_ADJUST",
   RESTRICTED_REGISTRATION_CANCELLED: "ADMIN_ADJUST",
   EO_POST_LOCK_ADJUSTMENT: "ADMIN_ADJUST",
   ADMIN_POST_LOCK_ADJUSTMENT: "ADMIN_ADJUST",
   STUDENT_REGISTRATION_SUBMITTED: "STUDENT_SUBMIT",
   EXTERNAL_CANDIDATE_REGISTRATION_CREATED: "ADMIN_ADJUST",
+  EXTERNAL_REGISTRATION_CREATED: "ADMIN_ADJUST",
+  EXTERNAL_REGISTRATION_UPDATED: "ADMIN_ADJUST",
 };
 
 export function serializeAuditValue(value: unknown): string | null {
@@ -59,12 +72,18 @@ export async function createRegistrationAuditLog(
     registrationSource?: string | null;
     visibility?: string | null;
     billingScope?: string | null;
+    registrationType?: string | null;
+    registrationNumber?: string | null;
+    feeStatementNumber?: string | null;
+    issueNumber?: string | null;
     assessmentHubCandidateNumberSnapshot?: string | null;
     candidateTypeSnapshot?: string | null;
     registrationStageId?: string | null;
     feeStageId?: string | null;
     entryType?: string | null;
     registrationWindowId?: string | null;
+    performedAt?: Date;
+    skipReasonCheck?: boolean;
   },
   client: AuditClient = prisma,
 ) {
@@ -73,28 +92,82 @@ export async function createRegistrationAuditLog(
     ? params.action
     : (LEGACY_AUDIT_ACTION[params.action] ?? params.action);
 
+  const workspaceContext = params.registrationWorkspaceId
+    ? await loadRegistrationAuditContext(params.registrationWorkspaceId, client)
+    : null;
+
+  const registrationType =
+    params.registrationType ?? workspaceContext?.registrationType ?? "INTERNAL_NORMAL";
+  const registrationNumber =
+    params.registrationNumber ?? workspaceContext?.registrationNumber ?? null;
+  const issueNumber = params.issueNumber ?? workspaceContext?.issueNumber ?? null;
+  const feeStatementNumber =
+    params.feeStatementNumber ?? workspaceContext?.feeStatementNumber ?? null;
+  const candidateId = params.candidateId ?? workspaceContext?.candidateId ?? null;
+  const candidateType =
+    params.candidateTypeSnapshot ?? workspaceContext?.candidateType ?? null;
+  const registrationSource =
+    params.registrationSource ?? workspaceContext?.registrationSource ?? null;
+  const visibility = params.visibility ?? workspaceContext?.visibility ?? null;
+  const billingScope = params.billingScope ?? workspaceContext?.billingScope ?? null;
+  const reason = params.reason ?? null;
+  const performedAt = params.performedAt ?? new Date();
+
+  if (workspaceReady && !params.skipReasonCheck) {
+    assertRegistrationAuditReason(registrationType, action, reason);
+  }
+
+  const payload = buildRegistrationAuditPayload({
+    registrationType,
+    registrationNumber,
+    feeStatementNumber,
+    issueNumber,
+    candidateId,
+    candidateType,
+    visibility,
+    billingScope,
+    registrationSource,
+    performedByUserId: params.performedById,
+    performedByRole: params.performedByRole ?? null,
+    reason,
+    performedAt,
+  });
+
+  const note = params.note
+    ? formatRegistrationAuditNote(registrationType, params.note)
+    : auditTypeMarkerNote(registrationType, action);
+
   const data: Record<string, unknown> = {
     studentId: params.studentId ?? null,
     registrationId: params.registrationId ?? null,
     examSessionId: params.examSessionId,
     action,
     performedById: params.performedById,
-    beforeValue: serializeAuditValue(params.beforeValue),
-    afterValue: serializeAuditValue(params.afterValue),
-    note: params.note ?? params.reason ?? null,
+    beforeValue: serializeAuditValue(
+      params.beforeValue === undefined ? null : wrapAuditDetail(payload, params.beforeValue),
+    ),
+    afterValue: serializeAuditValue(
+      params.afterValue === undefined ? wrapAuditDetail(payload, null) : wrapAuditDetail(payload, params.afterValue),
+    ),
+    note: note ?? params.reason ?? null,
+    performedAt,
   };
 
   if (workspaceReady) {
     data.registrationWorkspaceId = params.registrationWorkspaceId ?? null;
-    data.candidateId = params.candidateId ?? null;
+    data.candidateId = candidateId;
     data.performedByRole = params.performedByRole ?? null;
-    data.reason = params.reason ?? null;
-    data.registrationSource = params.registrationSource ?? null;
-    data.visibility = params.visibility ?? null;
-    data.billingScope = params.billingScope ?? null;
+    data.reason = reason;
+    data.registrationSource = registrationSource;
+    data.visibility = visibility;
+    data.billingScope = billingScope;
+    data.registrationType = registrationType;
+    data.registrationNumber = registrationNumber;
+    data.feeStatementNumber = feeStatementNumber;
+    data.issueNumber = issueNumber;
     data.assessmentHubCandidateNumberSnapshot =
       params.assessmentHubCandidateNumberSnapshot ?? null;
-    data.candidateTypeSnapshot = params.candidateTypeSnapshot ?? null;
+    data.candidateTypeSnapshot = candidateType;
     data.feeStageId = params.feeStageId ?? params.registrationStageId ?? null;
     data.entryType = params.entryType ?? null;
     data.registrationWindowId = params.registrationWindowId ?? null;
@@ -103,6 +176,19 @@ export async function createRegistrationAuditLog(
   return client.registrationAuditLog.create({
     data: data as never,
   });
+}
+
+function auditTypeMarkerNote(
+  registrationType: string | null | undefined,
+  action: RegistrationAuditAction,
+): string | null {
+  if (registrationType === "RESTRICTED_INTERNAL") {
+    return `Restricted Internal · ${action}`;
+  }
+  if (registrationType === "EXTERNAL") {
+    return `External Candidate · ${action}`;
+  }
+  return null;
 }
 
 export function registrationAuditSnapshot(registration: {
@@ -118,6 +204,7 @@ export function registrationAuditSnapshot(registration: {
   lockedAt?: Date | null;
   cancelledAt?: Date | null;
   registrationSource?: string;
+  registrationType?: string;
   visibility?: string;
   billingScope?: string;
   reason?: string | null;
@@ -137,6 +224,7 @@ export function registrationAuditSnapshot(registration: {
     lockedAt: registration.lockedAt?.toISOString() ?? null,
     cancelledAt: registration.cancelledAt?.toISOString() ?? null,
     registrationSource: registration.registrationSource ?? null,
+    registrationType: registration.registrationType ?? null,
     visibility: registration.visibility ?? null,
     billingScope: registration.billingScope ?? null,
     reason: registration.reason ?? null,
@@ -145,3 +233,11 @@ export function registrationAuditSnapshot(registration: {
     candidateTypeSnapshot: registration.candidateTypeSnapshot ?? null,
   };
 }
+
+export {
+  auditTypeMarker,
+  buildRegistrationAuditPayload,
+  formatRegistrationAuditNote,
+  loadRegistrationAuditContext,
+  type RegistrationAuditPayload,
+} from "@/lib/registrations/audit-payload";

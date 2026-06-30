@@ -2,6 +2,7 @@ import type { Candidate } from "@/generated/prisma/client";
 import type { UserRole } from "@/generated/prisma/enums";
 import {
   RegistrationAuditAction,
+  RegistrationSource,
   RegistrationStatus,
 } from "@/generated/prisma/enums";
 import {
@@ -18,18 +19,19 @@ import { RegistrationError } from "@/lib/registrations/errors";
 import { windowIncludesSeries } from "@/lib/registrations/included-series";
 import { registrationInclude } from "@/lib/registrations/include";
 import {
-  assistedAuditActionForRole,
   assistedSourceForRole,
   flagsForRegistrationType,
+  internalNormalWorkspaceAuditAction,
   restrictedAuditActionForRole,
   restrictedSourceForRole,
 } from "@/lib/registrations/metadata";
 import type { RegistrationType } from "@/generated/prisma/enums";
+import { formatRegistrationAuditNote } from "@/lib/registrations/audit-payload";
 import {
   isRegistrationWindowOpenForStaff,
   isStudentRegistrationPeriodClosed,
 } from "@/lib/registrations/window";
-import { applyPostLockAdjustment } from "@/lib/registrations/adjustment";
+import { applyLockedRegistrationAdjustment } from "@/lib/registrations/locked-registration-adjustment";
 import {
   resolveEntryTypeForRegistration,
   type RegistrationFeeStageRecord,
@@ -38,8 +40,10 @@ import {
   ensureRegistrationWorkspaceForCandidate,
   getRegistrationWorkspaceById,
 } from "@/lib/registrations/workspace";
-import { markStatementsNeedReview } from "@/lib/fees/statement";
+import { markFeeStatementsNeedsRegeneration } from "@/lib/fees/statement";
+import { applyCandidateRegistrationFeeSelection } from "@/lib/fees/candidate-registration-fee";
 import { assertStudentCanRegister } from "@/lib/students/archive";
+import { generateConfirmationNumber } from "@/lib/registrations/numbering";
 
 export interface StaffRegistrationInput {
   candidateId?: string;
@@ -48,6 +52,8 @@ export interface StaffRegistrationInput {
   examSessionIds: string[];
   reason: string;
   entryTypeOverride?: import("@/generated/prisma/enums").FeeEntryType;
+  includeCandidateRegistrationFee?: boolean;
+  candidateRegistrationFeeReason?: string;
   teacherRequestedBy?: { name: string; role: UserRole };
 }
 
@@ -68,7 +74,9 @@ export interface ExternalCandidateRegistrationInput {
   };
   registrationWindowId: string;
   examSessionIds: string[];
-  reason: string;
+  reason?: string;
+  includeCandidateRegistrationFee?: boolean;
+  candidateRegistrationFeeReason?: string;
 }
 
 function examLine(session: {
@@ -166,13 +174,41 @@ async function resolveInternalCandidate(input: StaffRegistrationInput) {
 
 interface WorkflowMetadata {
   visibility: "STUDENT_AND_TEACHER" | "EXAM_OFFICE_ONLY";
-  billingScope: "NORMAL_BILLING" | "MANUAL_REVIEW";
+  billingScope: "NORMAL_BILLING" | "RESTRICTED_BILLING" | "EXTERNAL_BILLING" | "MANUAL_REVIEW";
   registrationType: RegistrationType;
   auditAction: RegistrationAuditAction;
-  registrationSource: ReturnType<typeof assistedSourceForRole> | ReturnType<typeof restrictedSourceForRole>;
+  sessionAuditAction?: RegistrationAuditAction;
+  recordWorkspaceAudit?: boolean;
+  registrationSource: RegistrationSource;
   lockImmediately: boolean;
   requireInternal: boolean;
+  requireReason?: boolean;
   trackRestrictedMetadata?: boolean;
+}
+
+function workspaceAuditNote(
+  registrationType: RegistrationType,
+  registrationNumber: string | null | undefined,
+): string {
+  if (registrationType === "RESTRICTED_INTERNAL") {
+    return formatRegistrationAuditNote(
+      registrationType,
+      registrationNumber ? `Registration #: ${registrationNumber}` : "Registration created",
+    );
+  }
+  if (registrationType === "EXTERNAL") {
+    return formatRegistrationAuditNote(
+      registrationType,
+      registrationNumber ? `Registration #: ${registrationNumber}` : "Registration created",
+    );
+  }
+  return registrationNumber
+    ? `Registration #: ${registrationNumber}`
+    : "Registered on behalf of internal student";
+}
+
+function sessionAuditNote(registrationType: RegistrationType, paperCode: string): string {
+  return formatRegistrationAuditNote(registrationType, paperCode);
 }
 
 async function applyCandidateRegistrationWorkflow(
@@ -181,8 +217,10 @@ async function applyCandidateRegistrationWorkflow(
   input: {
     registrationWindowId: string;
     examSessionIds: string[];
-    reason: string;
+    reason?: string;
     entryTypeOverride?: import("@/generated/prisma/enums").FeeEntryType;
+    includeCandidateRegistrationFee?: boolean;
+    candidateRegistrationFeeReason?: string;
   },
   metadata: WorkflowMetadata,
 ) {
@@ -190,11 +228,16 @@ async function applyCandidateRegistrationWorkflow(
     throw new RegistrationError("Only Admin or Exam Officer can create staff registrations", 403);
   }
 
-  const reason = input.reason?.trim();
-  if (!reason) throw new RegistrationError("Reason is required", 400);
+  const reason = input.reason?.trim() ?? "";
+  if (metadata.requireReason !== false && !reason) {
+    throw new RegistrationError("Reason is required", 400);
+  }
 
   if (metadata.requireInternal && candidate.candidateType !== "INTERNAL") {
     throw new RegistrationError("This workflow requires an internal candidate", 400);
+  }
+  if (metadata.registrationType === "EXTERNAL" && candidate.candidateType !== "EXTERNAL") {
+    throw new RegistrationError("External registration requires an external candidate", 400);
   }
 
   const uniqueSessionIds = [...new Set(input.examSessionIds)];
@@ -259,8 +302,17 @@ async function applyCandidateRegistrationWorkflow(
               restrictedUpdatedById: performedBy.id,
               restrictedUpdatedAt: now,
             }
-          : {}),
+          : { reason }),
         lockedAt: lockImmediately ? now : null,
+        ...(lockImmediately && !workspace!.confirmationNumber
+          ? {
+              confirmationNumber: await generateConfirmationNumber(
+                metadata.registrationType,
+                now.getFullYear(),
+                tx,
+              ),
+            }
+          : {}),
         isLateRegistration: entryResolution.isLateRegistration,
         entryType: entryResolution.entryType,
         feeStageId: entryResolution.feeStageId,
@@ -274,6 +326,12 @@ async function applyCandidateRegistrationWorkflow(
     });
 
     for (const session of sessions) {
+      const sessionAuditAction =
+        metadata.sessionAuditAction ??
+        (entryResolution.entryTypeOverridden
+          ? RegistrationAuditAction.ENTRY_TYPE_OVERRIDDEN
+          : metadata.auditAction);
+
       const row = await tx.studentExamRegistration.create({
         data: {
           candidateId: candidate.id,
@@ -312,13 +370,12 @@ async function applyCandidateRegistrationWorkflow(
           studentId,
           registrationId: row.id,
           examSessionId: session.id,
-          action: entryResolution.entryTypeOverridden
-            ? RegistrationAuditAction.ENTRY_TYPE_OVERRIDDEN
-            : metadata.auditAction,
+          action: sessionAuditAction,
           performedById: performedBy.id,
           performedByRole: performedBy.role,
           reason,
           registrationSource: metadata.registrationSource,
+          registrationType: metadata.registrationType,
           visibility: metadata.visibility,
           billingScope: metadata.billingScope,
           entryType: entryResolution.entryType,
@@ -326,7 +383,11 @@ async function applyCandidateRegistrationWorkflow(
           assessmentHubCandidateNumberSnapshot: candidate.assessmentHubCandidateNumber,
           candidateTypeSnapshot: candidate.candidateType,
           afterValue: registrationAuditSnapshot(row),
-          note: examLine(row.examSession).paperCode,
+          note: sessionAuditNote(
+            metadata.registrationType,
+            examLine(row.examSession).paperCode,
+          ),
+          registrationWindowId: window.id,
         },
         tx,
       );
@@ -341,25 +402,84 @@ async function applyCandidateRegistrationWorkflow(
             examSessionId: session.id,
             feeStageId: entryResolution.feeStageId,
             action: entryResolution.defaultedToNormal
-            ? RegistrationAuditAction.ENTRY_TYPE_DEFAULTED_TO_NORMAL
-            : RegistrationAuditAction.ENTRY_TYPE_AUTO_ASSIGNED,
+              ? RegistrationAuditAction.ENTRY_TYPE_DEFAULTED_TO_NORMAL
+              : RegistrationAuditAction.ENTRY_TYPE_AUTO_ASSIGNED,
             performedById: performedBy.id,
             performedByRole: performedBy.role,
             entryType: entryResolution.entryType,
             reason,
             registrationSource: metadata.registrationSource,
+            registrationType: metadata.registrationType,
             visibility: metadata.visibility,
             billingScope: metadata.billingScope,
             note: entryResolution.entryType,
+            skipReasonCheck: true,
           },
           tx,
         );
       }
     }
+
+    if (metadata.recordWorkspaceAudit) {
+      const workspaceRecord = await tx.registrationWorkspace.findUnique({
+        where: { id: workspace!.id },
+        select: { registrationNumber: true },
+      });
+      await createRegistrationAuditLog(
+        {
+          registrationWorkspaceId: workspace!.id,
+          candidateId: candidate.id,
+          studentId,
+          registrationId: null,
+          examSessionId: null,
+          action: metadata.auditAction,
+          performedById: performedBy.id,
+          performedByRole: performedBy.role,
+          reason,
+          registrationSource: metadata.registrationSource,
+          registrationType: metadata.registrationType,
+          visibility: metadata.visibility,
+          billingScope: metadata.billingScope,
+          registrationNumber: workspaceRecord?.registrationNumber ?? null,
+          assessmentHubCandidateNumberSnapshot: candidate.assessmentHubCandidateNumber,
+          candidateTypeSnapshot: candidate.candidateType,
+          registrationWindowId: window.id,
+          note: workspaceAuditNote(metadata.registrationType, workspaceRecord?.registrationNumber),
+          afterValue: {
+            examSessionIds: uniqueSessionIds,
+          },
+        },
+        tx,
+      );
+    }
+
+    if (input.includeCandidateRegistrationFee) {
+      try {
+        await applyCandidateRegistrationFeeSelection({
+          workspaceId: workspace!.id,
+          includeCandidateRegistrationFee: true,
+          performedBy,
+          reason: input.candidateRegistrationFeeReason?.trim() || reason,
+          tx,
+        });
+      } catch (feeError) {
+        console.warn(
+          "Candidate registration fee could not be applied; registration was still created",
+          feeError,
+        );
+      }
+    }
   });
 
-  if (metadata.billingScope === "MANUAL_REVIEW") {
-    await markStatementsNeedReview(workspace!.id);
+  if (input.includeCandidateRegistrationFee || metadata.billingScope === "MANUAL_REVIEW") {
+    await markFeeStatementsNeedsRegeneration({
+      workspaceId: workspace!.id,
+      reasonCode: input.includeCandidateRegistrationFee
+        ? "CANDIDATE_REGISTRATION_FEE_ADDED"
+        : "MANUAL_BILLING_ADJUSTMENT",
+      performedByUserId: performedBy.id,
+      note: reason,
+    });
   }
 
   return getRegistrationWorkspaceById(workspace!.id);
@@ -369,6 +489,10 @@ export async function applyAssistedRegistration(
   performedBy: { id: string; role: UserRole },
   input: StaffRegistrationInput,
 ) {
+  if (!["ADMIN", "EXAM_OFFICER"].includes(performedBy.role)) {
+    throw new RegistrationError("Only Admin or Exam Officer can register on behalf of a student", 403);
+  }
+
   const candidate = await resolveInternalCandidate(input);
   return applyCandidateRegistrationWorkflow(
     performedBy,
@@ -377,8 +501,10 @@ export async function applyAssistedRegistration(
     {
       visibility: "STUDENT_AND_TEACHER",
       billingScope: "NORMAL_BILLING",
-      registrationType: "NORMAL",
-      auditAction: assistedAuditActionForRole(performedBy.role) as RegistrationAuditAction,
+      registrationType: "INTERNAL_NORMAL",
+      auditAction: internalNormalWorkspaceAuditAction(),
+      sessionAuditAction: RegistrationAuditAction.ADD,
+      recordWorkspaceAudit: true,
       registrationSource: assistedSourceForRole(performedBy.role),
       lockImmediately: false,
       requireInternal: true,
@@ -390,6 +516,13 @@ export async function applyOfficeOnlyInternalRegistration(
   performedBy: { id: string; role: UserRole },
   input: StaffRegistrationInput,
 ) {
+  if (!["ADMIN", "EXAM_OFFICER"].includes(performedBy.role)) {
+    throw new RegistrationError(
+      "Only Admin or Exam Officer can create restricted internal registrations",
+      403,
+    );
+  }
+
   const candidate = await resolveInternalCandidate(input);
   return applyCandidateRegistrationWorkflow(
     performedBy,
@@ -397,9 +530,11 @@ export async function applyOfficeOnlyInternalRegistration(
     input,
     {
       visibility: "EXAM_OFFICE_ONLY",
-      billingScope: "MANUAL_REVIEW",
-      registrationType: "RESTRICTED",
+      billingScope: "RESTRICTED_BILLING",
+      registrationType: "RESTRICTED_INTERNAL",
       auditAction: restrictedAuditActionForRole(performedBy.role) as RegistrationAuditAction,
+      sessionAuditAction: RegistrationAuditAction.ADD,
+      recordWorkspaceAudit: true,
       registrationSource: restrictedSourceForRole(performedBy.role),
       lockImmediately: true,
       requireInternal: true,
@@ -412,6 +547,13 @@ export async function applyExternalCandidateRegistration(
   performedBy: { id: string; role: UserRole },
   input: ExternalCandidateRegistrationInput,
 ) {
+  if (!["ADMIN", "EXAM_OFFICER"].includes(performedBy.role)) {
+    throw new RegistrationError(
+      "Only Admin or Exam Officer can register external candidates",
+      403,
+    );
+  }
+
   let candidate: Candidate;
   if (input.candidateId) {
     const existing = await prisma.candidate.findUnique({ where: { id: input.candidateId } });
@@ -436,12 +578,15 @@ export async function applyExternalCandidateRegistration(
     input,
     {
       visibility: "EXAM_OFFICE_ONLY",
-      billingScope: "MANUAL_REVIEW",
+      billingScope: "EXTERNAL_BILLING",
       registrationType: "EXTERNAL",
-      auditAction: "EXTERNAL_CANDIDATE_REGISTRATION_CREATED" as RegistrationAuditAction,
+      auditAction: RegistrationAuditAction.EXTERNAL_REGISTRATION_CREATED,
+      sessionAuditAction: RegistrationAuditAction.ADD,
+      recordWorkspaceAudit: true,
       registrationSource: "EXTERNAL_CANDIDATE",
       lockImmediately: true,
       requireInternal: false,
+      requireReason: true,
     },
   );
 }
@@ -518,10 +663,10 @@ export async function applyStaffStudentRegistrationAfterStudentClose(
       candidate.id,
       window.id,
       studentId,
-      "NORMAL",
+      "INTERNAL_NORMAL",
     );
 
-    await applyPostLockAdjustment(
+    await applyLockedRegistrationAdjustment(
       workspace.id,
       performedBy,
       {

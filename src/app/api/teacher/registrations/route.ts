@@ -6,6 +6,7 @@ import {
   buildTeacherRegistrationWhere,
   parseRegistrationFilters,
 } from "@/lib/registrations/filters";
+import { buildTeacherRegistrationWhereForTeacher } from "@/lib/registrations/visibility";
 import { registrationInclude } from "@/lib/registrations/include";
 import { ensureExpiredWindowsLocked } from "@/lib/registrations/lock";
 import { prisma } from "@/lib/prisma";
@@ -21,7 +22,10 @@ export async function GET(request: NextRequest) {
     await ensureExpiredWindowsLocked();
 
     const filters = parseRegistrationFilters(request.nextUrl.searchParams);
-    const where = buildTeacherRegistrationWhere(filters);
+    const where = await buildTeacherRegistrationWhereForTeacher(
+      buildTeacherRegistrationWhere(filters),
+      auth.user.id,
+    );
 
     const statusFilter = filters.status
       ? { status: filters.status as "ACTIVE" | "LOCKED" | "CANCELLED" }

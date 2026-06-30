@@ -1,6 +1,7 @@
 import { RegistrationStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
 import { ensureExpiredWindowsLocked } from "@/lib/registrations/lock";
+import { buildStudentVisibleRegistrationWhere } from "@/lib/registrations/filters";
 import {
   isLevelCategory,
   matchesAnyLevelCategory,
@@ -9,8 +10,8 @@ import {
 } from "@/lib/level-categories";
 import {
   formatSessionTimeRange,
-  sessionCalendarDetailLabel,
   sessionCalendarLabel,
+  sessionCalendarSubjectLine,
   sessionEventAppearance,
 } from "@/lib/calendar-events";
 import {
@@ -108,12 +109,7 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
     }),
     studentId
       ? prisma.studentExamRegistration.findMany({
-          where: {
-            studentId,
-            status: {
-              in: [RegistrationStatus.ACTIVE, RegistrationStatus.LOCKED],
-            },
-          },
+          where: buildStudentVisibleRegistrationWhere(studentId),
           select: { id: true, examSessionId: true, status: true },
         })
       : Promise.resolve([]),
@@ -253,11 +249,11 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
       );
 
       const calendarTimeLabel = formatSessionTimeRange(session.startTime, session.endTime);
-      const calendarDetailLabel = [
-        examBoardName,
+      const calendarDetailLabel = sessionCalendarSubjectLine(
+        qualification.level,
         session.paper.subject.name,
-        session.paper.code,
-      ].join(" · ");
+        session.paper.title,
+      );
 
       const registration = registrationBySession.get(session.id);
       const window = openWindowMap.get(

@@ -34,11 +34,12 @@ export interface FeeStatementPrintData {
   };
   items: Array<{
     examBoardSnapshot: string;
-    qualificationSnapshot: string;
-    subjectSnapshot: string;
-    paperCodeSnapshot: string;
-    paperTitleSnapshot: string;
-    entryTypeSnapshot: string;
+    qualificationSnapshot?: string | null;
+    subjectSnapshot?: string | null;
+    paperCodeSnapshot?: string | null;
+    paperTitleSnapshot?: string | null;
+    entryTypeSnapshot?: string | null;
+    serviceNameSnapshot?: string | null;
     salesGbpAmountSnapshot: number | string;
     salesCnyAmountSnapshot: number | string;
     lineTotalGbp: number | string;
@@ -168,14 +169,19 @@ function StatementDocument({
               const lineGbp = Number(item.lineTotalGbp);
               const lineCny = Number(item.lineTotalCny);
               const itemRate = item.exchangeRateSnapshot ? Number(item.exchangeRateSnapshot) : rate;
+              const isServiceLine = Boolean(item.serviceNameSnapshot);
 
               return (
                 <tr key={index} className="border-b border-slate-100">
                   <td className="py-2 pr-2">{item.examBoardSnapshot}</td>
-                  <td className="py-2 pr-2">{item.subjectSnapshot}</td>
-                  <td className="py-2 pr-2">{item.paperCodeSnapshot}</td>
-                  <td className="py-2 pr-2">{item.paperTitleSnapshot}</td>
-                  <td className="py-2 pr-2">{item.entryTypeSnapshot}</td>
+                  <td className="py-2 pr-2">
+                    {isServiceLine ? item.serviceNameSnapshot : (item.subjectSnapshot ?? "—")}
+                  </td>
+                  <td className="py-2 pr-2">{isServiceLine ? "—" : (item.paperCodeSnapshot ?? "—")}</td>
+                  <td className="py-2 pr-2">
+                    {isServiceLine ? item.serviceNameSnapshot : (item.paperTitleSnapshot ?? "—")}
+                  </td>
+                  <td className="py-2 pr-2">{isServiceLine ? "—" : (item.entryTypeSnapshot ?? "—")}</td>
                   {displayCurrency === "BOTH" ? (
                     <>
                       <td className="py-2 pr-2 text-right">{formatMoney(unitGbp, "GBP")}</td>

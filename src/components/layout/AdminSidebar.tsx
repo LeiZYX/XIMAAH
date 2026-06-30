@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import {
+  StaffSidebarNav,
+  adminStaffSections,
+} from "@/components/layout/StaffSidebarNav";
 
-const adminLinks = [
+const setupLinks = [
   { href: "/admin", label: "Dashboard", exact: true },
   { href: "/admin/users", label: "Users" },
   { href: "/admin/candidates", label: "Candidates" },
@@ -16,11 +20,7 @@ const adminLinks = [
   { href: "/admin/exam-series", label: "Exam Series" },
   { href: "/admin/exam-sessions", label: "Exam Sessions" },
   { href: "/admin/key-dates", label: "Key Dates" },
-  { href: "/admin/registration-windows", label: "Registration Windows" },
-  { href: "/admin/registrations", label: "Registrations" },
   { href: "/admin/exam-documents", label: "Exam Documents" },
-  { href: "/admin/fee-summary", label: "Fee Summary" },
-  { href: "/admin/fee-statements", label: "Fee Statements" },
 ];
 
 export function AdminSidebar() {
@@ -43,12 +43,13 @@ export function AdminSidebar() {
 
   return (
     <aside className="flex w-64 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
-      <div className="sticky top-0 flex flex-1 flex-col p-4">
+      <div className="sticky top-0 flex max-h-screen flex-1 flex-col overflow-y-auto p-4">
         <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
           Admin
         </p>
-        <nav className="space-y-1">
-          {adminLinks.map((link) => {
+
+        <div className="mb-5 space-y-1">
+          {setupLinks.map((link) => {
             const active = link.exact
               ? pathname === link.href
               : pathname.startsWith(link.href);
@@ -67,7 +68,9 @@ export function AdminSidebar() {
               </Link>
             );
           })}
-        </nav>
+        </div>
+
+        <StaffSidebarNav sections={adminStaffSections("/admin")} />
 
         <div className="mt-auto border-t border-slate-200 pt-4">
           {userName ? (

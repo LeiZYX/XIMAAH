@@ -14,6 +14,7 @@ import {
 import { hasWorkspaceSchema } from "@/lib/registrations/schema-capabilities";
 import { RegistrationError } from "@/lib/registrations/errors";
 import { ensureRegistrationWorkspaceForCandidate } from "@/lib/registrations/workspace";
+import { generateConfirmationNumber } from "@/lib/registrations/numbering";
 
 async function resolveLockPerformer(windowId: string): Promise<string> {
   const window = await prisma.registrationWindow.findUnique({
@@ -55,7 +56,7 @@ export async function lockRegistrationsForWindow(
       let workspaceId: string | null = null;
 
       if (workspaceReady) {
-        const registrationType: RegistrationType = registration.registrationType ?? "NORMAL";
+        const registrationType: RegistrationType = registration.registrationType ?? "INTERNAL_NORMAL";
         if (!registration.candidateId) {
           throw new RegistrationError("Registration missing candidate", 500);
         }
@@ -67,9 +68,12 @@ export async function lockRegistrationsForWindow(
           registrationType,
           tx,
         );
+        const confirmationNumber =
+          workspace.confirmationNumber ??
+          (await generateConfirmationNumber(registrationType, now.getFullYear(), tx));
         await tx.registrationWorkspace.update({
           where: { id: workspace.id },
-          data: { lockedAt: now },
+          data: { lockedAt: now, confirmationNumber },
         });
         workspaceId = workspace.id;
       }
