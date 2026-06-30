@@ -52,6 +52,7 @@ interface FeeStatementPrintModalProps {
   statements: FeeStatementPrintData[];
   displayCurrency: "GBP" | "CNY" | "BOTH";
   onClose: () => void;
+  autoPrint?: boolean;
 }
 
 function PrintIcon({ className }: { className?: string }) {
@@ -231,7 +232,12 @@ function StatementDocument({
   );
 }
 
-export function FeeStatementPrintModal({ statements, displayCurrency, onClose }: FeeStatementPrintModalProps) {
+export function FeeStatementPrintModal({
+  statements,
+  displayCurrency,
+  onClose,
+  autoPrint = false,
+}: FeeStatementPrintModalProps) {
   const [mounted, setMounted] = useState(false);
   const printDate = useMemo(() => new Date().toLocaleDateString(), []);
 
@@ -242,6 +248,12 @@ export function FeeStatementPrintModal({ statements, displayCurrency, onClose }:
     window.print();
     window.setTimeout(() => document.body.classList.remove("fee-print-active"), 500);
   }, []);
+
+  useEffect(() => {
+    if (!autoPrint || !mounted) return;
+    const timer = window.setTimeout(() => handlePrint(), 300);
+    return () => window.clearTimeout(timer);
+  }, [autoPrint, mounted, handlePrint]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {

@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 
 const examOfficeLinks = [
   { href: "/exam-office/registrations", label: "Registrations" },
+  { href: "/exam-office/exam-documents", label: "Exam Documents" },
   { href: "/exam-office/candidates", label: "Candidates" },
+  { href: "/exam-office/exam-boards", label: "Exam Boards" },
   { href: "/exam-office/registration-windows", label: "Registration Windows" },
   { href: "/exam-office/fee-summary", label: "Fee Summary" },
   { href: "/exam-office/fee-statements", label: "Fee Statements" },
-  { href: "/exam-office/students", label: "Students" },
 ];
 
 export function ExamOfficeSidebar() {

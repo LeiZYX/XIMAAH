@@ -10,11 +10,13 @@ export const EXAM_BOARD_LEGEND = Object.entries(EXAM_BOARD_ACCENTS).map(([code, 
   color: value.accent,
 }));
 
-export function examBoardAccent(code: string) {
+export function examBoardAccent(code: string, name?: string) {
   const normalized = code.trim().toUpperCase();
-  return EXAM_BOARD_ACCENTS[normalized] ?? {
+  const mapped = EXAM_BOARD_ACCENTS[normalized];
+  if (mapped) return mapped;
+  return {
     accent: "#475569",
-    label: code || "Other",
+    label: name?.trim() || code || "Other",
   };
 }
 

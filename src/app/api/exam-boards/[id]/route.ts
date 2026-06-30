@@ -1,6 +1,10 @@
 import { Prisma } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
+import {
+  examBoardWriteData,
+  parseExamBoardCentreFields,
+} from "@/lib/exam-boards/form";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -37,6 +41,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 
   const code = String(data.code).toUpperCase().trim();
+  const centreFields = parseExamBoardCentreFields(body as Record<string, unknown>);
 
   try {
     const duplicate = await prisma.examBoard.findFirst({
@@ -48,15 +53,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 
     const examBoard = await prisma.examBoard.update({
       where: { id },
-      data: {
-        name: data.name.trim(),
-        code,
-        country: String(data.country).toUpperCase().trim(),
-        description: data.description ? String(data.description) : null,
-        region: data.region ? String(data.region) : null,
-        website: data.website ? String(data.website) : null,
-        timezone: data.timezone ? String(data.timezone) : null,
-      },
+      data: examBoardWriteData({ ...data, ...centreFields }),
     });
     return NextResponse.json(examBoard);
   } catch (error) {

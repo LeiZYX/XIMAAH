@@ -78,8 +78,7 @@ export function StaffRegistrationModal({
           isOfficeOnly
             ? all.filter((window: RegistrationWindowOption) => window.status !== "DRAFT")
             : all.filter(
-                (window: RegistrationWindowOption) =>
-                  window.status === "OPEN" || window.status === "CLOSED",
+                (window: RegistrationWindowOption) => window.status === "OPEN",
               ),
         );
       })
@@ -197,11 +196,11 @@ export function StaffRegistrationModal({
         <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
         {isOfficeOnly ? (
           <p className="mt-1 text-sm text-amber-800">
-            Office-only registrations are hidden from students and teachers.
+            Restricted registrations are hidden from students and teachers and excluded from normal exam documents and billing.
           </p>
         ) : (
           <p className="mt-1 text-sm text-slate-600">
-            The internal candidate and assigned subject teachers will see this registration.
+            Normal internal registration. The candidate and assigned subject teachers will see this registration in their portals.
           </p>
         )}
 

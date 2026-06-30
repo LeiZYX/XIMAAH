@@ -1,0 +1,27 @@
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .exam-document-print-root,
+  .exam-document-print-root * {
+    visibility: visible;
+  }
+
+  .exam-document-print-root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .exam-document-page {
+    break-after: page;
+    page-break-after: always;
+  }
+}

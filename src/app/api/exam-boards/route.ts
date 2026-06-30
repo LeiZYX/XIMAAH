@@ -1,6 +1,10 @@
 import { Prisma } from "@/generated/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
+import {
+  examBoardWriteData,
+  parseExamBoardCentreFields,
+} from "@/lib/exam-boards/form";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -18,8 +22,13 @@ function prismaErrorMessage(error: unknown, code: string): string | null {
     return "Database tables are missing. Run: npm run db:migrate";
   }
 
-  if (error instanceof Error && error.message.includes("ECONNREFUSED")) {
-    return "Cannot connect to MySQL. Start the database first.";
+  if (error instanceof Error) {
+    if (error.message.includes("does not exist") && error.message.includes("ExamBoard")) {
+      return "Exam board centre columns are missing. Run: npx prisma migrate deploy";
+    }
+    if (error.message.includes("ECONNREFUSED")) {
+      return "Cannot connect to MySQL. Start the database first.";
+    }
   }
 
   return null;
@@ -37,6 +46,7 @@ export async function GET() {
     });
     return NextResponse.json(examBoards);
   } catch (error) {
+    console.error("GET /api/exam-boards failed:", error);
     const message = prismaErrorMessage(error, "") ?? "Failed to load exam boards";
     return jsonError(message, 500);
   }
@@ -59,6 +69,7 @@ export async function POST(request: NextRequest) {
   }
 
   const code = String(data.code).toUpperCase().trim();
+  const centreFields = parseExamBoardCentreFields(body as Record<string, unknown>);
 
   if (!code) {
     return jsonError("Code cannot be empty");
@@ -74,15 +85,7 @@ export async function POST(request: NextRequest) {
     }
 
     const examBoard = await prisma.examBoard.create({
-      data: {
-        name: data.name.trim(),
-        code,
-        country: String(data.country).toUpperCase().trim(),
-        description: data.description ? String(data.description) : null,
-        region: data.region ? String(data.region) : null,
-        website: data.website ? String(data.website) : null,
-        timezone: data.timezone ? String(data.timezone) : null,
-      },
+      data: examBoardWriteData({ ...data, ...centreFields }),
     });
     return NextResponse.json(examBoard, { status: 201 });
   } catch (error) {

@@ -4,7 +4,7 @@ import {
   buildRegistrationWhereFromFeeFilters,
   buildWorkspaceWhereFromFeeFilters,
 } from "@/lib/fees/filters";
-import { findMatchingFeeRule, resolveEntryTypeForWorkspace } from "@/lib/fees/match";
+import { findMatchingFeeRuleWithFallback, resolveEntryTypeForWorkspace } from "@/lib/fees/match";
 import { loadWorkspacesWithEntryType } from "@/lib/fees/workspace-entry-type";
 import { toNumber } from "@/lib/fees/money";
 import type { Prisma } from "@/generated/prisma/client";
@@ -225,7 +225,7 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
   for (const reg of registrations) {
     allCandidates.add(candidateKey(reg));
     const entryType = resolveRegEntryType(reg);
-    const match = findMatchingFeeRule(rules, {
+    const match = findMatchingFeeRuleWithFallback(rules, {
       examBoardId: reg.examBoardId,
       examSeriesId: reg.examSeriesId,
       qualificationId: reg.subject.qualificationId,
@@ -479,7 +479,7 @@ export async function buildFeeDetailsReport(
 
     for (const reg of registrations) {
       const entryType = resolveRegEntryType(reg);
-      const match = findMatchingFeeRule(rules, {
+      const match = findMatchingFeeRuleWithFallback(rules, {
         examBoardId: reg.examBoardId,
         examSeriesId: reg.examSeriesId,
         qualificationId: reg.subject.qualificationId,

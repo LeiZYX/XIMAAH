@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
-import { createPasswordResetToken, sendPasswordResetEmail } from "@/lib/auth/password-reset";
+import { requestPasswordResetForUser } from "@/lib/auth/password-reset";
 import { equalsFilter } from "@/lib/db/string-filters";
 import { prisma } from "@/lib/prisma";
 
@@ -14,16 +14,15 @@ export async function POST(request: NextRequest) {
 
   const email = data.email.trim().toLowerCase();
   const user = await prisma.user.findFirst({
-    where: { email: equalsFilter(email) },
+    where: { email: equalsFilter(email), isActive: true },
   });
 
   if (user?.email) {
-    const { token } = await createPasswordResetToken(user.id);
-    await sendPasswordResetEmail(user.email, token);
+    await requestPasswordResetForUser(user);
   }
 
   return NextResponse.json({
     ok: true,
-    message: "If an account exists for that email, a reset link has been sent.",
+    message: "If the email exists, a reset link has been sent.",
   });
 }

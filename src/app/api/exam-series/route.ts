@@ -7,17 +7,32 @@ export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   const examBoardId = request.nextUrl.searchParams.get("examBoardId");
+  const query = request.nextUrl.searchParams.get("q")?.trim().toLowerCase() ?? "";
 
   const examSeries = await prisma.examSeries.findMany({
     where: examBoardId ? { examBoardId } : undefined,
     orderBy: [{ year: "desc" }, { name: "asc" }],
     include: {
-      examBoard: { select: { name: true, code: true } },
+      examBoard: { select: { id: true, name: true, code: true } },
       _count: { select: { examSessions: true, keyDates: true } },
     },
   });
 
-  return NextResponse.json(examSeries);
+  const filtered = query
+    ? examSeries.filter((row) => {
+        const haystack = [
+          row.examBoard.name,
+          row.examBoard.code,
+          row.name,
+          String(row.year),
+        ]
+          .join(" ")
+          .toLowerCase();
+        return haystack.includes(query);
+      })
+    : examSeries;
+
+  return NextResponse.json(filtered);
 }
 
 export async function POST(request: NextRequest) {

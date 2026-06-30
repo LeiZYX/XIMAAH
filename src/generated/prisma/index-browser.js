@@ -151,6 +151,8 @@ exports.Prisma.StudentProfileScalarFieldEnum = {
   studentNo: 'studentNo',
   currentGrade: 'currentGrade',
   currentClassName: 'currentClassName',
+  idCardNumber: 'idCardNumber',
+  gender: 'gender',
   email: 'email',
   phone: 'phone',
   status: 'status',
@@ -163,6 +165,54 @@ exports.Prisma.StudentProfileScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TeacherProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  phone: 'phone',
+  email: 'email',
+  status: 'status',
+  visibleGrades: 'visibleGrades',
+  visibleClasses: 'visibleClasses',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SystemEmailSettingsScalarFieldEnum = {
+  id: 'id',
+  smtpHost: 'smtpHost',
+  smtpPort: 'smtpPort',
+  smtpSecure: 'smtpSecure',
+  smtpUser: 'smtpUser',
+  smtpPassword: 'smtpPassword',
+  mailFrom: 'mailFrom',
+  passwordResetExpiresMinutes: 'passwordResetExpiresMinutes',
+  appUrl: 'appUrl',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.UserAuditLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  targetUserId: 'targetUserId',
+  performedById: 'performedById',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.ExamDocumentAuditLogScalarFieldEnum = {
+  id: 'id',
+  action: 'action',
+  documentType: 'documentType',
+  registrationWindowId: 'registrationWindowId',
+  examSessionId: 'examSessionId',
+  candidateId: 'candidateId',
+  candidateCount: 'candidateCount',
+  performedById: 'performedById',
+  metadata: 'metadata',
+  reason: 'reason',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.CandidateScalarFieldEnum = {
   id: 'id',
   assessmentHubCandidateNumber: 'assessmentHubCandidateNumber',
@@ -171,21 +221,41 @@ exports.Prisma.CandidateScalarFieldEnum = {
   studentNumber: 'studentNumber',
   englishName: 'englishName',
   chineseName: 'chineseName',
+  surnamePinyin: 'surnamePinyin',
+  givenNamePinyin: 'givenNamePinyin',
+  preferredEnglishName: 'preferredEnglishName',
+  legalEnglishName: 'legalEnglishName',
   email: 'email',
   phone: 'phone',
   dateOfBirth: 'dateOfBirth',
   gender: 'gender',
+  nationality: 'nationality',
+  idDocumentType: 'idDocumentType',
+  idDocumentNumber: 'idDocumentNumber',
   idNumber: 'idNumber',
   passportNumber: 'passportNumber',
+  photoUrl: 'photoUrl',
+  emergencyContactName: 'emergencyContactName',
+  emergencyContactPhone: 'emergencyContactPhone',
   schoolName: 'schoolName',
   grade: 'grade',
   className: 'className',
+  graduationYear: 'graduationYear',
   status: 'status',
   loginEnabled: 'loginEnabled',
   sourceSystem: 'sourceSystem',
   externalId: 'externalId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CandidateAuditLogScalarFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  action: 'action',
+  performedById: 'performedById',
+  metadata: 'metadata',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.CandidateExamIdentityScalarFieldEnum = {
@@ -226,6 +296,13 @@ exports.Prisma.RegistrationWindowScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.RegistrationWindowIncludedSeriesScalarFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  examSeriesId: 'examSeriesId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.RegistrationFeeStageScalarFieldEnum = {
   id: 'id',
   registrationWindowId: 'registrationWindowId',
@@ -260,6 +337,18 @@ exports.Prisma.RegistrationWorkspaceScalarFieldEnum = {
   registrationSource: 'registrationSource',
   visibility: 'visibility',
   billingScope: 'billingScope',
+  registrationType: 'registrationType',
+  visibleToStudent: 'visibleToStudent',
+  visibleToTeacher: 'visibleToTeacher',
+  visibleInStudentPortal: 'visibleInStudentPortal',
+  visibleInTeacherPortal: 'visibleInTeacherPortal',
+  visibleInStudentDocuments: 'visibleInStudentDocuments',
+  visibleInStudentBilling: 'visibleInStudentBilling',
+  restrictedReason: 'restrictedReason',
+  restrictedCreatedById: 'restrictedCreatedById',
+  restrictedCreatedAt: 'restrictedCreatedAt',
+  restrictedUpdatedById: 'restrictedUpdatedById',
+  restrictedUpdatedAt: 'restrictedUpdatedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -289,6 +378,13 @@ exports.Prisma.StudentExamRegistrationScalarFieldEnum = {
   registrationSource: 'registrationSource',
   visibility: 'visibility',
   billingScope: 'billingScope',
+  registrationType: 'registrationType',
+  visibleToStudent: 'visibleToStudent',
+  visibleToTeacher: 'visibleToTeacher',
+  visibleInStudentPortal: 'visibleInStudentPortal',
+  visibleInTeacherPortal: 'visibleInTeacherPortal',
+  visibleInStudentDocuments: 'visibleInStudentDocuments',
+  visibleInStudentBilling: 'visibleInStudentBilling',
   addedByUserId: 'addedByUserId',
   addedByRole: 'addedByRole',
   addedAt: 'addedAt',
@@ -365,6 +461,15 @@ exports.Prisma.ExamBoardScalarFieldEnum = {
   website: 'website',
   timezone: 'timezone',
   calendarSubjectFilterEnabled: 'calendarSubjectFilterEnabled',
+  centreName: 'centreName',
+  centreNumber: 'centreNumber',
+  centreAddress: 'centreAddress',
+  centreEmail: 'centreEmail',
+  centrePhone: 'centrePhone',
+  centreCountry: 'centreCountry',
+  centreTimeZone: 'centreTimeZone',
+  defaultExamOfficerName: 'defaultExamOfficerName',
+  defaultExamOfficerEmail: 'defaultExamOfficerEmail',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -524,6 +629,7 @@ exports.Prisma.FeeStatementScalarFieldEnum = {
   registrationWorkspaceId: 'registrationWorkspaceId',
   registrationWindowId: 'registrationWindowId',
   statementNo: 'statementNo',
+  statementKind: 'statementKind',
   displayCurrency: 'displayCurrency',
   exchangeRateSnapshot: 'exchangeRateSnapshot',
   studentNameSnapshot: 'studentNameSnapshot',
@@ -583,6 +689,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
@@ -610,8 +721,51 @@ exports.Prisma.StudentProfileOrderByRelevanceFieldEnum = {
   studentNo: 'studentNo',
   currentGrade: 'currentGrade',
   currentClassName: 'currentClassName',
+  idCardNumber: 'idCardNumber',
   email: 'email',
   phone: 'phone'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+};
+
+exports.Prisma.TeacherProfileOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  phone: 'phone',
+  email: 'email'
+};
+
+exports.Prisma.SystemEmailSettingsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  smtpHost: 'smtpHost',
+  smtpUser: 'smtpUser',
+  smtpPassword: 'smtpPassword',
+  mailFrom: 'mailFrom',
+  appUrl: 'appUrl'
+};
+
+exports.Prisma.UserAuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  targetUserId: 'targetUserId',
+  performedById: 'performedById'
+};
+
+exports.Prisma.ExamDocumentAuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  examSessionId: 'examSessionId',
+  candidateId: 'candidateId',
+  performedById: 'performedById',
+  reason: 'reason'
 };
 
 exports.Prisma.CandidateOrderByRelevanceFieldEnum = {
@@ -621,16 +775,30 @@ exports.Prisma.CandidateOrderByRelevanceFieldEnum = {
   studentNumber: 'studentNumber',
   englishName: 'englishName',
   chineseName: 'chineseName',
+  surnamePinyin: 'surnamePinyin',
+  givenNamePinyin: 'givenNamePinyin',
+  preferredEnglishName: 'preferredEnglishName',
+  legalEnglishName: 'legalEnglishName',
   email: 'email',
   phone: 'phone',
-  gender: 'gender',
+  nationality: 'nationality',
+  idDocumentNumber: 'idDocumentNumber',
   idNumber: 'idNumber',
   passportNumber: 'passportNumber',
+  photoUrl: 'photoUrl',
+  emergencyContactName: 'emergencyContactName',
+  emergencyContactPhone: 'emergencyContactPhone',
   schoolName: 'schoolName',
   grade: 'grade',
   className: 'className',
   sourceSystem: 'sourceSystem',
   externalId: 'externalId'
+};
+
+exports.Prisma.CandidateAuditLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  candidateId: 'candidateId',
+  performedById: 'performedById'
 };
 
 exports.Prisma.CandidateExamIdentityOrderByRelevanceFieldEnum = {
@@ -657,6 +825,12 @@ exports.Prisma.RegistrationWindowOrderByRelevanceFieldEnum = {
   createdById: 'createdById'
 };
 
+exports.Prisma.RegistrationWindowIncludedSeriesOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  examSeriesId: 'examSeriesId'
+};
+
 exports.Prisma.RegistrationFeeStageOrderByRelevanceFieldEnum = {
   id: 'id',
   registrationWindowId: 'registrationWindowId',
@@ -673,7 +847,10 @@ exports.Prisma.RegistrationWorkspaceOrderByRelevanceFieldEnum = {
   lastAdjustmentReason: 'lastAdjustmentReason',
   lastAdjustmentSummary: 'lastAdjustmentSummary',
   feeStageId: 'feeStageId',
-  entryTypeOverrideReason: 'entryTypeOverrideReason'
+  entryTypeOverrideReason: 'entryTypeOverrideReason',
+  restrictedReason: 'restrictedReason',
+  restrictedCreatedById: 'restrictedCreatedById',
+  restrictedUpdatedById: 'restrictedUpdatedById'
 };
 
 exports.Prisma.StudentExamRegistrationOrderByRelevanceFieldEnum = {
@@ -746,7 +923,16 @@ exports.Prisma.ExamBoardOrderByRelevanceFieldEnum = {
   country: 'country',
   region: 'region',
   website: 'website',
-  timezone: 'timezone'
+  timezone: 'timezone',
+  centreName: 'centreName',
+  centreNumber: 'centreNumber',
+  centreAddress: 'centreAddress',
+  centreEmail: 'centreEmail',
+  centrePhone: 'centrePhone',
+  centreCountry: 'centreCountry',
+  centreTimeZone: 'centreTimeZone',
+  defaultExamOfficerName: 'defaultExamOfficerName',
+  defaultExamOfficerEmail: 'defaultExamOfficerEmail'
 };
 
 exports.Prisma.QualificationOrderByRelevanceFieldEnum = {
@@ -894,6 +1080,13 @@ exports.UserRole = exports.$Enums.UserRole = {
   STUDENT: 'STUDENT'
 };
 
+exports.Gender = exports.$Enums.Gender = {
+  MALE: 'MALE',
+  FEMALE: 'FEMALE',
+  OTHER: 'OTHER',
+  PREFER_NOT_TO_SAY: 'PREFER_NOT_TO_SAY'
+};
+
 exports.StudentProfileStatus = exports.$Enums.StudentProfileStatus = {
   ACTIVE: 'ACTIVE',
   GRADUATED: 'GRADUATED',
@@ -901,9 +1094,67 @@ exports.StudentProfileStatus = exports.$Enums.StudentProfileStatus = {
   INACTIVE: 'INACTIVE'
 };
 
+exports.TeacherProfileStatus = exports.$Enums.TeacherProfileStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE'
+};
+
+exports.UserAuditAction = exports.$Enums.UserAuditAction = {
+  USER_CREATED: 'USER_CREATED',
+  USER_UPDATED: 'USER_UPDATED',
+  USER_DEACTIVATED: 'USER_DEACTIVATED',
+  PASSWORD_RESET_REQUESTED: 'PASSWORD_RESET_REQUESTED',
+  PASSWORD_RESET_COMPLETED: 'PASSWORD_RESET_COMPLETED',
+  STUDENT_IMPORTED: 'STUDENT_IMPORTED',
+  TEACHER_IMPORTED: 'TEACHER_IMPORTED',
+  STUDENT_PROMOTED: 'STUDENT_PROMOTED',
+  STUDENT_ARCHIVED: 'STUDENT_ARCHIVED'
+};
+
+exports.ExamDocumentAuditAction = exports.$Enums.ExamDocumentAuditAction = {
+  EXAM_DOCUMENT_PREVIEWED: 'EXAM_DOCUMENT_PREVIEWED',
+  EXAM_DOCUMENT_PRINTED: 'EXAM_DOCUMENT_PRINTED',
+  EXAM_DOCUMENT_DOWNLOADED: 'EXAM_DOCUMENT_DOWNLOADED',
+  STATEMENT_OF_ENTRY_PRINTED: 'STATEMENT_OF_ENTRY_PRINTED',
+  ATTENDANCE_REGISTER_PRINTED: 'ATTENDANCE_REGISTER_PRINTED',
+  SEATING_PLAN_PRINTED: 'SEATING_PLAN_PRINTED',
+  CANDIDATE_LIST_EXPORTED: 'CANDIDATE_LIST_EXPORTED',
+  RESTRICTED_REGISTRATION_CREATED: 'RESTRICTED_REGISTRATION_CREATED',
+  RESTRICTED_REGISTRATION_UPDATED: 'RESTRICTED_REGISTRATION_UPDATED',
+  RESTRICTED_REGISTRATION_CANCELLED: 'RESTRICTED_REGISTRATION_CANCELLED',
+  RESTRICTED_INVOICE_PRINTED: 'RESTRICTED_INVOICE_PRINTED',
+  RESTRICTED_INVOICE_DOWNLOADED: 'RESTRICTED_INVOICE_DOWNLOADED'
+};
+
+exports.ExamDocumentType = exports.$Enums.ExamDocumentType = {
+  STATEMENT_OF_ENTRY: 'STATEMENT_OF_ENTRY',
+  CANDIDATE_TIMETABLE: 'CANDIDATE_TIMETABLE',
+  ATTENDANCE_REGISTER: 'ATTENDANCE_REGISTER',
+  SEATING_PLAN: 'SEATING_PLAN',
+  DESK_LABELS: 'DESK_LABELS',
+  CANDIDATE_LABELS: 'CANDIDATE_LABELS',
+  CANDIDATE_LIST: 'CANDIDATE_LIST',
+  SUBJECT_CANDIDATE_LIST: 'SUBJECT_CANDIDATE_LIST',
+  ROOM_CANDIDATE_LIST: 'ROOM_CANDIDATE_LIST',
+  MISSING_CANDIDATE_REPORT: 'MISSING_CANDIDATE_REPORT',
+  NORMAL_FEE_STATEMENT: 'NORMAL_FEE_STATEMENT',
+  RESTRICTED_INVOICE: 'RESTRICTED_INVOICE',
+  RESULT_SLIP: 'RESULT_SLIP',
+  CERTIFICATE_COLLECTION_LIST: 'CERTIFICATE_COLLECTION_LIST'
+};
+
 exports.CandidateType = exports.$Enums.CandidateType = {
   INTERNAL: 'INTERNAL',
   EXTERNAL: 'EXTERNAL'
+};
+
+exports.IdDocumentType = exports.$Enums.IdDocumentType = {
+  CHINESE_ID_CARD: 'CHINESE_ID_CARD',
+  PASSPORT: 'PASSPORT',
+  HONG_KONG_ID: 'HONG_KONG_ID',
+  MACAU_ID: 'MACAU_ID',
+  TAIWAN_ID: 'TAIWAN_ID',
+  OTHER: 'OTHER'
 };
 
 exports.CandidateStatus = exports.$Enums.CandidateStatus = {
@@ -911,6 +1162,14 @@ exports.CandidateStatus = exports.$Enums.CandidateStatus = {
   GRADUATED: 'GRADUATED',
   LEFT: 'LEFT',
   INACTIVE: 'INACTIVE'
+};
+
+exports.CandidateAuditAction = exports.$Enums.CandidateAuditAction = {
+  CANDIDATE_IDENTITY_UPDATED: 'CANDIDATE_IDENTITY_UPDATED',
+  CANDIDATE_PHOTO_UPLOADED: 'CANDIDATE_PHOTO_UPLOADED',
+  CANDIDATE_PHOTO_REMOVED: 'CANDIDATE_PHOTO_REMOVED',
+  CANDIDATE_NAME_CHANGED: 'CANDIDATE_NAME_CHANGED',
+  DOCUMENT_NUMBER_CHANGED: 'DOCUMENT_NUMBER_CHANGED'
 };
 
 exports.RegistrationWindowStatus = exports.$Enums.RegistrationWindowStatus = {
@@ -951,6 +1210,12 @@ exports.BillingScope = exports.$Enums.BillingScope = {
   MANUAL_REVIEW: 'MANUAL_REVIEW'
 };
 
+exports.RegistrationType = exports.$Enums.RegistrationType = {
+  NORMAL: 'NORMAL',
+  RESTRICTED: 'RESTRICTED',
+  EXTERNAL: 'EXTERNAL'
+};
+
 exports.RegistrationStatus = exports.$Enums.RegistrationStatus = {
   ACTIVE: 'ACTIVE',
   CANCELLED: 'CANCELLED',
@@ -987,6 +1252,10 @@ exports.RegistrationAuditAction = exports.$Enums.RegistrationAuditAction = {
   ADMIN_ASSISTED_REGISTRATION_CREATED: 'ADMIN_ASSISTED_REGISTRATION_CREATED',
   EO_OFFICE_ONLY_REGISTRATION_CREATED: 'EO_OFFICE_ONLY_REGISTRATION_CREATED',
   ADMIN_OFFICE_ONLY_REGISTRATION_CREATED: 'ADMIN_OFFICE_ONLY_REGISTRATION_CREATED',
+  EO_RESTRICTED_REGISTRATION_CREATED: 'EO_RESTRICTED_REGISTRATION_CREATED',
+  ADMIN_RESTRICTED_REGISTRATION_CREATED: 'ADMIN_RESTRICTED_REGISTRATION_CREATED',
+  RESTRICTED_REGISTRATION_UPDATED: 'RESTRICTED_REGISTRATION_UPDATED',
+  RESTRICTED_REGISTRATION_CANCELLED: 'RESTRICTED_REGISTRATION_CANCELLED',
   EO_POST_LOCK_ADJUSTMENT: 'EO_POST_LOCK_ADJUSTMENT',
   ADMIN_POST_LOCK_ADJUSTMENT: 'ADMIN_POST_LOCK_ADJUSTMENT',
   STUDENT_REGISTRATION_SUBMITTED: 'STUDENT_REGISTRATION_SUBMITTED',
@@ -1056,6 +1325,12 @@ exports.FeeMarkupType = exports.$Enums.FeeMarkupType = {
   MANUAL: 'MANUAL'
 };
 
+exports.FeeStatementKind = exports.$Enums.FeeStatementKind = {
+  NORMAL: 'NORMAL',
+  RESTRICTED: 'RESTRICTED',
+  EXTERNAL: 'EXTERNAL'
+};
+
 exports.FeeStatementDisplayCurrency = exports.$Enums.FeeStatementDisplayCurrency = {
   GBP: 'GBP',
   CNY: 'CNY',
@@ -1086,10 +1361,16 @@ exports.Prisma.ModelName = {
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
   StudentProfile: 'StudentProfile',
+  TeacherProfile: 'TeacherProfile',
+  SystemEmailSettings: 'SystemEmailSettings',
+  UserAuditLog: 'UserAuditLog',
+  ExamDocumentAuditLog: 'ExamDocumentAuditLog',
   Candidate: 'Candidate',
+  CandidateAuditLog: 'CandidateAuditLog',
   CandidateExamIdentity: 'CandidateExamIdentity',
   TeacherAssignment: 'TeacherAssignment',
   RegistrationWindow: 'RegistrationWindow',
+  RegistrationWindowIncludedSeries: 'RegistrationWindowIncludedSeries',
   RegistrationFeeStage: 'RegistrationFeeStage',
   RegistrationWorkspace: 'RegistrationWorkspace',
   StudentExamRegistration: 'StudentExamRegistration',

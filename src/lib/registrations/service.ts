@@ -17,6 +17,7 @@ import {
   type RegistrationFeeStageRecord,
 } from "@/lib/registrations/fee-stages";
 import { ensureRegistrationWorkspace } from "@/lib/registrations/workspace";
+import { flagsForRegistrationType } from "@/lib/registrations/metadata";
 import { hasWorkspaceSchema } from "@/lib/registrations/schema-capabilities";
 import { assertStudentCanRegister } from "@/lib/students/archive";
 import {
@@ -25,6 +26,7 @@ import {
 } from "@/lib/candidates/service";
 
 import { RegistrationError } from "@/lib/registrations/errors";
+import { windowIncludesSeries } from "@/lib/registrations/included-series";
 import { registrationInclude } from "@/lib/registrations/include";
 
 export { registrationInclude } from "@/lib/registrations/include";
@@ -42,13 +44,31 @@ export async function getOpenWindowsForSession(examSessionId: string, now = new 
   const examBoardId = session.paper.subject.qualification.examBoardId;
   const windows = await prisma.registrationWindow.findMany({
     where: {
-      examBoardId,
-      examSeriesId: session.examSeriesId,
       status: "OPEN",
+      OR: [
+        { examBoardId, examSeriesId: session.examSeriesId },
+        {
+          includedSeries: {
+            some: { examSeriesId: session.examSeriesId },
+          },
+        },
+      ],
+    },
+    include: {
+      includedSeries: {
+        select: {
+          examSeriesId: true,
+          examSeries: { select: { examBoardId: true } },
+        },
+      },
     },
   });
 
-  return windows.filter((window) => canRegisterInWindow(window, now));
+  return windows.filter(
+    (window) =>
+      windowIncludesSeries(window, session.examSeriesId, examBoardId) &&
+      canRegisterInWindow(window, now),
+  );
 }
 
 export async function getStudentEligibleWindowsForSession(
@@ -126,6 +146,8 @@ function buildRegistrationData(
     registrationSource: "STUDENT_SUBMITTED" as const,
     visibility: "STUDENT_AND_TEACHER" as const,
     billingScope: "NORMAL_BILLING" as const,
+    registrationType: "NORMAL" as const,
+    ...flagsForRegistrationType("NORMAL"),
     entryType: entry.entryType,
     feeStageId: entry.feeStageId,
     entryTypeOverridden: entry.entryTypeOverridden,

@@ -75,6 +75,7 @@ export function AddRegistrationDropdown({
                 }}
               >
                 Register on behalf of internal student
+                <span className="mt-0.5 block text-xs text-slate-500">Normal internal registration</span>
               </button>
               <button
                 type="button"
@@ -84,7 +85,7 @@ export function AddRegistrationDropdown({
                   setMode("office-only-internal");
                 }}
               >
-                Office-only registration for internal student
+                Restricted registration for internal student
               </button>
               <button
                 type="button"
@@ -126,8 +127,8 @@ export function AddRegistrationDropdown({
       {mode === "office-only-internal" ? (
         <StaffRegistrationModal
           mode="office-only"
-          title="Office-only registration for internal student"
-          submitLabel="Create office-only registration"
+          title="Restricted registration for internal student"
+          submitLabel="Create restricted registration"
           apiPath={officeOnlyApiPath}
           candidateType="INTERNAL"
           onClose={() => setMode(null)}

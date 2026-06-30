@@ -1,5 +1,7 @@
 import type { Candidate, CandidateType } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import { computeDisplayName } from "@/lib/candidates/identity";
+import { parseGenderInput } from "@/lib/candidates/export";
 
 export function generateAssessmentHubCandidateNumber(): string {
   const year = new Date().getFullYear();
@@ -18,8 +20,9 @@ export function candidateRegistrationSnapshots(candidate: Pick<
   | "assessmentHubCandidateNumber"
   | "candidateType"
 >) {
+  const displayName = computeDisplayName(candidate);
   return {
-    studentNameSnapshot: candidate.englishName,
+    studentNameSnapshot: displayName || candidate.englishName,
     studentNoSnapshot: candidate.studentNumber ?? candidate.assessmentHubCandidateNumber,
     gradeSnapshot: candidate.grade ?? "—",
     classNameSnapshot: candidate.className ?? "—",
@@ -44,12 +47,25 @@ export async function syncCandidateFromStudentUser(userId: string) {
     return prisma.candidate.update({
       where: { id: user.candidate.id },
       data: {
-        englishName: user.name,
+        englishName: computeDisplayName({
+          preferredEnglishName: user.candidate.preferredEnglishName,
+          legalEnglishName: user.candidate.legalEnglishName ?? user.name,
+          englishName: user.name,
+        }),
+        legalEnglishName: user.candidate.legalEnglishName ?? user.name,
         studentNumber: profile.studentNo,
         email: profile.email ?? user.email,
         phone: profile.phone ?? user.phone,
         grade: profile.currentGrade,
         className: profile.currentClassName,
+        graduationYear: profile.graduationYear,
+        gender: profile.gender ?? user.candidate.gender,
+        idDocumentNumber: profile.idCardNumber ?? user.candidate.idDocumentNumber,
+        idDocumentType:
+          profile.idCardNumber && !user.candidate.idDocumentType
+            ? "CHINESE_ID_CARD"
+            : user.candidate.idDocumentType,
+        idNumber: profile.idCardNumber ?? user.candidate.idNumber,
         status: profile.status as "ACTIVE" | "GRADUATED" | "LEFT" | "INACTIVE",
         loginEnabled,
       },
@@ -62,11 +78,17 @@ export async function syncCandidateFromStudentUser(userId: string) {
       candidateType: "INTERNAL",
       assessmentHubCandidateNumber: generateAssessmentHubCandidateNumber(),
       englishName: user.name,
+      legalEnglishName: user.name,
       studentNumber: profile.studentNo,
       email: profile.email ?? user.email,
       phone: profile.phone ?? user.phone,
       grade: profile.currentGrade,
       className: profile.currentClassName,
+      graduationYear: profile.graduationYear,
+      gender: profile.gender,
+      idDocumentNumber: profile.idCardNumber,
+      idDocumentType: profile.idCardNumber ? "CHINESE_ID_CARD" : null,
+      idNumber: profile.idCardNumber,
       status: profile.status as "ACTIVE" | "GRADUATED" | "LEFT" | "INACTIVE",
       loginEnabled,
       sourceSystem: "STUDENT_PROFILE",
@@ -167,32 +189,56 @@ export async function resolveCandidateForRegistration(params: {
 }
 
 export async function createExternalCandidate(input: {
-  englishName: string;
-  chineseName?: string;
-  email?: string;
-  phone?: string;
-  dateOfBirth?: Date;
-  gender?: string;
-  idNumber?: string;
-  passportNumber?: string;
-  schoolName?: string;
-  assessmentHubCandidateNumber?: string;
-  externalId?: string;
+  chineseName?: string | null;
+  surnamePinyin?: string | null;
+  givenNamePinyin?: string | null;
+  preferredEnglishName?: string | null;
+  legalEnglishName?: string | null;
+  englishName?: string | null;
+  email?: string | null;
+  phone?: string | null;
+  dateOfBirth?: Date | null;
+  gender?: Candidate["gender"] | string | null;
+  nationality?: string | null;
+  idDocumentType?: Candidate["idDocumentType"];
+  idDocumentNumber?: string | null;
+  idNumber?: string | null;
+  passportNumber?: string | null;
+  schoolName?: string | null;
+  emergencyContactName?: string | null;
+  emergencyContactPhone?: string | null;
+  assessmentHubCandidateNumber?: string | null;
+  externalId?: string | null;
 }) {
+  const legalEnglishName = input.legalEnglishName?.trim() || input.englishName?.trim() || "";
+  const displayName = computeDisplayName({
+    preferredEnglishName: input.preferredEnglishName,
+    legalEnglishName,
+  });
+
   return prisma.candidate.create({
     data: {
       candidateType: "EXTERNAL",
       assessmentHubCandidateNumber:
         input.assessmentHubCandidateNumber?.trim() || generateAssessmentHubCandidateNumber(),
-      englishName: input.englishName.trim(),
       chineseName: input.chineseName?.trim() || null,
+      surnamePinyin: input.surnamePinyin?.trim() || null,
+      givenNamePinyin: input.givenNamePinyin?.trim() || null,
+      preferredEnglishName: input.preferredEnglishName?.trim() || null,
+      legalEnglishName: legalEnglishName || null,
+      englishName: displayName || legalEnglishName,
       email: input.email?.trim() || null,
       phone: input.phone?.trim() || null,
       dateOfBirth: input.dateOfBirth ?? null,
-      gender: input.gender?.trim() || null,
+      gender: parseGenderInput(typeof input.gender === "string" ? input.gender : undefined) ?? (input.gender as Candidate["gender"]) ?? null,
+      nationality: input.nationality?.trim() || null,
+      idDocumentType: input.idDocumentType ?? null,
+      idDocumentNumber: input.idDocumentNumber?.trim() || null,
       idNumber: input.idNumber?.trim() || null,
       passportNumber: input.passportNumber?.trim() || null,
       schoolName: input.schoolName?.trim() || null,
+      emergencyContactName: input.emergencyContactName?.trim() || null,
+      emergencyContactPhone: input.emergencyContactPhone?.trim() || null,
       loginEnabled: false,
       status: "ACTIVE",
       sourceSystem: "MANUAL",

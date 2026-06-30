@@ -48,7 +48,7 @@ export function FeeBatchPrintView({ basePath }: FeeBatchPrintViewProps) {
       return;
     }
     try {
-      const response = await fetch(`/api/fee-statements?registrationWindowId=${windowId}`);
+      const response = await fetch(`/api/fee-statements?registrationWindowId=${windowId}&all=true`);
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Failed to load statements");
       let list: FeeStatementPrintData[] = Array.isArray(data) ? data : [];

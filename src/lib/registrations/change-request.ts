@@ -11,7 +11,7 @@ import { createRegistrationAuditLog } from "@/lib/registrations/audit";
 import { RegistrationError } from "@/lib/registrations/errors";
 import { canTeacherSubmitChangeRequest, isStudentRegistrationPeriodClosed } from "@/lib/registrations/window";
 import {
-  applyLateRegistration,
+  applyStaffStudentRegistrationAfterStudentClose,
   assertLateRegistrationAllowed,
   assertNoDuplicateStudentExamSessions,
 } from "@/lib/registrations/late-registration";
@@ -208,9 +208,15 @@ export async function listTeacherChangeRequests(teacherId: string) {
 
 export async function listChangeRequestsForReviewer(filters?: {
   status?: RegistrationChangeRequestStatus;
+  registrationWindowId?: string;
 }) {
   return prisma.registrationChangeRequest.findMany({
-    where: filters?.status ? { status: filters.status } : undefined,
+    where: {
+      ...(filters?.status ? { status: filters.status } : {}),
+      ...(filters?.registrationWindowId
+        ? { registrationWindowId: filters.registrationWindowId }
+        : {}),
+    },
     include: changeRequestInclude,
     orderBy: { createdAt: "desc" },
   });
@@ -235,6 +241,22 @@ export async function submitTeacherLateRegistrationRequest(
   }
 
   const uniqueSessionIds = [...new Set(input.examSessionIds)];
+  const registrationWindow = await prisma.registrationWindow.findUnique({
+    where: { id: input.registrationWindowId },
+  });
+  if (!registrationWindow) {
+    throw new RegistrationError("Registration window not found", 404);
+  }
+  if (!isStudentRegistrationPeriodClosed(registrationWindow)) {
+    throw new RegistrationError(
+      "Late registration requests are only allowed after student registration closes",
+      400,
+    );
+  }
+  if (!canTeacherSubmitChangeRequest(registrationWindow)) {
+    throw new RegistrationError("Registration window is closed for teacher change requests", 400);
+  }
+
   await assertLateRegistrationAllowed(input.registrationWindowId, uniqueSessionIds);
   await assertTeacherAssignedToExamSessions(teacher.id, uniqueSessionIds);
   await assertNoDuplicateStudentExamSessions(input.studentId, uniqueSessionIds);
@@ -417,7 +439,7 @@ export async function reviewChangeRequest(
         throw new RegistrationError("Late registration request is missing registration window", 400);
       }
       const examSessionIds = requestRow.examSessions.map((row) => row.examSessionId);
-      const workspace = await applyLateRegistration(
+      const workspace = await applyStaffStudentRegistrationAfterStudentClose(
         { id: reviewer.id, role: reviewer.role },
         {
           studentId: requestRow.studentId ?? undefined,

@@ -42,3 +42,19 @@ export function formatAdjusterLabel(
   if (name.trim().toLowerCase() === roleLabel.toLowerCase()) return roleLabel;
   return `${name}, ${roleLabel}`;
 }
+
+export function workspaceStudentLabel(workspace: {
+  student?: { name: string; studentNo?: string | null } | null;
+  candidate?: { englishName?: string | null; studentNumber?: string | null } | null;
+}): string {
+  if (workspace.student?.name?.trim()) return workspace.student.name;
+  if (workspace.candidate?.englishName?.trim()) return workspace.candidate.englishName;
+  return "—";
+}
+
+export function workspaceStudentNo(workspace: {
+  student?: { studentNo?: string | null } | null;
+  candidate?: { studentNumber?: string | null } | null;
+}): string | null {
+  return workspace.student?.studentNo ?? workspace.candidate?.studentNumber ?? null;
+}

@@ -8,7 +8,10 @@ export default function ExamOfficeExternalCandidatesPage() {
     <CandidateManager
       apiPath="/api/exam-office/candidates"
       detailBasePath="/exam-office/candidates"
+      moduleBasePath="/exam-office/candidates"
       defaultCandidateType="EXTERNAL"
+      title="External Candidates"
+      description="External exam candidates who are not school login accounts. Manage identities and board identifiers here."
     />
   );
 }

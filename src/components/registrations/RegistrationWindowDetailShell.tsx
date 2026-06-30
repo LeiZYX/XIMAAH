@@ -2,13 +2,15 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { IncludedExamSessionsList } from "@/components/registrations/IncludedExamSessionsList";
 import { RegistrationWindowDetailNav } from "@/components/registrations/RegistrationWindowDetailNav";
+import type { IncludedExamSession } from "@/lib/registrations/included-series";
 
 interface WindowInfo {
   id: string;
   title: string;
-  examBoard: { code: string; name: string };
-  examSeries: { name: string; year: number };
+  examBoard?: { id: string; name: string; code: string };
+  includedExamSessions?: IncludedExamSession[];
 }
 
 interface RegistrationWindowDetailShellProps {
@@ -41,11 +43,33 @@ export function RegistrationWindowDetailShell({
       <PageHeader
         title={windowInfo?.title ?? "Registration window"}
         description={
-          windowInfo
-            ? `${windowInfo.examBoard.code} · ${windowInfo.examSeries.name} (${windowInfo.examSeries.year})`
-            : "Manage registration window settings and stages."
+          windowInfo?.examBoard
+            ? `${windowInfo.examBoard.name} · manage settings, included sessions, and fee stages.`
+            : "Manage registration window settings, included exam sessions, and fee stages."
         }
       />
+
+      {windowInfo ? (
+        <div className="border border-slate-200 bg-white px-4 py-3 text-sm">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Exam board
+              </p>
+              <p className="font-medium text-slate-900">{windowInfo.examBoard?.name ?? "—"}</p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Included sessions
+              </p>
+              <IncludedExamSessionsList
+                sessions={windowInfo.includedExamSessions ?? []}
+                compact
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <RegistrationWindowDetailNav
         windowId={windowId}

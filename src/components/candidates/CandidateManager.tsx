@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { CandidatesSubnav } from "@/components/candidates/CandidatesSubnav";
 import { Card } from "@/components/ui/Card";
 import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -9,6 +10,7 @@ import {
   candidateStatusLabel,
   candidateTypeLabel,
 } from "@/lib/candidates/labels";
+import { CANDIDATES_MODULE_DESCRIPTION } from "@/lib/navigation/module-descriptions";
 import { LIST_PAGE_SIZES } from "@/lib/pagination";
 
 interface CandidateRow {
@@ -29,17 +31,19 @@ interface CandidateRow {
 interface CandidateManagerProps {
   apiPath: string;
   detailBasePath: string;
+  moduleBasePath: string;
   defaultCandidateType?: "INTERNAL" | "EXTERNAL";
-  showImportLink?: boolean;
-  importPath?: string;
+  title?: string;
+  description?: string;
 }
 
 export function CandidateManager({
   apiPath,
   detailBasePath,
+  moduleBasePath,
   defaultCandidateType,
-  showImportLink = false,
-  importPath,
+  title = "All Candidates",
+  description = CANDIDATES_MODULE_DESCRIPTION,
 }: CandidateManagerProps) {
   const [rows, setRows] = useState<CandidateRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -103,18 +107,16 @@ export function CandidateManager({
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Candidates"
-        description="Manage internal school students and external exam candidates. All registrations reference candidates."
-      />
-
-      {showImportLink && importPath ? (
-        <p className="text-sm">
-          <Link href={importPath} className="text-indigo-600 hover:underline">
-            Import internal candidates from Excel/CSV
-          </Link>
-        </p>
-      ) : null}
+      <CandidatesSubnav basePath={moduleBasePath} />
+      <PageHeader title={title} description={description} />
+      <div className="flex flex-wrap gap-2">
+        <a
+          href={`${apiPath}/export`}
+          className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          Export CSV
+        </a>
+      </div>
 
       <Card className="space-y-4">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

@@ -1,11 +1,21 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useState } from "react";
-import Link from "next/link";
+import { CandidatesSubnav } from "@/components/candidates/CandidatesSubnav";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { CANDIDATES_MODULE_DESCRIPTION } from "@/lib/navigation/module-descriptions";
 
-export default function AdminCandidateImportPage() {
+export default function CandidateImportExportPage() {
+  const pathname = usePathname();
+  const moduleBasePath = pathname.startsWith("/exam-office")
+    ? "/exam-office/candidates"
+    : "/admin/candidates";
+  const importApiPath = pathname.startsWith("/exam-office")
+    ? "/api/exam-office/candidates/import"
+    : "/api/admin/candidates/import";
+
   const [raw, setRaw] = useState("");
   const [markMissingInactive, setMarkMissingInactive] = useState(false);
   const [result, setResult] = useState<string | null>(null);
@@ -29,7 +39,7 @@ export default function AdminCandidateImportPage() {
       return row;
     });
 
-    const response = await fetch("/api/admin/candidates/import", {
+    const response = await fetch(importApiPath, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ rows, markMissingInactive }),
@@ -47,19 +57,25 @@ export default function AdminCandidateImportPage() {
 
   return (
     <div className="space-y-6">
+      <CandidatesSubnav basePath={moduleBasePath} />
       <PageHeader
-        title="Import internal candidates"
-        description="Upsert by studentNumber or externalId. Missing candidates are not deleted automatically."
+        title="Import / Export"
+        description={`${CANDIDATES_MODULE_DESCRIPTION} Bulk import internal candidates from CSV; export is available from the candidate list.`}
       />
-      <p className="text-sm">
-        <Link href="/admin/candidates" className="text-indigo-600 hover:underline">
-          Back to candidates
-        </Link>
-      </p>
       <Card className="space-y-4">
         <p className="text-sm text-slate-600">
-          CSV headers: studentNumber, englishName, chineseName, email, phone, grade, className,
-          externalId, assessmentHubCandidateNumber
+          CSV headers: chineseName, surnamePinyin, givenNamePinyin, preferredEnglishName, legalEnglishName,
+          gender, dateOfBirth, nationality, idDocumentType, idDocumentNumber, email, phone, candidateType,
+          studentNumber, grade, className, graduationYear, assessmentHubCandidateNumber, uci,
+          boardCandidateNumber, emergencyContactName, emergencyContactPhone
+        </p>
+        <p className="text-sm text-slate-600">
+          <a
+            href={`${importApiPath.replace("/import", "/export")}`}
+            className="font-medium text-indigo-600 hover:underline"
+          >
+            Download export template (current candidates)
+          </a>
         </p>
         <textarea
           value={raw}

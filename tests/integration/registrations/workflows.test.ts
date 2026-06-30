@@ -33,6 +33,7 @@ describe.sequential("registration workflows integration", () => {
     );
     expect(workspace.registrationSource).toBe("EO_ASSISTED");
     expect(workspace.visibility).toBe("STUDENT_AND_TEACHER");
+    expect(workspace.registrationType).toBe("NORMAL");
   });
 
   it("assigns office-only visibility for forced internal registration", async () => {
@@ -47,6 +48,25 @@ describe.sequential("registration workflows integration", () => {
     );
     expect(workspace.registrationSource).toBe("EO_FORCED_INTERNAL");
     expect(workspace.visibility).toBe("EXAM_OFFICE_ONLY");
+    expect(workspace.registrationType).toBe("RESTRICTED");
+
+    const normalWorkspace = await prisma.registrationWorkspace.findFirst({
+      where: {
+        studentId: testIds.studentAssisted,
+        registrationWindowId: testIds.windowOpen,
+        registrationType: "NORMAL",
+      },
+    });
+    const restrictedWorkspace = await prisma.registrationWorkspace.findFirst({
+      where: {
+        studentId: testIds.studentAssisted,
+        registrationWindowId: testIds.windowOpen,
+        registrationType: "RESTRICTED",
+      },
+    });
+    expect(normalWorkspace).not.toBeNull();
+    expect(restrictedWorkspace).not.toBeNull();
+    expect(normalWorkspace!.id).not.toBe(restrictedWorkspace!.id);
   });
 
   it("assigns EXTERNAL_CANDIDATE source for external registration", async () => {

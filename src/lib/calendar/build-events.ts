@@ -18,6 +18,7 @@ import {
   isSubjectVisibleOnCalendar,
 } from "@/lib/calendar-subject-selections";
 import { canStudentRegisterInWindow, describeStudentRegistrationAvailability } from "@/lib/registrations/window";
+import { indexWindowsByBoardSeries } from "@/lib/registrations/included-series";
 import type { RegistrationFeeStageRecord } from "@/lib/registrations/fee-stages";
 import type { CalendarEvent } from "@/lib/types";
 
@@ -97,6 +98,12 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
         title: true,
         studentSelfRegistrationEnabled: true,
         feeStages: { orderBy: { sequence: "asc" } },
+        includedSeries: {
+          select: {
+            examSeriesId: true,
+            examSeries: { select: { examBoardId: true } },
+          },
+        },
       },
     }),
     studentId
@@ -124,9 +131,19 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
       ? canStudentRegisterInWindow(window, [], now)
       : now >= window.studentRegistrationOpenAt && now <= window.registrationCloseAt;
 
-    if (eligibleForStudent) {
-      openWindowMap.set(openWindowKey(window.examBoardId, window.examSeriesId), window);
+    if (!eligibleForStudent) continue;
+
+    if (window.includedSeries.length > 0) {
+      for (const row of window.includedSeries) {
+        openWindowMap.set(
+          openWindowKey(row.examSeries.examBoardId, row.examSeriesId),
+          window,
+        );
+      }
+      continue;
     }
+
+    openWindowMap.set(openWindowKey(window.examBoardId, window.examSeriesId), window);
   }
 
   const allWindowsForMatch = await prisma.registrationWindow.findMany({
@@ -142,12 +159,15 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
       status: true,
       studentSelfRegistrationEnabled: true,
       feeStages: { orderBy: { sequence: "asc" } },
+      includedSeries: {
+        select: {
+          examSeriesId: true,
+          examSeries: { select: { examBoardId: true } },
+        },
+      },
     },
   });
-  const anyWindowByBoardSeries = new Map<string, (typeof allWindowsForMatch)[number]>();
-  for (const window of allWindowsForMatch) {
-    anyWindowByBoardSeries.set(openWindowKey(window.examBoardId, window.examSeriesId), window);
-  }
+  const anyWindowByBoardSeries = indexWindowsByBoardSeries(allWindowsForMatch);
 
   const sessionWhere = {
     ...(examSeriesId ? { examSeriesId } : {}),
@@ -224,19 +244,20 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
       }
 
       const examBoardCode = qualification.examBoard.code;
+      const examBoardName = qualification.examBoard.name;
       const appearance = sessionEventAppearance(
         qualification.level,
         examBoardCode,
         session.paper.title,
+        examBoardName,
       );
 
       const calendarTimeLabel = formatSessionTimeRange(session.startTime, session.endTime);
-      const calendarDetailLabel = sessionCalendarDetailLabel(
-        qualification.level,
+      const calendarDetailLabel = [
+        examBoardName,
         session.paper.subject.name,
         session.paper.code,
-        session.paper.title,
-      );
+      ].join(" · ");
 
       const registration = registrationBySession.get(session.id);
       const window = openWindowMap.get(

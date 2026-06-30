@@ -1,6 +1,6 @@
 "use client";
 
-import { LIST_PAGE_SIZES } from "@/lib/pagination";
+import { FEE_RULES_PAGE_SIZES, LIST_PAGE_SIZES } from "@/lib/pagination";
 
 interface ListPaginationProps {
   page: number;
@@ -9,6 +9,7 @@ interface ListPaginationProps {
   totalPages: number;
   loading?: boolean;
   itemLabel?: string;
+  pageSizes?: readonly number[];
   onPageChange: (page: number) => void;
   onPageSizeChange: (pageSize: number) => void;
 }
@@ -20,6 +21,7 @@ export function ListPagination({
   totalPages,
   loading = false,
   itemLabel = "items",
+  pageSizes = LIST_PAGE_SIZES,
   onPageChange,
   onPageSizeChange,
 }: ListPaginationProps) {
@@ -44,7 +46,7 @@ export function ListPagination({
             disabled={loading}
             className="rounded-lg border border-slate-300 px-2 py-1.5 text-sm disabled:opacity-50"
           >
-            {LIST_PAGE_SIZES.map((size) => (
+            {pageSizes.map((size) => (
               <option key={size} value={size}>
                 {size}
               </option>

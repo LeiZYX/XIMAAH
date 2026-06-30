@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
-import { applyLateRegistration } from "@/lib/registrations/late-registration";
+import { applyStaffStudentRegistrationAfterStudentClose } from "@/lib/registrations/late-registration";
 import { RegistrationError } from "@/lib/registrations/errors";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const workspace = await applyLateRegistration(
+    const workspace = await applyStaffStudentRegistrationAfterStudentClose(
       { id: auth.user.id, role: auth.user.role },
       {
         studentId: data.studentId,

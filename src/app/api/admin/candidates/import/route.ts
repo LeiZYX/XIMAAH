@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
 
   const result = await importInternalCandidates(data.rows, {
     markMissingInactive: Boolean(data.markMissingInactive),
+    performedById: auth.user.id,
   });
   return NextResponse.json(result);
 }

@@ -8,9 +8,10 @@ export default function ExamOfficeInternalCandidatesPage() {
     <CandidateManager
       apiPath="/api/exam-office/candidates"
       detailBasePath="/exam-office/candidates"
+      moduleBasePath="/exam-office/candidates"
       defaultCandidateType="INTERNAL"
-      showImportLink
-      importPath="/exam-office/candidates/import"
+      title="Internal Candidates"
+      description="Internal school students registered as exam candidates. Registrations reference these candidate records."
     />
   );
 }

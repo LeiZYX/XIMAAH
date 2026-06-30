@@ -8,9 +8,10 @@ export default function AdminInternalCandidatesPage() {
     <CandidateManager
       apiPath="/api/admin/candidates"
       detailBasePath="/admin/candidates"
+      moduleBasePath="/admin/candidates"
       defaultCandidateType="INTERNAL"
-      showImportLink
-      importPath="/admin/candidates/import"
+      title="Internal Candidates"
+      description="Internal school students registered as exam candidates. Registrations reference these candidate records."
     />
   );
 }

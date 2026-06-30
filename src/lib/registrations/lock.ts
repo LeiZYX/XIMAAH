@@ -1,5 +1,6 @@
 import type { RegistrationWindowStatus } from "@/generated/prisma/enums";
 import { RegistrationAuditAction, RegistrationStatus } from "@/generated/prisma/enums";
+import type { RegistrationType } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
 import {
   createRegistrationAuditLog,
@@ -12,6 +13,7 @@ import {
 } from "@/lib/registrations/window";
 import { hasWorkspaceSchema } from "@/lib/registrations/schema-capabilities";
 import { RegistrationError } from "@/lib/registrations/errors";
+import { ensureRegistrationWorkspaceForCandidate } from "@/lib/registrations/workspace";
 
 async function resolveLockPerformer(windowId: string): Promise<string> {
   const window = await prisma.registrationWindow.findUnique({
@@ -53,41 +55,22 @@ export async function lockRegistrationsForWindow(
       let workspaceId: string | null = null;
 
       if (workspaceReady) {
-        let workspace;
-        if (registration.candidateId) {
-          workspace = await tx.registrationWorkspace.upsert({
-            where: {
-              candidateId_registrationWindowId: {
-                candidateId: registration.candidateId,
-                registrationWindowId: windowId,
-              },
-            },
-            create: {
-              candidateId: registration.candidateId,
-              studentId: registration.studentId,
-              registrationWindowId: windowId,
-              lockedAt: now,
-            },
-            update: { lockedAt: now },
-          });
-        } else if (registration.studentId) {
-          workspace = await tx.registrationWorkspace.upsert({
-            where: {
-              studentId_registrationWindowId: {
-                studentId: registration.studentId,
-                registrationWindowId: windowId,
-              },
-            },
-            create: {
-              studentId: registration.studentId,
-              registrationWindowId: windowId,
-              lockedAt: now,
-            },
-            update: { lockedAt: now },
-          });
-        } else {
-          throw new RegistrationError("Registration missing candidate and student", 500);
+        const registrationType: RegistrationType = registration.registrationType ?? "NORMAL";
+        if (!registration.candidateId) {
+          throw new RegistrationError("Registration missing candidate", 500);
         }
+
+        const workspace = await ensureRegistrationWorkspaceForCandidate(
+          registration.candidateId,
+          windowId,
+          registration.studentId,
+          registrationType,
+          tx,
+        );
+        await tx.registrationWorkspace.update({
+          where: { id: workspace.id },
+          data: { lockedAt: now },
+        });
         workspaceId = workspace.id;
       }
 

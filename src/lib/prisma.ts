@@ -1,21 +1,59 @@
+import { statSync } from "node:fs";
+import { join } from "node:path";
 import { PrismaClient } from "@/generated/prisma/client";
 
 const globalForPrisma = globalThis as unknown as {
   prisma?: PrismaClient;
+  prismaFingerprint?: number;
 };
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
+function generatedClientFingerprint(): number {
+  try {
+    return statSync(join(process.cwd(), "src/generated/prisma/index.js")).mtimeMs;
+  } catch {
+    return 0;
+  }
+}
+
+function createPrismaClient() {
+  return new PrismaClient({
     log:
       process.env.NODE_ENV === "development"
         ? ["query", "warn", "error"]
         : ["error"],
   });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
 }
+
+function getPrismaClient(): PrismaClient {
+  if (process.env.NODE_ENV === "production") {
+    if (!globalForPrisma.prisma) {
+      globalForPrisma.prisma = createPrismaClient();
+    }
+    return globalForPrisma.prisma;
+  }
+
+  const fingerprint = generatedClientFingerprint();
+  if (
+    !globalForPrisma.prisma ||
+    globalForPrisma.prismaFingerprint !== fingerprint
+  ) {
+    if (globalForPrisma.prisma) {
+      void globalForPrisma.prisma.$disconnect();
+    }
+    globalForPrisma.prisma = createPrismaClient();
+    globalForPrisma.prismaFingerprint = fingerprint;
+  }
+
+  return globalForPrisma.prisma;
+}
+
+export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, prop, receiver) {
+    const client = getPrismaClient();
+    const value = Reflect.get(client, prop, receiver);
+    return typeof value === "function" ? value.bind(client) : value;
+  },
+});
 
 export async function disconnectPrismaClient(client: PrismaClient) {
   await Promise.race([

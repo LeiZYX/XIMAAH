@@ -11,11 +11,16 @@ export async function GET(request: NextRequest) {
   if (auth.error) return auth.error;
 
   const statusParam = request.nextUrl.searchParams.get("status");
+  const registrationWindowId =
+    request.nextUrl.searchParams.get("registrationWindowId") || undefined;
   const status =
     statusParam && Object.values(RegistrationChangeRequestStatus).includes(statusParam as never)
       ? (statusParam as RegistrationChangeRequestStatus)
       : undefined;
 
-  const rows = await listChangeRequestsForReviewer(status ? { status } : undefined);
+  const rows = await listChangeRequestsForReviewer({
+    ...(status ? { status } : {}),
+    ...(registrationWindowId ? { registrationWindowId } : {}),
+  });
   return NextResponse.json(rows);
 }

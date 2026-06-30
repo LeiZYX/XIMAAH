@@ -145,6 +145,22 @@ body {
   padding: 2px 3px;
 }
 
+.fc .fc-list-event {
+  cursor: pointer;
+}
+
+.fc .fc-list-event-title a {
+  display: block;
+  width: 100%;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.fc .fc-list-event-title a:hover {
+  text-decoration: underline;
+}
+
 .fc .fc-daygrid-day.fc-day-selected {
   background-color: #eef2ff !important;
 }
@@ -153,10 +169,10 @@ body {
   box-shadow: inset 0 0 0 2px #4f46e5;
 }
 
-.fc .fc-event.fc-event-selected {
+.fc .fc-event.fc-event-selected,
+.fc .fc-event[data-xima-selected] {
   outline: 2px solid #312e81;
   outline-offset: -1px;
-  z-index: 4 !important;
 }
 
 .fc .fc-event.fc-event-submitted {
@@ -173,6 +189,7 @@ body {
   color: #334155 !important;
 }
 
-.fc .fc-list-event.fc-event-selected td {
+.fc .fc-list-event.fc-event-selected td,
+.fc .fc-list-event[data-xima-selected] td {
   background-color: #eef2ff !important;
 }

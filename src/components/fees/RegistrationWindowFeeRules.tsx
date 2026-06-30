@@ -2,8 +2,10 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/Card";
+import { ListPagination } from "@/components/ui/ListPagination";
 import { RegistrationWindowFeeToolbar } from "@/components/fees/RegistrationWindowFeeToolbar";
 import { formatMoney } from "@/lib/fees/money";
+import { FEE_RULES_PAGE_SIZES } from "@/lib/pagination";
 import { STAGE_CODE_OPTIONS, entryTypeLabel } from "@/lib/registrations/stage-labels";
 
 interface FeeRuleRow {
@@ -105,6 +107,8 @@ export function RegistrationWindowFeeRules({
   const [editForm, setEditForm] = useState(emptyEditForm);
   const [bulkTemplate, setBulkTemplate] = useState(bulkTemplateDefaults);
   const [bulkSaving, setBulkSaving] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(FEE_RULES_PAGE_SIZES[0]);
 
   const apiBase = `/api/registration-windows/${windowId}`;
 
@@ -191,6 +195,20 @@ export function RegistrationWindowFeeRules({
     });
   }, [rules]);
 
+  const totalSubjects = groupedRules.length;
+  const totalPages = totalSubjects === 0 ? 0 : Math.ceil(totalSubjects / pageSize);
+
+  const paginatedGroups = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return groupedRules.slice(start, start + pageSize);
+  }, [groupedRules, page, pageSize]);
+
+  useEffect(() => {
+    if (totalPages > 0 && page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
   async function handleCreateRule(event: FormEvent) {
     event.preventDefault();
     if (!windowInfo || !canConfigure) return;
@@ -225,6 +243,7 @@ export function RegistrationWindowFeeRules({
     setForm(emptyForm);
     setShowForm(false);
     setMessage("Fee rule created.");
+    setPage(1);
     load();
   }
 
@@ -321,6 +340,7 @@ export function RegistrationWindowFeeRules({
       setMessage(
         `Created ${data.created} fee rules for calendar subjects${data.skipped ? ` (${data.skipped} already existed)` : ""}.`,
       );
+      setPage(1);
       load();
     } catch (bulkError) {
       setError(bulkError instanceof Error ? bulkError.message : "Bulk create failed");
@@ -366,6 +386,7 @@ export function RegistrationWindowFeeRules({
       return;
     }
     setMessage(`Copied ${data.copiedRules} fee rules and ${data.copiedRates} exchange rates.`);
+    setPage(1);
     load();
   }
 
@@ -385,6 +406,7 @@ export function RegistrationWindowFeeRules({
       }${data.errors?.length ? ` ${data.errors.length} errors.` : ""}`,
     );
     if (data.errors?.length) setError(data.errors.slice(0, 3).join("; "));
+    setPage(1);
     load();
   }
 
@@ -845,7 +867,7 @@ export function RegistrationWindowFeeRules({
           {groupedRules.length === 0 ? (
             <p className="py-6 text-center text-sm text-slate-500">No fee rules configured yet.</p>
           ) : (
-            groupedRules.map((group) => (
+            paginatedGroups.map((group) => (
               <div key={`${group.subjectCode}|${group.paperCode ?? ""}`} className="mb-6 last:mb-0">
                 <h3 className="mb-2 text-sm font-semibold text-slate-900">
                   {group.subjectCode} — {group.subjectName}
@@ -932,6 +954,22 @@ export function RegistrationWindowFeeRules({
             ))
           )}
         </div>
+
+        {groupedRules.length > 0 ? (
+          <ListPagination
+            page={page}
+            pageSize={pageSize}
+            total={totalSubjects}
+            totalPages={totalPages}
+            itemLabel="subjects"
+            pageSizes={FEE_RULES_PAGE_SIZES}
+            onPageChange={setPage}
+            onPageSizeChange={(size) => {
+              setPageSize(size);
+              setPage(1);
+            }}
+          />
+        ) : null}
       </Card>
     </div>
   );

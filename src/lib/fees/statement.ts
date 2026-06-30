@@ -1,13 +1,14 @@
 import type { FeeStatementDisplayCurrency } from "@/generated/prisma/enums";
 import { calculateFeeAmounts } from "@/lib/fees/calculate";
 import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-currency";
-import { findMatchingFeeRule, resolveEntryTypeForRegistration } from "@/lib/fees/match";
+import { findMatchingFeeRuleWithFallback, resolveEntryTypeForRegistration } from "@/lib/fees/match";
 import type {
   CalculatedFeeLine,
   ExchangeRateRecord,
   FeeRuleRecord,
   MissingFeeRuleWarning,
 } from "@/lib/fees/types";
+import type { Prisma } from "@/generated/prisma/client";
 import type { BillingScope } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
 import { AUTO_BILLING_SCOPES } from "@/lib/registrations/metadata";
@@ -17,6 +18,36 @@ export class FeeError extends Error {
     super(message);
     this.name = "FeeError";
   }
+}
+
+/** Ensure workspace.lockedAt is set when registrations are already LOCKED. */
+export async function ensureWorkspaceLockedForBilling(workspaceId: string) {
+  const workspace = await prisma.registrationWorkspace.findUnique({
+    where: { id: workspaceId },
+    select: { id: true, lockedAt: true },
+  });
+  if (!workspace) throw new FeeError("Registration workspace not found");
+  if (workspace.lockedAt) return workspace;
+
+  const lockedRegistration = await prisma.studentExamRegistration.findFirst({
+    where: {
+      registrationWorkspaceId: workspaceId,
+      status: "LOCKED",
+      lockedAt: { not: null },
+    },
+    orderBy: { lockedAt: "desc" },
+    select: { lockedAt: true },
+  });
+
+  if (!lockedRegistration?.lockedAt) {
+    throw new FeeError("Registration workspace is not locked");
+  }
+
+  return prisma.registrationWorkspace.update({
+    where: { id: workspaceId },
+    data: { lockedAt: lockedRegistration.lockedAt },
+    select: { id: true, lockedAt: true },
+  });
 }
 
 async function loadQualificationId(subjectId: string): Promise<string> {
@@ -50,7 +81,7 @@ export async function validateWorkspaceFees(workspaceId: string): Promise<{
   });
 
   if (!workspace) throw new FeeError("Registration workspace not found");
-  if (!workspace.lockedAt) throw new FeeError("Registration workspace is not locked");
+  await ensureWorkspaceLockedForBilling(workspaceId);
 
   const rules = await prisma.feeRule.findMany({
     where: { registrationWindowId: workspace.registrationWindowId, isActive: true },
@@ -66,7 +97,7 @@ export async function validateWorkspaceFees(workspaceId: string): Promise<{
   for (const reg of workspace.registrations) {
     const qualificationId = reg.subject.qualificationId;
     const entryType = resolveEntryTypeForRegistration(reg, workspace);
-    const match = findMatchingFeeRule(rules, {
+    const match = findMatchingFeeRuleWithFallback(rules, {
       examBoardId: reg.examBoardId,
       examSeriesId: reg.examSeriesId,
       qualificationId,
@@ -126,7 +157,7 @@ export async function buildFeeLinesForWorkspace(
   });
 
   if (!workspace) throw new FeeError("Registration workspace not found");
-  if (!workspace.lockedAt) throw new FeeError("Registration workspace is not locked");
+  await ensureWorkspaceLockedForBilling(workspaceId);
 
   const rules = await prisma.feeRule.findMany({
     where: { registrationWindowId: workspace.registrationWindowId, isActive: true },
@@ -144,7 +175,7 @@ export async function buildFeeLinesForWorkspace(
   for (const reg of workspace.registrations) {
     const qualificationId = reg.subject.qualificationId;
     const entryType = resolveEntryTypeForRegistration(reg, workspace);
-    const rule = findMatchingFeeRule(rules, {
+    const rule = findMatchingFeeRuleWithFallback(rules, {
       examBoardId: reg.examBoardId,
       examSeriesId: reg.examSeriesId,
       qualificationId,
@@ -230,13 +261,15 @@ export async function markStatementsNeedReview(workspaceId: string): Promise<voi
   });
 }
 
-function billableRegistrationFilter(includeManual = false): { billingScope: { in: BillingScope[] } } {
-  if (includeManual) {
-    return {
-      billingScope: { in: ["NORMAL_BILLING", "OFFICE_ONLY_BILLING", "MANUAL_REVIEW"] },
-    };
-  }
-  return { billingScope: { in: [...AUTO_BILLING_SCOPES] } };
+function billableRegistrationFilter(includeManual = false): Prisma.StudentExamRegistrationWhereInput {
+  return {
+    registrationType: { not: "RESTRICTED" },
+    billingScope: {
+      in: includeManual
+        ? (["NORMAL_BILLING", "OFFICE_ONLY_BILLING", "MANUAL_REVIEW"] as BillingScope[])
+        : [...AUTO_BILLING_SCOPES],
+    },
+  };
 }
 
 export async function generateFeeStatement(params: {
@@ -251,8 +284,9 @@ export async function generateFeeStatement(params: {
     generatedByUserId,
     displayCurrency = DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
     issue = false,
-    regenerate = false,
+    regenerate: regenerateRequested = false,
   } = params;
+  let regenerate = regenerateRequested;
 
   const workspace = await prisma.registrationWorkspace.findUnique({
     where: { id: workspaceId },
@@ -271,7 +305,12 @@ export async function generateFeeStatement(params: {
   });
 
   if (!workspace) throw new FeeError("Registration workspace not found");
-  if (!workspace.lockedAt) throw new FeeError("Registration workspace is not locked");
+  if (workspace.registrationType === "RESTRICTED") {
+    throw new FeeError(
+      "Restricted registrations use Restricted Invoice instead of a normal fee statement",
+    );
+  }
+  await ensureWorkspaceLockedForBilling(workspaceId);
 
   const existingDraft = await prisma.feeStatement.findFirst({
     where: {
@@ -300,6 +339,21 @@ export async function generateFeeStatement(params: {
     throw new FeeError(
       "An issued fee statement already exists. Use regenerate to create a revised statement.",
     );
+  }
+
+  const onlySuperseded =
+    !existingDraft &&
+    !existingIssued &&
+    (await prisma.feeStatement.findFirst({
+      where: {
+        registrationWorkspaceId: workspaceId,
+        statementKind: "NORMAL",
+        status: "REVISED",
+      },
+      select: { id: true },
+    }));
+  if (onlySuperseded) {
+    regenerate = true;
   }
 
   const { lines, exchangeRateSnapshot, warnings } = await buildFeeLinesForWorkspace(
@@ -367,6 +421,7 @@ export async function generateFeeStatement(params: {
       registrationWorkspaceId: workspaceId,
       registrationWindowId: workspace.registrationWindowId,
       statementNo,
+      statementKind: "NORMAL",
       displayCurrency,
       exchangeRateSnapshot,
       studentNameSnapshot: studentName,

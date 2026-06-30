@@ -104,8 +104,8 @@ export function FeeReportFiltersForm({
         <option value="EO_ASSISTED">EO assisted</option>
         <option value="ADMIN_ASSISTED">Admin assisted</option>
         <option value="EXTERNAL_CANDIDATE">External candidate</option>
-        <option value="EO_FORCED_INTERNAL">EO office-only</option>
-        <option value="ADMIN_FORCED_INTERNAL">Admin office-only</option>
+        <option value="EO_FORCED_INTERNAL">EO restricted</option>
+        <option value="ADMIN_FORCED_INTERNAL">Admin restricted</option>
       </select>
       <select
         value={filters.visibility ?? ""}
@@ -115,7 +115,7 @@ export function FeeReportFiltersForm({
         <option value="">All visibility</option>
         <option value="STUDENT_AND_TEACHER">Student & teacher</option>
         <option value="STUDENT_ONLY">Student only</option>
-        <option value="EXAM_OFFICE_ONLY">Exam office only</option>
+        <option value="EXAM_OFFICE_ONLY">Restricted visibility</option>
       </select>
       <select
         value={filters.billingScope ?? ""}
@@ -124,7 +124,7 @@ export function FeeReportFiltersForm({
       >
         <option value="">Default billing (normal)</option>
         <option value="NORMAL_BILLING">Normal billing</option>
-        <option value="OFFICE_ONLY_BILLING">Office-only billing</option>
+        <option value="OFFICE_ONLY_BILLING">Restricted billing</option>
         <option value="MANUAL_REVIEW">Manual review</option>
       </select>
       {showStatementStatus ? (
@@ -156,7 +156,7 @@ export function FeeReportFiltersForm({
               checked={Boolean(filters.includeOfficeOnly)}
               onChange={(e) => set({ includeOfficeOnly: e.target.checked })}
             />
-            Include office-only billing
+            Include restricted billing
           </label>
           <label className="flex items-center gap-2 text-sm text-slate-700">
             <input

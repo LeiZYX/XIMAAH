@@ -72,6 +72,12 @@ enum RegistrationVisibility {
   EXAM_OFFICE_ONLY
 }
 
+enum RegistrationType {
+  NORMAL
+  RESTRICTED
+  EXTERNAL
+}
+
 enum BillingScope {
   NORMAL_BILLING
   OFFICE_ONLY_BILLING
@@ -109,6 +115,10 @@ enum RegistrationAuditAction {
   ADMIN_ASSISTED_REGISTRATION_CREATED
   EO_OFFICE_ONLY_REGISTRATION_CREATED
   ADMIN_OFFICE_ONLY_REGISTRATION_CREATED
+  EO_RESTRICTED_REGISTRATION_CREATED
+  ADMIN_RESTRICTED_REGISTRATION_CREATED
+  RESTRICTED_REGISTRATION_UPDATED
+  RESTRICTED_REGISTRATION_CANCELLED
   EO_POST_LOCK_ADJUSTMENT
   ADMIN_POST_LOCK_ADJUSTMENT
   STUDENT_REGISTRATION_SUBMITTED
@@ -173,6 +183,44 @@ enum FeeStatementStatus {
   NEEDS_REVIEW
 }
 
+enum FeeStatementKind {
+  NORMAL
+  RESTRICTED
+  EXTERNAL
+}
+
+enum ExamDocumentType {
+  STATEMENT_OF_ENTRY
+  CANDIDATE_TIMETABLE
+  ATTENDANCE_REGISTER
+  SEATING_PLAN
+  DESK_LABELS
+  CANDIDATE_LABELS
+  CANDIDATE_LIST
+  SUBJECT_CANDIDATE_LIST
+  ROOM_CANDIDATE_LIST
+  MISSING_CANDIDATE_REPORT
+  NORMAL_FEE_STATEMENT
+  RESTRICTED_INVOICE
+  RESULT_SLIP
+  CERTIFICATE_COLLECTION_LIST
+}
+
+enum ExamDocumentAuditAction {
+  EXAM_DOCUMENT_PREVIEWED
+  EXAM_DOCUMENT_PRINTED
+  EXAM_DOCUMENT_DOWNLOADED
+  STATEMENT_OF_ENTRY_PRINTED
+  ATTENDANCE_REGISTER_PRINTED
+  SEATING_PLAN_PRINTED
+  CANDIDATE_LIST_EXPORTED
+  RESTRICTED_REGISTRATION_CREATED
+  RESTRICTED_REGISTRATION_UPDATED
+  RESTRICTED_REGISTRATION_CANCELLED
+  RESTRICTED_INVOICE_PRINTED
+  RESTRICTED_INVOICE_DOWNLOADED
+}
+
 enum FeeAuditAction {
   FEE_RULE_CREATED
   FEE_RULE_UPDATED
@@ -189,6 +237,47 @@ enum StudentProfileStatus {
   GRADUATED
   LEFT
   INACTIVE
+}
+
+enum TeacherProfileStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum IdDocumentType {
+  CHINESE_ID_CARD
+  PASSPORT
+  HONG_KONG_ID
+  MACAU_ID
+  TAIWAN_ID
+  OTHER
+}
+
+enum CandidateAuditAction {
+  CANDIDATE_IDENTITY_UPDATED
+  CANDIDATE_PHOTO_UPLOADED
+  CANDIDATE_PHOTO_REMOVED
+  CANDIDATE_NAME_CHANGED
+  DOCUMENT_NUMBER_CHANGED
+}
+
+enum UserAuditAction {
+  USER_CREATED
+  USER_UPDATED
+  USER_DEACTIVATED
+  PASSWORD_RESET_REQUESTED
+  PASSWORD_RESET_COMPLETED
+  STUDENT_IMPORTED
+  TEACHER_IMPORTED
+  STUDENT_PROMOTED
+  STUDENT_ARCHIVED
 }
 
 enum CandidateType {
@@ -237,6 +326,13 @@ model User {
   feeAuditLogsPerformed          FeeAuditLog[]               @relation("FeeAuditPerformer")
   registrationsAdded             StudentExamRegistration[]   @relation("RegistrationAddedBy")
   candidate                      Candidate?
+  teacherProfile                 TeacherProfile?
+  userAuditLogsPerformed         UserAuditLog[]              @relation("UserAuditPerformer")
+  userAuditLogsTarget            UserAuditLog[]              @relation("UserAuditTarget")
+  restrictedRegistrationsCreated RegistrationWorkspace[]     @relation("RestrictedRegistrationCreator")
+  restrictedRegistrationsUpdated RegistrationWorkspace[]     @relation("RestrictedRegistrationUpdater")
+  examDocumentAuditLogsPerformed ExamDocumentAuditLog[]      @relation("ExamDocumentAuditPerformer")
+  candidateAuditLogsPerformed    CandidateAuditLog[]         @relation("CandidateAuditPerformer")
 
   @@index([role])
   @@index([isActive])
@@ -262,6 +358,8 @@ model StudentProfile {
   studentNo        String               @unique
   currentGrade     String
   currentClassName String
+  idCardNumber     String?
+  gender           Gender?
   email            String?
   phone            String?
   status           StudentProfileStatus @default(ACTIVE)
@@ -279,6 +377,76 @@ model StudentProfile {
   @@index([studentNo])
 }
 
+model TeacherProfile {
+  id             String               @id @default(cuid())
+  userId         String               @unique
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone          String?
+  email          String?
+  status         TeacherProfileStatus @default(ACTIVE)
+  visibleGrades  Json?
+  visibleClasses Json?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  @@index([status])
+}
+
+model SystemEmailSettings {
+  id                          String   @id @default("default")
+  smtpHost                    String?
+  smtpPort                    Int      @default(587)
+  smtpSecure                  Boolean  @default(false)
+  smtpUser                    String?
+  smtpPassword                String?
+  mailFrom                    String?
+  passwordResetExpiresMinutes Int      @default(60)
+  appUrl                      String?
+  updatedAt                   DateTime @updatedAt
+}
+
+model UserAuditLog {
+  id            String          @id @default(cuid())
+  action        UserAuditAction
+  targetUserId  String?
+  targetUser    User?           @relation("UserAuditTarget", fields: [targetUserId], references: [id], onDelete: SetNull)
+  performedById String
+  performedBy   User            @relation("UserAuditPerformer", fields: [performedById], references: [id], onDelete: Cascade)
+  metadata      Json?
+  createdAt     DateTime        @default(now())
+
+  @@index([action])
+  @@index([targetUserId])
+  @@index([performedById])
+  @@index([createdAt])
+}
+
+model ExamDocumentAuditLog {
+  id                   String                  @id @default(cuid())
+  action               ExamDocumentAuditAction
+  documentType         ExamDocumentType?
+  registrationWindowId String?
+  registrationWindow   RegistrationWindow?     @relation(fields: [registrationWindowId], references: [id], onDelete: SetNull)
+  examSessionId        String?
+  examSession          ExamSession?            @relation(fields: [examSessionId], references: [id], onDelete: SetNull)
+  candidateId          String?
+  candidate            Candidate?              @relation(fields: [candidateId], references: [id], onDelete: SetNull)
+  candidateCount       Int?
+  performedById        String
+  performedBy          User                    @relation("ExamDocumentAuditPerformer", fields: [performedById], references: [id], onDelete: Cascade)
+  metadata             Json?
+  reason               String?                 @db.Text
+  createdAt            DateTime                @default(now())
+
+  @@index([action])
+  @@index([documentType])
+  @@index([registrationWindowId])
+  @@index([examSessionId])
+  @@index([candidateId])
+  @@index([performedById])
+  @@index([createdAt])
+}
+
 model Candidate {
   id                           String          @id @default(cuid())
   assessmentHubCandidateNumber String
@@ -288,15 +456,26 @@ model Candidate {
   studentNumber                String?
   englishName                  String
   chineseName                  String?
+  surnamePinyin                String?
+  givenNamePinyin              String?
+  preferredEnglishName         String?
+  legalEnglishName             String?
   email                        String?
   phone                        String?
   dateOfBirth                  DateTime?
-  gender                       String?
+  gender                       Gender?
+  nationality                  String?
+  idDocumentType               IdDocumentType?
+  idDocumentNumber             String?
   idNumber                     String?
   passportNumber               String?
+  photoUrl                     String?
+  emergencyContactName         String?
+  emergencyContactPhone        String?
   schoolName                   String?
   grade                        String?
   className                    String?
+  graduationYear               Int?
   status                       CandidateStatus @default(ACTIVE)
   loginEnabled                 Boolean         @default(false)
   sourceSystem                 String?
@@ -310,6 +489,8 @@ model Candidate {
   auditLogs              RegistrationAuditLog[]
   changeRequests         RegistrationChangeRequest[]
   feeStatements          FeeStatement[]
+  examDocumentAuditLogs  ExamDocumentAuditLog[]
+  candidateAuditLogs     CandidateAuditLog[]
 
   @@index([candidateType])
   @@index([status])
@@ -319,6 +500,22 @@ model Candidate {
   @@index([grade])
   @@index([className])
   @@index([externalId])
+}
+
+model CandidateAuditLog {
+  id            String               @id @default(cuid())
+  candidateId   String
+  candidate     Candidate            @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  action        CandidateAuditAction
+  performedById String
+  performedBy   User                 @relation("CandidateAuditPerformer", fields: [performedById], references: [id], onDelete: Cascade)
+  metadata      Json?
+  createdAt     DateTime             @default(now())
+
+  @@index([candidateId])
+  @@index([action])
+  @@index([performedById])
+  @@index([createdAt])
 }
 
 model CandidateExamIdentity {
@@ -383,11 +580,27 @@ model RegistrationWindow {
   exchangeRates         ExchangeRate[]
   feeStatements         FeeStatement[]
   feeAuditLogs          FeeAuditLog[]
+  includedSeries        RegistrationWindowIncludedSeries[]
+  examDocumentAuditLogs ExamDocumentAuditLog[]
 
   @@index([examBoardId])
   @@index([examSeriesId])
   @@index([status])
   @@index([studentRegistrationOpenAt, studentRegistrationCloseAt, registrationCloseAt], map: "RegistrationWindow_timing_idx")
+}
+
+/// Applicable exam sessions for a registration window (exam series / seasons per board).
+/// Product label: "Applicable Exam Sessions". Stored as ExamSeries rows.
+model RegistrationWindowIncludedSeries {
+  id                   String             @id @default(cuid())
+  registrationWindowId String
+  registrationWindow   RegistrationWindow @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  examSeriesId         String
+  examSeries           ExamSeries         @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
+  createdAt            DateTime           @default(now())
+
+  @@unique([registrationWindowId, examSeriesId])
+  @@index([examSeriesId])
 }
 
 model RegistrationFeeStage {
@@ -423,23 +636,37 @@ model RegistrationWorkspace {
   registrationWindowId String
   registrationWindow   RegistrationWindow @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
 
-  lockedAt                DateTime?
-  lastAdjustedByUserId    String?
-  lastAdjustedByUser      User?                  @relation("WorkspaceLastAdjuster", fields: [lastAdjustedByUserId], references: [id], onDelete: SetNull)
-  lastAdjustedByRole      UserRole?
-  lastAdjustedAt          DateTime?
-  lastAdjustmentReason    String?                @db.Text
-  lastAdjustmentSummary   String?                @db.Text
-  hasPostLockAdjustment   Boolean                @default(false)
-  isLateRegistration      Boolean                @default(false)
-  entryType               FeeEntryType           @default(NORMAL)
-  feeStageId              String?
-  feeStage                RegistrationFeeStage?  @relation(fields: [feeStageId], references: [id], onDelete: SetNull)
-  entryTypeOverridden     Boolean                @default(false)
-  entryTypeOverrideReason String?                @db.Text
-  registrationSource      RegistrationSource     @default(STUDENT_SUBMITTED)
-  visibility              RegistrationVisibility @default(STUDENT_AND_TEACHER)
-  billingScope            BillingScope           @default(NORMAL_BILLING)
+  lockedAt                  DateTime?
+  lastAdjustedByUserId      String?
+  lastAdjustedByUser        User?                  @relation("WorkspaceLastAdjuster", fields: [lastAdjustedByUserId], references: [id], onDelete: SetNull)
+  lastAdjustedByRole        UserRole?
+  lastAdjustedAt            DateTime?
+  lastAdjustmentReason      String?                @db.Text
+  lastAdjustmentSummary     String?                @db.Text
+  hasPostLockAdjustment     Boolean                @default(false)
+  isLateRegistration        Boolean                @default(false)
+  entryType                 FeeEntryType           @default(NORMAL)
+  feeStageId                String?
+  feeStage                  RegistrationFeeStage?  @relation(fields: [feeStageId], references: [id], onDelete: SetNull)
+  entryTypeOverridden       Boolean                @default(false)
+  entryTypeOverrideReason   String?                @db.Text
+  registrationSource        RegistrationSource     @default(STUDENT_SUBMITTED)
+  visibility                RegistrationVisibility @default(STUDENT_AND_TEACHER)
+  billingScope              BillingScope           @default(NORMAL_BILLING)
+  registrationType          RegistrationType       @default(NORMAL)
+  visibleToStudent          Boolean                @default(true)
+  visibleToTeacher          Boolean                @default(true)
+  visibleInStudentPortal    Boolean                @default(true)
+  visibleInTeacherPortal    Boolean                @default(true)
+  visibleInStudentDocuments Boolean                @default(true)
+  visibleInStudentBilling   Boolean                @default(true)
+  restrictedReason          String?                @db.Text
+  restrictedCreatedById     String?
+  restrictedCreatedBy       User?                  @relation("RestrictedRegistrationCreator", fields: [restrictedCreatedById], references: [id], onDelete: SetNull)
+  restrictedCreatedAt       DateTime?
+  restrictedUpdatedById     String?
+  restrictedUpdatedBy       User?                  @relation("RestrictedRegistrationUpdater", fields: [restrictedUpdatedById], references: [id], onDelete: SetNull)
+  restrictedUpdatedAt       DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -449,8 +676,8 @@ model RegistrationWorkspace {
   changeRequests RegistrationChangeRequest[]
   feeStatements  FeeStatement[]
 
-  @@unique([candidateId, registrationWindowId])
-  @@unique([studentId, registrationWindowId])
+  @@unique([candidateId, registrationWindowId, registrationType], map: "rw_candidate_window_type_uq")
+  @@unique([studentId, registrationWindowId, registrationType], map: "rw_student_window_type_uq")
   @@index([candidateId])
   @@index([studentId])
   @@index([registrationWindowId])
@@ -458,6 +685,7 @@ model RegistrationWorkspace {
   @@index([registrationSource])
   @@index([visibility])
   @@index([billingScope])
+  @@index([registrationType])
   @@index([entryType])
   @@index([feeStageId])
 }
@@ -492,24 +720,31 @@ model StudentExamRegistration {
   assessmentHubCandidateNumberSnapshot String?
   candidateTypeSnapshot                CandidateType?
 
-  status                  RegistrationStatus     @default(ACTIVE)
-  lockedAt                DateTime?
-  cancelledAt             DateTime?
-  registrationSource      RegistrationSource     @default(STUDENT_SUBMITTED)
-  visibility              RegistrationVisibility @default(STUDENT_AND_TEACHER)
-  billingScope            BillingScope           @default(NORMAL_BILLING)
-  addedByUserId           String?
-  addedByUser             User?                  @relation("RegistrationAddedBy", fields: [addedByUserId], references: [id], onDelete: SetNull)
-  addedByRole             UserRole?
-  addedAt                 DateTime?
-  reason                  String?                @db.Text
-  entryType               FeeEntryType           @default(NORMAL)
-  feeStageId              String?
-  feeStage                RegistrationFeeStage?  @relation(fields: [feeStageId], references: [id], onDelete: SetNull)
-  entryTypeOverridden     Boolean                @default(false)
-  entryTypeOverrideReason String?                @db.Text
-  createdAt               DateTime               @default(now())
-  updatedAt               DateTime               @updatedAt
+  status                    RegistrationStatus     @default(ACTIVE)
+  lockedAt                  DateTime?
+  cancelledAt               DateTime?
+  registrationSource        RegistrationSource     @default(STUDENT_SUBMITTED)
+  visibility                RegistrationVisibility @default(STUDENT_AND_TEACHER)
+  billingScope              BillingScope           @default(NORMAL_BILLING)
+  registrationType          RegistrationType       @default(NORMAL)
+  visibleToStudent          Boolean                @default(true)
+  visibleToTeacher          Boolean                @default(true)
+  visibleInStudentPortal    Boolean                @default(true)
+  visibleInTeacherPortal    Boolean                @default(true)
+  visibleInStudentDocuments Boolean                @default(true)
+  visibleInStudentBilling   Boolean                @default(true)
+  addedByUserId             String?
+  addedByUser               User?                  @relation("RegistrationAddedBy", fields: [addedByUserId], references: [id], onDelete: SetNull)
+  addedByRole               UserRole?
+  addedAt                   DateTime?
+  reason                    String?                @db.Text
+  entryType                 FeeEntryType           @default(NORMAL)
+  feeStageId                String?
+  feeStage                  RegistrationFeeStage?  @relation(fields: [feeStageId], references: [id], onDelete: SetNull)
+  entryTypeOverridden       Boolean                @default(false)
+  entryTypeOverrideReason   String?                @db.Text
+  createdAt                 DateTime               @default(now())
+  updatedAt                 DateTime               @updatedAt
 
   auditLogs RegistrationAuditLog[]
 
@@ -527,6 +762,7 @@ model StudentExamRegistration {
   @@index([registrationSource])
   @@index([visibility])
   @@index([billingScope])
+  @@index([registrationType])
   @@index([gradeSnapshot, classNameSnapshot])
   @@index([studentNoSnapshot])
   @@index([entryType])
@@ -638,6 +874,15 @@ model ExamBoard {
   website                      String?
   timezone                     String?
   calendarSubjectFilterEnabled Boolean  @default(false)
+  centreName                   String?
+  centreNumber                 String?
+  centreAddress                String?  @db.Text
+  centreEmail                  String?
+  centrePhone                  String?
+  centreCountry                String?
+  centreTimeZone               String?
+  defaultExamOfficerName       String?
+  defaultExamOfficerEmail      String?
   createdAt                    DateTime @default(now())
   updatedAt                    DateTime @updatedAt
 
@@ -743,6 +988,7 @@ model ExamSeries {
   keyDates                 KeyDate[]
   resources                Resource[]
   registrationWindows      RegistrationWindow[]
+  includedInWindows        RegistrationWindowIncludedSeries[]
   studentExamRegistrations StudentExamRegistration[]
   feeRules                 FeeRule[]
 
@@ -775,6 +1021,7 @@ model ExamSession {
   changeRequestExamSessions RegistrationChangeRequestExamSession[]
   feeRules                  FeeRule[]
   feeStatementItems         FeeStatementItem[]
+  examDocumentAuditLogs     ExamDocumentAuditLog[]
 
   @@index([paperId])
   @@index([examSeriesId])
@@ -938,6 +1185,7 @@ model FeeStatement {
   registrationWindowId                 String
   registrationWindow                   RegistrationWindow          @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
   statementNo                          String                      @unique
+  statementKind                        FeeStatementKind            @default(NORMAL)
   displayCurrency                      FeeStatementDisplayCurrency @default(BOTH)
   exchangeRateSnapshot                 Decimal?                    @db.Decimal(12, 4)
   studentNameSnapshot                  String
@@ -966,6 +1214,7 @@ model FeeStatement {
   @@index([registrationWindowId])
   @@index([status])
   @@index([statementNo])
+  @@index([statementKind])
 }
 
 model FeeStatementItem {

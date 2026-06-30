@@ -2,6 +2,12 @@ import type { FeeRuleMatchContext, FeeRuleRecord } from "@/lib/fees/types";
 
 import type { FeeEntryType } from "@/generated/prisma/enums";
 
+const FEE_ENTRY_TYPE_FALLBACKS: Record<FeeEntryType, FeeEntryType[]> = {
+  NORMAL: ["NORMAL"],
+  LATE: ["LATE", "NORMAL"],
+  HIGH_LATE: ["HIGH_LATE", "LATE", "NORMAL"],
+};
+
 function ruleMatchesRegistration(rule: FeeRuleRecord, ctx: FeeRuleMatchContext): boolean {
   if (!rule.isActive) return false;
   if (rule.examBoardId !== ctx.examBoardId) return false;
@@ -38,6 +44,19 @@ export function findMatchingFeeRule(
   );
   if (byQualification.length > 0) return byQualification[0];
 
+  return null;
+}
+
+/** Match fee rules, falling back to earlier entry stages when a late rule is not configured. */
+export function findMatchingFeeRuleWithFallback(
+  rules: FeeRuleRecord[],
+  ctx: FeeRuleMatchContext,
+): FeeRuleRecord | null {
+  const entryTypes = FEE_ENTRY_TYPE_FALLBACKS[ctx.entryType] ?? [ctx.entryType];
+  for (const entryType of entryTypes) {
+    const match = findMatchingFeeRule(rules, { ...ctx, entryType });
+    if (match) return match;
+  }
   return null;
 }
 

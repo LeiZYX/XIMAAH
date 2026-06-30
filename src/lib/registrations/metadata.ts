@@ -1,17 +1,28 @@
 import type {
   BillingScope,
   RegistrationSource,
+  RegistrationType,
   RegistrationVisibility,
   UserRole,
 } from "@/generated/prisma/enums";
+import {
+  EXTERNAL_VISIBILITY_FLAGS,
+  NORMAL_VISIBILITY_FLAGS,
+  RESTRICTED_VISIBILITY_FLAGS,
+  registrationTypeLabel,
+  type RegistrationVisibilityFlags,
+} from "@/lib/registrations/registration-type";
 
 export function assistedSourceForRole(role: UserRole): RegistrationSource {
   return role === "EXAM_OFFICER" ? "EO_ASSISTED" : "ADMIN_ASSISTED";
 }
 
-export function officeOnlySourceForRole(role: UserRole): RegistrationSource {
+export function restrictedSourceForRole(role: UserRole): RegistrationSource {
   return role === "EXAM_OFFICER" ? "EO_FORCED_INTERNAL" : "ADMIN_FORCED_INTERNAL";
 }
+
+/** @deprecated Use restrictedSourceForRole */
+export const officeOnlySourceForRole = restrictedSourceForRole;
 
 export function postLockSourceForRole(role: UserRole): RegistrationSource {
   return role === "EXAM_OFFICER" ? "EO_POST_LOCK_ADJUSTMENT" : "ADMIN_POST_LOCK_ADJUSTMENT";
@@ -23,11 +34,14 @@ export function assistedAuditActionForRole(role: UserRole) {
     : "ADMIN_ASSISTED_REGISTRATION_CREATED";
 }
 
-export function officeOnlyAuditActionForRole(role: UserRole) {
+export function restrictedAuditActionForRole(role: UserRole) {
   return role === "EXAM_OFFICER"
-    ? "EO_OFFICE_ONLY_REGISTRATION_CREATED"
-    : "ADMIN_OFFICE_ONLY_REGISTRATION_CREATED";
+    ? "EO_RESTRICTED_REGISTRATION_CREATED"
+    : "ADMIN_RESTRICTED_REGISTRATION_CREATED";
 }
+
+/** @deprecated Use restrictedAuditActionForRole */
+export const officeOnlyAuditActionForRole = restrictedAuditActionForRole;
 
 export function postLockAuditActionForRole(role: UserRole) {
   return role === "EXAM_OFFICER" ? "EO_POST_LOCK_ADJUSTMENT" : "ADMIN_POST_LOCK_ADJUSTMENT";
@@ -50,7 +64,7 @@ export function registrationSourceLabel(source: RegistrationSource | string): st
       return "Assisted registration";
     case "EO_FORCED_INTERNAL":
     case "ADMIN_FORCED_INTERNAL":
-      return "Office-only registration";
+      return "Restricted registration";
     case "EO_POST_LOCK_ADJUSTMENT":
     case "ADMIN_POST_LOCK_ADJUSTMENT":
       return "Post-lock adjustment";
@@ -68,7 +82,7 @@ export function visibilityLabel(visibility: RegistrationVisibility | string): st
     case "STUDENT_ONLY":
       return "Student only (teacher hidden)";
     case "EXAM_OFFICE_ONLY":
-      return "Office-only (student & teacher hidden)";
+      return "Restricted (student & teacher hidden)";
     default:
       return String(visibility);
   }
@@ -79,7 +93,7 @@ export function billingScopeLabel(scope: BillingScope | string): string {
     case "NORMAL_BILLING":
       return "Normal billing";
     case "OFFICE_ONLY_BILLING":
-      return "Office-only billing";
+      return "Restricted billing";
     case "NO_BILLING":
       return "No billing";
     case "MANUAL_REVIEW":
@@ -92,3 +106,16 @@ export function billingScopeLabel(scope: BillingScope | string): string {
 export function isExternalSource(source: RegistrationSource | string): boolean {
   return source === "EXTERNAL_CANDIDATE";
 }
+
+export function flagsForRegistrationType(type: RegistrationType) {
+  switch (type) {
+    case "RESTRICTED":
+      return RESTRICTED_VISIBILITY_FLAGS;
+    case "EXTERNAL":
+      return EXTERNAL_VISIBILITY_FLAGS;
+    default:
+      return NORMAL_VISIBILITY_FLAGS;
+  }
+}
+
+export { registrationTypeLabel, type RegistrationVisibilityFlags };

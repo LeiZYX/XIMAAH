@@ -17,15 +17,48 @@ function sessionLabels(event: EventContentArg["event"]) {
   const subjectLabel = typeof subject === "string" ? subject : "";
   const paperLabel = typeof paperCode === "string" ? paperCode : "";
   const timeLabel = typeof calendarTimeLabel === "string" ? calendarTimeLabel : "";
-  const detailLabel = [levelAbbrev, subjectLabel, paperLabel].filter(Boolean).join(" ");
+  const detailFromProps = event.extendedProps.calendarDetailLabel;
+  const detailLabel =
+    typeof detailFromProps === "string" && detailFromProps
+      ? detailFromProps
+      : [levelAbbrev, subjectLabel, paperLabel].filter(Boolean).join(" ");
   const examBoardLabel = typeof boardLabel === "string" ? boardLabel : "";
 
   return { examBoardLabel, timeLabel, detailLabel };
 }
 
+function isListView(viewType: string) {
+  return viewType === "listDay" || viewType === "listWeek" || viewType === "listMonth";
+}
+
+type FcSegHost = HTMLElement & {
+  fcSeg?: {
+    eventRange: {
+      def: { publicId: string };
+    };
+  };
+};
+
+export function listRowFromMountEl(el: HTMLElement) {
+  return el.classList.contains("fc-list-event")
+    ? el
+    : el.closest<HTMLElement>("tr.fc-list-event");
+}
+
+export function eventIdFromListRow(row: HTMLElement) {
+  const segId = (row as FcSegHost).fcSeg?.eventRange?.def?.publicId;
+  if (segId) return segId;
+  return row.dataset.ximaEventId ?? null;
+}
+
 export function sessionEventContent(arg: EventContentArg) {
-  const { event } = arg;
+  const { event, view } = arg;
   if (event.extendedProps.entityType !== "session") {
+    return true;
+  }
+
+  // List view needs FullCalendar's default <a> title link for reliable row clicks.
+  if (isListView(view.type)) {
     return true;
   }
 
@@ -60,13 +93,22 @@ export function sessionEventContent(arg: EventContentArg) {
 }
 
 export function sessionEventDidMount(info: EventMountArg) {
+  const listRow = listRowFromMountEl(info.el);
+
+  if (listRow) {
+    listRow.style.cursor = "pointer";
+    listRow.dataset.ximaEventId = info.event.id;
+  }
+
   if (info.event.extendedProps.entityType !== "session") return;
+
+  const mountEl = listRow ?? info.el;
 
   const boardAccent = info.event.extendedProps.boardAccent;
   if (typeof boardAccent === "string") {
-    info.el.style.borderColor = boardAccent;
+    mountEl.style.borderColor = boardAccent;
   }
 
   const { examBoardLabel, timeLabel, detailLabel } = sessionLabels(info.event);
-  info.el.title = [examBoardLabel, timeLabel, detailLabel].filter(Boolean).join("\n");
+  mountEl.title = [examBoardLabel, timeLabel, detailLabel].filter(Boolean).join("\n");
 }

@@ -17,6 +17,7 @@ export async function GET() {
   const statements = await prisma.feeStatement.findMany({
     where: {
       studentId: auth.user.id,
+      statementKind: "NORMAL",
       status: { in: ["ISSUED", "PAID"] },
     },
     include: {

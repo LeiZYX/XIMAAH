@@ -405,6 +405,20 @@ async function main() {
   const studentClose = new Date(now);
   studentClose.setDate(studentClose.getDate() + 14);
 
+  async function ensureWindowIncludedSeries(
+    registrationWindowId: string,
+    examSeriesId: string,
+  ) {
+    const existing = await prisma.registrationWindowIncludedSeries.findFirst({
+      where: { registrationWindowId, examSeriesId },
+    });
+    if (!existing) {
+      await prisma.registrationWindowIncludedSeries.create({
+        data: { registrationWindowId, examSeriesId },
+      });
+    }
+  }
+
   await prisma.registrationWindow.upsert({
     where: { id: IDS.windowOpen },
     update: {
@@ -425,6 +439,7 @@ async function main() {
       createdById: admin.id,
     },
   });
+  await ensureWindowIncludedSeries(IDS.windowOpen, seriesPearson.id);
 
   await prisma.registrationWindow.upsert({
     where: { id: IDS.windowClosed },
@@ -446,6 +461,7 @@ async function main() {
       createdById: admin.id,
     },
   });
+  await ensureWindowIncludedSeries(IDS.windowClosed, seriesPearson.id);
 
   for (const [windowId, startAt, endAt, enableAll] of [
     [IDS.windowOpen, openStart, openEnd, true],

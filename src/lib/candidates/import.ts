@@ -1,6 +1,18 @@
 import type { Prisma } from "@/generated/prisma/client";
 import { equalsFilter } from "@/lib/db/string-filters";
 import { prisma } from "@/lib/prisma";
+import { createCandidateAuditLog } from "@/lib/candidates/audit";
+import {
+  CANDIDATE_IMPORT_HEADERS,
+  parseCandidateTypeInput,
+  parseGenderInput,
+  parseIdDocumentTypeInput,
+} from "@/lib/candidates/export";
+import {
+  buildCandidateIdentityUpdate,
+  parseDateOfBirth,
+  validateCandidateIdentity,
+} from "@/lib/candidates/identity";
 import {
   createExternalCandidate,
   generateAssessmentHubCandidateNumber,
@@ -8,74 +20,146 @@ import {
 } from "@/lib/candidates/service";
 
 export interface CandidateImportRow {
-  studentNumber?: string;
-  englishName?: string;
   chineseName?: string;
+  surnamePinyin?: string;
+  givenNamePinyin?: string;
+  preferredEnglishName?: string;
+  legalEnglishName?: string;
+  englishName?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  nationality?: string;
+  idDocumentType?: string;
+  idDocumentNumber?: string;
   email?: string;
   phone?: string;
+  candidateType?: string;
+  studentNumber?: string;
   grade?: string;
   className?: string;
-  externalId?: string;
+  graduationYear?: string;
   assessmentHubCandidateNumber?: string;
+  uci?: string;
+  boardCandidateNumber?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
+  externalId?: string;
 }
 
-export async function importInternalCandidates(
+function rowToIdentityInput(row: CandidateImportRow) {
+  const legalEnglishName = row.legalEnglishName?.trim() || row.englishName?.trim() || "";
+  return {
+    chineseName: row.chineseName?.trim() || null,
+    surnamePinyin: row.surnamePinyin?.trim() || null,
+    givenNamePinyin: row.givenNamePinyin?.trim() || null,
+    preferredEnglishName: row.preferredEnglishName?.trim() || null,
+    legalEnglishName,
+    gender: parseGenderInput(row.gender) ?? null,
+    dateOfBirth: parseDateOfBirth(row.dateOfBirth),
+    nationality: row.nationality?.trim() || null,
+    idDocumentType: parseIdDocumentTypeInput(row.idDocumentType) ?? null,
+    idDocumentNumber: row.idDocumentNumber?.trim() || null,
+    email: row.email?.trim() || null,
+    phone: row.phone?.trim() || null,
+    studentNumber: row.studentNumber?.trim() || null,
+    grade: row.grade?.trim() || null,
+    className: row.className?.trim() || null,
+    graduationYear: row.graduationYear ? Number(row.graduationYear) : null,
+    assessmentHubCandidateNumber:
+      row.assessmentHubCandidateNumber?.trim() || generateAssessmentHubCandidateNumber(),
+    emergencyContactName: row.emergencyContactName?.trim() || null,
+    emergencyContactPhone: row.emergencyContactPhone?.trim() || null,
+  };
+}
+
+export async function importCandidates(
   rows: CandidateImportRow[],
-  options?: { markMissingInactive?: boolean },
+  options?: { markMissingInactive?: boolean; performedById?: string },
 ) {
   const results = { created: 0, updated: 0, skipped: 0, errors: [] as string[] };
   const seenStudentNumbers = new Set<string>();
 
   for (const [index, row] of rows.entries()) {
-    const studentNumber = row.studentNumber?.trim();
-    const englishName = row.englishName?.trim();
-    if (!studentNumber || !englishName) {
+    const candidateType = parseCandidateTypeInput(row.candidateType) ?? "INTERNAL";
+    const identityInput = rowToIdentityInput(row);
+    const validationErrors = validateCandidateIdentity(identityInput);
+    if (validationErrors.length > 0) {
+      results.errors.push(`Row ${index + 1}: ${validationErrors.join("; ")}`);
       results.skipped += 1;
       continue;
     }
 
-    seenStudentNumbers.add(studentNumber.toLowerCase());
+    const studentNumber = row.studentNumber?.trim();
+    if (candidateType === "INTERNAL" && studentNumber) {
+      seenStudentNumbers.add(studentNumber.toLowerCase());
+    }
 
     try {
-      const user = await prisma.user.findFirst({
-        where: { studentNo: equalsFilter(studentNumber) },
-        include: { studentProfile: true, candidate: true },
+      const identityData = buildCandidateIdentityUpdate({
+        ...identityInput,
+        assessmentHubCandidateNumber:
+          identityInput.assessmentHubCandidateNumber?.trim() ||
+          generateAssessmentHubCandidateNumber(),
       });
+      const user =
+        candidateType === "INTERNAL" && studentNumber
+          ? await prisma.user.findFirst({
+              where: { studentNo: equalsFilter(studentNumber) },
+              include: { studentProfile: true, candidate: true },
+            })
+          : null;
 
       if (user?.studentProfile) {
         await syncCandidateFromStudentUser(user.id);
-        await prisma.candidate.updateMany({
+        const candidate = await prisma.candidate.update({
           where: { userId: user.id },
           data: {
-            englishName,
-            chineseName: row.chineseName?.trim() || undefined,
-            email: row.email?.trim() || undefined,
-            phone: row.phone?.trim() || undefined,
-            grade: row.grade?.trim() || user.studentProfile.currentGrade,
-            className: row.className?.trim() || user.studentProfile.currentClassName,
+            ...identityData,
+            candidateType: "INTERNAL",
             externalId: row.externalId?.trim() || undefined,
+            graduationYear: identityData.graduationYear ?? user.studentProfile.graduationYear,
           },
         });
+        if (row.uci || row.boardCandidateNumber) {
+          const board = await prisma.examBoard.findFirst({ orderBy: { name: "asc" } });
+          if (board) {
+            await upsertCandidateExamIdentity(candidate.id, board.id, {
+              uci: row.uci?.trim() || null,
+              boardCandidateNumber: row.boardCandidateNumber?.trim() || null,
+            });
+          }
+        }
+        if (options?.performedById) {
+          await createCandidateAuditLog({
+            candidateId: candidate.id,
+            action: "CANDIDATE_IDENTITY_UPDATED",
+            performedById: options.performedById,
+            metadata: { source: "import" },
+          });
+        }
         results.updated += 1;
+        continue;
+      }
+
+      if (candidateType === "EXTERNAL") {
+        await createExternalCandidate({
+          ...identityInput,
+          legalEnglishName: identityInput.legalEnglishName ?? undefined,
+          assessmentHubCandidateNumber: identityInput.assessmentHubCandidateNumber ?? undefined,
+          externalId: row.externalId,
+        });
+        results.created += 1;
         continue;
       }
 
       await prisma.candidate.create({
         data: {
           candidateType: "INTERNAL",
-          assessmentHubCandidateNumber:
-            row.assessmentHubCandidateNumber?.trim() || generateAssessmentHubCandidateNumber(),
-          studentNumber,
-          englishName,
-          chineseName: row.chineseName?.trim() || null,
-          email: row.email?.trim() || null,
-          phone: row.phone?.trim() || null,
-          grade: row.grade?.trim() || null,
-          className: row.className?.trim() || null,
-          externalId: row.externalId?.trim() || null,
+          ...identityData,
           loginEnabled: false,
           status: "ACTIVE",
           sourceSystem: "IMPORT",
+          externalId: row.externalId?.trim() || null,
         },
       });
       results.created += 1;
@@ -93,7 +177,7 @@ export async function importInternalCandidates(
         studentNumber: { not: null },
         NOT: {
           studentNumber: {
-            in: [...seenStudentNumbers].map((value) => value),
+            in: [...seenStudentNumbers],
           },
         },
       },
@@ -103,6 +187,18 @@ export async function importInternalCandidates(
 
   return results;
 }
+
+export async function importInternalCandidates(
+  rows: CandidateImportRow[],
+  options?: { markMissingInactive?: boolean; performedById?: string },
+) {
+  return importCandidates(
+    rows.map((row) => ({ ...row, candidateType: row.candidateType ?? "INTERNAL" })),
+    options,
+  );
+}
+
+export { CANDIDATE_IMPORT_HEADERS };
 
 export async function upsertCandidateExamIdentity(
   candidateId: string,
@@ -134,9 +230,6 @@ export async function upsertCandidateExamIdentity(
   });
 }
 
-export async function updateCandidate(
-  id: string,
-  data: Prisma.CandidateUpdateInput,
-) {
+export async function updateCandidate(id: string, data: Prisma.CandidateUpdateInput) {
   return prisma.candidate.update({ where: { id }, data });
 }

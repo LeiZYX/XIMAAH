@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { exitAfterPrismaScript, prisma } from "../src/lib/prisma";
 import { hashPassword } from "../src/lib/auth/password";
+import { ensureDefaultExamBoards } from "./seed-exam-boards";
 
 async function main() {
   const adminEmail = (process.env.ADMIN_EMAIL ?? "admin@xima.local").toLowerCase();
@@ -28,65 +29,7 @@ async function main() {
     },
   });
 
-  const aqa = await prisma.examBoard.upsert({
-    where: { code: "AQA" },
-    update: {
-      name: "Assessment and Qualifications Alliance",
-      country: "GB",
-      region: "United Kingdom",
-      timezone: "Europe/London",
-    },
-    create: {
-      name: "Assessment and Qualifications Alliance",
-      code: "AQA",
-      description: "Leading exam board for GCSEs and A-Levels in England",
-      country: "GB",
-      region: "United Kingdom",
-      timezone: "Europe/London",
-      website: "https://www.aqa.org.uk",
-    },
-  });
-
-  const cie = await prisma.examBoard.upsert({
-    where: { code: "CIE" },
-    update: {
-      name: "Cambridge International Examinations",
-      country: "GB",
-      region: "International",
-      timezone: "Europe/London",
-    },
-    create: {
-      name: "Cambridge International Examinations",
-      code: "CIE",
-      description: "Cambridge Assessment International Education (IGCSE, AS & A Level)",
-      country: "GB",
-      region: "International",
-      timezone: "Europe/London",
-      website: "https://www.cambridgeinternational.org",
-    },
-  });
-
-  const edexcel = await prisma.examBoard.upsert({
-    where: { code: "EDEXCEL" },
-    update: {
-      name: "Edexcel (Pearson)",
-      country: "GB",
-      region: "United Kingdom",
-      timezone: "Europe/London",
-    },
-    create: {
-      name: "Edexcel (Pearson)",
-      code: "EDEXCEL",
-      description: "Pearson Edexcel qualifications",
-      country: "GB",
-      region: "United Kingdom",
-      timezone: "Europe/London",
-      website: "https://qualifications.pearson.com",
-    },
-  });
-
-  // Legacy seed used code "EDX" — remove duplicate if present
-  await prisma.examBoard.deleteMany({ where: { code: "EDX" } });
+  const { aqa, cie, edexcel } = await ensureDefaultExamBoards(prisma);
 
   const gcseMathsAqa = await prisma.qualification.upsert({
     where: { id: "seed-qual-aqa-gcse-maths" },
@@ -559,6 +502,20 @@ async function main() {
     registrationCloseAt: new Date("2026-12-31"),
   };
 
+  async function ensureWindowIncludedSeries(
+    registrationWindowId: string,
+    examSeriesId: string,
+  ) {
+    const existing = await prisma.registrationWindowIncludedSeries.findFirst({
+      where: { registrationWindowId, examSeriesId },
+    });
+    if (!existing) {
+      await prisma.registrationWindowIncludedSeries.create({
+        data: { registrationWindowId, examSeriesId },
+      });
+    }
+  }
+
   await prisma.registrationWindow.upsert({
     where: { id: "seed-window-aqa-summer" },
     update: {
@@ -576,6 +533,7 @@ async function main() {
       createdById: adminUser.id,
     },
   });
+  await ensureWindowIncludedSeries("seed-window-aqa-summer", aqaSummer2026.id);
 
   await prisma.registrationWindow.upsert({
     where: { id: "seed-window-cie-june" },
@@ -594,6 +552,7 @@ async function main() {
       createdById: adminUser.id,
     },
   });
+  await ensureWindowIncludedSeries("seed-window-cie-june", cieJune2026.id);
 
   await prisma.registrationWindow.upsert({
     where: { id: "seed-window-edexcel-summer" },
@@ -612,11 +571,34 @@ async function main() {
       createdById: adminUser.id,
     },
   });
+  await ensureWindowIncludedSeries("seed-window-edexcel-summer", edexcelSummer2026.id);
+
+  await prisma.registrationWindow.upsert({
+    where: { id: "seed-window-summer-2026-all" },
+    update: {
+      title: "Summer 2026 Multi-Board Registration",
+      ...windowTiming,
+      status: "OPEN",
+    },
+    create: {
+      id: "seed-window-summer-2026-all",
+      examBoardId: edexcel.id,
+      examSeriesId: edexcelSummer2026.id,
+      title: "Summer 2026 Multi-Board Registration",
+      ...windowTiming,
+      status: "OPEN",
+      createdById: adminUser.id,
+    },
+  });
+  await ensureWindowIncludedSeries("seed-window-summer-2026-all", edexcelSummer2026.id);
+  await ensureWindowIncludedSeries("seed-window-summer-2026-all", cieJune2026.id);
+  await ensureWindowIncludedSeries("seed-window-summer-2026-all", aqaSummer2026.id);
 
   const seedWindows = [
     { id: "seed-window-aqa-summer", ...windowTiming },
     { id: "seed-window-cie-june", ...windowTiming },
     { id: "seed-window-edexcel-summer", ...windowTiming },
+    { id: "seed-window-summer-2026-all", ...windowTiming },
   ];
 
   for (const window of seedWindows) {

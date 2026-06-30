@@ -8,8 +8,7 @@ export default function ExamOfficeCandidatesPage() {
     <CandidateManager
       apiPath="/api/exam-office/candidates"
       detailBasePath="/exam-office/candidates"
-      showImportLink
-      importPath="/exam-office/candidates/import"
+      moduleBasePath="/exam-office/candidates"
     />
   );
 }

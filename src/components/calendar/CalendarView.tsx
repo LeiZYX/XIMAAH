@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, startTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from "@fullcalendar/list";
+import type { EventApi, EventClickArg } from "@fullcalendar/core";
 import type { CalendarEvent } from "@/lib/types";
 import {
   LEVEL_CATEGORY_COLORS,
@@ -179,6 +180,33 @@ function DetailRow({ label, value }: { label: string; value?: unknown }) {
   );
 }
 
+function calendarEventFromFullCalendar(event: EventApi): CalendarEvent {
+  const props = event.extendedProps;
+  return {
+    id: event.id,
+    title: event.title,
+    start: event.startStr,
+    end: event.endStr || undefined,
+    allDay: event.allDay,
+    type: props.entityType === "keydate" ? "keydate" : "session",
+    backgroundColor: event.backgroundColor,
+    borderColor: event.borderColor,
+    extendedProps: { ...props },
+  };
+}
+
+function clearCalendarSelectionHighlight(root: HTMLElement | null) {
+  root?.querySelectorAll("[data-xima-selected]").forEach((node) => {
+    node.removeAttribute("data-xima-selected");
+  });
+}
+
+function highlightCalendarEventElement(root: HTMLElement | null, el: HTMLElement) {
+  clearCalendarSelectionHighlight(root);
+  const host = el.classList.contains("fc-event") ? el : el.closest<HTMLElement>(".fc-event");
+  host?.setAttribute("data-xima-selected", "true");
+}
+
 export function CalendarView() {
   const [filters, setFilters] = useState<CalendarFilters>({
     levelCategories: [],
@@ -206,6 +234,8 @@ export function CalendarView() {
   const [error, setError] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const calendarRef = useRef<FullCalendar>(null);
+  const calendarRootRef = useRef<HTMLDivElement>(null);
+  const visibleEventsRef = useRef<CalendarEvent[]>([]);
   const lastNavigatedLevels = useRef<string>("");
 
   const selectedDateKey = selectedEvent ? eventDateKey(selectedEvent.start) : null;
@@ -357,12 +387,10 @@ export function CalendarView() {
     }));
   }
 
-  function toggleExamBoard(boardId: string) {
+  function selectExamBoard(boardId: string | null) {
     setFilters((current) => ({
       ...current,
-      examBoardIds: current.examBoardIds.includes(boardId)
-        ? current.examBoardIds.filter((item) => item !== boardId)
-        : [...current.examBoardIds, boardId],
+      examBoardIds: boardId ? [boardId] : [],
       qualificationId: "",
       subjectId: "",
       examSeriesId: "",
@@ -397,9 +425,43 @@ export function CalendarView() {
     [events, searchQuery],
   );
 
+  visibleEventsRef.current = visibleEvents;
+
+  const selectCalendarEventById = useCallback((eventId: string) => {
+    const event = visibleEventsRef.current.find((item) => item.id === eventId);
+    if (event) {
+      startTransition(() => setSelectedEvent(event));
+      return;
+    }
+
+    const fcEvent = calendarRef.current?.getApi().getEventById(eventId);
+    if (fcEvent) {
+      startTransition(() => setSelectedEvent(calendarEventFromFullCalendar(fcEvent)));
+    }
+  }, []);
+
+  const handleCalendarEventClick = useCallback(
+    (info: EventClickArg) => {
+      highlightCalendarEventElement(calendarRootRef.current, info.el);
+      selectCalendarEventById(info.event.id);
+    },
+    [selectCalendarEventById],
+  );
+
+  const getEventClassNames = useCallback((arg: { event: EventApi }) => {
+    const classes: string[] = [];
+    if (arg.event.extendedProps.isLocked) classes.push("fc-event-submitted");
+    if (arg.event.extendedProps.isActive) classes.push("fc-event-in-list");
+    return classes;
+  }, []);
+
   useEffect(() => {
-    if (!selectedEvent) return;
+    if (!selectedEvent) {
+      clearCalendarSelectionHighlight(calendarRootRef.current);
+      return;
+    }
     if (!visibleEvents.some((item) => item.id === selectedEvent.id)) {
+      clearCalendarSelectionHighlight(calendarRootRef.current);
       setSelectedEvent(null);
     }
   }, [visibleEvents, selectedEvent]);
@@ -556,28 +618,41 @@ export function CalendarView() {
             getColor={(value) => LEVEL_CATEGORY_COLORS[value].bg}
           />
 
-          <MultiSelectPills
-            label="Exam board"
-            options={examBoards.map((board) => ({
-              value: board.id,
-              label: board.code,
-            }))}
-            selected={filters.examBoardIds}
-            onToggle={toggleExamBoard}
-            onClear={() =>
-              setFilters((current) => ({
-                ...current,
-                examBoardIds: [],
-                qualificationId: "",
-                subjectId: "",
-                examSeriesId: "",
-              }))
-            }
-            getColor={(boardId) => {
-              const board = examBoards.find((item) => item.id === boardId);
-              return board ? examBoardAccent(board.code).accent : undefined;
-            }}
-          />
+          <div>
+            <p className="mb-2 text-sm font-medium text-slate-700">Exam board</p>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => selectExamBoard(null)}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  filters.examBoardIds.length === 0
+                    ? "bg-indigo-600 text-white"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                }`}
+              >
+                All
+              </button>
+              {examBoards.map((board) => {
+                const active = filters.examBoardIds.includes(board.id);
+                const accent = examBoardAccent(board.code, board.name).accent;
+                return (
+                  <button
+                    key={board.id}
+                    type="button"
+                    onClick={() => selectExamBoard(board.id)}
+                    className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                      active
+                        ? "bg-indigo-600 text-white"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                    style={active ? undefined : { borderLeft: `3px solid ${accent}` }}
+                  >
+                    {board.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
 
           {!initialLoading && visibleEvents.length > 0 ? (
             <p className="text-xs text-slate-500">
@@ -712,6 +787,7 @@ export function CalendarView() {
               Loading calendar...
             </div>
           ) : (
+            <div ref={calendarRootRef}>
             <FullCalendar
               ref={calendarRef}
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
@@ -733,19 +809,11 @@ export function CalendarView() {
                 const day = String(arg.date.getDate()).padStart(2, "0");
                 return `${year}-${month}-${day}` === selectedDateKey ? ["fc-day-selected"] : [];
               }}
-              eventClassNames={(arg) => {
-                const classes: string[] = [];
-                if (arg.event.id === selectedEvent?.id) classes.push("fc-event-selected");
-                if (arg.event.extendedProps.isLocked) classes.push("fc-event-submitted");
-                if (arg.event.extendedProps.isActive) classes.push("fc-event-in-list");
-                return classes;
-              }}
+              eventClassNames={getEventClassNames}
               eventContent={sessionEventContent}
               eventDidMount={sessionEventDidMount}
-              eventClick={(info) => {
-                const event = visibleEvents.find((item) => item.id === info.event.id);
-                if (event) setSelectedEvent(event);
-              }}
+              eventInteractive
+              eventClick={handleCalendarEventClick}
               eventDisplay="block"
               displayEventTime={false}
               nowIndicator
@@ -755,6 +823,7 @@ export function CalendarView() {
                 meridiem: false,
               }}
             />
+            </div>
           )}
           {!initialLoading && !error ? (
             <p className="mt-3 text-xs text-slate-500">

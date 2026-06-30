@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
+import { validatePassword } from "@/lib/auth/password-policy";
 import { hashPassword } from "@/lib/auth/password";
 import { consumePasswordResetToken } from "@/lib/auth/password-reset";
+import { logUserAudit } from "@/lib/users/audit";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -15,9 +17,8 @@ export async function POST(request: NextRequest) {
   ]);
 
   if (!data) return jsonError("token and newPassword are required");
-  if (data.newPassword.length < 8) {
-    return jsonError("Password must be at least 8 characters");
-  }
+  const passwordError = validatePassword(data.newPassword);
+  if (passwordError) return jsonError(passwordError);
 
   const user = await consumePasswordResetToken(data.token);
   if (!user) return jsonError("Invalid or expired reset token", 400);
@@ -28,6 +29,12 @@ export async function POST(request: NextRequest) {
       passwordHash: await hashPassword(data.newPassword),
       mustChangePassword: false,
     },
+  });
+
+  await logUserAudit({
+    action: "PASSWORD_RESET_COMPLETED",
+    performedById: user.id,
+    targetUserId: user.id,
   });
 
   return NextResponse.json({ ok: true });

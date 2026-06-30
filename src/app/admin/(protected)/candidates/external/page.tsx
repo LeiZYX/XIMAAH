@@ -8,7 +8,10 @@ export default function AdminExternalCandidatesPage() {
     <CandidateManager
       apiPath="/api/admin/candidates"
       detailBasePath="/admin/candidates"
+      moduleBasePath="/admin/candidates"
       defaultCandidateType="EXTERNAL"
+      title="External Candidates"
+      description="External exam candidates who are not school login accounts. Manage identities and board identifiers here."
     />
   );
 }

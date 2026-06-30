@@ -25,14 +25,14 @@ export async function GET(
 
   if (
     auth.user.role === "STUDENT" &&
-    workspace.visibility === "EXAM_OFFICE_ONLY"
+    (workspace.visibility === "EXAM_OFFICE_ONLY" || workspace.registrationType === "RESTRICTED")
   ) {
     return jsonError("Forbidden", 403);
   }
 
   if (
     auth.user.role === "SUBJECT_TEACHER" &&
-    workspace.visibility === "EXAM_OFFICE_ONLY"
+    (workspace.visibility === "EXAM_OFFICE_ONLY" || workspace.registrationType === "RESTRICTED")
   ) {
     return jsonError("Forbidden", 403);
   }

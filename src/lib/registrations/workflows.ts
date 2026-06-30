@@ -15,14 +15,21 @@ import {
   registrationAuditSnapshot,
 } from "@/lib/registrations/audit";
 import { RegistrationError } from "@/lib/registrations/errors";
+import { windowIncludesSeries } from "@/lib/registrations/included-series";
 import { registrationInclude } from "@/lib/registrations/include";
 import {
   assistedAuditActionForRole,
   assistedSourceForRole,
-  officeOnlyAuditActionForRole,
-  officeOnlySourceForRole,
+  flagsForRegistrationType,
+  restrictedAuditActionForRole,
+  restrictedSourceForRole,
 } from "@/lib/registrations/metadata";
-import { isRegistrationWindowOpenForStaff, isStudentRegistrationPeriodClosed } from "@/lib/registrations/window";
+import type { RegistrationType } from "@/generated/prisma/enums";
+import {
+  isRegistrationWindowOpenForStaff,
+  isStudentRegistrationPeriodClosed,
+} from "@/lib/registrations/window";
+import { applyPostLockAdjustment } from "@/lib/registrations/adjustment";
 import {
   resolveEntryTypeForRegistration,
   type RegistrationFeeStageRecord,
@@ -81,7 +88,16 @@ async function loadSessionsForWindow(registrationWindowId: string, examSessionId
 
   const window = await prisma.registrationWindow.findUnique({
     where: { id: registrationWindowId },
-    include: { examBoard: true, examSeries: true },
+    include: {
+      examBoard: true,
+      examSeries: true,
+      includedSeries: {
+        select: {
+          examSeriesId: true,
+          examSeries: { select: { examBoardId: true } },
+        },
+      },
+    },
   });
   if (!window) {
     throw new RegistrationError("Registration window not found", 404);
@@ -100,9 +116,10 @@ async function loadSessionsForWindow(registrationWindowId: string, examSessionId
   }
 
   for (const session of sessions) {
-    if (session.examSeriesId !== window.examSeriesId) {
+    const boardId = session.paper.subject.qualification.examBoardId;
+    if (!windowIncludesSeries(window, session.examSeriesId, boardId)) {
       throw new RegistrationError(
-        `Exam session ${session.paper.code} does not belong to the selected registration window series`,
+        `Exam session ${session.paper.code} is not included in the selected registration window`,
         400,
       );
     }
@@ -150,10 +167,12 @@ async function resolveInternalCandidate(input: StaffRegistrationInput) {
 interface WorkflowMetadata {
   visibility: "STUDENT_AND_TEACHER" | "EXAM_OFFICE_ONLY";
   billingScope: "NORMAL_BILLING" | "MANUAL_REVIEW";
+  registrationType: RegistrationType;
   auditAction: RegistrationAuditAction;
-  registrationSource: ReturnType<typeof assistedSourceForRole> | ReturnType<typeof officeOnlySourceForRole>;
+  registrationSource: ReturnType<typeof assistedSourceForRole> | ReturnType<typeof restrictedSourceForRole>;
   lockImmediately: boolean;
   requireInternal: boolean;
+  trackRestrictedMetadata?: boolean;
 }
 
 async function applyCandidateRegistrationWorkflow(
@@ -216,7 +235,10 @@ async function applyCandidateRegistrationWorkflow(
     candidate.id,
     window.id,
     studentId,
+    metadata.registrationType,
   );
+
+  const visibilityFlags = flagsForRegistrationType(metadata.registrationType);
 
   await prisma.$transaction(async (tx) => {
     workspace = await tx.registrationWorkspace.update({
@@ -227,6 +249,17 @@ async function applyCandidateRegistrationWorkflow(
         registrationSource: metadata.registrationSource,
         visibility: metadata.visibility,
         billingScope: metadata.billingScope,
+        registrationType: metadata.registrationType,
+        ...visibilityFlags,
+        ...(metadata.trackRestrictedMetadata
+          ? {
+              restrictedReason: reason,
+              restrictedCreatedById: performedBy.id,
+              restrictedCreatedAt: now,
+              restrictedUpdatedById: performedBy.id,
+              restrictedUpdatedAt: now,
+            }
+          : {}),
         lockedAt: lockImmediately ? now : null,
         isLateRegistration: entryResolution.isLateRegistration,
         entryType: entryResolution.entryType,
@@ -258,6 +291,8 @@ async function applyCandidateRegistrationWorkflow(
           registrationSource: metadata.registrationSource,
           visibility: metadata.visibility,
           billingScope: metadata.billingScope,
+          registrationType: metadata.registrationType,
+          ...visibilityFlags,
           addedByUserId: performedBy.id,
           addedByRole: performedBy.role,
           addedAt: now,
@@ -342,6 +377,7 @@ export async function applyAssistedRegistration(
     {
       visibility: "STUDENT_AND_TEACHER",
       billingScope: "NORMAL_BILLING",
+      registrationType: "NORMAL",
       auditAction: assistedAuditActionForRole(performedBy.role) as RegistrationAuditAction,
       registrationSource: assistedSourceForRole(performedBy.role),
       lockImmediately: false,
@@ -362,10 +398,12 @@ export async function applyOfficeOnlyInternalRegistration(
     {
       visibility: "EXAM_OFFICE_ONLY",
       billingScope: "MANUAL_REVIEW",
-      auditAction: officeOnlyAuditActionForRole(performedBy.role) as RegistrationAuditAction,
-      registrationSource: officeOnlySourceForRole(performedBy.role),
+      registrationType: "RESTRICTED",
+      auditAction: restrictedAuditActionForRole(performedBy.role) as RegistrationAuditAction,
+      registrationSource: restrictedSourceForRole(performedBy.role),
       lockImmediately: true,
       requireInternal: true,
+      trackRestrictedMetadata: true,
     },
   );
 }
@@ -399,6 +437,7 @@ export async function applyExternalCandidateRegistration(
     {
       visibility: "EXAM_OFFICE_ONLY",
       billingScope: "MANUAL_REVIEW",
+      registrationType: "EXTERNAL",
       auditAction: "EXTERNAL_CANDIDATE_REGISTRATION_CREATED" as RegistrationAuditAction,
       registrationSource: "EXTERNAL_CANDIDATE",
       lockImmediately: true,
@@ -430,29 +469,78 @@ export async function assertNoDuplicateStudentExamSessions(
   return assertNoDuplicateSessions(candidate.id, examSessionIds);
 }
 
-export async function applyLateRegistration(
+/**
+ * EO/Admin helps an internal student after student self-registration closes.
+ * - While the window is OPEN: assisted registration (fee stage applies at submission time).
+ * - After the window is CLOSED: post-lock adjustment on the normal workspace.
+ */
+export async function applyStaffStudentRegistrationAfterStudentClose(
   performedBy: { id: string; role: UserRole },
   input: StaffRegistrationInput,
 ) {
+  if (!["ADMIN", "EXAM_OFFICER"].includes(performedBy.role)) {
+    throw new RegistrationError("Only Admin or Exam Officer can help students after the deadline", 403);
+  }
+
+  const reason = input.reason?.trim();
+  if (!reason) throw new RegistrationError("Reason is required", 400);
+
   const window = await prisma.registrationWindow.findUnique({
     where: { id: input.registrationWindowId },
   });
   if (!window) throw new RegistrationError("Registration window not found", 404);
-  if (window.status !== "CLOSED") {
-    throw new RegistrationError("Late registration is only allowed for closed registration windows", 400);
+
+  const now = new Date();
+  if (!isStudentRegistrationPeriodClosed(window, now)) {
+    throw new RegistrationError(
+      "Student self-registration is still open. Use assisted registration instead.",
+      400,
+    );
   }
 
-  const result = await applyAssistedRegistration(performedBy, input);
-  if (result) {
-    const now = new Date();
-    await prisma.registrationWorkspace.update({
-      where: { id: result.id },
-      data: { isLateRegistration: true, lockedAt: now },
-    });
-    await prisma.studentExamRegistration.updateMany({
-      where: { registrationWorkspaceId: result.id },
-      data: { status: RegistrationStatus.LOCKED, lockedAt: now },
-    });
+  const uniqueSessionIds = [...new Set(input.examSessionIds)];
+  if (uniqueSessionIds.length === 0) {
+    throw new RegistrationError("At least one exam session must be selected", 400);
   }
-  return getRegistrationWorkspaceById(result!.id);
+
+  if (window.status === "OPEN" && isRegistrationWindowOpenForStaff(window, now)) {
+    return applyAssistedRegistration(performedBy, { ...input, examSessionIds: uniqueSessionIds, reason });
+  }
+
+  if (window.status === "CLOSED" || window.status === "ARCHIVED") {
+    if (!window.postLockAdjustmentEnabled) {
+      throw new RegistrationError("Post-lock adjustment is disabled for this registration window", 400);
+    }
+
+    const candidate = await resolveInternalCandidate(input);
+    const studentId = candidate.userId ?? null;
+    const workspace = await ensureRegistrationWorkspaceForCandidate(
+      candidate.id,
+      window.id,
+      studentId,
+      "NORMAL",
+    );
+
+    await applyPostLockAdjustment(
+      workspace.id,
+      performedBy,
+      {
+        reason,
+        addExamSessionIds: uniqueSessionIds,
+        teacherRequestedBy: input.teacherRequestedBy,
+      },
+    );
+
+    return getRegistrationWorkspaceById(workspace.id);
+  }
+
+  throw new RegistrationError("Registration window is not available for staff registration", 400);
+}
+
+/** @deprecated Use applyStaffStudentRegistrationAfterStudentClose */
+export async function applyLateRegistration(
+  performedBy: { id: string; role: UserRole },
+  input: StaffRegistrationInput,
+) {
+  return applyStaffStudentRegistrationAfterStudentClose(performedBy, input);
 }

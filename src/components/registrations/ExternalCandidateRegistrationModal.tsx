@@ -144,7 +144,7 @@ export function ExternalCandidateRegistrationModal({
       <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
         <h2 className="text-lg font-semibold text-slate-900">Register external candidate</h2>
         <p className="mt-1 text-sm text-amber-800">
-          External registrations are office-only. Teachers cannot see them. Login is disabled by default.
+          External registrations are visible to the Exams Office only. Teachers cannot see them. Login is disabled by default.
         </p>
 
         <div className="mt-4 space-y-4">

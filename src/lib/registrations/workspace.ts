@@ -1,7 +1,10 @@
+import type { Prisma } from "@/generated/prisma/client";
+import type { RegistrationType } from "@/generated/prisma/enums";
 import { RegistrationStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
 import { buildPostLockAdjustmentHistoryFromAuditLogs } from "@/lib/registrations/adjustment-history";
 import { registrationInclude } from "@/lib/registrations/include";
+import { flagsForRegistrationType } from "@/lib/registrations/metadata";
 import type { AdjustmentSummaryPayload } from "@/lib/registrations/workspace-display";
 
 export type { AdjustmentSummaryPayload } from "@/lib/registrations/workspace-display";
@@ -49,58 +52,242 @@ export const workspaceInclude = {
   },
 };
 
+function workspaceDefaultsForType(registrationType: RegistrationType) {
+  const visibilityFlags = flagsForRegistrationType(registrationType);
+  return {
+    registrationType,
+    ...visibilityFlags,
+    visibility:
+      registrationType === "NORMAL" ? ("STUDENT_AND_TEACHER" as const) : ("EXAM_OFFICE_ONLY" as const),
+    billingScope:
+      registrationType === "NORMAL" ? ("NORMAL_BILLING" as const) : ("MANUAL_REVIEW" as const),
+  };
+}
+
+type WorkspaceClient = Prisma.TransactionClient | typeof prisma;
+
+async function findRegistrationWorkspace(
+  client: WorkspaceClient,
+  params: {
+    candidateId: string;
+    registrationWindowId: string;
+    registrationType: RegistrationType;
+    studentId?: string | null;
+  },
+) {
+  const byCandidate = await client.registrationWorkspace.findFirst({
+    where: {
+      candidateId: params.candidateId,
+      registrationWindowId: params.registrationWindowId,
+      registrationType: params.registrationType,
+    },
+  });
+  if (byCandidate) return byCandidate;
+
+  if (params.studentId) {
+    return client.registrationWorkspace.findFirst({
+      where: {
+        studentId: params.studentId,
+        registrationWindowId: params.registrationWindowId,
+        registrationType: params.registrationType,
+      },
+    });
+  }
+
+  return null;
+}
+
 export async function ensureRegistrationWorkspaceForCandidate(
   candidateId: string,
   registrationWindowId: string,
   studentId?: string | null,
+  registrationType: RegistrationType = "NORMAL",
+  client: WorkspaceClient = prisma,
 ) {
-  const byCandidate = await prisma.registrationWorkspace.findFirst({
-    where: { candidateId, registrationWindowId },
+  const existing = await findRegistrationWorkspace(client, {
+    candidateId,
+    registrationWindowId,
+    registrationType,
+    studentId,
   });
-  if (byCandidate) return byCandidate;
-
-  if (studentId) {
-    return prisma.registrationWorkspace.upsert({
-      where: {
-        studentId_registrationWindowId: { studentId, registrationWindowId },
-      },
-      create: { candidateId, studentId, registrationWindowId },
-      update: { candidateId },
-    });
+  if (existing) {
+    if (studentId && !existing.studentId) {
+      return client.registrationWorkspace.update({
+        where: { id: existing.id },
+        data: { studentId },
+      });
+    }
+    return existing;
   }
 
-  return prisma.registrationWorkspace.create({
-    data: { candidateId, registrationWindowId },
+  return client.registrationWorkspace.create({
+    data: {
+      candidateId,
+      studentId: studentId ?? null,
+      registrationWindowId,
+      ...workspaceDefaultsForType(registrationType),
+    },
   });
 }
 
 export async function ensureRegistrationWorkspace(
   studentId: string,
   registrationWindowId: string,
+  registrationType: RegistrationType = "NORMAL",
 ) {
   const { syncCandidateFromStudentUser } = await import("@/lib/candidates/service");
   const candidate = await syncCandidateFromStudentUser(studentId);
   if (!candidate) {
     throw new Error("Could not resolve candidate for student");
   }
-  return ensureRegistrationWorkspaceForCandidate(candidate.id, registrationWindowId, studentId);
+  return ensureRegistrationWorkspaceForCandidate(
+    candidate.id,
+    registrationWindowId,
+    studentId,
+    registrationType,
+  );
+}
+
+async function realignRegistrationWorkspacesByType() {
+  const workspaces = await prisma.registrationWorkspace.findMany({
+    select: {
+      id: true,
+      candidateId: true,
+      studentId: true,
+      registrationWindowId: true,
+      registrationType: true,
+    },
+  });
+
+  for (const workspace of workspaces) {
+    const registrations = await prisma.studentExamRegistration.findMany({
+      where: { registrationWorkspaceId: workspace.id },
+      select: { id: true, registrationType: true },
+    });
+    if (registrations.length === 0) continue;
+
+    const registrationsByType = new Map<RegistrationType, string[]>();
+    for (const registration of registrations) {
+      const current = registrationsByType.get(registration.registrationType) ?? [];
+      current.push(registration.id);
+      registrationsByType.set(registration.registrationType, current);
+    }
+
+    if (registrationsByType.size === 1) {
+      const [onlyType] = registrationsByType.keys();
+      if (onlyType && workspace.registrationType !== onlyType) {
+        await prisma.registrationWorkspace.update({
+          where: { id: workspace.id },
+          data: workspaceDefaultsForType(onlyType),
+        });
+      }
+      continue;
+    }
+
+    for (const [registrationType, registrationIds] of registrationsByType) {
+      if (!workspace.candidateId && !workspace.studentId) continue;
+
+      let targetWorkspace =
+        registrationType === workspace.registrationType
+          ? workspace
+          : workspace.candidateId
+            ? await findRegistrationWorkspace(prisma, {
+                candidateId: workspace.candidateId,
+                registrationWindowId: workspace.registrationWindowId,
+                registrationType,
+                studentId: workspace.studentId,
+              })
+            : await prisma.registrationWorkspace.findFirst({
+                where: {
+                  studentId: workspace.studentId!,
+                  registrationWindowId: workspace.registrationWindowId,
+                  registrationType,
+                },
+              });
+
+      if (!targetWorkspace) {
+        targetWorkspace = await prisma.registrationWorkspace.create({
+          data: {
+            candidateId: workspace.candidateId,
+            studentId: workspace.studentId,
+            registrationWindowId: workspace.registrationWindowId,
+            ...workspaceDefaultsForType(registrationType),
+          },
+        });
+      } else if (targetWorkspace.id !== workspace.id) {
+        await prisma.registrationWorkspace.update({
+          where: { id: targetWorkspace.id },
+          data: workspaceDefaultsForType(registrationType),
+        });
+      }
+
+      if (targetWorkspace.id !== workspace.id) {
+        await prisma.studentExamRegistration.updateMany({
+          where: { id: { in: registrationIds } },
+          data: { registrationWorkspaceId: targetWorkspace.id },
+        });
+
+        await prisma.registrationAuditLog.updateMany({
+          where: { registrationId: { in: registrationIds } },
+          data: { registrationWorkspaceId: targetWorkspace.id },
+        });
+      }
+    }
+  }
 }
 
 export async function backfillRegistrationWorkspaces() {
+  await realignRegistrationWorkspacesByType();
+
   const rows = await prisma.studentExamRegistration.findMany({
     where: { registrationWorkspaceId: null },
-    select: { id: true, studentId: true, registrationWindowId: true },
-    distinct: ["studentId", "registrationWindowId"],
+    select: {
+      id: true,
+      studentId: true,
+      candidateId: true,
+      registrationWindowId: true,
+      registrationType: true,
+    },
   });
 
+  const seen = new Set<string>();
+
   for (const row of rows) {
-    if (!row.studentId) continue;
-    const workspace = await ensureRegistrationWorkspace(row.studentId, row.registrationWindowId);
+    const key = row.candidateId
+      ? `c:${row.candidateId}:${row.registrationWindowId}:${row.registrationType}`
+      : row.studentId
+        ? `s:${row.studentId}:${row.registrationWindowId}:${row.registrationType}`
+        : null;
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+
+    let workspace;
+    if (row.candidateId) {
+      workspace = await ensureRegistrationWorkspaceForCandidate(
+        row.candidateId,
+        row.registrationWindowId,
+        row.studentId,
+        row.registrationType,
+      );
+    } else if (row.studentId) {
+      workspace = await ensureRegistrationWorkspace(
+        row.studentId,
+        row.registrationWindowId,
+        row.registrationType,
+      );
+    } else {
+      continue;
+    }
+
     await prisma.studentExamRegistration.updateMany({
       where: {
-        studentId: row.studentId,
         registrationWindowId: row.registrationWindowId,
         registrationWorkspaceId: null,
+        registrationType: row.registrationType,
+        OR: [
+          ...(row.candidateId ? [{ candidateId: row.candidateId }] : []),
+          ...(row.studentId ? [{ studentId: row.studentId }] : []),
+        ],
       },
       data: { registrationWorkspaceId: workspace.id },
     });
@@ -119,12 +306,15 @@ export async function getRegistrationWorkspaceById(workspaceId: string) {
 export async function findWorkspaceForStudentWindow(
   studentId: string,
   registrationWindowId: string,
+  registrationType: RegistrationType = "NORMAL",
 ) {
   await backfillRegistrationWorkspaces();
 
-  return prisma.registrationWorkspace.findUnique({
+  return prisma.registrationWorkspace.findFirst({
     where: {
-      studentId_registrationWindowId: { studentId, registrationWindowId },
+      studentId,
+      registrationWindowId,
+      registrationType,
     },
     include: workspaceInclude,
   });

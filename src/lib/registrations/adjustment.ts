@@ -100,6 +100,10 @@ export async function applyPostLockAdjustment(
     throw new RegistrationError("Registration workspace not found", 404);
   }
 
+  if (!workspace.registrationWindow.postLockAdjustmentEnabled) {
+    throw new RegistrationError("Post-lock adjustment is disabled for this registration window", 400);
+  }
+
   const hasLockedRows = workspace.registrations.some(
     (row) => row.status === RegistrationStatus.LOCKED,
   );

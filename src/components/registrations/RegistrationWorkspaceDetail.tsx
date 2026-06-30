@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import {
   auditActionLabel,
-  buildConfirmationPrintData,
+  buildWorkspaceConfirmationPrintData,
   RegistrationConfirmationPrintModal,
 } from "@/components/registrations/RegistrationConfirmationPrintModal";
 import {
@@ -129,6 +129,7 @@ function ExamSessionSearchPicker({
 
 interface WorkspaceData {
   id: string;
+  registrationType: string;
   lockedAt: string | null;
   hasPostLockAdjustment: boolean;
   lastAdjustedAt: string | null;
@@ -318,88 +319,10 @@ export function RegistrationWorkspaceDetail({
     workspace?.registrations[0]?.updatedAt ?? new Date().toISOString(),
   );
 
-  const printData = useMemo(() => {
-    if (!workspace) return null;
-    const candidate = workspace.candidate;
-    const profile = workspace.student?.studentProfile;
-    const firstReg = workspace.registrations[0];
-    const studentSnapshots = {
-      studentNameSnapshot:
-        firstReg?.studentNameSnapshot ?? candidate?.englishName ?? workspace.student?.name ?? "",
-      studentNoSnapshot:
-        firstReg?.studentNoSnapshot ?? candidate?.studentNumber ?? profile?.studentNo ?? "",
-      gradeSnapshot: firstReg?.gradeSnapshot ?? candidate?.grade ?? profile?.currentGrade ?? "",
-      classNameSnapshot:
-        firstReg?.classNameSnapshot ?? candidate?.className ?? profile?.currentClassName ?? "",
-      emailSnapshot:
-        firstReg?.emailSnapshot ??
-        candidate?.email ??
-        profile?.email ??
-        workspace.student?.email ??
-        null,
-      assessmentHubCandidateNumberSnapshot:
-        firstReg?.assessmentHubCandidateNumberSnapshot ??
-        candidate?.assessmentHubCandidateNumber ??
-        null,
-      candidateTypeSnapshot:
-        firstReg?.candidateTypeSnapshot ?? candidate?.candidateType ?? null,
-    };
-    const examBoardIdentities =
-      candidate?.examIdentities?.map((identity) => ({
-        examBoardName: identity.examBoard.name,
-        examBoardCode: identity.examBoard.code,
-        boardCandidateNumber: identity.boardCandidateNumber,
-        uci: identity.uci,
-        centreNumber: identity.centreNumber,
-      })) ?? [];
-    const group = {
-      windowId: workspace.registrationWindow.id,
-      workspaceId: workspace.id,
-      window: {
-        id: workspace.registrationWindow.id,
-        title: workspace.registrationWindow.title,
-        status: "CLOSED",
-        startAt: workspace.registrationWindow.studentRegistrationOpenAt,
-        endAt: workspace.registrationWindow.registrationCloseAt,
-      },
-      examSeries: workspace.registrationWindow.examSeries,
-      registrations: workspace.registrations.map((row) => ({
-        id: row.id,
-        status: "LOCKED",
-        updatedAt: row.updatedAt,
-        lockedAt: row.lockedAt,
-        ...studentSnapshots,
-        examBoard: workspace.registrationWindow.examBoard,
-        examSeries: workspace.registrationWindow.examSeries,
-        subject: row.subject,
-        paper: row.examSession.paper,
-        examSession: row.examSession,
-        registrationWindow: {
-          id: workspace.registrationWindow.id,
-          title: workspace.registrationWindow.title,
-          status: "CLOSED",
-        startAt: workspace.registrationWindow.studentRegistrationOpenAt,
-        endAt: workspace.registrationWindow.registrationCloseAt,
-        },
-      })),
-      lastUpdatedAt: lastUpdated ?? new Date().toISOString(),
-      cardStatus: "Locked" as const,
-      boardSummary: workspace.registrationWindow.examBoard.name,
-    };
-    return {
-      ...buildConfirmationPrintData(group as never, {
-        id: workspace.id,
-        hasPostLockAdjustment: workspace.hasPostLockAdjustment,
-        lastAdjustedAt: workspace.lastAdjustedAt,
-        lastAdjustedByUser: workspace.lastAdjustedByUser,
-        lastAdjustedByRole: workspace.lastAdjustedByRole,
-        lastAdjustmentReason: workspace.lastAdjustmentReason,
-        lastAdjustmentSummary: workspace.lastAdjustmentSummary,
-        auditLogs: workspace.auditLogs,
-      }),
-      examBoardIdentities,
-    };
-  }, [workspace, lastUpdated]);
+  const printData = useMemo(
+    () => (workspace ? buildWorkspaceConfirmationPrintData(workspace as never) : null),
+    [workspace],
+  );
 
   async function executeApplyChanges() {
     setApplying(true);
@@ -900,18 +823,20 @@ export function RegistrationWorkspaceDetail({
         )}
       </Card>
 
-      {workspace ? (
-        <FeeStatementPanel
-          workspaceId={workspace.id}
-          registrationWindowId={workspace.registrationWindow.id}
-          locked={Boolean(workspace.lockedAt)}
-          feeRulesHref={`${feeRulesHrefBase}/${workspace.registrationWindow.id}/fees`}
-          refreshKey={feeStatementRefreshKey}
-          onStatusChange={({ needsRegeneration, hasIssuedStatement }) => {
-            setFeeNeedsRegeneration(needsRegeneration);
-            setFeeHasIssuedStatement(hasIssuedStatement);
-          }}
-        />
+      {workspace && workspace.registrationType === "NORMAL" ? (
+        <div id="fee-statement">
+          <FeeStatementPanel
+            workspaceId={workspace.id}
+            registrationWindowId={workspace.registrationWindow.id}
+            locked={Boolean(workspace.lockedAt)}
+            feeRulesHref={`${feeRulesHrefBase}/${workspace.registrationWindow.id}/fees`}
+            refreshKey={feeStatementRefreshKey}
+            onStatusChange={({ needsRegeneration, hasIssuedStatement }) => {
+              setFeeNeedsRegeneration(needsRegeneration);
+              setFeeHasIssuedStatement(hasIssuedStatement);
+            }}
+          />
+        </div>
       ) : null}
 
       <Card>

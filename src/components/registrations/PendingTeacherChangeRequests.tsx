@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { useRegistrationsRefresh } from "@/components/registrations/registrations-refresh";
+import { includesNormalRegistrations } from "@/lib/registrations/workspace-type-filters";
 import {
   changeRequestTypeLabel,
   formatExamSessionSummary,
@@ -61,12 +62,17 @@ export function PendingTeacherChangeRequests({
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [rejectNote, setRejectNote] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const { bumpWorkspaceList } = useRegistrationsRefresh();
+  const { bumpWorkspaceList, registrationWindowId, registrationTypes } = useRegistrationsRefresh();
+  const showPanel = includesNormalRegistrations(registrationTypes);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${apiPath}?status=PENDING`);
+      const params = new URLSearchParams({ status: "PENDING" });
+      if (registrationWindowId) {
+        params.set("registrationWindowId", registrationWindowId);
+      }
+      const response = await fetch(`${apiPath}?${params.toString()}`);
       const data = await response.json();
       setRows(response.ok && Array.isArray(data) ? data : []);
     } catch {
@@ -74,7 +80,7 @@ export function PendingTeacherChangeRequests({
     } finally {
       setLoading(false);
     }
-  }, [apiPath]);
+  }, [apiPath, registrationWindowId]);
 
   useEffect(() => {
     load();
@@ -108,6 +114,7 @@ export function PendingTeacherChangeRequests({
     }
   }
 
+  if (!showPanel) return null;
   if (loading) return null;
   if (rows.length === 0) return null;
 

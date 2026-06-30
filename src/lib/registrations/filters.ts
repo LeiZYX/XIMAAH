@@ -1,8 +1,10 @@
 import type { Prisma } from "@/generated/prisma/client";
+import type { RegistrationType } from "@/generated/prisma/enums";
 import { containsFilter } from "@/lib/db/string-filters";
 import { AUTO_BILLING_SCOPES, STUDENT_VISIBLE, TEACHER_VISIBLE } from "@/lib/registrations/metadata";
 
 export interface RegistrationListFilters {
+  registrationWindowId?: string;
   examBoardId?: string;
   examSeriesId?: string;
   year?: number;
@@ -16,6 +18,8 @@ export interface RegistrationListFilters {
   registrationSource?: string;
   visibility?: string;
   billingScope?: string;
+  registrationType?: string;
+  registrationTypes?: string[];
   studentType?: string;
   candidateType?: string;
   assessmentHubCandidateNumber?: string;
@@ -26,6 +30,7 @@ export function buildRegistrationWhere(
 ): Prisma.StudentExamRegistrationWhereInput {
   const where: Prisma.StudentExamRegistrationWhereInput = {};
 
+  if (filters.registrationWindowId) where.registrationWindowId = filters.registrationWindowId;
   if (filters.examBoardId) where.examBoardId = filters.examBoardId;
   if (filters.examSeriesId) where.examSeriesId = filters.examSeriesId;
   if (filters.grade) where.gradeSnapshot = filters.grade;
@@ -40,6 +45,14 @@ export function buildRegistrationWhere(
   }
   if (filters.billingScope) {
     where.billingScope = filters.billingScope as Prisma.EnumBillingScopeFilter;
+  }
+  if (filters.registrationType) {
+    where.registrationType = filters.registrationType as Prisma.EnumRegistrationTypeFilter;
+  }
+  if (filters.registrationTypes?.length) {
+    where.registrationType = {
+      in: filters.registrationTypes as RegistrationType[],
+    };
   }
   if (filters.studentType === "EXTERNAL") {
     where.registrationSource = "EXTERNAL_CANDIDATE";
@@ -84,6 +97,9 @@ export function buildStudentVisibleRegistrationWhere(
 ): Prisma.StudentExamRegistrationWhereInput {
   return {
     status: { in: ["ACTIVE", "LOCKED"] },
+    registrationType: { not: "RESTRICTED" },
+    visibleToStudent: true,
+    visibleInStudentPortal: true,
     visibility: { in: STUDENT_VISIBLE },
     OR: [{ studentId: studentUserId }, { candidate: { userId: studentUserId } }],
   };
@@ -95,6 +111,9 @@ export function buildTeacherVisibleRegistrationWhere(
   return {
     AND: [
       base,
+      { registrationType: { not: "RESTRICTED" } },
+      { visibleToTeacher: true },
+      { visibleInTeacherPortal: true },
       { visibility: { in: TEACHER_VISIBLE } },
       {
         OR: [
@@ -122,6 +141,7 @@ export function parseRegistrationFilters(searchParams: URLSearchParams): Registr
   const month = searchParams.get("month");
 
   return {
+    registrationWindowId: searchParams.get("registrationWindowId") || undefined,
     examBoardId: searchParams.get("examBoardId") || undefined,
     examSeriesId: searchParams.get("examSeriesId") || undefined,
     year: year ? Number(year) : undefined,
@@ -135,6 +155,13 @@ export function parseRegistrationFilters(searchParams: URLSearchParams): Registr
     registrationSource: searchParams.get("registrationSource") || undefined,
     visibility: searchParams.get("visibility") || undefined,
     billingScope: searchParams.get("billingScope") || undefined,
+    registrationType: searchParams.get("registrationType") || undefined,
+    registrationTypes:
+      searchParams
+        .get("registrationTypes")
+        ?.split(",")
+        .map((part) => part.trim())
+        .filter(Boolean) || undefined,
     studentType: searchParams.get("studentType") || undefined,
     candidateType: searchParams.get("candidateType") || undefined,
     assessmentHubCandidateNumber:

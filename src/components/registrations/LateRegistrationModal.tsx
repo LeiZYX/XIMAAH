@@ -34,6 +34,8 @@ interface LateRegistrationModalProps {
   title: string;
   submitLabel: string;
   apiPath: string;
+  /** Teacher requests: OPEN windows only. Staff help: OPEN or CLOSED. */
+  windowFilter?: "teacher" | "staff";
   onClose: () => void;
   onSubmitted: (result: { workspaceId?: string }) => void;
 }
@@ -42,6 +44,7 @@ export function LateRegistrationModal({
   title,
   submitLabel,
   apiPath,
+  windowFilter = "staff",
   onClose,
   onSubmitted,
 }: LateRegistrationModalProps) {
@@ -68,12 +71,16 @@ export function LateRegistrationModal({
       .then((data) =>
         setWindows(
           Array.isArray(data)
-            ? data.filter((window: RegistrationWindowOption) => window.status === "CLOSED")
+            ? data.filter((window: RegistrationWindowOption) =>
+                windowFilter === "teacher"
+                  ? window.status === "OPEN"
+                  : window.status === "OPEN" || window.status === "CLOSED",
+              )
             : [],
         ),
       )
       .catch(() => setWindows([]));
-  }, []);
+  }, [windowFilter]);
 
   useEffect(() => {
     if (studentQuery.trim().length < 2) {
@@ -178,6 +185,11 @@ export function LateRegistrationModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
       <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-xl">
         <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          {windowFilter === "teacher"
+            ? "Submit a request to the Exams Office. Adjustments require EO or Admin approval while the registration window is open."
+            : "Add exams for a student after the self-registration deadline. Open windows use assisted registration; closed windows use post-lock adjustment."}
+        </p>
 
         <div className="mt-4 space-y-4">
           <label className="block text-sm">

@@ -2,10 +2,20 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { registrationTypeLabel } from "@/lib/registrations/metadata";
+import {
+  workspaceStudentLabel,
+  workspaceStudentNo,
+} from "@/lib/registrations/workspace-display";
 
 interface WorkspaceRow {
   id: string;
-  student: { name: string; studentNo: string | null };
+  registrationType: string;
+  student: { name: string; studentNo: string | null } | null;
+  candidate: {
+    englishName: string | null;
+    studentNumber: string | null;
+  } | null;
   registrationWindow: { title: string };
   registrations: Array<{ id: string }>;
 }
@@ -24,18 +34,20 @@ export function PostLockAdjustmentPickerModal({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${workspacesApiPath}?lockedOnly=true`)
+    fetch(`${workspacesApiPath}?lockedOnly=true&all=true`)
       .then((r) => r.json())
-      .then((data) => setRows(Array.isArray(data) ? data : []))
+      .then((data) => setRows(Array.isArray(data) ? data : data?.workspaces ?? []))
       .finally(() => setLoading(false));
   }, [workspacesApiPath]);
 
   const filtered = rows.filter((row) => {
     const q = query.trim().toLowerCase();
     if (!q) return true;
+    const name = workspaceStudentLabel(row).toLowerCase();
+    const studentNo = workspaceStudentNo(row)?.toLowerCase() ?? "";
     return (
-      row.student.name.toLowerCase().includes(q) ||
-      (row.student.studentNo?.toLowerCase().includes(q) ?? false) ||
+      name.includes(q) ||
+      studentNo.includes(q) ||
       row.registrationWindow.title.toLowerCase().includes(q)
     );
   });
@@ -66,9 +78,14 @@ export function PostLockAdjustmentPickerModal({
                 onClick={onClose}
                 className="block border-b border-slate-100 px-3 py-3 text-sm hover:bg-indigo-50"
               >
-                <span className="font-medium text-slate-900">{row.student.name}</span>
-                {row.student.studentNo ? (
-                  <span className="text-slate-500"> · {row.student.studentNo}</span>
+                <span className="font-medium text-slate-900">{workspaceStudentLabel(row)}</span>
+                {workspaceStudentNo(row) ? (
+                  <span className="text-slate-500"> · {workspaceStudentNo(row)}</span>
+                ) : null}
+                {row.registrationType !== "NORMAL" ? (
+                  <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                    {registrationTypeLabel(row.registrationType)}
+                  </span>
                 ) : null}
                 <span className="mt-1 block text-slate-600">
                   {row.registrationWindow.title} · {row.registrations.length} exam(s)

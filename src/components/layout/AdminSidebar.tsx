@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 
 const adminLinks = [
   { href: "/admin", label: "Dashboard", exact: true },
+  { href: "/admin/users", label: "Users" },
+  { href: "/admin/candidates", label: "Candidates" },
   { href: "/admin/exam-boards", label: "Exam Boards" },
   { href: "/admin/qualifications", label: "Qualifications" },
   { href: "/admin/subjects", label: "Subjects" },
@@ -16,11 +18,9 @@ const adminLinks = [
   { href: "/admin/key-dates", label: "Key Dates" },
   { href: "/admin/registration-windows", label: "Registration Windows" },
   { href: "/admin/registrations", label: "Registrations" },
-  { href: "/admin/candidates", label: "Candidates" },
+  { href: "/admin/exam-documents", label: "Exam Documents" },
   { href: "/admin/fee-summary", label: "Fee Summary" },
   { href: "/admin/fee-statements", label: "Fee Statements" },
-  { href: "/admin/students", label: "Students" },
-  { href: "/admin/import", label: "Import" },
 ];
 
 export function AdminSidebar() {

@@ -15,7 +15,7 @@ export function HelpStudentRegisterButton({
   const [workspaceLink, setWorkspaceLink] = useState<string | null>(null);
 
   function handleSubmitted(result: { workspaceId?: string }) {
-    setSuccess("Late registration created successfully. The student can now view and print their confirmation.");
+    setSuccess("Registration saved successfully.");
     if (result.workspaceId) {
       setWorkspaceLink(`${detailBasePath}/${result.workspaceId}`);
     }
@@ -47,8 +47,9 @@ export function HelpStudentRegisterButton({
       {open ? (
         <LateRegistrationModal
           title="Help Student Register After Deadline"
-          submitLabel="Create Late Registration"
+          submitLabel="Save registration"
           apiPath={apiPath}
+          windowFilter="staff"
           onClose={() => setOpen(false)}
           onSubmitted={handleSubmitted}
         />

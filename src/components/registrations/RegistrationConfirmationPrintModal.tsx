@@ -53,6 +53,7 @@ export interface ConfirmationPrintData {
 interface RegistrationConfirmationPrintModalProps {
   data: ConfirmationPrintData;
   onClose: () => void;
+  autoPrint?: boolean;
 }
 
 function PrintIcon({ className }: { className?: string }) {
@@ -323,6 +324,161 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
   );
 }
 
+export function buildWorkspaceConfirmationPrintData(workspace: {
+  id: string;
+  hasPostLockAdjustment: boolean;
+  lastAdjustedAt: string | Date | null;
+  lastAdjustedByUser: { name: string } | null;
+  lastAdjustedByRole: string | null;
+  lastAdjustmentReason: string | null;
+  lastAdjustmentSummary: string | null;
+  candidate?: {
+    englishName?: string | null;
+    studentNumber?: string | null;
+    grade?: string | null;
+    className?: string | null;
+    email?: string | null;
+    assessmentHubCandidateNumber?: string | null;
+    candidateType?: string | null;
+    examIdentities?: Array<{
+      examBoard: { name: string; code: string };
+      boardCandidateNumber?: string | null;
+      uci?: string | null;
+      centreNumber?: string | null;
+    }>;
+  } | null | undefined;
+  student?: {
+    name: string;
+    email?: string | null;
+    studentProfile?: {
+      studentNo?: string | null;
+      currentGrade?: string | null;
+      currentClassName?: string | null;
+      email?: string | null;
+    } | null;
+  } | null | undefined;
+  registrationWindow: {
+    id: string;
+    title: string;
+    studentRegistrationOpenAt: string | Date;
+    registrationCloseAt: string | Date;
+    examBoard: { name: string; code: string };
+    examSeries: { name: string; year: number };
+  };
+  registrations: Array<{
+    id: string;
+    updatedAt: string | Date;
+    lockedAt: string | Date | null;
+    studentNameSnapshot?: string | null;
+    studentNoSnapshot?: string | null;
+    gradeSnapshot?: string | null;
+    classNameSnapshot?: string | null;
+    emailSnapshot?: string | null;
+    assessmentHubCandidateNumberSnapshot?: string | null;
+    candidateTypeSnapshot?: string | null;
+    subject: { name: string; code: string };
+    examSession: { date: string | Date; startTime?: string | null; endTime?: string | null };
+    paper: { code: string; title: string };
+  }>;
+  auditLogs: Array<{
+    action: string;
+    performedAt: string | Date;
+    reason: string | null;
+    note: string | null;
+    performedBy: { name: string; role?: string | null };
+    performedByRole?: string | null;
+    examSession?: {
+      paper: { code: string; title: string; subject: { name: string } };
+    } | null;
+  }>;
+}): ConfirmationPrintData {
+  const candidate = workspace.candidate;
+  const profile = workspace.student?.studentProfile;
+  const firstReg = workspace.registrations[0];
+  const studentSnapshots = {
+    studentNameSnapshot:
+      firstReg?.studentNameSnapshot ?? candidate?.englishName ?? workspace.student?.name ?? "",
+    studentNoSnapshot:
+      firstReg?.studentNoSnapshot ?? candidate?.studentNumber ?? profile?.studentNo ?? "",
+    gradeSnapshot: firstReg?.gradeSnapshot ?? candidate?.grade ?? profile?.currentGrade ?? "",
+    classNameSnapshot:
+      firstReg?.classNameSnapshot ?? candidate?.className ?? profile?.currentClassName ?? "",
+    emailSnapshot:
+      firstReg?.emailSnapshot ??
+      candidate?.email ??
+      profile?.email ??
+      workspace.student?.email ??
+      null,
+    assessmentHubCandidateNumberSnapshot:
+      firstReg?.assessmentHubCandidateNumberSnapshot ??
+      candidate?.assessmentHubCandidateNumber ??
+      null,
+    candidateTypeSnapshot: firstReg?.candidateTypeSnapshot ?? candidate?.candidateType ?? null,
+  };
+  const examBoardIdentities =
+    candidate?.examIdentities?.map((identity) => ({
+      examBoardName: identity.examBoard.name,
+      examBoardCode: identity.examBoard.code,
+      boardCandidateNumber: identity.boardCandidateNumber,
+      uci: identity.uci,
+      centreNumber: identity.centreNumber,
+    })) ?? [];
+  const lastUpdated = workspace.registrations.reduce(
+    (latest, row) => (new Date(row.updatedAt) > new Date(latest) ? String(row.updatedAt) : latest),
+    String(workspace.registrations[0]?.updatedAt ?? new Date().toISOString()),
+  );
+  const group = {
+    windowId: workspace.registrationWindow.id,
+    workspaceId: workspace.id,
+    window: {
+      id: workspace.registrationWindow.id,
+      title: workspace.registrationWindow.title,
+      status: "CLOSED",
+      startAt: workspace.registrationWindow.studentRegistrationOpenAt,
+      endAt: workspace.registrationWindow.registrationCloseAt,
+    },
+    examSeries: workspace.registrationWindow.examSeries,
+    registrations: workspace.registrations.map((row) => ({
+      id: row.id,
+      status: "LOCKED",
+      updatedAt: row.updatedAt,
+      lockedAt: row.lockedAt,
+      ...studentSnapshots,
+      examBoard: workspace.registrationWindow.examBoard,
+      examSeries: workspace.registrationWindow.examSeries,
+      subject: row.subject,
+      paper: row.paper,
+      examSession: row.examSession,
+      registrationWindow: {
+        id: workspace.registrationWindow.id,
+        title: workspace.registrationWindow.title,
+        status: "CLOSED",
+        startAt: workspace.registrationWindow.studentRegistrationOpenAt,
+        endAt: workspace.registrationWindow.registrationCloseAt,
+      },
+    })),
+    lastUpdatedAt: lastUpdated,
+    cardStatus: "Locked" as const,
+    boardSummary: workspace.registrationWindow.examBoard.name,
+  };
+  return {
+    ...buildConfirmationPrintData(group as never, {
+      id: workspace.id,
+      hasPostLockAdjustment: workspace.hasPostLockAdjustment,
+      lastAdjustedAt: workspace.lastAdjustedAt,
+      lastAdjustedByUser: workspace.lastAdjustedByUser,
+      lastAdjustedByRole: workspace.lastAdjustedByRole,
+      lastAdjustmentReason: workspace.lastAdjustmentReason,
+      lastAdjustmentSummary: workspace.lastAdjustmentSummary,
+      auditLogs: workspace.auditLogs.map((log) => ({
+        ...log,
+        performedAt: String(log.performedAt),
+      })),
+    }),
+    examBoardIdentities,
+  };
+}
+
 export function buildConfirmationPrintData(
   group: RegistrationWindowGroup,
   workspace?: {
@@ -396,7 +552,11 @@ export function rowsToWindowGroup(
   } as RegistrationWindowGroup;
 }
 
-export function RegistrationConfirmationPrintModal({ data, onClose }: RegistrationConfirmationPrintModalProps) {
+export function RegistrationConfirmationPrintModal({
+  data,
+  onClose,
+  autoPrint = false,
+}: RegistrationConfirmationPrintModalProps) {
   const [mounted, setMounted] = useState(false);
   const printTimestamp = useMemo(() => new Date(), []);
   const savedTitleRef = useMemo(() => ({ value: "" }), []);
@@ -424,6 +584,11 @@ export function RegistrationConfirmationPrintModal({ data, onClose }: Registrati
   }, [cleanupPrintClone, data, printTimestamp, savedTitleRef]);
 
   useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    if (!autoPrint || !mounted) return;
+    const timer = window.setTimeout(() => handlePrint(), 300);
+    return () => window.clearTimeout(timer);
+  }, [autoPrint, mounted, handlePrint]);
   useEffect(() => {
     const onAfterPrint = () => cleanupPrintClone();
     window.addEventListener("afterprint", onAfterPrint);

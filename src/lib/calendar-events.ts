@@ -14,15 +14,17 @@ export function sessionEventAppearance(
   level: string,
   examBoardCode: string,
   paperTitle?: string,
+  examBoardName?: string,
 ): SessionEventAppearance {
   const levelColors = sessionColorsForLevel(level, paperTitle);
   const board = examBoardAccent(examBoardCode);
+  const displayName = examBoardName?.trim() || board.label;
 
   return {
     backgroundColor: levelColors.bg,
     borderColor: board.accent,
     boardAccent: board.accent,
-    boardLabel: examBoardCalendarLabel(examBoardCode),
+    boardLabel: displayName,
     levelCategory: levelColors.levelCategory,
   };
 }

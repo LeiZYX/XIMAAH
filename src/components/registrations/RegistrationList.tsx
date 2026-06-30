@@ -8,6 +8,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { ListPagination } from "@/components/ui/ListPagination";
+import { useRegistrationsRefresh } from "@/components/registrations/registrations-refresh";
 import { LIST_PAGE_SIZES } from "@/lib/pagination";
 
 interface RegistrationRow {
@@ -46,6 +47,7 @@ const EMPTY_FILTERS = {
   registrationSource: "",
   visibility: "",
   billingScope: "",
+  registrationType: "",
   studentType: "",
   candidateType: "",
   assessmentHubCandidateNumber: "",
@@ -65,6 +67,11 @@ export function RegistrationList({
   const [totalPages, setTotalPages] = useState(0);
   const [draftFilters, setDraftFilters] = useState(EMPTY_FILTERS);
   const [appliedFilters, setAppliedFilters] = useState(EMPTY_FILTERS);
+  const { registrationWindowId, registrationTypes } = useRegistrationsRefresh();
+
+  useEffect(() => {
+    setPage(1);
+  }, [registrationWindowId, registrationTypes]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -73,6 +80,12 @@ export function RegistrationList({
     Object.entries(appliedFilters).forEach(([key, value]) => {
       if (value) params.set(key, value);
     });
+    if (registrationWindowId) {
+      params.set("registrationWindowId", registrationWindowId);
+    }
+    if (!appliedFilters.registrationType && registrationTypes.length > 0) {
+      params.set("registrationTypes", registrationTypes.join(","));
+    }
     params.set("page", String(page));
     params.set("pageSize", String(pageSize));
 
@@ -94,7 +107,7 @@ export function RegistrationList({
     } finally {
       setLoading(false);
     }
-  }, [apiPath, appliedFilters, page, pageSize]);
+  }, [apiPath, appliedFilters, page, pageSize, registrationWindowId, registrationTypes]);
 
   useEffect(() => {
     void load();
@@ -106,9 +119,14 @@ export function RegistrationList({
   }
 
   function exportParams() {
-    return new URLSearchParams(
-      Object.entries(appliedFilters).filter(([, value]) => value) as [string, string][],
-    ).toString();
+    const entries = Object.entries(appliedFilters).filter(([, value]) => value) as [
+      string,
+      string,
+    ][];
+    if (registrationWindowId) {
+      entries.push(["registrationWindowId", registrationWindowId]);
+    }
+    return new URLSearchParams(entries).toString();
   }
 
   return (
@@ -117,8 +135,8 @@ export function RegistrationList({
         <div>
           <h2 className="text-lg font-semibold text-slate-900">Registration details</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Search by student name or number includes archived students using registration snapshot
-            fields.
+            Filtered by the registration window selected above. Search by student name or number
+            includes archived students using registration snapshot fields.
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -179,8 +197,8 @@ export function RegistrationList({
             <option value="STUDENT_SUBMITTED">Student submitted</option>
             <option value="EO_ASSISTED">EO assisted</option>
             <option value="ADMIN_ASSISTED">Admin assisted</option>
-            <option value="EO_FORCED_INTERNAL">EO office-only</option>
-            <option value="ADMIN_FORCED_INTERNAL">Admin office-only</option>
+            <option value="EO_FORCED_INTERNAL">EO restricted</option>
+            <option value="ADMIN_FORCED_INTERNAL">Admin restricted</option>
             <option value="EXTERNAL_CANDIDATE">External candidate</option>
           </select>
           <select
@@ -191,7 +209,19 @@ export function RegistrationList({
             <option value="">All visibility</option>
             <option value="STUDENT_AND_TEACHER">Student visible</option>
             <option value="STUDENT_ONLY">Student only</option>
-            <option value="EXAM_OFFICE_ONLY">Office-only</option>
+            <option value="EXAM_OFFICE_ONLY">Restricted</option>
+          </select>
+          <select
+            value={draftFilters.registrationType ?? ""}
+            onChange={(e) =>
+              setDraftFilters({ ...draftFilters, registrationType: e.target.value })
+            }
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          >
+            <option value="">All registration types</option>
+            <option value="NORMAL">Normal</option>
+            <option value="RESTRICTED">Restricted</option>
+            <option value="EXTERNAL">External</option>
           </select>
           <select
             value={draftFilters.billingScope}
@@ -201,7 +231,7 @@ export function RegistrationList({
             <option value="">All billing</option>
             <option value="NORMAL_BILLING">Normal billing</option>
             <option value="MANUAL_REVIEW">Manual review</option>
-            <option value="OFFICE_ONLY_BILLING">Office-only billing</option>
+            <option value="OFFICE_ONLY_BILLING">Restricted billing</option>
             <option value="NO_BILLING">No billing</option>
           </select>
           <select

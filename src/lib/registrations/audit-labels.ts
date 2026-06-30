@@ -47,9 +47,17 @@ export function auditActionLabel(action: RegistrationAuditAction | string): stri
     case "ADMIN_ASSISTED_REGISTRATION_CREATED":
       return "Admin registered on behalf of student";
     case "EO_OFFICE_ONLY_REGISTRATION_CREATED":
-      return "Exam Officer created office-only registration";
+      return "Exam Officer created restricted registration (legacy)";
     case "ADMIN_OFFICE_ONLY_REGISTRATION_CREATED":
-      return "Admin created office-only registration";
+      return "Admin created restricted registration (legacy)";
+    case "EO_RESTRICTED_REGISTRATION_CREATED":
+      return "Exam Officer created restricted registration";
+    case "ADMIN_RESTRICTED_REGISTRATION_CREATED":
+      return "Admin created restricted registration";
+    case "RESTRICTED_REGISTRATION_UPDATED":
+      return "Restricted registration updated";
+    case "RESTRICTED_REGISTRATION_CANCELLED":
+      return "Restricted registration cancelled";
     case "EO_POST_LOCK_ADJUSTMENT":
       return "Exam Officer post-lock adjustment";
     case "ADMIN_POST_LOCK_ADJUSTMENT":

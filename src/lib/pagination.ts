@@ -1,4 +1,5 @@
 export const LIST_PAGE_SIZES = [50, 100] as const;
+export const FEE_RULES_PAGE_SIZES = [10, 25, 50] as const;
 export const TEACHER_STUDENT_PAGE_SIZES = [25, 50, 100] as const;
 
 export function parseListPagination(searchParams: URLSearchParams): {

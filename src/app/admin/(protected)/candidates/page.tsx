@@ -8,8 +8,7 @@ export default function AdminCandidatesPage() {
     <CandidateManager
       apiPath="/api/admin/candidates"
       detailBasePath="/admin/candidates"
-      showImportLink
-      importPath="/admin/candidates/import"
+      moduleBasePath="/admin/candidates"
     />
   );
 }

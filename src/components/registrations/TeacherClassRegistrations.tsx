@@ -924,6 +924,7 @@ export function TeacherClassRegistrations() {
           title="Request Late Registration"
           submitLabel="Submit to Exams Office"
           apiPath="/api/teacher/late-registration-requests"
+          windowFilter="teacher"
           onClose={() => setLateModalOpen(false)}
           onSubmitted={() => {
             setSuccess("Your late registration request has been submitted to the Exams Office for review.");

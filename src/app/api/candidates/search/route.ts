@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { buildCandidateWhere, parseCandidateListFilters } from "@/lib/candidates/list";
+import { sanitizeCandidateForRole } from "@/lib/candidates/identity";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -32,5 +33,7 @@ export async function GET(request: NextRequest) {
     take: 30,
   });
 
-  return NextResponse.json(candidates);
+  return NextResponse.json(
+    candidates.map((candidate) => sanitizeCandidateForRole(candidate, auth.user.role)),
+  );
 }

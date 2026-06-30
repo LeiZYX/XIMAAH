@@ -1,9 +1,9 @@
+import { Suspense } from "react";
 import { RegistrationList } from "@/components/registrations/RegistrationList";
 import { PendingTeacherChangeRequests } from "@/components/registrations/PendingTeacherChangeRequests";
 import { AddRegistrationDropdown } from "@/components/registrations/AddRegistrationDropdown";
 import { RegistrationWorkspaceList } from "@/components/registrations/RegistrationWorkspaceList";
-import { RegistrationsRefreshProvider } from "@/components/registrations/registrations-refresh";
-import { RegistrationFeeBatchWidget } from "@/components/fees/RegistrationFeeBatchWidget";
+import { RegistrationsRefreshProvider, RegistrationWindowFilterBar } from "@/components/registrations/registrations-refresh";
 import { PageHeader } from "@/components/ui/PageHeader";
 
 export const dynamic = "force-dynamic";
@@ -11,16 +11,14 @@ export const revalidate = 0;
 
 export default function ExamOfficeRegistrationsPage() {
   return (
-    <RegistrationsRefreshProvider>
-      <div className="space-y-6">
-      <PageHeader title="Registrations" description="View, adjust, and export student exam registrations." />
-      <p className="text-sm">
+    <Suspense fallback={<p className="text-sm text-slate-600">Loading registrations…</p>}>
+      <RegistrationsRefreshProvider>
+        <div className="space-y-6">
+        <PageHeader title="Registrations" description="View, adjust, and export student exam registrations." />
+        <RegistrationWindowFilterBar />
+        <p className="text-sm">
         <a href="/exam-office/candidates" className="text-indigo-600 hover:underline">
           Manage candidates (internal & external)
-        </a>
-        {" · "}
-        <a href="/exam-office/students" className="text-indigo-600 hover:underline">
-          View students by status (active, graduated, left)
         </a>
       </p>
       <PendingTeacherChangeRequests
@@ -39,12 +37,12 @@ export default function ExamOfficeRegistrationsPage() {
         />
       </div>
       <RegistrationWorkspaceList apiPath="/api/admin/registrations/workspaces" detailBasePath="/exam-office/registrations" />
-      <RegistrationFeeBatchWidget feeRulesBasePath="/exam-office/registration-windows" />
       <RegistrationList
         apiPath="/api/exam-office/registrations"
         exportPath="/api/exam-office/registrations"
       />
-      </div>
-    </RegistrationsRefreshProvider>
+        </div>
+      </RegistrationsRefreshProvider>
+    </Suspense>
   );
 }

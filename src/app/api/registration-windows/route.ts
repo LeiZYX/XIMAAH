@@ -2,38 +2,49 @@ import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { canManageRegistrationWindows } from "@/lib/auth/permissions";
+import { createInitialFeeStagesForWindow } from "@/lib/registrations/create-initial-fee-stages";
 import { assertRegistrationWindowTimingValid } from "@/lib/registrations/fee-stages";
+import {
+  mapIncludedSeries,
+  registrationWindowSeriesInclude,
+  validateIncludedSeriesForBoard,
+} from "@/lib/registrations/included-series";
 import { summarizeRegistrationWindow } from "@/lib/registrations/window-summary";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET() {
-  try {
-    const windows = await prisma.registrationWindow.findMany({
+function enrichWindow(
+  window: Awaited<ReturnType<typeof loadWindows>>[number],
+) {
+  const summary = summarizeRegistrationWindow(window, window.feeStages);
+  return {
+    ...window,
+    includedExamSessions: mapIncludedSeries(window.includedSeries),
+    studentState: summary.studentState,
+    studentStateLabel: summary.studentStateLabel,
+    currentFeeStage: summary.currentFeeStage,
+    totalRegistrations: window._count.registrations,
+  };
+}
+
+async function loadWindows() {
+  return prisma.registrationWindow.findMany({
     include: {
-      examBoard: { select: { id: true, name: true, code: true } },
-      examSeries: { select: { id: true, name: true, year: true } },
+      ...registrationWindowSeriesInclude,
       createdBy: { select: { id: true, name: true } },
       feeStages: { orderBy: { sequence: "asc" } },
       _count: { select: { registrations: true } },
     },
     orderBy: [{ studentRegistrationOpenAt: "desc" }],
   });
+}
 
-  const enriched = windows.map((window) => {
-    const summary = summarizeRegistrationWindow(window, window.feeStages);
-    return {
-      ...window,
-      studentState: summary.studentState,
-      studentStateLabel: summary.studentStateLabel,
-      currentFeeStage: summary.currentFeeStage,
-      totalRegistrations: window._count.registrations,
-    };
-  });
-
-  return NextResponse.json(enriched);
+export async function GET() {
+  try {
+    const windows = await loadWindows();
+    return NextResponse.json(windows.map(enrichWindow));
   } catch (error) {
     console.error("GET /api/registration-windows failed:", error);
     return jsonError(
@@ -52,23 +63,50 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
   const data = parseJsonBody<{
-    examBoardId: string;
-    examSeriesId: string;
     title: string;
+    examBoardId: string;
     studentRegistrationOpenAt: string;
     studentRegistrationCloseAt: string;
     registrationCloseAt: string;
     status?: string;
+    examSeriesIds?: string[];
+    examSeriesId?: string;
+    lateEntryEnabled?: boolean;
+    highLateEntryEnabled?: boolean;
   }>(body, [
-    "examBoardId",
-    "examSeriesId",
     "title",
+    "examBoardId",
     "studentRegistrationOpenAt",
     "studentRegistrationCloseAt",
     "registrationCloseAt",
   ]);
 
   if (!data) return jsonError("Missing required fields");
+
+  const examBoardId = String(data.examBoardId).trim();
+  if (!examBoardId) return jsonError("Exam board is required");
+
+  const examSeriesIds = Array.isArray(data.examSeriesIds)
+    ? [...new Set(data.examSeriesIds.filter((id): id is string => typeof id === "string" && id.length > 0))]
+    : data.examSeriesId
+      ? [data.examSeriesId]
+      : [];
+
+  let seriesRows;
+  try {
+    seriesRows = await validateIncludedSeriesForBoard(examBoardId, examSeriesIds, (ids) =>
+      prisma.examSeries.findMany({
+        where: { id: { in: ids } },
+        include: { examBoard: { select: { id: true, name: true, code: true } } },
+        orderBy: [{ year: "desc" }, { name: "asc" }],
+      }),
+    );
+  } catch (error) {
+    return jsonError(error instanceof Error ? error.message : "Invalid exam sessions", 400);
+  }
+
+  const board = await prisma.examBoard.findUnique({ where: { id: examBoardId } });
+  if (!board) return jsonError("Exam board not found", 404);
 
   const studentRegistrationOpenAt = new Date(data.studentRegistrationOpenAt);
   const studentRegistrationCloseAt = new Date(data.studentRegistrationCloseAt);
@@ -80,23 +118,52 @@ export async function POST(request: NextRequest) {
     registrationCloseAt,
   });
 
+  const primarySeries = seriesRows[0]!;
+  const status = (data.status as "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED") ?? "DRAFT";
+
   const window = await prisma.registrationWindow.create({
     data: {
-      examBoardId: data.examBoardId,
-      examSeriesId: data.examSeriesId,
+      examBoardId,
+      examSeriesId: primarySeries.id,
       title: data.title,
       studentRegistrationOpenAt,
       studentRegistrationCloseAt,
       registrationCloseAt,
-      status: (data.status as "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED") ?? "DRAFT",
+      status,
       createdById: auth.user.id,
+      includedSeries: {
+        create: examSeriesIds.map((examSeriesId) => ({ examSeriesId })),
+      },
     },
     include: {
-      examBoard: { select: { id: true, name: true, code: true } },
-      examSeries: { select: { id: true, name: true, year: true } },
+      ...registrationWindowSeriesInclude,
       feeStages: { orderBy: { sequence: "asc" } },
+      _count: { select: { registrations: true } },
     },
   });
 
-  return NextResponse.json(window, { status: 201 });
+  await createInitialFeeStagesForWindow(
+    window.id,
+    {
+      studentRegistrationOpenAt,
+      studentRegistrationCloseAt,
+      registrationCloseAt,
+    },
+    {
+      lateEntryEnabled: data.lateEntryEnabled ?? true,
+      highLateEntryEnabled: data.highLateEntryEnabled ?? true,
+    },
+  );
+
+  const refreshed = await prisma.registrationWindow.findUniqueOrThrow({
+    where: { id: window.id },
+    include: {
+      ...registrationWindowSeriesInclude,
+      createdBy: { select: { id: true, name: true } },
+      feeStages: { orderBy: { sequence: "asc" } },
+      _count: { select: { registrations: true } },
+    },
+  });
+
+  return NextResponse.json(enrichWindow(refreshed), { status: 201 });
 }
