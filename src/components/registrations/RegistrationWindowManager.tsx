@@ -7,6 +7,10 @@ import { ExamBoardRadioList } from "@/components/registrations/ExamBoardRadioLis
 import { PageHeader } from "@/components/ui/PageHeader";
 import { datetimeLocalValueToIso } from "@/lib/datetime-local";
 import {
+  getCurrentAcademicYear,
+  mergeAcademicYearOptions,
+} from "@/lib/registrations/academic-year";
+import {
   formatIncludedSessionShortLabel,
   type IncludedExamSession,
 } from "@/lib/registrations/included-series";
@@ -14,6 +18,7 @@ import {
 interface WindowRow {
   id: string;
   title: string;
+  academicYear: string;
   studentRegistrationOpenAt: string;
   studentRegistrationCloseAt: string;
   registrationCloseAt: string;
@@ -69,9 +74,14 @@ export function RegistrationWindowManager({
   const [sessions, setSessions] = useState<SelectableSession[]>([]);
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [listAcademicYear, setListAcademicYear] = useState(getCurrentAcademicYear());
+  const [academicYearOptions, setAcademicYearOptions] = useState<string[]>([
+    getCurrentAcademicYear(),
+  ]);
   const [formError, setFormError] = useState<string | null>(null);
   const [form, setForm] = useState({
     title: "",
+    academicYear: getCurrentAcademicYear(),
     examBoardId: "",
     examSeriesIds: [] as string[],
     studentRegistrationOpenAt: "",
@@ -82,13 +92,25 @@ export function RegistrationWindowManager({
     highLateEntryEnabled: true,
   });
 
-  async function loadWindows() {
+  async function loadWindows(academicYear = listAcademicYear) {
     try {
-      const res = await fetch("/api/registration-windows");
+      const params = new URLSearchParams({ academicYear, scope: "staff" });
+      const res = await fetch(`/api/registration-windows?${params.toString()}`);
       const data = res.ok ? await res.json() : [];
       setWindows(Array.isArray(data) ? data : []);
     } catch {
       setWindows([]);
+    }
+  }
+
+  async function loadAcademicYears() {
+    try {
+      const res = await fetch("/api/registration-windows?yearsOnly=true");
+      const data = res.ok ? await res.json() : { years: [] };
+      const years = Array.isArray(data?.years) ? (data.years as string[]) : [];
+      setAcademicYearOptions(mergeAcademicYearOptions(years));
+    } catch {
+      setAcademicYearOptions(mergeAcademicYearOptions([]));
     }
   }
 
@@ -137,9 +159,13 @@ export function RegistrationWindowManager({
   }
 
   useEffect(() => {
-    void loadWindows();
+    void loadAcademicYears();
     void loadExamBoards();
   }, []);
+
+  useEffect(() => {
+    void loadWindows(listAcademicYear);
+  }, [listAcademicYear]);
 
   useEffect(() => {
     void loadSessions(form.examBoardId);
@@ -196,6 +222,7 @@ export function RegistrationWindowManager({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: form.title.trim(),
+          academicYear: form.academicYear,
           examBoardId: form.examBoardId,
           examSeriesIds: form.examSeriesIds,
           status: form.status,
@@ -215,6 +242,7 @@ export function RegistrationWindowManager({
       const firstBoardId = examBoards[0]?.id ?? "";
       setForm({
         title: "",
+        academicYear: getCurrentAcademicYear(),
         examBoardId: firstBoardId,
         examSeriesIds: [],
         studentRegistrationOpenAt: "",
@@ -229,7 +257,8 @@ export function RegistrationWindowManager({
       } else {
         setSessions([]);
       }
-      await loadWindows();
+      await loadWindows(listAcademicYear);
+      await loadAcademicYears();
     } finally {
       setCreating(false);
     }
@@ -251,6 +280,23 @@ export function RegistrationWindowManager({
           <div className="px-4 py-4">
             <SectionHeading title="Basic information" />
             <div className="grid gap-4 sm:max-w-xl">
+              <label className="block text-sm">
+                <span className="mb-1 block text-slate-700">
+                  Academic Year <span className="text-red-600">*</span>
+                </span>
+                <select
+                  required
+                  value={form.academicYear}
+                  onChange={(e) => setForm({ ...form, academicYear: e.target.value })}
+                  className="w-full border border-slate-300 px-3 py-2 text-sm sm:max-w-xs"
+                >
+                  {academicYearOptions.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </label>
               <label className="block text-sm">
                 <span className="mb-1 block text-slate-700">
                   Window name <span className="text-red-600">*</span>
@@ -411,8 +457,22 @@ export function RegistrationWindowManager({
       </section>
 
       <section className="border border-slate-200 bg-white">
-        <div className="border-b border-slate-200 px-4 py-3">
+        <div className="flex flex-wrap items-end justify-between gap-3 border-b border-slate-200 px-4 py-3">
           <h2 className="text-base font-semibold text-slate-900">Registration windows</h2>
+          <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Academic Year
+            <select
+              value={listAcademicYear}
+              onChange={(e) => setListAcademicYear(e.target.value)}
+              className="min-w-[10rem] rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-normal"
+            >
+              {academicYearOptions.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
@@ -431,7 +491,7 @@ export function RegistrationWindowManager({
               {windows.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-3 py-8 text-center text-sm text-slate-500">
-                    No registration windows yet.
+                    No registration windows for {listAcademicYear}.
                   </td>
                 </tr>
               ) : (

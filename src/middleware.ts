@@ -57,7 +57,9 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/exam-office") ||
     pathname.startsWith("/teacher") ||
     pathname.startsWith("/student") ||
-    pathname.startsWith("/account");
+    pathname.startsWith("/account") ||
+    pathname === "/about" ||
+    pathname === "/help";
 
   const isLoginPage = pathname === "/login" || pathname === "/admin/login";
   const isPublicAuthPage =
@@ -124,6 +126,8 @@ export const config = {
     "/teacher/:path*",
     "/student/:path*",
     "/account/:path*",
+    "/about",
+    "/help",
     "/login",
     "/forgot-password",
     "/reset-password",

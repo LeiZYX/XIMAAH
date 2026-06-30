@@ -226,7 +226,48 @@ function TeacherStudentDetailPanel({
         </section>
       </div>
 
-      <div className="mt-4 overflow-x-auto rounded-lg border border-slate-200 bg-white">
+      <div className="mt-4 space-y-2 lg:hidden">
+        {detail.exams.map((exam) => (
+          <article
+            key={exam.id}
+            className="rounded-lg border border-slate-200 bg-white p-3 text-sm"
+          >
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <div className="min-w-0">
+                <p className="font-medium text-slate-900">{exam.subject.name}</p>
+                <p className="text-slate-700">
+                  {exam.paper.code}
+                  {exam.paper.title ? ` · ${exam.paper.title}` : ""}
+                </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  {exam.examSession.date.slice(0, 10)}
+                  {exam.examSession.startTime ? ` · ${exam.examSession.startTime}` : ""}
+                  {" · "}
+                  {exam.entryTypeLabel}
+                </p>
+              </div>
+              <span
+                className={
+                  exam.status === "LOCKED" ? "font-medium text-indigo-700" : "text-amber-700"
+                }
+              >
+                {exam.status === "LOCKED" ? "Locked" : "Active"}
+              </span>
+            </div>
+            {exam.registrationWorkspaceId && exam.status === "LOCKED" ? (
+              <button
+                type="button"
+                onClick={() => onRequestChange(exam)}
+                className="mt-2 rounded-lg border border-indigo-200 px-2 py-1 text-xs font-medium text-indigo-700 hover:bg-indigo-50"
+              >
+                Request Change
+              </button>
+            ) : null}
+          </article>
+        ))}
+      </div>
+
+      <div className="mt-4 hidden overflow-x-auto rounded-lg border border-slate-200 bg-white lg:block">
         <table className="min-w-full text-left text-sm">
           <thead>
             <tr className="border-b bg-slate-50 text-xs uppercase text-slate-500">
@@ -662,7 +703,85 @@ export function TeacherClassRegistrations() {
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto">
+            <div className="space-y-3 p-4 lg:hidden">
+              {students.map((student) => {
+                const expanded = expandedStudentKey === student.studentKey;
+                return (
+                  <article
+                    key={student.studentKey}
+                    className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <h3 className="font-medium text-slate-900">{student.studentName}</h3>
+                        <p className="text-xs text-slate-500">
+                          {student.studentNo} · {student.candidateNumber}
+                        </p>
+                      </div>
+                      <span className={registrationStatusClass(student.registrationStatus)}>
+                        {registrationStatusLabel(student.registrationStatus)}
+                      </span>
+                    </div>
+                    <dl className="mt-3 grid gap-2 text-sm">
+                      <div>
+                        <dt className="text-xs uppercase text-slate-500">Grade / Class</dt>
+                        <dd>
+                          {student.grade} · {student.className}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs uppercase text-slate-500">Exam board(s)</dt>
+                        <dd>{student.examBoards}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-xs uppercase text-slate-500">Total exams</dt>
+                        <dd>{student.totalExams}</dd>
+                      </div>
+                      {student.pendingChangeRequests > 0 ? (
+                        <div>
+                          <dt className="text-xs uppercase text-slate-500">Pending requests</dt>
+                          <dd className="text-amber-800">{student.pendingChangeRequests} pending</dd>
+                        </div>
+                      ) : null}
+                    </dl>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => toggleExpand(student.studentKey)}
+                        className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                      >
+                        {expanded ? "Collapse" : "Expand"}
+                      </button>
+                      {student.canPrint ? (
+                        <RegistrationPrintButton
+                          onClick={() => void handlePrint(student)}
+                          className="rounded-lg px-2 py-1.5 text-indigo-700 ring-1 ring-inset ring-indigo-200 hover:bg-indigo-50"
+                        />
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => void openStudentRequestModal(student)}
+                        className="rounded-lg border border-indigo-200 px-3 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-50"
+                      >
+                        Request Late Registration
+                      </button>
+                    </div>
+                    {expanded ? (
+                      <div className="mt-3 border-t border-slate-100 pt-3">
+                        <TeacherStudentDetailPanel
+                          detail={detailCache[student.studentKey] ?? null}
+                          loading={detailLoadingKey === student.studentKey}
+                          error={detailErrors[student.studentKey] ?? null}
+                          onRequestChange={setActiveRow}
+                        />
+                      </div>
+                    ) : null}
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className="hidden overflow-x-auto lg:block">
               <table className="min-w-full text-left text-sm">
                 <thead className="hidden lg:table-header-group">
                   <tr className="border-b border-slate-100 bg-slate-50 text-xs font-medium uppercase tracking-wide text-slate-500">
@@ -828,7 +947,71 @@ export function TeacherClassRegistrations() {
         ) : requests.length === 0 ? (
           <p className="text-sm text-slate-500">You have not submitted any change requests yet.</p>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+            <div className="space-y-3 md:hidden">
+              {requests.map((request) => (
+                <article
+                  key={request.id}
+                  className="rounded-lg border border-slate-200 bg-white p-4 text-sm"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <div>
+                      <p className="font-medium text-slate-900">
+                        {request.registrationWorkspace.student.name}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {request.registrationWorkspace.student.studentProfile?.studentNo ?? "—"}
+                      </p>
+                    </div>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                        request.status === "PENDING"
+                          ? "bg-amber-100 text-amber-800"
+                          : request.status === "APPROVED"
+                            ? "bg-emerald-100 text-emerald-800"
+                            : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {changeRequestStatusLabel(request.status)}
+                    </span>
+                  </div>
+                  <dl className="mt-3 space-y-2 text-sm">
+                    <div>
+                      <dt className="text-xs uppercase text-slate-500">Board / Series</dt>
+                      <dd>
+                        {request.registrationWorkspace.registrationWindow.examBoard.name} ·{" "}
+                        {request.registrationWorkspace.registrationWindow.examSeries.name} (
+                        {request.registrationWorkspace.registrationWindow.examSeries.year})
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs uppercase text-slate-500">Type</dt>
+                      <dd>{changeRequestTypeLabel(request.requestType)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs uppercase text-slate-500">Target exam</dt>
+                      <dd>{formatExamSessionSummary(request.targetExamSession)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs uppercase text-slate-500">Replacement</dt>
+                      <dd>{formatExamSessionSummary(request.replacementExamSession)}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs uppercase text-slate-500">Reason</dt>
+                      <dd className="break-words">{request.reason}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs uppercase text-slate-500">Submitted</dt>
+                      <dd>{new Date(request.createdAt).toLocaleString()}</dd>
+                    </div>
+                  </dl>
+                  {request.status === "REJECTED" && request.reviewNote ? (
+                    <p className="mt-2 text-xs text-slate-500">{request.reviewNote}</p>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+            <div className="hidden overflow-x-auto md:block">
             <table className="min-w-full text-left text-sm">
               <thead>
                 <tr className="border-b text-xs uppercase text-slate-500">
@@ -887,7 +1070,8 @@ export function TeacherClassRegistrations() {
                 ))}
               </tbody>
             </table>
-          </div>
+            </div>
+          </>
         )}
       </Card>
 

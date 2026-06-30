@@ -497,6 +497,7 @@ async function main() {
   });
 
   const windowTiming = {
+    academicYear: "2025/26",
     studentRegistrationOpenAt: new Date("2026-01-01"),
     studentRegistrationCloseAt: new Date("2026-09-30"),
     registrationCloseAt: new Date("2026-12-31"),

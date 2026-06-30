@@ -33,35 +33,41 @@ function ResetPasswordForm() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-md items-center px-4">
-      <Card className="w-full">
-        <h1 className="text-xl font-semibold">Reset password</h1>
-        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-          <input
-            type="password"
-            required
-            minLength={8}
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="New password"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-          />
-          <button
-            type="submit"
-            disabled={loading || !token}
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white"
-          >
-            Reset password
-          </button>
-        </form>
-        {error ? <p className="mt-4 text-sm text-red-700">{error}</p> : null}
-        {message ? <p className="mt-4 text-sm text-green-700">{message}</p> : null}
-        <p className="mt-4 text-sm">
-          <Link href="/login" className="text-indigo-600">
-            Sign in
-          </Link>
-        </p>
-      </Card>
+    <div className="flex min-h-screen items-center justify-center overflow-x-hidden bg-slate-50 px-4 py-8">
+      <div className="w-full max-w-md">
+        <Card className="w-full">
+          <h1 className="text-xl font-semibold">Reset password</h1>
+          <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+            <label className="block w-full">
+              <span className="mb-1 block text-sm font-medium text-slate-700">New password</span>
+              <input
+                type="password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="At least 8 characters"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              />
+            </label>
+            <button
+              type="submit"
+              disabled={loading || !token}
+              className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white"
+            >
+              Reset password
+            </button>
+          </form>
+          {error ? <p className="mt-4 text-sm text-red-700">{error}</p> : null}
+          {message ? <p className="mt-4 text-sm text-green-700">{message}</p> : null}
+          <p className="mt-4 text-sm">
+            <Link href="/login" className="text-indigo-600">
+              Sign in
+            </Link>
+          </p>
+        </Card>
+      </div>
     </div>
   );
 }

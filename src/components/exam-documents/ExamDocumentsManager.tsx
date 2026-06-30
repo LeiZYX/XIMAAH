@@ -4,6 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { ExamDocumentCentreHeader } from "@/components/exam-documents/ExamDocumentCentreHeader";
 import { PageHeader } from "@/components/ui/PageHeader";
 import type { ExamBoardCentreInfo } from "@/lib/exam-boards/centre";
+import {
+  RegistrationWindowSelectorFields,
+  useRegistrationWindowSelector,
+} from "@/components/registrations/RegistrationWindowSelector";
 import { examDocumentTypeLabel } from "@/lib/exam-documents/labels";
 import "@/styles/exam-document-print.css";
 
@@ -114,6 +118,15 @@ export function ExamDocumentsManager({ apiBasePath }: { apiBasePath: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [workspaceId, setWorkspaceId] = useState("");
+  const windowSelector = useRegistrationWindowSelector({ scope: "staff" });
+
+  useEffect(() => {
+    setFilters((prev) =>
+      prev.registrationWindowId === windowSelector.registrationWindowId
+        ? prev
+        : { ...prev, registrationWindowId: windowSelector.registrationWindowId },
+    );
+  }, [windowSelector.registrationWindowId]);
 
   const currentCategory = DOCUMENT_CATEGORIES[category];
   const selectedType = currentCategory.types.find((type) => type.value === documentType);
@@ -254,13 +267,19 @@ export function ExamDocumentsManager({ apiBasePath }: { apiBasePath: string }) {
             ) : null}
           </div>
 
+          <RegistrationWindowSelectorFields
+            state={{
+              ...windowSelector,
+              setRegistrationWindowId: (id) => {
+                windowSelector.setRegistrationWindowId(id);
+                setFilters((prev) => ({ ...prev, registrationWindowId: id }));
+              },
+            }}
+            layout="inline"
+            className="sm:col-span-2 lg:col-span-4"
+          />
+
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <input
-              placeholder="Registration window ID"
-              value={filters.registrationWindowId}
-              onChange={(e) => setFilters((prev) => ({ ...prev, registrationWindowId: e.target.value }))}
-              className={inputClass}
-            />
             <input
               placeholder="Exam session ID"
               value={filters.examSessionId}

@@ -1,14 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import type { FeeReportFilters } from "@/lib/fees/filters";
-
-interface WindowOption {
-  id: string;
-  title: string;
-  examBoard: { name: string };
-  examSeries: { name: string; year: number };
-}
+import {
+  RegistrationWindowSelectorFields,
+  useRegistrationWindowSelector,
+} from "@/components/registrations/RegistrationWindowSelector";
 
 interface FeeReportFiltersFormProps {
   filters: FeeReportFilters;
@@ -27,14 +24,36 @@ export function FeeReportFiltersForm({
   showBatchOptions = false,
   requireRegistrationWindow = false,
 }: FeeReportFiltersFormProps) {
-  const [windows, setWindows] = useState<WindowOption[]>([]);
+  const selector = useRegistrationWindowSelector({
+    scope: "staff",
+    initialRegistrationWindowId: filters.registrationWindowId ?? "",
+    allowEmpty: !requireRegistrationWindow,
+  });
 
   useEffect(() => {
-    fetch("/api/registration-windows")
-      .then((r) => (r.ok ? r.json() : []))
-      .then((data) => setWindows(Array.isArray(data) ? data : []))
-      .catch(() => setWindows([]));
-  }, []);
+    if (
+      filters.registrationWindowId &&
+      filters.registrationWindowId !== selector.registrationWindowId &&
+      selector.windows.some((window) => window.id === filters.registrationWindowId)
+    ) {
+      selector.setRegistrationWindowId(filters.registrationWindowId);
+    }
+  }, [filters.registrationWindowId, selector]);
+
+  const selectorForUi = useMemo(
+    () => ({
+      ...selector,
+      setRegistrationWindowId: (id: string) => {
+        selector.setRegistrationWindowId(id);
+        onChange({ ...filters, registrationWindowId: id || undefined });
+      },
+      setAcademicYear: (year: string) => {
+        selector.setAcademicYear(year);
+        onChange({ ...filters, registrationWindowId: undefined });
+      },
+    }),
+    [filters, onChange, selector],
+  );
 
   const set = useCallback(
     (patch: Partial<FeeReportFilters>) => onChange({ ...filters, ...patch }),
@@ -43,25 +62,16 @@ export function FeeReportFiltersForm({
 
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      <div className="sm:col-span-2 lg:col-span-1">
-        <select
-          value={filters.registrationWindowId ?? ""}
-          onChange={(e) => set({ registrationWindowId: e.target.value || undefined })}
-          className={`w-full rounded-lg border px-3 py-2 text-sm ${
-            requireRegistrationWindow && !filters.registrationWindowId
-              ? "border-amber-400 bg-amber-50"
-              : "border-slate-300"
-          }`}
-        >
-          <option value="">
-            {requireRegistrationWindow ? "Select registration window *" : "All registration windows"}
-          </option>
-          {windows.map((w) => (
-            <option key={w.id} value={w.id}>
-              {w.title} ({w.examBoard.name} · {w.examSeries.name})
-            </option>
-          ))}
-        </select>
+      <div className="sm:col-span-2 lg:col-span-2">
+        <RegistrationWindowSelectorFields
+          state={selectorForUi}
+          layout="stacked"
+          allowEmpty={!requireRegistrationWindow}
+          emptyOptionLabel={
+            requireRegistrationWindow ? "Select registration window *" : "All registration windows"
+          }
+          showStatus={false}
+        />
         {requireRegistrationWindow && !filters.registrationWindowId ? (
           <p className="mt-1 text-xs text-amber-700">Registration window is required.</p>
         ) : null}

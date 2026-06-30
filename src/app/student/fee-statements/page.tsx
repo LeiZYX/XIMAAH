@@ -19,6 +19,53 @@ interface FeeStatementSummary {
   };
 }
 
+function FeeStatementCard({ statement }: { statement: FeeStatementSummary }) {
+  return (
+    <article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Statement</p>
+          <p className="font-semibold text-slate-900">{statement.statementNo}</p>
+        </div>
+        <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">
+          {statement.status}
+        </span>
+      </div>
+      <dl className="mt-3 space-y-2 text-sm">
+        <div>
+          <dt className="text-slate-500">Registration window</dt>
+          <dd className="font-medium text-slate-900">{statement.registrationWindow.title}</dd>
+          <dd className="text-xs text-slate-500">
+            {statement.registrationWindow.examBoard.code} ·{" "}
+            {statement.registrationWindow.examSeries.name} (
+            {statement.registrationWindow.examSeries.year})
+          </dd>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <dt className="text-slate-500">Total GBP</dt>
+            <dd className="font-medium text-slate-900">
+              {formatMoney(Number(statement.totalGbpAmount), "GBP")}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-slate-500">Total CNY</dt>
+            <dd className="font-medium text-slate-900">
+              {formatMoney(Number(statement.totalCnyAmount), "CNY")}
+            </dd>
+          </div>
+        </div>
+        <div>
+          <dt className="text-slate-500">Issued</dt>
+          <dd className="font-medium text-slate-900">
+            {statement.issuedAt ? new Date(statement.issuedAt).toLocaleDateString() : "—"}
+          </dd>
+        </div>
+      </dl>
+    </article>
+  );
+}
+
 export default function StudentFeeStatementsPage() {
   const [statements, setStatements] = useState<FeeStatementSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,38 +113,52 @@ export default function StudentFeeStatementsPage() {
           <p className="text-sm text-slate-600">No issued fee statements yet.</p>
         </Card>
       ) : (
-        <Card className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="border-b text-left text-xs uppercase text-slate-500">
-                <th className="py-2 pr-4">Statement</th>
-                <th className="py-2 pr-4">Window</th>
-                <th className="py-2 pr-4">Total GBP</th>
-                <th className="py-2 pr-4">Total CNY</th>
-                <th className="py-2 pr-4">Issued</th>
-              </tr>
-            </thead>
-            <tbody>
-              {statements.map((statement) => (
-                <tr key={statement.id} className="border-b border-slate-100">
-                  <td className="py-2 pr-4">{statement.statementNo}</td>
-                  <td className="py-2 pr-4">
-                    {statement.registrationWindow.title}
-                    <span className="block text-xs text-slate-500">
-                      {statement.registrationWindow.examBoard.code} ·{" "}
-                      {statement.registrationWindow.examSeries.name} ({statement.registrationWindow.examSeries.year})
-                    </span>
-                  </td>
-                  <td className="py-2 pr-4">{formatMoney(Number(statement.totalGbpAmount), "GBP")}</td>
-                  <td className="py-2 pr-4">{formatMoney(Number(statement.totalCnyAmount), "CNY")}</td>
-                  <td className="py-2 pr-4">
-                    {statement.issuedAt ? new Date(statement.issuedAt).toLocaleDateString() : "—"}
-                  </td>
+        <>
+          <div className="space-y-3 md:hidden">
+            {statements.map((statement) => (
+              <FeeStatementCard key={statement.id} statement={statement} />
+            ))}
+          </div>
+          <Card className="hidden overflow-x-auto md:block">
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr className="border-b text-left text-xs uppercase text-slate-500">
+                  <th className="py-2 pr-4">Statement</th>
+                  <th className="py-2 pr-4">Window</th>
+                  <th className="py-2 pr-4">Total GBP</th>
+                  <th className="py-2 pr-4">Total CNY</th>
+                  <th className="py-2 pr-4">Issued</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card>
+              </thead>
+              <tbody>
+                {statements.map((statement) => (
+                  <tr key={statement.id} className="border-b border-slate-100">
+                    <td className="py-2 pr-4">{statement.statementNo}</td>
+                    <td className="py-2 pr-4">
+                      {statement.registrationWindow.title}
+                      <span className="block text-xs text-slate-500">
+                        {statement.registrationWindow.examBoard.code} ·{" "}
+                        {statement.registrationWindow.examSeries.name} (
+                        {statement.registrationWindow.examSeries.year})
+                      </span>
+                    </td>
+                    <td className="py-2 pr-4">
+                      {formatMoney(Number(statement.totalGbpAmount), "GBP")}
+                    </td>
+                    <td className="py-2 pr-4">
+                      {formatMoney(Number(statement.totalCnyAmount), "CNY")}
+                    </td>
+                    <td className="py-2 pr-4">
+                      {statement.issuedAt
+                        ? new Date(statement.issuedAt).toLocaleDateString()
+                        : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
+        </>
       )}
     </div>
   );

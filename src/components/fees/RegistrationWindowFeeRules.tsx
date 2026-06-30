@@ -38,6 +38,7 @@ interface ExchangeRateRow {
 interface WindowInfo {
   id: string;
   title: string;
+  academicYear?: string;
   examBoard: { id: string; code: string; name: string };
   examSeries: { id: string; name: string; year: number };
 }
@@ -113,25 +114,36 @@ export function RegistrationWindowFeeRules({
   const apiBase = `/api/registration-windows/${windowId}`;
 
   const load = useCallback(async () => {
-    const [windowRes, rulesRes, ratesRes, calendarRes, windowsRes] = await Promise.all([
+    const [windowRes, rulesRes, ratesRes, calendarRes] = await Promise.all([
       fetch(`/api/registration-windows/${windowId}`),
       fetch(`${apiBase}/fee-rules`),
       fetch(`${apiBase}/exchange-rates`),
       fetch(`${apiBase}/calendar-subjects`),
-      fetch("/api/registration-windows"),
     ]);
 
-    if (windowRes.ok) setWindowInfo(await windowRes.json());
+    if (windowRes.ok) {
+      const windowData = await windowRes.json();
+      setWindowInfo(windowData);
+      if (windowData?.academicYear) {
+        const scoped = await fetch(
+          `/api/registration-windows?academicYear=${encodeURIComponent(windowData.academicYear)}&scope=staff`,
+        );
+        if (scoped.ok) {
+          const scopedData = await scoped.json();
+          setWindows(
+            Array.isArray(scopedData)
+              ? scopedData.filter((w: WindowInfo) => w.id !== windowId)
+              : [],
+          );
+        }
+      }
+    }
     if (rulesRes.ok) setRules(await rulesRes.json());
     if (ratesRes.ok) setRates(await ratesRes.json());
     if (calendarRes.ok) {
       const calendarData = await calendarRes.json();
       setCalendarSubjects(Array.isArray(calendarData.subjects) ? calendarData.subjects : []);
       setCalendarFilterEnabled(Boolean(calendarData.filterEnabled));
-    }
-    if (windowsRes.ok) {
-      const all = await windowsRes.json();
-      setWindows(Array.isArray(all) ? all.filter((w: WindowInfo) => w.id !== windowId) : []);
     }
   }, [apiBase, windowId]);
 

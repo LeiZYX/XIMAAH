@@ -6,11 +6,16 @@ import { ExamBoardRadioList } from "@/components/registrations/ExamBoardRadioLis
 import { IncludedExamSessionsList } from "@/components/registrations/IncludedExamSessionsList";
 import { Card } from "@/components/ui/Card";
 import { datetimeLocalValueToIso, isoToDatetimeLocalValue } from "@/lib/datetime-local";
+import {
+  getCurrentAcademicYear,
+  mergeAcademicYearOptions,
+} from "@/lib/registrations/academic-year";
 import type { IncludedExamSession } from "@/lib/registrations/included-series";
 
 interface WindowDetail {
   id: string;
   title: string;
+  academicYear: string;
   studentRegistrationOpenAt: string;
   studentRegistrationCloseAt: string;
   registrationCloseAt: string;
@@ -68,6 +73,9 @@ export function RegistrationWindowGeneral({
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [academicYearOptions, setAcademicYearOptions] = useState<string[]>([
+    getCurrentAcademicYear(),
+  ]);
 
   const loadSessions = useCallback(async (examBoardId: string) => {
     if (!examBoardId) {
@@ -114,6 +122,13 @@ export function RegistrationWindowGeneral({
     fetch("/api/exam-boards")
       .then((r) => (r.ok ? r.json() : []))
       .then((data) => setExamBoards(Array.isArray(data) ? data : []));
+    fetch("/api/registration-windows?yearsOnly=true")
+      .then((r) => (r.ok ? r.json() : { years: [] }))
+      .then((data) => {
+        const years = Array.isArray(data?.years) ? (data.years as string[]) : [];
+        setAcademicYearOptions(mergeAcademicYearOptions(years));
+      })
+      .catch(() => setAcademicYearOptions(mergeAcademicYearOptions([])));
   }, [load]);
 
   function handleExamBoardChange(examBoardId: string) {
@@ -142,6 +157,7 @@ export function RegistrationWindowGeneral({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title: window.title,
+        academicYear: window.academicYear,
         examBoardId: window.examBoard.id,
         examSeriesIds,
         studentRegistrationOpenAt: datetimeLocalValueToIso(window.studentRegistrationOpenAt),
@@ -186,6 +202,10 @@ export function RegistrationWindowGeneral({
             <dd className="text-sm font-medium text-slate-900">{window.title}</dd>
           </div>
           <div>
+            <dt className="text-xs uppercase text-slate-500">Academic year</dt>
+            <dd className="text-sm font-medium text-slate-900">{window.academicYear}</dd>
+          </div>
+          <div>
             <dt className="text-xs uppercase text-slate-500">Exam board</dt>
             <dd className="text-sm font-medium text-slate-900">{window.examBoard.name}</dd>
           </div>
@@ -216,6 +236,23 @@ export function RegistrationWindowGeneral({
           <form onSubmit={handleSave} className="space-y-6">
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-slate-900">Basic information</h3>
+              <label className="block text-sm">
+                <span className="mb-1 block text-slate-600">
+                  Academic Year <span className="text-red-600">*</span>
+                </span>
+                <select
+                  required
+                  value={window.academicYear}
+                  onChange={(e) => setWindow({ ...window, academicYear: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm sm:max-w-xs"
+                >
+                  {academicYearOptions.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </label>
               <label className="block text-sm">
                 <span className="mb-1 block text-slate-600">Window name</span>
                 <input

@@ -423,6 +423,7 @@ async function main() {
     where: { id: IDS.windowOpen },
     update: {
       status: "OPEN",
+      academicYear: "2025/26",
       studentRegistrationOpenAt: openStart,
       studentRegistrationCloseAt: studentClose,
       registrationCloseAt: openEnd,
@@ -430,6 +431,7 @@ async function main() {
     create: {
       id: IDS.windowOpen,
       title: "Test Open Registration Window",
+      academicYear: "2025/26",
       examBoardId: pearson.id,
       examSeriesId: seriesPearson.id,
       studentRegistrationOpenAt: openStart,
@@ -445,6 +447,7 @@ async function main() {
     where: { id: IDS.windowClosed },
     update: {
       status: "CLOSED",
+      academicYear: "2025/26",
       studentRegistrationOpenAt: closedStart,
       studentRegistrationCloseAt: closedEnd,
       registrationCloseAt: closedEnd,
@@ -452,6 +455,7 @@ async function main() {
     create: {
       id: IDS.windowClosed,
       title: "Test Closed Registration Window",
+      academicYear: "2025/26",
       examBoardId: pearson.id,
       examSeriesId: seriesPearson.id,
       studentRegistrationOpenAt: closedStart,

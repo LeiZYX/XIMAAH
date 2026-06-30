@@ -2,6 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  RegistrationWindowSelectorFields,
+  useRegistrationWindowSelector,
+} from "@/components/registrations/RegistrationWindowSelector";
+import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
   formatExamSessionOptionLabel,
@@ -16,14 +20,6 @@ interface StudentOption {
   email: string | null;
   grade: string | null;
   className: string | null;
-}
-
-interface RegistrationWindowOption {
-  id: string;
-  title: string;
-  status: string;
-  examBoard: { id: string; name: string };
-  examSeries: { id: string; name: string; year: number };
 }
 
 interface ExamSessionOption extends ExamSessionSearchable {
@@ -52,8 +48,15 @@ export function LateRegistrationModal({
   const [students, setStudents] = useState<StudentOption[]>([]);
   const [studentsLoading, setStudentsLoading] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentOption | null>(null);
-  const [windows, setWindows] = useState<RegistrationWindowOption[]>([]);
-  const [registrationWindowId, setRegistrationWindowId] = useState("");
+  const windowSelector = useRegistrationWindowSelector({
+    scope: windowFilter === "teacher" ? "late-teacher" : "late-staff",
+  });
+  const registrationWindowId = windowSelector.registrationWindowId;
+  const selectedWindow = windowSelector.selectedWindow as {
+    id: string;
+    examSeries: { id: string; name: string; year: number };
+    examBoard: { id: string; name: string };
+  } | null;
   const [subjectFilter, setSubjectFilter] = useState("");
   const [sessionQuery, setSessionQuery] = useState("");
   const [sessions, setSessions] = useState<ExamSessionOption[]>([]);
@@ -62,25 +65,6 @@ export function LateRegistrationModal({
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const selectedWindow = windows.find((window) => window.id === registrationWindowId) ?? null;
-
-  useEffect(() => {
-    fetch("/api/registration-windows")
-      .then((r) => r.json())
-      .then((data) =>
-        setWindows(
-          Array.isArray(data)
-            ? data.filter((window: RegistrationWindowOption) =>
-                windowFilter === "teacher"
-                  ? window.status === "OPEN"
-                  : window.status === "OPEN" || window.status === "CLOSED",
-              )
-            : [],
-        ),
-      )
-      .catch(() => setWindows([]));
-  }, [windowFilter]);
 
   useEffect(() => {
     if (studentQuery.trim().length < 2) {
@@ -234,24 +218,15 @@ export function LateRegistrationModal({
             </div>
           </label>
 
-          <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">Registration Window / Exam Series *</span>
-            <select
-              value={registrationWindowId}
-              onChange={(e) => {
-                setRegistrationWindowId(e.target.value);
+          <RegistrationWindowSelectorFields
+            state={{
+              ...windowSelector,
+              setRegistrationWindowId: (id) => {
+                windowSelector.setRegistrationWindowId(id);
                 setSelectedSessionIds([]);
-              }}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-            >
-              <option value="">Select closed registration window</option>
-              {windows.map((window) => (
-                <option key={window.id} value={window.id}>
-                  {window.title} — {window.examBoard.name} · {window.examSeries.name} ({window.examSeries.year})
-                </option>
-              ))}
-            </select>
-          </label>
+              },
+            }}
+          />
 
           {selectedWindow ? (
             <p className="text-sm text-slate-600">

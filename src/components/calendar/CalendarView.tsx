@@ -237,6 +237,24 @@ export function CalendarView() {
   const calendarRootRef = useRef<HTMLDivElement>(null);
   const visibleEventsRef = useRef<CalendarEvent[]>([]);
   const lastNavigatedLevels = useRef<string>("");
+  const [isMobileCalendar, setIsMobileCalendar] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsMobileCalendar(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const api = calendarRef.current?.getApi();
+    if (!api) return;
+    const targetView = isMobileCalendar ? "listMonth" : "dayGridMonth";
+    if (api.view.type !== targetView) {
+      api.changeView(targetView);
+    }
+  }, [isMobileCalendar]);
 
   const selectedDateKey = selectedEvent ? eventDateKey(selectedEvent.start) : null;
 
@@ -634,7 +652,7 @@ export function CalendarView() {
               </button>
               {examBoards.map((board) => {
                 const active = filters.examBoardIds.includes(board.id);
-                const accent = examBoardAccent(board.code, board.name).accent;
+                const { accent, label: boardLabel } = examBoardAccent(board.code, board.name);
                 return (
                   <button
                     key={board.id}
@@ -646,8 +664,9 @@ export function CalendarView() {
                         : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                     }`}
                     style={active ? undefined : { borderLeft: `3px solid ${accent}` }}
+                    title={board.name}
                   >
-                    {board.name}
+                    {boardLabel}
                   </button>
                 );
               })}
@@ -776,28 +795,40 @@ export function CalendarView() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
-        <Card className="p-4">
+        <Card className="order-2 p-3 sm:p-4 lg:order-1">
           {error ? (
             <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {error}
             </div>
           ) : null}
           {initialLoading ? (
-            <div className="flex h-[700px] items-center justify-center text-sm text-slate-500">
+            <div
+              className={`flex items-center justify-center text-sm text-slate-500 ${
+                isMobileCalendar ? "min-h-[16rem]" : "h-[700px]"
+              }`}
+            >
               Loading calendar...
             </div>
           ) : (
-            <div ref={calendarRootRef}>
+            <div ref={calendarRootRef} className="calendar-shell">
             <FullCalendar
               ref={calendarRef}
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
-              initialView="dayGridMonth"
-              headerToolbar={{
-                left: "prev,next today",
-                center: "title",
-                right: "dayGridMonth,timeGridWeek,listMonth",
-              }}
-              height={700}
+              initialView={isMobileCalendar ? "listMonth" : "dayGridMonth"}
+              headerToolbar={
+                isMobileCalendar
+                  ? {
+                      left: "prev,next today",
+                      center: "title",
+                      right: "listMonth,dayGridMonth",
+                    }
+                  : {
+                      left: "prev,next today",
+                      center: "title",
+                      right: "dayGridMonth,timeGridWeek,listMonth",
+                    }
+              }
+              height={isMobileCalendar ? "auto" : 700}
               eventMinHeight={CALENDAR_EVENT_BODY_HEIGHT_PX}
               dayMaxEvents={2}
               moreLinkClick="popover"
@@ -833,7 +864,7 @@ export function CalendarView() {
           ) : null}
         </Card>
 
-        <Card>
+        <Card className="order-1 lg:order-2">
           <h2 className="mb-4 text-lg font-semibold text-slate-900">Event details</h2>
           {selectedEvent ? (
             <div className="space-y-3 text-sm">

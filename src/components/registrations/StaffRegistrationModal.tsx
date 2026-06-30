@@ -2,6 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  RegistrationWindowSelectorFields,
+  useRegistrationWindowSelector,
+} from "@/components/registrations/RegistrationWindowSelector";
+import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
   formatExamSessionOptionLabel,
@@ -16,14 +20,6 @@ interface CandidateOption {
   studentNumber: string | null;
   grade: string | null;
   className: string | null;
-}
-
-interface RegistrationWindowOption {
-  id: string;
-  title: string;
-  status: string;
-  examBoard: { id: string; name: string };
-  examSeries: { id: string; name: string; year: number };
 }
 
 interface ExamSessionOption extends ExamSessionSearchable {
@@ -56,8 +52,15 @@ export function StaffRegistrationModal({
   const [candidates, setCandidates] = useState<CandidateOption[]>([]);
   const [candidatesLoading, setCandidatesLoading] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState<CandidateOption | null>(null);
-  const [windows, setWindows] = useState<RegistrationWindowOption[]>([]);
-  const [registrationWindowId, setRegistrationWindowId] = useState("");
+  const windowSelector = useRegistrationWindowSelector({
+    scope: isOfficeOnly ? "office-only" : "assisted",
+  });
+  const registrationWindowId = windowSelector.registrationWindowId;
+  const selectedWindow = windowSelector.selectedWindow as {
+    id: string;
+    examSeries: { id: string; name: string; year: number };
+    examBoard: { id: string; name: string };
+  } | null;
   const [subjectFilter, setSubjectFilter] = useState("");
   const [sessionQuery, setSessionQuery] = useState("");
   const [sessions, setSessions] = useState<ExamSessionOption[]>([]);
@@ -66,24 +69,6 @@ export function StaffRegistrationModal({
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const selectedWindow = windows.find((window) => window.id === registrationWindowId) ?? null;
-
-  useEffect(() => {
-    fetch("/api/registration-windows")
-      .then((r) => r.json())
-      .then((data) => {
-        const all = Array.isArray(data) ? data : [];
-        setWindows(
-          isOfficeOnly
-            ? all.filter((window: RegistrationWindowOption) => window.status !== "DRAFT")
-            : all.filter(
-                (window: RegistrationWindowOption) => window.status === "OPEN",
-              ),
-        );
-      })
-      .catch(() => setWindows([]));
-  }, [isOfficeOnly]);
 
   useEffect(() => {
     if (candidateQuery.trim().length < 2) {
@@ -244,24 +229,15 @@ export function StaffRegistrationModal({
             </div>
           </label>
 
-          <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">Registration window *</span>
-            <select
-              value={registrationWindowId}
-              onChange={(e) => {
-                setRegistrationWindowId(e.target.value);
+          <RegistrationWindowSelectorFields
+            state={{
+              ...windowSelector,
+              setRegistrationWindowId: (id) => {
+                windowSelector.setRegistrationWindowId(id);
                 setSelectedSessionIds([]);
-              }}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-            >
-              <option value="">Select registration window</option>
-              {windows.map((window) => (
-                <option key={window.id} value={window.id}>
-                  {window.title} — {window.examBoard.name} · {window.examSeries.name} ({window.status})
-                </option>
-              ))}
-            </select>
-          </label>
+              },
+            }}
+          />
 
           <label className="block text-sm">
             <span className="mb-1 block font-medium text-slate-700">Exam sessions *</span>

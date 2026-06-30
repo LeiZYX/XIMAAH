@@ -43,7 +43,9 @@ function WindowCard({
   const isLocked = group.cardStatus === "Locked";
 
   return (
-    <Card className="overflow-hidden p-0">
+    <Card
+      className={`overflow-hidden p-0 ${isLocked ? "ring-2 ring-indigo-200 ring-inset" : ""}`}
+    >
       {printOpen ? (
         <RegistrationConfirmationPrintModal
           data={{
@@ -62,13 +64,13 @@ function WindowCard({
           onClose={() => setPrintOpen(false)}
         />
       ) : null}
-      <div className="border-b border-slate-100 bg-slate-50/80 px-5 py-4">
+      <div className="border-b border-slate-100 bg-slate-50/80 px-4 py-4 sm:px-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
               {group.boardSummary}
             </p>
-            <h2 className="text-lg font-semibold text-slate-900">
+            <h2 className="text-base font-semibold text-slate-900 sm:text-lg">
               {group.window.title || group.examSeries.name}
             </h2>
             <p className="text-sm text-slate-600">
@@ -150,7 +152,7 @@ function WindowCard({
       </div>
 
       {expanded ? (
-        <div className="space-y-5 px-5 py-4">
+        <div className="space-y-5 px-4 py-4 sm:px-5">
           {boardGroups.map((board) => (
             <div key={board.boardName}>
               <h3 className="mb-2 text-sm font-semibold text-slate-800">{board.boardName}</h3>

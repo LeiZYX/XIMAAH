@@ -2,6 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  RegistrationWindowSelectorFields,
+  useRegistrationWindowSelector,
+} from "@/components/registrations/RegistrationWindowSelector";
+import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
   formatExamSessionOptionLabel,
@@ -14,14 +18,6 @@ interface CandidateOption {
   englishName: string;
   assessmentHubCandidateNumber: string;
   email: string | null;
-}
-
-interface RegistrationWindowOption {
-  id: string;
-  title: string;
-  status: string;
-  examBoard: { id: string; name: string };
-  examSeries: { id: string; name: string; year: number };
 }
 
 interface ExamSessionOption extends ExamSessionSearchable {
@@ -50,25 +46,15 @@ export function ExternalCandidateRegistrationModal({
     assessmentHubCandidateNumber: "",
     externalId: "",
   });
-  const [windows, setWindows] = useState<RegistrationWindowOption[]>([]);
-  const [registrationWindowId, setRegistrationWindowId] = useState("");
+  const windowSelector = useRegistrationWindowSelector({ scope: "external" });
+  const registrationWindowId = windowSelector.registrationWindowId;
+  const selectedWindow = windowSelector.selectedWindow;
   const [sessionQuery, setSessionQuery] = useState("");
   const [sessions, setSessions] = useState<ExamSessionOption[]>([]);
   const [selectedSessionIds, setSelectedSessionIds] = useState<string[]>([]);
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const selectedWindow = windows.find((window) => window.id === registrationWindowId) ?? null;
-
-  useEffect(() => {
-    fetch("/api/registration-windows")
-      .then((r) => r.json())
-      .then((data) =>
-        setWindows(Array.isArray(data) ? data.filter((w: RegistrationWindowOption) => w.status !== "DRAFT") : []),
-      )
-      .catch(() => setWindows([]));
-  }, []);
 
   useEffect(() => {
     if (!useExisting || candidateQuery.trim().length < 2) {
@@ -87,7 +73,7 @@ export function ExternalCandidateRegistrationModal({
   }, [candidateQuery, useExisting]);
 
   useEffect(() => {
-    if (!selectedWindow) {
+    if (!selectedWindow?.examSeries?.id) {
       setSessions([]);
       return;
     }
@@ -198,21 +184,15 @@ export function ExternalCandidateRegistrationModal({
             </div>
           )}
 
-          <select
-            value={registrationWindowId}
-            onChange={(e) => {
-              setRegistrationWindowId(e.target.value);
-              setSelectedSessionIds([]);
+          <RegistrationWindowSelectorFields
+            state={{
+              ...windowSelector,
+              setRegistrationWindowId: (id) => {
+                windowSelector.setRegistrationWindowId(id);
+                setSelectedSessionIds([]);
+              },
             }}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-          >
-            <option value="">Select registration window</option>
-            {windows.map((window) => (
-              <option key={window.id} value={window.id}>
-                {window.title} ({window.status})
-              </option>
-            ))}
-          </select>
+          />
 
           <input
             value={sessionQuery}

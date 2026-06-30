@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { canManageRegistrationWindows } from "@/lib/auth/permissions";
+import { isValidAcademicYear } from "@/lib/registrations/academic-year";
 import { lockRegistrationsForWindow, ensureExpiredWindowsLocked } from "@/lib/registrations/lock";
 import { assertRegistrationWindowTimingValid } from "@/lib/registrations/fee-stages";
 import type { RegistrationWindowTimingSource } from "@/lib/registrations/sync-fee-stages-from-window";
@@ -87,6 +88,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   const body = await request.json();
   const data = parseJsonBody<{
     title?: string;
+    academicYear?: string;
     examBoardId?: string;
     examSeriesIds?: string[];
     studentRegistrationOpenAt?: string;
@@ -147,6 +149,12 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     if (!board) return jsonError("Exam board not found", 404);
   }
 
+  if (data.academicYear !== undefined) {
+    if (!isValidAcademicYear(data.academicYear)) {
+      return jsonError("Invalid academic year format. Use e.g. 2026/27", 400);
+    }
+  }
+
   const window = await prisma.$transaction(async (tx) => {
     if (examSeriesIds) {
       await tx.registrationWindowIncludedSeries.deleteMany({
@@ -158,6 +166,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       where: { id },
       data: {
         ...(data.title !== undefined ? { title: data.title } : {}),
+        ...(data.academicYear !== undefined ? { academicYear: data.academicYear } : {}),
         examBoardId,
         ...(examSeriesIds
           ? {

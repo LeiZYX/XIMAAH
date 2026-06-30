@@ -283,6 +283,7 @@ exports.Prisma.RegistrationWindowScalarFieldEnum = {
   examBoardId: 'examBoardId',
   examSeriesId: 'examSeriesId',
   title: 'title',
+  academicYear: 'academicYear',
   studentRegistrationOpenAt: 'studentRegistrationOpenAt',
   studentRegistrationCloseAt: 'studentRegistrationCloseAt',
   registrationCloseAt: 'registrationCloseAt',
@@ -822,6 +823,7 @@ exports.Prisma.RegistrationWindowOrderByRelevanceFieldEnum = {
   examBoardId: 'examBoardId',
   examSeriesId: 'examSeriesId',
   title: 'title',
+  academicYear: 'academicYear',
   createdById: 'createdById'
 };
 

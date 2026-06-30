@@ -14,18 +14,26 @@ export default function StudentHomePage() {
       />
       <div className="grid gap-4 sm:grid-cols-2">
         <Link href="/calendar">
-          <Card className="transition hover:border-indigo-300 hover:shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-900">Exam calendar</h2>
+          <Card className="h-full transition hover:border-indigo-300 hover:shadow-sm">
+            <h2 className="text-base font-semibold text-slate-900 sm:text-lg">Exam calendar</h2>
             <p className="mt-1 text-sm text-slate-600">
               Browse all exam sessions and register during open registration windows.
             </p>
           </Card>
         </Link>
         <Link href="/student/registrations">
-          <Card className="transition hover:border-indigo-300 hover:shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-900">My Exam Registrations</h2>
+          <Card className="h-full transition hover:border-indigo-300 hover:shadow-sm">
+            <h2 className="text-base font-semibold text-slate-900 sm:text-lg">My Exam Registrations</h2>
             <p className="mt-1 text-sm text-slate-600">
               Review your selections by exam series and registration window.
+            </p>
+          </Card>
+        </Link>
+        <Link href="/student/fee-statements" className="sm:col-span-2">
+          <Card className="transition hover:border-indigo-300 hover:shadow-sm">
+            <h2 className="text-base font-semibold text-slate-900 sm:text-lg">Fee Statements</h2>
+            <p className="mt-1 text-sm text-slate-600">
+              View issued fee statements for your locked registrations.
             </p>
           </Card>
         </Link>

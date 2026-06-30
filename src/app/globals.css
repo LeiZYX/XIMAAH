@@ -193,3 +193,38 @@ body {
 .fc .fc-list-event[data-xima-selected] td {
   background-color: #eef2ff !important;
 }
+
+@media (max-width: 767px) {
+  .calendar-shell .fc .fc-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .calendar-shell .fc .fc-toolbar-chunk {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+
+  .calendar-shell .fc .fc-toolbar-title {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .calendar-shell .fc .fc-button {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .calendar-shell .fc-list-event-title {
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+
+  .calendar-shell .fc-list-event-time {
+    font-size: 0.75rem;
+    white-space: normal;
+  }
+}

@@ -5,9 +5,9 @@ export const revalidate = 0;
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <AppHeader />
-      <main className="mx-auto max-w-4xl p-6 lg:p-8">{children}</main>
+      <main className="mx-auto max-w-4xl px-4 py-5 sm:p-6 lg:p-8">{children}</main>
     </div>
   );
 }

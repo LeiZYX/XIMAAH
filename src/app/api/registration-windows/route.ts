@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { canManageRegistrationWindows } from "@/lib/auth/permissions";
+import {
+  getCurrentAcademicYear,
+  inferAcademicYearFromExamYear,
+  inferAcademicYearFromRegistrationOpenAt,
+  isValidAcademicYear,
+  mergeAcademicYearOptions,
+} from "@/lib/registrations/academic-year";
 import { createInitialFeeStagesForWindow } from "@/lib/registrations/create-initial-fee-stages";
 import { assertRegistrationWindowTimingValid } from "@/lib/registrations/fee-stages";
 import {
@@ -9,6 +16,10 @@ import {
   registrationWindowSeriesInclude,
   validateIncludedSeriesForBoard,
 } from "@/lib/registrations/included-series";
+import {
+  parseRegistrationWindowListScope,
+  registrationWindowScopeWhere,
+} from "@/lib/registrations/window-list-scope";
 import { summarizeRegistrationWindow } from "@/lib/registrations/window-summary";
 import { prisma } from "@/lib/prisma";
 
@@ -29,21 +40,65 @@ function enrichWindow(
   };
 }
 
-async function loadWindows() {
+const windowInclude = {
+  ...registrationWindowSeriesInclude,
+  createdBy: { select: { id: true, name: true } },
+  feeStages: { orderBy: { sequence: "asc" as const } },
+  _count: { select: { registrations: true } },
+};
+
+async function loadWindows(where: Record<string, unknown> = {}) {
   return prisma.registrationWindow.findMany({
-    include: {
-      ...registrationWindowSeriesInclude,
-      createdBy: { select: { id: true, name: true } },
-      feeStages: { orderBy: { sequence: "asc" } },
-      _count: { select: { registrations: true } },
-    },
+    where,
+    include: windowInclude,
     orderBy: [{ studentRegistrationOpenAt: "desc" }],
   });
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const windows = await loadWindows();
+    const { searchParams } = request.nextUrl;
+    const yearsOnly = searchParams.get("yearsOnly") === "true";
+    const resolveWindowId = searchParams.get("resolveWindowId");
+    const academicYearParam = searchParams.get("academicYear");
+    const scope = parseRegistrationWindowListScope(searchParams.get("scope"));
+    const listAllYears = searchParams.get("allYears") === "true";
+
+    if (yearsOnly) {
+      const rows = await prisma.registrationWindow.findMany({
+        select: { academicYear: true },
+        distinct: ["academicYear"],
+        orderBy: { academicYear: "desc" },
+      });
+      const years = mergeAcademicYearOptions(rows.map((row) => row.academicYear));
+      return NextResponse.json({ years });
+    }
+
+    if (resolveWindowId) {
+      const resolved = await prisma.registrationWindow.findUnique({
+        where: { id: resolveWindowId },
+        select: { academicYear: true },
+      });
+      if (!resolved) {
+        return jsonError("Registration window not found", 404);
+      }
+      return NextResponse.json({ academicYear: resolved.academicYear });
+    }
+
+    const where: Record<string, unknown> = {
+      ...registrationWindowScopeWhere(scope),
+    };
+
+    if (academicYearParam) {
+      if (!isValidAcademicYear(academicYearParam)) {
+        return jsonError("Invalid academic year", 400);
+      }
+      where.academicYear = academicYearParam;
+    } else if (!listAllYears) {
+      where.academicYear = getCurrentAcademicYear();
+    }
+
+    const windows = await loadWindows(where);
     return NextResponse.json(windows.map(enrichWindow));
   } catch (error) {
     console.error("GET /api/registration-windows failed:", error);
@@ -64,6 +119,7 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const data = parseJsonBody<{
     title: string;
+    academicYear?: string;
     examBoardId: string;
     studentRegistrationOpenAt: string;
     studentRegistrationCloseAt: string;
@@ -121,11 +177,27 @@ export async function POST(request: NextRequest) {
   const primarySeries = seriesRows[0]!;
   const status = (data.status as "DRAFT" | "OPEN" | "CLOSED" | "ARCHIVED") ?? "DRAFT";
 
+  let academicYear = data.academicYear?.trim();
+  if (academicYear) {
+    if (!isValidAcademicYear(academicYear)) {
+      return jsonError("Invalid academic year format. Use e.g. 2026/27", 400);
+    }
+  } else {
+    const seriesYear = await prisma.examSeries.findUnique({
+      where: { id: primarySeries.id },
+      select: { year: true },
+    });
+    academicYear = seriesYear
+      ? inferAcademicYearFromExamYear(seriesYear.year)
+      : inferAcademicYearFromRegistrationOpenAt(studentRegistrationOpenAt);
+  }
+
   const window = await prisma.registrationWindow.create({
     data: {
       examBoardId,
       examSeriesId: primarySeries.id,
       title: data.title,
+      academicYear,
       studentRegistrationOpenAt,
       studentRegistrationCloseAt,
       registrationCloseAt,
@@ -157,12 +229,7 @@ export async function POST(request: NextRequest) {
 
   const refreshed = await prisma.registrationWindow.findUniqueOrThrow({
     where: { id: window.id },
-    include: {
-      ...registrationWindowSeriesInclude,
-      createdBy: { select: { id: true, name: true } },
-      feeStages: { orderBy: { sequence: "asc" } },
-      _count: { select: { registrations: true } },
-    },
+    include: windowInclude,
   });
 
   return NextResponse.json(enrichWindow(refreshed), { status: 201 });

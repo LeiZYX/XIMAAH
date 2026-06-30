@@ -558,6 +558,8 @@ model RegistrationWindow {
   examSeriesId                   String
   examSeries                     ExamSeries               @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
   title                          String
+  /// UK-style label, e.g. "2026/27" (September–August).
+  academicYear                   String
   studentRegistrationOpenAt      DateTime
   studentRegistrationCloseAt     DateTime
   registrationCloseAt            DateTime
@@ -585,6 +587,7 @@ model RegistrationWindow {
 
   @@index([examBoardId])
   @@index([examSeriesId])
+  @@index([academicYear])
   @@index([status])
   @@index([studentRegistrationOpenAt, studentRegistrationCloseAt, registrationCloseAt], map: "RegistrationWindow_timing_idx")
 }

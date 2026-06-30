@@ -1,11 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { FeeManagementNav } from "@/components/fees/FeeManagementNav";
 import { FeeStatementsBatchWidget } from "@/components/fees/FeeStatementsBatchWidget";
+import {
+  RegistrationWindowSelectorFields,
+  useRegistrationWindowSelector,
+} from "@/components/registrations/RegistrationWindowSelector";
 import {
   FEE_STATEMENT_TYPE_RADIO_LABELS,
   STAFF_REGISTRATION_TYPE_FILTERS,
@@ -19,12 +23,6 @@ interface FeeStatementsListViewProps {
   windowsBasePath: string;
 }
 
-interface RegistrationWindowOption {
-  id: string;
-  title: string;
-  status: string;
-}
-
 export function FeeStatementsListView({
   basePath,
   windowsBasePath,
@@ -32,13 +30,24 @@ export function FeeStatementsListView({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [windows, setWindows] = useState<RegistrationWindowOption[]>([]);
-  const [windowsLoading, setWindowsLoading] = useState(true);
-  const [windowId, setWindowIdState] = useState("");
   const [statementType, setStatementTypeState] = useState<StaffRegistrationTypeFilter>("NORMAL");
 
+  const windowFromUrl = searchParams.get("registrationWindowId") ?? "";
+  const yearFromUrl = searchParams.get("academicYear") ?? undefined;
+
+  const selector = useRegistrationWindowSelector({
+    scope: "staff",
+    initialAcademicYear: yearFromUrl,
+    resolveRegistrationWindowId: windowFromUrl || null,
+    initialRegistrationWindowId: windowFromUrl,
+  });
+
   const syncUrl = useCallback(
-    (updates: { registrationWindowId?: string; statementType?: StaffRegistrationTypeFilter }) => {
+    (updates: {
+      registrationWindowId?: string;
+      academicYear?: string;
+      statementType?: StaffRegistrationTypeFilter;
+    }) => {
       const params = new URLSearchParams(searchParams.toString());
       if (updates.registrationWindowId !== undefined) {
         if (updates.registrationWindowId) {
@@ -46,6 +55,9 @@ export function FeeStatementsListView({
         } else {
           params.delete("registrationWindowId");
         }
+      }
+      if (updates.academicYear !== undefined) {
+        params.set("academicYear", updates.academicYear);
       }
       if (updates.statementType !== undefined) {
         if (updates.statementType === "NORMAL") {
@@ -61,32 +73,31 @@ export function FeeStatementsListView({
   );
 
   useEffect(() => {
-    setWindowsLoading(true);
-    fetch("/api/registration-windows")
-      .then((r) => (r.ok ? r.json() : []))
-      .then((data) => {
-        const list = Array.isArray(data) ? data : [];
-        setWindows(list);
-
-        const fromUrl = searchParams.get("registrationWindowId");
-        const validFromUrl = fromUrl && list.some((window) => window.id === fromUrl) ? fromUrl : "";
-        setWindowIdState(validFromUrl || list[0]?.id || "");
-        setStatementTypeState(parseFeeStatementType(searchParams));
-      })
-      .catch(() => {
-        setWindows([]);
-        setWindowIdState("");
-        setStatementTypeState("NORMAL");
-      })
-      .finally(() => setWindowsLoading(false));
+    setStatementTypeState(parseFeeStatementType(searchParams));
   }, [searchParams]);
 
-  const setWindowId = useCallback(
-    (id: string) => {
-      setWindowIdState(id);
-      syncUrl({ registrationWindowId: id });
-    },
-    [syncUrl],
+  useEffect(() => {
+    if (!selector.registrationWindowId) return;
+    if (searchParams.get("registrationWindowId") === selector.registrationWindowId) return;
+    syncUrl({
+      registrationWindowId: selector.registrationWindowId,
+      academicYear: selector.academicYear,
+    });
+  }, [searchParams, selector.academicYear, selector.registrationWindowId, syncUrl]);
+
+  const selectorForUi = useMemo(
+    () => ({
+      ...selector,
+      setAcademicYear: (year: string) => {
+        selector.setAcademicYear(year);
+        syncUrl({ academicYear: year, registrationWindowId: "" });
+      },
+      setRegistrationWindowId: (id: string) => {
+        selector.setRegistrationWindowId(id);
+        syncUrl({ registrationWindowId: id, academicYear: selector.academicYear });
+      },
+    }),
+    [selector, syncUrl],
   );
 
   const setStatementType = useCallback(
@@ -105,29 +116,19 @@ export function FeeStatementsListView({
         description="Select a registration window and statement type to generate, issue, and print fee statements or restricted invoices."
       />
 
-      {windowsLoading ? (
+      {selector.loading && selector.yearsLoading ? (
         <Card className="text-sm text-slate-600">Loading registration windows…</Card>
-      ) : windows.length === 0 ? (
-        <Card className="text-sm text-slate-600">
-          No registration windows yet. Create one under Registration Windows to manage fee statements
-          here.
+      ) : selector.windows.length === 0 ? (
+        <Card className="space-y-3">
+          <RegistrationWindowSelectorFields state={selectorForUi} layout="inline" />
+          <p className="text-sm text-slate-600">
+            No registration windows for this academic year. Create one under Registration Windows or
+            choose another academic year.
+          </p>
         </Card>
       ) : (
         <Card className="space-y-4">
-          <label className="flex flex-wrap items-center gap-2 text-sm font-medium text-slate-700">
-            Registration window
-            <select
-              value={windowId}
-              onChange={(e) => setWindowId(e.target.value)}
-              className="min-w-[16rem] rounded-lg border border-slate-300 px-3 py-2 text-sm font-normal"
-            >
-              {windows.map((window) => (
-                <option key={window.id} value={window.id}>
-                  {window.title} ({window.status})
-                </option>
-              ))}
-            </select>
-          </label>
+          <RegistrationWindowSelectorFields state={selectorForUi} layout="inline" />
 
           <fieldset>
             <legend className="text-sm font-medium text-slate-700">Statement type</legend>
@@ -154,9 +155,9 @@ export function FeeStatementsListView({
         </Card>
       )}
 
-      {windowId ? (
+      {selector.registrationWindowId ? (
         <FeeStatementsBatchWidget
-          registrationWindowId={windowId}
+          registrationWindowId={selector.registrationWindowId}
           statementType={statementType}
           windowsBasePath={windowsBasePath}
         />

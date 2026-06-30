@@ -24,7 +24,7 @@ export function examBoardCalendarLabel(code: string): string {
   const normalized = code.trim().toUpperCase();
   if (normalized === "AQA") return "AQA";
   if (normalized === "CIE") return "CIE";
-  if (normalized === "EDEXCEL") return "EDEXCEL";
+  if (normalized === "EDEXCEL") return "Edexcel";
   return normalized || "?";
 }
 
