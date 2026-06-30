@@ -12,6 +12,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$ROOT_DIR"
 
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/mysql-root.sh"
+
 if [ -f .env ]; then
   set -a
   # shellcheck disable=SC1091
@@ -35,31 +38,23 @@ if [ -t 0 ] && [ "${SKIP_BACKUP:-}" != "1" ]; then
   fi
 fi
 
-echo "==> Stopping app and removing MySQL volume"
-docker compose stop app mysql 2>/dev/null || true
-docker compose rm -f mysql 2>/dev/null || true
-
-VOLUME_NAME="$(docker volume ls -q | grep mysql_data | head -1 || true)"
-if [ -n "$VOLUME_NAME" ]; then
-  echo "    Removing volume: $VOLUME_NAME"
-  docker volume rm "$VOLUME_NAME"
-else
-  echo "    No mysql_data volume found (may already be removed)."
-fi
+echo "==> Stopping app and removing MySQL data volume"
+docker compose stop app 2>/dev/null || true
+docker compose down -v --remove-orphans 2>/dev/null || true
 
 echo "==> Starting fresh MySQL container"
 docker compose up -d mysql
 
 echo "==> Waiting for MySQL to become healthy (up to 90s)"
 for _ in $(seq 1 18); do
-  if docker compose exec -T mysql mysqladmin ping -h localhost -uroot -p"${MYSQL_ROOT_PASSWORD}" --silent 2>/dev/null; then
+  if mysql_root_ping 2>/dev/null; then
     echo "    MySQL is ready."
     break
   fi
   sleep 5
 done
 
-if ! docker compose exec -T mysql mysqladmin ping -h localhost -uroot -p"${MYSQL_ROOT_PASSWORD}" --silent 2>/dev/null; then
+if ! mysql_root_ping 2>/dev/null; then
   echo "ERROR: MySQL did not become healthy in time."
   docker compose logs mysql --tail 50
   exit 1

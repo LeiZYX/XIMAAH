@@ -2,7 +2,7 @@
 # Rebuild MySQL container and import baseline database from Git.
 #
 # Usage (production server):
-#   cp .env.production .env   # first time, or when env changes
+#   cp .env.production .env
 #   chmod +x scripts/restore-baseline-database.sh
 #   ./scripts/restore-baseline-database.sh
 set -euo pipefail
@@ -10,6 +10,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$ROOT_DIR"
+
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/mysql-root.sh"
 
 BASELINE="$ROOT_DIR/deploy/database/xima_assessment_hub_baseline.sql.gz"
 
@@ -24,14 +27,10 @@ if [ ! -f .env ] && [ -f .env.production ]; then
   cp .env.production .env
 fi
 
-if [ -f .env ]; then
-  set -a
-  # shellcheck disable=SC1091
-  source .env
-  set +a
+if [ ! -f .env ]; then
+  echo "ERROR: .env not found. Run: cp .env.production .env"
+  exit 1
 fi
-
-MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:?MYSQL_ROOT_PASSWORD is not set in .env}"
 
 echo "WARNING: This deletes the MySQL volume and restores from baseline dump."
 read -r -p "Type RESTORE to continue: " CONFIRM
@@ -40,27 +39,35 @@ if [ "$CONFIRM" != "RESTORE" ]; then
   exit 1
 fi
 
-echo "==> Stopping services and removing MySQL volume"
-docker compose stop app mysql 2>/dev/null || true
-docker compose rm -f mysql 2>/dev/null || true
-VOLUME_NAME="$(docker volume ls -q | grep mysql_data | head -1 || true)"
-if [ -n "$VOLUME_NAME" ]; then
-  docker volume rm "$VOLUME_NAME"
-fi
+echo "==> Stopping services and removing MySQL data volume"
+docker compose stop app 2>/dev/null || true
+docker compose down -v --remove-orphans 2>/dev/null || true
 
-echo "==> Starting MySQL"
+echo "==> Starting MySQL with credentials from .env"
 docker compose up -d mysql
 
-echo "==> Waiting for MySQL"
+echo "==> Waiting for MySQL (up to 90s)"
+READY=0
 for _ in $(seq 1 18); do
-  if docker compose exec -T mysql mysqladmin ping -h localhost -uroot -p"${MYSQL_ROOT_PASSWORD}" --silent 2>/dev/null; then
+  if mysql_root_ping 2>/dev/null; then
+    READY=1
+    echo "    MySQL is ready."
     break
   fi
   sleep 5
 done
 
+if [ "$READY" -ne 1 ]; then
+  echo "ERROR: MySQL did not become ready."
+  echo "Check .env matches the password used to initialize MySQL:"
+  echo "  grep MYSQL_ROOT_PASSWORD .env"
+  echo "  docker compose exec mysql printenv MYSQL_ROOT_PASSWORD"
+  docker compose logs mysql --tail 50
+  exit 1
+fi
+
 echo "==> Importing baseline database"
-gunzip -c "$BASELINE" | docker compose exec -T mysql mysql -uroot -p"${MYSQL_ROOT_PASSWORD}"
+gunzip -c "$BASELINE" | mysql_root_import_stdin
 
 echo "==> Starting application"
 docker compose up -d --build
