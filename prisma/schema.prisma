@@ -715,7 +715,7 @@ model RegistrationWindowIncludedSeries {
   examSeries           ExamSeries           @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
   createdAt            DateTime           @default(now())
 
-  @@unique([registrationWindowId, examSeriesId])
+  @@unique([registrationWindowId, examSeriesId], map: "rw_included_series_uq")
   @@index([examSeriesId])
 }
 

@@ -5,7 +5,7 @@ CREATE TABLE `RegistrationWindowIncludedSeries` (
     `examSeriesId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    UNIQUE INDEX `RegistrationWindowIncludedSeries_registrationWindowId_examSer_key`(`registrationWindowId`, `examSeriesId`),
+    UNIQUE INDEX `rw_included_series_uq`(`registrationWindowId`, `examSeriesId`),
     INDEX `RegistrationWindowIncludedSeries_examSeriesId_idx`(`examSeriesId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

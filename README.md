@@ -175,6 +175,77 @@ docker compose exec app npx prisma migrate deploy
 docker compose up -d --build
 ```
 
+### Fix failed migration history (existing production DB)
+
+If `prisma migrate deploy` reports **P3009** (failed migration in `_prisma_migrations`) and the database already has most tables (e.g. only one failed row for `20260626180000_registration_window_timing_refactor`):
+
+```bash
+chmod +x scripts/repair-migration-history.sh scripts/backup-mysql.sh
+./scripts/repair-migration-history.sh
+docker compose up -d --build
+```
+
+This script:
+
+1. Backs up MySQL
+2. Clears failed migration records (`resolve --rolled-back` / `--applied`)
+3. Runs `migrate deploy`, auto-marking migrations as applied when objects already exist
+4. Applies idempotent patches for critical v0.5.0 columns (audit log billing scope, registration numbers)
+
+Optional: inspect orphan empty workspaces from failed registration submits:
+
+```bash
+docker compose exec -T mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" xima_assessment_hub \
+  < scripts/cleanup-orphan-registration-workspaces.sql
+```
+
+### Rebuild MySQL from scratch (deletes all data)
+
+**Recommended (baseline dump from Git):**
+
+```bash
+cp .env.production .env
+chmod +x scripts/restore-baseline-database.sh
+./scripts/restore-baseline-database.sh
+```
+
+**Alternative (migrations + seed, no baseline file):**
+
+```bash
+chmod +x scripts/rebuild-mysql.sh
+./scripts/rebuild-mysql.sh
+```
+
+Production environment is committed as `.env.production` (copy to `.env` on the server).
+
+Regenerate baseline dump on dev:
+
+```bash
+./scripts/export-baseline-database.sh
+```
+
+### Reset database (delete all data and rebuild)
+
+**Destructive.** Drops the entire database, runs all migrations, and seeds admin + sample data.
+
+```bash
+chmod +x scripts/reset-production-database.sh scripts/backup-mysql.sh
+./scripts/reset-production-database.sh
+# Type RESET when prompted
+```
+
+Skip backup: `SKIP_BACKUP=1 ./scripts/reset-production-database.sh`
+
+Manual equivalent:
+
+```bash
+docker compose exec mysql mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e \
+  "DROP DATABASE IF EXISTS xima_assessment_hub; CREATE DATABASE xima_assessment_hub CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+docker compose exec app npx prisma migrate deploy
+docker compose exec app npx prisma db seed
+docker compose up -d --build
+```
+
 ## CSV Import Format
 
 See the Import page in the admin dashboard for full documentation. Each row requires an `entity` column:
