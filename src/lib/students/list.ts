@@ -4,6 +4,7 @@ import {
   parseStudentStatusFilter,
   type StudentStatusFilter,
 } from "@/lib/students/archive";
+import { parseGradeInput } from "@/lib/students/profile-enums";
 import { buildPaginationMeta } from "@/lib/pagination";
 import { containsFilter } from "@/lib/db/string-filters";
 import { prisma } from "@/lib/prisma";
@@ -33,7 +34,7 @@ export async function listStudents(filters: StudentListFilters, page = 1, pageSi
     studentProfile: {
       is: {
         ...profileWhere,
-        ...(filters.grade ? { currentGrade: filters.grade } : {}),
+        ...(filters.grade ? { currentGrade: parseGradeInput(filters.grade) ?? undefined } : {}),
         ...(filters.className ? { currentClassName: filters.className } : {}),
       },
     },

@@ -1,14 +1,16 @@
-import type { CandidateStatus, CandidateType, Prisma } from "@/generated/prisma/client";
+import type { CandidateStatus, CandidateType, Grade, Prisma } from "@/generated/prisma/client";
 import { RegistrationStatus } from "@/generated/prisma/enums";
 import { ensureInternalCandidatesSynced } from "@/lib/candidates/service";
+import { backfillMissingStudentIds } from "@/lib/candidates/student-id";
 import { buildPaginationMeta } from "@/lib/pagination";
 import { containsFilter } from "@/lib/db/string-filters";
 import { prisma } from "@/lib/prisma";
+import { parseGradeInput } from "@/lib/students/profile-enums";
 
 export interface CandidateListFilters {
   candidateType?: CandidateType;
   status?: CandidateStatus;
-  grade?: string;
+  grade?: Grade | string;
   className?: string;
   q?: string;
   assessmentHubCandidateNumber?: string;
@@ -19,16 +21,22 @@ export interface CandidateListFilters {
 
 export function parseCandidateListFilters(searchParams: URLSearchParams): CandidateListFilters {
   const type = searchParams.get("candidateType")?.toUpperCase();
-  const status = searchParams.get("status")?.toUpperCase();
+  const statusParam = searchParams.get("status");
+  const status = statusParam?.toUpperCase();
+  const parsedStatus =
+    status === "ALL"
+      ? undefined
+      : status === "ACTIVE" ||
+          status === "GRADUATED" ||
+          status === "LEFT" ||
+          status === "INACTIVE"
+        ? status
+        : statusParam === null
+          ? "ACTIVE"
+          : undefined;
   return {
     candidateType: type === "INTERNAL" || type === "EXTERNAL" ? type : undefined,
-    status:
-      status === "ACTIVE" ||
-      status === "GRADUATED" ||
-      status === "LEFT" ||
-      status === "INACTIVE"
-        ? status
-        : undefined,
+    status: parsedStatus,
     grade: searchParams.get("grade")?.trim() || undefined,
     className: searchParams.get("className")?.trim() || undefined,
     q: searchParams.get("q")?.trim() || undefined,
@@ -44,7 +52,10 @@ export function buildCandidateWhere(filters: CandidateListFilters): Prisma.Candi
   const where: Prisma.CandidateWhereInput = {};
   if (filters.candidateType) where.candidateType = filters.candidateType;
   if (filters.status) where.status = filters.status;
-  if (filters.grade) where.grade = filters.grade;
+  if (filters.grade) {
+    const grade = typeof filters.grade === "string" ? parseGradeInput(filters.grade) : filters.grade;
+    if (grade) where.grade = grade;
+  }
   if (filters.className) where.className = filters.className;
   if (filters.assessmentHubCandidateNumber) {
     where.assessmentHubCandidateNumber = containsFilter(filters.assessmentHubCandidateNumber);
@@ -59,6 +70,7 @@ export function buildCandidateWhere(filters: CandidateListFilters): Prisma.Candi
       { englishName: containsFilter(filters.q) },
       { chineseName: containsFilter(filters.q) },
       { assessmentHubCandidateNumber: containsFilter(filters.q) },
+      { studentId: containsFilter(filters.q) },
       { studentNumber: containsFilter(filters.q) },
       { email: containsFilter(filters.q) },
     ];
@@ -72,6 +84,7 @@ export async function listCandidates(
   pageSize = 50,
 ) {
   await ensureInternalCandidatesSynced();
+  await backfillMissingStudentIds().catch(() => undefined);
   const where = buildCandidateWhere(filters);
   const total = await prisma.candidate.count({ where });
   const { skip, page: safePage, totalPages } = buildPaginationMeta(total, page, pageSize);

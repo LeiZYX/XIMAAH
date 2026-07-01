@@ -165,6 +165,11 @@ exports.Prisma.StudentProfileScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StudentIdSequenceScalarFieldEnum = {
+  year: 'year',
+  lastNumber: 'lastNumber'
+};
+
 exports.Prisma.TeacherProfileScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -215,6 +220,7 @@ exports.Prisma.ExamDocumentAuditLogScalarFieldEnum = {
 
 exports.Prisma.CandidateScalarFieldEnum = {
   id: 'id',
+  studentId: 'studentId',
   assessmentHubCandidateNumber: 'assessmentHubCandidateNumber',
   candidateType: 'candidateType',
   userId: 'userId',
@@ -882,7 +888,6 @@ exports.Prisma.StudentProfileOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
   studentNo: 'studentNo',
-  currentGrade: 'currentGrade',
   currentClassName: 'currentClassName',
   idCardNumber: 'idCardNumber',
   email: 'email',
@@ -933,6 +938,7 @@ exports.Prisma.ExamDocumentAuditLogOrderByRelevanceFieldEnum = {
 
 exports.Prisma.CandidateOrderByRelevanceFieldEnum = {
   id: 'id',
+  studentId: 'studentId',
   assessmentHubCandidateNumber: 'assessmentHubCandidateNumber',
   userId: 'userId',
   studentNumber: 'studentNumber',
@@ -952,7 +958,6 @@ exports.Prisma.CandidateOrderByRelevanceFieldEnum = {
   emergencyContactName: 'emergencyContactName',
   emergencyContactPhone: 'emergencyContactPhone',
   schoolName: 'schoolName',
-  grade: 'grade',
   className: 'className',
   sourceSystem: 'sourceSystem',
   externalId: 'externalId'
@@ -1355,10 +1360,18 @@ exports.UserRole = exports.$Enums.UserRole = {
   STUDENT: 'STUDENT'
 };
 
+exports.Grade = exports.$Enums.Grade = {
+  G9: 'G9',
+  G10: 'G10',
+  G11: 'G11',
+  G12: 'G12'
+};
+
 exports.Gender = exports.$Enums.Gender = {
   MALE: 'MALE',
   FEMALE: 'FEMALE',
   OTHER: 'OTHER',
+  UNKNOWN: 'UNKNOWN',
   PREFER_NOT_TO_SAY: 'PREFER_NOT_TO_SAY'
 };
 
@@ -1380,10 +1393,13 @@ exports.UserAuditAction = exports.$Enums.UserAuditAction = {
   USER_DEACTIVATED: 'USER_DEACTIVATED',
   PASSWORD_RESET_REQUESTED: 'PASSWORD_RESET_REQUESTED',
   PASSWORD_RESET_COMPLETED: 'PASSWORD_RESET_COMPLETED',
+  PASSWORD_FORCE_SET_BY_ADMIN: 'PASSWORD_FORCE_SET_BY_ADMIN',
   STUDENT_IMPORTED: 'STUDENT_IMPORTED',
   TEACHER_IMPORTED: 'TEACHER_IMPORTED',
   STUDENT_PROMOTED: 'STUDENT_PROMOTED',
-  STUDENT_ARCHIVED: 'STUDENT_ARCHIVED'
+  STUDENT_ARCHIVED: 'STUDENT_ARCHIVED',
+  STUDENT_REACTIVATED: 'STUDENT_REACTIVATED',
+  STUDENT_DELETED: 'STUDENT_DELETED'
 };
 
 exports.ExamDocumentAuditAction = exports.$Enums.ExamDocumentAuditAction = {
@@ -1733,6 +1749,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
   StudentProfile: 'StudentProfile',
+  StudentIdSequence: 'StudentIdSequence',
   TeacherProfile: 'TeacherProfile',
   SystemEmailSettings: 'SystemEmailSettings',
   UserAuditLog: 'UserAuditLog',

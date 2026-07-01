@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { SetPasswordModal } from "@/components/users/SetPasswordModal";
 import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { UsersSubnav } from "@/components/users/UsersSubnav";
@@ -89,6 +90,7 @@ export function TeacherUsersManager() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<TeacherFormState>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [setPasswordUser, setSetPasswordUser] = useState<TeacherRow | null>(null);
   const [filters, setFilters] = useState({
     q: "",
     status: "ACTIVE",
@@ -267,6 +269,21 @@ export function TeacherUsersManager() {
     setMessage(typeof data.message === "string" ? data.message : "Password reset email sent.");
   }
 
+  async function submitForceSetPassword(password: string, confirmPassword: string) {
+    if (!setPasswordUser) return "No user selected";
+    const response = await fetch(`/api/admin/users/${setPasswordUser.id}/force-set-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password, confirmPassword }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      return typeof data.error === "string" ? data.error : "Could not set password";
+    }
+    setMessage(typeof data.message === "string" ? data.message : "Password has been updated successfully.");
+    return null;
+  }
+
   return (
     <div className="space-y-4">
       <UsersSubnav />
@@ -383,6 +400,13 @@ export function TeacherUsersManager() {
                           className="text-slate-700 hover:underline"
                         >
                           Reset password
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSetPasswordUser(row)}
+                          className="text-slate-700 hover:underline"
+                        >
+                          Set password
                         </button>
                       </div>
                     </td>
@@ -511,6 +535,13 @@ export function TeacherUsersManager() {
           </div>
         </div>
       ) : null}
+
+      <SetPasswordModal
+        open={Boolean(setPasswordUser)}
+        userLabel={setPasswordUser?.name ?? "teacher"}
+        onClose={() => setSetPasswordUser(null)}
+        onSubmit={submitForceSetPassword}
+      />
     </div>
   );
 }

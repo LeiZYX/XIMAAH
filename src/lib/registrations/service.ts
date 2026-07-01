@@ -1,5 +1,5 @@
 import { RegistrationAuditAction, RegistrationStatus } from "@/generated/prisma/enums";
-import type { CandidateType } from "@/generated/prisma/client";
+import type { CandidateType, Grade } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   createRegistrationAuditLog,
@@ -97,7 +97,7 @@ function buildRegistrationData(
   student: { id: string; name: string; email: string | null; phone: string | null },
   profile: {
     studentNo: string;
-    currentGrade: string;
+    currentGrade: Grade;
     currentClassName: string;
     email: string | null;
     phone: string | null;

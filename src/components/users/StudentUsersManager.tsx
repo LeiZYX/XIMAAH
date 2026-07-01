@@ -1,12 +1,15 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { CandidateLifecycleActions } from "@/components/candidates/CandidateLifecycleActions";
+import { SetPasswordModal } from "@/components/users/SetPasswordModal";
 import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { UsersSubnav } from "@/components/users/UsersSubnav";
 import { LIST_PAGE_SIZES } from "@/lib/pagination";
 import { USERS_MODULE_DESCRIPTION } from "@/lib/navigation/module-descriptions";
 import { studentStatusLabel } from "@/lib/students/labels";
+import { GENDER_VALUES, GRADE_VALUES } from "@/lib/students/profile-enums";
 
 interface StudentRow {
   id: string;
@@ -15,8 +18,15 @@ interface StudentRow {
   phone: string | null;
   isActive: boolean;
   studentNo: string | null;
+  candidateId: string | null;
   candidateNumber: string | null;
+  studentId: string | null;
   chineseName: string | null;
+  pinyinLastName: string | null;
+  pinyinFirstName: string | null;
+  idNumber: string | null;
+  passportNumber: string | null;
+  dateOfBirth: string | null;
   idCardNumber: string | null;
   gender: string | null;
   grade: string | null;
@@ -28,13 +38,17 @@ interface StudentRow {
 interface StudentFormState {
   englishName: string;
   chineseName: string;
+  pinyinLastName: string;
+  pinyinFirstName: string;
   studentNumber: string;
   candidateNumber: string;
-  idCardNumber: string;
-  gender: "" | "MALE" | "FEMALE" | "OTHER";
+  idNumber: string;
+  passportNumber: string;
+  dateOfBirth: string;
+  gender: "" | "MALE" | "FEMALE" | "OTHER" | "UNKNOWN";
   email: string;
   phone: string;
-  grade: string;
+  grade: "" | "G9" | "G10" | "G11" | "G12";
   className: string;
   status: "ACTIVE" | "GRADUATED" | "LEFT" | "INACTIVE";
   isActive: boolean;
@@ -43,9 +57,13 @@ interface StudentFormState {
 const emptyForm = (): StudentFormState => ({
   englishName: "",
   chineseName: "",
+  pinyinLastName: "",
+  pinyinFirstName: "",
   studentNumber: "",
   candidateNumber: "",
-  idCardNumber: "",
+  idNumber: "",
+  passportNumber: "",
+  dateOfBirth: "",
   gender: "",
   email: "",
   phone: "",
@@ -66,6 +84,7 @@ function genderLabel(gender: string | null) {
   if (gender === "MALE") return "Male";
   if (gender === "FEMALE") return "Female";
   if (gender === "OTHER") return "Other";
+  if (gender === "UNKNOWN") return "Unknown";
   return "—";
 }
 
@@ -99,6 +118,7 @@ export function StudentUsersManager() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<StudentFormState>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [setPasswordUser, setSetPasswordUser] = useState<StudentRow | null>(null);
   const [filters, setFilters] = useState({
     q: "",
     grade: "",
@@ -187,13 +207,17 @@ export function StudentUsersManager() {
     setForm({
       englishName: row.name,
       chineseName: row.chineseName ?? "",
+      pinyinLastName: row.pinyinLastName ?? "",
+      pinyinFirstName: row.pinyinFirstName ?? "",
       studentNumber: row.studentNo ?? "",
       candidateNumber: row.candidateNumber ?? "",
-      idCardNumber: row.idCardNumber ?? "",
+      idNumber: row.idNumber ?? row.idCardNumber ?? "",
+      passportNumber: row.passportNumber ?? "",
+      dateOfBirth: row.dateOfBirth ?? "",
       gender: (row.gender as StudentFormState["gender"]) || "",
       email: row.email ?? "",
       phone: row.phone ?? "",
-      grade: row.grade ?? "",
+      grade: (row.grade as StudentFormState["grade"]) || "",
       className: row.className ?? "",
       status: (row.status as StudentFormState["status"]) || "ACTIVE",
       isActive: row.isActive,
@@ -210,13 +234,17 @@ export function StudentUsersManager() {
     const payload = {
       englishName: form.englishName.trim(),
       chineseName: form.chineseName.trim() || undefined,
-      studentNumber: form.studentNumber.trim(),
+      pinyinLastName: form.pinyinLastName.trim() || undefined,
+      pinyinFirstName: form.pinyinFirstName.trim() || undefined,
+      studentNumber: form.studentNumber.trim() || undefined,
       candidateNumber: form.candidateNumber.trim() || undefined,
-      idCardNumber: form.idCardNumber.trim() || undefined,
+      idNumber: form.idNumber.trim() || undefined,
+      passportNumber: form.passportNumber.trim() || undefined,
+      dateOfBirth: form.dateOfBirth.trim() || undefined,
       gender: form.gender || undefined,
       email: form.email.trim() || undefined,
       phone: form.phone.trim() || undefined,
-      grade: form.grade.trim(),
+      grade: form.grade,
       className: form.className.trim(),
       status: form.status,
       isActive: form.isActive,
@@ -276,6 +304,21 @@ export function StudentUsersManager() {
     setMessage(typeof data.message === "string" ? data.message : "Password reset email sent.");
   }
 
+  async function submitForceSetPassword(password: string, confirmPassword: string) {
+    if (!setPasswordUser) return "No user selected";
+    const response = await fetch(`/api/admin/users/${setPasswordUser.id}/force-set-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password, confirmPassword }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      return typeof data.error === "string" ? data.error : "Could not set password";
+    }
+    setMessage(typeof data.message === "string" ? data.message : "Password has been updated successfully.");
+    return null;
+  }
+
   return (
     <div className="space-y-4">
       <UsersSubnav />
@@ -302,12 +345,18 @@ export function StudentUsersManager() {
             onChange={(e) => updateFilters({ q: e.target.value })}
             className={filterClass}
           />
-          <input
-            placeholder="Grade"
+          <select
             value={filters.grade}
             onChange={(e) => updateFilters({ grade: e.target.value })}
             className={filterClass}
-          />
+          >
+            <option value="">All grades</option>
+            {GRADE_VALUES.map((grade) => (
+              <option key={grade} value={grade}>
+                {grade}
+              </option>
+            ))}
+          </select>
           <input
             placeholder="Class"
             value={filters.className}
@@ -359,6 +408,7 @@ export function StudentUsersManager() {
                       aria-label="Select all students"
                     />
                   </th>
+                  <th className="border border-slate-200 px-3 py-2">Student ID</th>
                   <th className="border border-slate-200 px-3 py-2">Student No.</th>
                   <th className="border border-slate-200 px-3 py-2">English name</th>
                   <th className="border border-slate-200 px-3 py-2">Chinese name</th>
@@ -380,6 +430,9 @@ export function StudentUsersManager() {
                         onChange={() => toggleRow(row.id)}
                         aria-label={`Select ${row.name}`}
                       />
+                    </td>
+                    <td className="border border-slate-200 px-3 py-2 font-mono text-xs">
+                      {row.studentId ?? "—"}
                     </td>
                     <td className="border border-slate-200 px-3 py-2">{row.studentNo ?? "—"}</td>
                     <td className="border border-slate-200 px-3 py-2">{row.name}</td>
@@ -418,6 +471,24 @@ export function StudentUsersManager() {
                         >
                           Reset password
                         </button>
+                        <button
+                          type="button"
+                          onClick={() => setSetPasswordUser(row)}
+                          className="text-slate-700 hover:underline"
+                        >
+                          Set password
+                        </button>
+                        {row.candidateId ? (
+                          <CandidateLifecycleActions
+                            candidateId={row.candidateId}
+                            apiPath="/api/admin/candidates"
+                            status={row.status}
+                            canArchive
+                            canDelete
+                            onChanged={() => void load()}
+                            onDeleted={() => void load()}
+                          />
+                        ) : null}
                       </div>
                     </td>
                   </tr>
@@ -451,6 +522,15 @@ export function StudentUsersManager() {
             <form onSubmit={(e) => void handleSave(e)} className="mt-4 space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-sm text-slate-700">
+                  Chinese name *
+                  <input
+                    required
+                    value={form.chineseName}
+                    onChange={(e) => setForm((prev) => ({ ...prev, chineseName: e.target.value }))}
+                    className={`mt-1 ${inputClass}`}
+                  />
+                </label>
+                <label className="block text-sm text-slate-700">
                   English name *
                   <input
                     required
@@ -460,19 +540,24 @@ export function StudentUsersManager() {
                   />
                 </label>
                 <label className="block text-sm text-slate-700">
-                  Chinese name
+                  Pinyin last name *
                   <input
-                    value={form.chineseName}
-                    onChange={(e) => setForm((prev) => ({ ...prev, chineseName: e.target.value }))}
+                    required
+                    value={form.pinyinLastName}
+                    onChange={(e) =>
+                      setForm((prev) => ({ ...prev, pinyinLastName: e.target.value }))
+                    }
                     className={`mt-1 ${inputClass}`}
                   />
                 </label>
                 <label className="block text-sm text-slate-700">
-                  Student number *
+                  Pinyin first name *
                   <input
                     required
-                    value={form.studentNumber}
-                    onChange={(e) => setForm((prev) => ({ ...prev, studentNumber: e.target.value }))}
+                    value={form.pinyinFirstName}
+                    onChange={(e) =>
+                      setForm((prev) => ({ ...prev, pinyinFirstName: e.target.value }))
+                    }
                     className={`mt-1 ${inputClass}`}
                   />
                 </label>
@@ -487,18 +572,35 @@ export function StudentUsersManager() {
                   />
                 </label>
                 <label className="block text-sm text-slate-700">
-                  ID card number
+                  Student number
                   <input
-                    value={form.idCardNumber}
+                    value={form.studentNumber}
+                    onChange={(e) => setForm((prev) => ({ ...prev, studentNumber: e.target.value }))}
+                    className={`mt-1 ${inputClass}`}
+                  />
+                </label>
+                <label className="block text-sm text-slate-700">
+                  ID number
+                  <input
+                    value={form.idNumber}
+                    onChange={(e) => setForm((prev) => ({ ...prev, idNumber: e.target.value }))}
+                    className={`mt-1 ${inputClass}`}
+                  />
+                </label>
+                <label className="block text-sm text-slate-700">
+                  Passport number
+                  <input
+                    value={form.passportNumber}
                     onChange={(e) =>
-                      setForm((prev) => ({ ...prev, idCardNumber: e.target.value }))
+                      setForm((prev) => ({ ...prev, passportNumber: e.target.value }))
                     }
                     className={`mt-1 ${inputClass}`}
                   />
                 </label>
                 <label className="block text-sm text-slate-700">
-                  Gender
+                  Gender *
                   <select
+                    required
                     value={form.gender}
                     onChange={(e) =>
                       setForm((prev) => ({
@@ -508,15 +610,28 @@ export function StudentUsersManager() {
                     }
                     className={`mt-1 ${inputClass}`}
                   >
-                    <option value="">Not set</option>
-                    <option value="MALE">Male</option>
-                    <option value="FEMALE">Female</option>
-                    <option value="OTHER">Other</option>
+                    <option value="">Select gender</option>
+                    {GENDER_VALUES.map((gender) => (
+                      <option key={gender} value={gender}>
+                        {genderLabel(gender)}
+                      </option>
+                    ))}
                   </select>
                 </label>
                 <label className="block text-sm text-slate-700">
-                  Email
+                  Date of birth *
                   <input
+                    required
+                    type="date"
+                    value={form.dateOfBirth}
+                    onChange={(e) => setForm((prev) => ({ ...prev, dateOfBirth: e.target.value }))}
+                    className={`mt-1 ${inputClass}`}
+                  />
+                </label>
+                <label className="block text-sm text-slate-700">
+                  Email *
+                  <input
+                    required
                     type="email"
                     value={form.email}
                     onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
@@ -524,8 +639,9 @@ export function StudentUsersManager() {
                   />
                 </label>
                 <label className="block text-sm text-slate-700">
-                  Phone
+                  Phone *
                   <input
+                    required
                     value={form.phone}
                     onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
                     className={`mt-1 ${inputClass}`}
@@ -533,12 +649,24 @@ export function StudentUsersManager() {
                 </label>
                 <label className="block text-sm text-slate-700">
                   Grade *
-                  <input
+                  <select
                     required
                     value={form.grade}
-                    onChange={(e) => setForm((prev) => ({ ...prev, grade: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        grade: e.target.value as StudentFormState["grade"],
+                      }))
+                    }
                     className={`mt-1 ${inputClass}`}
-                  />
+                  >
+                    <option value="">Select grade</option>
+                    {GRADE_VALUES.map((grade) => (
+                      <option key={grade} value={grade}>
+                        {grade}
+                      </option>
+                    ))}
+                  </select>
                 </label>
                 <label className="block text-sm text-slate-700">
                   Class *
@@ -593,6 +721,13 @@ export function StudentUsersManager() {
           </div>
         </div>
       ) : null}
+
+      <SetPasswordModal
+        open={Boolean(setPasswordUser)}
+        userLabel={setPasswordUser?.name ?? "student"}
+        onClose={() => setSetPasswordUser(null)}
+        onSubmit={submitForceSetPassword}
+      />
     </div>
   );
 }

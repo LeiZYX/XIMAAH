@@ -8,6 +8,7 @@ import {
   parseGenderInput,
   parseIdDocumentTypeInput,
 } from "@/lib/candidates/export";
+import { parseGradeInput } from "@/lib/students/profile-enums";
 import {
   buildCandidateIdentityUpdate,
   parseDateOfBirth,
@@ -18,6 +19,7 @@ import {
   generateAssessmentHubCandidateNumber,
   syncCandidateFromStudentUser,
 } from "@/lib/candidates/service";
+import { generateStudentId } from "@/lib/candidates/student-id";
 
 export interface CandidateImportRow {
   chineseName?: string;
@@ -62,7 +64,7 @@ function rowToIdentityInput(row: CandidateImportRow) {
     email: row.email?.trim() || null,
     phone: row.phone?.trim() || null,
     studentNumber: row.studentNumber?.trim() || null,
-    grade: row.grade?.trim() || null,
+    grade: parseGradeInput(row.grade) ?? null,
     className: row.className?.trim() || null,
     graduationYear: row.graduationYear ? Number(row.graduationYear) : null,
     assessmentHubCandidateNumber:
@@ -154,6 +156,7 @@ export async function importCandidates(
 
       await prisma.candidate.create({
         data: {
+          studentId: await generateStudentId(),
           candidateType: "INTERNAL",
           ...identityData,
           loginEnabled: false,

@@ -2,6 +2,9 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { CandidateLifecycleActions } from "@/components/candidates/CandidateLifecycleActions";
+import { SetPasswordModal } from "@/components/users/SetPasswordModal";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import {
@@ -82,6 +85,9 @@ export function CandidateDetailView({
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [photoUploading, setPhotoUploading] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [setPasswordOpen, setSetPasswordOpen] = useState(false);
+  const router = useRouter();
 
   async function load() {
     const response = await fetch(`${apiPath}/${candidateId}`);
@@ -124,6 +130,10 @@ export function CandidateDetailView({
       .then((r) => r.json())
       .then((data) => setExamBoards(Array.isArray(data) ? data : []))
       .catch(() => setExamBoards([]));
+    fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then((data) => setUserRole(data?.user?.role ?? null))
+      .catch(() => setUserRole(null));
   }, [apiPath, candidateId]);
 
   const displayName = useMemo(
@@ -140,6 +150,10 @@ export function CandidateDetailView({
 
   const isInternal = candidate?.candidateType === "INTERNAL";
   const photoUrl = typeof candidate?.photoUrl === "string" ? candidate.photoUrl : null;
+  const linkedUser = candidate?.user as { id: string; email: string | null; isActive: boolean } | null | undefined;
+  const canManageLifecycle = userRole === "ADMIN" || userRole === "EXAM_OFFICER";
+  const canDelete = userRole === "ADMIN";
+  const canSetPassword = userRole === "ADMIN" && Boolean(linkedUser?.id);
 
   async function saveIdentity(event: FormEvent) {
     event.preventDefault();
@@ -232,6 +246,21 @@ export function CandidateDetailView({
     setCandidate(data);
   }
 
+  async function submitForceSetPassword(password: string, confirmPassword: string) {
+    if (!linkedUser?.id) return "No linked user account";
+    const response = await fetch(`/api/admin/users/${linkedUser.id}/force-set-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password, confirmPassword }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      return typeof data.error === "string" ? data.error : "Could not set password";
+    }
+    setMessage(typeof data.message === "string" ? data.message : "Password has been updated successfully.");
+    return null;
+  }
+
   if (!candidate) {
     return <p className="text-sm text-slate-500">{error ?? "Loading candidate..."}</p>;
   }
@@ -246,7 +275,7 @@ export function CandidateDetailView({
     <div className="space-y-6">
       <PageHeader
         title={displayName || String(candidate.englishName)}
-        description={`Assessment Hub candidate ${String(candidate.assessmentHubCandidateNumber)}`}
+        description={`Student ID ${String(candidate.studentId ?? "—")}`}
       />
       <p className="text-sm">
         <Link href={backHref} className="text-indigo-600 hover:underline">
@@ -256,6 +285,54 @@ export function CandidateDetailView({
 
       {message ? <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{message}</p> : null}
       {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p> : null}
+
+      <Card className="space-y-4">
+        <SectionTitle>Student Overview</SectionTitle>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <Field label="Student ID" value={String(candidate.studentId ?? "—")} />
+          <Field label="Candidate Number" value={String(candidate.assessmentHubCandidateNumber ?? "—")} />
+          <Field label="Chinese Name" value={String(candidate.chineseName ?? "—")} />
+          <Field label="English Name" value={String(candidate.englishName ?? "—")} />
+          <Field label="Grade" value={String(candidate.grade ?? "—")} />
+          <Field label="Class" value={String(candidate.className ?? "—")} />
+          <Field label="Status" value={candidateStatusLabel(candidate.status as never)} />
+          <div>
+            <span className="text-slate-500">User Account</span>
+            <p className="font-medium text-slate-900">
+              {linkedUser
+                ? `${linkedUser.email ?? linkedUser.id} (${linkedUser.isActive ? "Active" : "Inactive"})`
+                : "—"}
+            </p>
+            {canSetPassword ? (
+              <button
+                type="button"
+                onClick={() => setSetPasswordOpen(true)}
+                className="mt-1 text-sm text-indigo-600 hover:underline"
+              >
+                Set password
+              </button>
+            ) : null}
+          </div>
+        </div>
+        {!readOnly && (canManageLifecycle || canDelete) ? (
+          <CandidateLifecycleActions
+            candidateId={candidateId}
+            apiPath={apiPath}
+            status={String(candidate.status ?? "ACTIVE")}
+            canArchive={canManageLifecycle}
+            canDelete={canDelete}
+            onChanged={() => void load()}
+            onDeleted={() => router.push(backHref)}
+          />
+        ) : null}
+      </Card>
+
+      <SetPasswordModal
+        open={setPasswordOpen}
+        userLabel={displayName || String(candidate.englishName)}
+        onClose={() => setSetPasswordOpen(false)}
+        onSubmit={submitForceSetPassword}
+      />
 
       <Card className="space-y-4">
         <SectionTitle>Profile Photo</SectionTitle>

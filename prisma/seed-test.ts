@@ -81,7 +81,7 @@ async function createUser(params: {
             studentProfile: {
               create: {
                 studentNo: params.studentNo,
-                currentGrade: params.grade ?? "Year 12",
+                currentGrade: (params.grade as "G12") ?? "G12",
                 currentClassName: params.className ?? "12A",
                 email: params.email,
                 status: "ACTIVE",
@@ -544,6 +544,7 @@ async function main() {
     },
     create: {
       id: IDS.candidateExternal,
+      studentId: "STU-TEST-000001",
       candidateType: "EXTERNAL",
       assessmentHubCandidateNumber: "AH-TEST-EXT-001",
       englishName: "Test External Candidate",

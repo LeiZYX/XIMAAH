@@ -1,13 +1,20 @@
 import * as XLSX from "xlsx";
 import type { Prisma } from "@/generated/prisma/client";
-import type { CandidateType, Gender, StudentProfileStatus } from "@/generated/prisma/enums";
+import type { CandidateType, Gender, Grade, StudentProfileStatus } from "@/generated/prisma/enums";
 import { hashPassword } from "@/lib/auth/password";
-import { syncCandidateFromStudentUser } from "@/lib/candidates/service";
+import { syncCandidateFromStudentUser, ensureInternalCandidatesSynced } from "@/lib/candidates/service";
+import { backfillMissingStudentIds } from "@/lib/candidates/student-id";
 import {
   buildStudentProfileWhere,
   parseStudentStatusFilter,
   type StudentStatusFilter,
 } from "@/lib/students/archive";
+import {
+  formatDateOfBirth,
+  parseDateOfBirthInput,
+  parseGenderInput,
+  parseGradeInput,
+} from "@/lib/students/profile-enums";
 import { buildPaginationMeta } from "@/lib/pagination";
 import { containsFilter, equalsFilter } from "@/lib/db/string-filters";
 import { logUserAudit } from "@/lib/users/audit";
@@ -34,13 +41,7 @@ export function parseStudentIdentityFilters(searchParams: URLSearchParams): Stud
 }
 
 function parseGender(value: unknown): Gender | undefined {
-  const normalized = String(value ?? "").trim().toUpperCase();
-  if (normalized === "MALE" || normalized === "FEMALE" || normalized === "OTHER") {
-    return normalized;
-  }
-  if (normalized === "男" || normalized === "M") return "MALE";
-  if (normalized === "女" || normalized === "F") return "FEMALE";
-  return undefined;
+  return parseGenderInput(value);
 }
 
 function mapStudentRow(
@@ -48,23 +49,32 @@ function mapStudentRow(
     include: { studentProfile: true; candidate: true };
   }>,
 ) {
+  const candidate = student.candidate;
+  const profile = student.studentProfile;
   return {
     id: student.id,
-    name: student.name,
-    email: student.email ?? student.studentProfile?.email ?? null,
-    phone: student.phone ?? student.studentProfile?.phone ?? null,
+    name: candidate?.englishName ?? student.name,
+    email: candidate?.email ?? student.email ?? profile?.email ?? null,
+    phone: candidate?.phone ?? student.phone ?? profile?.phone ?? null,
     isActive: student.isActive,
-    studentNo: student.studentProfile?.studentNo ?? student.studentNo ?? null,
-    candidateNumber: student.candidate?.assessmentHubCandidateNumber ?? null,
-    chineseName: student.candidate?.chineseName ?? null,
-    grade: student.studentProfile?.currentGrade ?? null,
-    className: student.studentProfile?.currentClassName ?? null,
-    idCardNumber: student.studentProfile?.idCardNumber ?? null,
-    gender: student.studentProfile?.gender ?? null,
-    status: student.studentProfile?.status ?? "ACTIVE",
-    studentType: student.candidate?.candidateType ?? "INTERNAL",
-    entryYear: student.studentProfile?.entryYear ?? null,
-    graduationYear: student.studentProfile?.graduationYear ?? null,
+    studentNo: candidate?.studentNumber ?? profile?.studentNo ?? student.studentNo ?? null,
+    candidateId: candidate?.id ?? null,
+    candidateNumber: candidate?.assessmentHubCandidateNumber ?? null,
+    studentId: candidate?.studentId ?? null,
+    chineseName: candidate?.chineseName ?? null,
+    pinyinLastName: candidate?.surnamePinyin ?? null,
+    pinyinFirstName: candidate?.givenNamePinyin ?? null,
+    idNumber: candidate?.idNumber ?? profile?.idCardNumber ?? null,
+    passportNumber: candidate?.passportNumber ?? null,
+    dateOfBirth: candidate?.dateOfBirth ? formatDateOfBirth(candidate.dateOfBirth) : null,
+    grade: candidate?.grade ?? profile?.currentGrade ?? null,
+    className: candidate?.className ?? profile?.currentClassName ?? null,
+    idCardNumber: candidate?.idNumber ?? profile?.idCardNumber ?? null,
+    gender: candidate?.gender ?? profile?.gender ?? null,
+    status: candidate?.status ?? profile?.status ?? "ACTIVE",
+    studentType: candidate?.candidateType ?? "INTERNAL",
+    entryYear: profile?.entryYear ?? null,
+    graduationYear: profile?.graduationYear ?? null,
   };
 }
 
@@ -73,6 +83,8 @@ export async function listStudentIdentities(
   page = 1,
   pageSize = 50,
 ) {
+  await ensureInternalCandidatesSynced();
+  await backfillMissingStudentIds().catch(() => undefined);
   const status = filters.status ?? "ACTIVE";
   const profileWhere = buildStudentProfileWhere(status);
 
@@ -81,7 +93,7 @@ export async function listStudentIdentities(
     studentProfile: {
       is: {
         ...profileWhere,
-        ...(filters.grade ? { currentGrade: filters.grade } : {}),
+        ...(filters.grade ? { currentGrade: filters.grade as Grade } : {}),
         ...(filters.className ? { currentClassName: filters.className } : {}),
       },
     },
@@ -99,6 +111,7 @@ export async function listStudentIdentities(
       { studentProfile: { is: { studentNo: containsFilter(filters.q) } } },
       { studentProfile: { is: { idCardNumber: containsFilter(filters.q) } } },
       { candidate: { is: { assessmentHubCandidateNumber: containsFilter(filters.q) } } },
+      { candidate: { is: { studentId: containsFilter(filters.q) } } },
       { candidate: { is: { chineseName: containsFilter(filters.q) } } },
     ];
   }
@@ -126,16 +139,20 @@ export async function listStudentIdentities(
 export async function exportStudentIdentities(filters: StudentIdentityFilters) {
   const result = await listStudentIdentities(filters, 1, 10_000);
   return result.students.map((row) => ({
-    studentNumber: row.studentNo ?? "",
     candidateNumber: row.candidateNumber ?? "",
     chineseName: row.chineseName ?? "",
     englishName: row.name,
-    idCardNumber: row.idCardNumber ?? "",
+    pinyinLastName: row.pinyinLastName ?? "",
+    pinyinFirstName: row.pinyinFirstName ?? "",
+    idNumber: row.idNumber ?? row.idCardNumber ?? "",
+    passportNumber: row.passportNumber ?? "",
     gender: row.gender ?? "",
-    email: row.email ?? "",
-    phone: row.phone ?? "",
+    dateOfBirth: row.dateOfBirth ?? "",
     grade: row.grade ?? "",
     className: row.className ?? "",
+    phone: row.phone ?? "",
+    email: row.email ?? "",
+    studentNumber: row.studentNo ?? "",
     status: row.status,
     studentType: row.studentType,
     accountActive: row.isActive ? "YES" : "NO",
@@ -189,6 +206,10 @@ export function validateStudentImportRows(rows: StudentImportRow[]) {
     if (!row.studentNumber) errors.push({ row: rowNum, message: "studentNumber is required" });
     if (!row.englishName) errors.push({ row: rowNum, message: "englishName is required" });
     if (!row.grade) errors.push({ row: rowNum, message: "grade is required" });
+    const parsedGrade = parseGradeInput(row.grade);
+    if (row.grade && !parsedGrade) {
+      errors.push({ row: rowNum, message: "grade must be one of G9, G10, G11, G12" });
+    }
     if (!row.className) errors.push({ row: rowNum, message: "className is required" });
     if (row.studentNumber) {
       if (seenStudentNumbers.has(row.studentNumber)) {
@@ -216,6 +237,8 @@ export async function commitStudentImportRows(
 
     const passwordHash = await hashPassword(row.studentNumber);
     const status = row.status ?? "ACTIVE";
+    const grade = parseGradeInput(row.grade);
+    if (!grade) continue;
 
     if (existingProfile) {
       await prisma.user.update({
@@ -229,7 +252,7 @@ export async function commitStudentImportRows(
       await prisma.studentProfile.update({
         where: { id: existingProfile.id },
         data: {
-          currentGrade: row.grade,
+          currentGrade: grade,
           currentClassName: row.className,
           idCardNumber: row.idCardNumber ?? null,
           gender: row.gender ?? null,
@@ -247,7 +270,7 @@ export async function commitStudentImportRows(
               : {}),
             ...(row.chineseName ? { chineseName: row.chineseName } : {}),
             englishName: row.englishName,
-            grade: row.grade,
+            grade,
             className: row.className,
           },
         });
@@ -269,7 +292,7 @@ export async function commitStudentImportRows(
         studentProfile: {
           create: {
             studentNo: row.studentNumber,
-            currentGrade: row.grade,
+            currentGrade: grade,
             currentClassName: row.className,
             idCardNumber: row.idCardNumber ?? null,
             gender: row.gender ?? null,
@@ -319,13 +342,18 @@ export async function upsertStudentIdentity(
     id?: string;
     englishName: string;
     chineseName?: string;
-    studentNumber: string;
+    pinyinLastName?: string;
+    pinyinFirstName?: string;
+    studentNumber?: string;
     candidateNumber?: string;
     email?: string;
     phone?: string;
-    grade: string;
+    grade: Grade | string;
     className: string;
     idCardNumber?: string;
+    idNumber?: string;
+    passportNumber?: string;
+    dateOfBirth?: string;
     gender?: Gender;
     status?: StudentProfileStatus;
     isActive?: boolean;
@@ -333,9 +361,43 @@ export async function upsertStudentIdentity(
     password?: string;
   },
 ) {
+  const grade = parseGradeInput(input.grade);
+  if (!grade) {
+    throw new Error("Grade must be one of G9, G10, G11, G12");
+  }
+
+  const idNumber = input.idNumber ?? input.idCardNumber;
+  const dateOfBirth = input.dateOfBirth ? parseDateOfBirthInput(input.dateOfBirth) : undefined;
+  const studentNumber =
+    input.studentNumber?.trim() ||
+    input.candidateNumber?.trim() ||
+    (input.email ? input.email.split("@")[0] : `STU-${Date.now()}`);
+
   const passwordHash = input.password
     ? await hashPassword(input.password)
-    : await hashPassword(input.studentNumber);
+    : await hashPassword(studentNumber);
+
+  const candidateData = {
+    chineseName: input.chineseName ?? null,
+    englishName: input.englishName,
+    legalEnglishName: input.englishName,
+    surnamePinyin: input.pinyinLastName ?? null,
+    givenNamePinyin: input.pinyinFirstName ?? null,
+    assessmentHubCandidateNumber: input.candidateNumber,
+    idNumber: idNumber ?? null,
+    passportNumber: input.passportNumber ?? null,
+    idDocumentNumber: idNumber ?? null,
+    idDocumentType: idNumber ? ("CHINESE_ID_CARD" as const) : input.passportNumber ? ("PASSPORT" as const) : null,
+    gender: input.gender ?? null,
+    dateOfBirth: dateOfBirth ?? null,
+    grade,
+    className: input.className,
+    email: input.email ?? null,
+    phone: input.phone ?? null,
+    studentNumber,
+    candidateType: input.studentType ?? ("INTERNAL" as const),
+    status: (input.status ?? "ACTIVE") as StudentProfileStatus,
+  };
 
   if (input.id) {
     const user = await prisma.user.update({
@@ -344,14 +406,15 @@ export async function upsertStudentIdentity(
         name: input.englishName,
         email: input.email ?? null,
         phone: input.phone ?? null,
+        studentNo: studentNumber,
         isActive: input.isActive ?? true,
         ...(input.password ? { passwordHash, mustChangePassword: false } : {}),
         studentProfile: {
           update: {
-            studentNo: input.studentNumber,
-            currentGrade: input.grade,
+            studentNo: studentNumber,
+            currentGrade: grade,
             currentClassName: input.className,
-            idCardNumber: input.idCardNumber ?? null,
+            idCardNumber: idNumber ?? null,
             gender: input.gender ?? null,
             email: input.email ?? null,
             phone: input.phone ?? null,
@@ -361,19 +424,20 @@ export async function upsertStudentIdentity(
       },
       include: { studentProfile: true, candidate: true },
     });
-    await syncCandidateFromStudentUser(user.id);
-    if (input.candidateNumber || input.chineseName) {
+
+    if (user.candidate) {
+      await prisma.candidate.update({
+        where: { id: user.candidate.id },
+        data: candidateData,
+      });
+    } else {
+      await syncCandidateFromStudentUser(user.id);
       await prisma.candidate.updateMany({
         where: { userId: user.id },
-        data: {
-          ...(input.candidateNumber
-            ? { assessmentHubCandidateNumber: input.candidateNumber }
-            : {}),
-          ...(input.chineseName ? { chineseName: input.chineseName } : {}),
-          candidateType: input.studentType ?? "INTERNAL",
-        },
+        data: candidateData,
       });
     }
+
     await logUserAudit({
       action: "USER_UPDATED",
       performedById,
@@ -392,17 +456,17 @@ export async function upsertStudentIdentity(
       name: input.englishName,
       email: input.email ?? null,
       phone: input.phone ?? null,
-      studentNo: input.studentNumber,
+      studentNo: studentNumber,
       role: "STUDENT",
       isActive: input.isActive ?? true,
       passwordHash,
       mustChangePassword: true,
       studentProfile: {
         create: {
-          studentNo: input.studentNumber,
-          currentGrade: input.grade,
+          studentNo: studentNumber,
+          currentGrade: grade,
           currentClassName: input.className,
-          idCardNumber: input.idCardNumber ?? null,
+          idCardNumber: idNumber ?? null,
           gender: input.gender ?? null,
           email: input.email ?? null,
           phone: input.phone ?? null,
@@ -412,19 +476,13 @@ export async function upsertStudentIdentity(
     },
     include: { studentProfile: true, candidate: true },
   });
+
   await syncCandidateFromStudentUser(user.id);
-  if (input.candidateNumber || input.chineseName) {
-    await prisma.candidate.update({
-      where: { userId: user.id },
-      data: {
-        ...(input.candidateNumber
-          ? { assessmentHubCandidateNumber: input.candidateNumber }
-          : {}),
-        ...(input.chineseName ? { chineseName: input.chineseName } : {}),
-        candidateType: input.studentType ?? "INTERNAL",
-      },
-    });
-  }
+  await prisma.candidate.updateMany({
+    where: { userId: user.id },
+    data: candidateData,
+  });
+
   await logUserAudit({
     action: "USER_CREATED",
     performedById,

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { USERS_MODULE_DESCRIPTION } from "@/lib/navigation/module-descriptions";
+import { GRADE_VALUES } from "@/lib/students/profile-enums";
 import { UsersSubnav } from "@/components/users/UsersSubnav";
 
 type ImportTab = "students" | "teachers";
@@ -13,7 +14,10 @@ interface ImportError {
 }
 
 interface ImportPreviewState {
-  preview: Record<string, unknown>[];
+  preview: Array<Record<string, unknown>>;
+  creates: Array<Record<string, unknown>>;
+  updates: Array<Record<string, unknown>>;
+  skipped: Array<Record<string, unknown>>;
   errors: ImportError[];
   total: number;
 }
@@ -66,11 +70,15 @@ function ImportTabPanel({
       if (commit) {
         const created = typeof data.created === "number" ? data.created : 0;
         const updated = typeof data.updated === "number" ? data.updated : 0;
-        setMessage(`Import complete: ${created} created, ${updated} updated.`);
+        const skipped = typeof data.skipped === "number" ? data.skipped : 0;
+        setMessage(`Import complete: ${created} created, ${updated} updated, ${skipped} skipped.`);
         setPreview(null);
       } else {
         setPreview({
           preview: Array.isArray(data.preview) ? data.preview : [],
+          creates: Array.isArray(data.creates) ? data.creates : [],
+          updates: Array.isArray(data.updates) ? data.updates : [],
+          skipped: Array.isArray(data.skipped) ? data.skipped : [],
           errors: Array.isArray(data.errors) ? data.errors : [],
           total: typeof data.total === "number" ? data.total : 0,
         });
@@ -117,7 +125,7 @@ function ImportTabPanel({
           {committing ? "Committing..." : "Commit import"}
         </button>
         <a href={sampleHref} className={buttonClass}>
-          Download sample
+          Download Excel Template
         </a>
         <a href={exportHref} className={buttonClass}>
           Export full list
@@ -125,8 +133,8 @@ function ImportTabPanel({
       </div>
 
       <p className="text-sm text-slate-600">
-        Download the sample workbook, fill in your data using the same column headers, then upload
-        for preview. Commit is enabled only when the preview has no errors.
+        Download the Excel template, fill in internal student profile fields, then upload for preview.
+        Commit is enabled only when the preview has no validation errors.
       </p>
 
       {message ? <p className="text-sm text-green-700">{message}</p> : null}
@@ -135,10 +143,9 @@ function ImportTabPanel({
       {preview ? (
         <div className="space-y-4">
           <p className="text-sm text-slate-700">
-            {preview.total} row{preview.total === 1 ? "" : "s"} parsed
-            {preview.preview.length < preview.total
-              ? ` (showing first ${preview.preview.length})`
-              : ""}
+            {preview.total} row{preview.total === 1 ? "" : "s"} parsed · {preview.creates.length}{" "}
+            new · {preview.updates.length} update
+            {preview.skipped.length > 0 ? ` · ${preview.skipped.length} skipped` : ""}
             {preview.errors.length > 0 ? ` · ${preview.errors.length} error(s)` : ""}
           </p>
 
@@ -240,7 +247,7 @@ export function UserImportExportPanel() {
               kind="students"
               endpoint="/api/admin/users/students"
               exportHref="/api/admin/users/students/export"
-              sampleHref="/api/admin/users/students/import/sample"
+              sampleHref="/api/admin/users/students/import/template"
             />
           ) : (
             <ImportTabPanel

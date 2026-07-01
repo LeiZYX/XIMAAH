@@ -15,6 +15,7 @@ import { LIST_PAGE_SIZES } from "@/lib/pagination";
 
 interface CandidateRow {
   id: string;
+  studentId: string;
   assessmentHubCandidateNumber: string;
   candidateType: string;
   studentNumber: string | null;
@@ -54,7 +55,7 @@ export function CandidateManager({
   const [totalPages, setTotalPages] = useState(0);
   const [filters, setFilters] = useState({
     candidateType: defaultCandidateType ?? "",
-    status: "",
+    status: "ACTIVE",
     q: "",
     grade: "",
     className: "",
@@ -136,14 +137,14 @@ export function CandidateManager({
             onChange={(e) => updateFilters({ status: e.target.value })}
             className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
           >
-            <option value="">All statuses</option>
             <option value="ACTIVE">Active</option>
             <option value="GRADUATED">Graduated</option>
             <option value="LEFT">Left</option>
             <option value="INACTIVE">Inactive</option>
+            <option value="ALL">All statuses</option>
           </select>
           <input
-            placeholder="Search name or AH number"
+            placeholder="Search name, Student ID, or AH number"
             value={filters.q}
             onChange={(e) => updateFilters({ q: e.target.value })}
             className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
@@ -197,6 +198,7 @@ export function CandidateManager({
             <table className="min-w-full text-sm">
               <thead>
                 <tr className="border-b text-left text-xs uppercase text-slate-500">
+                  <th className="py-2 pr-3">Student ID</th>
                   <th className="py-2 pr-3">AH No.</th>
                   <th className="py-2 pr-3">Name</th>
                   <th className="py-2 pr-3">Type</th>
@@ -211,6 +213,7 @@ export function CandidateManager({
               <tbody>
                 {rows.map((row) => (
                   <tr key={row.id} className="border-b border-slate-100">
+                    <td className="py-2 pr-3 font-mono text-xs">{row.studentId}</td>
                     <td className="py-2 pr-3 font-mono text-xs">{row.assessmentHubCandidateNumber}</td>
                     <td className="py-2 pr-3">
                       {row.englishName}

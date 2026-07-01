@@ -50,6 +50,14 @@ export function canManageUsers(role: UserRole): boolean {
   return role === "ADMIN";
 }
 
+export function canManageStudentLifecycle(role: UserRole): boolean {
+  return role === "ADMIN" || role === "EXAM_OFFICER";
+}
+
+export function canPermanentlyDeleteStudent(role: UserRole): boolean {
+  return role === "ADMIN";
+}
+
 export function loginIdentifiersForRole(role: UserRole): string {
   switch (role) {
     case "ADMIN":

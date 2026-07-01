@@ -345,7 +345,15 @@ enum Gender {
   MALE
   FEMALE
   OTHER
+  UNKNOWN
   PREFER_NOT_TO_SAY
+}
+
+enum Grade {
+  G9
+  G10
+  G11
+  G12
 }
 
 enum IdDocumentType {
@@ -371,10 +379,13 @@ enum UserAuditAction {
   USER_DEACTIVATED
   PASSWORD_RESET_REQUESTED
   PASSWORD_RESET_COMPLETED
+  PASSWORD_FORCE_SET_BY_ADMIN
   STUDENT_IMPORTED
   TEACHER_IMPORTED
   STUDENT_PROMOTED
   STUDENT_ARCHIVED
+  STUDENT_REACTIVATED
+  STUDENT_DELETED
 }
 
 enum CandidateType {
@@ -462,7 +473,7 @@ model StudentProfile {
   userId           String               @unique
   user             User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
   studentNo        String               @unique
-  currentGrade     String
+  currentGrade     Grade
   currentClassName String
   idCardNumber     String?
   gender           Gender?
@@ -481,6 +492,11 @@ model StudentProfile {
   @@index([currentClassName])
   @@index([status])
   @@index([studentNo])
+}
+
+model StudentIdSequence {
+  year       Int @id
+  lastNumber Int
 }
 
 model TeacherProfile {
@@ -555,6 +571,7 @@ model ExamDocumentAuditLog {
 
 model Candidate {
   id                           String           @id @default(cuid())
+  studentId                    String           @unique
   assessmentHubCandidateNumber String
   candidateType                CandidateType
   userId                       String?          @unique
@@ -579,7 +596,7 @@ model Candidate {
   emergencyContactName         String?
   emergencyContactPhone        String?
   schoolName                   String?
-  grade                        String?
+  grade                        Grade?
   className                    String?
   graduationYear               Int?
   status                       CandidateStatus  @default(ACTIVE)
@@ -605,9 +622,14 @@ model Candidate {
 
   @@index([candidateType])
   @@index([status])
+  @@index([studentId])
   @@index([assessmentHubCandidateNumber])
   @@index([studentNumber])
   @@index([englishName])
+  @@index([email])
+  @@index([phone])
+  @@index([idNumber])
+  @@index([passportNumber])
   @@index([grade])
   @@index([className])
   @@index([externalId])

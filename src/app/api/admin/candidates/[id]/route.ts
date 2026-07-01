@@ -67,6 +67,10 @@ export async function PATCH(
 
   if (!data) return jsonError("Invalid payload", 400);
 
+  if ("studentId" in (body as object)) {
+    return jsonError("Student ID cannot be changed", 400);
+  }
+
   try {
     if (data.examIdentity?.examBoardId) {
       await upsertCandidateExamIdentity(id, data.examIdentity.examBoardId, {

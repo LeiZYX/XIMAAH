@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { canManageUsers } from "@/lib/auth/permissions";
+import type { Gender, Grade } from "@/generated/prisma/enums";
 import { logUserAudit } from "@/lib/users/audit";
 import { upsertStudentIdentity } from "@/lib/users/student-identity";
 import { prisma } from "@/lib/prisma";
@@ -21,19 +22,24 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   const data = parseJsonBody<{
     englishName: string;
     chineseName?: string;
-    studentNumber: string;
+    pinyinLastName?: string;
+    pinyinFirstName?: string;
+    studentNumber?: string;
     candidateNumber?: string;
     email?: string;
     phone?: string;
-    grade: string;
+    grade: Grade | string;
     className: string;
     idCardNumber?: string;
-    gender?: "MALE" | "FEMALE" | "OTHER";
+    idNumber?: string;
+    passportNumber?: string;
+    dateOfBirth?: string;
+    gender?: Gender;
     status?: "ACTIVE" | "GRADUATED" | "LEFT" | "INACTIVE";
     isActive?: boolean;
     studentType?: "INTERNAL" | "EXTERNAL";
     password?: string;
-  }>(body, ["englishName", "studentNumber", "grade", "className"]);
+  }>(body, ["englishName", "grade", "className"]);
 
   if (!data) return jsonError("Missing required fields");
   const student = await upsertStudentIdentity(auth.user.id, { ...data, id });

@@ -1,23 +1,32 @@
-import type { StudentProfileStatus } from "@/generated/prisma/enums";
+import type { Grade, StudentProfileStatus } from "@/generated/prisma/enums";
 import { syncCandidateFromStudentUser } from "@/lib/candidates/service";
 import { logUserAudit } from "@/lib/users/audit";
 import { prisma } from "@/lib/prisma";
+import { parseGradeInput } from "@/lib/students/profile-enums";
 
 export interface PromotionPreviewInput {
-  sourceGrade: string;
+  sourceGrade: Grade | string;
   sourceClassName?: string;
-  targetGrade?: string;
+  targetGrade?: Grade | string;
   targetClassName?: string;
   archiveStatus?: StudentProfileStatus;
 }
 
+function resolveGrade(value: Grade | string | undefined): Grade | undefined {
+  if (!value) return undefined;
+  return typeof value === "string" ? parseGradeInput(value) : value;
+}
+
 export async function previewClassPromotion(input: PromotionPreviewInput) {
+  const sourceGrade = resolveGrade(input.sourceGrade);
+  if (!sourceGrade) throw new Error("sourceGrade must be one of G9, G10, G11, G12");
+
   const students = await prisma.user.findMany({
     where: {
       role: "STUDENT",
       studentProfile: {
         is: {
-          currentGrade: input.sourceGrade,
+          currentGrade: sourceGrade,
           ...(input.sourceClassName ? { currentClassName: input.sourceClassName } : {}),
           status: "ACTIVE",
         },
@@ -33,7 +42,7 @@ export async function previewClassPromotion(input: PromotionPreviewInput) {
     studentNo: student.studentProfile?.studentNo ?? null,
     currentGrade: student.studentProfile?.currentGrade ?? null,
     currentClassName: student.studentProfile?.currentClassName ?? null,
-    targetGrade: input.targetGrade ?? student.studentProfile?.currentGrade ?? null,
+    targetGrade: resolveGrade(input.targetGrade) ?? student.studentProfile?.currentGrade ?? null,
     targetClassName: input.targetClassName ?? student.studentProfile?.currentClassName ?? null,
     archiveStatus: input.archiveStatus ?? null,
   }));
@@ -43,13 +52,16 @@ export async function commitClassPromotion(
   performedById: string,
   input: PromotionPreviewInput & { studentIds: string[] },
 ) {
+  const sourceGrade = resolveGrade(input.sourceGrade);
+  if (!sourceGrade) throw new Error("sourceGrade must be one of G9, G10, G11, G12");
+
   const students = await prisma.user.findMany({
     where: {
       id: { in: input.studentIds },
       role: "STUDENT",
       studentProfile: {
         is: {
-          currentGrade: input.sourceGrade,
+          currentGrade: sourceGrade,
           ...(input.sourceClassName ? { currentClassName: input.sourceClassName } : {}),
         },
       },
@@ -66,7 +78,7 @@ export async function commitClassPromotion(
     if (!profile) continue;
 
     const nextStatus = input.archiveStatus ?? profile.status;
-    const nextGrade = input.targetGrade ?? profile.currentGrade;
+    const nextGrade = resolveGrade(input.targetGrade) ?? profile.currentGrade;
     const nextClass = input.targetClassName ?? profile.currentClassName;
 
     await prisma.studentProfile.update({

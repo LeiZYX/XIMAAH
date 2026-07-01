@@ -109,6 +109,7 @@ export function parseGenderInput(value: string | undefined): Candidate["gender"]
   if (normalized === "MALE") return "MALE";
   if (normalized === "FEMALE") return "FEMALE";
   if (normalized === "OTHER") return "OTHER";
+  if (normalized === "UNKNOWN") return "UNKNOWN";
   if (normalized === "PREFER_NOT_TO_SAY") return "PREFER_NOT_TO_SAY";
   if (raw.toLowerCase() === "prefer not to say") return "PREFER_NOT_TO_SAY";
   return undefined;

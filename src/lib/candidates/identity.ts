@@ -1,5 +1,6 @@
-import type { Gender, IdDocumentType } from "@/generated/prisma/enums";
+import type { Gender, Grade, IdDocumentType } from "@/generated/prisma/enums";
 import type { UserRole } from "@/lib/auth/constants";
+import { parseGradeInput } from "@/lib/students/profile-enums";
 
 export interface CandidateIdentityInput {
   chineseName?: string | null;
@@ -17,7 +18,7 @@ export interface CandidateIdentityInput {
   emergencyContactName?: string | null;
   emergencyContactPhone?: string | null;
   studentNumber?: string | null;
-  grade?: string | null;
+  grade?: Grade | string | null;
   className?: string | null;
   graduationYear?: number | null;
   assessmentHubCandidateNumber?: string | null;
@@ -44,6 +45,8 @@ export function genderLabel(gender: Gender | string | null | undefined): string 
       return "Female";
     case "OTHER":
       return "Other";
+    case "UNKNOWN":
+      return "Unknown";
     case "PREFER_NOT_TO_SAY":
       return "Prefer not to say";
     default:
@@ -55,6 +58,7 @@ export const GENDER_OPTIONS: Array<{ value: Gender; label: string }> = [
   { value: "MALE", label: "Male" },
   { value: "FEMALE", label: "Female" },
   { value: "OTHER", label: "Other" },
+  { value: "UNKNOWN", label: "Unknown" },
   { value: "PREFER_NOT_TO_SAY", label: "Prefer not to say" },
 ];
 
@@ -148,7 +152,10 @@ export function buildCandidateIdentityUpdate(input: CandidateIdentityInput) {
     emergencyContactName: input.emergencyContactName?.trim() || null,
     emergencyContactPhone: input.emergencyContactPhone?.trim() || null,
     studentNumber: input.studentNumber?.trim() || null,
-    grade: input.grade?.trim() || null,
+    grade:
+      typeof input.grade === "string"
+        ? (parseGradeInput(input.grade) ?? null)
+        : (input.grade ?? null),
     className: input.className?.trim() || null,
     graduationYear: input.graduationYear ?? null,
     assessmentHubCandidateNumber: input.assessmentHubCandidateNumber?.trim() || "",
@@ -176,7 +183,7 @@ export type CandidateProfileRecord = {
   emergencyContactName?: string | null;
   emergencyContactPhone?: string | null;
   studentNumber?: string | null;
-  grade?: string | null;
+  grade?: Grade | string | null;
   className?: string | null;
   graduationYear?: number | null;
   status?: string | null;

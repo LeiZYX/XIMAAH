@@ -2,6 +2,7 @@ import type { Candidate, CandidateType } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { computeDisplayName } from "@/lib/candidates/identity";
 import { parseGenderInput } from "@/lib/candidates/export";
+import { generateStudentId } from "@/lib/candidates/student-id";
 
 export function generateAssessmentHubCandidateNumber(): string {
   const year = new Date().getFullYear();
@@ -74,6 +75,7 @@ export async function syncCandidateFromStudentUser(userId: string) {
 
   return prisma.candidate.create({
     data: {
+      studentId: await generateStudentId(),
       userId: user.id,
       candidateType: "INTERNAL",
       assessmentHubCandidateNumber: generateAssessmentHubCandidateNumber(),
@@ -218,6 +220,7 @@ export async function createExternalCandidate(input: {
 
   return prisma.candidate.create({
     data: {
+      studentId: await generateStudentId(),
       candidateType: "EXTERNAL",
       assessmentHubCandidateNumber:
         input.assessmentHubCandidateNumber?.trim() || generateAssessmentHubCandidateNumber(),
