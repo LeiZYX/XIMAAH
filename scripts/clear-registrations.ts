@@ -57,10 +57,6 @@ async function clearAllRegistrationData() {
       where: { feeStatement: { registrationWorkspaceId: { not: null } } },
     });
 
-    await tx.candidateBoardRegistration.deleteMany({
-      where: { feeStatement: { registrationWorkspaceId: { not: null } } },
-    });
-
     await tx.feeStatement.deleteMany({
       where: { registrationWorkspaceId: { not: null } },
     });

@@ -597,7 +597,6 @@ model Candidate {
   feeStatements          FeeStatement[]
   examDocumentAuditLogs  ExamDocumentAuditLog[]
   candidateAuditLogs     CandidateAuditLog[]
-  boardRegistrations     CandidateBoardRegistration[]
   reviewRequests         ReviewRequest[]
   cashInRequests         CashInRequest[]
   accessToScriptRequests AccessToScriptRequest[]
@@ -1026,7 +1025,6 @@ model ExamBoard {
   candidateExamIdentities   CandidateExamIdentity[]
   reviewWindows             ReviewWindow[]
   feeSchedules              FeeSchedule[]
-  candidateBoardRegistrations CandidateBoardRegistration[]
   reviewRequests            ReviewRequest[]
   cashInRequests            CashInRequest[]
   accessToScriptRequests    AccessToScriptRequest[]
@@ -1378,7 +1376,6 @@ model FeeStatement {
   cashInRequests       CashInRequest[]
   accessToScriptRequests AccessToScriptRequest[]
   certificateRequests  CertificateRequest[]
-  candidateBoardRegistrations CandidateBoardRegistration[]
 
   @@index([candidateId])
   @@index([studentId])
@@ -1624,26 +1621,6 @@ model CertificateRequest {
   @@index([candidateId])
   @@index([examBoardId])
   @@index([status])
-}
-
-model CandidateBoardRegistration {
-  id                   String      @id @default(cuid())
-  candidateId          String
-  candidate            Candidate   @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  examBoardId          String
-  examBoard            ExamBoard   @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
-  registered           Boolean     @default(false)
-  registrationFeePaid  Boolean     @default(false)
-  registrationFeePaidAt DateTime?
-  feeStatementId       String?
-  feeStatement         FeeStatement? @relation(fields: [feeStatementId], references: [id], onDelete: SetNull)
-  notes                String?     @db.Text
-  createdAt            DateTime    @default(now())
-  updatedAt            DateTime    @updatedAt
-
-  @@unique([candidateId, examBoardId])
-  @@index([examBoardId])
-  @@index([registrationFeePaid])
 }
 
 model FeeSchedule {

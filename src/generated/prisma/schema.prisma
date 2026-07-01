@@ -597,7 +597,6 @@ model Candidate {
   feeStatements          FeeStatement[]
   examDocumentAuditLogs  ExamDocumentAuditLog[]
   candidateAuditLogs     CandidateAuditLog[]
-  boardRegistrations     CandidateBoardRegistration[]
   reviewRequests         ReviewRequest[]
   cashInRequests         CashInRequest[]
   accessToScriptRequests AccessToScriptRequest[]
@@ -715,7 +714,7 @@ model RegistrationWindowIncludedSeries {
   examSeries           ExamSeries         @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
   createdAt            DateTime           @default(now())
 
-  @@unique([registrationWindowId, examSeriesId])
+  @@unique([registrationWindowId, examSeriesId], map: "rw_included_series_uq")
   @@index([examSeriesId])
 }
 
@@ -1014,24 +1013,23 @@ model ExamBoard {
   createdAt                    DateTime @default(now())
   updatedAt                    DateTime @updatedAt
 
-  qualifications              Qualification[]
-  examSeries                  ExamSeries[]
-  keyDates                    KeyDate[]
-  resources                   Resource[]
-  sourceDocuments             SourceDocument[]
-  calendarSubjectSelections   CalendarSubjectSelection[]
-  registrationWindows         RegistrationWindow[]
-  studentExamRegistrations    StudentExamRegistration[]
-  feeRules                    FeeRule[]
-  candidateExamIdentities     CandidateExamIdentity[]
-  reviewWindows               ReviewWindow[]
-  feeSchedules                FeeSchedule[]
-  candidateBoardRegistrations CandidateBoardRegistration[]
-  reviewRequests              ReviewRequest[]
-  cashInRequests              CashInRequest[]
-  accessToScriptRequests      AccessToScriptRequest[]
-  certificateRequests         CertificateRequest[]
-  postResultsAuditLogs        PostResultsAuditLog[]
+  qualifications            Qualification[]
+  examSeries                ExamSeries[]
+  keyDates                  KeyDate[]
+  resources                 Resource[]
+  sourceDocuments           SourceDocument[]
+  calendarSubjectSelections CalendarSubjectSelection[]
+  registrationWindows       RegistrationWindow[]
+  studentExamRegistrations  StudentExamRegistration[]
+  feeRules                  FeeRule[]
+  candidateExamIdentities   CandidateExamIdentity[]
+  reviewWindows             ReviewWindow[]
+  feeSchedules              FeeSchedule[]
+  reviewRequests            ReviewRequest[]
+  cashInRequests            CashInRequest[]
+  accessToScriptRequests    AccessToScriptRequest[]
+  certificateRequests       CertificateRequest[]
+  postResultsAuditLogs      PostResultsAuditLog[]
 
   @@index([country])
 }
@@ -1373,12 +1371,11 @@ model FeeStatement {
   createdAt                            DateTime                    @default(now())
   updatedAt                            DateTime                    @updatedAt
 
-  items                       FeeStatementItem[]
-  reviewRequests              ReviewRequest[]
-  cashInRequests              CashInRequest[]
-  accessToScriptRequests      AccessToScriptRequest[]
-  certificateRequests         CertificateRequest[]
-  candidateBoardRegistrations CandidateBoardRegistration[]
+  items                  FeeStatementItem[]
+  reviewRequests         ReviewRequest[]
+  cashInRequests         CashInRequest[]
+  accessToScriptRequests AccessToScriptRequest[]
+  certificateRequests    CertificateRequest[]
 
   @@index([candidateId])
   @@index([studentId])
@@ -1624,26 +1621,6 @@ model CertificateRequest {
   @@index([candidateId])
   @@index([examBoardId])
   @@index([status])
-}
-
-model CandidateBoardRegistration {
-  id                    String        @id @default(cuid())
-  candidateId           String
-  candidate             Candidate     @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  examBoardId           String
-  examBoard             ExamBoard     @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
-  registered            Boolean       @default(false)
-  registrationFeePaid   Boolean       @default(false)
-  registrationFeePaidAt DateTime?
-  feeStatementId        String?
-  feeStatement          FeeStatement? @relation(fields: [feeStatementId], references: [id], onDelete: SetNull)
-  notes                 String?       @db.Text
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
-
-  @@unique([candidateId, examBoardId])
-  @@index([examBoardId])
-  @@index([registrationFeePaid])
 }
 
 model FeeSchedule {

@@ -20,12 +20,10 @@ import {
   type UseRegistrationWindowSelectorResult,
 } from "@/components/registrations/RegistrationWindowSelector";
 import {
-  DEFAULT_STAFF_REGISTRATION_TYPES,
-  REGISTRATION_TYPE_FILTER_LABELS,
+  FEE_STATEMENT_TYPE_RADIO_LABELS,
   STAFF_REGISTRATION_TYPE_FILTERS,
   isStaffRegistrationTypeFilter,
-  parseStaffRegistrationTypes,
-  serializeStaffRegistrationTypes,
+  parseStaffRegistrationType,
   type StaffRegistrationTypeFilter,
 } from "@/lib/registrations/workspace-type-filters";
 
@@ -38,9 +36,9 @@ interface RegistrationsRefreshContextValue {
   setRegistrationWindowId: (id: string) => void;
   academicYear: string;
   setAcademicYear: (year: string) => void;
+  registrationType: StaffRegistrationTypeFilter;
+  setRegistrationType: (type: StaffRegistrationTypeFilter) => void;
   registrationTypes: StaffRegistrationTypeFilter[];
-  setRegistrationTypes: (types: StaffRegistrationTypeFilter[]) => void;
-  toggleRegistrationType: (type: StaffRegistrationTypeFilter) => void;
   windows: RegistrationWindowOption[];
   windowsLoading: boolean;
   windowSelector: UseRegistrationWindowSelectorResult;
@@ -55,7 +53,7 @@ function syncUrlParams(
   updates: {
     registrationWindowId?: string;
     academicYear?: string;
-    registrationTypes?: StaffRegistrationTypeFilter[];
+    registrationType?: StaffRegistrationTypeFilter;
   },
 ) {
   const params = new URLSearchParams(searchParams.toString());
@@ -69,15 +67,12 @@ function syncUrlParams(
   if (updates.academicYear !== undefined) {
     params.set("academicYear", updates.academicYear);
   }
-  if (updates.registrationTypes !== undefined) {
-    const serialized = serializeStaffRegistrationTypes(updates.registrationTypes);
-    const isDefault =
-      updates.registrationTypes.length === DEFAULT_STAFF_REGISTRATION_TYPES.length &&
-      DEFAULT_STAFF_REGISTRATION_TYPES.every((type) => updates.registrationTypes!.includes(type));
-    if (isDefault) {
-      params.delete("registrationTypes");
+  if (updates.registrationType !== undefined) {
+    params.delete("registrationTypes");
+    if (updates.registrationType === "INTERNAL_NORMAL") {
+      params.delete("type");
     } else {
-      params.set("registrationTypes", serialized);
+      params.set("type", updates.registrationType);
     }
   }
   const query = params.toString();
@@ -91,9 +86,8 @@ export function RegistrationsRefreshProvider({ children }: { children: ReactNode
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [workspaceRefreshKey, setWorkspaceRefreshKey] = useState(0);
-  const [registrationTypes, setRegistrationTypesState] = useState<StaffRegistrationTypeFilter[]>([
-    ...DEFAULT_STAFF_REGISTRATION_TYPES,
-  ]);
+  const [registrationType, setRegistrationTypeState] =
+    useState<StaffRegistrationTypeFilter>("INTERNAL_NORMAL");
 
   const windowFromUrl = searchParams.get("registrationWindowId") ?? "";
   const yearFromUrl = searchParams.get("academicYear") ?? undefined;
@@ -105,6 +99,8 @@ export function RegistrationsRefreshProvider({ children }: { children: ReactNode
     initialRegistrationWindowId: windowFromUrl,
   });
 
+  const registrationTypes = useMemo(() => [registrationType], [registrationType]);
+
   const bumpWorkspaceList = useCallback(() => {
     setWorkspaceRefreshKey((current) => current + 1);
   }, []);
@@ -115,7 +111,7 @@ export function RegistrationsRefreshProvider({ children }: { children: ReactNode
   }, []);
 
   useEffect(() => {
-    setRegistrationTypesState(parseStaffRegistrationTypes(searchParams));
+    setRegistrationTypeState(parseStaffRegistrationType(searchParams));
   }, [searchParams]);
 
   useEffect(() => {
@@ -161,27 +157,12 @@ export function RegistrationsRefreshProvider({ children }: { children: ReactNode
     [pathname, router, searchParams, windowSelector],
   );
 
-  const setRegistrationTypes = useCallback(
-    (types: StaffRegistrationTypeFilter[]) => {
-      const next =
-        types.length > 0 ? types : [...DEFAULT_STAFF_REGISTRATION_TYPES];
-      setRegistrationTypesState(next);
-      syncUrlParams(router, pathname, searchParams, { registrationTypes: next });
+  const setRegistrationType = useCallback(
+    (type: StaffRegistrationTypeFilter) => {
+      setRegistrationTypeState(type);
+      syncUrlParams(router, pathname, searchParams, { registrationType: type });
     },
     [pathname, router, searchParams],
-  );
-
-  const toggleRegistrationType = useCallback(
-    (type: StaffRegistrationTypeFilter) => {
-      const next = registrationTypes.includes(type)
-        ? registrationTypes.filter((item) => item !== type)
-        : [...registrationTypes, type];
-      const resolved =
-        next.length > 0 ? next : [...DEFAULT_STAFF_REGISTRATION_TYPES];
-      setRegistrationTypesState(resolved);
-      syncUrlParams(router, pathname, searchParams, { registrationTypes: resolved });
-    },
-    [pathname, registrationTypes, router, searchParams],
   );
 
   const selectorForUi = useMemo(
@@ -214,9 +195,9 @@ export function RegistrationsRefreshProvider({ children }: { children: ReactNode
         setRegistrationWindowId,
         academicYear: windowSelector.academicYear,
         setAcademicYear,
+        registrationType,
+        setRegistrationType,
         registrationTypes,
-        setRegistrationTypes,
-        toggleRegistrationType,
         windows: windowSelector.windows,
         windowsLoading: windowSelector.loading,
         windowSelector: selectorForUi,
@@ -248,9 +229,9 @@ export function useRegistrationsRefresh(): RegistrationsRefreshContextValue {
       setRegistrationWindowId: () => {},
       academicYear: "",
       setAcademicYear: () => {},
-      registrationTypes: [...DEFAULT_STAFF_REGISTRATION_TYPES],
-      setRegistrationTypes: () => {},
-      toggleRegistrationType: () => {},
+      registrationType: "INTERNAL_NORMAL",
+      setRegistrationType: () => {},
+      registrationTypes: ["INTERNAL_NORMAL"],
       windows: [],
       windowsLoading: false,
       windowSelector: emptySelector,
@@ -260,7 +241,7 @@ export function useRegistrationsRefresh(): RegistrationsRefreshContextValue {
 }
 
 export function RegistrationWindowFilterBar() {
-  const { registrationTypes, toggleRegistrationType, windows, windowsLoading, windowSelector } =
+  const { registrationType, setRegistrationType, windows, windowsLoading, windowSelector } =
     useRegistrationsRefresh();
 
   if (windowsLoading && windowSelector.yearsLoading) {
@@ -278,32 +259,28 @@ export function RegistrationWindowFilterBar() {
         </p>
       ) : null}
 
-      <div>
-        <p className="mb-2 text-sm font-medium text-slate-700">Registration type</p>
-        <div className="flex flex-wrap gap-2">
-          {STAFF_REGISTRATION_TYPE_FILTERS.map((type) => {
-            const selected = registrationTypes.includes(type);
-            return (
-              <button
-                key={type}
-                type="button"
-                onClick={() => toggleRegistrationType(type)}
-                className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
-                  selected
-                    ? "bg-indigo-600 text-white"
-                    : "bg-slate-100 text-slate-700 ring-1 ring-inset ring-slate-200 hover:bg-slate-200"
-                }`}
-              >
-                {REGISTRATION_TYPE_FILTER_LABELS[type]}
-              </button>
-            );
-          })}
+      <fieldset>
+        <legend className="text-sm font-medium text-slate-700">Registration type</legend>
+        <div className="mt-2 flex flex-wrap gap-4">
+          {STAFF_REGISTRATION_TYPE_FILTERS.map((type) => (
+            <label key={type} className="inline-flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+              <input
+                type="radio"
+                name="registrationType"
+                value={type}
+                checked={registrationType === type}
+                onChange={() => {
+                  if (isStaffRegistrationTypeFilter(type)) {
+                    setRegistrationType(type);
+                  }
+                }}
+                className="text-indigo-600 focus:ring-indigo-500"
+              />
+              {FEE_STATEMENT_TYPE_RADIO_LABELS[type]}
+            </label>
+          ))}
         </div>
-        <p className="mt-2 text-xs text-slate-500">
-          All registration types are shown by default. Narrow the workspace and detail lists using
-          these type chips or the filters below.
-        </p>
-      </div>
+      </fieldset>
     </Card>
   );
 }

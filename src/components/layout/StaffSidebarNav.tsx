@@ -86,7 +86,6 @@ export function adminStaffSections(base: "/admin" | "/exam-office"): SidebarSect
       links: [
         { href: `${prefix}/registration-windows`, label: "Registration Windows" },
         { href: `${prefix}/registrations`, label: "Registrations" },
-        { href: `${prefix}/candidate-board-registrations`, label: "Candidate Board Registration" },
         {
           href: `${prefix}/fee-statements?businessType=REGISTRATION`,
           label: "Registration Fee Statements",

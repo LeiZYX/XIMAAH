@@ -806,19 +806,6 @@ exports.Prisma.CertificateRequestScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.CandidateBoardRegistrationScalarFieldEnum = {
-  id: 'id',
-  candidateId: 'candidateId',
-  examBoardId: 'examBoardId',
-  registered: 'registered',
-  registrationFeePaid: 'registrationFeePaid',
-  registrationFeePaidAt: 'registrationFeePaidAt',
-  feeStatementId: 'feeStatementId',
-  notes: 'notes',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.FeeScheduleScalarFieldEnum = {
   id: 'id',
   examBoardId: 'examBoardId',
@@ -1339,14 +1326,6 @@ exports.Prisma.CertificateRequestOrderByRelevanceFieldEnum = {
   feeStatementId: 'feeStatementId'
 };
 
-exports.Prisma.CandidateBoardRegistrationOrderByRelevanceFieldEnum = {
-  id: 'id',
-  candidateId: 'candidateId',
-  examBoardId: 'examBoardId',
-  feeStatementId: 'feeStatementId',
-  notes: 'notes'
-};
-
 exports.Prisma.FeeScheduleOrderByRelevanceFieldEnum = {
   id: 'id',
   examBoardId: 'examBoardId',
@@ -1791,7 +1770,6 @@ exports.Prisma.ModelName = {
   CashInRequest: 'CashInRequest',
   AccessToScriptRequest: 'AccessToScriptRequest',
   CertificateRequest: 'CertificateRequest',
-  CandidateBoardRegistration: 'CandidateBoardRegistration',
   FeeSchedule: 'FeeSchedule',
   PostResultsAuditLog: 'PostResultsAuditLog'
 };

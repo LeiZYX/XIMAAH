@@ -24,6 +24,14 @@ export function isStaffRegistrationTypeFilter(value: string): value is StaffRegi
   return (STAFF_REGISTRATION_TYPE_FILTERS as readonly string[]).includes(value);
 }
 
+export function parseStaffRegistrationType(
+  searchParams: URLSearchParams,
+): StaffRegistrationTypeFilter {
+  const raw = searchParams.get("type");
+  if (raw && isStaffRegistrationTypeFilter(raw)) return raw;
+  return "INTERNAL_NORMAL";
+}
+
 export function parseStaffRegistrationTypes(searchParams: URLSearchParams): StaffRegistrationTypeFilter[] {
   const raw = searchParams.get("registrationTypes");
   if (!raw) return [...DEFAULT_STAFF_REGISTRATION_TYPES];
