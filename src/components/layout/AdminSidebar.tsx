@@ -21,6 +21,7 @@ const setupLinks = [
   { href: "/admin/exam-sessions", label: "Exam Sessions" },
   { href: "/admin/key-dates", label: "Key Dates" },
   { href: "/admin/exam-documents", label: "Exam Documents" },
+  { href: "/admin/import", label: "Import Data" },
 ];
 
 export function AdminSidebar() {
