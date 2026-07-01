@@ -24,6 +24,24 @@ services:
       retries: 10
       start_period: 30s
 
+  data-processor:
+    build:
+      context: ./services/data-processor
+    container_name: xima-data-processor
+    restart: unless-stopped
+    networks:
+      - xima_internal
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'python -c "import urllib.request; urllib.request.urlopen(''http://127.0.0.1:8001/health'')"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
   app:
     build:
       context: .
@@ -35,10 +53,13 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      data-processor:
+        condition: service_healthy
     env_file:
       - .env
     environment:
       NODE_ENV: production
+      DATA_PROCESSOR_URL: http://data-processor:8001
     ports:
       - "127.0.0.1:3000:3000"
     networks:

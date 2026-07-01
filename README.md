@@ -54,6 +54,15 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) — you'll land on the calendar view.
 
+For **Admin → Import Data** (Edexcel XLSX, AQA/OxfordAQA PDF, Cambridge PDF), start the Python data-processor:
+
+```bash
+cd services/data-processor
+uvicorn app.main:app --port 8001
+```
+
+Ensure `.env` has `DATA_PROCESSOR_URL=http://localhost:8001` (see `.env.example`).
+
 ## Features
 
 ### Admin Dashboard (`/admin`)
@@ -99,7 +108,7 @@ ExamBoard
 
 ## Production Deployment (Ubuntu + Docker Compose)
 
-Production stack: **Next.js app** + **MySQL 8** in Docker, with **Nginx** on the Ubuntu host as reverse proxy for `https://exam.shssip-iedu.cn`.
+Production stack: **Next.js app** + **Python data-processor** + **MySQL 8** in Docker, with **Nginx** on the Ubuntu host as reverse proxy for `https://exam.shssip-iedu.cn`.
 
 ### Prerequisites
 
@@ -144,14 +153,14 @@ sudo certbot --nginx -d exam.shssip-iedu.cn
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
-The app container listens on `127.0.0.1:3000` only. MySQL is not exposed publicly.
+The app container listens on `127.0.0.1:3000` only. MySQL and the data-processor are reachable only on the internal Docker network (`data-processor:8001`).
 
 ### Production files
 
 | File | Purpose |
 |------|---------|
 | `Dockerfile` | Production Next.js image (`prisma generate`, `next build`, `npm run start`) |
-| `docker-compose.yml` | Production `app` + `mysql` services |
+| `docker-compose.yml` | Production `app` + `data-processor` + `mysql` services |
 | `docker-compose.dev.yml` | Local dev MySQL / phpMyAdmin / data-processor |
 | `.env.production.example` | Production environment template |
 | `deploy/nginx/exam.shssip-iedu.cn.conf` | Nginx reverse proxy config |

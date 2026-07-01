@@ -20,7 +20,7 @@ cd services/data-processor
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8001
+uvicorn app.main:app --port 8001
 ```
 
 Set in Next.js `.env`:
@@ -31,8 +31,16 @@ DATA_PROCESSOR_URL=http://localhost:8001
 
 ## Docker
 
-From the repo root:
+**Production** (`docker-compose.yml`) — internal only, no host port:
 
 ```bash
-docker compose up data-processor
+docker compose up -d --build
+```
+
+The `app` service uses `DATA_PROCESSOR_URL=http://data-processor:8001`.
+
+**Local dev** (`docker-compose.dev.yml`) — exposes `8001` on the host:
+
+```bash
+docker compose -f docker-compose.dev.yml up -d data-processor
 ```

@@ -16,15 +16,22 @@ export class DataProcessorError extends Error {
   }
 }
 
+export function resolveDataProcessorUrl(): string | undefined {
+  const configured = process.env.DATA_PROCESSOR_URL?.trim();
+  if (configured) return configured.replace(/\/$/, "");
+  if (process.env.NODE_ENV !== "production") return "http://localhost:8001";
+  return undefined;
+}
+
 function baseUrl(): string {
-  const url = process.env.DATA_PROCESSOR_URL;
+  const url = resolveDataProcessorUrl();
   if (!url) {
     throw new DataProcessorError(
       "DATA_PROCESSOR_URL is not configured. Start the Python data-processor service.",
       503,
     );
   }
-  return url.replace(/\/$/, "");
+  return url;
 }
 
 async function readError(response: Response): Promise<string> {
@@ -109,9 +116,9 @@ export async function validateImportPreview(payload: {
 
 export async function checkDataProcessorHealth(): Promise<boolean> {
   try {
-    const url = process.env.DATA_PROCESSOR_URL;
+    const url = resolveDataProcessorUrl();
     if (!url) return false;
-    const response = await fetch(`${url.replace(/\/$/, "")}/health`, {
+    const response = await fetch(`${url}/health`, {
       next: { revalidate: 0 },
     });
     return response.ok;
