@@ -63,6 +63,7 @@ services:
       MYSQL_HOST: mysql
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-xima_assessment_hub}
+      BACKUP_DIRECTORY: ${BACKUP_DIRECTORY:-/var/backups/xima-assessment-hub}
     volumes:
       - backup_data:/var/backups/xima-assessment-hub
     ports:

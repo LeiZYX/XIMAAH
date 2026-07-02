@@ -58,7 +58,7 @@ ENV NODE_OPTIONS=--max-old-space-size=1024
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install -y default-mysql-client && \
+    apt-get install -y default-mysql-client gosu && \
     rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --system --gid 1001 nodejs \
@@ -74,10 +74,13 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/src/generated ./src/generated
 COPY --from=builder /app/src/lib ./src/lib
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-USER nextjs
+USER root
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["node", "server.js"]
