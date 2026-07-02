@@ -853,6 +853,35 @@ exports.Prisma.PostResultsAuditLogScalarFieldEnum = {
   metadata: 'metadata'
 };
 
+exports.Prisma.BackupSettingScalarFieldEnum = {
+  id: 'id',
+  enabled: 'enabled',
+  frequency: 'frequency',
+  backupTime: 'backupTime',
+  backupDirectory: 'backupDirectory',
+  retentionDays: 'retentionDays',
+  backupType: 'backupType',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.BackupJobScalarFieldEnum = {
+  id: 'id',
+  backupType: 'backupType',
+  status: 'status',
+  fileName: 'fileName',
+  filePath: 'filePath',
+  fileSizeBytes: 'fileSizeBytes',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt',
+  errorMessage: 'errorMessage',
+  triggeredBy: 'triggeredBy',
+  triggeredByUserId: 'triggeredByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1353,6 +1382,21 @@ exports.Prisma.PostResultsAuditLogOrderByRelevanceFieldEnum = {
   notes: 'notes',
   metadata: 'metadata'
 };
+
+exports.Prisma.BackupSettingOrderByRelevanceFieldEnum = {
+  id: 'id',
+  backupTime: 'backupTime',
+  backupDirectory: 'backupDirectory',
+  updatedByUserId: 'updatedByUserId'
+};
+
+exports.Prisma.BackupJobOrderByRelevanceFieldEnum = {
+  id: 'id',
+  fileName: 'fileName',
+  filePath: 'filePath',
+  errorMessage: 'errorMessage',
+  triggeredByUserId: 'triggeredByUserId'
+};
 exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
   EXAM_OFFICER: 'EXAM_OFFICER',
@@ -1399,7 +1443,13 @@ exports.UserAuditAction = exports.$Enums.UserAuditAction = {
   STUDENT_PROMOTED: 'STUDENT_PROMOTED',
   STUDENT_ARCHIVED: 'STUDENT_ARCHIVED',
   STUDENT_REACTIVATED: 'STUDENT_REACTIVATED',
-  STUDENT_DELETED: 'STUDENT_DELETED'
+  STUDENT_DELETED: 'STUDENT_DELETED',
+  BACKUP_SETTINGS_UPDATED: 'BACKUP_SETTINGS_UPDATED',
+  BACKUP_MANUAL_STARTED: 'BACKUP_MANUAL_STARTED',
+  BACKUP_MANUAL_SUCCESS: 'BACKUP_MANUAL_SUCCESS',
+  BACKUP_MANUAL_FAILED: 'BACKUP_MANUAL_FAILED',
+  BACKUP_FILE_DOWNLOADED: 'BACKUP_FILE_DOWNLOADED',
+  BACKUP_FILE_DELETED: 'BACKUP_FILE_DELETED'
 };
 
 exports.ExamDocumentAuditAction = exports.$Enums.ExamDocumentAuditAction = {
@@ -1745,6 +1795,29 @@ exports.PostResultsAuditAction = exports.$Enums.PostResultsAuditAction = {
   POST_RESULTS_FEE_STATEMENT_GENERATED: 'POST_RESULTS_FEE_STATEMENT_GENERATED'
 };
 
+exports.BackupFrequency = exports.$Enums.BackupFrequency = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY'
+};
+
+exports.BackupType = exports.$Enums.BackupType = {
+  DATABASE_ONLY: 'DATABASE_ONLY',
+  DATABASE_AND_UPLOADS: 'DATABASE_AND_UPLOADS'
+};
+
+exports.BackupJobStatus = exports.$Enums.BackupJobStatus = {
+  PENDING: 'PENDING',
+  RUNNING: 'RUNNING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED'
+};
+
+exports.BackupTriggeredBy = exports.$Enums.BackupTriggeredBy = {
+  SCHEDULED: 'SCHEDULED',
+  MANUAL: 'MANUAL'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   PasswordResetToken: 'PasswordResetToken',
@@ -1788,7 +1861,9 @@ exports.Prisma.ModelName = {
   AccessToScriptRequest: 'AccessToScriptRequest',
   CertificateRequest: 'CertificateRequest',
   FeeSchedule: 'FeeSchedule',
-  PostResultsAuditLog: 'PostResultsAuditLog'
+  PostResultsAuditLog: 'PostResultsAuditLog',
+  BackupSetting: 'BackupSetting',
+  BackupJob: 'BackupJob'
 };
 
 /**

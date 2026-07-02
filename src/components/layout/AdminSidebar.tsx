@@ -24,6 +24,10 @@ const setupLinks = [
   { href: "/admin/import", label: "Import Data" },
 ];
 
+const settingsLinks = [
+  { href: "/admin/settings/backup", label: "Backup Settings" },
+];
+
 export function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -55,6 +59,28 @@ export function AdminSidebar() {
               ? pathname === link.href
               : pathname.startsWith(link.href);
 
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`block rounded-md px-3 py-2 text-sm font-medium transition ${
+                  active
+                    ? "bg-indigo-600 text-white"
+                    : "text-slate-700 hover:bg-white hover:text-slate-900"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        <p className="mb-2 mt-4 px-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Settings
+        </p>
+        <div className="mb-5 space-y-1">
+          {settingsLinks.map((link) => {
+            const active = pathname.startsWith(link.href);
             return (
               <Link
                 key={link.href}

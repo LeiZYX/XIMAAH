@@ -60,6 +60,11 @@ services:
     environment:
       NODE_ENV: production
       DATA_PROCESSOR_URL: http://data-processor:8001
+      MYSQL_HOST: mysql
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-xima_assessment_hub}
+    volumes:
+      - backup_data:/var/backups/xima-assessment-hub
     ports:
       - "127.0.0.1:3000:3000"
     networks:
@@ -71,3 +76,4 @@ networks:
 
 volumes:
   mysql_data:
+  backup_data:
