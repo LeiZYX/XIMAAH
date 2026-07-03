@@ -34,6 +34,7 @@ export default function ExamOfficeRegistrationsPage() {
           externalApiPath="/api/exam-office/external-candidate-registrations"
           workspacesApiPath="/api/admin/registrations/workspaces"
           detailBasePath="/exam-office/registrations"
+          candidateDetailBasePath="/exam-office/candidates"
         />
       </div>
       <RegistrationWorkspaceList apiPath="/api/admin/registrations/workspaces" detailBasePath="/exam-office/registrations" />

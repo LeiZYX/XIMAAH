@@ -15,9 +15,9 @@ import {
   type FeeStatementDisplayCurrencyOption,
 } from "@/lib/fees/display-currency";
 import {
-  logRegistrationSubmitPayload,
-  readSubmitErrorMessage,
-} from "@/lib/registrations/submit-response";
+  RegistrationExamBoardIdentitySection,
+  useRegistrationExamBoardIdentityReady,
+} from "@/components/registrations/RegistrationExamBoardIdentitySection";
 import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
@@ -25,6 +25,10 @@ import {
   limitExamSessions,
   type ExamSessionSearchable,
 } from "@/lib/exam-session-search";
+import {
+  logRegistrationSubmitPayload,
+  readSubmitErrorMessage,
+} from "@/lib/registrations/submit-response";
 
 interface CandidateOption {
   id: string;
@@ -39,10 +43,12 @@ interface ExamSessionOption extends ExamSessionSearchable {
 
 export function ExternalCandidateRegistrationModal({
   apiPath,
+  candidateDetailBasePath,
   onClose,
   onSubmitted,
 }: {
   apiPath: string;
+  candidateDetailBasePath: string;
   onClose: () => void;
   onSubmitted: (result: { workspaceId?: string }) => void;
 }) {
@@ -78,6 +84,12 @@ export function ExternalCandidateRegistrationModal({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
+
+  const activeCandidateId = useExisting ? selectedCandidate?.id ?? null : null;
+  const { ready: identityReady, hasIdentity } = useRegistrationExamBoardIdentityReady(
+    activeCandidateId,
+    selectedWindow?.examBoard?.id ?? null,
+  );
 
   useEffect(() => {
     if (!useExisting || candidateQuery.trim().length < 2) {
@@ -149,6 +161,10 @@ export function ExternalCandidateRegistrationModal({
     }
     if (!useExisting && !newCandidate.englishName.trim()) {
       setError("English name is required for new external candidate.");
+      return;
+    }
+    if (useExisting && selectedWindow?.examBoard?.id && identityReady && !hasIdentity) {
+      setError("No Exam Board Identity exists for this student.");
       return;
     }
     if (!registrationWindowId || selectedSessionIds.length === 0) {
@@ -248,7 +264,12 @@ export function ExternalCandidateRegistrationModal({
               </div>
             </>
           ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
+            <>
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
+                Create the external candidate first, add their Exam Board Identity on the candidate profile,
+                then return here to register for exams.
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2">
               {(["englishName", "chineseName", "email", "phone", "schoolName", "externalId"] as const).map(
                 (field) => (
                   <input
@@ -260,7 +281,8 @@ export function ExternalCandidateRegistrationModal({
                   />
                 ),
               )}
-            </div>
+              </div>
+            </>
           )}
 
           <RegistrationWindowSelectorFields
@@ -272,6 +294,15 @@ export function ExternalCandidateRegistrationModal({
               },
             }}
           />
+
+          {useExisting ? (
+            <RegistrationExamBoardIdentitySection
+              candidateId={activeCandidateId}
+              examBoardId={selectedWindow?.examBoard?.id ?? null}
+              examBoardName={selectedWindow?.examBoard?.name ?? null}
+              candidateDetailBasePath={candidateDetailBasePath}
+            />
+          ) : null}
 
           <input
             value={sessionQuery}
@@ -340,7 +371,7 @@ export function ExternalCandidateRegistrationModal({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={submitting}
+            disabled={submitting || (useExisting && identityReady && !hasIdentity)}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
           >
             {submitting ? "Submitting..." : "Register external candidate"}

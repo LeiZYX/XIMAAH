@@ -308,6 +308,16 @@ export const RegistrationStatus: {
 export type RegistrationStatus = (typeof RegistrationStatus)[keyof typeof RegistrationStatus]
 
 
+export const CandidateExamIdentityStatus: {
+  PENDING: 'PENDING',
+  REGISTERED: 'REGISTERED',
+  WITHDRAWN: 'WITHDRAWN',
+  ARCHIVED: 'ARCHIVED'
+};
+
+export type CandidateExamIdentityStatus = (typeof CandidateExamIdentityStatus)[keyof typeof CandidateExamIdentityStatus]
+
+
 export const RegistrationSource: {
   STUDENT_SUBMITTED: 'STUDENT_SUBMITTED',
   TEACHER_REQUEST_APPROVED: 'TEACHER_REQUEST_APPROVED',
@@ -818,6 +828,10 @@ export const RegistrationWindowStatus: typeof $Enums.RegistrationWindowStatus
 export type RegistrationStatus = $Enums.RegistrationStatus
 
 export const RegistrationStatus: typeof $Enums.RegistrationStatus
+
+export type CandidateExamIdentityStatus = $Enums.CandidateExamIdentityStatus
+
+export const CandidateExamIdentityStatus: typeof $Enums.CandidateExamIdentityStatus
 
 export type RegistrationSource = $Enums.RegistrationSource
 
@@ -5268,6 +5282,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed: number
     backupSettingsUpdated: number
     backupJobsTriggered: number
+    candidateExamIdentitiesCreated: number
+    candidateExamIdentitiesUpdated: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5306,6 +5322,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: boolean | UserCountOutputTypeCountPostResultsAuditLogsPerformedArgs
     backupSettingsUpdated?: boolean | UserCountOutputTypeCountBackupSettingsUpdatedArgs
     backupJobsTriggered?: boolean | UserCountOutputTypeCountBackupJobsTriggeredArgs
+    candidateExamIdentitiesCreated?: boolean | UserCountOutputTypeCountCandidateExamIdentitiesCreatedArgs
+    candidateExamIdentitiesUpdated?: boolean | UserCountOutputTypeCountCandidateExamIdentitiesUpdatedArgs
   }
 
   // Custom InputTypes
@@ -5562,6 +5580,20 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountBackupJobsTriggeredArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BackupJobWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCandidateExamIdentitiesCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CandidateExamIdentityWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountCandidateExamIdentitiesUpdatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CandidateExamIdentityWhereInput
   }
 
 
@@ -7250,6 +7282,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: boolean | User$postResultsAuditLogsPerformedArgs<ExtArgs>
     backupSettingsUpdated?: boolean | User$backupSettingsUpdatedArgs<ExtArgs>
     backupJobsTriggered?: boolean | User$backupJobsTriggeredArgs<ExtArgs>
+    candidateExamIdentitiesCreated?: boolean | User$candidateExamIdentitiesCreatedArgs<ExtArgs>
+    candidateExamIdentitiesUpdated?: boolean | User$candidateExamIdentitiesUpdatedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -7310,6 +7344,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: boolean | User$postResultsAuditLogsPerformedArgs<ExtArgs>
     backupSettingsUpdated?: boolean | User$backupSettingsUpdatedArgs<ExtArgs>
     backupJobsTriggered?: boolean | User$backupJobsTriggeredArgs<ExtArgs>
+    candidateExamIdentitiesCreated?: boolean | User$candidateExamIdentitiesCreatedArgs<ExtArgs>
+    candidateExamIdentitiesUpdated?: boolean | User$candidateExamIdentitiesUpdatedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -7354,6 +7390,8 @@ export namespace Prisma {
       postResultsAuditLogsPerformed: Prisma.$PostResultsAuditLogPayload<ExtArgs>[]
       backupSettingsUpdated: Prisma.$BackupSettingPayload<ExtArgs>[]
       backupJobsTriggered: Prisma.$BackupJobPayload<ExtArgs>[]
+      candidateExamIdentitiesCreated: Prisma.$CandidateExamIdentityPayload<ExtArgs>[]
+      candidateExamIdentitiesUpdated: Prisma.$CandidateExamIdentityPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7746,6 +7784,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed<T extends User$postResultsAuditLogsPerformedArgs<ExtArgs> = {}>(args?: Subset<T, User$postResultsAuditLogsPerformedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostResultsAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     backupSettingsUpdated<T extends User$backupSettingsUpdatedArgs<ExtArgs> = {}>(args?: Subset<T, User$backupSettingsUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BackupSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     backupJobsTriggered<T extends User$backupJobsTriggeredArgs<ExtArgs> = {}>(args?: Subset<T, User$backupJobsTriggeredArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BackupJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    candidateExamIdentitiesCreated<T extends User$candidateExamIdentitiesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$candidateExamIdentitiesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateExamIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    candidateExamIdentitiesUpdated<T extends User$candidateExamIdentitiesUpdatedArgs<ExtArgs> = {}>(args?: Subset<T, User$candidateExamIdentitiesUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateExamIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9024,6 +9064,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BackupJobScalarFieldEnum | BackupJobScalarFieldEnum[]
+  }
+
+  /**
+   * User.candidateExamIdentitiesCreated
+   */
+  export type User$candidateExamIdentitiesCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateExamIdentity
+     */
+    select?: CandidateExamIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CandidateExamIdentity
+     */
+    omit?: CandidateExamIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateExamIdentityInclude<ExtArgs> | null
+    where?: CandidateExamIdentityWhereInput
+    orderBy?: CandidateExamIdentityOrderByWithRelationInput | CandidateExamIdentityOrderByWithRelationInput[]
+    cursor?: CandidateExamIdentityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CandidateExamIdentityScalarFieldEnum | CandidateExamIdentityScalarFieldEnum[]
+  }
+
+  /**
+   * User.candidateExamIdentitiesUpdated
+   */
+  export type User$candidateExamIdentitiesUpdatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateExamIdentity
+     */
+    select?: CandidateExamIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CandidateExamIdentity
+     */
+    omit?: CandidateExamIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateExamIdentityInclude<ExtArgs> | null
+    where?: CandidateExamIdentityWhereInput
+    orderBy?: CandidateExamIdentityOrderByWithRelationInput | CandidateExamIdentityOrderByWithRelationInput[]
+    cursor?: CandidateExamIdentityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CandidateExamIdentityScalarFieldEnum | CandidateExamIdentityScalarFieldEnum[]
   }
 
   /**
@@ -16489,10 +16577,19 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      /**
+       * Permanent system student identifier (STU-YYYY-000001). Generated automatically; never imported.
+       */
       studentId: string
+      /**
+       * Internal Assessment Hub registry number. Not an exam-board candidate number.
+       */
       assessmentHubCandidateNumber: string
       candidateType: $Enums.CandidateType
       userId: string | null
+      /**
+       * School-facing student/login number. Separate from studentId and exam-board numbers.
+       */
       studentNumber: string | null
       englishName: string
       chineseName: string | null
@@ -18586,11 +18683,15 @@ export namespace Prisma {
     candidateId: string | null
     examBoardId: string | null
     centreNumber: string | null
-    boardCandidateNumber: string | null
-    uci: string | null
+    candidateNumber: string | null
+    uciNumber: string | null
+    status: $Enums.CandidateExamIdentityStatus | null
+    registeredAt: Date | null
     notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    createdByUserId: string | null
+    updatedByUserId: string | null
   }
 
   export type CandidateExamIdentityMaxAggregateOutputType = {
@@ -18598,11 +18699,15 @@ export namespace Prisma {
     candidateId: string | null
     examBoardId: string | null
     centreNumber: string | null
-    boardCandidateNumber: string | null
-    uci: string | null
+    candidateNumber: string | null
+    uciNumber: string | null
+    status: $Enums.CandidateExamIdentityStatus | null
+    registeredAt: Date | null
     notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    createdByUserId: string | null
+    updatedByUserId: string | null
   }
 
   export type CandidateExamIdentityCountAggregateOutputType = {
@@ -18610,11 +18715,15 @@ export namespace Prisma {
     candidateId: number
     examBoardId: number
     centreNumber: number
-    boardCandidateNumber: number
-    uci: number
+    candidateNumber: number
+    uciNumber: number
+    status: number
+    registeredAt: number
     notes: number
     createdAt: number
     updatedAt: number
+    createdByUserId: number
+    updatedByUserId: number
     _all: number
   }
 
@@ -18624,11 +18733,15 @@ export namespace Prisma {
     candidateId?: true
     examBoardId?: true
     centreNumber?: true
-    boardCandidateNumber?: true
-    uci?: true
+    candidateNumber?: true
+    uciNumber?: true
+    status?: true
+    registeredAt?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
+    createdByUserId?: true
+    updatedByUserId?: true
   }
 
   export type CandidateExamIdentityMaxAggregateInputType = {
@@ -18636,11 +18749,15 @@ export namespace Prisma {
     candidateId?: true
     examBoardId?: true
     centreNumber?: true
-    boardCandidateNumber?: true
-    uci?: true
+    candidateNumber?: true
+    uciNumber?: true
+    status?: true
+    registeredAt?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
+    createdByUserId?: true
+    updatedByUserId?: true
   }
 
   export type CandidateExamIdentityCountAggregateInputType = {
@@ -18648,11 +18765,15 @@ export namespace Prisma {
     candidateId?: true
     examBoardId?: true
     centreNumber?: true
-    boardCandidateNumber?: true
-    uci?: true
+    candidateNumber?: true
+    uciNumber?: true
+    status?: true
+    registeredAt?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
+    createdByUserId?: true
+    updatedByUserId?: true
     _all?: true
   }
 
@@ -18733,11 +18854,15 @@ export namespace Prisma {
     candidateId: string
     examBoardId: string
     centreNumber: string | null
-    boardCandidateNumber: string | null
-    uci: string | null
+    candidateNumber: string | null
+    uciNumber: string | null
+    status: $Enums.CandidateExamIdentityStatus
+    registeredAt: Date | null
     notes: string | null
     createdAt: Date
     updatedAt: Date
+    createdByUserId: string | null
+    updatedByUserId: string | null
     _count: CandidateExamIdentityCountAggregateOutputType | null
     _min: CandidateExamIdentityMinAggregateOutputType | null
     _max: CandidateExamIdentityMaxAggregateOutputType | null
@@ -18762,13 +18887,19 @@ export namespace Prisma {
     candidateId?: boolean
     examBoardId?: boolean
     centreNumber?: boolean
-    boardCandidateNumber?: boolean
-    uci?: boolean
+    candidateNumber?: boolean
+    uciNumber?: boolean
+    status?: boolean
+    registeredAt?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    createdByUserId?: boolean
+    updatedByUserId?: boolean
     candidate?: boolean | CandidateDefaultArgs<ExtArgs>
     examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
+    createdByUser?: boolean | CandidateExamIdentity$createdByUserArgs<ExtArgs>
+    updatedByUser?: boolean | CandidateExamIdentity$updatedByUserArgs<ExtArgs>
   }, ExtArgs["result"]["candidateExamIdentity"]>
 
 
@@ -18778,17 +18909,23 @@ export namespace Prisma {
     candidateId?: boolean
     examBoardId?: boolean
     centreNumber?: boolean
-    boardCandidateNumber?: boolean
-    uci?: boolean
+    candidateNumber?: boolean
+    uciNumber?: boolean
+    status?: boolean
+    registeredAt?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    createdByUserId?: boolean
+    updatedByUserId?: boolean
   }
 
-  export type CandidateExamIdentityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "candidateId" | "examBoardId" | "centreNumber" | "boardCandidateNumber" | "uci" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["candidateExamIdentity"]>
+  export type CandidateExamIdentityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "candidateId" | "examBoardId" | "centreNumber" | "candidateNumber" | "uciNumber" | "status" | "registeredAt" | "notes" | "createdAt" | "updatedAt" | "createdByUserId" | "updatedByUserId", ExtArgs["result"]["candidateExamIdentity"]>
   export type CandidateExamIdentityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     candidate?: boolean | CandidateDefaultArgs<ExtArgs>
     examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
+    createdByUser?: boolean | CandidateExamIdentity$createdByUserArgs<ExtArgs>
+    updatedByUser?: boolean | CandidateExamIdentity$updatedByUserArgs<ExtArgs>
   }
 
   export type $CandidateExamIdentityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -18796,17 +18933,26 @@ export namespace Prisma {
     objects: {
       candidate: Prisma.$CandidatePayload<ExtArgs>
       examBoard: Prisma.$ExamBoardPayload<ExtArgs>
+      createdByUser: Prisma.$UserPayload<ExtArgs> | null
+      updatedByUser: Prisma.$UserPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       candidateId: string
       examBoardId: string
       centreNumber: string | null
-      boardCandidateNumber: string | null
-      uci: string | null
+      /**
+       * Board-assigned candidate number for this exam board only.
+       */
+      candidateNumber: string | null
+      uciNumber: string | null
+      status: $Enums.CandidateExamIdentityStatus
+      registeredAt: Date | null
       notes: string | null
       createdAt: Date
       updatedAt: Date
+      createdByUserId: string | null
+      updatedByUserId: string | null
     }, ExtArgs["result"]["candidateExamIdentity"]>
     composites: {}
   }
@@ -19149,6 +19295,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     candidate<T extends CandidateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CandidateDefaultArgs<ExtArgs>>): Prisma__CandidateClient<$Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     examBoard<T extends ExamBoardDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoardDefaultArgs<ExtArgs>>): Prisma__ExamBoardClient<$Result.GetResult<Prisma.$ExamBoardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    createdByUser<T extends CandidateExamIdentity$createdByUserArgs<ExtArgs> = {}>(args?: Subset<T, CandidateExamIdentity$createdByUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    updatedByUser<T extends CandidateExamIdentity$updatedByUserArgs<ExtArgs> = {}>(args?: Subset<T, CandidateExamIdentity$updatedByUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -19182,11 +19330,15 @@ export namespace Prisma {
     readonly candidateId: FieldRef<"CandidateExamIdentity", 'String'>
     readonly examBoardId: FieldRef<"CandidateExamIdentity", 'String'>
     readonly centreNumber: FieldRef<"CandidateExamIdentity", 'String'>
-    readonly boardCandidateNumber: FieldRef<"CandidateExamIdentity", 'String'>
-    readonly uci: FieldRef<"CandidateExamIdentity", 'String'>
+    readonly candidateNumber: FieldRef<"CandidateExamIdentity", 'String'>
+    readonly uciNumber: FieldRef<"CandidateExamIdentity", 'String'>
+    readonly status: FieldRef<"CandidateExamIdentity", 'CandidateExamIdentityStatus'>
+    readonly registeredAt: FieldRef<"CandidateExamIdentity", 'DateTime'>
     readonly notes: FieldRef<"CandidateExamIdentity", 'String'>
     readonly createdAt: FieldRef<"CandidateExamIdentity", 'DateTime'>
     readonly updatedAt: FieldRef<"CandidateExamIdentity", 'DateTime'>
+    readonly createdByUserId: FieldRef<"CandidateExamIdentity", 'String'>
+    readonly updatedByUserId: FieldRef<"CandidateExamIdentity", 'String'>
   }
     
 
@@ -19527,6 +19679,44 @@ export namespace Prisma {
      * Limit how many CandidateExamIdentities to delete.
      */
     limit?: number
+  }
+
+  /**
+   * CandidateExamIdentity.createdByUser
+   */
+  export type CandidateExamIdentity$createdByUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * CandidateExamIdentity.updatedByUser
+   */
+  export type CandidateExamIdentity$updatedByUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
   }
 
   /**
@@ -60464,11 +60654,15 @@ export namespace Prisma {
     candidateId: 'candidateId',
     examBoardId: 'examBoardId',
     centreNumber: 'centreNumber',
-    boardCandidateNumber: 'boardCandidateNumber',
-    uci: 'uci',
+    candidateNumber: 'candidateNumber',
+    uciNumber: 'uciNumber',
+    status: 'status',
+    registeredAt: 'registeredAt',
     notes: 'notes',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    createdByUserId: 'createdByUserId',
+    updatedByUserId: 'updatedByUserId'
   };
 
   export type CandidateExamIdentityScalarFieldEnum = (typeof CandidateExamIdentityScalarFieldEnum)[keyof typeof CandidateExamIdentityScalarFieldEnum]
@@ -61345,9 +61539,11 @@ export namespace Prisma {
     candidateId: 'candidateId',
     examBoardId: 'examBoardId',
     centreNumber: 'centreNumber',
-    boardCandidateNumber: 'boardCandidateNumber',
-    uci: 'uci',
-    notes: 'notes'
+    candidateNumber: 'candidateNumber',
+    uciNumber: 'uciNumber',
+    notes: 'notes',
+    createdByUserId: 'createdByUserId',
+    updatedByUserId: 'updatedByUserId'
   };
 
   export type CandidateExamIdentityOrderByRelevanceFieldEnum = (typeof CandidateExamIdentityOrderByRelevanceFieldEnum)[keyof typeof CandidateExamIdentityOrderByRelevanceFieldEnum]
@@ -61977,6 +62173,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'CandidateExamIdentityStatus'
+   */
+  export type EnumCandidateExamIdentityStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CandidateExamIdentityStatus'>
+    
+
+
+  /**
    * Reference to a field of type 'RegistrationWindowStatus'
    */
   export type EnumRegistrationWindowStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationWindowStatus'>
@@ -62271,6 +62474,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogListRelationFilter
     backupSettingsUpdated?: BackupSettingListRelationFilter
     backupJobsTriggered?: BackupJobListRelationFilter
+    candidateExamIdentitiesCreated?: CandidateExamIdentityListRelationFilter
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -62324,6 +62529,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogOrderByRelationAggregateInput
     backupSettingsUpdated?: BackupSettingOrderByRelationAggregateInput
     backupJobsTriggered?: BackupJobOrderByRelationAggregateInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityOrderByRelationAggregateInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -62381,6 +62588,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogListRelationFilter
     backupSettingsUpdated?: BackupSettingListRelationFilter
     backupJobsTriggered?: BackupJobListRelationFilter
+    candidateExamIdentitiesCreated?: CandidateExamIdentityListRelationFilter
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityListRelationFilter
   }, "id" | "username" | "email" | "phone" | "studentNo">
 
   export type UserOrderByWithAggregationInput = {
@@ -63268,13 +63477,19 @@ export namespace Prisma {
     candidateId?: StringFilter<"CandidateExamIdentity"> | string
     examBoardId?: StringFilter<"CandidateExamIdentity"> | string
     centreNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
-    boardCandidateNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
-    uci?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    candidateNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    uciNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    status?: EnumCandidateExamIdentityStatusFilter<"CandidateExamIdentity"> | $Enums.CandidateExamIdentityStatus
+    registeredAt?: DateTimeNullableFilter<"CandidateExamIdentity"> | Date | string | null
     notes?: StringNullableFilter<"CandidateExamIdentity"> | string | null
     createdAt?: DateTimeFilter<"CandidateExamIdentity"> | Date | string
     updatedAt?: DateTimeFilter<"CandidateExamIdentity"> | Date | string
+    createdByUserId?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    updatedByUserId?: StringNullableFilter<"CandidateExamIdentity"> | string | null
     candidate?: XOR<CandidateScalarRelationFilter, CandidateWhereInput>
     examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
+    createdByUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    updatedByUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
   export type CandidateExamIdentityOrderByWithRelationInput = {
@@ -63282,13 +63497,19 @@ export namespace Prisma {
     candidateId?: SortOrder
     examBoardId?: SortOrder
     centreNumber?: SortOrderInput | SortOrder
-    boardCandidateNumber?: SortOrderInput | SortOrder
-    uci?: SortOrderInput | SortOrder
+    candidateNumber?: SortOrderInput | SortOrder
+    uciNumber?: SortOrderInput | SortOrder
+    status?: SortOrder
+    registeredAt?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdByUserId?: SortOrderInput | SortOrder
+    updatedByUserId?: SortOrderInput | SortOrder
     candidate?: CandidateOrderByWithRelationInput
     examBoard?: ExamBoardOrderByWithRelationInput
+    createdByUser?: UserOrderByWithRelationInput
+    updatedByUser?: UserOrderByWithRelationInput
     _relevance?: CandidateExamIdentityOrderByRelevanceInput
   }
 
@@ -63301,13 +63522,19 @@ export namespace Prisma {
     candidateId?: StringFilter<"CandidateExamIdentity"> | string
     examBoardId?: StringFilter<"CandidateExamIdentity"> | string
     centreNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
-    boardCandidateNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
-    uci?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    candidateNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    uciNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    status?: EnumCandidateExamIdentityStatusFilter<"CandidateExamIdentity"> | $Enums.CandidateExamIdentityStatus
+    registeredAt?: DateTimeNullableFilter<"CandidateExamIdentity"> | Date | string | null
     notes?: StringNullableFilter<"CandidateExamIdentity"> | string | null
     createdAt?: DateTimeFilter<"CandidateExamIdentity"> | Date | string
     updatedAt?: DateTimeFilter<"CandidateExamIdentity"> | Date | string
+    createdByUserId?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    updatedByUserId?: StringNullableFilter<"CandidateExamIdentity"> | string | null
     candidate?: XOR<CandidateScalarRelationFilter, CandidateWhereInput>
     examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
+    createdByUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    updatedByUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id" | "candidateId_examBoardId">
 
   export type CandidateExamIdentityOrderByWithAggregationInput = {
@@ -63315,11 +63542,15 @@ export namespace Prisma {
     candidateId?: SortOrder
     examBoardId?: SortOrder
     centreNumber?: SortOrderInput | SortOrder
-    boardCandidateNumber?: SortOrderInput | SortOrder
-    uci?: SortOrderInput | SortOrder
+    candidateNumber?: SortOrderInput | SortOrder
+    uciNumber?: SortOrderInput | SortOrder
+    status?: SortOrder
+    registeredAt?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdByUserId?: SortOrderInput | SortOrder
+    updatedByUserId?: SortOrderInput | SortOrder
     _count?: CandidateExamIdentityCountOrderByAggregateInput
     _max?: CandidateExamIdentityMaxOrderByAggregateInput
     _min?: CandidateExamIdentityMinOrderByAggregateInput
@@ -63333,11 +63564,15 @@ export namespace Prisma {
     candidateId?: StringWithAggregatesFilter<"CandidateExamIdentity"> | string
     examBoardId?: StringWithAggregatesFilter<"CandidateExamIdentity"> | string
     centreNumber?: StringNullableWithAggregatesFilter<"CandidateExamIdentity"> | string | null
-    boardCandidateNumber?: StringNullableWithAggregatesFilter<"CandidateExamIdentity"> | string | null
-    uci?: StringNullableWithAggregatesFilter<"CandidateExamIdentity"> | string | null
+    candidateNumber?: StringNullableWithAggregatesFilter<"CandidateExamIdentity"> | string | null
+    uciNumber?: StringNullableWithAggregatesFilter<"CandidateExamIdentity"> | string | null
+    status?: EnumCandidateExamIdentityStatusWithAggregatesFilter<"CandidateExamIdentity"> | $Enums.CandidateExamIdentityStatus
+    registeredAt?: DateTimeNullableWithAggregatesFilter<"CandidateExamIdentity"> | Date | string | null
     notes?: StringNullableWithAggregatesFilter<"CandidateExamIdentity"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CandidateExamIdentity"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CandidateExamIdentity"> | Date | string
+    createdByUserId?: StringNullableWithAggregatesFilter<"CandidateExamIdentity"> | string | null
+    updatedByUserId?: StringNullableWithAggregatesFilter<"CandidateExamIdentity"> | string | null
   }
 
   export type TeacherAssignmentWhereInput = {
@@ -67640,6 +67875,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -67693,6 +67930,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUpdateInput = {
@@ -67746,6 +67985,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -67799,6 +68040,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -68785,13 +69028,17 @@ export namespace Prisma {
   export type CandidateExamIdentityCreateInput = {
     id?: string
     centreNumber?: string | null
-    boardCandidateNumber?: string | null
-    uci?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate: CandidateCreateNestedOneWithoutExamIdentitiesInput
     examBoard: ExamBoardCreateNestedOneWithoutCandidateExamIdentitiesInput
+    createdByUser?: UserCreateNestedOneWithoutCandidateExamIdentitiesCreatedInput
+    updatedByUser?: UserCreateNestedOneWithoutCandidateExamIdentitiesUpdatedInput
   }
 
   export type CandidateExamIdentityUncheckedCreateInput = {
@@ -68799,23 +69046,31 @@ export namespace Prisma {
     candidateId: string
     examBoardId: string
     centreNumber?: string | null
-    boardCandidateNumber?: string | null
-    uci?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    createdByUserId?: string | null
+    updatedByUserId?: string | null
   }
 
   export type CandidateExamIdentityUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    boardCandidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uci?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneRequiredWithoutExamIdentitiesNestedInput
     examBoard?: ExamBoardUpdateOneRequiredWithoutCandidateExamIdentitiesNestedInput
+    createdByUser?: UserUpdateOneWithoutCandidateExamIdentitiesCreatedNestedInput
+    updatedByUser?: UserUpdateOneWithoutCandidateExamIdentitiesUpdatedNestedInput
   }
 
   export type CandidateExamIdentityUncheckedUpdateInput = {
@@ -68823,11 +69078,15 @@ export namespace Prisma {
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    boardCandidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uci?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CandidateExamIdentityCreateManyInput = {
@@ -68835,18 +69094,24 @@ export namespace Prisma {
     candidateId: string
     examBoardId: string
     centreNumber?: string | null
-    boardCandidateNumber?: string | null
-    uci?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    createdByUserId?: string | null
+    updatedByUserId?: string | null
   }
 
   export type CandidateExamIdentityUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    boardCandidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uci?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -68857,11 +69122,15 @@ export namespace Prisma {
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    boardCandidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uci?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type TeacherAssignmentCreateInput = {
@@ -73599,6 +73868,12 @@ export namespace Prisma {
     none?: BackupJobWhereInput
   }
 
+  export type CandidateExamIdentityListRelationFilter = {
+    every?: CandidateExamIdentityWhereInput
+    some?: CandidateExamIdentityWhereInput
+    none?: CandidateExamIdentityWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -73697,6 +73972,10 @@ export namespace Prisma {
   }
 
   export type BackupJobOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CandidateExamIdentityOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -74426,16 +74705,6 @@ export namespace Prisma {
     not?: NestedEnumCandidateStatusFilter<$PrismaModel> | $Enums.CandidateStatus
   }
 
-  export type CandidateExamIdentityListRelationFilter = {
-    every?: CandidateExamIdentityWhereInput
-    some?: CandidateExamIdentityWhereInput
-    none?: CandidateExamIdentityWhereInput
-  }
-
-  export type CandidateExamIdentityOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
   export type CandidateOrderByRelevanceInput = {
     fields: CandidateOrderByRelevanceFieldEnum | CandidateOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -74654,6 +74923,13 @@ export namespace Prisma {
     _max?: NestedEnumCandidateAuditActionFilter<$PrismaModel>
   }
 
+  export type EnumCandidateExamIdentityStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CandidateExamIdentityStatus | EnumCandidateExamIdentityStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CandidateExamIdentityStatus[]
+    notIn?: $Enums.CandidateExamIdentityStatus[]
+    not?: NestedEnumCandidateExamIdentityStatusFilter<$PrismaModel> | $Enums.CandidateExamIdentityStatus
+  }
+
   export type ExamBoardScalarRelationFilter = {
     is?: ExamBoardWhereInput
     isNot?: ExamBoardWhereInput
@@ -74675,11 +74951,15 @@ export namespace Prisma {
     candidateId?: SortOrder
     examBoardId?: SortOrder
     centreNumber?: SortOrder
-    boardCandidateNumber?: SortOrder
-    uci?: SortOrder
+    candidateNumber?: SortOrder
+    uciNumber?: SortOrder
+    status?: SortOrder
+    registeredAt?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdByUserId?: SortOrder
+    updatedByUserId?: SortOrder
   }
 
   export type CandidateExamIdentityMaxOrderByAggregateInput = {
@@ -74687,11 +74967,15 @@ export namespace Prisma {
     candidateId?: SortOrder
     examBoardId?: SortOrder
     centreNumber?: SortOrder
-    boardCandidateNumber?: SortOrder
-    uci?: SortOrder
+    candidateNumber?: SortOrder
+    uciNumber?: SortOrder
+    status?: SortOrder
+    registeredAt?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdByUserId?: SortOrder
+    updatedByUserId?: SortOrder
   }
 
   export type CandidateExamIdentityMinOrderByAggregateInput = {
@@ -74699,11 +74983,25 @@ export namespace Prisma {
     candidateId?: SortOrder
     examBoardId?: SortOrder
     centreNumber?: SortOrder
-    boardCandidateNumber?: SortOrder
-    uci?: SortOrder
+    candidateNumber?: SortOrder
+    uciNumber?: SortOrder
+    status?: SortOrder
+    registeredAt?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    createdByUserId?: SortOrder
+    updatedByUserId?: SortOrder
+  }
+
+  export type EnumCandidateExamIdentityStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CandidateExamIdentityStatus | EnumCandidateExamIdentityStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CandidateExamIdentityStatus[]
+    notIn?: $Enums.CandidateExamIdentityStatus[]
+    not?: NestedEnumCandidateExamIdentityStatusWithAggregatesFilter<$PrismaModel> | $Enums.CandidateExamIdentityStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCandidateExamIdentityStatusFilter<$PrismaModel>
+    _max?: NestedEnumCandidateExamIdentityStatusFilter<$PrismaModel>
   }
 
   export type SubjectScalarRelationFilter = {
@@ -78172,6 +78470,20 @@ export namespace Prisma {
     connect?: BackupJobWhereUniqueInput | BackupJobWhereUniqueInput[]
   }
 
+  export type CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput = {
+    create?: XOR<CandidateExamIdentityCreateWithoutCreatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput> | CandidateExamIdentityCreateWithoutCreatedByUserInput[] | CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput[]
+    connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutCreatedByUserInput | CandidateExamIdentityCreateOrConnectWithoutCreatedByUserInput[]
+    createMany?: CandidateExamIdentityCreateManyCreatedByUserInputEnvelope
+    connect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+  }
+
+  export type CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput = {
+    create?: XOR<CandidateExamIdentityCreateWithoutUpdatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput> | CandidateExamIdentityCreateWithoutUpdatedByUserInput[] | CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput[]
+    connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput | CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput[]
+    createMany?: CandidateExamIdentityCreateManyUpdatedByUserInputEnvelope
+    connect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+  }
+
   export type SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -78433,6 +78745,20 @@ export namespace Prisma {
     connectOrCreate?: BackupJobCreateOrConnectWithoutTriggeredByUserInput | BackupJobCreateOrConnectWithoutTriggeredByUserInput[]
     createMany?: BackupJobCreateManyTriggeredByUserInputEnvelope
     connect?: BackupJobWhereUniqueInput | BackupJobWhereUniqueInput[]
+  }
+
+  export type CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput = {
+    create?: XOR<CandidateExamIdentityCreateWithoutCreatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput> | CandidateExamIdentityCreateWithoutCreatedByUserInput[] | CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput[]
+    connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutCreatedByUserInput | CandidateExamIdentityCreateOrConnectWithoutCreatedByUserInput[]
+    createMany?: CandidateExamIdentityCreateManyCreatedByUserInputEnvelope
+    connect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+  }
+
+  export type CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput = {
+    create?: XOR<CandidateExamIdentityCreateWithoutUpdatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput> | CandidateExamIdentityCreateWithoutUpdatedByUserInput[] | CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput[]
+    connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput | CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput[]
+    createMany?: CandidateExamIdentityCreateManyUpdatedByUserInputEnvelope
+    connect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -78975,6 +79301,34 @@ export namespace Prisma {
     deleteMany?: BackupJobScalarWhereInput | BackupJobScalarWhereInput[]
   }
 
+  export type CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput = {
+    create?: XOR<CandidateExamIdentityCreateWithoutCreatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput> | CandidateExamIdentityCreateWithoutCreatedByUserInput[] | CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput[]
+    connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutCreatedByUserInput | CandidateExamIdentityCreateOrConnectWithoutCreatedByUserInput[]
+    upsert?: CandidateExamIdentityUpsertWithWhereUniqueWithoutCreatedByUserInput | CandidateExamIdentityUpsertWithWhereUniqueWithoutCreatedByUserInput[]
+    createMany?: CandidateExamIdentityCreateManyCreatedByUserInputEnvelope
+    set?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    disconnect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    delete?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    connect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    update?: CandidateExamIdentityUpdateWithWhereUniqueWithoutCreatedByUserInput | CandidateExamIdentityUpdateWithWhereUniqueWithoutCreatedByUserInput[]
+    updateMany?: CandidateExamIdentityUpdateManyWithWhereWithoutCreatedByUserInput | CandidateExamIdentityUpdateManyWithWhereWithoutCreatedByUserInput[]
+    deleteMany?: CandidateExamIdentityScalarWhereInput | CandidateExamIdentityScalarWhereInput[]
+  }
+
+  export type CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput = {
+    create?: XOR<CandidateExamIdentityCreateWithoutUpdatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput> | CandidateExamIdentityCreateWithoutUpdatedByUserInput[] | CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput[]
+    connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput | CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput[]
+    upsert?: CandidateExamIdentityUpsertWithWhereUniqueWithoutUpdatedByUserInput | CandidateExamIdentityUpsertWithWhereUniqueWithoutUpdatedByUserInput[]
+    createMany?: CandidateExamIdentityCreateManyUpdatedByUserInputEnvelope
+    set?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    disconnect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    delete?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    connect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    update?: CandidateExamIdentityUpdateWithWhereUniqueWithoutUpdatedByUserInput | CandidateExamIdentityUpdateWithWhereUniqueWithoutUpdatedByUserInput[]
+    updateMany?: CandidateExamIdentityUpdateManyWithWhereWithoutUpdatedByUserInput | CandidateExamIdentityUpdateManyWithWhereWithoutUpdatedByUserInput[]
+    deleteMany?: CandidateExamIdentityScalarWhereInput | CandidateExamIdentityScalarWhereInput[]
+  }
+
   export type SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -79493,6 +79847,34 @@ export namespace Prisma {
     update?: BackupJobUpdateWithWhereUniqueWithoutTriggeredByUserInput | BackupJobUpdateWithWhereUniqueWithoutTriggeredByUserInput[]
     updateMany?: BackupJobUpdateManyWithWhereWithoutTriggeredByUserInput | BackupJobUpdateManyWithWhereWithoutTriggeredByUserInput[]
     deleteMany?: BackupJobScalarWhereInput | BackupJobScalarWhereInput[]
+  }
+
+  export type CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput = {
+    create?: XOR<CandidateExamIdentityCreateWithoutCreatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput> | CandidateExamIdentityCreateWithoutCreatedByUserInput[] | CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput[]
+    connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutCreatedByUserInput | CandidateExamIdentityCreateOrConnectWithoutCreatedByUserInput[]
+    upsert?: CandidateExamIdentityUpsertWithWhereUniqueWithoutCreatedByUserInput | CandidateExamIdentityUpsertWithWhereUniqueWithoutCreatedByUserInput[]
+    createMany?: CandidateExamIdentityCreateManyCreatedByUserInputEnvelope
+    set?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    disconnect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    delete?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    connect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    update?: CandidateExamIdentityUpdateWithWhereUniqueWithoutCreatedByUserInput | CandidateExamIdentityUpdateWithWhereUniqueWithoutCreatedByUserInput[]
+    updateMany?: CandidateExamIdentityUpdateManyWithWhereWithoutCreatedByUserInput | CandidateExamIdentityUpdateManyWithWhereWithoutCreatedByUserInput[]
+    deleteMany?: CandidateExamIdentityScalarWhereInput | CandidateExamIdentityScalarWhereInput[]
+  }
+
+  export type CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput = {
+    create?: XOR<CandidateExamIdentityCreateWithoutUpdatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput> | CandidateExamIdentityCreateWithoutUpdatedByUserInput[] | CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput[]
+    connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput | CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput[]
+    upsert?: CandidateExamIdentityUpsertWithWhereUniqueWithoutUpdatedByUserInput | CandidateExamIdentityUpsertWithWhereUniqueWithoutUpdatedByUserInput[]
+    createMany?: CandidateExamIdentityCreateManyUpdatedByUserInputEnvelope
+    set?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    disconnect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    delete?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    connect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+    update?: CandidateExamIdentityUpdateWithWhereUniqueWithoutUpdatedByUserInput | CandidateExamIdentityUpdateWithWhereUniqueWithoutUpdatedByUserInput[]
+    updateMany?: CandidateExamIdentityUpdateManyWithWhereWithoutUpdatedByUserInput | CandidateExamIdentityUpdateManyWithWhereWithoutUpdatedByUserInput[]
+    deleteMany?: CandidateExamIdentityScalarWhereInput | CandidateExamIdentityScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
@@ -80299,6 +80681,22 @@ export namespace Prisma {
     connect?: ExamBoardWhereUniqueInput
   }
 
+  export type UserCreateNestedOneWithoutCandidateExamIdentitiesCreatedInput = {
+    create?: XOR<UserCreateWithoutCandidateExamIdentitiesCreatedInput, UserUncheckedCreateWithoutCandidateExamIdentitiesCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCandidateExamIdentitiesCreatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCandidateExamIdentitiesUpdatedInput = {
+    create?: XOR<UserCreateWithoutCandidateExamIdentitiesUpdatedInput, UserUncheckedCreateWithoutCandidateExamIdentitiesUpdatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCandidateExamIdentitiesUpdatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumCandidateExamIdentityStatusFieldUpdateOperationsInput = {
+    set?: $Enums.CandidateExamIdentityStatus
+  }
+
   export type CandidateUpdateOneRequiredWithoutExamIdentitiesNestedInput = {
     create?: XOR<CandidateCreateWithoutExamIdentitiesInput, CandidateUncheckedCreateWithoutExamIdentitiesInput>
     connectOrCreate?: CandidateCreateOrConnectWithoutExamIdentitiesInput
@@ -80313,6 +80711,26 @@ export namespace Prisma {
     upsert?: ExamBoardUpsertWithoutCandidateExamIdentitiesInput
     connect?: ExamBoardWhereUniqueInput
     update?: XOR<XOR<ExamBoardUpdateToOneWithWhereWithoutCandidateExamIdentitiesInput, ExamBoardUpdateWithoutCandidateExamIdentitiesInput>, ExamBoardUncheckedUpdateWithoutCandidateExamIdentitiesInput>
+  }
+
+  export type UserUpdateOneWithoutCandidateExamIdentitiesCreatedNestedInput = {
+    create?: XOR<UserCreateWithoutCandidateExamIdentitiesCreatedInput, UserUncheckedCreateWithoutCandidateExamIdentitiesCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCandidateExamIdentitiesCreatedInput
+    upsert?: UserUpsertWithoutCandidateExamIdentitiesCreatedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCandidateExamIdentitiesCreatedInput, UserUpdateWithoutCandidateExamIdentitiesCreatedInput>, UserUncheckedUpdateWithoutCandidateExamIdentitiesCreatedInput>
+  }
+
+  export type UserUpdateOneWithoutCandidateExamIdentitiesUpdatedNestedInput = {
+    create?: XOR<UserCreateWithoutCandidateExamIdentitiesUpdatedInput, UserUncheckedCreateWithoutCandidateExamIdentitiesUpdatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCandidateExamIdentitiesUpdatedInput
+    upsert?: UserUpsertWithoutCandidateExamIdentitiesUpdatedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutCandidateExamIdentitiesUpdatedInput, UserUpdateWithoutCandidateExamIdentitiesUpdatedInput>, UserUncheckedUpdateWithoutCandidateExamIdentitiesUpdatedInput>
   }
 
   export type UserCreateNestedOneWithoutTeacherAssignmentsInput = {
@@ -87576,6 +87994,23 @@ export namespace Prisma {
     _max?: NestedEnumCandidateAuditActionFilter<$PrismaModel>
   }
 
+  export type NestedEnumCandidateExamIdentityStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.CandidateExamIdentityStatus | EnumCandidateExamIdentityStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CandidateExamIdentityStatus[]
+    notIn?: $Enums.CandidateExamIdentityStatus[]
+    not?: NestedEnumCandidateExamIdentityStatusFilter<$PrismaModel> | $Enums.CandidateExamIdentityStatus
+  }
+
+  export type NestedEnumCandidateExamIdentityStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CandidateExamIdentityStatus | EnumCandidateExamIdentityStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.CandidateExamIdentityStatus[]
+    notIn?: $Enums.CandidateExamIdentityStatus[]
+    not?: NestedEnumCandidateExamIdentityStatusWithAggregatesFilter<$PrismaModel> | $Enums.CandidateExamIdentityStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCandidateExamIdentityStatusFilter<$PrismaModel>
+    _max?: NestedEnumCandidateExamIdentityStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumRegistrationWindowStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.RegistrationWindowStatus | EnumRegistrationWindowStatusFieldRefInput<$PrismaModel>
     in?: $Enums.RegistrationWindowStatus[]
@@ -90549,6 +90984,86 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CandidateExamIdentityCreateWithoutCreatedByUserInput = {
+    id?: string
+    centreNumber?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    candidate: CandidateCreateNestedOneWithoutExamIdentitiesInput
+    examBoard: ExamBoardCreateNestedOneWithoutCandidateExamIdentitiesInput
+    updatedByUser?: UserCreateNestedOneWithoutCandidateExamIdentitiesUpdatedInput
+  }
+
+  export type CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput = {
+    id?: string
+    candidateId: string
+    examBoardId: string
+    centreNumber?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    updatedByUserId?: string | null
+  }
+
+  export type CandidateExamIdentityCreateOrConnectWithoutCreatedByUserInput = {
+    where: CandidateExamIdentityWhereUniqueInput
+    create: XOR<CandidateExamIdentityCreateWithoutCreatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput>
+  }
+
+  export type CandidateExamIdentityCreateManyCreatedByUserInputEnvelope = {
+    data: CandidateExamIdentityCreateManyCreatedByUserInput | CandidateExamIdentityCreateManyCreatedByUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CandidateExamIdentityCreateWithoutUpdatedByUserInput = {
+    id?: string
+    centreNumber?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    candidate: CandidateCreateNestedOneWithoutExamIdentitiesInput
+    examBoard: ExamBoardCreateNestedOneWithoutCandidateExamIdentitiesInput
+    createdByUser?: UserCreateNestedOneWithoutCandidateExamIdentitiesCreatedInput
+  }
+
+  export type CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput = {
+    id?: string
+    candidateId: string
+    examBoardId: string
+    centreNumber?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdByUserId?: string | null
+  }
+
+  export type CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput = {
+    where: CandidateExamIdentityWhereUniqueInput
+    create: XOR<CandidateExamIdentityCreateWithoutUpdatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput>
+  }
+
+  export type CandidateExamIdentityCreateManyUpdatedByUserInputEnvelope = {
+    data: CandidateExamIdentityCreateManyUpdatedByUserInput | CandidateExamIdentityCreateManyUpdatedByUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SourceDocumentUpsertWithWhereUniqueWithoutUploadedByInput = {
     where: SourceDocumentWhereUniqueInput
     update: XOR<SourceDocumentUpdateWithoutUploadedByInput, SourceDocumentUncheckedUpdateWithoutUploadedByInput>
@@ -91831,6 +92346,57 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"BackupJob"> | Date | string
   }
 
+  export type CandidateExamIdentityUpsertWithWhereUniqueWithoutCreatedByUserInput = {
+    where: CandidateExamIdentityWhereUniqueInput
+    update: XOR<CandidateExamIdentityUpdateWithoutCreatedByUserInput, CandidateExamIdentityUncheckedUpdateWithoutCreatedByUserInput>
+    create: XOR<CandidateExamIdentityCreateWithoutCreatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutCreatedByUserInput>
+  }
+
+  export type CandidateExamIdentityUpdateWithWhereUniqueWithoutCreatedByUserInput = {
+    where: CandidateExamIdentityWhereUniqueInput
+    data: XOR<CandidateExamIdentityUpdateWithoutCreatedByUserInput, CandidateExamIdentityUncheckedUpdateWithoutCreatedByUserInput>
+  }
+
+  export type CandidateExamIdentityUpdateManyWithWhereWithoutCreatedByUserInput = {
+    where: CandidateExamIdentityScalarWhereInput
+    data: XOR<CandidateExamIdentityUpdateManyMutationInput, CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserInput>
+  }
+
+  export type CandidateExamIdentityScalarWhereInput = {
+    AND?: CandidateExamIdentityScalarWhereInput | CandidateExamIdentityScalarWhereInput[]
+    OR?: CandidateExamIdentityScalarWhereInput[]
+    NOT?: CandidateExamIdentityScalarWhereInput | CandidateExamIdentityScalarWhereInput[]
+    id?: StringFilter<"CandidateExamIdentity"> | string
+    candidateId?: StringFilter<"CandidateExamIdentity"> | string
+    examBoardId?: StringFilter<"CandidateExamIdentity"> | string
+    centreNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    candidateNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    uciNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    status?: EnumCandidateExamIdentityStatusFilter<"CandidateExamIdentity"> | $Enums.CandidateExamIdentityStatus
+    registeredAt?: DateTimeNullableFilter<"CandidateExamIdentity"> | Date | string | null
+    notes?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    createdAt?: DateTimeFilter<"CandidateExamIdentity"> | Date | string
+    updatedAt?: DateTimeFilter<"CandidateExamIdentity"> | Date | string
+    createdByUserId?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+    updatedByUserId?: StringNullableFilter<"CandidateExamIdentity"> | string | null
+  }
+
+  export type CandidateExamIdentityUpsertWithWhereUniqueWithoutUpdatedByUserInput = {
+    where: CandidateExamIdentityWhereUniqueInput
+    update: XOR<CandidateExamIdentityUpdateWithoutUpdatedByUserInput, CandidateExamIdentityUncheckedUpdateWithoutUpdatedByUserInput>
+    create: XOR<CandidateExamIdentityCreateWithoutUpdatedByUserInput, CandidateExamIdentityUncheckedCreateWithoutUpdatedByUserInput>
+  }
+
+  export type CandidateExamIdentityUpdateWithWhereUniqueWithoutUpdatedByUserInput = {
+    where: CandidateExamIdentityWhereUniqueInput
+    data: XOR<CandidateExamIdentityUpdateWithoutUpdatedByUserInput, CandidateExamIdentityUncheckedUpdateWithoutUpdatedByUserInput>
+  }
+
+  export type CandidateExamIdentityUpdateManyWithWhereWithoutUpdatedByUserInput = {
+    where: CandidateExamIdentityScalarWhereInput
+    data: XOR<CandidateExamIdentityUpdateManyMutationInput, CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserInput>
+  }
+
   export type UserCreateWithoutPasswordResetTokensInput = {
     id?: string
     name: string
@@ -91881,6 +92447,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -91933,6 +92501,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -92001,6 +92571,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -92053,6 +92625,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserCreateWithoutStudentProfileInput = {
@@ -92105,6 +92679,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentProfileInput = {
@@ -92157,6 +92733,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -92225,6 +92803,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentProfileInput = {
@@ -92277,6 +92857,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserCreateWithoutTeacherProfileInput = {
@@ -92329,6 +92911,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutTeacherProfileInput = {
@@ -92381,6 +92965,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutTeacherProfileInput = {
@@ -92449,6 +93035,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherProfileInput = {
@@ -92501,6 +93089,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserCreateWithoutUserAuditLogsTargetInput = {
@@ -92553,6 +93143,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsTargetInput = {
@@ -92605,6 +93197,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsTargetInput = {
@@ -92662,6 +93256,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsPerformedInput = {
@@ -92714,6 +93310,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsPerformedInput = {
@@ -92782,6 +93380,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsTargetInput = {
@@ -92834,6 +93434,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUpsertWithoutUserAuditLogsPerformedInput = {
@@ -92897,6 +93499,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsPerformedInput = {
@@ -92949,6 +93553,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExamDocumentAuditLogsInput = {
@@ -93222,6 +93828,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -93274,6 +93882,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutExamDocumentAuditLogsPerformedInput = {
@@ -93581,6 +94191,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -93633,6 +94245,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserCreateWithoutCandidateInput = {
@@ -93685,6 +94299,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutCandidateInput = {
@@ -93737,6 +94353,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutCandidateInput = {
@@ -93747,23 +94365,31 @@ export namespace Prisma {
   export type CandidateExamIdentityCreateWithoutCandidateInput = {
     id?: string
     centreNumber?: string | null
-    boardCandidateNumber?: string | null
-    uci?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutCandidateExamIdentitiesInput
+    createdByUser?: UserCreateNestedOneWithoutCandidateExamIdentitiesCreatedInput
+    updatedByUser?: UserCreateNestedOneWithoutCandidateExamIdentitiesUpdatedInput
   }
 
   export type CandidateExamIdentityUncheckedCreateWithoutCandidateInput = {
     id?: string
     examBoardId: string
     centreNumber?: string | null
-    boardCandidateNumber?: string | null
-    uci?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    createdByUserId?: string | null
+    updatedByUserId?: string | null
   }
 
   export type CandidateExamIdentityCreateOrConnectWithoutCandidateInput = {
@@ -94531,6 +95157,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateInput = {
@@ -94583,6 +95211,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type CandidateExamIdentityUpsertWithWhereUniqueWithoutCandidateInput = {
@@ -94599,21 +95229,6 @@ export namespace Prisma {
   export type CandidateExamIdentityUpdateManyWithWhereWithoutCandidateInput = {
     where: CandidateExamIdentityScalarWhereInput
     data: XOR<CandidateExamIdentityUpdateManyMutationInput, CandidateExamIdentityUncheckedUpdateManyWithoutCandidateInput>
-  }
-
-  export type CandidateExamIdentityScalarWhereInput = {
-    AND?: CandidateExamIdentityScalarWhereInput | CandidateExamIdentityScalarWhereInput[]
-    OR?: CandidateExamIdentityScalarWhereInput[]
-    NOT?: CandidateExamIdentityScalarWhereInput | CandidateExamIdentityScalarWhereInput[]
-    id?: StringFilter<"CandidateExamIdentity"> | string
-    candidateId?: StringFilter<"CandidateExamIdentity"> | string
-    examBoardId?: StringFilter<"CandidateExamIdentity"> | string
-    centreNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
-    boardCandidateNumber?: StringNullableFilter<"CandidateExamIdentity"> | string | null
-    uci?: StringNullableFilter<"CandidateExamIdentity"> | string | null
-    notes?: StringNullableFilter<"CandidateExamIdentity"> | string | null
-    createdAt?: DateTimeFilter<"CandidateExamIdentity"> | Date | string
-    updatedAt?: DateTimeFilter<"CandidateExamIdentity"> | Date | string
   }
 
   export type RegistrationWorkspaceUpsertWithWhereUniqueWithoutCandidateInput = {
@@ -94961,6 +95576,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutCandidateAuditLogsPerformedInput = {
@@ -95013,6 +95630,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutCandidateAuditLogsPerformedInput = {
@@ -95190,6 +95809,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateAuditLogsPerformedInput = {
@@ -95242,6 +95863,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type CandidateCreateWithoutExamIdentitiesInput = {
@@ -95428,6 +96051,232 @@ export namespace Prisma {
   export type ExamBoardCreateOrConnectWithoutCandidateExamIdentitiesInput = {
     where: ExamBoardWhereUniqueInput
     create: XOR<ExamBoardCreateWithoutCandidateExamIdentitiesInput, ExamBoardUncheckedCreateWithoutCandidateExamIdentitiesInput>
+  }
+
+  export type UserCreateWithoutCandidateExamIdentitiesCreatedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCandidateExamIdentitiesCreatedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCandidateExamIdentitiesCreatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCandidateExamIdentitiesCreatedInput, UserUncheckedCreateWithoutCandidateExamIdentitiesCreatedInput>
+  }
+
+  export type UserCreateWithoutCandidateExamIdentitiesUpdatedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCandidateExamIdentitiesUpdatedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCandidateExamIdentitiesUpdatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCandidateExamIdentitiesUpdatedInput, UserUncheckedCreateWithoutCandidateExamIdentitiesUpdatedInput>
   }
 
   export type CandidateUpsertWithoutExamIdentitiesInput = {
@@ -95628,6 +96477,244 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
   }
 
+  export type UserUpsertWithoutCandidateExamIdentitiesCreatedInput = {
+    update: XOR<UserUpdateWithoutCandidateExamIdentitiesCreatedInput, UserUncheckedUpdateWithoutCandidateExamIdentitiesCreatedInput>
+    create: XOR<UserCreateWithoutCandidateExamIdentitiesCreatedInput, UserUncheckedCreateWithoutCandidateExamIdentitiesCreatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCandidateExamIdentitiesCreatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCandidateExamIdentitiesCreatedInput, UserUncheckedUpdateWithoutCandidateExamIdentitiesCreatedInput>
+  }
+
+  export type UserUpdateWithoutCandidateExamIdentitiesCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCandidateExamIdentitiesCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+  }
+
+  export type UserUpsertWithoutCandidateExamIdentitiesUpdatedInput = {
+    update: XOR<UserUpdateWithoutCandidateExamIdentitiesUpdatedInput, UserUncheckedUpdateWithoutCandidateExamIdentitiesUpdatedInput>
+    create: XOR<UserCreateWithoutCandidateExamIdentitiesUpdatedInput, UserUncheckedCreateWithoutCandidateExamIdentitiesUpdatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutCandidateExamIdentitiesUpdatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutCandidateExamIdentitiesUpdatedInput, UserUncheckedUpdateWithoutCandidateExamIdentitiesUpdatedInput>
+  }
+
+  export type UserUpdateWithoutCandidateExamIdentitiesUpdatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCandidateExamIdentitiesUpdatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+  }
+
   export type UserCreateWithoutTeacherAssignmentsInput = {
     id?: string
     name: string
@@ -95678,6 +96765,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutTeacherAssignmentsInput = {
@@ -95730,6 +96819,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutTeacherAssignmentsInput = {
@@ -95841,6 +96932,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherAssignmentsInput = {
@@ -95893,6 +96986,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type SubjectUpsertWithoutTeacherAssignmentsInput = {
@@ -96130,6 +97225,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWindowsInput = {
@@ -96182,6 +97279,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWindowsInput = {
@@ -97064,6 +98163,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWindowsInput = {
@@ -97116,6 +98217,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWindowInput = {
@@ -98188,6 +99291,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWorkspacesInput = {
@@ -98240,6 +99345,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWorkspacesInput = {
@@ -98362,6 +99469,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutWorkspacesLastAdjustedInput = {
@@ -98414,6 +99523,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutWorkspacesLastAdjustedInput = {
@@ -98508,6 +99619,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsCreatedInput = {
@@ -98560,6 +99673,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsCreatedInput = {
@@ -98617,6 +99732,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -98669,6 +99786,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsUpdatedInput = {
@@ -99162,6 +100281,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWorkspacesInput = {
@@ -99214,6 +100335,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutWorkspacesInput = {
@@ -99348,6 +100471,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkspacesLastAdjustedInput = {
@@ -99400,6 +100525,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutWorkspacesInput = {
@@ -99506,6 +100633,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsCreatedInput = {
@@ -99558,6 +100687,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUpsertWithoutRestrictedRegistrationsUpdatedInput = {
@@ -99621,6 +100752,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -99673,6 +100806,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput = {
@@ -99892,6 +101027,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentRegistrationsInput = {
@@ -99944,6 +101081,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentRegistrationsInput = {
@@ -100428,6 +101567,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationsAddedInput = {
@@ -100480,6 +101621,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationsAddedInput = {
@@ -100862,6 +102005,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentRegistrationsInput = {
@@ -100914,6 +102059,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutRegistrationsInput = {
@@ -101446,6 +102593,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationsAddedInput = {
@@ -101498,6 +102647,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutRegistrationsInput = {
@@ -101900,6 +103051,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -101952,6 +103105,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsAsStudentInput = {
@@ -102196,6 +103351,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput = {
@@ -102248,6 +103405,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsPerformedInput = {
@@ -102593,6 +103752,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -102645,6 +103806,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithoutAuditLogsInput = {
@@ -102913,6 +104076,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsPerformedInput = {
@@ -102965,6 +104130,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type RegistrationWorkspaceCreateWithoutChangeRequestsInput = {
@@ -103173,6 +104340,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentChangeRequestsInput = {
@@ -103225,6 +104394,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentChangeRequestsInput = {
@@ -103385,6 +104556,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationChangeRequestsInput = {
@@ -103437,6 +104610,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationChangeRequestsInput = {
@@ -103600,6 +104775,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewedChangeRequestsInput = {
@@ -103652,6 +104829,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewedChangeRequestsInput = {
@@ -103910,6 +105089,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentChangeRequestsInput = {
@@ -103962,6 +105143,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type CandidateUpsertWithoutChangeRequestsInput = {
@@ -104134,6 +105317,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationChangeRequestsInput = {
@@ -104186,6 +105371,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type ExamSessionUpsertWithoutChangeRequestTargetsInput = {
@@ -104367,6 +105554,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewedChangeRequestsInput = {
@@ -104419,6 +105608,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type RegistrationChangeRequestExamSessionUpsertWithWhereUniqueWithoutChangeRequestInput = {
@@ -105138,23 +106329,31 @@ export namespace Prisma {
   export type CandidateExamIdentityCreateWithoutExamBoardInput = {
     id?: string
     centreNumber?: string | null
-    boardCandidateNumber?: string | null
-    uci?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate: CandidateCreateNestedOneWithoutExamIdentitiesInput
+    createdByUser?: UserCreateNestedOneWithoutCandidateExamIdentitiesCreatedInput
+    updatedByUser?: UserCreateNestedOneWithoutCandidateExamIdentitiesUpdatedInput
   }
 
   export type CandidateExamIdentityUncheckedCreateWithoutExamBoardInput = {
     id?: string
     candidateId: string
     centreNumber?: string | null
-    boardCandidateNumber?: string | null
-    uci?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    createdByUserId?: string | null
+    updatedByUserId?: string | null
   }
 
   export type CandidateExamIdentityCreateOrConnectWithoutExamBoardInput = {
@@ -111560,6 +112759,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutSourceDocumentsInput = {
@@ -111612,6 +112813,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutSourceDocumentsInput = {
@@ -112011,6 +113214,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSourceDocumentsInput = {
@@ -112063,6 +113268,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type PaperUpsertWithWhereUniqueWithoutSourceDocumentInput = {
@@ -112564,6 +113771,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeRulesCreatedInput = {
@@ -112616,6 +113825,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeRulesCreatedInput = {
@@ -113095,6 +114306,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeRulesCreatedInput = {
@@ -113147,6 +114360,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExchangeRatesInput = {
@@ -113264,6 +114479,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutExchangeRatesCreatedInput = {
@@ -113316,6 +114533,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutExchangeRatesCreatedInput = {
@@ -113455,6 +114674,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExchangeRatesCreatedInput = {
@@ -113507,6 +114728,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type CandidateCreateWithoutFeeStatementsInput = {
@@ -113662,6 +114885,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsAsStudentInput = {
@@ -113714,6 +114939,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsAsStudentInput = {
@@ -113974,6 +115201,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsGeneratedInput = {
@@ -114026,6 +115255,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsGeneratedInput = {
@@ -114449,6 +115680,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsRegenerationChangedInput = {
@@ -114501,6 +115734,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsRegenerationChangedInput = {
@@ -114926,6 +116161,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsAsStudentInput = {
@@ -114978,6 +116215,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutFeeStatementsInput = {
@@ -115262,6 +116501,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsGeneratedInput = {
@@ -115314,6 +116555,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutSuccessorStatementsInput = {
@@ -115599,6 +116842,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsRegenerationChangedInput = {
@@ -115651,6 +116896,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeStatementInput = {
@@ -116260,6 +117507,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeAuditLogsPerformedInput = {
@@ -116312,6 +117561,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeAuditLogsPerformedInput = {
@@ -116451,6 +117702,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeAuditLogsPerformedInput = {
@@ -116503,6 +117756,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type ExamBoardCreateWithoutReviewWindowsInput = {
@@ -116691,6 +117946,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewWindowsCreatedInput = {
@@ -116743,6 +118000,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewWindowsCreatedInput = {
@@ -117301,6 +118560,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewWindowsCreatedInput = {
@@ -117353,6 +118614,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type ReviewWindowServiceUpsertWithWhereUniqueWithoutReviewWindowInput = {
@@ -118148,6 +119411,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsRequestedInput = {
@@ -118200,6 +119465,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsRequestedInput = {
@@ -118257,6 +119524,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsReviewedInput = {
@@ -118309,6 +119578,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsReviewedInput = {
@@ -119032,6 +120303,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsRequestedInput = {
@@ -119084,6 +120357,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUpsertWithoutReviewRequestsReviewedInput = {
@@ -119147,6 +120422,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsReviewedInput = {
@@ -119199,6 +120476,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutReviewRequestsInput = {
@@ -119708,6 +120987,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutCashInRequestsRequestedInput = {
@@ -119760,6 +121041,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutCashInRequestsRequestedInput = {
@@ -120315,6 +121598,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCashInRequestsRequestedInput = {
@@ -120367,6 +121652,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutCashInRequestsInput = {
@@ -121032,6 +122319,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutAccessToScriptRequestsRequestedInput = {
@@ -121084,6 +122373,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutAccessToScriptRequestsRequestedInput = {
@@ -121807,6 +123098,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccessToScriptRequestsRequestedInput = {
@@ -121859,6 +123152,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutAccessToScriptRequestsInput = {
@@ -122292,6 +123587,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutCertificateRequestsRequestedInput = {
@@ -122344,6 +123641,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutCertificateRequestsRequestedInput = {
@@ -122811,6 +124110,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCertificateRequestsRequestedInput = {
@@ -122863,6 +124164,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutCertificateRequestsInput = {
@@ -123208,6 +124511,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeSchedulesCreatedInput = {
@@ -123260,6 +124565,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeSchedulesCreatedInput = {
@@ -123618,6 +124925,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeSchedulesCreatedInput = {
@@ -123670,6 +124979,8 @@ export namespace Prisma {
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeScheduleInput = {
@@ -124089,6 +125400,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutPostResultsAuditLogsPerformedInput = {
@@ -124141,6 +125454,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutPostResultsAuditLogsPerformedInput = {
@@ -124590,6 +125905,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostResultsAuditLogsPerformedInput = {
@@ -124642,6 +125959,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserCreateWithoutBackupSettingsUpdatedInput = {
@@ -124694,6 +126013,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutBackupSettingsUpdatedInput = {
@@ -124746,6 +126067,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutBackupSettingsUpdatedInput = {
@@ -124814,6 +126137,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupSettingsUpdatedInput = {
@@ -124866,6 +126191,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserCreateWithoutBackupJobsTriggeredInput = {
@@ -124918,6 +126245,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserUncheckedCreateWithoutBackupJobsTriggeredInput = {
@@ -124970,6 +126299,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
   }
 
   export type UserCreateOrConnectWithoutBackupJobsTriggeredInput = {
@@ -125038,6 +126369,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupJobsTriggeredInput = {
@@ -125090,6 +126423,8 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
   }
 
   export type SourceDocumentCreateManyUploadedByInput = {
@@ -125855,6 +127190,36 @@ export namespace Prisma {
     triggeredBy: $Enums.BackupTriggeredBy
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type CandidateExamIdentityCreateManyCreatedByUserInput = {
+    id?: string
+    candidateId: string
+    examBoardId: string
+    centreNumber?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    updatedByUserId?: string | null
+  }
+
+  export type CandidateExamIdentityCreateManyUpdatedByUserInput = {
+    id?: string
+    candidateId: string
+    examBoardId: string
+    centreNumber?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    createdByUserId?: string | null
   }
 
   export type SourceDocumentUpdateWithoutUploadedByInput = {
@@ -128294,15 +129659,109 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CandidateExamIdentityUpdateWithoutCreatedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    candidate?: CandidateUpdateOneRequiredWithoutExamIdentitiesNestedInput
+    examBoard?: ExamBoardUpdateOneRequiredWithoutCandidateExamIdentitiesNestedInput
+    updatedByUser?: UserUpdateOneWithoutCandidateExamIdentitiesUpdatedNestedInput
+  }
+
+  export type CandidateExamIdentityUncheckedUpdateWithoutCreatedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CandidateExamIdentityUpdateWithoutUpdatedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    candidate?: CandidateUpdateOneRequiredWithoutExamIdentitiesNestedInput
+    examBoard?: ExamBoardUpdateOneRequiredWithoutCandidateExamIdentitiesNestedInput
+    createdByUser?: UserUpdateOneWithoutCandidateExamIdentitiesCreatedNestedInput
+  }
+
+  export type CandidateExamIdentityUncheckedUpdateWithoutUpdatedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type CandidateExamIdentityCreateManyCandidateInput = {
     id?: string
     examBoardId: string
     centreNumber?: string | null
-    boardCandidateNumber?: string | null
-    uci?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    createdByUserId?: string | null
+    updatedByUserId?: string | null
   }
 
   export type RegistrationWorkspaceCreateManyCandidateInput = {
@@ -128580,34 +130039,46 @@ export namespace Prisma {
   export type CandidateExamIdentityUpdateWithoutCandidateInput = {
     id?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    boardCandidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uci?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutCandidateExamIdentitiesNestedInput
+    createdByUser?: UserUpdateOneWithoutCandidateExamIdentitiesCreatedNestedInput
+    updatedByUser?: UserUpdateOneWithoutCandidateExamIdentitiesUpdatedNestedInput
   }
 
   export type CandidateExamIdentityUncheckedUpdateWithoutCandidateInput = {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    boardCandidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uci?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CandidateExamIdentityUncheckedUpdateManyWithoutCandidateInput = {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    boardCandidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uci?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type RegistrationWorkspaceUpdateWithoutCandidateInput = {
@@ -131959,11 +133430,15 @@ export namespace Prisma {
     id?: string
     candidateId: string
     centreNumber?: string | null
-    boardCandidateNumber?: string | null
-    uci?: string | null
+    candidateNumber?: string | null
+    uciNumber?: string | null
+    status?: $Enums.CandidateExamIdentityStatus
+    registeredAt?: Date | string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    createdByUserId?: string | null
+    updatedByUserId?: string | null
   }
 
   export type ReviewWindowCreateManyExamBoardInput = {
@@ -132633,34 +134108,46 @@ export namespace Prisma {
   export type CandidateExamIdentityUpdateWithoutExamBoardInput = {
     id?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    boardCandidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uci?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneRequiredWithoutExamIdentitiesNestedInput
+    createdByUser?: UserUpdateOneWithoutCandidateExamIdentitiesCreatedNestedInput
+    updatedByUser?: UserUpdateOneWithoutCandidateExamIdentitiesUpdatedNestedInput
   }
 
   export type CandidateExamIdentityUncheckedUpdateWithoutExamBoardInput = {
     id?: StringFieldUpdateOperationsInput | string
     candidateId?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    boardCandidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uci?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CandidateExamIdentityUncheckedUpdateManyWithoutExamBoardInput = {
     id?: StringFieldUpdateOperationsInput | string
     candidateId?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    boardCandidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
-    uci?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    uciNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumCandidateExamIdentityStatusFieldUpdateOperationsInput | $Enums.CandidateExamIdentityStatus
+    registeredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ReviewWindowUpdateWithoutExamBoardInput = {

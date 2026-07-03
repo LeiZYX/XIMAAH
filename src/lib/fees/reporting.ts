@@ -50,7 +50,7 @@ export interface FeeDetailRow {
   statementId: string | null;
   statementNo: string | null;
   candidateName: string;
-  assessmentHubCandidateNumber: string | null;
+  permanentStudentId: string | null;
   studentNumber: string | null;
   candidateType: string | null;
   grade: string;
@@ -93,6 +93,7 @@ type RegRow = {
   studentNoSnapshot: string;
   assessmentHubCandidateNumberSnapshot: string | null;
   candidateTypeSnapshot: string | null;
+  candidate?: { studentId: string | null } | null;
   registrationSource: string | null;
   visibility: string | null;
   billingScope: string | null;
@@ -139,6 +140,7 @@ async function loadBillableRegistrations(filters: FeeReportFilters): Promise<Reg
       registrationWorkspaceId: { in: workspaceIds },
     },
     include: {
+      candidate: { select: { studentId: true } },
       subject: { select: { name: true, qualificationId: true } },
       paper: { select: { code: true, title: true } },
       examSession: { select: { date: true } },
@@ -470,6 +472,7 @@ export async function buildFeeDetailsReport(
           examSession: { select: { date: true } },
         },
       },
+      candidate: { select: { studentId: true } },
       registrationWindow: {
         include: {
           examBoard: { select: { name: true } },
@@ -526,7 +529,7 @@ export async function buildFeeDetailsReport(
         statementId: statement.id,
         statementNo: statement.statementNo,
         candidateName: statement.studentNameSnapshot,
-        assessmentHubCandidateNumber: statement.assessmentHubCandidateNumberSnapshot,
+        permanentStudentId: statement.candidate?.studentId ?? null,
         studentNumber:
           statement.candidateTypeSnapshot === "INTERNAL" ? statement.studentNoSnapshot : null,
         candidateType: statement.candidateTypeSnapshot,
@@ -612,7 +615,7 @@ export async function buildFeeDetailsReport(
         statementId: null,
         statementNo: null,
         candidateName: reg.studentNameSnapshot,
-        assessmentHubCandidateNumber: reg.assessmentHubCandidateNumberSnapshot,
+        permanentStudentId: reg.candidate?.studentId ?? null,
         studentNumber:
           reg.candidateTypeSnapshot === "INTERNAL" ? reg.studentNoSnapshot : null,
         candidateType: reg.candidateTypeSnapshot,
@@ -649,7 +652,7 @@ export async function buildFeeDetailsReport(
 export interface CandidateFeeDetailGroup {
   candidateKey: string;
   candidateName: string;
-  assessmentHubCandidateNumber: string | null;
+  permanentStudentId: string | null;
   studentNumber: string | null;
   candidateType: string | null;
   grade: string;
@@ -664,7 +667,7 @@ export interface CandidateFeeDetailGroup {
 
 export function candidateKeyFromDetailRow(row: FeeDetailRow): string {
   return (
-    row.assessmentHubCandidateNumber ??
+    row.permanentStudentId ??
     row.studentNumber ??
     row.candidateName
   ).trim();
@@ -689,7 +692,7 @@ export function groupFeeDetailsByCandidate(rows: FeeDetailRow[]): CandidateFeeDe
       map.set(key, {
         candidateKey: key,
         candidateName: row.candidateName,
-        assessmentHubCandidateNumber: row.assessmentHubCandidateNumber,
+        permanentStudentId: row.permanentStudentId,
         studentNumber: row.studentNumber,
         candidateType: row.candidateType,
         grade: row.grade,

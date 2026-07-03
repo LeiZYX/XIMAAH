@@ -18,6 +18,7 @@
     "db:clear-registrations": "tsx scripts/clear-registrations.ts",
     "db:backfill-registration-numbers": "tsx scripts/backfill-registration-numbers.ts",
     "db:cleanup-registration-data": "tsx scripts/cleanup-registration-data.ts",
+    "db:clear-students": "tsx scripts/clear-student-data.ts",
     "db:studio": "prisma studio",
     "backup:database": "tsx scripts/run-database-backup.ts"
   },

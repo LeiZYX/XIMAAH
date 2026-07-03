@@ -35,6 +35,7 @@ export async function GET(request: NextRequest) {
     },
     include: {
       studentProfile: true,
+      candidate: { select: { id: true } },
     },
     orderBy: { name: "asc" },
     take: 25,
@@ -48,6 +49,7 @@ export async function GET(request: NextRequest) {
       studentNo: student.studentProfile?.studentNo ?? null,
       grade: student.studentProfile?.currentGrade ?? null,
       className: student.studentProfile?.currentClassName ?? null,
+      candidateId: student.candidate?.id ?? null,
       status: student.studentProfile?.status ?? "ACTIVE",
       isActive: student.isActive,
       archived: !student.isActive || student.studentProfile?.status !== "ACTIVE",

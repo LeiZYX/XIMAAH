@@ -133,8 +133,9 @@ function ImportTabPanel({
       </div>
 
       <p className="text-sm text-slate-600">
-        Download the Excel template, fill in internal student profile fields, then upload for preview.
-        Commit is enabled only when the preview has no validation errors.
+        Download the Excel template, fill in internal student profile fields (including optional School
+        Student Number), then upload for preview. Student ID, Candidate Number, and UCI Number are not
+        imported. Commit is enabled only when the preview has no validation errors.
       </p>
 
       {message ? <p className="text-sm text-green-700">{message}</p> : null}

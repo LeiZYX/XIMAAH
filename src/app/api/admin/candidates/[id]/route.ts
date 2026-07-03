@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { createCandidateAuditLog } from "@/lib/candidates/audit";
-import { updateCandidate, upsertCandidateExamIdentity } from "@/lib/candidates/import";
+import { updateCandidate } from "@/lib/candidates/import";
+import {
+  archiveCandidateExamIdentity,
+  upsertCandidateExamIdentity,
+} from "@/lib/candidates/exam-board-identity";
+import type { CandidateExamIdentityStatus } from "@/generated/prisma/enums";
 import { getCandidateById } from "@/lib/candidates/list";
 import {
   buildCandidateIdentityUpdate,
@@ -51,10 +56,13 @@ export async function PATCH(
     loginEnabled?: boolean;
     removePhoto?: boolean;
     examIdentity?: {
+      id?: string;
+      archive?: boolean;
       examBoardId?: string;
       centreNumber?: string;
-      boardCandidateNumber?: string;
-      uci?: string;
+      candidateNumber?: string;
+      uciNumber?: string;
+      status?: CandidateExamIdentityStatus;
       notes?: string;
     };
     syncFromStudents?: boolean;
@@ -72,12 +80,32 @@ export async function PATCH(
   }
 
   try {
-    if (data.examIdentity?.examBoardId) {
-      await upsertCandidateExamIdentity(id, data.examIdentity.examBoardId, {
-        centreNumber: data.examIdentity.centreNumber ?? null,
-        boardCandidateNumber: data.examIdentity.boardCandidateNumber ?? null,
-        uci: data.examIdentity.uci ?? null,
-        notes: data.examIdentity.notes ?? null,
+    if (data.examIdentity?.archive && data.examIdentity.id) {
+      await archiveCandidateExamIdentity(id, data.examIdentity.id, auth.user.id);
+      await createCandidateAuditLog({
+        candidateId: id,
+        action: "CANDIDATE_IDENTITY_UPDATED",
+        performedById: auth.user.id,
+        metadata: { section: "exam_board_identity", action: "archive" },
+      });
+    } else if (data.examIdentity?.examBoardId) {
+      await upsertCandidateExamIdentity(
+        id,
+        data.examIdentity.examBoardId,
+        {
+          centreNumber: data.examIdentity.centreNumber ?? null,
+          candidateNumber: data.examIdentity.candidateNumber ?? null,
+          uciNumber: data.examIdentity.uciNumber ?? null,
+          status: data.examIdentity.status ?? null,
+          notes: data.examIdentity.notes ?? null,
+        },
+        auth.user.id,
+      );
+      await createCandidateAuditLog({
+        candidateId: id,
+        action: "CANDIDATE_IDENTITY_UPDATED",
+        performedById: auth.user.id,
+        metadata: { section: "exam_board_identity" },
       });
     }
 

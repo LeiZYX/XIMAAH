@@ -16,10 +16,12 @@ export interface FeeStatementPrintData {
   exchangeRateSnapshot: number | string | null;
   studentNameSnapshot: string;
   studentNoSnapshot: string;
+  permanentStudentIdSnapshot?: string | null;
   gradeSnapshot: string;
   classNameSnapshot: string;
   emailSnapshot: string | null;
   assessmentHubCandidateNumberSnapshot?: string | null;
+  candidate?: { studentId: string | null } | null;
   candidateTypeSnapshot?: string | null;
   status: string;
   totalGbpAmount: number | string;
@@ -106,8 +108,8 @@ function StatementDocument({
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Candidate information</h2>
             <dl className="space-y-1">
               <div><dt className="inline font-medium">Name: </dt><dd className="inline">{statement.studentNameSnapshot}</dd></div>
-              {statement.assessmentHubCandidateNumberSnapshot ? (
-                <div><dt className="inline font-medium">Assessment Hub candidate no.: </dt><dd className="inline">{statement.assessmentHubCandidateNumberSnapshot}</dd></div>
+              {(statement.permanentStudentIdSnapshot ?? statement.candidate?.studentId) ? (
+                <div><dt className="inline font-medium">Student ID: </dt><dd className="inline font-mono text-xs">{statement.permanentStudentIdSnapshot ?? statement.candidate?.studentId}</dd></div>
               ) : null}
               {statement.candidateTypeSnapshot ? (
                 <div><dt className="inline font-medium">Candidate type: </dt><dd className="inline">{statement.candidateTypeSnapshot === "INTERNAL" ? "Internal" : "External"}</dd></div>

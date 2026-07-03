@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { examDocumentCandidateIdentifier } from "@/lib/candidates/display-identifiers";
 import { ExamDocumentCentreHeader } from "@/components/exam-documents/ExamDocumentCentreHeader";
 import { PageHeader } from "@/components/ui/PageHeader";
 import type { ExamBoardCentreInfo } from "@/lib/exam-boards/centre";
@@ -387,7 +388,11 @@ export function ExamDocumentsManager({ apiBasePath }: { apiBasePath: string }) {
                           {String(page.documentTitle ?? documentType)}
                         </h2>
                         <p className="text-sm text-slate-700">
-                          {String(page.candidateName ?? "")} · {String(page.candidateNumber ?? "")}
+                          {String(page.candidateName ?? "")} · {examDocumentCandidateIdentifier({
+                            permanentStudentId: page.permanentStudentId as string | null | undefined,
+                            examBoard: page.examBoard as string | null | undefined,
+                            boardCandidateNumber: page.boardCandidateNumber as string | null | undefined,
+                          })}
                           {page.centreNumber ? ` · Centre ${String(page.centreNumber)}` : ""}
                         </p>
                         <IdentityDetailsBlock page={page} />
@@ -457,7 +462,7 @@ export function ExamDocumentsManager({ apiBasePath }: { apiBasePath: string }) {
                         <tr className="bg-slate-50 text-left text-xs uppercase text-slate-600">
                           <th className="border px-2 py-1">Seat</th>
                           <th className="border px-2 py-1">Photo</th>
-                          <th className="border px-2 py-1">Candidate No.</th>
+                          <th className="border px-2 py-1">Board candidate no.</th>
                           <th className="border px-2 py-1">Name</th>
                           <th className="border px-2 py-1">Class</th>
                           <th className="border px-2 py-1">Present</th>
@@ -478,7 +483,7 @@ export function ExamDocumentsManager({ apiBasePath }: { apiBasePath: string }) {
                                 "—"
                               )}
                             </td>
-                            <td className="border px-2 py-1">{row.candidateNumber}</td>
+                            <td className="border px-2 py-1">{row.boardCandidateNumber ?? row.candidateNumber ?? "—"}</td>
                             <td className="border px-2 py-1">{row.candidateName}</td>
                             <td className="border px-2 py-1">{row.className}</td>
                             <td className="border px-2 py-1">&nbsp;</td>
@@ -505,7 +510,7 @@ export function ExamDocumentsManager({ apiBasePath }: { apiBasePath: string }) {
                         <div key={seatIndex} className="border border-slate-300 p-2 text-sm">
                           <div className="font-medium">Seat {seat.seat}</div>
                           <div>{seat.candidateName}</div>
-                          <div className="text-slate-600">{seat.candidateNumber}</div>
+                          <div className="text-slate-600">{seat.boardCandidateNumber ?? seat.candidateNumber ?? "—"}</div>
                         </div>
                       ))}
                     </div>
@@ -526,7 +531,13 @@ export function ExamDocumentsManager({ apiBasePath }: { apiBasePath: string }) {
                         {label.chineseName ? (
                           <p className="text-slate-600">{String(label.chineseName)}</p>
                         ) : null}
-                        <p className="mt-1 font-mono text-slate-700">{String(label.candidateNumber)}</p>
+                        <p className="mt-1 font-mono text-slate-700">
+                          {examDocumentCandidateIdentifier({
+                            permanentStudentId: label.permanentStudentId as string | null | undefined,
+                            examBoard: label.examBoard as string | null | undefined,
+                            boardCandidateNumber: (label.boardCandidateNumber ?? label.candidateNumber) as string | null | undefined,
+                          })}
+                        </p>
                         <p className="text-slate-600">
                           {String(label.grade ?? "—")} · {String(label.className ?? "—")}
                         </p>
@@ -545,7 +556,7 @@ export function ExamDocumentsManager({ apiBasePath }: { apiBasePath: string }) {
                     <tr className="bg-slate-50 text-left text-xs uppercase text-slate-600">
                       <th className="border px-2 py-1">Centre No.</th>
                       <th className="border px-2 py-1">Candidate No.</th>
-                      <th className="border px-2 py-1">Student No.</th>
+                      <th className="border px-2 py-1">Student ID</th>
                       <th className="border px-2 py-1">Name</th>
                       <th className="border px-2 py-1">Grade</th>
                       <th className="border px-2 py-1">Class</th>

@@ -9,118 +9,106 @@ export interface HelpSection {
 export const helpSections: HelpSection[] = [
   {
     id: "overview",
-    title: "What is XIMA Assessment Hub?",
+    title: "Overview",
     paragraphs: [
-      "XIMA Assessment Hub is the school's exam registration and planning system.",
-      "It is used to view exam calendars, register for exams, check registration status, and view fee statements when they are published.",
-      "Students, teachers, and exam office staff all use the same calendar and registration window information, with access tailored to each role.",
+      "XIMA Assessment Hub is the school's exam planning and registration system.",
+      "It brings together exam calendars, candidate records, board registration details, and exam registrations in one place.",
+      "Students, teachers, and administrators each see the areas relevant to their role.",
     ],
   },
   {
-    id: "student-workflow",
-    title: "Student exam registration workflow",
-    paragraphs: ["Follow these steps to register for exams during an open registration window:"],
+    id: "dashboard",
+    title: "Dashboard",
+    paragraphs: [
+      "After signing in, the Dashboard is your starting point for day-to-day work in the system.",
+      "Use the top navigation to move between areas such as Calendar, Candidates, Registrations, and Settings.",
+      "Menu items depend on your account role. If you cannot see a page you expect, contact the Exams Office or System Administrator.",
+    ],
+  },
+  {
+    id: "calendar",
+    title: "Calendar",
+    paragraphs: [
+      "The Calendar shows upcoming exam sessions and key dates for each exam series.",
+      "Browse by date to see when papers are scheduled.",
+      "Use filters to narrow results by exam board, qualification, or subject when those options are available.",
+      "Teachers and students can use the calendar to plan ahead; administrators use it to confirm session details before registration opens.",
+    ],
+  },
+  {
+    id: "students-candidates",
+    title: "Students & Candidates",
+    paragraphs: [
+      "Each student has a candidate profile that holds their personal and school information used for exam administration.",
+      "Administrators can search, view, and update candidate profiles, including names, contact details, grade, and class.",
+      "Student ID is assigned by the system. School Student Number is the school's own reference where one is used.",
+      "Keep candidate profiles accurate before exam registration and board registration work begins.",
+    ],
+  },
+  {
+    id: "board-registration",
+    title: "Candidate Board Registration",
+    paragraphs: [
+      "Candidate Board Registration is where exam-board identity details are managed for each student.",
+      "A student may have separate records for different examination boards—for example Pearson / Edexcel, AQA, or Cambridge.",
+      "For each board identity you can record details such as Centre Number, Candidate Number, and UCI Number where applicable.",
+      "These details should be in place before staff create exam registrations for that student and board.",
+    ],
+  },
+  {
+    id: "exam-registrations",
+    title: "Exam Registrations",
+    paragraphs: [
+      "Exam Registrations is where authorised staff create and manage entries for exam sessions.",
+      "During an open registration period, students may register for themselves where self-registration is enabled.",
+      "Teachers and the Exams Office can assist students with registration when needed.",
+      "After selecting a student and registration window, choose the exam sessions to enter and review the summary before saving.",
+      "Open a registration record at any time to review entered sessions, print confirmation where available, or request changes according to school policy.",
+    ],
+  },
+  {
+    id: "import-export",
+    title: "Import / Export",
+    paragraphs: [
+      "Import and export tools help administrators update candidate and board registration data in bulk using Excel.",
+    ],
     steps: [
-      "Log in with your student account.",
-      "Open My Exam Registrations from the top navigation.",
-      "Choose an active registration window for your exam series.",
-      "Select the subjects and papers you need to enter.",
-      "Review your entries carefully, then submit your registration.",
-      "Return to My Exam Registrations to check your current status.",
-      "View your fee statement later if one has been published for your registration.",
+      "Download the Excel template for the type of data you are importing.",
+      "Fill in the template using the column headings provided. Do not change or remove required column names.",
+      "Choose your completed .xlsx file in the import area (drag and drop or browse).",
+      "Review the preview: total rows, new records, updates, validation errors, and duplicate rows.",
+      "Commit the import only when the preview shows no blocking errors.",
+      "Use Export to download a spreadsheet of current records—for example candidate lists or board registration data—for reporting or offline review.",
     ],
   },
   {
-    id: "windows-deadlines",
-    title: "Registration window and deadlines",
+    id: "password-login",
+    title: "Password & Login",
     paragraphs: [
-      "Each registration window has a student registration period with a clear open and close time.",
-      "While the student registration period is open, you may submit a new registration or adjust your own subject and paper choices.",
-      "After the student registration close deadline, your registration becomes locked.",
-      "Once locked, you cannot directly add, remove, or change exams in the system.",
-      "If you need a change after lock, contact the relevant subject teacher as soon as possible.",
+      "Sign in with the username or email and password provided by your school.",
+      "If you forget your password, use the password reset option on the login page when it is available, or ask the Exams Office for help.",
+      "Administrators can assign or reset passwords for student and staff accounts when required.",
+      "New accounts may need to be activated before first use. If you cannot sign in, contact the Exams Office or System Administrator.",
+      "Change your password after a reset and do not share your login details with anyone else.",
     ],
   },
   {
-    id: "teacher-changes",
-    title: "Teacher-assisted changes after lock",
+    id: "backup",
+    title: "Backup",
     paragraphs: [
-      "When a registration is locked, changes must go through a formal review process:",
-    ],
-    steps: [
-      "The student contacts the subject teacher and explains the requested change.",
-      "The teacher reviews whether the request is appropriate.",
-      "The teacher submits a change request in the system on the student's behalf.",
-      "The Exam Officer reviews the request.",
-      "The change only becomes effective after Exam Officer approval.",
+      "System administrators can configure automatic database backups from the admin settings area.",
+      "Backups help protect school exam data if recovery is ever needed.",
+      "Administrators can set how often backups run and how long backup copies are kept.",
+      "Routine backup configuration is an administrator task. Other users do not need to manage backups directly.",
     ],
   },
   {
-    id: "eo-approval",
-    title: "Exam Officer approval",
+    id: "support",
+    title: "Support",
     paragraphs: [
-      "The Exam Officer may approve or reject teacher-submitted change requests.",
-      "Approved requests update the student's registration record and may affect fee statements if billing has already started.",
-      "Rejected requests do not change the registration. The teacher and student should be informed of the outcome.",
-    ],
-  },
-  {
-    id: "fee-statements",
-    title: "Fee statements",
-    paragraphs: [
-      "Students may view normal fee statements for their visible exam registrations when statements have been published.",
-      "A fee statement lists the exam entries that will be billed for that registration window.",
-      "If your registration changes after a statement was issued, contact the Exams Office for guidance.",
-      "Fee statements are read-only for students. Payment arrangements are handled outside this system.",
-    ],
-  },
-  {
-    id: "reminders",
-    title: "Important reminders",
-    bullets: [
-      "Check your exam entries carefully before the student registration deadline.",
-      "Missing the deadline may lead to late entry fees or prevent changes without teacher assistance.",
-      "Once your registration is locked, changes require teacher submission and Exam Officer approval.",
-      "Always verify exam dates, session times, venues, and paper codes before the deadline.",
-      "Keep your contact details up to date so staff can reach you about registration issues.",
+      "If you need help using XIMA Assessment Hub, contact the Exams Office first for registration, calendar, and candidate questions.",
+      "For account access, password issues, or system configuration, contact the System Administrator.",
+      "When reporting a problem, include your name, role, the page you were using, and a short description of what happened.",
     ],
   },
 ];
-
-export const roleHelpNotes: Record<
-  "STUDENT" | "SUBJECT_TEACHER" | "EXAM_OFFICER" | "ADMIN",
-  { title: string; bullets: string[] }
-> = {
-  STUDENT: {
-    title: "Notes for students",
-    bullets: [
-      "Use My Exam Registrations to submit and review your entries.",
-      "Locked means you can no longer edit directly — contact your subject teacher for help.",
-      "For urgent registration questions, speak to your subject teacher first, then the Exams Office if needed.",
-    ],
-  },
-  SUBJECT_TEACHER: {
-    title: "Notes for teachers",
-    bullets: [
-      "Monitor class registrations during the open student registration period.",
-      "After lock, submit change requests only when a student has asked for a legitimate adjustment.",
-      "Include a clear reason when submitting a change request so the Exam Officer can review it quickly.",
-    ],
-  },
-  EXAM_OFFICER: {
-    title: "Notes for Exam Officers",
-    bullets: [
-      "Review pending teacher change requests promptly during the registration window.",
-      "Approve only requests that meet school and exam board policy.",
-      "Use registration reports and fee tools to confirm entries before statements are issued.",
-    ],
-  },
-  ADMIN: {
-    title: "Notes for administrators",
-    bullets: [
-      "Configure registration windows, calendars, and user access before each exam season.",
-      "Ensure teachers and students can see the correct open windows and deadlines.",
-      "Use the same Help workflow descriptions when training staff and students.",
-    ],
-  },
-};

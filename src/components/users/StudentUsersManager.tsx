@@ -19,7 +19,6 @@ interface StudentRow {
   isActive: boolean;
   studentNo: string | null;
   candidateId: string | null;
-  candidateNumber: string | null;
   studentId: string | null;
   chineseName: string | null;
   pinyinLastName: string | null;
@@ -41,7 +40,6 @@ interface StudentFormState {
   pinyinLastName: string;
   pinyinFirstName: string;
   studentNumber: string;
-  candidateNumber: string;
   idNumber: string;
   passportNumber: string;
   dateOfBirth: string;
@@ -60,7 +58,6 @@ const emptyForm = (): StudentFormState => ({
   pinyinLastName: "",
   pinyinFirstName: "",
   studentNumber: "",
-  candidateNumber: "",
   idNumber: "",
   passportNumber: "",
   dateOfBirth: "",
@@ -116,6 +113,7 @@ export function StudentUsersManager() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [viewStudentId, setViewStudentId] = useState<string | null>(null);
   const [form, setForm] = useState<StudentFormState>(emptyForm);
   const [saving, setSaving] = useState(false);
   const [setPasswordUser, setSetPasswordUser] = useState<StudentRow | null>(null);
@@ -198,19 +196,20 @@ export function StudentUsersManager() {
 
   function openCreate() {
     setEditingId(null);
+    setViewStudentId(null);
     setForm(emptyForm());
     setModalOpen(true);
   }
 
   function openEdit(row: StudentRow) {
     setEditingId(row.id);
+    setViewStudentId(row.studentId);
     setForm({
       englishName: row.name,
       chineseName: row.chineseName ?? "",
       pinyinLastName: row.pinyinLastName ?? "",
       pinyinFirstName: row.pinyinFirstName ?? "",
       studentNumber: row.studentNo ?? "",
-      candidateNumber: row.candidateNumber ?? "",
       idNumber: row.idNumber ?? row.idCardNumber ?? "",
       passportNumber: row.passportNumber ?? "",
       dateOfBirth: row.dateOfBirth ?? "",
@@ -237,7 +236,6 @@ export function StudentUsersManager() {
       pinyinLastName: form.pinyinLastName.trim() || undefined,
       pinyinFirstName: form.pinyinFirstName.trim() || undefined,
       studentNumber: form.studentNumber.trim() || undefined,
-      candidateNumber: form.candidateNumber.trim() || undefined,
       idNumber: form.idNumber.trim() || undefined,
       passportNumber: form.passportNumber.trim() || undefined,
       dateOfBirth: form.dateOfBirth.trim() || undefined,
@@ -262,6 +260,9 @@ export function StudentUsersManager() {
       const data = await response.json();
       if (!response.ok) {
         throw new Error(typeof data.error === "string" ? data.error : "Save failed");
+      }
+      if (!editingId && typeof data.studentId === "string") {
+        setViewStudentId(data.studentId);
       }
       setModalOpen(false);
       setMessage(editingId ? "Student updated." : "Student created.");
@@ -409,7 +410,7 @@ export function StudentUsersManager() {
                     />
                   </th>
                   <th className="border border-slate-200 px-3 py-2">Student ID</th>
-                  <th className="border border-slate-200 px-3 py-2">Student No.</th>
+                  <th className="border border-slate-200 px-3 py-2">School Student Number</th>
                   <th className="border border-slate-200 px-3 py-2">English name</th>
                   <th className="border border-slate-200 px-3 py-2">Chinese name</th>
                   <th className="border border-slate-200 px-3 py-2">ID card</th>
@@ -520,6 +521,18 @@ export function StudentUsersManager() {
               {editingId ? "Edit student" : "New student"}
             </h2>
             <form onSubmit={(e) => void handleSave(e)} className="mt-4 space-y-4">
+              <div className="rounded border border-slate-200 bg-slate-50 px-4 py-3">
+                <label className="block text-sm text-slate-700">
+                  Student ID
+                  <span className="ml-1 font-normal text-slate-500">(System generated)</span>
+                  <input
+                    readOnly
+                    value={viewStudentId ?? "Assigned on save"}
+                    className={`mt-1 ${inputClass} bg-slate-100 text-slate-600`}
+                    aria-readonly="true"
+                  />
+                </label>
+              </div>
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-sm text-slate-700">
                   Chinese name *
@@ -561,21 +574,13 @@ export function StudentUsersManager() {
                     className={`mt-1 ${inputClass}`}
                   />
                 </label>
-                <label className="block text-sm text-slate-700">
-                  Candidate number
-                  <input
-                    value={form.candidateNumber}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, candidateNumber: e.target.value }))
-                    }
-                    className={`mt-1 ${inputClass}`}
-                  />
-                </label>
-                <label className="block text-sm text-slate-700">
-                  Student number
+                <label className="block text-sm text-slate-700 sm:col-span-2">
+                  School Student Number
+                  <span className="ml-1 font-normal text-slate-500">(School assigned)</span>
                   <input
                     value={form.studentNumber}
                     onChange={(e) => setForm((prev) => ({ ...prev, studentNumber: e.target.value }))}
+                    placeholder="Example: XM2500100"
                     className={`mt-1 ${inputClass}`}
                   />
                 </label>

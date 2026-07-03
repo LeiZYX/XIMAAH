@@ -185,8 +185,10 @@ function TeacherStudentDetailPanel({
           <h3 className="text-sm font-semibold text-slate-900">Candidate information</h3>
           <dl className="mt-3 space-y-2 text-sm">
             <div>
-              <dt className="text-slate-500">Candidate number</dt>
-              <dd className="font-medium text-slate-900">{detail.candidate.candidateNumber}</dd>
+              <dt className="text-slate-500">Student ID</dt>
+              <dd className="font-medium font-mono text-xs text-slate-900">
+                {detail.candidate.permanentStudentId ?? "—"}
+              </dd>
             </div>
             <div>
               <dt className="text-slate-500">Candidate type</dt>
@@ -715,7 +717,7 @@ export function TeacherClassRegistrations() {
                       <div className="min-w-0">
                         <h3 className="font-medium text-slate-900">{student.studentName}</h3>
                         <p className="text-xs text-slate-500">
-                          {student.studentNo} · {student.candidateNumber}
+                          {student.permanentStudentId ?? student.studentNo}
                         </p>
                       </div>
                       <span className={registrationStatusClass(student.registrationStatus)}>
@@ -804,7 +806,7 @@ export function TeacherClassRegistrations() {
                           <td className="px-4 py-4 lg:whitespace-nowrap">
                             <p className="font-medium text-slate-900">{student.studentName}</p>
                             <p className="text-xs text-slate-500">
-                              {student.studentNo} · {student.candidateNumber}
+                              {student.permanentStudentId ?? student.studentNo}
                             </p>
                           </td>
                           <td className="hidden px-4 py-4 text-slate-700 lg:table-cell">

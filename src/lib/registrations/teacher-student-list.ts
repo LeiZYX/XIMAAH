@@ -26,6 +26,7 @@ const teacherRegistrationDetailInclude = {
   subject: registrationInclude.subject,
   paper: registrationInclude.paper,
   student: registrationInclude.student,
+  candidate: registrationInclude.candidate,
   registrationWorkspace: {
     include: {
       lastAdjustedByUser: { select: { name: true } },
@@ -45,6 +46,8 @@ const summarySelect = {
   gradeSnapshot: true,
   classNameSnapshot: true,
   assessmentHubCandidateNumberSnapshot: true,
+  candidateId: true,
+  candidate: { select: { studentId: true } },
   candidateTypeSnapshot: true,
   status: true,
   updatedAt: true,
@@ -63,7 +66,7 @@ export interface TeacherStudentSummary {
   studentId: string | null;
   studentName: string;
   studentNo: string;
-  candidateNumber: string;
+  permanentStudentId: string | null;
   grade: string;
   className: string;
   examBoards: string;
@@ -100,7 +103,7 @@ export interface TeacherStudentExamRow {
 export interface TeacherStudentDetail {
   summary: TeacherStudentSummary;
   candidate: {
-    candidateNumber: string;
+    permanentStudentId: string | null;
     candidateType: string;
     studentNo: string;
     email: string | null;
@@ -223,7 +226,7 @@ function groupSummaryRows(
       studentId: first.studentId,
       studentName: first.studentNameSnapshot,
       studentNo: first.studentNoSnapshot,
-      candidateNumber: first.assessmentHubCandidateNumberSnapshot ?? "—",
+      permanentStudentId: first.candidate?.studentId ?? null,
       grade: first.gradeSnapshot,
       className: first.classNameSnapshot,
       examBoards: summarizeBoardNames(registrations),
@@ -255,6 +258,7 @@ function mapRegistrationToStudentRow(reg: DetailRegistration): StudentRegistrati
     classNameSnapshot: reg.classNameSnapshot,
     emailSnapshot: reg.emailSnapshot,
     assessmentHubCandidateNumberSnapshot: reg.assessmentHubCandidateNumberSnapshot,
+    permanentStudentId: reg.candidate?.studentId ?? null,
     candidateTypeSnapshot: reg.candidateTypeSnapshot,
     registrationSource: reg.registrationSource,
     examBoard: reg.examBoard,
@@ -425,6 +429,8 @@ export async function getTeacherStudentDetail(
     gradeSnapshot: row.gradeSnapshot,
     classNameSnapshot: row.classNameSnapshot,
     assessmentHubCandidateNumberSnapshot: row.assessmentHubCandidateNumberSnapshot,
+    candidateId: row.candidateId,
+    candidate: row.candidate,
     candidateTypeSnapshot: row.candidateTypeSnapshot,
     status: row.status,
     updatedAt: row.updatedAt,
@@ -451,7 +457,7 @@ export async function getTeacherStudentDetail(
   return {
     summary,
     candidate: {
-      candidateNumber: first.assessmentHubCandidateNumberSnapshot ?? "—",
+      permanentStudentId: first.candidate?.studentId ?? null,
       candidateType: first.candidateTypeSnapshot ?? "INTERNAL",
       studentNo: first.studentNoSnapshot,
       email: first.emailSnapshot,

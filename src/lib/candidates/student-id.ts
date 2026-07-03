@@ -1,10 +1,21 @@
 import type { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
+import {
+  assertStudentIdNotProvided,
+  formatStudentId as formatPermanentStudentId,
+  isPermanentStudentId,
+} from "@/lib/students/identifiers";
 
 type DbClient = Prisma.TransactionClient | typeof prisma;
 
+export { isPermanentStudentId };
+
 export function formatStudentId(year: number, sequence: number): string {
-  return `STU-${year}-${String(sequence).padStart(6, "0")}`;
+  return formatPermanentStudentId(year, sequence);
+}
+
+export function rejectImportedStudentId(value: unknown): void {
+  assertStudentIdNotProvided(value, "Student ID");
 }
 
 export async function generateStudentId(client: DbClient = prisma): Promise<string> {

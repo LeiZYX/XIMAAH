@@ -30,8 +30,8 @@ function CandidateGroupCard({
         <div className="min-w-0 flex-1 space-y-1">
           <p className="font-semibold text-slate-900">{group.candidateName}</p>
           <p className="text-sm text-slate-600">
-            {group.assessmentHubCandidateNumber
-              ? `AH ${group.assessmentHubCandidateNumber}`
+            {group.permanentStudentId
+              ? `Student ID ${group.permanentStudentId}`
               : group.studentNumber
                 ? `Student ${group.studentNumber}`
                 : "—"}

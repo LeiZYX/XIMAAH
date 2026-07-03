@@ -23,6 +23,7 @@ import {
 } from "@/lib/registrations/workspace-type-filters";
 import {
   formatAdjusterLabel,
+  workspacePermanentStudentId,
   workspaceStudentLabel,
   workspaceStudentNo,
 } from "@/lib/registrations/workspace-display";
@@ -54,13 +55,13 @@ interface WorkspaceRow {
   } | null;
   candidate: {
     englishName: string | null;
+    studentId: string | null;
     studentNumber: string | null;
     candidateType: string | null;
     email: string | null;
     phone: string | null;
     grade: string | null;
     className: string | null;
-    assessmentHubCandidateNumber: string | null;
   } | null;
   registrationWindow: {
     title: string;
@@ -393,7 +394,7 @@ export function RegistrationWorkspaceList({
             <tr className="border-b border-slate-200 text-slate-600">
               <th className="py-2 pr-4 font-medium">Student</th>
               <th className="py-2 pr-4 font-medium">Registration #</th>
-              <th className="py-2 pr-4 font-medium">Student No.</th>
+              <th className="py-2 pr-4 font-medium">Student ID</th>
               <th className="py-2 pr-4 font-medium">Grade</th>
               <th className="py-2 pr-4 font-medium">Class</th>
               <th className="py-2 pr-4 font-medium">Exam Board</th>
@@ -412,7 +413,7 @@ export function RegistrationWorkspaceList({
                   {workspaceStudentLabel(row)}
                 </td>
                 <td className="py-2 pr-4 font-mono text-xs">{row.registrationNumber ?? "—"}</td>
-                <td className="py-2 pr-4">{workspaceStudentNo(row) ?? "—"}</td>
+                <td className="py-2 pr-4 font-mono text-xs">{workspacePermanentStudentId(row) ?? "—"}</td>
                 <td className="py-2 pr-4">{gradeLabel(row)}</td>
                 <td className="py-2 pr-4">{classLabel(row)}</td>
                 <td className="py-2 pr-4">{row.registrationWindow.examBoard.name}</td>
@@ -451,7 +452,7 @@ export function RegistrationWorkspaceList({
             <tr className="border-b border-slate-200 text-slate-600">
               <th className="py-2 pr-4 font-medium">Student</th>
               <th className="py-2 pr-4 font-medium">Registration #</th>
-              <th className="py-2 pr-4 font-medium">Student No.</th>
+              <th className="py-2 pr-4 font-medium">Student ID</th>
               <th className="py-2 pr-4 font-medium">Window</th>
               <th className="py-2 pr-4 font-medium">Restricted reason</th>
               <th className="py-2 pr-4 font-medium">Exams</th>
@@ -470,7 +471,7 @@ export function RegistrationWorkspaceList({
                   </div>
                 </td>
                 <td className="py-2 pr-4 font-mono text-xs">{row.registrationNumber ?? "—"}</td>
-                <td className="py-2 pr-4">{workspaceStudentNo(row) ?? "—"}</td>
+                <td className="py-2 pr-4 font-mono text-xs">{workspacePermanentStudentId(row) ?? "—"}</td>
                 <td className="py-2 pr-4">
                   {row.registrationWindow.title}
                   <span className="block text-xs text-slate-500">
@@ -502,7 +503,7 @@ export function RegistrationWorkspaceList({
             <tr className="border-b border-slate-200 text-slate-600">
               <th className="py-2 pr-4 font-medium">Candidate</th>
               <th className="py-2 pr-4 font-medium">Registration #</th>
-              <th className="py-2 pr-4 font-medium">Candidate No.</th>
+              <th className="py-2 pr-4 font-medium">Student ID</th>
               <th className="py-2 pr-4 font-medium">Contact</th>
               <th className="py-2 pr-4 font-medium">Exam Board</th>
               <th className="py-2 pr-4 font-medium">Sessions</th>
@@ -521,10 +522,8 @@ export function RegistrationWorkspaceList({
                   </div>
                 </td>
                 <td className="py-2 pr-4 font-mono text-xs">{row.registrationNumber ?? "—"}</td>
-                <td className="py-2 pr-4">
-                  {row.candidate?.assessmentHubCandidateNumber ||
-                    workspaceStudentNo(row) ||
-                    "—"}
+                <td className="py-2 pr-4 font-mono text-xs">
+                  {workspacePermanentStudentId(row) ?? "—"}
                 </td>
                 <td className="py-2 pr-4">{contactLabel(row)}</td>
                 <td className="py-2 pr-4">{row.registrationWindow.examBoard.name}</td>
@@ -561,7 +560,11 @@ export function RegistrationWorkspaceList({
               <td className="py-2 pr-4 font-mono text-xs">{row.registrationNumber ?? "—"}</td>
               <td className="py-2 pr-4 font-medium text-slate-900">
                 {workspaceStudentLabel(row)}
-                {workspaceStudentNo(row) ? (
+                {workspacePermanentStudentId(row) ? (
+                  <span className="block font-mono text-xs text-slate-500">
+                    {workspacePermanentStudentId(row)}
+                  </span>
+                ) : workspaceStudentNo(row) ? (
                   <span className="block text-xs text-slate-500">{workspaceStudentNo(row)}</span>
                 ) : null}
               </td>

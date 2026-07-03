@@ -1,14 +1,5 @@
-import { CandidateNumbersPanel } from "@/components/candidates/CandidateNumbersPanel";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
-export default function AdminCandidateNumbersPage() {
-  return (
-    <CandidateNumbersPanel
-      apiPath="/api/admin/candidates"
-      detailBasePath="/admin/candidates"
-      moduleBasePath="/admin/candidates"
-    />
-  );
+export default function LegacyAdminCandidateNumbersRedirect() {
+  redirect("/admin/candidates/board-registration");
 }

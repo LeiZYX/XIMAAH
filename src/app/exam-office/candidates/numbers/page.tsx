@@ -1,14 +1,5 @@
-import { CandidateNumbersPanel } from "@/components/candidates/CandidateNumbersPanel";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
-export default function ExamOfficeCandidateNumbersPage() {
-  return (
-    <CandidateNumbersPanel
-      apiPath="/api/exam-office/candidates"
-      detailBasePath="/exam-office/candidates"
-      moduleBasePath="/exam-office/candidates"
-    />
-  );
+export default function LegacyExamOfficeCandidateNumbersRedirect() {
+  redirect("/exam-office/candidates/board-registration");
 }

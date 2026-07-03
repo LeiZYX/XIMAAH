@@ -10,7 +10,7 @@ export function CandidatesSubnav({ basePath }: { basePath: string }) {
     { href: basePath, label: "All Candidates", exact: true },
     { href: `${basePath}/internal`, label: "Internal Candidates" },
     { href: `${basePath}/external`, label: "External Candidates" },
-    { href: `${basePath}/numbers`, label: "Candidate Numbers" },
+    { href: `${basePath}/board-registration`, label: "Candidate Board Registration" },
     { href: `${basePath}/import`, label: "Import / Export" },
   ];
 

@@ -2,7 +2,9 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { CandidateExamBoardIdentitiesTab } from "@/components/candidates/CandidateExamBoardIdentitiesTab";
+import type { CandidateExamIdentityFormPayload } from "@/components/candidates/CandidateExamBoardIdentitiesTab";
 import { CandidateLifecycleActions } from "@/components/candidates/CandidateLifecycleActions";
 import { SetPasswordModal } from "@/components/users/SetPasswordModal";
 import { Card } from "@/components/ui/Card";
@@ -16,7 +18,12 @@ import {
   ID_DOCUMENT_TYPE_OPTIONS,
 } from "@/lib/candidates/identity";
 import { candidateStatusLabel, candidateTypeLabel } from "@/lib/candidates/labels";
-import type { Gender, IdDocumentType } from "@/generated/prisma/enums";
+import {
+  EXAM_BOARD_IDENTITIES_TAB,
+  EXAM_BOARD_IDENTITIES_TAB_TITLE,
+  resolveCandidateDetailTab,
+} from "@/lib/navigation/candidate-board-registration";
+import type { CandidateExamIdentityStatus, Gender, IdDocumentType } from "@/generated/prisma/enums";
 
 type CandidateRecord = Record<string, unknown>;
 
@@ -74,13 +81,7 @@ export function CandidateDetailView({
     assessmentHubCandidateNumber: "",
     status: "ACTIVE",
   });
-  const [examIdentityForm, setExamIdentityForm] = useState({
-    examBoardId: "",
-    centreNumber: "",
-    boardCandidateNumber: "",
-    uci: "",
-    notes: "",
-  });
+  const [activeTab, setActiveTab] = useState<"profile" | typeof EXAM_BOARD_IDENTITIES_TAB>("profile");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -88,6 +89,11 @@ export function CandidateDetailView({
   const [userRole, setUserRole] = useState<string | null>(null);
   const [setPasswordOpen, setSetPasswordOpen] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    setActiveTab(resolveCandidateDetailTab(searchParams.get("tab")));
+  }, [searchParams]);
 
   async function load() {
     const response = await fetch(`${apiPath}/${candidateId}`);
@@ -185,23 +191,57 @@ export function CandidateDetailView({
     setCandidate(data);
   }
 
-  async function saveExamIdentity() {
-    if (readOnly || !examIdentityForm.examBoardId) return;
+  async function saveExamIdentity(payload: CandidateExamIdentityFormPayload) {
+    if (readOnly || !payload.examBoardId) return;
     setSaving(true);
     setError(null);
     setMessage(null);
     const response = await fetch(`${apiPath}/${candidateId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ examIdentity: examIdentityForm }),
+      body: JSON.stringify({
+        examIdentity: {
+          examBoardId: payload.examBoardId,
+          centreNumber: payload.centreNumber,
+          candidateNumber: payload.candidateNumber,
+          uciNumber: payload.uciNumber,
+          status: payload.status,
+          notes: payload.notes,
+        },
+      }),
     });
     const data = await response.json();
     setSaving(false);
     if (!response.ok) {
-      setError(data.error ?? "Could not save exam identity");
+      setError(data.error ?? "Could not save exam board identity");
       return;
     }
-    setMessage("Exam board identity saved.");
+    setMessage(payload.id ? "Exam board identity updated." : "Exam board identity added.");
+    setCandidate(data);
+  }
+
+  async function archiveExamIdentity(identityId: string) {
+    if (readOnly) return;
+    setSaving(true);
+    setError(null);
+    setMessage(null);
+    const response = await fetch(`${apiPath}/${candidateId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        examIdentity: {
+          id: identityId,
+          archive: true,
+        },
+      }),
+    });
+    const data = await response.json();
+    setSaving(false);
+    if (!response.ok) {
+      setError(data.error ?? "Could not archive exam board identity");
+      return;
+    }
+    setMessage("Exam board identity archived.");
     setCandidate(data);
   }
 
@@ -266,6 +306,17 @@ export function CandidateDetailView({
   }
 
   const identities = (candidate.examIdentities as Array<Record<string, unknown>>) ?? [];
+  const typedIdentities = identities.map((identity) => ({
+    id: String(identity.id),
+    examBoardId: String(identity.examBoardId),
+    centreNumber: (identity.centreNumber as string | null) ?? null,
+    candidateNumber: (identity.candidateNumber as string | null) ?? null,
+    uciNumber: (identity.uciNumber as string | null) ?? null,
+    status: (identity.status as CandidateExamIdentityStatus) ?? "PENDING",
+    registeredAt: identity.registeredAt ? String(identity.registeredAt) : null,
+    notes: (identity.notes as string | null) ?? null,
+    examBoard: identity.examBoard as { id: string; name: string; code: string },
+  }));
   const workspaces = (candidate.registrationWorkspaces as Array<Record<string, unknown>>) ?? [];
   const feeStatements = (candidate.feeStatements as Array<Record<string, unknown>>) ?? [];
 
@@ -286,11 +337,35 @@ export function CandidateDetailView({
       {message ? <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{message}</p> : null}
       {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p> : null}
 
+      <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
+        <button
+          type="button"
+          onClick={() => setActiveTab("profile")}
+          className={`rounded px-3 py-1.5 text-sm ${
+            activeTab === "profile" ? "bg-slate-900 text-white" : "text-slate-700 hover:bg-slate-100"
+          }`}
+        >
+          Profile
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab(EXAM_BOARD_IDENTITIES_TAB)}
+          className={`rounded px-3 py-1.5 text-sm ${
+            activeTab === EXAM_BOARD_IDENTITIES_TAB
+              ? "bg-slate-900 text-white"
+              : "text-slate-700 hover:bg-slate-100"
+          }`}
+        >
+          {EXAM_BOARD_IDENTITIES_TAB_TITLE}
+        </button>
+      </div>
+
+      {activeTab === "profile" ? (
+        <>
       <Card className="space-y-4">
         <SectionTitle>Student Overview</SectionTitle>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Field label="Student ID" value={String(candidate.studentId ?? "—")} />
-          <Field label="Candidate Number" value={String(candidate.assessmentHubCandidateNumber ?? "—")} />
+          <Field label="Student ID (System generated)" value={String(candidate.studentId ?? "—")} />
           <Field label="Chinese Name" value={String(candidate.chineseName ?? "—")} />
           <Field label="English Name" value={String(candidate.englishName ?? "—")} />
           <Field label="Grade" value={String(candidate.grade ?? "—")} />
@@ -444,10 +519,6 @@ export function CandidateDetailView({
           <SectionTitle>Candidate Information</SectionTitle>
           <div className="grid gap-3 sm:grid-cols-2">
             <Field label="Candidate Type" value={candidateTypeLabel(candidate.candidateType as never)} />
-            <label className="text-sm">
-              <span className="mb-1 block text-slate-600">AH Candidate Number *</span>
-              <input required disabled={readOnly} value={identityForm.assessmentHubCandidateNumber} onChange={(e) => setIdentityForm({ ...identityForm, assessmentHubCandidateNumber: e.target.value })} className={inputClass} />
-            </label>
             <Field label="Status" value={candidateStatusLabel(candidate.status as never)} />
           </div>
         </Card>
@@ -457,7 +528,10 @@ export function CandidateDetailView({
             <SectionTitle>School Information</SectionTitle>
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="text-sm">
-                <span className="mb-1 block text-slate-600">Student Number</span>
+                <span className="mb-1 block text-slate-600">
+                  School Student Number
+                  <span className="ml-1 font-normal text-slate-500">(School assigned)</span>
+                </span>
                 <input disabled={readOnly} value={identityForm.studentNumber} onChange={(e) => setIdentityForm({ ...identityForm, studentNumber: e.target.value })} className={inputClass} />
               </label>
               <label className="text-sm">
@@ -506,55 +580,6 @@ export function CandidateDetailView({
       </form>
 
       <Card>
-        <SectionTitle>Exam Board Identities</SectionTitle>
-        {identities.length === 0 ? (
-          <p className="mb-3 text-sm text-slate-500">No exam board identities yet.</p>
-        ) : (
-          <table className="mb-4 min-w-full text-sm">
-            <thead>
-              <tr className="border-b text-left text-xs uppercase text-slate-500">
-                <th className="py-2 pr-3">Board</th>
-                <th className="py-2 pr-3">Centre</th>
-                <th className="py-2 pr-3">Board candidate no.</th>
-                <th className="py-2 pr-3">UCI</th>
-              </tr>
-            </thead>
-            <tbody>
-              {identities.map((identity) => {
-                const board = identity.examBoard as { name: string };
-                return (
-                  <tr key={String(identity.id)} className="border-b border-slate-100">
-                    <td className="py-2 pr-3">{board.name}</td>
-                    <td className="py-2 pr-3">{String(identity.centreNumber ?? "—")}</td>
-                    <td className="py-2 pr-3">{String(identity.boardCandidateNumber ?? "—")}</td>
-                    <td className="py-2 pr-3">{String(identity.uci ?? "—")}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
-        {!readOnly ? (
-          <>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <select value={examIdentityForm.examBoardId} onChange={(e) => setExamIdentityForm({ ...examIdentityForm, examBoardId: e.target.value })} className={inputClass}>
-                <option value="">Select exam board</option>
-                {examBoards.map((board) => (
-                  <option key={board.id} value={board.id}>{board.name}</option>
-                ))}
-              </select>
-              <input placeholder="Centre number" value={examIdentityForm.centreNumber} onChange={(e) => setExamIdentityForm({ ...examIdentityForm, centreNumber: e.target.value })} className={inputClass} />
-              <input placeholder="Board candidate number" value={examIdentityForm.boardCandidateNumber} onChange={(e) => setExamIdentityForm({ ...examIdentityForm, boardCandidateNumber: e.target.value })} className={inputClass} />
-              <input placeholder="UCI (Pearson)" value={examIdentityForm.uci} onChange={(e) => setExamIdentityForm({ ...examIdentityForm, uci: e.target.value })} className={inputClass} />
-            </div>
-            <button type="button" onClick={() => void saveExamIdentity()} disabled={saving} className="mt-3 rounded-lg border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-700">
-              Save exam board identity
-            </button>
-          </>
-        ) : null}
-      </Card>
-
-      <Card>
         <SectionTitle>Registration History</SectionTitle>
         {workspaces.length === 0 ? (
           <p className="text-sm text-slate-500">No registrations yet.</p>
@@ -586,6 +611,22 @@ export function CandidateDetailView({
           </ul>
         )}
       </Card>
+        </>
+      ) : null}
+
+      {activeTab === EXAM_BOARD_IDENTITIES_TAB ? (
+        <Card>
+          <SectionTitle>{EXAM_BOARD_IDENTITIES_TAB_TITLE}</SectionTitle>
+          <CandidateExamBoardIdentitiesTab
+            identities={typedIdentities}
+            examBoards={examBoards}
+            readOnly={readOnly}
+            saving={saving}
+            onSave={saveExamIdentity}
+            onArchive={archiveExamIdentity}
+          />
+        </Card>
+      ) : null}
     </div>
   );
 }

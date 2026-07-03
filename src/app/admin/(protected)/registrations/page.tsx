@@ -34,6 +34,7 @@ export default function AdminRegistrationsPage() {
           externalApiPath="/api/admin/external-candidate-registrations"
           workspacesApiPath="/api/admin/registrations/workspaces"
           detailBasePath="/admin/registrations"
+          candidateDetailBasePath="/admin/candidates"
         />
       </div>
       <RegistrationWorkspaceList apiPath="/api/admin/registrations/workspaces" detailBasePath="/admin/registrations" />

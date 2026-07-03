@@ -30,6 +30,7 @@ interface RegistrationRow {
   subject: { name: string; code: string };
   paper: { code: string; title: string };
   examSession: { date: string; startTime: string | null };
+  candidate?: { studentId: string | null } | null;
 }
 
 interface RegistrationListProps {
@@ -296,7 +297,7 @@ export function RegistrationList({
                 {showStudentColumns ? (
                   <>
                     <th className="py-2 pr-4">Student</th>
-                    <th className="py-2 pr-4">No.</th>
+                    <th className="py-2 pr-4">Student ID</th>
                     <th className="py-2 pr-4">Grade</th>
                     <th className="py-2 pr-4">Class</th>
                   </>
@@ -323,7 +324,9 @@ export function RegistrationList({
                   {showStudentColumns ? (
                     <>
                       <td className="py-2 pr-4">{row.studentNameSnapshot}</td>
-                      <td className="py-2 pr-4">{row.studentNoSnapshot}</td>
+                      <td className="py-2 pr-4 font-mono text-xs">
+                        {row.candidate?.studentId ?? "—"}
+                      </td>
                       <td className="py-2 pr-4">{row.gradeSnapshot}</td>
                       <td className="py-2 pr-4">{row.classNameSnapshot}</td>
                     </>

@@ -15,9 +15,9 @@ import {
   type FeeStatementDisplayCurrencyOption,
 } from "@/lib/fees/display-currency";
 import {
-  logRegistrationSubmitPayload,
-  readSubmitErrorMessage,
-} from "@/lib/registrations/submit-response";
+  RegistrationExamBoardIdentitySection,
+  useRegistrationExamBoardIdentityReady,
+} from "@/components/registrations/RegistrationExamBoardIdentitySection";
 import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
@@ -25,6 +25,10 @@ import {
   limitExamSessions,
   type ExamSessionSearchable,
 } from "@/lib/exam-session-search";
+import {
+  logRegistrationSubmitPayload,
+  readSubmitErrorMessage,
+} from "@/lib/registrations/submit-response";
 
 interface CandidateOption {
   id: string;
@@ -47,6 +51,7 @@ interface StaffRegistrationModalProps {
   submitLabel: string;
   apiPath: string;
   candidateType?: "INTERNAL" | "EXTERNAL";
+  candidateDetailBasePath: string;
   onClose: () => void;
   onSubmitted: (result: { workspaceId?: string }) => void;
 }
@@ -57,6 +62,7 @@ export function StaffRegistrationModal({
   submitLabel,
   apiPath,
   candidateType = "INTERNAL",
+  candidateDetailBasePath,
   onClose,
   onSubmitted,
 }: StaffRegistrationModalProps) {
@@ -89,6 +95,11 @@ export function StaffRegistrationModal({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
+
+  const { ready: identityReady, hasIdentity } = useRegistrationExamBoardIdentityReady(
+    selectedCandidate?.id ?? null,
+    selectedWindow?.examBoard.id ?? null,
+  );
 
   useEffect(() => {
     if (candidateQuery.trim().length < 2) {
@@ -193,6 +204,10 @@ export function StaffRegistrationModal({
     }
     if (selectedSessionIds.length === 0) {
       setError("Please select at least one exam session.");
+      return;
+    }
+    if (selectedWindow && identityReady && !hasIdentity) {
+      setError("No Exam Board Identity exists for this student.");
       return;
     }
     if (!reason.trim()) {
@@ -312,6 +327,13 @@ export function StaffRegistrationModal({
             }}
           />
 
+          <RegistrationExamBoardIdentitySection
+            candidateId={selectedCandidate?.id ?? null}
+            examBoardId={selectedWindow?.examBoard.id ?? null}
+            examBoardName={selectedWindow?.examBoard.name ?? null}
+            candidateDetailBasePath={candidateDetailBasePath}
+          />
+
           <label className="block text-sm">
             <span className="mb-1 block font-medium text-slate-700">Exam sessions *</span>
             <input
@@ -385,7 +407,7 @@ export function StaffRegistrationModal({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={submitting}
+            disabled={submitting || (identityReady && !hasIdentity)}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
           >
             {submitting ? "Submitting..." : submitLabel}

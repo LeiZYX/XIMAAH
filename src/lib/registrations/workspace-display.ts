@@ -58,3 +58,9 @@ export function workspaceStudentNo(workspace: {
 }): string | null {
   return workspace.student?.studentNo ?? workspace.candidate?.studentNumber ?? null;
 }
+
+export function workspacePermanentStudentId(workspace: {
+  candidate?: { studentId?: string | null } | null;
+}): string | null {
+  return workspace.candidate?.studentId?.trim() || null;
+}

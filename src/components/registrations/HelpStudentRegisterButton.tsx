@@ -6,9 +6,11 @@ import { LateRegistrationModal } from "@/components/registrations/LateRegistrati
 export function HelpStudentRegisterButton({
   apiPath,
   detailBasePath,
+  candidateDetailBasePath,
 }: {
   apiPath: string;
   detailBasePath: string;
+  candidateDetailBasePath: string;
 }) {
   const [open, setOpen] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
@@ -50,6 +52,7 @@ export function HelpStudentRegisterButton({
           submitLabel="Save registration"
           apiPath={apiPath}
           windowFilter="staff"
+          candidateDetailBasePath={candidateDetailBasePath}
           onClose={() => setOpen(false)}
           onSubmitted={handleSubmitted}
         />

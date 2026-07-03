@@ -54,6 +54,13 @@ enum RegistrationStatus {
   LOCKED
 }
 
+enum CandidateExamIdentityStatus {
+  PENDING
+  REGISTERED
+  WITHDRAWN
+  ARCHIVED
+}
+
 enum RegistrationSource {
   STUDENT_SUBMITTED
   TEACHER_REQUEST_APPROVED
@@ -458,6 +465,8 @@ model User {
   postResultsAuditLogsPerformed      PostResultsAuditLog[] @relation("PostResultsAuditPerformer")
   backupSettingsUpdated              BackupSetting[]     @relation("BackupSettingsUpdater")
   backupJobsTriggered                BackupJob[]         @relation("BackupJobTriggeredBy")
+  candidateExamIdentitiesCreated     CandidateExamIdentity[] @relation("CandidateExamIdentityCreatedBy")
+  candidateExamIdentitiesUpdated     CandidateExamIdentity[] @relation("CandidateExamIdentityUpdatedBy")
 
   @@index([role])
   @@index([isActive])
@@ -579,11 +588,14 @@ model ExamDocumentAuditLog {
 
 model Candidate {
   id                           String           @id @default(cuid())
+  /// Permanent system student identifier (STU-YYYY-000001). Generated automatically; never imported.
   studentId                    String           @unique
+  /// Internal Assessment Hub registry number. Not an exam-board candidate number.
   assessmentHubCandidateNumber String
   candidateType                CandidateType
   userId                       String?          @unique
   user                         User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  /// School-facing student/login number. Separate from studentId and exam-board numbers.
   studentNumber                String?
   englishName                  String
   chineseName                  String?
@@ -660,22 +672,33 @@ model CandidateAuditLog {
 }
 
 model CandidateExamIdentity {
-  id                   String    @id @default(cuid())
-  candidateId          String
-  candidate            Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  examBoardId          String
-  examBoard            ExamBoard @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
-  centreNumber         String?
-  boardCandidateNumber String?
-  uci                  String?
-  notes                String?
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
+  id              String                      @id @default(cuid())
+  candidateId     String
+  candidate       Candidate                   @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  examBoardId     String
+  examBoard       ExamBoard                   @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  centreNumber    String?
+  /// Board-assigned candidate number for this exam board only.
+  candidateNumber String?
+  uciNumber       String?
+  status          CandidateExamIdentityStatus @default(PENDING)
+  registeredAt    DateTime?
+  notes           String?                     @db.Text
+  createdAt       DateTime                    @default(now())
+  updatedAt       DateTime                    @updatedAt
+  createdByUserId String?
+  createdByUser   User?                       @relation("CandidateExamIdentityCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  updatedByUserId String?
+  updatedByUser   User?                       @relation("CandidateExamIdentityUpdatedBy", fields: [updatedByUserId], references: [id], onDelete: SetNull)
 
   @@unique([candidateId, examBoardId])
   @@index([candidateId])
   @@index([examBoardId])
-  @@index([boardCandidateNumber])
+  @@index([candidateNumber])
+  @@index([status])
+  @@index([registeredAt])
+  @@index([createdByUserId])
+  @@index([updatedByUserId])
 }
 
 model TeacherAssignment {

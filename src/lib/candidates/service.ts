@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { computeDisplayName } from "@/lib/candidates/identity";
 import { parseGenderInput } from "@/lib/candidates/export";
 import { generateStudentId } from "@/lib/candidates/student-id";
+import { registrationStudentNumberSnapshot, isPermanentStudentId } from "@/lib/students/identifiers";
 
 export function generateAssessmentHubCandidateNumber(): string {
   const year = new Date().getFullYear();
@@ -20,11 +21,14 @@ export function candidateRegistrationSnapshots(candidate: Pick<
   | "phone"
   | "assessmentHubCandidateNumber"
   | "candidateType"
->) {
+> & { studentId?: string | null }) {
   const displayName = computeDisplayName(candidate);
   return {
     studentNameSnapshot: displayName || candidate.englishName,
-    studentNoSnapshot: candidate.studentNumber ?? candidate.assessmentHubCandidateNumber,
+    studentNoSnapshot: registrationStudentNumberSnapshot({
+      studentNumber: candidate.studentNumber,
+      permanentStudentId: candidate.studentId,
+    }),
     gradeSnapshot: candidate.grade ?? "—",
     classNameSnapshot: candidate.className ?? "—",
     emailSnapshot: candidate.email ?? null,
@@ -43,6 +47,7 @@ export async function syncCandidateFromStudentUser(userId: string) {
 
   const profile = user.studentProfile;
   const loginEnabled = user.isActive && profile.status === "ACTIVE";
+  const schoolStudentNumber = isPermanentStudentId(profile.studentNo) ? null : profile.studentNo;
 
   if (user.candidate) {
     return prisma.candidate.update({
@@ -54,7 +59,7 @@ export async function syncCandidateFromStudentUser(userId: string) {
           englishName: user.name,
         }),
         legalEnglishName: user.candidate.legalEnglishName ?? user.name,
-        studentNumber: profile.studentNo,
+        ...(schoolStudentNumber ? { studentNumber: schoolStudentNumber } : {}),
         email: profile.email ?? user.email,
         phone: profile.phone ?? user.phone,
         grade: profile.currentGrade,
@@ -81,7 +86,7 @@ export async function syncCandidateFromStudentUser(userId: string) {
       assessmentHubCandidateNumber: generateAssessmentHubCandidateNumber(),
       englishName: user.name,
       legalEnglishName: user.name,
-      studentNumber: profile.studentNo,
+      studentNumber: schoolStudentNumber,
       email: profile.email ?? user.email,
       phone: profile.phone ?? user.phone,
       grade: profile.currentGrade,

@@ -131,6 +131,7 @@ export async function GET(request: NextRequest) {
     regenerationChangedBy: { select: { id: true, name: true } },
     revisedFromStatement: { select: { id: true, statementNo: true, status: true } },
     revisedToStatement: { select: { id: true, statementNo: true, status: true } },
+    candidate: { select: { studentId: true } },
     registrationWindow: {
       include: {
         examBoard: { select: { name: true, code: true } },

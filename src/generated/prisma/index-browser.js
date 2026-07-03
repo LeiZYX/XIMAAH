@@ -269,11 +269,15 @@ exports.Prisma.CandidateExamIdentityScalarFieldEnum = {
   candidateId: 'candidateId',
   examBoardId: 'examBoardId',
   centreNumber: 'centreNumber',
-  boardCandidateNumber: 'boardCandidateNumber',
-  uci: 'uci',
+  candidateNumber: 'candidateNumber',
+  uciNumber: 'uciNumber',
+  status: 'status',
+  registeredAt: 'registeredAt',
   notes: 'notes',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId'
 };
 
 exports.Prisma.TeacherAssignmentScalarFieldEnum = {
@@ -1003,9 +1007,11 @@ exports.Prisma.CandidateExamIdentityOrderByRelevanceFieldEnum = {
   candidateId: 'candidateId',
   examBoardId: 'examBoardId',
   centreNumber: 'centreNumber',
-  boardCandidateNumber: 'boardCandidateNumber',
-  uci: 'uci',
-  notes: 'notes'
+  candidateNumber: 'candidateNumber',
+  uciNumber: 'uciNumber',
+  notes: 'notes',
+  createdByUserId: 'createdByUserId',
+  updatedByUserId: 'updatedByUserId'
 };
 
 exports.Prisma.TeacherAssignmentOrderByRelevanceFieldEnum = {
@@ -1511,6 +1517,13 @@ exports.CandidateAuditAction = exports.$Enums.CandidateAuditAction = {
   CANDIDATE_PHOTO_REMOVED: 'CANDIDATE_PHOTO_REMOVED',
   CANDIDATE_NAME_CHANGED: 'CANDIDATE_NAME_CHANGED',
   DOCUMENT_NUMBER_CHANGED: 'DOCUMENT_NUMBER_CHANGED'
+};
+
+exports.CandidateExamIdentityStatus = exports.$Enums.CandidateExamIdentityStatus = {
+  PENDING: 'PENDING',
+  REGISTERED: 'REGISTERED',
+  WITHDRAWN: 'WITHDRAWN',
+  ARCHIVED: 'ARCHIVED'
 };
 
 exports.RegistrationWindowStatus = exports.$Enums.RegistrationWindowStatus = {

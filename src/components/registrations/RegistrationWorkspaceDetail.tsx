@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { formatPermanentStudentId } from "@/lib/candidates/display-identifiers";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import {
@@ -158,11 +159,11 @@ interface WorkspaceData {
   } | null;
   candidate?: {
     englishName: string;
+    studentId: string | null;
     studentNumber: string | null;
     grade: string | null;
     className: string | null;
     email: string | null;
-    assessmentHubCandidateNumber: string;
     candidateType: string;
     examIdentities?: Array<{
       boardCandidateNumber: string | null;
@@ -632,8 +633,9 @@ export function RegistrationWorkspaceDetail({
   const candidate = workspace.candidate;
   const displayName =
     candidate?.englishName ?? workspace.student?.name ?? workspace.registrations[0]?.studentNameSnapshot ?? "—";
+  const displayStudentId = formatPermanentStudentId(candidate?.studentId);
   const displayStudentNo =
-    candidate?.studentNumber ?? profile?.studentNo ?? candidate?.assessmentHubCandidateNumber ?? "—";
+    candidate?.studentNumber ?? profile?.studentNo ?? workspace.registrations[0]?.studentNoSnapshot ?? "—";
   const adjustment = parseAdjustmentSummary(workspace.lastAdjustmentSummary);
   const feeAuditInfo = findCandidateRegistrationFeeAuditInfo(workspace.auditLogs);
 
@@ -688,7 +690,7 @@ export function RegistrationWorkspaceDetail({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold text-slate-900">{workspace.registrationWindow.title}</h1>
-          <p className="text-sm text-slate-600">{displayName} · {displayStudentNo}</p>
+          <p className="text-sm text-slate-600">{displayName} · {displayStudentId}</p>
         </div>
         {isLocked ? (
           <button type="button" onClick={() => setPrintOpen(true)} className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
@@ -706,7 +708,7 @@ export function RegistrationWorkspaceDetail({
           <h2 className="mb-3 text-lg font-semibold text-slate-900">Candidate</h2>
           <dl className="grid gap-2 text-sm">
             <div><dt className="text-slate-500">Name</dt><dd className="font-medium">{displayName}</dd></div>
-            <div><dt className="text-slate-500">Assessment Hub Candidate No.</dt><dd className="font-medium">{candidate?.assessmentHubCandidateNumber ?? workspace.registrations[0]?.assessmentHubCandidateNumberSnapshot ?? "—"}</dd></div>
+            <div><dt className="text-slate-500">Student ID</dt><dd className="font-medium font-mono text-xs">{displayStudentId}</dd></div>
             <div><dt className="text-slate-500">Candidate Type</dt><dd className="font-medium">{candidate?.candidateType ?? workspace.registrations[0]?.candidateTypeSnapshot ?? "—"}</dd></div>
             {(candidate?.candidateType ?? workspace.registrations[0]?.candidateTypeSnapshot) === "INTERNAL" ? (
               <>

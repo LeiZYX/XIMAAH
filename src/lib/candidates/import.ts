@@ -14,6 +14,7 @@ import {
   parseDateOfBirth,
   validateCandidateIdentity,
 } from "@/lib/candidates/identity";
+import { upsertCandidateExamIdentity } from "@/lib/candidates/exam-board-identity";
 import {
   createExternalCandidate,
   generateAssessmentHubCandidateNumber,
@@ -126,8 +127,8 @@ export async function importCandidates(
           const board = await prisma.examBoard.findFirst({ orderBy: { name: "asc" } });
           if (board) {
             await upsertCandidateExamIdentity(candidate.id, board.id, {
-              uci: row.uci?.trim() || null,
-              boardCandidateNumber: row.boardCandidateNumber?.trim() || null,
+              uciNumber: row.uci?.trim() || null,
+              candidateNumber: row.boardCandidateNumber?.trim() || null,
             });
           }
         }
@@ -203,35 +204,10 @@ export async function importInternalCandidates(
 
 export { CANDIDATE_IMPORT_HEADERS };
 
-export async function upsertCandidateExamIdentity(
-  candidateId: string,
-  examBoardId: string,
-  data: {
-    centreNumber?: string | null;
-    boardCandidateNumber?: string | null;
-    uci?: string | null;
-    notes?: string | null;
-  },
-) {
-  return prisma.candidateExamIdentity.upsert({
-    where: { candidateId_examBoardId: { candidateId, examBoardId } },
-    create: {
-      candidateId,
-      examBoardId,
-      centreNumber: data.centreNumber ?? null,
-      boardCandidateNumber: data.boardCandidateNumber ?? null,
-      uci: data.uci ?? null,
-      notes: data.notes ?? null,
-    },
-    update: {
-      centreNumber: data.centreNumber ?? null,
-      boardCandidateNumber: data.boardCandidateNumber ?? null,
-      uci: data.uci ?? null,
-      notes: data.notes ?? null,
-    },
-    include: { examBoard: { select: { id: true, name: true, code: true } } },
-  });
-}
+export {
+  upsertCandidateExamIdentity,
+  type ExamBoardIdentityInput,
+} from "@/lib/candidates/exam-board-identity";
 
 export async function updateCandidate(id: string, data: Prisma.CandidateUpdateInput) {
   return prisma.candidate.update({ where: { id }, data });

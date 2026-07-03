@@ -12,6 +12,7 @@ export interface StudentRegistrationRow {
   gradeSnapshot?: string;
   classNameSnapshot?: string;
   emailSnapshot?: string | null;
+  permanentStudentId?: string | null;
   assessmentHubCandidateNumberSnapshot?: string | null;
   candidateTypeSnapshot?: string | null;
   registrationSource?: string;
@@ -276,7 +277,7 @@ export function getStudentSnapshotFromRegistrations(registrations: StudentRegist
       className: "—",
       studentNo: "—",
       email: "—",
-      assessmentHubCandidateNumber: "—",
+      permanentStudentId: "—",
       candidateType: "—",
     };
   }
@@ -287,7 +288,7 @@ export function getStudentSnapshotFromRegistrations(registrations: StudentRegist
     className: row.classNameSnapshot ?? "—",
     studentNo: row.studentNoSnapshot ?? "—",
     email: row.emailSnapshot ?? "—",
-    assessmentHubCandidateNumber: row.assessmentHubCandidateNumberSnapshot ?? "—",
+    permanentStudentId: row.permanentStudentId ?? "—",
     candidateType: row.candidateTypeSnapshot ?? "—",
   };
 }

@@ -3,7 +3,7 @@ import type { Candidate, Prisma } from "@/generated/prisma/client";
 import type { Gender, Grade } from "@/generated/prisma/enums";
 import { hashPassword } from "@/lib/auth/password";
 import { generateAssessmentHubCandidateNumber } from "@/lib/candidates/service";
-import { generateStudentId } from "@/lib/candidates/student-id";
+import { generateStudentId, rejectImportedStudentId } from "@/lib/candidates/student-id";
 import { prisma } from "@/lib/prisma";
 import {
   formatDateOfBirth,
@@ -17,9 +17,9 @@ import { INTERNAL_STUDENT_IMPORT_COLUMNS } from "@/lib/users/internal-student-im
 
 export interface InternalStudentImportRow {
   rowNumber: number;
-  candidateNumber?: string;
   chineseName: string;
   englishName: string;
+  schoolStudentNumber?: string;
   pinyinLastName: string;
   pinyinFirstName: string;
   idNumber?: string;
@@ -48,17 +48,31 @@ export interface InternalStudentImportPreviewItem {
   className: string;
 }
 
+const FORBIDDEN_IMPORT_HEADERS = new Set([
+  "candidate number",
+  "candidatenumber",
+  "student id",
+  "studentid",
+  "uci number",
+  "uci",
+  "exam board candidate number",
+  "centre number",
+  "center number",
+]);
+
 function normalizeHeader(value: string): string {
   return value.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
 const HEADER_ALIASES: Record<string, keyof Omit<InternalStudentImportRow, "rowNumber">> = {
-  "candidate number": "candidateNumber",
-  candidatenumber: "candidateNumber",
   "chinese name": "chineseName",
   chinesename: "chineseName",
   "english name": "englishName",
   englishname: "englishName",
+  "school student number": "schoolStudentNumber",
+  schoolstudentnumber: "schoolStudentNumber",
+  "student number": "schoolStudentNumber",
+  studentnumber: "schoolStudentNumber",
   "pinyin last name": "pinyinLastName",
   pinyinlastname: "pinyinLastName",
   "pinyin first name": "pinyinFirstName",
@@ -88,6 +102,27 @@ function cellText(value: unknown): string {
   return String(value).trim();
 }
 
+function readSheetHeaders(sheet: XLSX.WorkSheet): string[] {
+  const ref = sheet["!ref"];
+  if (!ref) return [];
+  const range = XLSX.utils.decode_range(ref);
+  const headers: string[] = [];
+  for (let col = range.s.c; col <= range.e.c; col += 1) {
+    const cell = sheet[XLSX.utils.encode_cell({ r: range.s.r, c: col })];
+    const value = cellText(cell?.v);
+    if (value) headers.push(value);
+  }
+  return headers;
+}
+
+function dateOfBirthRange(date: Date): { gte: Date; lt: Date } {
+  const gte = new Date(date);
+  gte.setUTCHours(0, 0, 0, 0);
+  const lt = new Date(gte);
+  lt.setUTCDate(lt.getUTCDate() + 1);
+  return { gte, lt };
+}
+
 function mapRow(
   raw: Record<string, unknown>,
   rowNumber: number,
@@ -101,9 +136,9 @@ function mapRow(
 
   return {
     rowNumber,
-    candidateNumber: cellText(mapped.candidateNumber) || undefined,
     chineseName: cellText(mapped.chineseName),
     englishName: cellText(mapped.englishName),
+    schoolStudentNumber: cellText(mapped.schoolStudentNumber) || undefined,
     pinyinLastName: cellText(mapped.pinyinLastName),
     pinyinFirstName: cellText(mapped.pinyinFirstName),
     idNumber: cellText(mapped.idNumber) || undefined,
@@ -121,19 +156,50 @@ function isBlankRow(raw: Record<string, unknown>): boolean {
   return Object.values(raw).every((value) => cellText(value) === "");
 }
 
-export function parseInternalStudentImportWorkbook(
-  buffer: ArrayBuffer,
-): Array<Partial<InternalStudentImportRow> & { rowNumber: number }> {
+function readImportSheet(buffer: ArrayBuffer) {
   const workbook = XLSX.read(buffer, { type: "array", cellDates: true });
   const sheetName =
     workbook.SheetNames.find((name) => normalizeHeader(name) === "internal students") ??
     workbook.SheetNames[0];
   const sheet = workbook.Sheets[sheetName];
+  return { sheet, sheetName };
+}
+
+export function validateInternalStudentImportHeaders(
+  buffer: ArrayBuffer,
+): InternalStudentImportError[] {
+  const { sheet } = readImportSheet(buffer);
+  const errors: InternalStudentImportError[] = [];
+
+  for (const header of readSheetHeaders(sheet)) {
+    const normalized = normalizeHeader(header);
+    if (FORBIDDEN_IMPORT_HEADERS.has(normalized)) {
+      errors.push({
+        row: 1,
+        message: `Column "${header}" is not allowed in this import`,
+      });
+    }
+  }
+
+  return errors;
+}
+
+export function parseInternalStudentImportWorkbook(
+  buffer: ArrayBuffer,
+): Array<Partial<InternalStudentImportRow> & { rowNumber: number }> {
+  const { sheet } = readImportSheet(buffer);
   const rawRows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: "" });
 
   return rawRows
     .map((row, index) => mapRow(row, index + 2))
     .filter((row, index) => !isBlankRow(rawRows[index]));
+}
+
+export function collectInternalStudentImportErrors(
+  buffer: ArrayBuffer,
+  rows: Array<Partial<InternalStudentImportRow> & { rowNumber: number }>,
+): InternalStudentImportError[] {
+  return [...validateInternalStudentImportHeaders(buffer), ...validateInternalStudentImportRows(rows)];
 }
 
 export function validateInternalStudentImportRows(
@@ -145,12 +211,22 @@ export function validateInternalStudentImportRows(
 
   for (const row of rows) {
     const rowNum = row.rowNumber;
+
+    try {
+      rejectImportedStudentId((row as { studentId?: unknown }).studentId);
+    } catch (error) {
+      errors.push({
+        row: rowNum,
+        message: error instanceof Error ? error.message : "Student ID cannot be imported",
+      });
+    }
+
     if (!row.chineseName) errors.push({ row: rowNum, message: "Chinese Name is required" });
     if (!row.englishName) errors.push({ row: rowNum, message: "English Name is required" });
     if (!row.pinyinLastName) errors.push({ row: rowNum, message: "Pinyin Last Name is required" });
     if (!row.pinyinFirstName) errors.push({ row: rowNum, message: "Pinyin First Name is required" });
-    if (!row.gender) errors.push({ row: rowNum, message: "Gender must be MALE, FEMALE, OTHER, or UNKNOWN" });
-    if (!row.dateOfBirth) errors.push({ row: rowNum, message: "Date of Birth must be valid (YYYY-MM-DD)" });
+    if (!row.gender) errors.push({ row: rowNum, message: "Gender is required" });
+    if (!row.dateOfBirth) errors.push({ row: rowNum, message: "Date of Birth is required" });
     if (!row.grade) errors.push({ row: rowNum, message: "Grade must be one of G9, G10, G11, G12" });
     if (!row.className) errors.push({ row: rowNum, message: "Class is required" });
     if (!row.phone) errors.push({ row: rowNum, message: "Phone is required" });
@@ -175,15 +251,9 @@ export function validateInternalStudentImportRows(
 async function findMatchingCandidate(
   row: Pick<
     InternalStudentImportRow,
-    "candidateNumber" | "email" | "phone" | "idNumber" | "passportNumber"
+    "chineseName" | "dateOfBirth" | "email" | "phone" | "idNumber" | "passportNumber"
   >,
 ): Promise<{ candidate: Candidate | null; matchBy?: string }> {
-  if (row.candidateNumber) {
-    const candidate = await prisma.candidate.findFirst({
-      where: { assessmentHubCandidateNumber: row.candidateNumber },
-    });
-    if (candidate) return { candidate, matchBy: "candidateNumber" };
-  }
   if (row.email) {
     const candidate = await prisma.candidate.findFirst({
       where: { email: row.email, candidateType: "INTERNAL" },
@@ -207,6 +277,19 @@ async function findMatchingCandidate(
       where: { passportNumber: row.passportNumber, candidateType: "INTERNAL" },
     });
     if (candidate) return { candidate, matchBy: "passportNumber" };
+  }
+  if (row.chineseName && row.dateOfBirth) {
+    const dobRange = dateOfBirthRange(row.dateOfBirth);
+    const matches = await prisma.candidate.findMany({
+      where: {
+        chineseName: row.chineseName,
+        dateOfBirth: dobRange,
+        candidateType: "INTERNAL",
+      },
+    });
+    if (matches.length === 1) {
+      return { candidate: matches[0], matchBy: "chineseName+dateOfBirth" };
+    }
   }
   return { candidate: null };
 }
@@ -233,24 +316,19 @@ export async function previewInternalStudentImportRows(
   return preview;
 }
 
-async function allocateStudentNo(email: string): Promise<string> {
-  const base = email.split("@")[0]?.replace(/\W/g, "").slice(0, 12).toUpperCase() || "STU";
-  for (let attempt = 0; attempt < 20; attempt += 1) {
-    const suffix = attempt === 0 ? "" : `-${attempt}`;
-    const candidateNo = `${base}${suffix}`;
-    const existing = await prisma.studentProfile.findUnique({ where: { studentNo: candidateNo } });
-    if (!existing) return candidateNo;
-  }
-  return `STU-${Date.now()}`;
+function profileLoginStudentNo(input: {
+  schoolStudentNumber?: string;
+  permanentStudentId: string;
+}): string {
+  return input.schoolStudentNumber?.trim() || input.permanentStudentId;
 }
 
-function candidateUncheckedUpdate(
+function candidateProfileUpdate(
   row: InternalStudentImportRow,
-  extras: { studentNumber: string; userId: string },
+  extras: { schoolStudentNumber?: string; userId: string },
 ): Prisma.CandidateUncheckedUpdateInput {
   return {
     candidateType: "INTERNAL",
-    ...(row.candidateNumber ? { assessmentHubCandidateNumber: row.candidateNumber } : {}),
     chineseName: row.chineseName,
     englishName: row.englishName,
     legalEnglishName: row.englishName,
@@ -268,7 +346,7 @@ function candidateUncheckedUpdate(
     email: row.email,
     status: "ACTIVE",
     loginEnabled: true,
-    studentNumber: extras.studentNumber,
+    studentNumber: extras.schoolStudentNumber ?? null,
     userId: extras.userId,
   };
 }
@@ -278,9 +356,12 @@ async function upsertAuthForCandidate(
   candidate: Candidate,
   passwordSeed: string,
 ) {
-  const studentNo =
-    candidate.studentNumber ??
-    (await allocateStudentNo(row.email));
+  const permanentStudentId = candidate.studentId ?? (await generateStudentId());
+  const schoolStudentNumber = row.schoolStudentNumber?.trim() || candidate.studentNumber?.trim() || undefined;
+  const profileStudentNo = profileLoginStudentNo({
+    schoolStudentNumber,
+    permanentStudentId,
+  });
 
   if (candidate.userId) {
     const user = await prisma.user.update({
@@ -289,11 +370,11 @@ async function upsertAuthForCandidate(
         name: row.englishName,
         email: row.email,
         phone: row.phone,
-        studentNo,
+        studentNo: profileStudentNo,
         isActive: true,
         studentProfile: {
           update: {
-            studentNo,
+            studentNo: profileStudentNo,
             currentGrade: row.grade,
             currentClassName: row.className,
             idCardNumber: row.idNumber ?? null,
@@ -307,7 +388,10 @@ async function upsertAuthForCandidate(
     });
     await prisma.candidate.update({
       where: { id: candidate.id },
-      data: candidateUncheckedUpdate(row, { studentNumber: studentNo, userId: user.id }),
+      data: candidateProfileUpdate(row, {
+        schoolStudentNumber,
+        userId: user.id,
+      }),
     });
     return user.id;
   }
@@ -318,13 +402,13 @@ async function upsertAuthForCandidate(
       name: row.englishName,
       email: row.email,
       phone: row.phone,
-      studentNo,
+      studentNo: profileStudentNo,
       role: "STUDENT",
       passwordHash,
       mustChangePassword: true,
       studentProfile: {
         create: {
-          studentNo,
+          studentNo: profileStudentNo,
           currentGrade: row.grade,
           currentClassName: row.className,
           idCardNumber: row.idNumber ?? null,
@@ -339,7 +423,10 @@ async function upsertAuthForCandidate(
 
   await prisma.candidate.update({
     where: { id: candidate.id },
-    data: candidateUncheckedUpdate(row, { studentNumber: studentNo, userId: user.id }),
+    data: candidateProfileUpdate(row, {
+      schoolStudentNumber,
+      userId: user.id,
+    }),
   });
 
   return user.id;
@@ -351,52 +438,46 @@ export async function commitInternalStudentImportRows(
 ) {
   let created = 0;
   let updated = 0;
-  let skipped = 0;
+  const skipped = 0;
 
   for (const row of rows) {
+    rejectImportedStudentId((row as { studentId?: unknown }).studentId);
+
     const { candidate: existing, matchBy } = await findMatchingCandidate(row);
 
     if (existing) {
-      const userId = await upsertAuthForCandidate(
-        row,
-        existing,
-        existing.studentNumber ?? row.email,
-      );
-      await prisma.candidate.update({
-        where: { id: existing.id },
-        data: candidateUncheckedUpdate(row, {
-          studentNumber: existing.studentNumber ?? (await allocateStudentNo(row.email)),
-          userId,
-        }),
-      });
+      const userId = await upsertAuthForCandidate(row, existing, row.email);
       await logUserAudit({
         action: "USER_UPDATED",
         performedById,
         targetUserId: userId,
-        metadata: { source: "internal_student_import", matchBy },
+        metadata: {
+          source: "internal_student_import",
+          matchBy,
+          studentId: existing.studentId,
+        },
       });
       updated += 1;
       continue;
     }
 
-    const studentNo = await allocateStudentNo(row.email);
-    const assessmentHubCandidateNumber =
-      row.candidateNumber ?? generateAssessmentHubCandidateNumber();
-    const passwordHash = await hashPassword(studentNo);
-    const studentId = await generateStudentId();
+    const permanentStudentId = await generateStudentId();
+    const schoolStudentNumber = row.schoolStudentNumber?.trim() || undefined;
+    const profileStudentNo = profileLoginStudentNo({ schoolStudentNumber, permanentStudentId });
+    const passwordHash = await hashPassword(row.email);
 
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         name: row.englishName,
         email: row.email,
         phone: row.phone,
-        studentNo,
+        studentNo: profileStudentNo,
         role: "STUDENT",
         passwordHash,
         mustChangePassword: true,
         studentProfile: {
           create: {
-            studentNo,
+            studentNo: profileStudentNo,
             currentGrade: row.grade,
             currentClassName: row.className,
             idCardNumber: row.idNumber ?? null,
@@ -408,10 +489,10 @@ export async function commitInternalStudentImportRows(
         },
         candidate: {
           create: {
-            studentId,
+            studentId: permanentStudentId,
             candidateType: "INTERNAL",
-            assessmentHubCandidateNumber,
-            studentNumber: studentNo,
+            assessmentHubCandidateNumber: generateAssessmentHubCandidateNumber(),
+            studentNumber: schoolStudentNumber ?? null,
             chineseName: row.chineseName,
             englishName: row.englishName,
             legalEnglishName: row.englishName,
@@ -438,8 +519,7 @@ export async function commitInternalStudentImportRows(
     await logUserAudit({
       action: "USER_CREATED",
       performedById,
-      targetUserId: user.id,
-      metadata: { source: "internal_student_import" },
+      metadata: { source: "internal_student_import", permanentStudentId },
     });
     created += 1;
   }
@@ -447,7 +527,7 @@ export async function commitInternalStudentImportRows(
   await logUserAudit({
     action: "STUDENT_IMPORTED",
     performedById,
-    metadata: { created, updated, skipped, total: rows.length, format: "internal_student_v2" },
+    metadata: { created, updated, skipped, total: rows.length, format: "internal_student_v7" },
   });
 
   return { created, updated, skipped };
@@ -469,3 +549,5 @@ export function isCompleteInternalStudentImportRow(
       row.email,
   );
 }
+
+export { INTERNAL_STUDENT_IMPORT_COLUMNS };

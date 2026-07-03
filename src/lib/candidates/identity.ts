@@ -1,3 +1,4 @@
+import { resolvePermanentStudentId } from "@/lib/candidates/display-identifiers";
 import type { Gender, Grade, IdDocumentType } from "@/generated/prisma/enums";
 import type { UserRole } from "@/lib/auth/constants";
 import { parseGradeInput } from "@/lib/students/profile-enums";
@@ -107,7 +108,7 @@ export function validateCandidateIdentity(input: CandidateIdentityInput): string
   if (!input.dateOfBirth) errors.push("Date of Birth is required");
   if (!input.idDocumentType) errors.push("ID Document Type is required");
   if (!input.idDocumentNumber?.trim()) errors.push("ID / Passport Number is required");
-  if (!input.assessmentHubCandidateNumber?.trim()) errors.push("Candidate Number is required");
+  if (!input.assessmentHubCandidateNumber?.trim()) errors.push("Assessment Hub number is required");
   return errors;
 }
 
@@ -190,6 +191,7 @@ export type CandidateProfileRecord = {
   email?: string | null;
   phone?: string | null;
   assessmentHubCandidateNumber?: string | null;
+  studentId?: string | null;
   loginEnabled?: boolean | null;
   examIdentities?: Array<Record<string, unknown>>;
   registrationWorkspaces?: Array<Record<string, unknown>>;
@@ -243,6 +245,7 @@ export function candidateDocumentProfile(row: {
     displayName,
     chineseName: candidate?.chineseName ?? null,
     photoUrl: candidate?.photoUrl ?? null,
+    permanentStudentId: resolvePermanentStudentId({ candidate }),
     candidateNumber: row.assessmentHubCandidateNumberSnapshot ?? candidate?.assessmentHubCandidateNumber ?? "—",
     studentNumber: row.studentNoSnapshot ?? candidate?.studentNumber ?? "—",
     grade: row.gradeSnapshot ?? candidate?.grade ?? "—",

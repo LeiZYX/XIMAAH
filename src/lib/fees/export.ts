@@ -56,7 +56,7 @@ export function exportDetailsCsv(rows: FeeDetailRow[], showCosts: boolean): stri
   const headers = [
     "Statement No.",
     "Candidate Name",
-    "AH Candidate No.",
+    "Student ID",
     "Student No.",
     "Candidate Type",
     "Grade",
@@ -86,7 +86,7 @@ export function exportDetailsCsv(rows: FeeDetailRow[], showCosts: boolean): stri
       [
         row.statementNo ?? "",
         row.candidateName,
-        row.assessmentHubCandidateNumber ?? "",
+        row.permanentStudentId ?? "",
         row.studentNumber ?? "",
         row.candidateType ?? "",
         row.grade,
@@ -146,7 +146,7 @@ export function exportDetailsXlsx(rows: FeeDetailRow[], showCosts: boolean): Buf
     const base: Record<string, unknown> = {
       "Statement No.": row.statementNo ?? "",
       "Candidate Name": row.candidateName,
-      "AH Candidate No.": row.assessmentHubCandidateNumber ?? "",
+      "Student ID": row.permanentStudentId ?? "",
       "Student No.": row.studentNumber ?? "",
       "Candidate Type": row.candidateType ?? "",
       Grade: row.grade,

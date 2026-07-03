@@ -144,17 +144,9 @@ export function CandidateManager({
             <option value="ALL">All statuses</option>
           </select>
           <input
-            placeholder="Search name, Student ID, or AH number"
+            placeholder="Search name or Student ID"
             value={filters.q}
             onChange={(e) => updateFilters({ q: e.target.value })}
-            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-          />
-          <input
-            placeholder="AH candidate number"
-            value={filters.assessmentHubCandidateNumber}
-            onChange={(e) =>
-              updateFilters({ assessmentHubCandidateNumber: e.target.value })
-            }
             className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
           />
           <input
@@ -199,7 +191,6 @@ export function CandidateManager({
               <thead>
                 <tr className="border-b text-left text-xs uppercase text-slate-500">
                   <th className="py-2 pr-3">Student ID</th>
-                  <th className="py-2 pr-3">AH No.</th>
                   <th className="py-2 pr-3">Name</th>
                   <th className="py-2 pr-3">Type</th>
                   <th className="py-2 pr-3">Student No.</th>
@@ -214,7 +205,6 @@ export function CandidateManager({
                 {rows.map((row) => (
                   <tr key={row.id} className="border-b border-slate-100">
                     <td className="py-2 pr-3 font-mono text-xs">{row.studentId}</td>
-                    <td className="py-2 pr-3 font-mono text-xs">{row.assessmentHubCandidateNumber}</td>
                     <td className="py-2 pr-3">
                       {row.englishName}
                       {row.chineseName ? ` (${row.chineseName})` : ""}

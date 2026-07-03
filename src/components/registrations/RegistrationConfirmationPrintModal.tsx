@@ -155,7 +155,9 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
           <h4 className="border-b border-slate-200 pb-2 text-sm font-semibold uppercase tracking-wide text-indigo-700">Candidate Information</h4>
           <dl className="mt-3 grid gap-3 sm:grid-cols-2">
             <SummaryField label="Candidate Name" value={student.name} />
-            <SummaryField label="Assessment Hub Candidate No." value={student.assessmentHubCandidateNumber} />
+            {student.permanentStudentId && student.permanentStudentId !== "—" ? (
+              <SummaryField label="Student ID" value={student.permanentStudentId} />
+            ) : null}
             <SummaryField label="Candidate Type" value={candidateTypeLabel(student.candidateType)} />
             {isInternal ? (
               <>
@@ -344,6 +346,7 @@ export function buildWorkspaceConfirmationPrintData(workspace: {
   lastAdjustmentSummary: string | null;
   candidate?: {
     englishName?: string | null;
+    studentId?: string | null;
     studentNumber?: string | null;
     grade?: string | null;
     className?: string | null;
@@ -419,10 +422,7 @@ export function buildWorkspaceConfirmationPrintData(workspace: {
       profile?.email ??
       workspace.student?.email ??
       null,
-    assessmentHubCandidateNumberSnapshot:
-      firstReg?.assessmentHubCandidateNumberSnapshot ??
-      candidate?.assessmentHubCandidateNumber ??
-      null,
+    permanentStudentId: candidate?.studentId ?? null,
     candidateTypeSnapshot: firstReg?.candidateTypeSnapshot ?? candidate?.candidateType ?? null,
   };
   const examBoardIdentities =

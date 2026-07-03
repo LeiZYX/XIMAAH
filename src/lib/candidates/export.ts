@@ -32,8 +32,8 @@ type ExportCandidate = Pick<
   | "emergencyContactPhone"
 > & {
   examIdentities?: Array<{
-    uci: string | null;
-    boardCandidateNumber: string | null;
+    uciNumber: string | null;
+    candidateNumber: string | null;
     examBoard: { code: string };
   }>;
 };
@@ -90,8 +90,8 @@ export function candidatesToCsv(candidates: ExportCandidate[]): string {
       candidate.className,
       candidate.graduationYear,
       candidate.assessmentHubCandidateNumber,
-      primaryIdentity?.uci,
-      primaryIdentity?.boardCandidateNumber,
+      primaryIdentity?.uciNumber,
+      primaryIdentity?.candidateNumber,
       candidate.emergencyContactName,
       candidate.emergencyContactPhone,
     ]

@@ -1,19 +1,15 @@
-import { HelpRoleNotes } from "@/components/info/HelpRoleNotes";
-import { InfoAlert, InfoDocLayout, InfoSection } from "@/components/info/InfoDocLayout";
+import { InfoDocLayout, InfoSection } from "@/components/info/InfoDocLayout";
 import { helpSections } from "@/lib/help-documentation";
 
 export const dynamic = "force-dynamic";
 
 export default function HelpPage() {
-  const toc = [
-    ...helpSections.map((section) => ({ id: section.id, label: section.title })),
-    { id: "role-notes", label: "Role-specific notes" },
-  ];
+  const toc = helpSections.map((section) => ({ id: section.id, label: section.title }));
 
   return (
     <InfoDocLayout
       title="Help"
-      description="Guide to internal student exam registration, deadlines, teacher-assisted changes, and fee statements."
+      description="A concise guide to using XIMA Assessment Hub—for students, teachers, and administrators."
       toc={toc}
     >
       {helpSections.map((section) => (
@@ -37,14 +33,6 @@ export default function HelpPage() {
           ) : null}
         </InfoSection>
       ))}
-
-      <InfoSection id="role-notes" title="Role-specific notes">
-        <HelpRoleNotes />
-        <InfoAlert>
-          This guide covers normal internal student registration only. For other registration
-          arrangements, contact the Exams Office directly.
-        </InfoAlert>
-      </InfoSection>
     </InfoDocLayout>
   );
 }

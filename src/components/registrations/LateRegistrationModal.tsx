@@ -6,6 +6,10 @@ import {
   useRegistrationWindowSelector,
 } from "@/components/registrations/RegistrationWindowSelector";
 import {
+  RegistrationExamBoardIdentitySection,
+  useRegistrationExamBoardIdentityReady,
+} from "@/components/registrations/RegistrationExamBoardIdentitySection";
+import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
   formatExamSessionOptionLabel,
@@ -20,6 +24,7 @@ interface StudentOption {
   email: string | null;
   grade: string | null;
   className: string | null;
+  candidateId: string | null;
 }
 
 interface ExamSessionOption extends ExamSessionSearchable {
@@ -32,6 +37,7 @@ interface LateRegistrationModalProps {
   apiPath: string;
   /** Teacher requests: OPEN windows only. Staff help: OPEN or CLOSED. */
   windowFilter?: "teacher" | "staff";
+  candidateDetailBasePath?: string;
   onClose: () => void;
   onSubmitted: (result: { workspaceId?: string }) => void;
 }
@@ -41,6 +47,7 @@ export function LateRegistrationModal({
   submitLabel,
   apiPath,
   windowFilter = "staff",
+  candidateDetailBasePath,
   onClose,
   onSubmitted,
 }: LateRegistrationModalProps) {
@@ -65,6 +72,13 @@ export function LateRegistrationModal({
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const isStaffFlow = windowFilter === "staff";
+  const activeCandidateId = isStaffFlow ? selectedStudent?.candidateId ?? null : null;
+  const { ready: identityReady, hasIdentity } = useRegistrationExamBoardIdentityReady(
+    activeCandidateId,
+    selectedWindow?.examBoard.id ?? null,
+  );
 
   useEffect(() => {
     if (studentQuery.trim().length < 2) {
@@ -133,6 +147,10 @@ export function LateRegistrationModal({
     }
     if (selectedSessionIds.length === 0) {
       setError("Please select at least one exam session.");
+      return;
+    }
+    if (isStaffFlow && selectedWindow && identityReady && !hasIdentity) {
+      setError("No Exam Board Identity exists for this student.");
       return;
     }
     if (!reason.trim()) {
@@ -228,7 +246,20 @@ export function LateRegistrationModal({
             }}
           />
 
-          {selectedWindow ? (
+          {isStaffFlow && candidateDetailBasePath ? (
+            <RegistrationExamBoardIdentitySection
+              candidateId={activeCandidateId}
+              examBoardId={selectedWindow?.examBoard.id ?? null}
+              examBoardName={selectedWindow?.examBoard.name ?? null}
+              candidateDetailBasePath={candidateDetailBasePath}
+            />
+          ) : null}
+
+          {selectedWindow && !isStaffFlow ? (
+            <p className="text-sm text-slate-600">
+              Exam Board: <span className="font-medium">{selectedWindow.examBoard.name}</span>
+            </p>
+          ) : isStaffFlow && selectedWindow ? (
             <p className="text-sm text-slate-600">
               Exam Board: <span className="font-medium">{selectedWindow.examBoard.name}</span>
             </p>
@@ -305,7 +336,7 @@ export function LateRegistrationModal({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={submitting}
+            disabled={submitting || (isStaffFlow && identityReady && !hasIdentity)}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
           >
             {submitting ? "Submitting..." : submitLabel}

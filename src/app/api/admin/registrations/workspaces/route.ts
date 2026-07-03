@@ -24,13 +24,13 @@ const workspaceListInclude = {
   candidate: {
     select: {
       englishName: true,
+      studentId: true,
       studentNumber: true,
       candidateType: true,
       email: true,
       phone: true,
       grade: true,
       className: true,
-      assessmentHubCandidateNumber: true,
     },
   },
   registrationWindow: {

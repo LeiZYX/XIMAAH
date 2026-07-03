@@ -13,12 +13,14 @@ export function AddRegistrationDropdown({
   externalApiPath,
   workspacesApiPath,
   detailBasePath,
+  candidateDetailBasePath,
 }: {
   assistedApiPath: string;
   officeOnlyApiPath: string;
   externalApiPath: string;
   workspacesApiPath: string;
   detailBasePath: string;
+  candidateDetailBasePath: string;
 }) {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<ModalMode>(null);
@@ -131,6 +133,7 @@ export function AddRegistrationDropdown({
           submitLabel="Create assisted registration"
           apiPath={assistedApiPath}
           candidateType="INTERNAL"
+          candidateDetailBasePath={candidateDetailBasePath}
           onClose={() => setMode(null)}
           onSubmitted={handleSubmitted}
         />
@@ -143,6 +146,7 @@ export function AddRegistrationDropdown({
           submitLabel="Create restricted registration"
           apiPath={officeOnlyApiPath}
           candidateType="INTERNAL"
+          candidateDetailBasePath={candidateDetailBasePath}
           onClose={() => setMode(null)}
           onSubmitted={handleSubmitted}
         />
@@ -151,6 +155,7 @@ export function AddRegistrationDropdown({
       {mode === "external" ? (
         <ExternalCandidateRegistrationModal
           apiPath={externalApiPath}
+          candidateDetailBasePath={candidateDetailBasePath}
           onClose={() => setMode(null)}
           onSubmitted={handleSubmitted}
         />

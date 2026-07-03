@@ -63,11 +63,9 @@ export function buildStatementOfEntryPages(rows: RegistrationRow[]) {
       photoUrl: profile.photoUrl,
       candidateName: profile.displayName,
       chineseName: profile.chineseName,
+      permanentStudentId: profile.permanentStudentId === "—" ? null : profile.permanentStudentId,
       studentNumber: profile.studentNumber,
-      candidateNumber: profile.candidateNumber,
-      uci: identity?.uci ?? "—",
-      centreNumber: centre.centreNumber,
-      boardCandidateNumber: identity?.boardCandidateNumber ?? "—",
+      boardCandidateNumber: identity?.candidateNumber ?? "—",
       idDocumentTypeLabel: profile.idDocumentTypeLabel,
       idDocumentNumber: profile.idDocumentNumber,
       genderLabel: profile.genderLabel,
@@ -90,6 +88,7 @@ export function buildCandidateTimetablePages(rows: RegistrationRow[]) {
     const first = group.registrations[0]!;
     const centre = centreForRow(first);
     const profile = candidateDocumentProfile(first);
+    const identity = boardIdentityForRow(first);
     const byDate = new Map<string, ReturnType<typeof mapEntry>[]>();
     for (const row of group.registrations) {
       const entry = mapEntry(row);
@@ -103,9 +102,10 @@ export function buildCandidateTimetablePages(rows: RegistrationRow[]) {
       photoUrl: profile.photoUrl,
       candidateName: profile.displayName,
       chineseName: profile.chineseName,
-      candidateNumber: profile.candidateNumber,
+      permanentStudentId: profile.permanentStudentId === "—" ? null : profile.permanentStudentId,
       studentNumber: profile.studentNumber,
-      className: profile.className,
+      boardCandidateNumber: identity?.candidateNumber ?? "—",
+      examBoard: first.examBoard.name,
       grade: profile.grade,
       idDocumentTypeLabel: profile.idDocumentTypeLabel,
       idDocumentNumber: profile.idDocumentNumber,
@@ -141,9 +141,11 @@ export function buildAttendanceRegisters(rows: RegistrationRow[]) {
       }),
       rows: group.registrations.map((row, index) => {
         const profile = candidateDocumentProfile(row);
+        const identity = boardIdentityForRow(row);
         return {
           seat: String(index + 1),
-          candidateNumber: profile.candidateNumber,
+          permanentStudentId: profile.permanentStudentId === "—" ? null : profile.permanentStudentId,
+          boardCandidateNumber: identity?.candidateNumber ?? "—",
           candidateName: profile.displayName,
           className: profile.className,
           photoUrl: profile.photoUrl,
@@ -174,13 +176,17 @@ export function buildSeatingPlans(rows: RegistrationRow[]) {
       time: group.session.startTime ?? "—",
       paperCode: group.session.paper.code,
       subject: group.session.paper.subject.name,
-      seats: group.registrations.map((row, index) => ({
-        seat: String(index + 1),
-        candidateNumber: row.assessmentHubCandidateNumberSnapshot ?? "—",
-        candidateName: row.studentNameSnapshot,
+      seats: group.registrations.map((row, index) => {
+        const identity = boardIdentityForRow(row);
+        return {
+          seat: String(index + 1),
+          permanentStudentId: row.candidate?.studentId ?? null,
+          boardCandidateNumber: identity?.candidateNumber ?? "—",
+          candidateName: row.studentNameSnapshot,
         paperCode: row.paper.code,
         subject: row.subject.name,
-      })),
+        };
+      }),
     };
   });
 }
@@ -190,9 +196,13 @@ export function buildCandidateListRows(rows: RegistrationRow[]) {
   return groups.map((group) => {
     const first = group.registrations[0]!;
     const centre = centreForRow(first);
+    const identity = boardIdentityForRow(first);
+    const profile = candidateDocumentProfile(first);
     return {
       centre,
-      candidateNumber: first.assessmentHubCandidateNumberSnapshot ?? "—",
+      permanentStudentId: first.candidate?.studentId ?? null,
+      boardCandidateNumber: identity?.candidateNumber ?? "—",
+      examBoard: first.examBoard.name,
       studentNumber: first.studentNoSnapshot,
       candidateName: first.studentNameSnapshot,
       grade: first.gradeSnapshot,
@@ -212,14 +222,17 @@ export function buildCandidateLabelPages(rows: RegistrationRow[]) {
     const first = group.registrations[0]!;
     const centre = centreForRow(first);
     const profile = candidateDocumentProfile(first);
+    const identity = boardIdentityForRow(first);
     return {
       documentTitle: "Candidate Label",
       centre,
       photoUrl: profile.photoUrl,
       candidateName: profile.displayName,
       chineseName: profile.chineseName,
-      candidateNumber: profile.candidateNumber,
+      permanentStudentId: profile.permanentStudentId === "—" ? null : profile.permanentStudentId,
       studentNumber: profile.studentNumber,
+      boardCandidateNumber: identity?.candidateNumber ?? "—",
+      examBoard: first.examBoard.name,
       grade: profile.grade,
       className: profile.className,
       examSession: first.examSeries.name,
@@ -255,7 +268,8 @@ export function buildDocumentPayload(
 export function candidateListToCsv(rows: ReturnType<typeof buildCandidateListRows>) {
   const header = [
     "Centre Number",
-    "Candidate Number",
+    "Student ID",
+    "Board Candidate No.",
     "Student Number",
     "Candidate Name",
     "Grade",
@@ -269,7 +283,8 @@ export function candidateListToCsv(rows: ReturnType<typeof buildCandidateListRow
   const lines = rows.map((row) =>
     [
       row.centreNumber,
-      row.candidateNumber,
+      row.permanentStudentId ?? "",
+      row.boardCandidateNumber,
       row.studentNumber,
       row.candidateName,
       row.grade,

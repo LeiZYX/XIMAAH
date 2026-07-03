@@ -4,6 +4,7 @@ import { requireAuth } from "@/lib/auth/require-auth";
 import { canManageUsers } from "@/lib/auth/permissions";
 import type { Gender, Grade } from "@/generated/prisma/enums";
 import { logUserAudit } from "@/lib/users/audit";
+import { rejectImportedStudentId } from "@/lib/candidates/student-id";
 import { upsertStudentIdentity } from "@/lib/users/student-identity";
 import { prisma } from "@/lib/prisma";
 
@@ -25,7 +26,6 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     pinyinLastName?: string;
     pinyinFirstName?: string;
     studentNumber?: string;
-    candidateNumber?: string;
     email?: string;
     phone?: string;
     grade: Grade | string;
@@ -42,6 +42,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }>(body, ["englishName", "grade", "className"]);
 
   if (!data) return jsonError("Missing required fields");
+  rejectImportedStudentId((body as { studentId?: unknown }).studentId);
   const student = await upsertStudentIdentity(auth.user.id, { ...data, id });
   return NextResponse.json(student);
 }

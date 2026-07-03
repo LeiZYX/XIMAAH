@@ -4,12 +4,13 @@ import { requireAuth } from "@/lib/auth/require-auth";
 import { canManageUsers } from "@/lib/auth/permissions";
 import { parseListPagination } from "@/lib/pagination";
 import type { Gender, Grade } from "@/generated/prisma/enums";
+import { rejectImportedStudentId } from "@/lib/candidates/student-id";
 import {
   commitInternalStudentImportRows,
+  collectInternalStudentImportErrors,
   isCompleteInternalStudentImportRow,
   parseInternalStudentImportWorkbook,
   previewInternalStudentImportRows,
-  validateInternalStudentImportRows,
 } from "@/lib/users/internal-student-import";
 import { listStudentIdentities, parseStudentIdentityFilters, upsertStudentIdentity } from "@/lib/users/student-identity";
 
@@ -39,8 +40,9 @@ export async function POST(request: NextRequest) {
     const commit = form.get("commit") === "true";
     if (!(file instanceof File)) return jsonError("file is required");
 
-    const rows = parseInternalStudentImportWorkbook(await file.arrayBuffer());
-    const errors = validateInternalStudentImportRows(rows);
+    const buffer = await file.arrayBuffer();
+    const rows = parseInternalStudentImportWorkbook(buffer);
+    const errors = collectInternalStudentImportErrors(buffer, rows);
     const completeRows = rows.filter(isCompleteInternalStudentImportRow);
     if (!commit) {
       const preview = await previewInternalStudentImportRows(completeRows);
@@ -67,7 +69,6 @@ export async function POST(request: NextRequest) {
     pinyinLastName?: string;
     pinyinFirstName?: string;
     studentNumber?: string;
-    candidateNumber?: string;
     email?: string;
     phone?: string;
     grade: Grade | string;
@@ -84,6 +85,7 @@ export async function POST(request: NextRequest) {
   }>(body, ["englishName", "grade", "className"]);
 
   if (!data) return jsonError("Missing required fields");
+  rejectImportedStudentId((body as { studentId?: unknown }).studentId);
   const student = await upsertStudentIdentity(auth.user.id, data);
   return NextResponse.json(student, { status: 201 });
 }
