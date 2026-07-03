@@ -9,9 +9,27 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "0.5.0";
+export const CURRENT_VERSION = "1.0.0";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.0.0",
+    releaseDate: "2026-07-03",
+    summary:
+      "Candidate Board Registration, exam-board identity checks during registration, separated student identifiers, Excel import/export, and a user-oriented Help guide.",
+    changes: [
+      "Added Candidate Board Registration to manage per-board identities (Centre Number, Candidate Number, UCI) for Pearson / Edexcel, AQA, and Cambridge",
+      "Exam registrations now load board identity automatically; staff cannot enter board numbers manually during registration",
+      "Excel (.xlsx) import with template download, drag-and-drop upload, preview, and commit for board registration data",
+      "Separated system Student ID (auto-generated) from School Student Number (school-assigned)",
+      "Updated internal student import/export to use Excel templates with preview and validation",
+      "Added Exam Board Identities tab on candidate profiles for viewing and editing board records",
+      "Rewrote Help page for students, teachers, and administrators without internal billing workflows",
+    ],
+    knownIssues: [
+      "Run pending Prisma migrations through 20260718120000_candidate_exam_identity_redesign after pulling this release.",
+    ],
+  },
   {
     version: "0.5.0",
     releaseDate: "2026-06-26",
