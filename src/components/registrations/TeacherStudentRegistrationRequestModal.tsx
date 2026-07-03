@@ -192,8 +192,8 @@ export function TeacherStudentRegistrationRequestModal({
             <dd className="font-medium text-slate-900">{summary.studentNo}</dd>
           </div>
           <div>
-            <dt className="text-slate-500">Candidate number</dt>
-            <dd className="font-medium text-slate-900">{summary.candidateNumber}</dd>
+            <dt className="text-slate-500">Student ID</dt>
+            <dd className="font-medium text-slate-900">{summary.permanentStudentId ?? "—"}</dd>
           </div>
           <div>
             <dt className="text-slate-500">Grade / Class</dt>
