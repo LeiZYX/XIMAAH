@@ -9,9 +9,17 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.1.0";
+export const CURRENT_VERSION = "1.1.1";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.1.1",
+    releaseDate: "2026-07-04",
+    summary: "Production build fix for external candidate registration modal.",
+    bugFixes: [
+      "Fixed TypeScript build error in ExternalCandidateRegistrationModal after exam-board identity refactor",
+    ],
+  },
   {
     version: "1.1.0",
     releaseDate: "2026-07-04",

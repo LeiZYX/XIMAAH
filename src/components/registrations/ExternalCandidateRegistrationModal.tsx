@@ -284,7 +284,7 @@ export function ExternalCandidateRegistrationModal({
 
           {useExisting ? (
             <RegistrationExamBoardIdentitySection
-              candidateId={activeCandidateId}
+              candidateId={selectedCandidate?.id ?? null}
               examBoardId={selectedWindow?.examBoard?.id ?? null}
               examBoardName={selectedWindow?.examBoard?.name ?? null}
               candidateDetailBasePath={candidateDetailBasePath}
