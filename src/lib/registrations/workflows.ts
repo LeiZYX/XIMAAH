@@ -10,7 +10,6 @@ import {
   createExternalCandidate,
   resolveCandidateForRegistration,
 } from "@/lib/candidates/service";
-import { assertCandidateExamBoardIdentityForRegistration } from "@/lib/candidates/exam-board-identity";
 import { prisma } from "@/lib/prisma";
 import {
   createRegistrationAuditLog,
@@ -243,14 +242,6 @@ async function applyCandidateRegistrationWorkflow(
 
   const uniqueSessionIds = [...new Set(input.examSessionIds)];
   const { window, sessions } = await loadSessionsForWindow(input.registrationWindowId, uniqueSessionIds);
-  try {
-    await assertCandidateExamBoardIdentityForRegistration(candidate.id, window.examBoardId);
-  } catch (error) {
-    throw new RegistrationError(
-      error instanceof Error ? error.message : "No Exam Board Identity exists for this student.",
-      400,
-    );
-  }
   await assertNoDuplicateSessions(candidate.id, uniqueSessionIds);
 
   const now = new Date();

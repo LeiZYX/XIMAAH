@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
-import { submitTeacherLateRegistrationRequest } from "@/lib/registrations/change-request";
+import { submitTeacherLateRegistrationAdjustment } from "@/lib/registrations/change-request";
 import { RegistrationError } from "@/lib/registrations/errors";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
     studentId?: string;
     registrationWindowId?: string;
     examSessionIds?: string[];
+    removeRegistrationIds?: string[];
     reason?: string;
   }>(body, []);
 
@@ -24,21 +25,32 @@ export async function POST(request: NextRequest) {
   }
 
   const examSessionIds = Array.isArray(data.examSessionIds) ? data.examSessionIds : [];
-  if (examSessionIds.length === 0) {
-    return jsonError("At least one exam session must be selected", 400);
+  const removeRegistrationIds = Array.isArray(data.removeRegistrationIds)
+    ? data.removeRegistrationIds
+    : [];
+
+  if (examSessionIds.length === 0 && removeRegistrationIds.length === 0) {
+    return jsonError("Select at least one exam session to add or remove", 400);
   }
 
   try {
-    const requestRow = await submitTeacherLateRegistrationRequest(
+    const requests = await submitTeacherLateRegistrationAdjustment(
       { id: auth.user.id, role: auth.user.role },
       {
         studentId: data.studentId,
         registrationWindowId: data.registrationWindowId,
         examSessionIds,
+        removeRegistrationIds,
         reason: data.reason.trim(),
       },
     );
-    return NextResponse.json(requestRow, { status: 201 });
+    return NextResponse.json(
+      {
+        requests,
+        count: requests.length,
+      },
+      { status: 201 },
+    );
   } catch (error) {
     if (error instanceof RegistrationError) {
       return jsonError(error.message, error.status);

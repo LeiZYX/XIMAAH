@@ -9,9 +9,23 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.0.0";
+export const CURRENT_VERSION = "1.1.0";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.1.0",
+    releaseDate: "2026-07-04",
+    summary:
+      "Teacher late-registration adjustments without subject assignment, optional exam-board identity for staff registration, and audit-log fixes.",
+    changes: [
+      "Teachers can request late registration adds and removals in one flow; all changes require Exams Office approval",
+      "Removed teacher subject-assignment gate from class registrations, change requests, and late registration",
+      "Staff-assisted registration no longer blocks when exam-board identity is missing; UI shows a warning instead",
+    ],
+    bugFixes: [
+      "Fixed registration audit log foreign-key error when a registration window auto-closes on teacher page load",
+    ],
+  },
   {
     version: "1.0.0",
     releaseDate: "2026-07-03",

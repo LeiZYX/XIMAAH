@@ -159,7 +159,7 @@ export async function ensureExpiredWindowsLocked() {
         performedById: window.createdById ?? (await resolveLockPerformer(window.id)),
         performedByRole: "ADMIN",
         action: RegistrationAuditAction.REGISTRATION_WINDOW_CLOSED,
-        examSessionId: "",
+        examSessionId: null,
         note: "Registration window reached registration close time",
       });
     }

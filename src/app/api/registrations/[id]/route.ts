@@ -8,7 +8,6 @@ import {
 } from "@/lib/registrations/service";
 import {
   canRoleViewRegistration,
-  loadTeacherRegistrationScope,
 } from "@/lib/registrations/visibility";
 import { prisma } from "@/lib/prisma";
 
@@ -54,11 +53,7 @@ export async function GET(
   }
 
   if (auth.user.role === "STUDENT" || auth.user.role === "SUBJECT_TEACHER") {
-    const scope =
-      auth.user.role === "SUBJECT_TEACHER"
-        ? await loadTeacherRegistrationScope(auth.user.id)
-        : undefined;
-    if (!canRoleViewRegistration(auth.user.role, registration, scope)) {
+    if (!canRoleViewRegistration(auth.user.role, registration)) {
       return jsonError("Forbidden", 403);
     }
   }

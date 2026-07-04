@@ -43,35 +43,6 @@ export const changeRequestInclude = {
   },
 } as const;
 
-async function assertTeacherAssignedToExamSessions(teacherId: string, examSessionIds: string[]) {
-  const [assignments, sessions] = await Promise.all([
-    prisma.teacherAssignment.findMany({
-      where: { teacherId },
-      include: { subject: { select: { name: true } } },
-    }),
-    prisma.examSession.findMany({
-      where: { id: { in: examSessionIds } },
-      include: { paper: { include: { subject: { select: { name: true } } } } },
-    }),
-  ]);
-
-  const assignedSubjects = new Set(
-    assignments.map((assignment) => assignment.subject.name.toLowerCase()),
-  );
-  if (assignedSubjects.size === 0) {
-    throw new RegistrationError("You are not assigned to any subjects", 403);
-  }
-
-  for (const session of sessions) {
-    if (!assignedSubjects.has(session.paper.subject.name.toLowerCase())) {
-      throw new RegistrationError(
-        `You can only request late registration for your assigned subjects (${session.paper.subject.name} is not assigned to you)`,
-        403,
-      );
-    }
-  }
-}
-
 async function assertNoDuplicatePendingLateRequest(input: {
   studentId: string;
   registrationWindowId: string;
@@ -101,13 +72,8 @@ async function assertNoDuplicatePendingLateRequest(input: {
   }
 }
 
-async function assertTeacherCanRequestChange(teacherId: string, registrationWorkspaceId: string) {
-  const [assignments, workspace] = await Promise.all([
-    prisma.teacherAssignment.findMany({
-      where: { teacherId },
-      include: { subject: { select: { name: true } } },
-    }),
-    prisma.registrationWorkspace.findUnique({
+async function assertTeacherCanRequestChange(_teacherId: string, registrationWorkspaceId: string) {
+  const workspace = await prisma.registrationWorkspace.findUnique({
       where: { id: registrationWorkspaceId },
       include: {
         registrationWindow: true,
@@ -116,8 +82,7 @@ async function assertTeacherCanRequestChange(teacherId: string, registrationWork
           include: { subject: { select: { name: true } } },
         },
       },
-    }),
-  ]);
+    });
 
   if (!workspace) {
     throw new RegistrationError("Registration workspace not found", 404);
@@ -133,20 +98,6 @@ async function assertTeacherCanRequestChange(teacherId: string, registrationWork
     isStudentRegistrationPeriodClosed(workspace.registrationWindow);
   if (!isLocked) {
     throw new RegistrationError("Change requests are only allowed after student registration closes", 400);
-  }
-
-  const assignedSubjects = new Set(
-    assignments.map((assignment) => assignment.subject.name.toLowerCase()),
-  );
-  if (assignedSubjects.size === 0) {
-    throw new RegistrationError("You are not assigned to any subjects", 403);
-  }
-
-  const hasAssignedSubject = workspace.registrations.some((registration) =>
-    assignedSubjects.has(registration.subject.name.toLowerCase()),
-  );
-  if (!hasAssignedSubject) {
-    throw new RegistrationError("You can only request changes for your assigned subjects", 403);
   }
 
   return workspace;
@@ -258,7 +209,6 @@ export async function submitTeacherLateRegistrationRequest(
   }
 
   await assertLateRegistrationAllowed(input.registrationWindowId, uniqueSessionIds);
-  await assertTeacherAssignedToExamSessions(teacher.id, uniqueSessionIds);
   await assertNoDuplicateStudentExamSessions(input.studentId, uniqueSessionIds);
   await assertStudentCanRegister(input.studentId);
   await assertNoDuplicatePendingLateRequest({
@@ -295,6 +245,90 @@ export async function submitTeacherLateRegistrationRequest(
   });
 
   return requestRow;
+}
+
+export async function submitTeacherLateRegistrationAdjustment(
+  teacher: { id: string; role: UserRole },
+  input: {
+    studentId: string;
+    registrationWindowId: string;
+    examSessionIds: string[];
+    removeRegistrationIds: string[];
+    reason: string;
+  },
+) {
+  const addSessionIds = [...new Set(input.examSessionIds)];
+  const removeRegistrationIds = [...new Set(input.removeRegistrationIds)];
+
+  if (addSessionIds.length === 0 && removeRegistrationIds.length === 0) {
+    throw new RegistrationError("Select at least one add or remove change", 400);
+  }
+
+  const workspace = await prisma.registrationWorkspace.findFirst({
+    where: {
+      studentId: input.studentId,
+      registrationWindowId: input.registrationWindowId,
+    },
+    select: { id: true },
+  });
+
+  const created: Awaited<ReturnType<typeof submitTeacherChangeRequest>>[] = [];
+
+  if (removeRegistrationIds.length > 0) {
+    if (!workspace) {
+      throw new RegistrationError("No registration workspace exists for removals", 400);
+    }
+
+    for (const registrationId of removeRegistrationIds) {
+      const registration = await prisma.studentExamRegistration.findFirst({
+        where: {
+          id: registrationId,
+          studentId: input.studentId,
+          registrationWindowId: input.registrationWindowId,
+          status: { in: [RegistrationStatus.ACTIVE, RegistrationStatus.LOCKED] },
+        },
+        select: { id: true, registrationWorkspaceId: true },
+      });
+      if (!registration?.registrationWorkspaceId) {
+        throw new RegistrationError("Registration not found for removal", 404);
+      }
+
+      created.push(
+        await submitTeacherChangeRequest(teacher, {
+          registrationWorkspaceId: registration.registrationWorkspaceId,
+          requestType: RegistrationChangeRequestType.REMOVE_EXAM,
+          targetRegistrationId: registrationId,
+          reason: input.reason,
+        }),
+      );
+    }
+  }
+
+  if (addSessionIds.length > 0 && workspace) {
+    for (const examSessionId of addSessionIds) {
+      created.push(
+        await submitTeacherChangeRequest(teacher, {
+          registrationWorkspaceId: workspace.id,
+          requestType: RegistrationChangeRequestType.ADD_EXAM,
+          targetExamSessionId: examSessionId,
+          reason: input.reason,
+        }),
+      );
+    }
+  }
+
+  if (addSessionIds.length > 0 && !workspace) {
+    created.push(
+      await submitTeacherLateRegistrationRequest(teacher, {
+        studentId: input.studentId,
+        registrationWindowId: input.registrationWindowId,
+        examSessionIds: addSessionIds,
+        reason: input.reason,
+      }),
+    );
+  }
+
+  return created;
 }
 
 export async function submitTeacherChangeRequest(
@@ -388,7 +422,7 @@ export async function submitTeacherChangeRequest(
       targetExamSessionId ??
       input.replacementExamSessionId ??
       workspace.registrations[0]?.examSessionId ??
-      "",
+      null,
   });
 
   return requestRow;
@@ -538,7 +572,7 @@ export async function reviewChangeRequest(
       requestRow.targetExamSessionId ??
       requestRow.replacementExamSessionId ??
       requestRow.registrationWorkspace?.registrations[0]?.examSessionId ??
-      "",
+      null,
   });
 
   if (!resultingWorkspaceId) {

@@ -14,10 +14,7 @@ import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
   type FeeStatementDisplayCurrencyOption,
 } from "@/lib/fees/display-currency";
-import {
-  RegistrationExamBoardIdentitySection,
-  useRegistrationExamBoardIdentityReady,
-} from "@/components/registrations/RegistrationExamBoardIdentitySection";
+import { RegistrationExamBoardIdentitySection } from "@/components/registrations/RegistrationExamBoardIdentitySection";
 import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
@@ -84,12 +81,6 @@ export function ExternalCandidateRegistrationModal({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
-
-  const activeCandidateId = useExisting ? selectedCandidate?.id ?? null : null;
-  const { ready: identityReady, hasIdentity } = useRegistrationExamBoardIdentityReady(
-    activeCandidateId,
-    selectedWindow?.examBoard?.id ?? null,
-  );
 
   useEffect(() => {
     if (!useExisting || candidateQuery.trim().length < 2) {
@@ -161,10 +152,6 @@ export function ExternalCandidateRegistrationModal({
     }
     if (!useExisting && !newCandidate.englishName.trim()) {
       setError("English name is required for new external candidate.");
-      return;
-    }
-    if (useExisting && selectedWindow?.examBoard?.id && identityReady && !hasIdentity) {
-      setError("No Exam Board Identity exists for this student.");
       return;
     }
     if (!registrationWindowId || selectedSessionIds.length === 0) {
@@ -371,7 +358,7 @@ export function ExternalCandidateRegistrationModal({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={submitting || (useExisting && identityReady && !hasIdentity)}
+            disabled={submitting}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
           >
             {submitting ? "Submitting..." : "Register external candidate"}

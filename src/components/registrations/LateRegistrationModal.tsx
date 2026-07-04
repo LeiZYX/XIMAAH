@@ -5,10 +5,7 @@ import {
   RegistrationWindowSelectorFields,
   useRegistrationWindowSelector,
 } from "@/components/registrations/RegistrationWindowSelector";
-import {
-  RegistrationExamBoardIdentitySection,
-  useRegistrationExamBoardIdentityReady,
-} from "@/components/registrations/RegistrationExamBoardIdentitySection";
+import { RegistrationExamBoardIdentitySection } from "@/components/registrations/RegistrationExamBoardIdentitySection";
 import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
@@ -29,6 +26,21 @@ interface StudentOption {
 
 interface ExamSessionOption extends ExamSessionSearchable {
   id: string;
+}
+
+interface ExistingExamRow {
+  id: string;
+  status: string;
+  registrationWorkspaceId: string | null;
+  subject: { name: string };
+  paper: { code: string; title: string };
+  examSession: { id: string; date: string; startTime: string | null };
+}
+
+function formatExistingExamLabel(exam: ExistingExamRow): string {
+  const date = exam.examSession.date.slice(0, 10);
+  const time = exam.examSession.startTime ? ` ${exam.examSession.startTime}` : "";
+  return `${exam.subject.name} · ${exam.paper.code} · ${exam.paper.title} · ${date}${time}`;
 }
 
 interface LateRegistrationModalProps {
@@ -69,16 +81,23 @@ export function LateRegistrationModal({
   const [sessions, setSessions] = useState<ExamSessionOption[]>([]);
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [selectedSessionIds, setSelectedSessionIds] = useState<string[]>([]);
+  const [addSessionIds, setAddSessionIds] = useState<string[]>([]);
+  const [removalIds, setRemovalIds] = useState<Set<string>>(new Set());
+  const [existingExams, setExistingExams] = useState<ExistingExamRow[]>([]);
+  const [existingExamsLoading, setExistingExamsLoading] = useState(false);
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const isStaffFlow = windowFilter === "staff";
-  const activeCandidateId = isStaffFlow ? selectedStudent?.candidateId ?? null : null;
-  const { ready: identityReady, hasIdentity } = useRegistrationExamBoardIdentityReady(
-    activeCandidateId,
-    selectedWindow?.examBoard.id ?? null,
+  const isTeacherFlow = windowFilter === "teacher";
+
+  const blockedSessionIds = useMemo(
+    () => new Set(existingExams.map((exam) => exam.examSession.id)),
+    [existingExams],
   );
+
+  const pendingChangeCount = removalIds.size + (isTeacherFlow ? addSessionIds.length : selectedSessionIds.length);
 
   useEffect(() => {
     if (studentQuery.trim().length < 2) {
@@ -95,6 +114,43 @@ export function LateRegistrationModal({
     }, 250);
     return () => window.clearTimeout(handle);
   }, [studentQuery]);
+
+  useEffect(() => {
+    if (!isTeacherFlow || !selectedStudent || !registrationWindowId) {
+      setExistingExams([]);
+      setRemovalIds(new Set());
+      return;
+    }
+
+    let cancelled = false;
+    setExistingExamsLoading(true);
+    const params = new URLSearchParams({
+      studentKey: `user:${selectedStudent.id}`,
+      registrationWindowId,
+    });
+
+    fetch(`/api/teacher/registrations/students?${params.toString()}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (cancelled) return;
+        const exams = Array.isArray(data?.exams) ? data.exams : [];
+        setExistingExams(exams);
+        setRemovalIds(new Set());
+        const blocked = new Set(exams.map((exam: ExistingExamRow) => exam.examSession.id));
+        setAddSessionIds((current) => current.filter((sessionId) => !blocked.has(sessionId)));
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setExistingExams([]);
+      })
+      .finally(() => {
+        if (!cancelled) setExistingExamsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isTeacherFlow, selectedStudent, registrationWindowId]);
 
   useEffect(() => {
     if (!selectedWindow) {
@@ -122,17 +178,37 @@ export function LateRegistrationModal({
 
   const visibleSessions = useMemo(() => {
     const { items } = limitExamSessions(sessions, sessionQuery);
-    if (!subjectFilter.trim()) return items;
-    const filter = subjectFilter.trim().toLowerCase();
-    return items.filter((session) =>
-      session.paper.subject.name.toLowerCase().includes(filter),
-    );
-  }, [sessions, sessionQuery, subjectFilter]);
+    const filtered = subjectFilter.trim()
+      ? items.filter((session) =>
+          session.paper.subject.name.toLowerCase().includes(subjectFilter.trim().toLowerCase()),
+        )
+      : items;
+    if (!isTeacherFlow) return filtered;
+    return filtered.filter((session) => !blockedSessionIds.has(session.id));
+  }, [sessions, sessionQuery, subjectFilter, isTeacherFlow, blockedSessionIds]);
 
   function toggleSession(id: string) {
     setSelectedSessionIds((current) =>
       current.includes(id) ? current.filter((value) => value !== id) : [...current, id],
     );
+  }
+
+  function toggleAddSession(id: string) {
+    setAddSessionIds((current) =>
+      current.includes(id) ? current.filter((value) => value !== id) : [...current, id],
+    );
+  }
+
+  function toggleRemoval(examId: string) {
+    setRemovalIds((current) => {
+      const next = new Set(current);
+      if (next.has(examId)) {
+        next.delete(examId);
+      } else {
+        next.add(examId);
+      }
+      return next;
+    });
   }
 
   async function handleSubmit() {
@@ -145,12 +221,13 @@ export function LateRegistrationModal({
       setError("Please select a registration window.");
       return;
     }
-    if (selectedSessionIds.length === 0) {
+    if (isTeacherFlow) {
+      if (pendingChangeCount === 0) {
+        setError("Select at least one exam to add or remove.");
+        return;
+      }
+    } else if (selectedSessionIds.length === 0) {
       setError("Please select at least one exam session.");
-      return;
-    }
-    if (isStaffFlow && selectedWindow && identityReady && !hasIdentity) {
-      setError("No Exam Board Identity exists for this student.");
       return;
     }
     if (!reason.trim()) {
@@ -163,12 +240,22 @@ export function LateRegistrationModal({
       const response = await fetch(apiPath, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          studentId: selectedStudent.id,
-          registrationWindowId,
-          examSessionIds: selectedSessionIds,
-          reason: reason.trim(),
-        }),
+        body: JSON.stringify(
+          isTeacherFlow
+            ? {
+                studentId: selectedStudent.id,
+                registrationWindowId,
+                examSessionIds: addSessionIds,
+                removeRegistrationIds: [...removalIds],
+                reason: reason.trim(),
+              }
+            : {
+                studentId: selectedStudent.id,
+                registrationWindowId,
+                examSessionIds: selectedSessionIds,
+                reason: reason.trim(),
+              },
+        ),
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
@@ -242,13 +329,15 @@ export function LateRegistrationModal({
               setRegistrationWindowId: (id) => {
                 windowSelector.setRegistrationWindowId(id);
                 setSelectedSessionIds([]);
+                setAddSessionIds([]);
+                setRemovalIds(new Set());
               },
             }}
           />
 
           {isStaffFlow && candidateDetailBasePath ? (
             <RegistrationExamBoardIdentitySection
-              candidateId={activeCandidateId}
+              candidateId={selectedStudent?.candidateId ?? null}
               examBoardId={selectedWindow?.examBoard.id ?? null}
               examBoardName={selectedWindow?.examBoard.name ?? null}
               candidateDetailBasePath={candidateDetailBasePath}
@@ -265,6 +354,72 @@ export function LateRegistrationModal({
             </p>
           ) : null}
 
+          {isTeacherFlow && selectedStudent && registrationWindowId ? (
+            <div className="rounded-lg border border-slate-200 p-4">
+              <h3 className="text-sm font-semibold text-slate-900">Current registrations</h3>
+              <p className="mt-1 text-xs text-slate-500">
+                Mark exams to remove. All changes require Exams Office approval.
+              </p>
+              {existingExamsLoading ? (
+                <p className="mt-2 text-sm text-slate-500">Loading current registrations...</p>
+              ) : existingExams.length === 0 ? (
+                <p className="mt-2 text-sm text-slate-500">No existing registrations in this window.</p>
+              ) : (
+                <div className="mt-2 overflow-x-auto rounded-lg border border-slate-200">
+                  <table className="min-w-full text-left text-sm">
+                    <thead>
+                      <tr className="border-b bg-slate-50 text-xs uppercase text-slate-500">
+                        <th className="px-3 py-2">Exam</th>
+                        <th className="px-3 py-2">Status</th>
+                        <th className="px-3 py-2">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {existingExams.map((exam) => {
+                        const canRemove = exam.status === "LOCKED" && exam.registrationWorkspaceId;
+                        const markedRemove = removalIds.has(exam.id);
+                        return (
+                          <tr key={exam.id} className="border-b border-slate-100 align-top">
+                            <td className="px-3 py-2">
+                              <p className="font-medium text-slate-900">{formatExistingExamLabel(exam)}</p>
+                              {markedRemove ? (
+                                <p className="mt-1 text-xs text-red-700">Marked for removal</p>
+                              ) : null}
+                            </td>
+                            <td className="px-3 py-2">
+                              {exam.status === "LOCKED" ? (
+                                <span className="font-medium text-indigo-700">Locked</span>
+                              ) : (
+                                <span className="text-amber-700">Active</span>
+                              )}
+                            </td>
+                            <td className="px-3 py-2">
+                              {canRemove ? (
+                                <button
+                                  type="button"
+                                  onClick={() => toggleRemoval(exam.id)}
+                                  className={`rounded-lg border px-2 py-1 text-xs font-medium ${
+                                    markedRemove
+                                      ? "border-red-300 bg-red-50 text-red-700"
+                                      : "border-slate-300 text-slate-700 hover:bg-slate-50"
+                                  }`}
+                                >
+                                  {markedRemove ? "Undo remove" : "Remove"}
+                                </button>
+                              ) : (
+                                <span className="text-xs text-slate-400">Awaiting lock</span>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          ) : null}
+
           <label className="block text-sm">
             <span className="mb-1 block font-medium text-slate-700">Subject filter</span>
             <input
@@ -276,7 +431,9 @@ export function LateRegistrationModal({
           </label>
 
           <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">Exam sessions *</span>
+            <span className="mb-1 block font-medium text-slate-700">
+              {isTeacherFlow ? "Add exams" : "Exam sessions *"}
+            </span>
             <input
               value={sessionQuery}
               onChange={(e) => setSessionQuery(e.target.value)}
@@ -287,7 +444,11 @@ export function LateRegistrationModal({
               {sessionsLoading ? (
                 <p className="px-3 py-2 text-sm text-slate-500">Loading exam sessions...</p>
               ) : visibleSessions.length === 0 ? (
-                <p className="px-3 py-2 text-sm text-slate-500">No exam sessions available.</p>
+                <p className="px-3 py-2 text-sm text-slate-500">
+                  {isTeacherFlow
+                    ? "No additional exam sessions available."
+                    : "No exam sessions available."}
+                </p>
               ) : (
                 visibleSessions.map((session) => (
                   <label
@@ -296,8 +457,14 @@ export function LateRegistrationModal({
                   >
                     <input
                       type="checkbox"
-                      checked={selectedSessionIds.includes(session.id)}
-                      onChange={() => toggleSession(session.id)}
+                      checked={
+                        isTeacherFlow
+                          ? addSessionIds.includes(session.id)
+                          : selectedSessionIds.includes(session.id)
+                      }
+                      onChange={() =>
+                        isTeacherFlow ? toggleAddSession(session.id) : toggleSession(session.id)
+                      }
                       className="mt-1"
                     />
                     <span>{formatExamSessionOptionLabel(session)}</span>
@@ -305,26 +472,41 @@ export function LateRegistrationModal({
                 ))
               )}
             </div>
-            {selectedSessionIds.length > 0 ? (
+            {isTeacherFlow && addSessionIds.length > 0 ? (
+              <p className="mt-1 text-xs text-slate-500">{addSessionIds.length} exam(s) to add</p>
+            ) : null}
+            {!isTeacherFlow && selectedSessionIds.length > 0 ? (
               <p className="mt-1 text-xs text-slate-500">{selectedSessionIds.length} session(s) selected</p>
             ) : null}
           </label>
 
           <label className="block text-sm">
-            <span className="mb-1 block font-medium text-slate-700">Reason for late registration *</span>
+            <span className="mb-1 block font-medium text-slate-700">
+              {isTeacherFlow ? "Reason for registration changes *" : "Reason for late registration *"}
+            </span>
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              placeholder="Explain why this late registration is needed"
+              placeholder={
+                isTeacherFlow
+                  ? "Explain why these registration changes are needed"
+                  : "Explain why this late registration is needed"
+              }
             />
           </label>
         </div>
 
         {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
 
-        <div className="mt-6 flex justify-end gap-2">
+        <div className={`mt-6 flex ${isTeacherFlow ? "flex-wrap items-center justify-between gap-3" : "justify-end gap-2"}`}>
+          {isTeacherFlow ? (
+            <p className="text-sm text-slate-600">
+              {pendingChangeCount} change{pendingChangeCount === 1 ? "" : "s"} selected
+            </p>
+          ) : null}
+          <div className="flex gap-2">
           <button
             type="button"
             onClick={onClose}
@@ -336,11 +518,12 @@ export function LateRegistrationModal({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={submitting || (isStaffFlow && identityReady && !hasIdentity)}
+            disabled={submitting}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
           >
             {submitting ? "Submitting..." : submitLabel}
           </button>
+          </div>
         </div>
       </div>
     </div>

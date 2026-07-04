@@ -14,10 +14,7 @@ import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
   type FeeStatementDisplayCurrencyOption,
 } from "@/lib/fees/display-currency";
-import {
-  RegistrationExamBoardIdentitySection,
-  useRegistrationExamBoardIdentityReady,
-} from "@/components/registrations/RegistrationExamBoardIdentitySection";
+import { RegistrationExamBoardIdentitySection } from "@/components/registrations/RegistrationExamBoardIdentitySection";
 import {
   EXAM_SESSION_PREVIEW_LIMIT,
   EXAM_SESSION_SEARCH_LIMIT,
@@ -95,11 +92,6 @@ export function StaffRegistrationModal({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
-
-  const { ready: identityReady, hasIdentity } = useRegistrationExamBoardIdentityReady(
-    selectedCandidate?.id ?? null,
-    selectedWindow?.examBoard.id ?? null,
-  );
 
   useEffect(() => {
     if (candidateQuery.trim().length < 2) {
@@ -204,10 +196,6 @@ export function StaffRegistrationModal({
     }
     if (selectedSessionIds.length === 0) {
       setError("Please select at least one exam session.");
-      return;
-    }
-    if (selectedWindow && identityReady && !hasIdentity) {
-      setError("No Exam Board Identity exists for this student.");
       return;
     }
     if (!reason.trim()) {
@@ -407,7 +395,7 @@ export function StaffRegistrationModal({
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={submitting || (identityReady && !hasIdentity)}
+            disabled={submitting}
             className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
           >
             {submitting ? "Submitting..." : submitLabel}

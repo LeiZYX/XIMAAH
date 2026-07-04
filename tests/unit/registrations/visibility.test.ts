@@ -69,12 +69,12 @@ describe("portal visibility helpers", () => {
   it("hides restricted, external, and office-only registrations from teachers", () => {
     expect(isHiddenFromTeacherPortal(restrictedInternal)).toBe(true);
     expect(isHiddenFromTeacherPortal(externalCandidate)).toBe(true);
-    expect(canTeacherViewRegistration(visibleInternalNormal, teacherScope)).toBe(true);
-    expect(canTeacherViewRegistration(postLockAdjusted, teacherScope)).toBe(true);
-    expect(canTeacherViewRegistration(restrictedInternal, teacherScope)).toBe(false);
+    expect(canTeacherViewRegistration(visibleInternalNormal)).toBe(true);
+    expect(canTeacherViewRegistration(postLockAdjusted)).toBe(true);
+    expect(canTeacherViewRegistration(restrictedInternal)).toBe(false);
   });
 
-  it("scopes teacher visibility to assigned subjects and optional grade/class", () => {
+  it("does not scope teacher visibility to assigned subjects", () => {
     expect(
       matchesTeacherAssignment(
         {
@@ -87,18 +87,8 @@ describe("portal visibility helpers", () => {
     ).toBe(true);
 
     expect(
-      canTeacherViewRegistration(
-        { ...visibleInternalNormal, subjectId: "subject-2" },
-        teacherScope,
-      ),
-    ).toBe(false);
-
-    const scopedGrades: TeacherRegistrationScope = {
-      subjectIds: ["subject-1"],
-      visibleGrades: ["Y11"],
-      visibleClasses: [],
-    };
-    expect(canTeacherViewRegistration(visibleInternalNormal, scopedGrades)).toBe(false);
+      canTeacherViewRegistration({ ...visibleInternalNormal, subjectId: "subject-2" }),
+    ).toBe(true);
   });
 
   it("returns no rows when teacher has no subject assignments", () => {

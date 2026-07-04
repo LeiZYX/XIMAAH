@@ -80,6 +80,9 @@ export function RegistrationExamBoardIdentitySection({
             Exam board: <span className="font-medium">{examBoardName}</span>
           </p>
         ) : null}
+        <p className="mt-2 text-amber-800">
+          You can still submit this registration. Add board numbers later when they are available.
+        </p>
         <Link
           href={`${candidateDetailBasePath}/${candidateId}?tab=${EXAM_BOARD_IDENTITIES_TAB}`}
           className="mt-3 inline-flex rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-sm font-medium text-amber-900 hover:bg-amber-100"
@@ -130,42 +133,4 @@ export function RegistrationExamBoardIdentitySection({
       </div>
     </div>
   );
-}
-
-export function useRegistrationExamBoardIdentityReady(
-  candidateId: string | null,
-  examBoardId: string | null,
-) {
-  const [ready, setReady] = useState(false);
-  const [hasIdentity, setHasIdentity] = useState(false);
-
-  useEffect(() => {
-    if (!candidateId || !examBoardId) {
-      setReady(false);
-      setHasIdentity(false);
-      return;
-    }
-
-    let cancelled = false;
-    setReady(false);
-
-    fetch(`/api/candidates/${candidateId}/board-identity?examBoardId=${encodeURIComponent(examBoardId)}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (cancelled) return;
-        setHasIdentity(Boolean(data?.identity));
-        setReady(true);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setHasIdentity(false);
-        setReady(true);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [candidateId, examBoardId]);
-
-  return { ready, hasIdentity };
 }

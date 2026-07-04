@@ -140,7 +140,7 @@ export async function createRegistrationAuditLog(
   const data: Record<string, unknown> = {
     studentId: params.studentId ?? null,
     registrationId: params.registrationId ?? null,
-    examSessionId: params.examSessionId,
+    examSessionId: params.examSessionId?.trim() ? params.examSessionId : null,
     action,
     performedById: params.performedById,
     beforeValue: serializeAuditValue(

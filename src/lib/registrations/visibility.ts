@@ -101,11 +101,8 @@ export function canStudentViewRegistration(row: RegistrationVisibilityFields): b
   return matchesStudentVisibleRegistration(row);
 }
 
-export function canTeacherViewRegistration(
-  row: RegistrationVisibilityFields,
-  scope: TeacherRegistrationScope,
-): boolean {
-  return matchesTeacherVisibleRegistration(row) && matchesTeacherAssignment(row, scope);
+export function canTeacherViewRegistration(row: RegistrationVisibilityFields): boolean {
+  return matchesTeacherVisibleRegistration(row);
 }
 
 export function canRoleViewRegistration(
@@ -116,7 +113,7 @@ export function canRoleViewRegistration(
   if (role === "ADMIN" || role === "EXAM_OFFICER") return true;
   if (role === "STUDENT") return canStudentViewRegistration(row);
   if (role === "SUBJECT_TEACHER") {
-    return scope ? canTeacherViewRegistration(row, scope) : matchesTeacherVisibleRegistration(row);
+    return canTeacherViewRegistration(row);
   }
   return false;
 }
@@ -165,43 +162,37 @@ export function buildTeacherAssignmentWhere(
 
 export async function buildTeacherRegistrationWhereForTeacher(
   base: Prisma.StudentExamRegistrationWhereInput,
-  teacherId: string,
+  _teacherId: string,
 ): Promise<Prisma.StudentExamRegistrationWhereInput> {
-  const scope = await loadTeacherRegistrationScope(teacherId);
-  return {
-    AND: [base, buildTeacherAssignmentWhere(scope)],
-  };
+  return base;
 }
 
 export async function teacherCanViewWorkspace(
   workspaceId: string,
-  teacherId: string,
+  _teacherId: string,
 ): Promise<boolean> {
-  const [scope, workspace] = await Promise.all([
-    loadTeacherRegistrationScope(teacherId),
-    prisma.registrationWorkspace.findUnique({
-      where: { id: workspaceId },
-      select: {
-        registrationType: true,
-        visibility: true,
-        visibleToTeacher: true,
-        visibleInTeacherPortal: true,
-        registrations: {
-          where: { status: { in: ["ACTIVE", "LOCKED"] } },
-          select: {
-            registrationType: true,
-            visibility: true,
-            visibleToTeacher: true,
-            visibleInTeacherPortal: true,
-            subjectId: true,
-            gradeSnapshot: true,
-            classNameSnapshot: true,
-            status: true,
-          },
+  const workspace = await prisma.registrationWorkspace.findUnique({
+    where: { id: workspaceId },
+    select: {
+      registrationType: true,
+      visibility: true,
+      visibleToTeacher: true,
+      visibleInTeacherPortal: true,
+      registrations: {
+        where: { status: { in: ["ACTIVE", "LOCKED"] } },
+        select: {
+          registrationType: true,
+          visibility: true,
+          visibleToTeacher: true,
+          visibleInTeacherPortal: true,
+          subjectId: true,
+          gradeSnapshot: true,
+          classNameSnapshot: true,
+          status: true,
         },
       },
-    }),
-  ]);
+    },
+  });
 
   if (!workspace) return false;
 
@@ -215,13 +206,10 @@ export async function teacherCanViewWorkspace(
   if (isHiddenFromTeacherPortal(workspaceRow)) return false;
 
   return workspace.registrations.some((registration) =>
-    canTeacherViewRegistration(
-      {
-        ...registration,
-        registrationType: registration.registrationType ?? workspace.registrationType,
-        visibility: registration.visibility ?? workspace.visibility,
-      },
-      scope,
-    ),
+    canTeacherViewRegistration({
+      ...registration,
+      registrationType: registration.registrationType ?? workspace.registrationType,
+      visibility: registration.visibility ?? workspace.visibility,
+    }),
   );
 }
