@@ -9,13 +9,23 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.1.1";
+export const CURRENT_VERSION = "1.1.2";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.1.2",
+    releaseDate: "2026-07-04",
+    summary: "Release notes type fix for production build.",
+    changes: [],
+    bugFixes: [
+      "Fixed ReleaseNote TypeScript error blocking production Docker build",
+    ],
+  },
   {
     version: "1.1.1",
     releaseDate: "2026-07-04",
     summary: "Production build fix for external candidate registration modal.",
+    changes: [],
     bugFixes: [
       "Fixed TypeScript build error in ExternalCandidateRegistrationModal after exam-board identity refactor",
     ],
