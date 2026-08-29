@@ -142,7 +142,7 @@ export async function GET(request: NextRequest) {
         examSeries: { select: { name: true, year: true } },
       },
     },
-  } as const;
+  };
 
   const statementKindParam = params.get("statementKind");
   const statementKind: FeeStatementKind | undefined =
