@@ -16,6 +16,9 @@ interface FeeStatementSummary {
   status: string;
   totalGbpAmount: number | string;
   totalCnyAmount: number | string;
+  previouslyPaidGbpAmount?: number | string | null;
+  amountDueGbpAmount?: number | string | null;
+  paymentNotes?: string | null;
   issuedAt: string | null;
   paymentOrders?: StudentPaymentOrder[];
   registrationWindow: {
@@ -89,11 +92,35 @@ function FeeStatementCard({
           </dd>
         </div>
         <div>
-          <dt className="text-slate-500">Total GBP</dt>
+          <dt className="text-slate-500">Fee total (GBP)</dt>
           <dd className="font-medium text-slate-900">
             {formatMoney(Number(statement.totalGbpAmount), "GBP")}
           </dd>
         </div>
+        {Number(statement.previouslyPaidGbpAmount ?? 0) > 0 ? (
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <dt className="text-slate-500">Already paid</dt>
+              <dd className="font-medium text-slate-900">
+                {formatMoney(Number(statement.previouslyPaidGbpAmount), "GBP")}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-slate-500">Amount due</dt>
+              <dd className="font-medium text-slate-900">
+                {formatMoney(
+                  Number(
+                    statement.amountDueGbpAmount ?? statement.totalGbpAmount,
+                  ),
+                  "GBP",
+                )}
+              </dd>
+            </div>
+          </div>
+        ) : null}
+        {statement.paymentNotes ? (
+          <p className="text-xs text-slate-600">{statement.paymentNotes}</p>
+        ) : null}
         <div>
           <dt className="text-slate-500">Issued</dt>
           <dd className="font-medium text-slate-900">
@@ -106,6 +133,8 @@ function FeeStatementCard({
           feeStatementId={statement.id}
           statementStatus={statement.status}
           totalGbpAmount={statement.totalGbpAmount}
+          amountDueGbpAmount={statement.amountDueGbpAmount}
+          previouslyPaidGbpAmount={statement.previouslyPaidGbpAmount}
           existingOrders={statement.paymentOrders ?? []}
           onPaid={onPaid}
         />

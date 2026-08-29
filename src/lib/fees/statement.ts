@@ -28,6 +28,10 @@ import {
 } from "@/lib/registrations/registration-type";
 import { generateFeeStatementNumber } from "@/lib/registrations/numbering";
 import { createFeeAuditLog } from "@/lib/fees/audit";
+import {
+  computeStatementPaymentSplit,
+  sumWorkspacePaidGbp,
+} from "@/lib/fees/payment-due";
 import { finalizeRevisedFeeStatement } from "@/lib/fees/statement-lifecycle";
 
 export class FeeError extends Error {
@@ -478,6 +482,23 @@ export async function generateFeeStatement(params: {
   const statementNo = await generateFeeStatementNumber(registrationType);
   const statementKind = statementKindForRegistrationType(registrationType);
 
+  const previouslyPaidGbp = await sumWorkspacePaidGbp(workspaceId);
+  const paymentSplit = computeStatementPaymentSplit({
+    totalGbp,
+    totalCny,
+    previouslyPaidGbp,
+  });
+
+  const noFurtherPaymentDue = issue && paymentSplit.amountDueGbp <= 0;
+  const initialStatus = noFurtherPaymentDue ? "PAID" : issue ? "ISSUED" : "DRAFT";
+  const paymentNotes = noFurtherPaymentDue
+    ? previouslyPaidGbp > 0
+      ? `No additional payment due. Previous online payments £${paymentSplit.previouslyPaidGbp.toFixed(2)} cover the revised total £${paymentSplit.totalGbp.toFixed(2)}.`
+      : `No payment due.`
+    : previouslyPaidGbp > 0
+      ? `Balance due after previous payment(s) of £${paymentSplit.previouslyPaidGbp.toFixed(2)}. Full fee total £${paymentSplit.totalGbp.toFixed(2)}.`
+      : null;
+
   const statement = await prisma.feeStatement.create({
     data: {
       candidateId: workspace.candidateId ?? candidate?.id ?? null,
@@ -496,11 +517,16 @@ export async function generateFeeStatement(params: {
       emailSnapshot: email,
       assessmentHubCandidateNumberSnapshot: assessmentHubCandidateNumber,
       candidateTypeSnapshot: candidateType,
-      status: issue ? "ISSUED" : "DRAFT",
-      totalGbpAmount: totalGbp,
-      totalCnyAmount: totalCny,
+      status: initialStatus,
+      totalGbpAmount: paymentSplit.totalGbp,
+      totalCnyAmount: paymentSplit.totalCny,
+      previouslyPaidGbpAmount: paymentSplit.previouslyPaidGbp,
+      previouslyPaidCnyAmount: paymentSplit.previouslyPaidCny,
+      amountDueGbpAmount: paymentSplit.amountDueGbp,
+      amountDueCnyAmount: paymentSplit.amountDueCny,
+      paymentNotes,
       generatedByUserId,
-      issuedAt: issue ? new Date() : null,
+      issuedAt: issue || noFurtherPaymentDue ? new Date() : null,
       items: {
         create: lines.map((line) => mapFeeLineToStatementItemCreate(line)),
       },
@@ -525,12 +551,19 @@ export async function generateFeeStatement(params: {
     });
   }
 
-  if (issue) {
+  if (issue || noFurtherPaymentDue) {
     await createFeeAuditLog({
       action: "FEE_STATEMENT_ISSUED",
       performedByUserId: generatedByUserId,
       registrationWindowId: workspace.registrationWindowId,
-      metadata: { statementId: statement.id, statementNo: statement.statementNo, regenerate },
+      metadata: {
+        statementId: statement.id,
+        statementNo: statement.statementNo,
+        regenerate,
+        previouslyPaidGbp: paymentSplit.previouslyPaidGbp,
+        amountDueGbp: paymentSplit.amountDueGbp,
+        autoPaidNoDue: noFurtherPaymentDue,
+      },
     }).catch((error) => {
       console.error("Fee audit log failed:", error);
     });

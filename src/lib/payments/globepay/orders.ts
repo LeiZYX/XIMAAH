@@ -6,6 +6,7 @@ import {
   queryGlobePayOrderStatus,
   revokeGlobePayOrder,
 } from "@/lib/payments/globepay/client";
+import { statementAmountDueGbp } from "@/lib/fees/payment-due";
 
 export class PaymentError extends Error {
   constructor(
@@ -155,8 +156,14 @@ export async function createOrReusePaymentOrder(params: {
     throw new PaymentError("Only issued fee statements can be paid online");
   }
 
-  const amountMinor = gbpToMinorUnits(statement.totalGbpAmount);
-  const amountGbp = statement.totalGbpAmount;
+  const amountGbpNumber = statementAmountDueGbp(statement);
+  if (amountGbpNumber <= 0) {
+    throw new PaymentError("No additional payment is due on this fee statement");
+  }
+  const amountMinor = gbpToMinorUnits(amountGbpNumber);
+  const amountGbp = amountGbpNumber;
+  const previouslyPaidGbp = Number(statement.previouslyPaidGbpAmount ?? 0);
+  const isBalanceDue = previouslyPaidGbp > 0;
 
   const openSameChannel = await prisma.paymentOrder.findFirst({
     where: {
@@ -186,10 +193,11 @@ export async function createOrReusePaymentOrder(params: {
     channel: params.channel,
     version,
   });
-  const description = `Exam fees ${statement.statementNo} — ${statement.studentNoSnapshot}`.slice(
-    0,
-    128,
-  );
+  const description = (
+    isBalanceDue
+      ? `Exam fees ${statement.statementNo} balance £${amountGbpNumber.toFixed(2)} — ${statement.studentNoSnapshot}`
+      : `Exam fees ${statement.statementNo} — ${statement.studentNoSnapshot}`
+  ).slice(0, 128);
 
   let globepay;
   try {

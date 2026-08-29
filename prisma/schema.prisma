@@ -1421,6 +1421,12 @@ model FeeStatement {
   studentVisible          Boolean                     @default(true)
   totalGbpAmount          Decimal                     @db.Decimal(12, 2)
   totalCnyAmount          Decimal                     @db.Decimal(12, 2)
+  /** Sum of successful online payments already received for this workspace before this statement. */
+  previouslyPaidGbpAmount Decimal?                    @db.Decimal(12, 2)
+  previouslyPaidCnyAmount Decimal?                    @db.Decimal(12, 2)
+  /** Amount still payable on this statement (full or top-up delta). Defaults to total when null (legacy). */
+  amountDueGbpAmount      Decimal?                    @db.Decimal(12, 2)
+  amountDueCnyAmount      Decimal?                    @db.Decimal(12, 2)
   paymentNotes            String?                     @db.Text
   generatedByUserId       String
   generatedBy             User                        @relation("FeeStatementGenerator", fields: [generatedByUserId], references: [id], onDelete: Cascade)

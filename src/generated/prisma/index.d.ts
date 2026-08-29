@@ -45398,12 +45398,20 @@ export namespace Prisma {
     exchangeRateSnapshot: Decimal | null
     totalGbpAmount: Decimal | null
     totalCnyAmount: Decimal | null
+    previouslyPaidGbpAmount: Decimal | null
+    previouslyPaidCnyAmount: Decimal | null
+    amountDueGbpAmount: Decimal | null
+    amountDueCnyAmount: Decimal | null
   }
 
   export type FeeStatementSumAggregateOutputType = {
     exchangeRateSnapshot: Decimal | null
     totalGbpAmount: Decimal | null
     totalCnyAmount: Decimal | null
+    previouslyPaidGbpAmount: Decimal | null
+    previouslyPaidCnyAmount: Decimal | null
+    amountDueGbpAmount: Decimal | null
+    amountDueCnyAmount: Decimal | null
   }
 
   export type FeeStatementMinAggregateOutputType = {
@@ -45429,6 +45437,10 @@ export namespace Prisma {
     studentVisible: boolean | null
     totalGbpAmount: Decimal | null
     totalCnyAmount: Decimal | null
+    previouslyPaidGbpAmount: Decimal | null
+    previouslyPaidCnyAmount: Decimal | null
+    amountDueGbpAmount: Decimal | null
+    amountDueCnyAmount: Decimal | null
     paymentNotes: string | null
     generatedByUserId: string | null
     generatedAt: Date | null
@@ -45465,6 +45477,10 @@ export namespace Prisma {
     studentVisible: boolean | null
     totalGbpAmount: Decimal | null
     totalCnyAmount: Decimal | null
+    previouslyPaidGbpAmount: Decimal | null
+    previouslyPaidCnyAmount: Decimal | null
+    amountDueGbpAmount: Decimal | null
+    amountDueCnyAmount: Decimal | null
     paymentNotes: string | null
     generatedByUserId: string | null
     generatedAt: Date | null
@@ -45501,6 +45517,10 @@ export namespace Prisma {
     studentVisible: number
     totalGbpAmount: number
     totalCnyAmount: number
+    previouslyPaidGbpAmount: number
+    previouslyPaidCnyAmount: number
+    amountDueGbpAmount: number
+    amountDueCnyAmount: number
     paymentNotes: number
     generatedByUserId: number
     generatedAt: number
@@ -45520,12 +45540,20 @@ export namespace Prisma {
     exchangeRateSnapshot?: true
     totalGbpAmount?: true
     totalCnyAmount?: true
+    previouslyPaidGbpAmount?: true
+    previouslyPaidCnyAmount?: true
+    amountDueGbpAmount?: true
+    amountDueCnyAmount?: true
   }
 
   export type FeeStatementSumAggregateInputType = {
     exchangeRateSnapshot?: true
     totalGbpAmount?: true
     totalCnyAmount?: true
+    previouslyPaidGbpAmount?: true
+    previouslyPaidCnyAmount?: true
+    amountDueGbpAmount?: true
+    amountDueCnyAmount?: true
   }
 
   export type FeeStatementMinAggregateInputType = {
@@ -45551,6 +45579,10 @@ export namespace Prisma {
     studentVisible?: true
     totalGbpAmount?: true
     totalCnyAmount?: true
+    previouslyPaidGbpAmount?: true
+    previouslyPaidCnyAmount?: true
+    amountDueGbpAmount?: true
+    amountDueCnyAmount?: true
     paymentNotes?: true
     generatedByUserId?: true
     generatedAt?: true
@@ -45587,6 +45619,10 @@ export namespace Prisma {
     studentVisible?: true
     totalGbpAmount?: true
     totalCnyAmount?: true
+    previouslyPaidGbpAmount?: true
+    previouslyPaidCnyAmount?: true
+    amountDueGbpAmount?: true
+    amountDueCnyAmount?: true
     paymentNotes?: true
     generatedByUserId?: true
     generatedAt?: true
@@ -45623,6 +45659,10 @@ export namespace Prisma {
     studentVisible?: true
     totalGbpAmount?: true
     totalCnyAmount?: true
+    previouslyPaidGbpAmount?: true
+    previouslyPaidCnyAmount?: true
+    amountDueGbpAmount?: true
+    amountDueCnyAmount?: true
     paymentNotes?: true
     generatedByUserId?: true
     generatedAt?: true
@@ -45746,6 +45786,10 @@ export namespace Prisma {
     studentVisible: boolean
     totalGbpAmount: Decimal
     totalCnyAmount: Decimal
+    previouslyPaidGbpAmount: Decimal | null
+    previouslyPaidCnyAmount: Decimal | null
+    amountDueGbpAmount: Decimal | null
+    amountDueCnyAmount: Decimal | null
     paymentNotes: string | null
     generatedByUserId: string
     generatedAt: Date
@@ -45801,6 +45845,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount?: boolean
     totalCnyAmount?: boolean
+    previouslyPaidGbpAmount?: boolean
+    previouslyPaidCnyAmount?: boolean
+    amountDueGbpAmount?: boolean
+    amountDueCnyAmount?: boolean
     paymentNotes?: boolean
     generatedByUserId?: boolean
     generatedAt?: boolean
@@ -45857,6 +45905,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount?: boolean
     totalCnyAmount?: boolean
+    previouslyPaidGbpAmount?: boolean
+    previouslyPaidCnyAmount?: boolean
+    amountDueGbpAmount?: boolean
+    amountDueCnyAmount?: boolean
     paymentNotes?: boolean
     generatedByUserId?: boolean
     generatedAt?: boolean
@@ -45870,7 +45922,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type FeeStatementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessType" | "candidateId" | "studentId" | "registrationWorkspaceId" | "registrationWindowId" | "reviewWindowId" | "statementNo" | "statementKind" | "displayCurrency" | "exchangeRateSnapshot" | "studentNameSnapshot" | "studentNoSnapshot" | "gradeSnapshot" | "classNameSnapshot" | "emailSnapshot" | "assessmentHubCandidateNumberSnapshot" | "candidateTypeSnapshot" | "status" | "studentVisible" | "totalGbpAmount" | "totalCnyAmount" | "paymentNotes" | "generatedByUserId" | "generatedAt" | "issuedAt" | "revisedFromStatementId" | "revisedToStatementId" | "regenerationReason" | "regenerationChangedByUserId" | "regenerationChangedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["feeStatement"]>
+  export type FeeStatementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessType" | "candidateId" | "studentId" | "registrationWorkspaceId" | "registrationWindowId" | "reviewWindowId" | "statementNo" | "statementKind" | "displayCurrency" | "exchangeRateSnapshot" | "studentNameSnapshot" | "studentNoSnapshot" | "gradeSnapshot" | "classNameSnapshot" | "emailSnapshot" | "assessmentHubCandidateNumberSnapshot" | "candidateTypeSnapshot" | "status" | "studentVisible" | "totalGbpAmount" | "totalCnyAmount" | "previouslyPaidGbpAmount" | "previouslyPaidCnyAmount" | "amountDueGbpAmount" | "amountDueCnyAmount" | "paymentNotes" | "generatedByUserId" | "generatedAt" | "issuedAt" | "revisedFromStatementId" | "revisedToStatementId" | "regenerationReason" | "regenerationChangedByUserId" | "regenerationChangedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["feeStatement"]>
   export type FeeStatementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     candidate?: boolean | FeeStatement$candidateArgs<ExtArgs>
     student?: boolean | FeeStatement$studentArgs<ExtArgs>
@@ -45936,6 +45988,16 @@ export namespace Prisma {
       studentVisible: boolean
       totalGbpAmount: Prisma.Decimal
       totalCnyAmount: Prisma.Decimal
+      /**
+       * * Sum of successful online payments already received for this workspace before this statement.
+       */
+      previouslyPaidGbpAmount: Prisma.Decimal | null
+      previouslyPaidCnyAmount: Prisma.Decimal | null
+      /**
+       * * Amount still payable on this statement (full or top-up delta). Defaults to total when null (legacy).
+       */
+      amountDueGbpAmount: Prisma.Decimal | null
+      amountDueCnyAmount: Prisma.Decimal | null
       paymentNotes: string | null
       generatedByUserId: string
       generatedAt: Date
@@ -46355,6 +46417,10 @@ export namespace Prisma {
     readonly studentVisible: FieldRef<"FeeStatement", 'Boolean'>
     readonly totalGbpAmount: FieldRef<"FeeStatement", 'Decimal'>
     readonly totalCnyAmount: FieldRef<"FeeStatement", 'Decimal'>
+    readonly previouslyPaidGbpAmount: FieldRef<"FeeStatement", 'Decimal'>
+    readonly previouslyPaidCnyAmount: FieldRef<"FeeStatement", 'Decimal'>
+    readonly amountDueGbpAmount: FieldRef<"FeeStatement", 'Decimal'>
+    readonly amountDueCnyAmount: FieldRef<"FeeStatement", 'Decimal'>
     readonly paymentNotes: FieldRef<"FeeStatement", 'String'>
     readonly generatedByUserId: FieldRef<"FeeStatement", 'String'>
     readonly generatedAt: FieldRef<"FeeStatement", 'DateTime'>
@@ -62466,6 +62532,10 @@ export namespace Prisma {
     studentVisible: 'studentVisible',
     totalGbpAmount: 'totalGbpAmount',
     totalCnyAmount: 'totalCnyAmount',
+    previouslyPaidGbpAmount: 'previouslyPaidGbpAmount',
+    previouslyPaidCnyAmount: 'previouslyPaidCnyAmount',
+    amountDueGbpAmount: 'amountDueGbpAmount',
+    amountDueCnyAmount: 'amountDueCnyAmount',
     paymentNotes: 'paymentNotes',
     generatedByUserId: 'generatedByUserId',
     generatedAt: 'generatedAt',
@@ -67614,6 +67684,10 @@ export namespace Prisma {
     studentVisible?: BoolFilter<"FeeStatement"> | boolean
     totalGbpAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: StringNullableFilter<"FeeStatement"> | string | null
     generatedByUserId?: StringFilter<"FeeStatement"> | string
     generatedAt?: DateTimeFilter<"FeeStatement"> | Date | string
@@ -67667,6 +67741,10 @@ export namespace Prisma {
     studentVisible?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
+    previouslyPaidGbpAmount?: SortOrderInput | SortOrder
+    previouslyPaidCnyAmount?: SortOrderInput | SortOrder
+    amountDueGbpAmount?: SortOrderInput | SortOrder
+    amountDueCnyAmount?: SortOrderInput | SortOrder
     paymentNotes?: SortOrderInput | SortOrder
     generatedByUserId?: SortOrder
     generatedAt?: SortOrder
@@ -67724,6 +67802,10 @@ export namespace Prisma {
     studentVisible?: BoolFilter<"FeeStatement"> | boolean
     totalGbpAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: StringNullableFilter<"FeeStatement"> | string | null
     generatedByUserId?: StringFilter<"FeeStatement"> | string
     generatedAt?: DateTimeFilter<"FeeStatement"> | Date | string
@@ -67777,6 +67859,10 @@ export namespace Prisma {
     studentVisible?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
+    previouslyPaidGbpAmount?: SortOrderInput | SortOrder
+    previouslyPaidCnyAmount?: SortOrderInput | SortOrder
+    amountDueGbpAmount?: SortOrderInput | SortOrder
+    amountDueCnyAmount?: SortOrderInput | SortOrder
     paymentNotes?: SortOrderInput | SortOrder
     generatedByUserId?: SortOrder
     generatedAt?: SortOrder
@@ -67821,6 +67907,10 @@ export namespace Prisma {
     studentVisible?: BoolWithAggregatesFilter<"FeeStatement"> | boolean
     totalGbpAmount?: DecimalWithAggregatesFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalWithAggregatesFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: DecimalNullableWithAggregatesFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: DecimalNullableWithAggregatesFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: DecimalNullableWithAggregatesFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: DecimalNullableWithAggregatesFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: StringNullableWithAggregatesFilter<"FeeStatement"> | string | null
     generatedByUserId?: StringWithAggregatesFilter<"FeeStatement"> | string
     generatedAt?: DateTimeWithAggregatesFilter<"FeeStatement"> | Date | string
@@ -73526,6 +73616,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -73575,6 +73669,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -73614,6 +73712,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73663,6 +73765,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -73707,6 +73813,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -73738,6 +73848,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -73770,6 +73884,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -78742,6 +78860,10 @@ export namespace Prisma {
     studentVisible?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
+    previouslyPaidGbpAmount?: SortOrder
+    previouslyPaidCnyAmount?: SortOrder
+    amountDueGbpAmount?: SortOrder
+    amountDueCnyAmount?: SortOrder
     paymentNotes?: SortOrder
     generatedByUserId?: SortOrder
     generatedAt?: SortOrder
@@ -78759,6 +78881,10 @@ export namespace Prisma {
     exchangeRateSnapshot?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
+    previouslyPaidGbpAmount?: SortOrder
+    previouslyPaidCnyAmount?: SortOrder
+    amountDueGbpAmount?: SortOrder
+    amountDueCnyAmount?: SortOrder
   }
 
   export type FeeStatementMaxOrderByAggregateInput = {
@@ -78784,6 +78910,10 @@ export namespace Prisma {
     studentVisible?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
+    previouslyPaidGbpAmount?: SortOrder
+    previouslyPaidCnyAmount?: SortOrder
+    amountDueGbpAmount?: SortOrder
+    amountDueCnyAmount?: SortOrder
     paymentNotes?: SortOrder
     generatedByUserId?: SortOrder
     generatedAt?: SortOrder
@@ -78820,6 +78950,10 @@ export namespace Prisma {
     studentVisible?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
+    previouslyPaidGbpAmount?: SortOrder
+    previouslyPaidCnyAmount?: SortOrder
+    amountDueGbpAmount?: SortOrder
+    amountDueCnyAmount?: SortOrder
     paymentNotes?: SortOrder
     generatedByUserId?: SortOrder
     generatedAt?: SortOrder
@@ -78837,6 +78971,10 @@ export namespace Prisma {
     exchangeRateSnapshot?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
+    previouslyPaidGbpAmount?: SortOrder
+    previouslyPaidCnyAmount?: SortOrder
+    amountDueGbpAmount?: SortOrder
+    amountDueCnyAmount?: SortOrder
   }
 
   export type EnumFeeStatementBusinessTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -91717,6 +91855,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -91765,6 +91907,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -91813,6 +91959,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -91860,6 +92010,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -91909,6 +92063,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -91957,6 +92115,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -93718,6 +93880,10 @@ export namespace Prisma {
     studentVisible?: BoolFilter<"FeeStatement"> | boolean
     totalGbpAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: DecimalNullableFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: StringNullableFilter<"FeeStatement"> | string | null
     generatedByUserId?: StringFilter<"FeeStatement"> | string
     generatedAt?: DateTimeFilter<"FeeStatement"> | Date | string
@@ -96894,6 +97060,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -96941,6 +97111,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -99930,6 +100104,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -99977,6 +100155,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -102225,6 +102407,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -102272,6 +102458,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -117526,6 +117716,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -117574,6 +117768,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -117617,6 +117815,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -117665,6 +117867,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -117713,6 +117919,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -117761,6 +117971,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -117804,6 +118018,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -117852,6 +118070,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -118902,6 +119124,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -118950,6 +119176,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -119015,6 +119245,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -119063,6 +119297,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -119334,6 +119572,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -119382,6 +119624,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -119551,6 +119797,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -119599,6 +119849,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -119758,6 +120012,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -119806,6 +120064,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -119968,6 +120230,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -120016,6 +120282,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -121005,6 +121275,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -121052,6 +121326,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -122383,6 +122661,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -122431,6 +122713,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -123293,6 +123579,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -123341,6 +123631,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -123856,6 +124150,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -123904,6 +124202,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -124477,6 +124779,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -124525,6 +124831,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -125196,6 +125506,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -125244,6 +125558,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -125985,6 +126303,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -126033,6 +126355,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -126472,6 +126798,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -126520,6 +126850,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -127005,6 +127339,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -127053,6 +127391,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -129596,6 +129938,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedAt?: Date | string
     issuedAt?: Date | string | null
@@ -129630,6 +129976,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -129666,6 +130016,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -131111,6 +131465,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -131159,6 +131517,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -131202,6 +131564,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -131232,6 +131598,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -131279,6 +131649,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -131322,6 +131696,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -131353,6 +131731,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -131401,6 +131783,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -131444,6 +131830,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -132841,6 +133231,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -133432,6 +133826,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -133479,6 +133877,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -133522,6 +133924,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -134052,6 +134458,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -134679,6 +135089,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -134726,6 +135140,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -134769,6 +135187,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -135483,6 +135905,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -135798,6 +136224,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -135845,6 +136275,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -135888,6 +136322,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -141564,6 +142002,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -141599,6 +142041,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -141751,6 +142197,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -141799,6 +142249,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -141842,6 +142296,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -141872,6 +142330,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -141920,6 +142382,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -141963,6 +142429,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -142442,6 +142912,10 @@ export namespace Prisma {
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
     paymentNotes?: string | null
     generatedByUserId: string
     generatedAt?: Date | string
@@ -142725,6 +143199,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -142772,6 +143250,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -142815,6 +143297,10 @@ export namespace Prisma {
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
     generatedByUserId?: StringFieldUpdateOperationsInput | string
     generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

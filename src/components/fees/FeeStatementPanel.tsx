@@ -446,6 +446,8 @@ export function FeeStatementPanel({
                             feeStatementId={statement.id}
                             statementStatus={statement.status}
                             totalGbpAmount={statement.totalGbpAmount}
+                            amountDueGbpAmount={statement.amountDueGbpAmount}
+                            previouslyPaidGbpAmount={statement.previouslyPaidGbpAmount}
                             existingOrders={statement.paymentOrders ?? []}
                             onPaid={() => void load()}
                           />

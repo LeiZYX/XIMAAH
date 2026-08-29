@@ -26,6 +26,8 @@ export interface FeeStatementPrintData {
   status: string;
   totalGbpAmount: number | string;
   totalCnyAmount: number | string;
+  previouslyPaidGbpAmount?: number | string | null;
+  amountDueGbpAmount?: number | string | null;
   paymentNotes?: string | null;
   generatedAt: string;
   issuedAt: string | null;
@@ -235,6 +237,25 @@ function StatementDocument({
             ) : null}
             {(displayCurrency === "CNY" || displayCurrency === "BOTH") ? (
               <div><dt className="inline font-medium">Total CNY: </dt><dd className="inline">{formatMoney(totalCny, "CNY")}</dd></div>
+            ) : null}
+            {Number(statement.previouslyPaidGbpAmount ?? 0) > 0 ? (
+              <>
+                <div>
+                  <dt className="inline font-medium">Already paid (GBP): </dt>
+                  <dd className="inline">
+                    {formatMoney(Number(statement.previouslyPaidGbpAmount), "GBP")}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="inline font-medium">Amount due (GBP): </dt>
+                  <dd className="inline font-semibold">
+                    {formatMoney(
+                      Number(statement.amountDueGbpAmount ?? statement.totalGbpAmount),
+                      "GBP",
+                    )}
+                  </dd>
+                </div>
+              </>
             ) : null}
             {shouldShowExchangeRate(displayCurrency) && rate ? (
               <div><dt className="inline font-medium">Exchange rate snapshot: </dt><dd className="inline">1 GBP = {rate} CNY</dd></div>

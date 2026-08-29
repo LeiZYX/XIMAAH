@@ -27,6 +27,8 @@ interface StudentFeePaymentPanelProps {
   feeStatementId: string;
   statementStatus: string;
   totalGbpAmount: number | string;
+  amountDueGbpAmount?: number | string | null;
+  previouslyPaidGbpAmount?: number | string | null;
   existingOrders?: StudentPaymentOrder[];
   onPaid?: () => void;
 }
@@ -40,9 +42,16 @@ export function StudentFeePaymentPanel({
   feeStatementId,
   statementStatus,
   totalGbpAmount,
+  amountDueGbpAmount,
+  previouslyPaidGbpAmount,
   existingOrders = [],
   onPaid,
 }: StudentFeePaymentPanelProps) {
+  const dueGbp =
+    amountDueGbpAmount !== undefined && amountDueGbpAmount !== null
+      ? toAmount(amountDueGbpAmount)
+      : toAmount(totalGbpAmount);
+  const paidAlready = toAmount(previouslyPaidGbpAmount ?? 0);
   const [orders, setOrders] = useState<StudentPaymentOrder[]>(existingOrders);
   const [activeOrder, setActiveOrder] = useState<StudentPaymentOrder | null>(null);
   const [loadingChannel, setLoadingChannel] = useState<PaymentChannel | null>(null);
@@ -100,7 +109,9 @@ export function StudentFeePaymentPanel({
         const others = prev.filter((o) => o.id !== data.order!.id);
         return [data.order!, ...others];
       });
-      setMessage(`Scan the ${channel} QR code to pay ${formatMoney(toAmount(totalGbpAmount), "GBP")}.`);
+      setMessage(
+        `Scan the ${channel} QR code to pay ${formatMoney(dueGbp, "GBP")}${paidAlready > 0 ? " (balance)" : ""}.`,
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not create payment order");
     } finally {
@@ -150,7 +161,10 @@ export function StudentFeePaymentPanel({
       <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-3 text-sm text-emerald-900">
         <p className="font-medium">Paid</p>
         <p className="mt-1 text-emerald-800">
-          {formatMoney(toAmount(activeOrder?.amountGbp ?? totalGbpAmount), "GBP")}
+          {formatMoney(
+            toAmount(activeOrder?.amountGbp ?? (dueGbp > 0 ? dueGbp : totalGbpAmount)),
+            "GBP",
+          )}
           {activeOrder?.channel ? ` via ${activeOrder.channel}` : ""}
           {activeOrder?.paidAt
             ? ` · ${new Date(activeOrder.paidAt).toLocaleString()}`
@@ -164,13 +178,34 @@ export function StudentFeePaymentPanel({
     return null;
   }
 
+  if (dueGbp <= 0) {
+    return (
+      <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-3 text-sm text-emerald-900">
+        <p className="font-medium">No additional payment due</p>
+        <p className="mt-1 text-emerald-800">
+          Full fee total {formatMoney(toAmount(totalGbpAmount), "GBP")}
+          {paidAlready > 0 ? ` · already paid ${formatMoney(paidAlready, "GBP")}` : ""}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50/80 p-3">
       <div>
-        <p className="text-sm font-medium text-slate-900">Pay online (GBP)</p>
+        <p className="text-sm font-medium text-slate-900">
+          {paidAlready > 0 ? "Pay balance online (GBP)" : "Pay online (GBP)"}
+        </p>
         <p className="mt-0.5 text-xs text-slate-600">
-          Amount due: {formatMoney(toAmount(totalGbpAmount), "GBP")}. Choose WeChat or Alipay,
-          then scan the QR code.
+          {paidAlready > 0 ? (
+            <>
+              Full total {formatMoney(toAmount(totalGbpAmount), "GBP")} · already paid{" "}
+              {formatMoney(paidAlready, "GBP")} · <strong>due {formatMoney(dueGbp, "GBP")}</strong>
+            </>
+          ) : (
+            <>Amount due: {formatMoney(dueGbp, "GBP")}.</>
+          )}{" "}
+          Choose WeChat or Alipay, then scan the QR code.
         </p>
       </div>
 
