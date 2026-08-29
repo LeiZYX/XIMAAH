@@ -59,11 +59,38 @@ export const helpSections: HelpSection[] = [
     id: "exam-registrations",
     title: "Exam Registrations",
     paragraphs: [
-      "Exam Registrations is where authorised staff create and manage entries for exam sessions.",
-      "During an open registration period, students may register for themselves where self-registration is enabled.",
-      "Teachers and the Exams Office can assist students with registration when needed.",
+      "Exam Registrations is where students and authorised staff create and manage entries for exam sessions.",
+      "Each exam board and series uses a registration window with published open and close times. Who can act depends on those times—see Registration timeline below.",
       "After selecting a student and registration window, choose the exam sessions to enter and review the summary before saving.",
       "Open a registration record at any time to review entered sessions, print confirmation where available, or request changes according to school policy.",
+    ],
+  },
+  {
+    id: "registration-timeline",
+    title: "Registration timeline",
+    paragraphs: [
+      "Every registration window has three important times: Student registration open, Student registration close, and Registration close (staff deadline). The window itself must be set to Open for student or teacher actions during the period.",
+    ],
+    bullets: [
+      "Students: You can self-register only while the window is Open, student self-registration is enabled, and the current time is between Student registration open and Student registration close. After the student close time, the list locks for you—contact your subject teacher or the Exams Office.",
+      "Teachers: While student registration is still open, guide students to complete their own entries. After Student registration close (and before Registration close), you can submit change requests for the Exams Office to process. You cannot reopen a closed window yourself.",
+      "Exam Officers / Administrators: During the Open window (including after student close, up to Registration close), you can assist or adjust registrations for students. After the window is Closed, further subject changes use post-lock adjustment when that option is enabled for the window; a reason is required.",
+      "If two windows exist for the same board and series, only a window that is Open and within its own timing allows new student registration. A Closed window does not block a separate Open window.",
+    ],
+  },
+  {
+    id: "fees-payment",
+    title: "Fees, statements & payment",
+    paragraphs: [
+      "Fee statements are produced per registration workspace after entries are locked for billing. Students pay against an Issued statement; draft statements are for office review only.",
+    ],
+    bullets: [
+      "When statements can be issued: The Exams Office can generate and issue a fee statement only after the registration workspace is locked (entries locked for that window). Fee rules for the window must already be set up. Statements may be created as Draft first, then Issued, or generated and issued in one step.",
+      "When to pay: Students should pay after the statement status is Issued. Use Fee Statements in the student menu. Online payment (where enabled) charges in GBP via WeChat Pay or Alipay QR code. Refresh the page after paying if the status does not update immediately.",
+      "What you pay: The payable amount is the Amount due. If you have not successfully paid before, Amount due equals the full fee total. Pay only against the current Issued statement.",
+      "After you have paid, then subjects are changed: The Exams Office may adjust entries (for example post-lock) and regenerate a revised fee statement. If a previous online payment succeeded, the new statement shows amounts already paid and a balance due—you only pay the difference. If the revised total is fully covered by earlier payments, the statement may be marked Paid with no further payment.",
+      "If you had not paid before a revision: The revised Issued statement asks for the full new total (previous unpaid orders are not treated as paid). Cancelled or failed QR payments do not count toward already paid.",
+      "Questions about amounts, deadlines, or offline payment: contact the Exams Office.",
     ],
   },
   {

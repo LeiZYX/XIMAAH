@@ -9,16 +9,37 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.1.2";
+export const CURRENT_VERSION = "1.2.0";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.2.0",
+    releaseDate: "2026-08-29",
+    summary:
+      "Online fee payment (GlobePay GBP QR), balance due after revised statements, and clearer Help on registration and payment timing.",
+    changes: [
+      "Students can pay issued fee statements online in GBP via WeChat Pay or Alipay QR (GlobePay)",
+      "Exam Officers can view payment status, cancel unpaid orders, and filter unpaid/paid statements",
+      "Revised fee statements after a successful payment charge only the balance due; unpaid revisions still charge the full total; zero balance marks Paid automatically",
+      "Fee statement and print views show already paid and amount due when a top-up applies",
+      "Help page: registration timeline (student / teacher / Exams Office) and fees, statements & payment guidance",
+    ],
+    bugFixes: [
+      "Fixed fee-statements include typing that blocked the production Docker build",
+      "Simplified student payment UI labels (Refresh; no CNY reference on online pay)",
+    ],
+    knownIssues: [
+      "Run Prisma migration 20260829113000_fee_statement_amount_due after pulling this release (if not already applied).",
+      "GlobePay credentials (GLOBEPAY_*) must be set in the production .env; notify URL must be reachable over HTTPS.",
+    ],
+  },
   {
     version: "1.1.2",
     releaseDate: "2026-07-04",
     summary: "Release notes type fix for production build.",
     changes: [],
     bugFixes: [
-      "Fixed ReleaseNote TypeScript error blocking production Docker build",
+      "Fixed ReleaseNote TypeScript error blocking production build",
     ],
   },
   {
