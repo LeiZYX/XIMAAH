@@ -88,19 +88,11 @@ function FeeStatementCard({
             {statement.registrationWindow.examSeries.year})
           </dd>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <dt className="text-slate-500">Total GBP (pay this)</dt>
-            <dd className="font-medium text-slate-900">
-              {formatMoney(Number(statement.totalGbpAmount), "GBP")}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-slate-500">Total CNY (reference)</dt>
-            <dd className="font-medium text-slate-900">
-              {formatMoney(Number(statement.totalCnyAmount), "CNY")}
-            </dd>
-          </div>
+        <div>
+          <dt className="text-slate-500">Total GBP</dt>
+          <dd className="font-medium text-slate-900">
+            {formatMoney(Number(statement.totalGbpAmount), "GBP")}
+          </dd>
         </div>
         <div>
           <dt className="text-slate-500">Issued</dt>
