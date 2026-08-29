@@ -1,5 +1,6 @@
 import type { FeeAuditAction } from "@/generated/prisma/enums";
 import { createFeeAuditLog } from "@/lib/fees/audit";
+import { closeOpenPaymentOrdersForStatements } from "@/lib/payments/globepay/orders";
 import { prisma } from "@/lib/prisma";
 
 export type FeeStatementChangeReasonCode =
@@ -114,6 +115,8 @@ export async function markFeeStatementsNeedsRegeneration(params: {
       regenerationChangedAt: now,
     },
   });
+
+  await closeOpenPaymentOrdersForStatements(candidates.map((row) => row.id));
 
   const workspace = await prisma.registrationWorkspace.findUnique({
     where: { id: params.workspaceId },

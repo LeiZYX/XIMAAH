@@ -8,6 +8,7 @@ import {
   FeeStatementPrintModal,
   type FeeStatementPrintData,
 } from "@/components/fees/FeeStatementPrintModal";
+import { StatementPaymentOrdersPanel } from "@/components/fees/StatementPaymentOrdersPanel";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
@@ -50,6 +51,7 @@ export function FeeStatementsBatchPanel({
   const [totalPages, setTotalPages] = useState(0);
   const [batchPrintOpen, setBatchPrintOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [paymentFilter, setPaymentFilter] = useState<"all" | "unpaid" | "paid">("all");
   const [previewStatement, setPreviewStatement] = useState<{
     statement: FeeStatementPrintData;
     autoPrint: boolean;
@@ -58,7 +60,7 @@ export function FeeStatementsBatchPanel({
   useEffect(() => {
     setPage(1);
     setSelectedIds([]);
-  }, [registrationWindowId]);
+  }, [registrationWindowId, paymentFilter]);
 
   const load = useCallback(async () => {
     if (!registrationWindowId) {
@@ -75,6 +77,9 @@ export function FeeStatementsBatchPanel({
         pageSize: String(pageSize),
         statementKind: "NORMAL",
       });
+      if (paymentFilter !== "all") {
+        params.set("paymentStatus", paymentFilter);
+      }
       const response = await fetch(`/api/fee-statements?${params.toString()}`);
       const data = await readJsonResponse<PaginatedStatements>(response);
       if (response.ok && data.statements) {
@@ -94,7 +99,7 @@ export function FeeStatementsBatchPanel({
     } finally {
       setListLoading(false);
     }
-  }, [registrationWindowId, page, pageSize]);
+  }, [registrationWindowId, page, pageSize, paymentFilter]);
 
   useEffect(() => {
     void load();
@@ -184,6 +189,16 @@ export function FeeStatementsBatchPanel({
             <option value="CNY">Display CNY</option>
             <option value="BOTH">Display GBP + CNY</option>
           </select>
+          <select
+            value={paymentFilter}
+            onChange={(e) => setPaymentFilter(e.target.value as "all" | "unpaid" | "paid")}
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            aria-label="Filter by payment status"
+          >
+            <option value="all">All payment statuses</option>
+            <option value="unpaid">Unpaid (Issued)</option>
+            <option value="paid">Paid</option>
+          </select>
           <button
             type="button"
             disabled={loading || !registrationWindowId}
@@ -221,13 +236,16 @@ export function FeeStatementsBatchPanel({
           <p className="text-sm text-slate-500">Loading...</p>
         ) : statements.length === 0 ? (
           <p className="text-sm text-slate-500">
-            No active fee statements for this window. If a previous statement was superseded after a
-            registration change, use batch generate to create a new one.
+            {paymentFilter === "unpaid"
+              ? "No unpaid (issued) fee statements for this window."
+              : paymentFilter === "paid"
+                ? "No paid fee statements for this window."
+                : "No active fee statements for this window. If a previous statement was superseded after a registration change, use batch generate to create a new one."}
           </p>
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[640px] text-left text-sm">
+              <table className="w-full min-w-[860px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 text-slate-600">
                     <th className="py-2 pr-3 font-medium">
@@ -236,6 +254,7 @@ export function FeeStatementsBatchPanel({
                     <th className="py-2 pr-4 font-medium">Statement</th>
                     <th className="py-2 pr-4 font-medium">Candidate</th>
                     <th className="py-2 pr-4 font-medium">Status</th>
+                    <th className="py-2 pr-4 font-medium">Online payment</th>
                     <th className="py-2 font-medium text-right">Actions</th>
                   </tr>
                 </thead>
@@ -263,6 +282,13 @@ export function FeeStatementsBatchPanel({
                         >
                           {feeStatementStatusLabel(statement.status)}
                         </span>
+                      </td>
+                      <td className="py-2 pr-4 align-top">
+                        <StatementPaymentOrdersPanel
+                          orders={statement.paymentOrders ?? []}
+                          compact
+                          onChanged={() => void load()}
+                        />
                       </td>
                       <td className="py-2">
                         <div className="flex items-center justify-end gap-2">

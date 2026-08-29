@@ -205,6 +205,20 @@ enum FeeStatementKind {
   EXTERNAL
 }
 
+enum PaymentChannel {
+  Wechat
+  Alipay
+}
+
+enum PaymentOrderStatus {
+  CREATED
+  PAYING
+  PAID
+  CLOSED
+  CANCELLED
+  FAILED
+}
+
 enum ExamDocumentType {
   STATEMENT_OF_ENTRY
   CANDIDATE_TIMETABLE
@@ -467,6 +481,7 @@ model User {
   backupJobsTriggered              BackupJob[]                 @relation("BackupJobTriggeredBy")
   candidateExamIdentitiesCreated   CandidateExamIdentity[]     @relation("CandidateExamIdentityCreatedBy")
   candidateExamIdentitiesUpdated   CandidateExamIdentity[]     @relation("CandidateExamIdentityUpdatedBy")
+  paymentOrdersCancelled           PaymentOrder[]              @relation("PaymentOrderCancelledBy")
 
   @@index([role])
   @@index([isActive])
@@ -1425,6 +1440,7 @@ model FeeStatement {
   updatedAt                            DateTime                    @updatedAt
 
   items                  FeeStatementItem[]
+  paymentOrders          PaymentOrder[]
   reviewRequests         ReviewRequest[]
   cashInRequests         CashInRequest[]
   accessToScriptRequests AccessToScriptRequest[]
@@ -1442,6 +1458,37 @@ model FeeStatement {
   @@index([revisedFromStatementId])
   @@index([revisedToStatementId])
   @@index([regenerationChangedByUserId])
+}
+
+model PaymentOrder {
+  id                String             @id @default(cuid())
+  feeStatementId    String
+  feeStatement      FeeStatement       @relation(fields: [feeStatementId], references: [id], onDelete: Cascade)
+  partnerOrderId    String             @unique
+  channel           PaymentChannel
+  currency          String             @default("GBP")
+  amountMinor       Int
+  amountGbp         Decimal            @db.Decimal(12, 2)
+  status            PaymentOrderStatus @default(CREATED)
+  description       String
+  codeUrl           String?            @db.Text
+  qrcodeImg         String?            @db.LongText
+  payUrl            String?            @db.Text
+  globepayOrderId   String?
+  paidAt            DateTime?
+  notifyPayload     Json?
+  cancelledAt       DateTime?
+  cancelledByUserId String?
+  cancelledBy       User?              @relation("PaymentOrderCancelledBy", fields: [cancelledByUserId], references: [id], onDelete: SetNull)
+  cancelNote        String?            @db.Text
+  version           Int                @default(1)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@unique([feeStatementId, channel, version])
+  @@index([feeStatementId])
+  @@index([status])
+  @@index([cancelledByUserId])
 }
 
 model FeeStatementItem {

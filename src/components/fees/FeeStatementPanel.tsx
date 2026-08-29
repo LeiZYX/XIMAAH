@@ -7,6 +7,8 @@ import {
   FeeStatementPrintModal,
   type FeeStatementPrintData,
 } from "@/components/fees/FeeStatementPrintModal";
+import { StatementPaymentOrdersPanel } from "@/components/fees/StatementPaymentOrdersPanel";
+import { StudentFeePaymentPanel } from "@/components/fees/StudentFeePaymentPanel";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import { SalesAmountDisplay } from "@/components/fees/SalesAmountDisplay";
 import {
@@ -435,6 +437,25 @@ export function FeeStatementPanel({
                         </button>
                       )}
                     </div>
+                    {(statement.status === "ISSUED" ||
+                      statement.status === "PAID" ||
+                      (statement.paymentOrders?.length ?? 0) > 0) ? (
+                      <div className="w-full basis-full space-y-3 pl-6">
+                        {statement.status === "ISSUED" ? (
+                          <StudentFeePaymentPanel
+                            feeStatementId={statement.id}
+                            statementStatus={statement.status}
+                            totalGbpAmount={statement.totalGbpAmount}
+                            existingOrders={statement.paymentOrders ?? []}
+                            onPaid={() => void load()}
+                          />
+                        ) : null}
+                        <StatementPaymentOrdersPanel
+                          orders={statement.paymentOrders ?? []}
+                          onChanged={() => void load()}
+                        />
+                      </div>
+                    ) : null}
                   </li>
                 ))}
             </ul>

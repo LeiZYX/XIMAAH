@@ -132,6 +132,10 @@ export async function GET(request: NextRequest) {
     revisedFromStatement: { select: { id: true, statementNo: true, status: true } },
     revisedToStatement: { select: { id: true, statementNo: true, status: true } },
     candidate: { select: { studentId: true } },
+    paymentOrders: {
+      include: { cancelledBy: { select: { id: true, name: true } } },
+      orderBy: [{ version: "desc" as const }, { createdAt: "desc" as const }],
+    },
     registrationWindow: {
       include: {
         examBoard: { select: { name: true, code: true } },
@@ -151,6 +155,7 @@ export async function GET(request: NextRequest) {
         : undefined;
 
   const includeSuperseded = params.get("includeSuperseded") === "true";
+  const paymentStatus = params.get("paymentStatus"); // unpaid | paid | all
 
   const where: Prisma.FeeStatementWhereInput = {
     ...(registrationWindowId ? { registrationWindowId } : {}),
@@ -158,6 +163,12 @@ export async function GET(request: NextRequest) {
     ...(statementKind ? { statementKind } : {}),
     ...(!includeSuperseded ? { status: { notIn: ["REVISED", "CANCELLED"] } } : {}),
   };
+
+  if (paymentStatus === "paid") {
+    where.status = "PAID";
+  } else if (paymentStatus === "unpaid") {
+    where.status = "ISSUED";
+  }
 
   if (workspaceId) {
     await repairDuplicateIssuedFeeStatements(workspaceId);

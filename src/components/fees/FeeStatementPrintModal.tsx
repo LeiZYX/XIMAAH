@@ -29,6 +29,20 @@ export interface FeeStatementPrintData {
   paymentNotes?: string | null;
   generatedAt: string;
   issuedAt: string | null;
+  paymentOrders?: Array<{
+    id: string;
+    partnerOrderId: string;
+    channel: string;
+    currency: string;
+    amountGbp: string | number;
+    status: string;
+    paidAt?: string | null;
+    cancelledAt?: string | null;
+    cancelledBy?: { id: string; name: string } | null;
+    cancelNote?: string | null;
+    version: number;
+    createdAt: string;
+  }>;
   registrationWindow: {
     title: string;
     examBoard: { name: string; code: string };

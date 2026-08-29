@@ -65,6 +65,21 @@ export async function GET() {
     },
     include: {
       items: true,
+      paymentOrders: {
+        orderBy: [{ version: "desc" }, { createdAt: "desc" }],
+        select: {
+          id: true,
+          partnerOrderId: true,
+          channel: true,
+          amountGbp: true,
+          status: true,
+          qrcodeImg: true,
+          codeUrl: true,
+          payUrl: true,
+          paidAt: true,
+          version: true,
+        },
+      },
       registrationWindow: {
         include: {
           examBoard: { select: { name: true, code: true } },

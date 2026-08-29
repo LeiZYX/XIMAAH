@@ -180,6 +180,11 @@ export type ExchangeRate = $Result.DefaultSelection<Prisma.$ExchangeRatePayload>
  */
 export type FeeStatement = $Result.DefaultSelection<Prisma.$FeeStatementPayload>
 /**
+ * Model PaymentOrder
+ * 
+ */
+export type PaymentOrder = $Result.DefaultSelection<Prisma.$PaymentOrderPayload>
+/**
  * Model FeeStatementItem
  * 
  */
@@ -499,6 +504,26 @@ export const FeeStatementKind: {
 };
 
 export type FeeStatementKind = (typeof FeeStatementKind)[keyof typeof FeeStatementKind]
+
+
+export const PaymentChannel: {
+  Wechat: 'Wechat',
+  Alipay: 'Alipay'
+};
+
+export type PaymentChannel = (typeof PaymentChannel)[keyof typeof PaymentChannel]
+
+
+export const PaymentOrderStatus: {
+  CREATED: 'CREATED',
+  PAYING: 'PAYING',
+  PAID: 'PAID',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED',
+  FAILED: 'FAILED'
+};
+
+export type PaymentOrderStatus = (typeof PaymentOrderStatus)[keyof typeof PaymentOrderStatus]
 
 
 export const ExamDocumentType: {
@@ -884,6 +909,14 @@ export const FeeStatementStatus: typeof $Enums.FeeStatementStatus
 export type FeeStatementKind = $Enums.FeeStatementKind
 
 export const FeeStatementKind: typeof $Enums.FeeStatementKind
+
+export type PaymentChannel = $Enums.PaymentChannel
+
+export const PaymentChannel: typeof $Enums.PaymentChannel
+
+export type PaymentOrderStatus = $Enums.PaymentOrderStatus
+
+export const PaymentOrderStatus: typeof $Enums.PaymentOrderStatus
 
 export type ExamDocumentType = $Enums.ExamDocumentType
 
@@ -1428,6 +1461,16 @@ export class PrismaClient<
     * ```
     */
   get feeStatement(): Prisma.FeeStatementDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.paymentOrder`: Exposes CRUD operations for the **PaymentOrder** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PaymentOrders
+    * const paymentOrders = await prisma.paymentOrder.findMany()
+    * ```
+    */
+  get paymentOrder(): Prisma.PaymentOrderDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.feeStatementItem`: Exposes CRUD operations for the **FeeStatementItem** model.
@@ -2022,6 +2065,7 @@ export namespace Prisma {
     FeeRule: 'FeeRule',
     ExchangeRate: 'ExchangeRate',
     FeeStatement: 'FeeStatement',
+    PaymentOrder: 'PaymentOrder',
     FeeStatementItem: 'FeeStatementItem',
     FeeAuditLog: 'FeeAuditLog',
     ReviewWindow: 'ReviewWindow',
@@ -2052,7 +2096,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "feeStatementItem" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
+      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4234,6 +4278,72 @@ export namespace Prisma {
           }
         }
       }
+      PaymentOrder: {
+        payload: Prisma.$PaymentOrderPayload<ExtArgs>
+        fields: Prisma.PaymentOrderFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PaymentOrderFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentOrderPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PaymentOrderFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentOrderPayload>
+          }
+          findFirst: {
+            args: Prisma.PaymentOrderFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentOrderPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PaymentOrderFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentOrderPayload>
+          }
+          findMany: {
+            args: Prisma.PaymentOrderFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentOrderPayload>[]
+          }
+          create: {
+            args: Prisma.PaymentOrderCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentOrderPayload>
+          }
+          createMany: {
+            args: Prisma.PaymentOrderCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.PaymentOrderDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentOrderPayload>
+          }
+          update: {
+            args: Prisma.PaymentOrderUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentOrderPayload>
+          }
+          deleteMany: {
+            args: Prisma.PaymentOrderDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PaymentOrderUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PaymentOrderUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentOrderPayload>
+          }
+          aggregate: {
+            args: Prisma.PaymentOrderAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePaymentOrder>
+          }
+          groupBy: {
+            args: Prisma.PaymentOrderGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PaymentOrderGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PaymentOrderCountArgs<ExtArgs>
+            result: $Utils.Optional<PaymentOrderCountAggregateOutputType> | number
+          }
+        }
+      }
       FeeStatementItem: {
         payload: Prisma.$FeeStatementItemPayload<ExtArgs>
         fields: Prisma.FeeStatementItemFieldRefs
@@ -5155,6 +5265,7 @@ export namespace Prisma {
     feeRule?: FeeRuleOmit
     exchangeRate?: ExchangeRateOmit
     feeStatement?: FeeStatementOmit
+    paymentOrder?: PaymentOrderOmit
     feeStatementItem?: FeeStatementItemOmit
     feeAuditLog?: FeeAuditLogOmit
     reviewWindow?: ReviewWindowOmit
@@ -5284,6 +5395,7 @@ export namespace Prisma {
     backupJobsTriggered: number
     candidateExamIdentitiesCreated: number
     candidateExamIdentitiesUpdated: number
+    paymentOrdersCancelled: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5324,6 +5436,7 @@ export namespace Prisma {
     backupJobsTriggered?: boolean | UserCountOutputTypeCountBackupJobsTriggeredArgs
     candidateExamIdentitiesCreated?: boolean | UserCountOutputTypeCountCandidateExamIdentitiesCreatedArgs
     candidateExamIdentitiesUpdated?: boolean | UserCountOutputTypeCountCandidateExamIdentitiesUpdatedArgs
+    paymentOrdersCancelled?: boolean | UserCountOutputTypeCountPaymentOrdersCancelledArgs
   }
 
   // Custom InputTypes
@@ -5594,6 +5707,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountCandidateExamIdentitiesUpdatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CandidateExamIdentityWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPaymentOrdersCancelledArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentOrderWhereInput
   }
 
 
@@ -6827,6 +6947,7 @@ export namespace Prisma {
     successorStatements: number
     predecessorStatements: number
     items: number
+    paymentOrders: number
     reviewRequests: number
     cashInRequests: number
     accessToScriptRequests: number
@@ -6837,6 +6958,7 @@ export namespace Prisma {
     successorStatements?: boolean | FeeStatementCountOutputTypeCountSuccessorStatementsArgs
     predecessorStatements?: boolean | FeeStatementCountOutputTypeCountPredecessorStatementsArgs
     items?: boolean | FeeStatementCountOutputTypeCountItemsArgs
+    paymentOrders?: boolean | FeeStatementCountOutputTypeCountPaymentOrdersArgs
     reviewRequests?: boolean | FeeStatementCountOutputTypeCountReviewRequestsArgs
     cashInRequests?: boolean | FeeStatementCountOutputTypeCountCashInRequestsArgs
     accessToScriptRequests?: boolean | FeeStatementCountOutputTypeCountAccessToScriptRequestsArgs
@@ -6873,6 +6995,13 @@ export namespace Prisma {
    */
   export type FeeStatementCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FeeStatementItemWhereInput
+  }
+
+  /**
+   * FeeStatementCountOutputType without action
+   */
+  export type FeeStatementCountOutputTypeCountPaymentOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentOrderWhereInput
   }
 
   /**
@@ -7284,6 +7413,7 @@ export namespace Prisma {
     backupJobsTriggered?: boolean | User$backupJobsTriggeredArgs<ExtArgs>
     candidateExamIdentitiesCreated?: boolean | User$candidateExamIdentitiesCreatedArgs<ExtArgs>
     candidateExamIdentitiesUpdated?: boolean | User$candidateExamIdentitiesUpdatedArgs<ExtArgs>
+    paymentOrdersCancelled?: boolean | User$paymentOrdersCancelledArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -7346,6 +7476,7 @@ export namespace Prisma {
     backupJobsTriggered?: boolean | User$backupJobsTriggeredArgs<ExtArgs>
     candidateExamIdentitiesCreated?: boolean | User$candidateExamIdentitiesCreatedArgs<ExtArgs>
     candidateExamIdentitiesUpdated?: boolean | User$candidateExamIdentitiesUpdatedArgs<ExtArgs>
+    paymentOrdersCancelled?: boolean | User$paymentOrdersCancelledArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -7392,6 +7523,7 @@ export namespace Prisma {
       backupJobsTriggered: Prisma.$BackupJobPayload<ExtArgs>[]
       candidateExamIdentitiesCreated: Prisma.$CandidateExamIdentityPayload<ExtArgs>[]
       candidateExamIdentitiesUpdated: Prisma.$CandidateExamIdentityPayload<ExtArgs>[]
+      paymentOrdersCancelled: Prisma.$PaymentOrderPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7786,6 +7918,7 @@ export namespace Prisma {
     backupJobsTriggered<T extends User$backupJobsTriggeredArgs<ExtArgs> = {}>(args?: Subset<T, User$backupJobsTriggeredArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BackupJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     candidateExamIdentitiesCreated<T extends User$candidateExamIdentitiesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$candidateExamIdentitiesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateExamIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     candidateExamIdentitiesUpdated<T extends User$candidateExamIdentitiesUpdatedArgs<ExtArgs> = {}>(args?: Subset<T, User$candidateExamIdentitiesUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateExamIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    paymentOrdersCancelled<T extends User$paymentOrdersCancelledArgs<ExtArgs> = {}>(args?: Subset<T, User$paymentOrdersCancelledArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9112,6 +9245,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CandidateExamIdentityScalarFieldEnum | CandidateExamIdentityScalarFieldEnum[]
+  }
+
+  /**
+   * User.paymentOrdersCancelled
+   */
+  export type User$paymentOrdersCancelledArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    where?: PaymentOrderWhereInput
+    orderBy?: PaymentOrderOrderByWithRelationInput | PaymentOrderOrderByWithRelationInput[]
+    cursor?: PaymentOrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PaymentOrderScalarFieldEnum | PaymentOrderScalarFieldEnum[]
   }
 
   /**
@@ -45667,6 +45824,7 @@ export namespace Prisma {
     predecessorStatements?: boolean | FeeStatement$predecessorStatementsArgs<ExtArgs>
     regenerationChangedBy?: boolean | FeeStatement$regenerationChangedByArgs<ExtArgs>
     items?: boolean | FeeStatement$itemsArgs<ExtArgs>
+    paymentOrders?: boolean | FeeStatement$paymentOrdersArgs<ExtArgs>
     reviewRequests?: boolean | FeeStatement$reviewRequestsArgs<ExtArgs>
     cashInRequests?: boolean | FeeStatement$cashInRequestsArgs<ExtArgs>
     accessToScriptRequests?: boolean | FeeStatement$accessToScriptRequestsArgs<ExtArgs>
@@ -45726,6 +45884,7 @@ export namespace Prisma {
     predecessorStatements?: boolean | FeeStatement$predecessorStatementsArgs<ExtArgs>
     regenerationChangedBy?: boolean | FeeStatement$regenerationChangedByArgs<ExtArgs>
     items?: boolean | FeeStatement$itemsArgs<ExtArgs>
+    paymentOrders?: boolean | FeeStatement$paymentOrdersArgs<ExtArgs>
     reviewRequests?: boolean | FeeStatement$reviewRequestsArgs<ExtArgs>
     cashInRequests?: boolean | FeeStatement$cashInRequestsArgs<ExtArgs>
     accessToScriptRequests?: boolean | FeeStatement$accessToScriptRequestsArgs<ExtArgs>
@@ -45748,6 +45907,7 @@ export namespace Prisma {
       predecessorStatements: Prisma.$FeeStatementPayload<ExtArgs>[]
       regenerationChangedBy: Prisma.$UserPayload<ExtArgs> | null
       items: Prisma.$FeeStatementItemPayload<ExtArgs>[]
+      paymentOrders: Prisma.$PaymentOrderPayload<ExtArgs>[]
       reviewRequests: Prisma.$ReviewRequestPayload<ExtArgs>[]
       cashInRequests: Prisma.$CashInRequestPayload<ExtArgs>[]
       accessToScriptRequests: Prisma.$AccessToScriptRequestPayload<ExtArgs>[]
@@ -46139,6 +46299,7 @@ export namespace Prisma {
     predecessorStatements<T extends FeeStatement$predecessorStatementsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$predecessorStatementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     regenerationChangedBy<T extends FeeStatement$regenerationChangedByArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$regenerationChangedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends FeeStatement$itemsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    paymentOrders<T extends FeeStatement$paymentOrdersArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$paymentOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewRequests<T extends FeeStatement$reviewRequestsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$reviewRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cashInRequests<T extends FeeStatement$cashInRequestsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$cashInRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessToScriptRequests<T extends FeeStatement$accessToScriptRequestsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$accessToScriptRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessToScriptRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -46772,6 +46933,30 @@ export namespace Prisma {
   }
 
   /**
+   * FeeStatement.paymentOrders
+   */
+  export type FeeStatement$paymentOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    where?: PaymentOrderWhereInput
+    orderBy?: PaymentOrderOrderByWithRelationInput | PaymentOrderOrderByWithRelationInput[]
+    cursor?: PaymentOrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PaymentOrderScalarFieldEnum | PaymentOrderScalarFieldEnum[]
+  }
+
+  /**
    * FeeStatement.reviewRequests
    */
   export type FeeStatement$reviewRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -46883,6 +47068,1172 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: FeeStatementInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PaymentOrder
+   */
+
+  export type AggregatePaymentOrder = {
+    _count: PaymentOrderCountAggregateOutputType | null
+    _avg: PaymentOrderAvgAggregateOutputType | null
+    _sum: PaymentOrderSumAggregateOutputType | null
+    _min: PaymentOrderMinAggregateOutputType | null
+    _max: PaymentOrderMaxAggregateOutputType | null
+  }
+
+  export type PaymentOrderAvgAggregateOutputType = {
+    amountMinor: number | null
+    amountGbp: Decimal | null
+    version: number | null
+  }
+
+  export type PaymentOrderSumAggregateOutputType = {
+    amountMinor: number | null
+    amountGbp: Decimal | null
+    version: number | null
+  }
+
+  export type PaymentOrderMinAggregateOutputType = {
+    id: string | null
+    feeStatementId: string | null
+    partnerOrderId: string | null
+    channel: $Enums.PaymentChannel | null
+    currency: string | null
+    amountMinor: number | null
+    amountGbp: Decimal | null
+    status: $Enums.PaymentOrderStatus | null
+    description: string | null
+    codeUrl: string | null
+    qrcodeImg: string | null
+    payUrl: string | null
+    globepayOrderId: string | null
+    paidAt: Date | null
+    cancelledAt: Date | null
+    cancelledByUserId: string | null
+    cancelNote: string | null
+    version: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PaymentOrderMaxAggregateOutputType = {
+    id: string | null
+    feeStatementId: string | null
+    partnerOrderId: string | null
+    channel: $Enums.PaymentChannel | null
+    currency: string | null
+    amountMinor: number | null
+    amountGbp: Decimal | null
+    status: $Enums.PaymentOrderStatus | null
+    description: string | null
+    codeUrl: string | null
+    qrcodeImg: string | null
+    payUrl: string | null
+    globepayOrderId: string | null
+    paidAt: Date | null
+    cancelledAt: Date | null
+    cancelledByUserId: string | null
+    cancelNote: string | null
+    version: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PaymentOrderCountAggregateOutputType = {
+    id: number
+    feeStatementId: number
+    partnerOrderId: number
+    channel: number
+    currency: number
+    amountMinor: number
+    amountGbp: number
+    status: number
+    description: number
+    codeUrl: number
+    qrcodeImg: number
+    payUrl: number
+    globepayOrderId: number
+    paidAt: number
+    notifyPayload: number
+    cancelledAt: number
+    cancelledByUserId: number
+    cancelNote: number
+    version: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PaymentOrderAvgAggregateInputType = {
+    amountMinor?: true
+    amountGbp?: true
+    version?: true
+  }
+
+  export type PaymentOrderSumAggregateInputType = {
+    amountMinor?: true
+    amountGbp?: true
+    version?: true
+  }
+
+  export type PaymentOrderMinAggregateInputType = {
+    id?: true
+    feeStatementId?: true
+    partnerOrderId?: true
+    channel?: true
+    currency?: true
+    amountMinor?: true
+    amountGbp?: true
+    status?: true
+    description?: true
+    codeUrl?: true
+    qrcodeImg?: true
+    payUrl?: true
+    globepayOrderId?: true
+    paidAt?: true
+    cancelledAt?: true
+    cancelledByUserId?: true
+    cancelNote?: true
+    version?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PaymentOrderMaxAggregateInputType = {
+    id?: true
+    feeStatementId?: true
+    partnerOrderId?: true
+    channel?: true
+    currency?: true
+    amountMinor?: true
+    amountGbp?: true
+    status?: true
+    description?: true
+    codeUrl?: true
+    qrcodeImg?: true
+    payUrl?: true
+    globepayOrderId?: true
+    paidAt?: true
+    cancelledAt?: true
+    cancelledByUserId?: true
+    cancelNote?: true
+    version?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PaymentOrderCountAggregateInputType = {
+    id?: true
+    feeStatementId?: true
+    partnerOrderId?: true
+    channel?: true
+    currency?: true
+    amountMinor?: true
+    amountGbp?: true
+    status?: true
+    description?: true
+    codeUrl?: true
+    qrcodeImg?: true
+    payUrl?: true
+    globepayOrderId?: true
+    paidAt?: true
+    notifyPayload?: true
+    cancelledAt?: true
+    cancelledByUserId?: true
+    cancelNote?: true
+    version?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PaymentOrderAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PaymentOrder to aggregate.
+     */
+    where?: PaymentOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentOrders to fetch.
+     */
+    orderBy?: PaymentOrderOrderByWithRelationInput | PaymentOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PaymentOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PaymentOrders
+    **/
+    _count?: true | PaymentOrderCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PaymentOrderAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PaymentOrderSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PaymentOrderMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PaymentOrderMaxAggregateInputType
+  }
+
+  export type GetPaymentOrderAggregateType<T extends PaymentOrderAggregateArgs> = {
+        [P in keyof T & keyof AggregatePaymentOrder]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePaymentOrder[P]>
+      : GetScalarType<T[P], AggregatePaymentOrder[P]>
+  }
+
+
+
+
+  export type PaymentOrderGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentOrderWhereInput
+    orderBy?: PaymentOrderOrderByWithAggregationInput | PaymentOrderOrderByWithAggregationInput[]
+    by: PaymentOrderScalarFieldEnum[] | PaymentOrderScalarFieldEnum
+    having?: PaymentOrderScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PaymentOrderCountAggregateInputType | true
+    _avg?: PaymentOrderAvgAggregateInputType
+    _sum?: PaymentOrderSumAggregateInputType
+    _min?: PaymentOrderMinAggregateInputType
+    _max?: PaymentOrderMaxAggregateInputType
+  }
+
+  export type PaymentOrderGroupByOutputType = {
+    id: string
+    feeStatementId: string
+    partnerOrderId: string
+    channel: $Enums.PaymentChannel
+    currency: string
+    amountMinor: number
+    amountGbp: Decimal
+    status: $Enums.PaymentOrderStatus
+    description: string
+    codeUrl: string | null
+    qrcodeImg: string | null
+    payUrl: string | null
+    globepayOrderId: string | null
+    paidAt: Date | null
+    notifyPayload: JsonValue | null
+    cancelledAt: Date | null
+    cancelledByUserId: string | null
+    cancelNote: string | null
+    version: number
+    createdAt: Date
+    updatedAt: Date
+    _count: PaymentOrderCountAggregateOutputType | null
+    _avg: PaymentOrderAvgAggregateOutputType | null
+    _sum: PaymentOrderSumAggregateOutputType | null
+    _min: PaymentOrderMinAggregateOutputType | null
+    _max: PaymentOrderMaxAggregateOutputType | null
+  }
+
+  type GetPaymentOrderGroupByPayload<T extends PaymentOrderGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PaymentOrderGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PaymentOrderGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PaymentOrderGroupByOutputType[P]>
+            : GetScalarType<T[P], PaymentOrderGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PaymentOrderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    feeStatementId?: boolean
+    partnerOrderId?: boolean
+    channel?: boolean
+    currency?: boolean
+    amountMinor?: boolean
+    amountGbp?: boolean
+    status?: boolean
+    description?: boolean
+    codeUrl?: boolean
+    qrcodeImg?: boolean
+    payUrl?: boolean
+    globepayOrderId?: boolean
+    paidAt?: boolean
+    notifyPayload?: boolean
+    cancelledAt?: boolean
+    cancelledByUserId?: boolean
+    cancelNote?: boolean
+    version?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    feeStatement?: boolean | FeeStatementDefaultArgs<ExtArgs>
+    cancelledBy?: boolean | PaymentOrder$cancelledByArgs<ExtArgs>
+  }, ExtArgs["result"]["paymentOrder"]>
+
+
+
+  export type PaymentOrderSelectScalar = {
+    id?: boolean
+    feeStatementId?: boolean
+    partnerOrderId?: boolean
+    channel?: boolean
+    currency?: boolean
+    amountMinor?: boolean
+    amountGbp?: boolean
+    status?: boolean
+    description?: boolean
+    codeUrl?: boolean
+    qrcodeImg?: boolean
+    payUrl?: boolean
+    globepayOrderId?: boolean
+    paidAt?: boolean
+    notifyPayload?: boolean
+    cancelledAt?: boolean
+    cancelledByUserId?: boolean
+    cancelNote?: boolean
+    version?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PaymentOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "feeStatementId" | "partnerOrderId" | "channel" | "currency" | "amountMinor" | "amountGbp" | "status" | "description" | "codeUrl" | "qrcodeImg" | "payUrl" | "globepayOrderId" | "paidAt" | "notifyPayload" | "cancelledAt" | "cancelledByUserId" | "cancelNote" | "version" | "createdAt" | "updatedAt", ExtArgs["result"]["paymentOrder"]>
+  export type PaymentOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    feeStatement?: boolean | FeeStatementDefaultArgs<ExtArgs>
+    cancelledBy?: boolean | PaymentOrder$cancelledByArgs<ExtArgs>
+  }
+
+  export type $PaymentOrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PaymentOrder"
+    objects: {
+      feeStatement: Prisma.$FeeStatementPayload<ExtArgs>
+      cancelledBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      feeStatementId: string
+      partnerOrderId: string
+      channel: $Enums.PaymentChannel
+      currency: string
+      amountMinor: number
+      amountGbp: Prisma.Decimal
+      status: $Enums.PaymentOrderStatus
+      description: string
+      codeUrl: string | null
+      qrcodeImg: string | null
+      payUrl: string | null
+      globepayOrderId: string | null
+      paidAt: Date | null
+      notifyPayload: Prisma.JsonValue | null
+      cancelledAt: Date | null
+      cancelledByUserId: string | null
+      cancelNote: string | null
+      version: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["paymentOrder"]>
+    composites: {}
+  }
+
+  type PaymentOrderGetPayload<S extends boolean | null | undefined | PaymentOrderDefaultArgs> = $Result.GetResult<Prisma.$PaymentOrderPayload, S>
+
+  type PaymentOrderCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PaymentOrderFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PaymentOrderCountAggregateInputType | true
+    }
+
+  export interface PaymentOrderDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PaymentOrder'], meta: { name: 'PaymentOrder' } }
+    /**
+     * Find zero or one PaymentOrder that matches the filter.
+     * @param {PaymentOrderFindUniqueArgs} args - Arguments to find a PaymentOrder
+     * @example
+     * // Get one PaymentOrder
+     * const paymentOrder = await prisma.paymentOrder.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PaymentOrderFindUniqueArgs>(args: SelectSubset<T, PaymentOrderFindUniqueArgs<ExtArgs>>): Prisma__PaymentOrderClient<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PaymentOrder that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PaymentOrderFindUniqueOrThrowArgs} args - Arguments to find a PaymentOrder
+     * @example
+     * // Get one PaymentOrder
+     * const paymentOrder = await prisma.paymentOrder.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PaymentOrderFindUniqueOrThrowArgs>(args: SelectSubset<T, PaymentOrderFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PaymentOrderClient<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PaymentOrder that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentOrderFindFirstArgs} args - Arguments to find a PaymentOrder
+     * @example
+     * // Get one PaymentOrder
+     * const paymentOrder = await prisma.paymentOrder.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PaymentOrderFindFirstArgs>(args?: SelectSubset<T, PaymentOrderFindFirstArgs<ExtArgs>>): Prisma__PaymentOrderClient<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PaymentOrder that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentOrderFindFirstOrThrowArgs} args - Arguments to find a PaymentOrder
+     * @example
+     * // Get one PaymentOrder
+     * const paymentOrder = await prisma.paymentOrder.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PaymentOrderFindFirstOrThrowArgs>(args?: SelectSubset<T, PaymentOrderFindFirstOrThrowArgs<ExtArgs>>): Prisma__PaymentOrderClient<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PaymentOrders that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentOrderFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PaymentOrders
+     * const paymentOrders = await prisma.paymentOrder.findMany()
+     * 
+     * // Get first 10 PaymentOrders
+     * const paymentOrders = await prisma.paymentOrder.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const paymentOrderWithIdOnly = await prisma.paymentOrder.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PaymentOrderFindManyArgs>(args?: SelectSubset<T, PaymentOrderFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PaymentOrder.
+     * @param {PaymentOrderCreateArgs} args - Arguments to create a PaymentOrder.
+     * @example
+     * // Create one PaymentOrder
+     * const PaymentOrder = await prisma.paymentOrder.create({
+     *   data: {
+     *     // ... data to create a PaymentOrder
+     *   }
+     * })
+     * 
+     */
+    create<T extends PaymentOrderCreateArgs>(args: SelectSubset<T, PaymentOrderCreateArgs<ExtArgs>>): Prisma__PaymentOrderClient<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PaymentOrders.
+     * @param {PaymentOrderCreateManyArgs} args - Arguments to create many PaymentOrders.
+     * @example
+     * // Create many PaymentOrders
+     * const paymentOrder = await prisma.paymentOrder.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PaymentOrderCreateManyArgs>(args?: SelectSubset<T, PaymentOrderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a PaymentOrder.
+     * @param {PaymentOrderDeleteArgs} args - Arguments to delete one PaymentOrder.
+     * @example
+     * // Delete one PaymentOrder
+     * const PaymentOrder = await prisma.paymentOrder.delete({
+     *   where: {
+     *     // ... filter to delete one PaymentOrder
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PaymentOrderDeleteArgs>(args: SelectSubset<T, PaymentOrderDeleteArgs<ExtArgs>>): Prisma__PaymentOrderClient<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PaymentOrder.
+     * @param {PaymentOrderUpdateArgs} args - Arguments to update one PaymentOrder.
+     * @example
+     * // Update one PaymentOrder
+     * const paymentOrder = await prisma.paymentOrder.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PaymentOrderUpdateArgs>(args: SelectSubset<T, PaymentOrderUpdateArgs<ExtArgs>>): Prisma__PaymentOrderClient<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PaymentOrders.
+     * @param {PaymentOrderDeleteManyArgs} args - Arguments to filter PaymentOrders to delete.
+     * @example
+     * // Delete a few PaymentOrders
+     * const { count } = await prisma.paymentOrder.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PaymentOrderDeleteManyArgs>(args?: SelectSubset<T, PaymentOrderDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PaymentOrders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentOrderUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PaymentOrders
+     * const paymentOrder = await prisma.paymentOrder.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PaymentOrderUpdateManyArgs>(args: SelectSubset<T, PaymentOrderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PaymentOrder.
+     * @param {PaymentOrderUpsertArgs} args - Arguments to update or create a PaymentOrder.
+     * @example
+     * // Update or create a PaymentOrder
+     * const paymentOrder = await prisma.paymentOrder.upsert({
+     *   create: {
+     *     // ... data to create a PaymentOrder
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PaymentOrder we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PaymentOrderUpsertArgs>(args: SelectSubset<T, PaymentOrderUpsertArgs<ExtArgs>>): Prisma__PaymentOrderClient<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PaymentOrders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentOrderCountArgs} args - Arguments to filter PaymentOrders to count.
+     * @example
+     * // Count the number of PaymentOrders
+     * const count = await prisma.paymentOrder.count({
+     *   where: {
+     *     // ... the filter for the PaymentOrders we want to count
+     *   }
+     * })
+    **/
+    count<T extends PaymentOrderCountArgs>(
+      args?: Subset<T, PaymentOrderCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PaymentOrderCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PaymentOrder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentOrderAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PaymentOrderAggregateArgs>(args: Subset<T, PaymentOrderAggregateArgs>): Prisma.PrismaPromise<GetPaymentOrderAggregateType<T>>
+
+    /**
+     * Group by PaymentOrder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentOrderGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PaymentOrderGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PaymentOrderGroupByArgs['orderBy'] }
+        : { orderBy?: PaymentOrderGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PaymentOrderGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPaymentOrderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PaymentOrder model
+   */
+  readonly fields: PaymentOrderFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PaymentOrder.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PaymentOrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    feeStatement<T extends FeeStatementDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatementDefaultArgs<ExtArgs>>): Prisma__FeeStatementClient<$Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    cancelledBy<T extends PaymentOrder$cancelledByArgs<ExtArgs> = {}>(args?: Subset<T, PaymentOrder$cancelledByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PaymentOrder model
+   */
+  interface PaymentOrderFieldRefs {
+    readonly id: FieldRef<"PaymentOrder", 'String'>
+    readonly feeStatementId: FieldRef<"PaymentOrder", 'String'>
+    readonly partnerOrderId: FieldRef<"PaymentOrder", 'String'>
+    readonly channel: FieldRef<"PaymentOrder", 'PaymentChannel'>
+    readonly currency: FieldRef<"PaymentOrder", 'String'>
+    readonly amountMinor: FieldRef<"PaymentOrder", 'Int'>
+    readonly amountGbp: FieldRef<"PaymentOrder", 'Decimal'>
+    readonly status: FieldRef<"PaymentOrder", 'PaymentOrderStatus'>
+    readonly description: FieldRef<"PaymentOrder", 'String'>
+    readonly codeUrl: FieldRef<"PaymentOrder", 'String'>
+    readonly qrcodeImg: FieldRef<"PaymentOrder", 'String'>
+    readonly payUrl: FieldRef<"PaymentOrder", 'String'>
+    readonly globepayOrderId: FieldRef<"PaymentOrder", 'String'>
+    readonly paidAt: FieldRef<"PaymentOrder", 'DateTime'>
+    readonly notifyPayload: FieldRef<"PaymentOrder", 'Json'>
+    readonly cancelledAt: FieldRef<"PaymentOrder", 'DateTime'>
+    readonly cancelledByUserId: FieldRef<"PaymentOrder", 'String'>
+    readonly cancelNote: FieldRef<"PaymentOrder", 'String'>
+    readonly version: FieldRef<"PaymentOrder", 'Int'>
+    readonly createdAt: FieldRef<"PaymentOrder", 'DateTime'>
+    readonly updatedAt: FieldRef<"PaymentOrder", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PaymentOrder findUnique
+   */
+  export type PaymentOrderFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentOrder to fetch.
+     */
+    where: PaymentOrderWhereUniqueInput
+  }
+
+  /**
+   * PaymentOrder findUniqueOrThrow
+   */
+  export type PaymentOrderFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentOrder to fetch.
+     */
+    where: PaymentOrderWhereUniqueInput
+  }
+
+  /**
+   * PaymentOrder findFirst
+   */
+  export type PaymentOrderFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentOrder to fetch.
+     */
+    where?: PaymentOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentOrders to fetch.
+     */
+    orderBy?: PaymentOrderOrderByWithRelationInput | PaymentOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PaymentOrders.
+     */
+    cursor?: PaymentOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PaymentOrders.
+     */
+    distinct?: PaymentOrderScalarFieldEnum | PaymentOrderScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentOrder findFirstOrThrow
+   */
+  export type PaymentOrderFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentOrder to fetch.
+     */
+    where?: PaymentOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentOrders to fetch.
+     */
+    orderBy?: PaymentOrderOrderByWithRelationInput | PaymentOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PaymentOrders.
+     */
+    cursor?: PaymentOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PaymentOrders.
+     */
+    distinct?: PaymentOrderScalarFieldEnum | PaymentOrderScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentOrder findMany
+   */
+  export type PaymentOrderFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which PaymentOrders to fetch.
+     */
+    where?: PaymentOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentOrders to fetch.
+     */
+    orderBy?: PaymentOrderOrderByWithRelationInput | PaymentOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PaymentOrders.
+     */
+    cursor?: PaymentOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentOrders.
+     */
+    skip?: number
+    distinct?: PaymentOrderScalarFieldEnum | PaymentOrderScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentOrder create
+   */
+  export type PaymentOrderCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PaymentOrder.
+     */
+    data: XOR<PaymentOrderCreateInput, PaymentOrderUncheckedCreateInput>
+  }
+
+  /**
+   * PaymentOrder createMany
+   */
+  export type PaymentOrderCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PaymentOrders.
+     */
+    data: PaymentOrderCreateManyInput | PaymentOrderCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PaymentOrder update
+   */
+  export type PaymentOrderUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PaymentOrder.
+     */
+    data: XOR<PaymentOrderUpdateInput, PaymentOrderUncheckedUpdateInput>
+    /**
+     * Choose, which PaymentOrder to update.
+     */
+    where: PaymentOrderWhereUniqueInput
+  }
+
+  /**
+   * PaymentOrder updateMany
+   */
+  export type PaymentOrderUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PaymentOrders.
+     */
+    data: XOR<PaymentOrderUpdateManyMutationInput, PaymentOrderUncheckedUpdateManyInput>
+    /**
+     * Filter which PaymentOrders to update
+     */
+    where?: PaymentOrderWhereInput
+    /**
+     * Limit how many PaymentOrders to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PaymentOrder upsert
+   */
+  export type PaymentOrderUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PaymentOrder to update in case it exists.
+     */
+    where: PaymentOrderWhereUniqueInput
+    /**
+     * In case the PaymentOrder found by the `where` argument doesn't exist, create a new PaymentOrder with this data.
+     */
+    create: XOR<PaymentOrderCreateInput, PaymentOrderUncheckedCreateInput>
+    /**
+     * In case the PaymentOrder was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PaymentOrderUpdateInput, PaymentOrderUncheckedUpdateInput>
+  }
+
+  /**
+   * PaymentOrder delete
+   */
+  export type PaymentOrderDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
+    /**
+     * Filter which PaymentOrder to delete.
+     */
+    where: PaymentOrderWhereUniqueInput
+  }
+
+  /**
+   * PaymentOrder deleteMany
+   */
+  export type PaymentOrderDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PaymentOrders to delete
+     */
+    where?: PaymentOrderWhereInput
+    /**
+     * Limit how many PaymentOrders to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PaymentOrder.cancelledBy
+   */
+  export type PaymentOrder$cancelledByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * PaymentOrder without action
+   */
+  export type PaymentOrderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentOrder
+     */
+    select?: PaymentOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PaymentOrder
+     */
+    omit?: PaymentOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentOrderInclude<ExtArgs> | null
   }
 
 
@@ -61131,6 +62482,33 @@ export namespace Prisma {
   export type FeeStatementScalarFieldEnum = (typeof FeeStatementScalarFieldEnum)[keyof typeof FeeStatementScalarFieldEnum]
 
 
+  export const PaymentOrderScalarFieldEnum: {
+    id: 'id',
+    feeStatementId: 'feeStatementId',
+    partnerOrderId: 'partnerOrderId',
+    channel: 'channel',
+    currency: 'currency',
+    amountMinor: 'amountMinor',
+    amountGbp: 'amountGbp',
+    status: 'status',
+    description: 'description',
+    codeUrl: 'codeUrl',
+    qrcodeImg: 'qrcodeImg',
+    payUrl: 'payUrl',
+    globepayOrderId: 'globepayOrderId',
+    paidAt: 'paidAt',
+    notifyPayload: 'notifyPayload',
+    cancelledAt: 'cancelledAt',
+    cancelledByUserId: 'cancelledByUserId',
+    cancelNote: 'cancelNote',
+    version: 'version',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PaymentOrderScalarFieldEnum = (typeof PaymentOrderScalarFieldEnum)[keyof typeof PaymentOrderScalarFieldEnum]
+
+
   export const FeeStatementItemScalarFieldEnum: {
     id: 'id',
     feeStatementId: 'feeStatementId',
@@ -61871,6 +63249,23 @@ export namespace Prisma {
   export type FeeStatementOrderByRelevanceFieldEnum = (typeof FeeStatementOrderByRelevanceFieldEnum)[keyof typeof FeeStatementOrderByRelevanceFieldEnum]
 
 
+  export const PaymentOrderOrderByRelevanceFieldEnum: {
+    id: 'id',
+    feeStatementId: 'feeStatementId',
+    partnerOrderId: 'partnerOrderId',
+    currency: 'currency',
+    description: 'description',
+    codeUrl: 'codeUrl',
+    qrcodeImg: 'qrcodeImg',
+    payUrl: 'payUrl',
+    globepayOrderId: 'globepayOrderId',
+    cancelledByUserId: 'cancelledByUserId',
+    cancelNote: 'cancelNote'
+  };
+
+  export type PaymentOrderOrderByRelevanceFieldEnum = (typeof PaymentOrderOrderByRelevanceFieldEnum)[keyof typeof PaymentOrderOrderByRelevanceFieldEnum]
+
+
   export const FeeStatementItemOrderByRelevanceFieldEnum: {
     id: 'id',
     feeStatementId: 'feeStatementId',
@@ -62320,6 +63715,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'PaymentChannel'
+   */
+  export type EnumPaymentChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentChannel'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentOrderStatus'
+   */
+  export type EnumPaymentOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentOrderStatus'>
+    
+
+
+  /**
    * Reference to a field of type 'FeeScheduleServiceType'
    */
   export type EnumFeeScheduleServiceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeScheduleServiceType'>
@@ -62476,6 +63885,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobListRelationFilter
     candidateExamIdentitiesCreated?: CandidateExamIdentityListRelationFilter
     candidateExamIdentitiesUpdated?: CandidateExamIdentityListRelationFilter
+    paymentOrdersCancelled?: PaymentOrderListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -62531,6 +63941,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobOrderByRelationAggregateInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityOrderByRelationAggregateInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityOrderByRelationAggregateInput
+    paymentOrdersCancelled?: PaymentOrderOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -62590,6 +64001,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobListRelationFilter
     candidateExamIdentitiesCreated?: CandidateExamIdentityListRelationFilter
     candidateExamIdentitiesUpdated?: CandidateExamIdentityListRelationFilter
+    paymentOrdersCancelled?: PaymentOrderListRelationFilter
   }, "id" | "username" | "email" | "phone" | "studentNo">
 
   export type UserOrderByWithAggregationInput = {
@@ -66225,6 +67637,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementListRelationFilter
     regenerationChangedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     items?: FeeStatementItemListRelationFilter
+    paymentOrders?: PaymentOrderListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     cashInRequests?: CashInRequestListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
@@ -66277,6 +67690,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementOrderByRelationAggregateInput
     regenerationChangedBy?: UserOrderByWithRelationInput
     items?: FeeStatementItemOrderByRelationAggregateInput
+    paymentOrders?: PaymentOrderOrderByRelationAggregateInput
     reviewRequests?: ReviewRequestOrderByRelationAggregateInput
     cashInRequests?: CashInRequestOrderByRelationAggregateInput
     accessToScriptRequests?: AccessToScriptRequestOrderByRelationAggregateInput
@@ -66333,6 +67747,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementListRelationFilter
     regenerationChangedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     items?: FeeStatementItemListRelationFilter
+    paymentOrders?: PaymentOrderListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     cashInRequests?: CashInRequestListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
@@ -66417,6 +67832,148 @@ export namespace Prisma {
     regenerationChangedAt?: DateTimeNullableWithAggregatesFilter<"FeeStatement"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"FeeStatement"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FeeStatement"> | Date | string
+  }
+
+  export type PaymentOrderWhereInput = {
+    AND?: PaymentOrderWhereInput | PaymentOrderWhereInput[]
+    OR?: PaymentOrderWhereInput[]
+    NOT?: PaymentOrderWhereInput | PaymentOrderWhereInput[]
+    id?: StringFilter<"PaymentOrder"> | string
+    feeStatementId?: StringFilter<"PaymentOrder"> | string
+    partnerOrderId?: StringFilter<"PaymentOrder"> | string
+    channel?: EnumPaymentChannelFilter<"PaymentOrder"> | $Enums.PaymentChannel
+    currency?: StringFilter<"PaymentOrder"> | string
+    amountMinor?: IntFilter<"PaymentOrder"> | number
+    amountGbp?: DecimalFilter<"PaymentOrder"> | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFilter<"PaymentOrder"> | $Enums.PaymentOrderStatus
+    description?: StringFilter<"PaymentOrder"> | string
+    codeUrl?: StringNullableFilter<"PaymentOrder"> | string | null
+    qrcodeImg?: StringNullableFilter<"PaymentOrder"> | string | null
+    payUrl?: StringNullableFilter<"PaymentOrder"> | string | null
+    globepayOrderId?: StringNullableFilter<"PaymentOrder"> | string | null
+    paidAt?: DateTimeNullableFilter<"PaymentOrder"> | Date | string | null
+    notifyPayload?: JsonNullableFilter<"PaymentOrder">
+    cancelledAt?: DateTimeNullableFilter<"PaymentOrder"> | Date | string | null
+    cancelledByUserId?: StringNullableFilter<"PaymentOrder"> | string | null
+    cancelNote?: StringNullableFilter<"PaymentOrder"> | string | null
+    version?: IntFilter<"PaymentOrder"> | number
+    createdAt?: DateTimeFilter<"PaymentOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"PaymentOrder"> | Date | string
+    feeStatement?: XOR<FeeStatementScalarRelationFilter, FeeStatementWhereInput>
+    cancelledBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type PaymentOrderOrderByWithRelationInput = {
+    id?: SortOrder
+    feeStatementId?: SortOrder
+    partnerOrderId?: SortOrder
+    channel?: SortOrder
+    currency?: SortOrder
+    amountMinor?: SortOrder
+    amountGbp?: SortOrder
+    status?: SortOrder
+    description?: SortOrder
+    codeUrl?: SortOrderInput | SortOrder
+    qrcodeImg?: SortOrderInput | SortOrder
+    payUrl?: SortOrderInput | SortOrder
+    globepayOrderId?: SortOrderInput | SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    notifyPayload?: SortOrderInput | SortOrder
+    cancelledAt?: SortOrderInput | SortOrder
+    cancelledByUserId?: SortOrderInput | SortOrder
+    cancelNote?: SortOrderInput | SortOrder
+    version?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    feeStatement?: FeeStatementOrderByWithRelationInput
+    cancelledBy?: UserOrderByWithRelationInput
+    _relevance?: PaymentOrderOrderByRelevanceInput
+  }
+
+  export type PaymentOrderWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    partnerOrderId?: string
+    feeStatementId_channel_version?: PaymentOrderFeeStatementIdChannelVersionCompoundUniqueInput
+    AND?: PaymentOrderWhereInput | PaymentOrderWhereInput[]
+    OR?: PaymentOrderWhereInput[]
+    NOT?: PaymentOrderWhereInput | PaymentOrderWhereInput[]
+    feeStatementId?: StringFilter<"PaymentOrder"> | string
+    channel?: EnumPaymentChannelFilter<"PaymentOrder"> | $Enums.PaymentChannel
+    currency?: StringFilter<"PaymentOrder"> | string
+    amountMinor?: IntFilter<"PaymentOrder"> | number
+    amountGbp?: DecimalFilter<"PaymentOrder"> | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFilter<"PaymentOrder"> | $Enums.PaymentOrderStatus
+    description?: StringFilter<"PaymentOrder"> | string
+    codeUrl?: StringNullableFilter<"PaymentOrder"> | string | null
+    qrcodeImg?: StringNullableFilter<"PaymentOrder"> | string | null
+    payUrl?: StringNullableFilter<"PaymentOrder"> | string | null
+    globepayOrderId?: StringNullableFilter<"PaymentOrder"> | string | null
+    paidAt?: DateTimeNullableFilter<"PaymentOrder"> | Date | string | null
+    notifyPayload?: JsonNullableFilter<"PaymentOrder">
+    cancelledAt?: DateTimeNullableFilter<"PaymentOrder"> | Date | string | null
+    cancelledByUserId?: StringNullableFilter<"PaymentOrder"> | string | null
+    cancelNote?: StringNullableFilter<"PaymentOrder"> | string | null
+    version?: IntFilter<"PaymentOrder"> | number
+    createdAt?: DateTimeFilter<"PaymentOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"PaymentOrder"> | Date | string
+    feeStatement?: XOR<FeeStatementScalarRelationFilter, FeeStatementWhereInput>
+    cancelledBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id" | "partnerOrderId" | "feeStatementId_channel_version">
+
+  export type PaymentOrderOrderByWithAggregationInput = {
+    id?: SortOrder
+    feeStatementId?: SortOrder
+    partnerOrderId?: SortOrder
+    channel?: SortOrder
+    currency?: SortOrder
+    amountMinor?: SortOrder
+    amountGbp?: SortOrder
+    status?: SortOrder
+    description?: SortOrder
+    codeUrl?: SortOrderInput | SortOrder
+    qrcodeImg?: SortOrderInput | SortOrder
+    payUrl?: SortOrderInput | SortOrder
+    globepayOrderId?: SortOrderInput | SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    notifyPayload?: SortOrderInput | SortOrder
+    cancelledAt?: SortOrderInput | SortOrder
+    cancelledByUserId?: SortOrderInput | SortOrder
+    cancelNote?: SortOrderInput | SortOrder
+    version?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PaymentOrderCountOrderByAggregateInput
+    _avg?: PaymentOrderAvgOrderByAggregateInput
+    _max?: PaymentOrderMaxOrderByAggregateInput
+    _min?: PaymentOrderMinOrderByAggregateInput
+    _sum?: PaymentOrderSumOrderByAggregateInput
+  }
+
+  export type PaymentOrderScalarWhereWithAggregatesInput = {
+    AND?: PaymentOrderScalarWhereWithAggregatesInput | PaymentOrderScalarWhereWithAggregatesInput[]
+    OR?: PaymentOrderScalarWhereWithAggregatesInput[]
+    NOT?: PaymentOrderScalarWhereWithAggregatesInput | PaymentOrderScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PaymentOrder"> | string
+    feeStatementId?: StringWithAggregatesFilter<"PaymentOrder"> | string
+    partnerOrderId?: StringWithAggregatesFilter<"PaymentOrder"> | string
+    channel?: EnumPaymentChannelWithAggregatesFilter<"PaymentOrder"> | $Enums.PaymentChannel
+    currency?: StringWithAggregatesFilter<"PaymentOrder"> | string
+    amountMinor?: IntWithAggregatesFilter<"PaymentOrder"> | number
+    amountGbp?: DecimalWithAggregatesFilter<"PaymentOrder"> | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusWithAggregatesFilter<"PaymentOrder"> | $Enums.PaymentOrderStatus
+    description?: StringWithAggregatesFilter<"PaymentOrder"> | string
+    codeUrl?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
+    qrcodeImg?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
+    payUrl?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
+    globepayOrderId?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
+    paidAt?: DateTimeNullableWithAggregatesFilter<"PaymentOrder"> | Date | string | null
+    notifyPayload?: JsonNullableWithAggregatesFilter<"PaymentOrder">
+    cancelledAt?: DateTimeNullableWithAggregatesFilter<"PaymentOrder"> | Date | string | null
+    cancelledByUserId?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
+    cancelNote?: StringNullableWithAggregatesFilter<"PaymentOrder"> | string | null
+    version?: IntWithAggregatesFilter<"PaymentOrder"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"PaymentOrder"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PaymentOrder"> | Date | string
   }
 
   export type FeeStatementItemWhereInput = {
@@ -67877,6 +69434,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -67932,6 +69490,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUpdateInput = {
@@ -67987,6 +69546,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -68042,6 +69602,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -71984,6 +73545,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -72027,6 +73589,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -72070,6 +73633,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -72113,6 +73677,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -72214,6 +73779,172 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentOrderCreateInput = {
+    id?: string
+    partnerOrderId: string
+    channel: $Enums.PaymentChannel
+    currency?: string
+    amountMinor: number
+    amountGbp: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PaymentOrderStatus
+    description: string
+    codeUrl?: string | null
+    qrcodeImg?: string | null
+    payUrl?: string | null
+    globepayOrderId?: string | null
+    paidAt?: Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: Date | string | null
+    cancelNote?: string | null
+    version?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    feeStatement: FeeStatementCreateNestedOneWithoutPaymentOrdersInput
+    cancelledBy?: UserCreateNestedOneWithoutPaymentOrdersCancelledInput
+  }
+
+  export type PaymentOrderUncheckedCreateInput = {
+    id?: string
+    feeStatementId: string
+    partnerOrderId: string
+    channel: $Enums.PaymentChannel
+    currency?: string
+    amountMinor: number
+    amountGbp: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PaymentOrderStatus
+    description: string
+    codeUrl?: string | null
+    qrcodeImg?: string | null
+    payUrl?: string | null
+    globepayOrderId?: string | null
+    paidAt?: Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: Date | string | null
+    cancelledByUserId?: string | null
+    cancelNote?: string | null
+    version?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentOrderUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    partnerOrderId?: StringFieldUpdateOperationsInput | string
+    channel?: EnumPaymentChannelFieldUpdateOperationsInput | $Enums.PaymentChannel
+    currency?: StringFieldUpdateOperationsInput | string
+    amountMinor?: IntFieldUpdateOperationsInput | number
+    amountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
+    description?: StringFieldUpdateOperationsInput | string
+    codeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    qrcodeImg?: NullableStringFieldUpdateOperationsInput | string | null
+    payUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    globepayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelNote?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feeStatement?: FeeStatementUpdateOneRequiredWithoutPaymentOrdersNestedInput
+    cancelledBy?: UserUpdateOneWithoutPaymentOrdersCancelledNestedInput
+  }
+
+  export type PaymentOrderUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feeStatementId?: StringFieldUpdateOperationsInput | string
+    partnerOrderId?: StringFieldUpdateOperationsInput | string
+    channel?: EnumPaymentChannelFieldUpdateOperationsInput | $Enums.PaymentChannel
+    currency?: StringFieldUpdateOperationsInput | string
+    amountMinor?: IntFieldUpdateOperationsInput | number
+    amountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
+    description?: StringFieldUpdateOperationsInput | string
+    codeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    qrcodeImg?: NullableStringFieldUpdateOperationsInput | string | null
+    payUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    globepayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelNote?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentOrderCreateManyInput = {
+    id?: string
+    feeStatementId: string
+    partnerOrderId: string
+    channel: $Enums.PaymentChannel
+    currency?: string
+    amountMinor: number
+    amountGbp: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PaymentOrderStatus
+    description: string
+    codeUrl?: string | null
+    qrcodeImg?: string | null
+    payUrl?: string | null
+    globepayOrderId?: string | null
+    paidAt?: Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: Date | string | null
+    cancelledByUserId?: string | null
+    cancelNote?: string | null
+    version?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentOrderUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    partnerOrderId?: StringFieldUpdateOperationsInput | string
+    channel?: EnumPaymentChannelFieldUpdateOperationsInput | $Enums.PaymentChannel
+    currency?: StringFieldUpdateOperationsInput | string
+    amountMinor?: IntFieldUpdateOperationsInput | number
+    amountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
+    description?: StringFieldUpdateOperationsInput | string
+    codeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    qrcodeImg?: NullableStringFieldUpdateOperationsInput | string | null
+    payUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    globepayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelNote?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentOrderUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feeStatementId?: StringFieldUpdateOperationsInput | string
+    partnerOrderId?: StringFieldUpdateOperationsInput | string
+    channel?: EnumPaymentChannelFieldUpdateOperationsInput | $Enums.PaymentChannel
+    currency?: StringFieldUpdateOperationsInput | string
+    amountMinor?: IntFieldUpdateOperationsInput | number
+    amountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
+    description?: StringFieldUpdateOperationsInput | string
+    codeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    qrcodeImg?: NullableStringFieldUpdateOperationsInput | string | null
+    payUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    globepayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelNote?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -73874,6 +75605,12 @@ export namespace Prisma {
     none?: CandidateExamIdentityWhereInput
   }
 
+  export type PaymentOrderListRelationFilter = {
+    every?: PaymentOrderWhereInput
+    some?: PaymentOrderWhereInput
+    none?: PaymentOrderWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -73976,6 +75713,10 @@ export namespace Prisma {
   }
 
   export type CandidateExamIdentityOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PaymentOrderOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -77138,6 +78879,139 @@ export namespace Prisma {
     _max?: NestedEnumFeeStatementStatusFilter<$PrismaModel>
   }
 
+  export type EnumPaymentChannelFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentChannel | EnumPaymentChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentChannel[]
+    notIn?: $Enums.PaymentChannel[]
+    not?: NestedEnumPaymentChannelFilter<$PrismaModel> | $Enums.PaymentChannel
+  }
+
+  export type EnumPaymentOrderStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentOrderStatus | EnumPaymentOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentOrderStatus[]
+    notIn?: $Enums.PaymentOrderStatus[]
+    not?: NestedEnumPaymentOrderStatusFilter<$PrismaModel> | $Enums.PaymentOrderStatus
+  }
+
+  export type FeeStatementScalarRelationFilter = {
+    is?: FeeStatementWhereInput
+    isNot?: FeeStatementWhereInput
+  }
+
+  export type PaymentOrderOrderByRelevanceInput = {
+    fields: PaymentOrderOrderByRelevanceFieldEnum | PaymentOrderOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type PaymentOrderFeeStatementIdChannelVersionCompoundUniqueInput = {
+    feeStatementId: string
+    channel: $Enums.PaymentChannel
+    version: number
+  }
+
+  export type PaymentOrderCountOrderByAggregateInput = {
+    id?: SortOrder
+    feeStatementId?: SortOrder
+    partnerOrderId?: SortOrder
+    channel?: SortOrder
+    currency?: SortOrder
+    amountMinor?: SortOrder
+    amountGbp?: SortOrder
+    status?: SortOrder
+    description?: SortOrder
+    codeUrl?: SortOrder
+    qrcodeImg?: SortOrder
+    payUrl?: SortOrder
+    globepayOrderId?: SortOrder
+    paidAt?: SortOrder
+    notifyPayload?: SortOrder
+    cancelledAt?: SortOrder
+    cancelledByUserId?: SortOrder
+    cancelNote?: SortOrder
+    version?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentOrderAvgOrderByAggregateInput = {
+    amountMinor?: SortOrder
+    amountGbp?: SortOrder
+    version?: SortOrder
+  }
+
+  export type PaymentOrderMaxOrderByAggregateInput = {
+    id?: SortOrder
+    feeStatementId?: SortOrder
+    partnerOrderId?: SortOrder
+    channel?: SortOrder
+    currency?: SortOrder
+    amountMinor?: SortOrder
+    amountGbp?: SortOrder
+    status?: SortOrder
+    description?: SortOrder
+    codeUrl?: SortOrder
+    qrcodeImg?: SortOrder
+    payUrl?: SortOrder
+    globepayOrderId?: SortOrder
+    paidAt?: SortOrder
+    cancelledAt?: SortOrder
+    cancelledByUserId?: SortOrder
+    cancelNote?: SortOrder
+    version?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentOrderMinOrderByAggregateInput = {
+    id?: SortOrder
+    feeStatementId?: SortOrder
+    partnerOrderId?: SortOrder
+    channel?: SortOrder
+    currency?: SortOrder
+    amountMinor?: SortOrder
+    amountGbp?: SortOrder
+    status?: SortOrder
+    description?: SortOrder
+    codeUrl?: SortOrder
+    qrcodeImg?: SortOrder
+    payUrl?: SortOrder
+    globepayOrderId?: SortOrder
+    paidAt?: SortOrder
+    cancelledAt?: SortOrder
+    cancelledByUserId?: SortOrder
+    cancelNote?: SortOrder
+    version?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentOrderSumOrderByAggregateInput = {
+    amountMinor?: SortOrder
+    amountGbp?: SortOrder
+    version?: SortOrder
+  }
+
+  export type EnumPaymentChannelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentChannel | EnumPaymentChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentChannel[]
+    notIn?: $Enums.PaymentChannel[]
+    not?: NestedEnumPaymentChannelWithAggregatesFilter<$PrismaModel> | $Enums.PaymentChannel
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentChannelFilter<$PrismaModel>
+    _max?: NestedEnumPaymentChannelFilter<$PrismaModel>
+  }
+
+  export type EnumPaymentOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentOrderStatus | EnumPaymentOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentOrderStatus[]
+    notIn?: $Enums.PaymentOrderStatus[]
+    not?: NestedEnumPaymentOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.PaymentOrderStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentOrderStatusFilter<$PrismaModel>
+    _max?: NestedEnumPaymentOrderStatusFilter<$PrismaModel>
+  }
+
   export type EnumFeeScheduleServiceTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.FeeScheduleServiceType | EnumFeeScheduleServiceTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.FeeScheduleServiceType[] | null
@@ -77157,11 +79031,6 @@ export namespace Prisma {
     in?: $Enums.FeeCurrency[] | null
     notIn?: $Enums.FeeCurrency[] | null
     not?: NestedEnumFeeCurrencyNullableFilter<$PrismaModel> | $Enums.FeeCurrency | null
-  }
-
-  export type FeeStatementScalarRelationFilter = {
-    is?: FeeStatementWhereInput
-    isNot?: FeeStatementWhereInput
   }
 
   export type FeeScheduleNullableScalarRelationFilter = {
@@ -78484,6 +80353,13 @@ export namespace Prisma {
     connect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
   }
 
+  export type PaymentOrderCreateNestedManyWithoutCancelledByInput = {
+    create?: XOR<PaymentOrderCreateWithoutCancelledByInput, PaymentOrderUncheckedCreateWithoutCancelledByInput> | PaymentOrderCreateWithoutCancelledByInput[] | PaymentOrderUncheckedCreateWithoutCancelledByInput[]
+    connectOrCreate?: PaymentOrderCreateOrConnectWithoutCancelledByInput | PaymentOrderCreateOrConnectWithoutCancelledByInput[]
+    createMany?: PaymentOrderCreateManyCancelledByInputEnvelope
+    connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+  }
+
   export type SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -78759,6 +80635,13 @@ export namespace Prisma {
     connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput | CandidateExamIdentityCreateOrConnectWithoutUpdatedByUserInput[]
     createMany?: CandidateExamIdentityCreateManyUpdatedByUserInputEnvelope
     connect?: CandidateExamIdentityWhereUniqueInput | CandidateExamIdentityWhereUniqueInput[]
+  }
+
+  export type PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput = {
+    create?: XOR<PaymentOrderCreateWithoutCancelledByInput, PaymentOrderUncheckedCreateWithoutCancelledByInput> | PaymentOrderCreateWithoutCancelledByInput[] | PaymentOrderUncheckedCreateWithoutCancelledByInput[]
+    connectOrCreate?: PaymentOrderCreateOrConnectWithoutCancelledByInput | PaymentOrderCreateOrConnectWithoutCancelledByInput[]
+    createMany?: PaymentOrderCreateManyCancelledByInputEnvelope
+    connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -79329,6 +81212,20 @@ export namespace Prisma {
     deleteMany?: CandidateExamIdentityScalarWhereInput | CandidateExamIdentityScalarWhereInput[]
   }
 
+  export type PaymentOrderUpdateManyWithoutCancelledByNestedInput = {
+    create?: XOR<PaymentOrderCreateWithoutCancelledByInput, PaymentOrderUncheckedCreateWithoutCancelledByInput> | PaymentOrderCreateWithoutCancelledByInput[] | PaymentOrderUncheckedCreateWithoutCancelledByInput[]
+    connectOrCreate?: PaymentOrderCreateOrConnectWithoutCancelledByInput | PaymentOrderCreateOrConnectWithoutCancelledByInput[]
+    upsert?: PaymentOrderUpsertWithWhereUniqueWithoutCancelledByInput | PaymentOrderUpsertWithWhereUniqueWithoutCancelledByInput[]
+    createMany?: PaymentOrderCreateManyCancelledByInputEnvelope
+    set?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    disconnect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    delete?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    update?: PaymentOrderUpdateWithWhereUniqueWithoutCancelledByInput | PaymentOrderUpdateWithWhereUniqueWithoutCancelledByInput[]
+    updateMany?: PaymentOrderUpdateManyWithWhereWithoutCancelledByInput | PaymentOrderUpdateManyWithWhereWithoutCancelledByInput[]
+    deleteMany?: PaymentOrderScalarWhereInput | PaymentOrderScalarWhereInput[]
+  }
+
   export type SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -79875,6 +81772,20 @@ export namespace Prisma {
     update?: CandidateExamIdentityUpdateWithWhereUniqueWithoutUpdatedByUserInput | CandidateExamIdentityUpdateWithWhereUniqueWithoutUpdatedByUserInput[]
     updateMany?: CandidateExamIdentityUpdateManyWithWhereWithoutUpdatedByUserInput | CandidateExamIdentityUpdateManyWithWhereWithoutUpdatedByUserInput[]
     deleteMany?: CandidateExamIdentityScalarWhereInput | CandidateExamIdentityScalarWhereInput[]
+  }
+
+  export type PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput = {
+    create?: XOR<PaymentOrderCreateWithoutCancelledByInput, PaymentOrderUncheckedCreateWithoutCancelledByInput> | PaymentOrderCreateWithoutCancelledByInput[] | PaymentOrderUncheckedCreateWithoutCancelledByInput[]
+    connectOrCreate?: PaymentOrderCreateOrConnectWithoutCancelledByInput | PaymentOrderCreateOrConnectWithoutCancelledByInput[]
+    upsert?: PaymentOrderUpsertWithWhereUniqueWithoutCancelledByInput | PaymentOrderUpsertWithWhereUniqueWithoutCancelledByInput[]
+    createMany?: PaymentOrderCreateManyCancelledByInputEnvelope
+    set?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    disconnect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    delete?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    update?: PaymentOrderUpdateWithWhereUniqueWithoutCancelledByInput | PaymentOrderUpdateWithWhereUniqueWithoutCancelledByInput[]
+    updateMany?: PaymentOrderUpdateManyWithWhereWithoutCancelledByInput | PaymentOrderUpdateManyWithWhereWithoutCancelledByInput[]
+    deleteMany?: PaymentOrderScalarWhereInput | PaymentOrderScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
@@ -85904,6 +87815,13 @@ export namespace Prisma {
     connect?: FeeStatementItemWhereUniqueInput | FeeStatementItemWhereUniqueInput[]
   }
 
+  export type PaymentOrderCreateNestedManyWithoutFeeStatementInput = {
+    create?: XOR<PaymentOrderCreateWithoutFeeStatementInput, PaymentOrderUncheckedCreateWithoutFeeStatementInput> | PaymentOrderCreateWithoutFeeStatementInput[] | PaymentOrderUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: PaymentOrderCreateOrConnectWithoutFeeStatementInput | PaymentOrderCreateOrConnectWithoutFeeStatementInput[]
+    createMany?: PaymentOrderCreateManyFeeStatementInputEnvelope
+    connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+  }
+
   export type ReviewRequestCreateNestedManyWithoutFeeStatementInput = {
     create?: XOR<ReviewRequestCreateWithoutFeeStatementInput, ReviewRequestUncheckedCreateWithoutFeeStatementInput> | ReviewRequestCreateWithoutFeeStatementInput[] | ReviewRequestUncheckedCreateWithoutFeeStatementInput[]
     connectOrCreate?: ReviewRequestCreateOrConnectWithoutFeeStatementInput | ReviewRequestCreateOrConnectWithoutFeeStatementInput[]
@@ -85951,6 +87869,13 @@ export namespace Prisma {
     connectOrCreate?: FeeStatementItemCreateOrConnectWithoutFeeStatementInput | FeeStatementItemCreateOrConnectWithoutFeeStatementInput[]
     createMany?: FeeStatementItemCreateManyFeeStatementInputEnvelope
     connect?: FeeStatementItemWhereUniqueInput | FeeStatementItemWhereUniqueInput[]
+  }
+
+  export type PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput = {
+    create?: XOR<PaymentOrderCreateWithoutFeeStatementInput, PaymentOrderUncheckedCreateWithoutFeeStatementInput> | PaymentOrderCreateWithoutFeeStatementInput[] | PaymentOrderUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: PaymentOrderCreateOrConnectWithoutFeeStatementInput | PaymentOrderCreateOrConnectWithoutFeeStatementInput[]
+    createMany?: PaymentOrderCreateManyFeeStatementInputEnvelope
+    connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
   }
 
   export type ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput = {
@@ -86127,6 +88052,20 @@ export namespace Prisma {
     deleteMany?: FeeStatementItemScalarWhereInput | FeeStatementItemScalarWhereInput[]
   }
 
+  export type PaymentOrderUpdateManyWithoutFeeStatementNestedInput = {
+    create?: XOR<PaymentOrderCreateWithoutFeeStatementInput, PaymentOrderUncheckedCreateWithoutFeeStatementInput> | PaymentOrderCreateWithoutFeeStatementInput[] | PaymentOrderUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: PaymentOrderCreateOrConnectWithoutFeeStatementInput | PaymentOrderCreateOrConnectWithoutFeeStatementInput[]
+    upsert?: PaymentOrderUpsertWithWhereUniqueWithoutFeeStatementInput | PaymentOrderUpsertWithWhereUniqueWithoutFeeStatementInput[]
+    createMany?: PaymentOrderCreateManyFeeStatementInputEnvelope
+    set?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    disconnect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    delete?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    update?: PaymentOrderUpdateWithWhereUniqueWithoutFeeStatementInput | PaymentOrderUpdateWithWhereUniqueWithoutFeeStatementInput[]
+    updateMany?: PaymentOrderUpdateManyWithWhereWithoutFeeStatementInput | PaymentOrderUpdateManyWithWhereWithoutFeeStatementInput[]
+    deleteMany?: PaymentOrderScalarWhereInput | PaymentOrderScalarWhereInput[]
+  }
+
   export type ReviewRequestUpdateManyWithoutFeeStatementNestedInput = {
     create?: XOR<ReviewRequestCreateWithoutFeeStatementInput, ReviewRequestUncheckedCreateWithoutFeeStatementInput> | ReviewRequestCreateWithoutFeeStatementInput[] | ReviewRequestUncheckedCreateWithoutFeeStatementInput[]
     connectOrCreate?: ReviewRequestCreateOrConnectWithoutFeeStatementInput | ReviewRequestCreateOrConnectWithoutFeeStatementInput[]
@@ -86225,6 +88164,20 @@ export namespace Prisma {
     deleteMany?: FeeStatementItemScalarWhereInput | FeeStatementItemScalarWhereInput[]
   }
 
+  export type PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput = {
+    create?: XOR<PaymentOrderCreateWithoutFeeStatementInput, PaymentOrderUncheckedCreateWithoutFeeStatementInput> | PaymentOrderCreateWithoutFeeStatementInput[] | PaymentOrderUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: PaymentOrderCreateOrConnectWithoutFeeStatementInput | PaymentOrderCreateOrConnectWithoutFeeStatementInput[]
+    upsert?: PaymentOrderUpsertWithWhereUniqueWithoutFeeStatementInput | PaymentOrderUpsertWithWhereUniqueWithoutFeeStatementInput[]
+    createMany?: PaymentOrderCreateManyFeeStatementInputEnvelope
+    set?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    disconnect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    delete?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+    update?: PaymentOrderUpdateWithWhereUniqueWithoutFeeStatementInput | PaymentOrderUpdateWithWhereUniqueWithoutFeeStatementInput[]
+    updateMany?: PaymentOrderUpdateManyWithWhereWithoutFeeStatementInput | PaymentOrderUpdateManyWithWhereWithoutFeeStatementInput[]
+    deleteMany?: PaymentOrderScalarWhereInput | PaymentOrderScalarWhereInput[]
+  }
+
   export type ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput = {
     create?: XOR<ReviewRequestCreateWithoutFeeStatementInput, ReviewRequestUncheckedCreateWithoutFeeStatementInput> | ReviewRequestCreateWithoutFeeStatementInput[] | ReviewRequestUncheckedCreateWithoutFeeStatementInput[]
     connectOrCreate?: ReviewRequestCreateOrConnectWithoutFeeStatementInput | ReviewRequestCreateOrConnectWithoutFeeStatementInput[]
@@ -86279,6 +88232,44 @@ export namespace Prisma {
     update?: CertificateRequestUpdateWithWhereUniqueWithoutFeeStatementInput | CertificateRequestUpdateWithWhereUniqueWithoutFeeStatementInput[]
     updateMany?: CertificateRequestUpdateManyWithWhereWithoutFeeStatementInput | CertificateRequestUpdateManyWithWhereWithoutFeeStatementInput[]
     deleteMany?: CertificateRequestScalarWhereInput | CertificateRequestScalarWhereInput[]
+  }
+
+  export type FeeStatementCreateNestedOneWithoutPaymentOrdersInput = {
+    create?: XOR<FeeStatementCreateWithoutPaymentOrdersInput, FeeStatementUncheckedCreateWithoutPaymentOrdersInput>
+    connectOrCreate?: FeeStatementCreateOrConnectWithoutPaymentOrdersInput
+    connect?: FeeStatementWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutPaymentOrdersCancelledInput = {
+    create?: XOR<UserCreateWithoutPaymentOrdersCancelledInput, UserUncheckedCreateWithoutPaymentOrdersCancelledInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPaymentOrdersCancelledInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumPaymentChannelFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentChannel
+  }
+
+  export type EnumPaymentOrderStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentOrderStatus
+  }
+
+  export type FeeStatementUpdateOneRequiredWithoutPaymentOrdersNestedInput = {
+    create?: XOR<FeeStatementCreateWithoutPaymentOrdersInput, FeeStatementUncheckedCreateWithoutPaymentOrdersInput>
+    connectOrCreate?: FeeStatementCreateOrConnectWithoutPaymentOrdersInput
+    upsert?: FeeStatementUpsertWithoutPaymentOrdersInput
+    connect?: FeeStatementWhereUniqueInput
+    update?: XOR<XOR<FeeStatementUpdateToOneWithWhereWithoutPaymentOrdersInput, FeeStatementUpdateWithoutPaymentOrdersInput>, FeeStatementUncheckedUpdateWithoutPaymentOrdersInput>
+  }
+
+  export type UserUpdateOneWithoutPaymentOrdersCancelledNestedInput = {
+    create?: XOR<UserCreateWithoutPaymentOrdersCancelledInput, UserUncheckedCreateWithoutPaymentOrdersCancelledInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPaymentOrdersCancelledInput
+    upsert?: UserUpsertWithoutPaymentOrdersCancelledInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPaymentOrdersCancelledInput, UserUpdateWithoutPaymentOrdersCancelledInput>, UserUncheckedUpdateWithoutPaymentOrdersCancelledInput>
   }
 
   export type FeeStatementCreateNestedOneWithoutItemsInput = {
@@ -88507,6 +90498,40 @@ export namespace Prisma {
     _max?: NestedEnumFeeStatementStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumPaymentChannelFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentChannel | EnumPaymentChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentChannel[]
+    notIn?: $Enums.PaymentChannel[]
+    not?: NestedEnumPaymentChannelFilter<$PrismaModel> | $Enums.PaymentChannel
+  }
+
+  export type NestedEnumPaymentOrderStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentOrderStatus | EnumPaymentOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentOrderStatus[]
+    notIn?: $Enums.PaymentOrderStatus[]
+    not?: NestedEnumPaymentOrderStatusFilter<$PrismaModel> | $Enums.PaymentOrderStatus
+  }
+
+  export type NestedEnumPaymentChannelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentChannel | EnumPaymentChannelFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentChannel[]
+    notIn?: $Enums.PaymentChannel[]
+    not?: NestedEnumPaymentChannelWithAggregatesFilter<$PrismaModel> | $Enums.PaymentChannel
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentChannelFilter<$PrismaModel>
+    _max?: NestedEnumPaymentChannelFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPaymentOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentOrderStatus | EnumPaymentOrderStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentOrderStatus[]
+    notIn?: $Enums.PaymentOrderStatus[]
+    not?: NestedEnumPaymentOrderStatusWithAggregatesFilter<$PrismaModel> | $Enums.PaymentOrderStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentOrderStatusFilter<$PrismaModel>
+    _max?: NestedEnumPaymentOrderStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumFeeScheduleServiceTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.FeeScheduleServiceType | EnumFeeScheduleServiceTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.FeeScheduleServiceType[] | null
@@ -89710,6 +91735,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -89752,6 +91778,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -89804,6 +91831,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -89846,6 +91874,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -89898,6 +91927,7 @@ export namespace Prisma {
     revisedToStatement?: FeeStatementCreateNestedOneWithoutPredecessorStatementsInput
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -89940,6 +91970,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -91061,6 +93092,62 @@ export namespace Prisma {
 
   export type CandidateExamIdentityCreateManyUpdatedByUserInputEnvelope = {
     data: CandidateExamIdentityCreateManyUpdatedByUserInput | CandidateExamIdentityCreateManyUpdatedByUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PaymentOrderCreateWithoutCancelledByInput = {
+    id?: string
+    partnerOrderId: string
+    channel: $Enums.PaymentChannel
+    currency?: string
+    amountMinor: number
+    amountGbp: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PaymentOrderStatus
+    description: string
+    codeUrl?: string | null
+    qrcodeImg?: string | null
+    payUrl?: string | null
+    globepayOrderId?: string | null
+    paidAt?: Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: Date | string | null
+    cancelNote?: string | null
+    version?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    feeStatement: FeeStatementCreateNestedOneWithoutPaymentOrdersInput
+  }
+
+  export type PaymentOrderUncheckedCreateWithoutCancelledByInput = {
+    id?: string
+    feeStatementId: string
+    partnerOrderId: string
+    channel: $Enums.PaymentChannel
+    currency?: string
+    amountMinor: number
+    amountGbp: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PaymentOrderStatus
+    description: string
+    codeUrl?: string | null
+    qrcodeImg?: string | null
+    payUrl?: string | null
+    globepayOrderId?: string | null
+    paidAt?: Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: Date | string | null
+    cancelNote?: string | null
+    version?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentOrderCreateOrConnectWithoutCancelledByInput = {
+    where: PaymentOrderWhereUniqueInput
+    create: XOR<PaymentOrderCreateWithoutCancelledByInput, PaymentOrderUncheckedCreateWithoutCancelledByInput>
+  }
+
+  export type PaymentOrderCreateManyCancelledByInputEnvelope = {
+    data: PaymentOrderCreateManyCancelledByInput | PaymentOrderCreateManyCancelledByInput[]
     skipDuplicates?: boolean
   }
 
@@ -92397,6 +94484,49 @@ export namespace Prisma {
     data: XOR<CandidateExamIdentityUpdateManyMutationInput, CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserInput>
   }
 
+  export type PaymentOrderUpsertWithWhereUniqueWithoutCancelledByInput = {
+    where: PaymentOrderWhereUniqueInput
+    update: XOR<PaymentOrderUpdateWithoutCancelledByInput, PaymentOrderUncheckedUpdateWithoutCancelledByInput>
+    create: XOR<PaymentOrderCreateWithoutCancelledByInput, PaymentOrderUncheckedCreateWithoutCancelledByInput>
+  }
+
+  export type PaymentOrderUpdateWithWhereUniqueWithoutCancelledByInput = {
+    where: PaymentOrderWhereUniqueInput
+    data: XOR<PaymentOrderUpdateWithoutCancelledByInput, PaymentOrderUncheckedUpdateWithoutCancelledByInput>
+  }
+
+  export type PaymentOrderUpdateManyWithWhereWithoutCancelledByInput = {
+    where: PaymentOrderScalarWhereInput
+    data: XOR<PaymentOrderUpdateManyMutationInput, PaymentOrderUncheckedUpdateManyWithoutCancelledByInput>
+  }
+
+  export type PaymentOrderScalarWhereInput = {
+    AND?: PaymentOrderScalarWhereInput | PaymentOrderScalarWhereInput[]
+    OR?: PaymentOrderScalarWhereInput[]
+    NOT?: PaymentOrderScalarWhereInput | PaymentOrderScalarWhereInput[]
+    id?: StringFilter<"PaymentOrder"> | string
+    feeStatementId?: StringFilter<"PaymentOrder"> | string
+    partnerOrderId?: StringFilter<"PaymentOrder"> | string
+    channel?: EnumPaymentChannelFilter<"PaymentOrder"> | $Enums.PaymentChannel
+    currency?: StringFilter<"PaymentOrder"> | string
+    amountMinor?: IntFilter<"PaymentOrder"> | number
+    amountGbp?: DecimalFilter<"PaymentOrder"> | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFilter<"PaymentOrder"> | $Enums.PaymentOrderStatus
+    description?: StringFilter<"PaymentOrder"> | string
+    codeUrl?: StringNullableFilter<"PaymentOrder"> | string | null
+    qrcodeImg?: StringNullableFilter<"PaymentOrder"> | string | null
+    payUrl?: StringNullableFilter<"PaymentOrder"> | string | null
+    globepayOrderId?: StringNullableFilter<"PaymentOrder"> | string | null
+    paidAt?: DateTimeNullableFilter<"PaymentOrder"> | Date | string | null
+    notifyPayload?: JsonNullableFilter<"PaymentOrder">
+    cancelledAt?: DateTimeNullableFilter<"PaymentOrder"> | Date | string | null
+    cancelledByUserId?: StringNullableFilter<"PaymentOrder"> | string | null
+    cancelNote?: StringNullableFilter<"PaymentOrder"> | string | null
+    version?: IntFilter<"PaymentOrder"> | number
+    createdAt?: DateTimeFilter<"PaymentOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"PaymentOrder"> | Date | string
+  }
+
   export type UserCreateWithoutPasswordResetTokensInput = {
     id?: string
     name: string
@@ -92449,6 +94579,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -92503,6 +94634,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -92573,6 +94705,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -92627,6 +94760,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserCreateWithoutStudentProfileInput = {
@@ -92681,6 +94815,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutStudentProfileInput = {
@@ -92735,6 +94870,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -92805,6 +94941,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentProfileInput = {
@@ -92859,6 +94996,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserCreateWithoutTeacherProfileInput = {
@@ -92913,6 +95051,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutTeacherProfileInput = {
@@ -92967,6 +95106,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutTeacherProfileInput = {
@@ -93037,6 +95177,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherProfileInput = {
@@ -93091,6 +95232,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserCreateWithoutUserAuditLogsTargetInput = {
@@ -93145,6 +95287,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsTargetInput = {
@@ -93199,6 +95342,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsTargetInput = {
@@ -93258,6 +95402,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsPerformedInput = {
@@ -93312,6 +95457,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsPerformedInput = {
@@ -93382,6 +95528,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsTargetInput = {
@@ -93436,6 +95583,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUpsertWithoutUserAuditLogsPerformedInput = {
@@ -93501,6 +95649,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsPerformedInput = {
@@ -93555,6 +95704,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExamDocumentAuditLogsInput = {
@@ -93830,6 +95980,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -93884,6 +96035,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutExamDocumentAuditLogsPerformedInput = {
@@ -94193,6 +96345,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -94247,6 +96400,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserCreateWithoutCandidateInput = {
@@ -94301,6 +96455,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutCandidateInput = {
@@ -94355,6 +96510,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutCandidateInput = {
@@ -94756,6 +96912,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -94798,6 +96955,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -95159,6 +97317,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateInput = {
@@ -95213,6 +97372,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type CandidateExamIdentityUpsertWithWhereUniqueWithoutCandidateInput = {
@@ -95578,6 +97738,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutCandidateAuditLogsPerformedInput = {
@@ -95632,6 +97793,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutCandidateAuditLogsPerformedInput = {
@@ -95811,6 +97973,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateAuditLogsPerformedInput = {
@@ -95865,6 +98028,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type CandidateCreateWithoutExamIdentitiesInput = {
@@ -96105,6 +98269,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutCandidateExamIdentitiesCreatedInput = {
@@ -96159,6 +98324,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutCandidateExamIdentitiesCreatedInput = {
@@ -96218,6 +98384,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -96272,6 +98439,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -96540,6 +98708,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateExamIdentitiesCreatedInput = {
@@ -96594,6 +98763,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUpsertWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -96659,6 +98829,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -96713,6 +98884,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserCreateWithoutTeacherAssignmentsInput = {
@@ -96767,6 +98939,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutTeacherAssignmentsInput = {
@@ -96821,6 +98994,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutTeacherAssignmentsInput = {
@@ -96934,6 +99108,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherAssignmentsInput = {
@@ -96988,6 +99163,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type SubjectUpsertWithoutTeacherAssignmentsInput = {
@@ -97227,6 +99403,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWindowsInput = {
@@ -97281,6 +99458,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWindowsInput = {
@@ -97770,6 +99948,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -97812,6 +99991,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -98165,6 +100345,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWindowsInput = {
@@ -98219,6 +100400,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWindowInput = {
@@ -99293,6 +101475,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWorkspacesInput = {
@@ -99347,6 +101530,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWorkspacesInput = {
@@ -99471,6 +101655,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutWorkspacesLastAdjustedInput = {
@@ -99525,6 +101710,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutWorkspacesLastAdjustedInput = {
@@ -99621,6 +101807,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsCreatedInput = {
@@ -99675,6 +101862,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsCreatedInput = {
@@ -99734,6 +101922,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -99788,6 +101977,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsUpdatedInput = {
@@ -100053,6 +102243,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -100095,6 +102286,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -100283,6 +102475,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWorkspacesInput = {
@@ -100337,6 +102530,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutWorkspacesInput = {
@@ -100473,6 +102667,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkspacesLastAdjustedInput = {
@@ -100527,6 +102722,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutWorkspacesInput = {
@@ -100635,6 +102831,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsCreatedInput = {
@@ -100689,6 +102886,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUpsertWithoutRestrictedRegistrationsUpdatedInput = {
@@ -100754,6 +102952,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -100808,6 +103007,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput = {
@@ -101029,6 +103229,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutStudentRegistrationsInput = {
@@ -101083,6 +103284,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutStudentRegistrationsInput = {
@@ -101569,6 +103771,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationsAddedInput = {
@@ -101623,6 +103826,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationsAddedInput = {
@@ -102007,6 +104211,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentRegistrationsInput = {
@@ -102061,6 +104266,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutRegistrationsInput = {
@@ -102595,6 +104801,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationsAddedInput = {
@@ -102649,6 +104856,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutRegistrationsInput = {
@@ -103053,6 +105261,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -103107,6 +105316,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsAsStudentInput = {
@@ -103353,6 +105563,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput = {
@@ -103407,6 +105618,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsPerformedInput = {
@@ -103754,6 +105966,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -103808,6 +106021,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithoutAuditLogsInput = {
@@ -104078,6 +106292,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsPerformedInput = {
@@ -104132,6 +106347,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type RegistrationWorkspaceCreateWithoutChangeRequestsInput = {
@@ -104342,6 +106558,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutStudentChangeRequestsInput = {
@@ -104396,6 +106613,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutStudentChangeRequestsInput = {
@@ -104558,6 +106776,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationChangeRequestsInput = {
@@ -104612,6 +106831,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationChangeRequestsInput = {
@@ -104777,6 +106997,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutReviewedChangeRequestsInput = {
@@ -104831,6 +107052,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutReviewedChangeRequestsInput = {
@@ -105091,6 +107313,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentChangeRequestsInput = {
@@ -105145,6 +107368,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type CandidateUpsertWithoutChangeRequestsInput = {
@@ -105319,6 +107543,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationChangeRequestsInput = {
@@ -105373,6 +107598,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type ExamSessionUpsertWithoutChangeRequestTargetsInput = {
@@ -105556,6 +107782,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewedChangeRequestsInput = {
@@ -105610,6 +107837,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type RegistrationChangeRequestExamSessionUpsertWithWhereUniqueWithoutChangeRequestInput = {
@@ -112761,6 +114989,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutSourceDocumentsInput = {
@@ -112815,6 +115044,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutSourceDocumentsInput = {
@@ -113216,6 +115446,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSourceDocumentsInput = {
@@ -113270,6 +115501,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type PaperUpsertWithWhereUniqueWithoutSourceDocumentInput = {
@@ -113773,6 +116005,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutFeeRulesCreatedInput = {
@@ -113827,6 +116060,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutFeeRulesCreatedInput = {
@@ -114308,6 +116542,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeRulesCreatedInput = {
@@ -114362,6 +116597,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExchangeRatesInput = {
@@ -114481,6 +116717,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutExchangeRatesCreatedInput = {
@@ -114535,6 +116772,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutExchangeRatesCreatedInput = {
@@ -114676,6 +116914,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExchangeRatesCreatedInput = {
@@ -114730,6 +116969,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type CandidateCreateWithoutFeeStatementsInput = {
@@ -114887,6 +117127,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsAsStudentInput = {
@@ -114941,6 +117182,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsAsStudentInput = {
@@ -115203,6 +117445,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsGeneratedInput = {
@@ -115257,6 +117500,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsGeneratedInput = {
@@ -115300,6 +117544,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -115342,6 +117587,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -115389,6 +117635,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -115431,6 +117678,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -115483,6 +117731,7 @@ export namespace Prisma {
     revisedToStatement?: FeeStatementCreateNestedOneWithoutPredecessorStatementsInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -115525,6 +117774,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -115572,6 +117822,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -115614,6 +117865,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -115682,6 +117934,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsRegenerationChangedInput = {
@@ -115736,6 +117989,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsRegenerationChangedInput = {
@@ -115808,6 +118062,62 @@ export namespace Prisma {
 
   export type FeeStatementItemCreateManyFeeStatementInputEnvelope = {
     data: FeeStatementItemCreateManyFeeStatementInput | FeeStatementItemCreateManyFeeStatementInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PaymentOrderCreateWithoutFeeStatementInput = {
+    id?: string
+    partnerOrderId: string
+    channel: $Enums.PaymentChannel
+    currency?: string
+    amountMinor: number
+    amountGbp: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PaymentOrderStatus
+    description: string
+    codeUrl?: string | null
+    qrcodeImg?: string | null
+    payUrl?: string | null
+    globepayOrderId?: string | null
+    paidAt?: Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: Date | string | null
+    cancelNote?: string | null
+    version?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cancelledBy?: UserCreateNestedOneWithoutPaymentOrdersCancelledInput
+  }
+
+  export type PaymentOrderUncheckedCreateWithoutFeeStatementInput = {
+    id?: string
+    partnerOrderId: string
+    channel: $Enums.PaymentChannel
+    currency?: string
+    amountMinor: number
+    amountGbp: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PaymentOrderStatus
+    description: string
+    codeUrl?: string | null
+    qrcodeImg?: string | null
+    payUrl?: string | null
+    globepayOrderId?: string | null
+    paidAt?: Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: Date | string | null
+    cancelledByUserId?: string | null
+    cancelNote?: string | null
+    version?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentOrderCreateOrConnectWithoutFeeStatementInput = {
+    where: PaymentOrderWhereUniqueInput
+    create: XOR<PaymentOrderCreateWithoutFeeStatementInput, PaymentOrderUncheckedCreateWithoutFeeStatementInput>
+  }
+
+  export type PaymentOrderCreateManyFeeStatementInputEnvelope = {
+    data: PaymentOrderCreateManyFeeStatementInput | PaymentOrderCreateManyFeeStatementInput[]
     skipDuplicates?: boolean
   }
 
@@ -116163,6 +118473,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsAsStudentInput = {
@@ -116217,6 +118528,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutFeeStatementsInput = {
@@ -116503,6 +118815,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsGeneratedInput = {
@@ -116557,6 +118870,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type FeeStatementUpsertWithoutSuccessorStatementsInput = {
@@ -116606,6 +118920,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -116648,6 +118963,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -116717,6 +119033,7 @@ export namespace Prisma {
     revisedToStatement?: FeeStatementUpdateOneWithoutPredecessorStatementsNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -116759,6 +119076,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -116844,6 +119162,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsRegenerationChangedInput = {
@@ -116898,6 +119217,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeStatementInput = {
@@ -116914,6 +119234,22 @@ export namespace Prisma {
   export type FeeStatementItemUpdateManyWithWhereWithoutFeeStatementInput = {
     where: FeeStatementItemScalarWhereInput
     data: XOR<FeeStatementItemUpdateManyMutationInput, FeeStatementItemUncheckedUpdateManyWithoutFeeStatementInput>
+  }
+
+  export type PaymentOrderUpsertWithWhereUniqueWithoutFeeStatementInput = {
+    where: PaymentOrderWhereUniqueInput
+    update: XOR<PaymentOrderUpdateWithoutFeeStatementInput, PaymentOrderUncheckedUpdateWithoutFeeStatementInput>
+    create: XOR<PaymentOrderCreateWithoutFeeStatementInput, PaymentOrderUncheckedCreateWithoutFeeStatementInput>
+  }
+
+  export type PaymentOrderUpdateWithWhereUniqueWithoutFeeStatementInput = {
+    where: PaymentOrderWhereUniqueInput
+    data: XOR<PaymentOrderUpdateWithoutFeeStatementInput, PaymentOrderUncheckedUpdateWithoutFeeStatementInput>
+  }
+
+  export type PaymentOrderUpdateManyWithWhereWithoutFeeStatementInput = {
+    where: PaymentOrderScalarWhereInput
+    data: XOR<PaymentOrderUpdateManyMutationInput, PaymentOrderUncheckedUpdateManyWithoutFeeStatementInput>
   }
 
   export type ReviewRequestUpsertWithWhereUniqueWithoutFeeStatementInput = {
@@ -116980,6 +119316,430 @@ export namespace Prisma {
     data: XOR<CertificateRequestUpdateManyMutationInput, CertificateRequestUncheckedUpdateManyWithoutFeeStatementInput>
   }
 
+  export type FeeStatementCreateWithoutPaymentOrdersInput = {
+    id?: string
+    businessType?: $Enums.FeeStatementBusinessType
+    statementNo: string
+    statementKind?: $Enums.FeeStatementKind
+    displayCurrency?: $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot: string
+    studentNoSnapshot: string
+    gradeSnapshot: string
+    classNameSnapshot: string
+    emailSnapshot?: string | null
+    assessmentHubCandidateNumberSnapshot?: string | null
+    candidateTypeSnapshot?: $Enums.CandidateType | null
+    status?: $Enums.FeeStatementStatus
+    studentVisible?: boolean
+    totalGbpAmount: Decimal | DecimalJsLike | number | string
+    totalCnyAmount: Decimal | DecimalJsLike | number | string
+    paymentNotes?: string | null
+    generatedAt?: Date | string
+    issuedAt?: Date | string | null
+    regenerationReason?: string | null
+    regenerationChangedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
+    student?: UserCreateNestedOneWithoutFeeStatementsAsStudentInput
+    registrationWorkspace?: RegistrationWorkspaceCreateNestedOneWithoutFeeStatementsInput
+    registrationWindow?: RegistrationWindowCreateNestedOneWithoutFeeStatementsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutFeeStatementsInput
+    generatedBy: UserCreateNestedOneWithoutFeeStatementsGeneratedInput
+    revisedFromStatement?: FeeStatementCreateNestedOneWithoutSuccessorStatementsInput
+    successorStatements?: FeeStatementCreateNestedManyWithoutRevisedFromStatementInput
+    revisedToStatement?: FeeStatementCreateNestedOneWithoutPredecessorStatementsInput
+    predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
+    regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
+    items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
+    certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+  }
+
+  export type FeeStatementUncheckedCreateWithoutPaymentOrdersInput = {
+    id?: string
+    businessType?: $Enums.FeeStatementBusinessType
+    candidateId?: string | null
+    studentId?: string | null
+    registrationWorkspaceId?: string | null
+    registrationWindowId?: string | null
+    reviewWindowId?: string | null
+    statementNo: string
+    statementKind?: $Enums.FeeStatementKind
+    displayCurrency?: $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot: string
+    studentNoSnapshot: string
+    gradeSnapshot: string
+    classNameSnapshot: string
+    emailSnapshot?: string | null
+    assessmentHubCandidateNumberSnapshot?: string | null
+    candidateTypeSnapshot?: $Enums.CandidateType | null
+    status?: $Enums.FeeStatementStatus
+    studentVisible?: boolean
+    totalGbpAmount: Decimal | DecimalJsLike | number | string
+    totalCnyAmount: Decimal | DecimalJsLike | number | string
+    paymentNotes?: string | null
+    generatedByUserId: string
+    generatedAt?: Date | string
+    issuedAt?: Date | string | null
+    revisedFromStatementId?: string | null
+    revisedToStatementId?: string | null
+    regenerationReason?: string | null
+    regenerationChangedByUserId?: string | null
+    regenerationChangedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
+    predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
+    items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+  }
+
+  export type FeeStatementCreateOrConnectWithoutPaymentOrdersInput = {
+    where: FeeStatementWhereUniqueInput
+    create: XOR<FeeStatementCreateWithoutPaymentOrdersInput, FeeStatementUncheckedCreateWithoutPaymentOrdersInput>
+  }
+
+  export type UserCreateWithoutPaymentOrdersCancelledInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPaymentOrdersCancelledInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPaymentOrdersCancelledInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPaymentOrdersCancelledInput, UserUncheckedCreateWithoutPaymentOrdersCancelledInput>
+  }
+
+  export type FeeStatementUpsertWithoutPaymentOrdersInput = {
+    update: XOR<FeeStatementUpdateWithoutPaymentOrdersInput, FeeStatementUncheckedUpdateWithoutPaymentOrdersInput>
+    create: XOR<FeeStatementCreateWithoutPaymentOrdersInput, FeeStatementUncheckedCreateWithoutPaymentOrdersInput>
+    where?: FeeStatementWhereInput
+  }
+
+  export type FeeStatementUpdateToOneWithWhereWithoutPaymentOrdersInput = {
+    where?: FeeStatementWhereInput
+    data: XOR<FeeStatementUpdateWithoutPaymentOrdersInput, FeeStatementUncheckedUpdateWithoutPaymentOrdersInput>
+  }
+
+  export type FeeStatementUpdateWithoutPaymentOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessType?: EnumFeeStatementBusinessTypeFieldUpdateOperationsInput | $Enums.FeeStatementBusinessType
+    statementNo?: StringFieldUpdateOperationsInput | string
+    statementKind?: EnumFeeStatementKindFieldUpdateOperationsInput | $Enums.FeeStatementKind
+    displayCurrency?: EnumFeeStatementDisplayCurrencyFieldUpdateOperationsInput | $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot?: StringFieldUpdateOperationsInput | string
+    studentNoSnapshot?: StringFieldUpdateOperationsInput | string
+    gradeSnapshot?: StringFieldUpdateOperationsInput | string
+    classNameSnapshot?: StringFieldUpdateOperationsInput | string
+    emailSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+    status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    studentVisible?: BoolFieldUpdateOperationsInput | boolean
+    totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
+    student?: UserUpdateOneWithoutFeeStatementsAsStudentNestedInput
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneWithoutFeeStatementsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneWithoutFeeStatementsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutFeeStatementsNestedInput
+    generatedBy?: UserUpdateOneRequiredWithoutFeeStatementsGeneratedNestedInput
+    revisedFromStatement?: FeeStatementUpdateOneWithoutSuccessorStatementsNestedInput
+    successorStatements?: FeeStatementUpdateManyWithoutRevisedFromStatementNestedInput
+    revisedToStatement?: FeeStatementUpdateOneWithoutPredecessorStatementsNestedInput
+    predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
+    regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
+    items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
+    certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+  }
+
+  export type FeeStatementUncheckedUpdateWithoutPaymentOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessType?: EnumFeeStatementBusinessTypeFieldUpdateOperationsInput | $Enums.FeeStatementBusinessType
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWorkspaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    statementNo?: StringFieldUpdateOperationsInput | string
+    statementKind?: EnumFeeStatementKindFieldUpdateOperationsInput | $Enums.FeeStatementKind
+    displayCurrency?: EnumFeeStatementDisplayCurrencyFieldUpdateOperationsInput | $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot?: StringFieldUpdateOperationsInput | string
+    studentNoSnapshot?: StringFieldUpdateOperationsInput | string
+    gradeSnapshot?: StringFieldUpdateOperationsInput | string
+    classNameSnapshot?: StringFieldUpdateOperationsInput | string
+    emailSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+    status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    studentVisible?: BoolFieldUpdateOperationsInput | boolean
+    totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedByUserId?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedFromStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    revisedToStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
+    predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
+    items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+  }
+
+  export type UserUpsertWithoutPaymentOrdersCancelledInput = {
+    update: XOR<UserUpdateWithoutPaymentOrdersCancelledInput, UserUncheckedUpdateWithoutPaymentOrdersCancelledInput>
+    create: XOR<UserCreateWithoutPaymentOrdersCancelledInput, UserUncheckedCreateWithoutPaymentOrdersCancelledInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPaymentOrdersCancelledInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPaymentOrdersCancelledInput, UserUncheckedUpdateWithoutPaymentOrdersCancelledInput>
+  }
+
+  export type UserUpdateWithoutPaymentOrdersCancelledInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPaymentOrdersCancelledInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+  }
+
   export type FeeStatementCreateWithoutItemsInput = {
     id?: string
     businessType?: $Enums.FeeStatementBusinessType
@@ -117016,6 +119776,7 @@ export namespace Prisma {
     revisedToStatement?: FeeStatementCreateNestedOneWithoutPredecessorStatementsInput
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -117058,6 +119819,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -117224,6 +119986,7 @@ export namespace Prisma {
     revisedToStatement?: FeeStatementUpdateOneWithoutPredecessorStatementsNestedInput
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -117266,6 +120029,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -117509,6 +120273,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutFeeAuditLogsPerformedInput = {
@@ -117563,6 +120328,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutFeeAuditLogsPerformedInput = {
@@ -117704,6 +120470,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeAuditLogsPerformedInput = {
@@ -117758,6 +120525,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type ExamBoardCreateWithoutReviewWindowsInput = {
@@ -117948,6 +120716,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutReviewWindowsCreatedInput = {
@@ -118002,6 +120771,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutReviewWindowsCreatedInput = {
@@ -118253,6 +121023,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -118295,6 +121066,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -118562,6 +121334,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewWindowsCreatedInput = {
@@ -118616,6 +121389,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type ReviewWindowServiceUpsertWithWhereUniqueWithoutReviewWindowInput = {
@@ -119413,6 +122187,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsRequestedInput = {
@@ -119467,6 +122242,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsRequestedInput = {
@@ -119526,6 +122302,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsReviewedInput = {
@@ -119580,6 +122357,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsReviewedInput = {
@@ -119624,6 +122402,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
@@ -119666,6 +122445,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -120305,6 +123085,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsRequestedInput = {
@@ -120359,6 +123140,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUpsertWithoutReviewRequestsReviewedInput = {
@@ -120424,6 +123206,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsReviewedInput = {
@@ -120478,6 +123261,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type FeeStatementUpsertWithoutReviewRequestsInput = {
@@ -120528,6 +123312,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
@@ -120570,6 +123355,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -120989,6 +123775,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutCashInRequestsRequestedInput = {
@@ -121043,6 +123830,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutCashInRequestsRequestedInput = {
@@ -121087,6 +123875,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
@@ -121129,6 +123918,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -121600,6 +124390,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCashInRequestsRequestedInput = {
@@ -121654,6 +124445,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type FeeStatementUpsertWithoutCashInRequestsInput = {
@@ -121704,6 +124496,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
@@ -121746,6 +124539,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -122321,6 +125115,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutAccessToScriptRequestsRequestedInput = {
@@ -122375,6 +125170,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutAccessToScriptRequestsRequestedInput = {
@@ -122419,6 +125215,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
@@ -122461,6 +125258,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -123100,6 +125898,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccessToScriptRequestsRequestedInput = {
@@ -123154,6 +125953,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type FeeStatementUpsertWithoutAccessToScriptRequestsInput = {
@@ -123204,6 +126004,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
@@ -123246,6 +126047,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -123589,6 +126391,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutCertificateRequestsRequestedInput = {
@@ -123643,6 +126446,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutCertificateRequestsRequestedInput = {
@@ -123687,6 +126491,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -123729,6 +126534,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -124112,6 +126918,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCertificateRequestsRequestedInput = {
@@ -124166,6 +126973,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type FeeStatementUpsertWithoutCertificateRequestsInput = {
@@ -124216,6 +127024,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -124258,6 +127067,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -124513,6 +127323,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutFeeSchedulesCreatedInput = {
@@ -124567,6 +127378,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutFeeSchedulesCreatedInput = {
@@ -124927,6 +127739,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeSchedulesCreatedInput = {
@@ -124981,6 +127794,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeScheduleInput = {
@@ -125402,6 +128216,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutPostResultsAuditLogsPerformedInput = {
@@ -125456,6 +128271,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutPostResultsAuditLogsPerformedInput = {
@@ -125907,6 +128723,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostResultsAuditLogsPerformedInput = {
@@ -125961,6 +128778,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserCreateWithoutBackupSettingsUpdatedInput = {
@@ -126015,6 +128833,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutBackupSettingsUpdatedInput = {
@@ -126069,6 +128888,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutBackupSettingsUpdatedInput = {
@@ -126139,6 +128959,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupSettingsUpdatedInput = {
@@ -126193,6 +129014,7 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserCreateWithoutBackupJobsTriggeredInput = {
@@ -126247,6 +129069,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserUncheckedCreateWithoutBackupJobsTriggeredInput = {
@@ -126301,6 +129124,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
   }
 
   export type UserCreateOrConnectWithoutBackupJobsTriggeredInput = {
@@ -126371,6 +129195,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupJobsTriggeredInput = {
@@ -126425,6 +129250,7 @@ export namespace Prisma {
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
   }
 
   export type SourceDocumentCreateManyUploadedByInput = {
@@ -127220,6 +130046,29 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     createdByUserId?: string | null
+  }
+
+  export type PaymentOrderCreateManyCancelledByInput = {
+    id?: string
+    feeStatementId: string
+    partnerOrderId: string
+    channel: $Enums.PaymentChannel
+    currency?: string
+    amountMinor: number
+    amountGbp: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PaymentOrderStatus
+    description: string
+    codeUrl?: string | null
+    qrcodeImg?: string | null
+    payUrl?: string | null
+    globepayOrderId?: string | null
+    paidAt?: Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: Date | string | null
+    cancelNote?: string | null
+    version?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type SourceDocumentUpdateWithoutUploadedByInput = {
@@ -128280,6 +131129,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -128322,6 +131172,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -128399,6 +131250,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -128441,6 +131293,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -128518,6 +131371,7 @@ export namespace Prisma {
     revisedToStatement?: FeeStatementUpdateOneWithoutPredecessorStatementsNestedInput
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -128560,6 +131414,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -129749,6 +132604,75 @@ export namespace Prisma {
     createdByUserId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type PaymentOrderUpdateWithoutCancelledByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    partnerOrderId?: StringFieldUpdateOperationsInput | string
+    channel?: EnumPaymentChannelFieldUpdateOperationsInput | $Enums.PaymentChannel
+    currency?: StringFieldUpdateOperationsInput | string
+    amountMinor?: IntFieldUpdateOperationsInput | number
+    amountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
+    description?: StringFieldUpdateOperationsInput | string
+    codeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    qrcodeImg?: NullableStringFieldUpdateOperationsInput | string | null
+    payUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    globepayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelNote?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feeStatement?: FeeStatementUpdateOneRequiredWithoutPaymentOrdersNestedInput
+  }
+
+  export type PaymentOrderUncheckedUpdateWithoutCancelledByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feeStatementId?: StringFieldUpdateOperationsInput | string
+    partnerOrderId?: StringFieldUpdateOperationsInput | string
+    channel?: EnumPaymentChannelFieldUpdateOperationsInput | $Enums.PaymentChannel
+    currency?: StringFieldUpdateOperationsInput | string
+    amountMinor?: IntFieldUpdateOperationsInput | number
+    amountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
+    description?: StringFieldUpdateOperationsInput | string
+    codeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    qrcodeImg?: NullableStringFieldUpdateOperationsInput | string | null
+    payUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    globepayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelNote?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentOrderUncheckedUpdateManyWithoutCancelledByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feeStatementId?: StringFieldUpdateOperationsInput | string
+    partnerOrderId?: StringFieldUpdateOperationsInput | string
+    channel?: EnumPaymentChannelFieldUpdateOperationsInput | $Enums.PaymentChannel
+    currency?: StringFieldUpdateOperationsInput | string
+    amountMinor?: IntFieldUpdateOperationsInput | number
+    amountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
+    description?: StringFieldUpdateOperationsInput | string
+    codeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    qrcodeImg?: NullableStringFieldUpdateOperationsInput | string | null
+    payUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    globepayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelNote?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CandidateExamIdentityCreateManyCandidateInput = {
     id?: string
     examBoardId: string
@@ -130526,6 +133450,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -130568,6 +133493,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -131771,6 +134697,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -131813,6 +134740,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -132888,6 +135816,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -132930,6 +135859,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -138710,6 +141640,29 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type PaymentOrderCreateManyFeeStatementInput = {
+    id?: string
+    partnerOrderId: string
+    channel: $Enums.PaymentChannel
+    currency?: string
+    amountMinor: number
+    amountGbp: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PaymentOrderStatus
+    description: string
+    codeUrl?: string | null
+    qrcodeImg?: string | null
+    payUrl?: string | null
+    globepayOrderId?: string | null
+    paidAt?: Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: Date | string | null
+    cancelledByUserId?: string | null
+    cancelNote?: string | null
+    version?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type ReviewRequestCreateManyFeeStatementInput = {
     id?: string
     reviewWindowId: string
@@ -138816,6 +141769,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -138858,6 +141812,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -138935,6 +141890,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -138977,6 +141933,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -139103,6 +142060,75 @@ export namespace Prisma {
     lineTotalCny?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     quantity?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentOrderUpdateWithoutFeeStatementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    partnerOrderId?: StringFieldUpdateOperationsInput | string
+    channel?: EnumPaymentChannelFieldUpdateOperationsInput | $Enums.PaymentChannel
+    currency?: StringFieldUpdateOperationsInput | string
+    amountMinor?: IntFieldUpdateOperationsInput | number
+    amountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
+    description?: StringFieldUpdateOperationsInput | string
+    codeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    qrcodeImg?: NullableStringFieldUpdateOperationsInput | string | null
+    payUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    globepayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelNote?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cancelledBy?: UserUpdateOneWithoutPaymentOrdersCancelledNestedInput
+  }
+
+  export type PaymentOrderUncheckedUpdateWithoutFeeStatementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    partnerOrderId?: StringFieldUpdateOperationsInput | string
+    channel?: EnumPaymentChannelFieldUpdateOperationsInput | $Enums.PaymentChannel
+    currency?: StringFieldUpdateOperationsInput | string
+    amountMinor?: IntFieldUpdateOperationsInput | number
+    amountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
+    description?: StringFieldUpdateOperationsInput | string
+    codeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    qrcodeImg?: NullableStringFieldUpdateOperationsInput | string | null
+    payUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    globepayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelNote?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentOrderUncheckedUpdateManyWithoutFeeStatementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    partnerOrderId?: StringFieldUpdateOperationsInput | string
+    channel?: EnumPaymentChannelFieldUpdateOperationsInput | $Enums.PaymentChannel
+    currency?: StringFieldUpdateOperationsInput | string
+    amountMinor?: IntFieldUpdateOperationsInput | number
+    amountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPaymentOrderStatusFieldUpdateOperationsInput | $Enums.PaymentOrderStatus
+    description?: StringFieldUpdateOperationsInput | string
+    codeUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    qrcodeImg?: NullableStringFieldUpdateOperationsInput | string | null
+    payUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    globepayOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    notifyPayload?: NullableJsonNullValueInput | InputJsonValue
+    cancelledAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    cancelledByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    cancelNote?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewRequestUpdateWithoutFeeStatementInput = {
@@ -139717,6 +142743,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -139759,6 +142786,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput

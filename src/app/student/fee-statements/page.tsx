@@ -3,6 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
+import {
+  StudentFeePaymentPanel,
+  type StudentPaymentOrder,
+} from "@/components/fees/StudentFeePaymentPanel";
+import { feeStatementStatusClass, feeStatementStatusLabel } from "@/lib/fees/workspace-status";
 import { formatMoney } from "@/lib/fees/money";
 
 interface FeeStatementSummary {
@@ -12,6 +17,7 @@ interface FeeStatementSummary {
   totalGbpAmount: number | string;
   totalCnyAmount: number | string;
   issuedAt: string | null;
+  paymentOrders?: StudentPaymentOrder[];
   registrationWindow: {
     title: string;
     examBoard: { code: string };
@@ -52,7 +58,13 @@ function UpdatingCard({ entry }: { entry: UpdatingEntry }) {
   );
 }
 
-function FeeStatementCard({ statement }: { statement: FeeStatementSummary }) {
+function FeeStatementCard({
+  statement,
+  onPaid,
+}: {
+  statement: FeeStatementSummary;
+  onPaid: () => void;
+}) {
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-2">
@@ -60,8 +72,10 @@ function FeeStatementCard({ statement }: { statement: FeeStatementSummary }) {
           <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Statement</p>
           <p className="font-semibold text-slate-900">{statement.statementNo}</p>
         </div>
-        <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">
-          {statement.status}
+        <span
+          className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${feeStatementStatusClass(statement.status)}`}
+        >
+          {feeStatementStatusLabel(statement.status)}
         </span>
       </div>
       <dl className="mt-3 space-y-2 text-sm">
@@ -76,13 +90,13 @@ function FeeStatementCard({ statement }: { statement: FeeStatementSummary }) {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <dt className="text-slate-500">Total GBP</dt>
+            <dt className="text-slate-500">Total GBP (pay this)</dt>
             <dd className="font-medium text-slate-900">
               {formatMoney(Number(statement.totalGbpAmount), "GBP")}
             </dd>
           </div>
           <div>
-            <dt className="text-slate-500">Total CNY</dt>
+            <dt className="text-slate-500">Total CNY (reference)</dt>
             <dd className="font-medium text-slate-900">
               {formatMoney(Number(statement.totalCnyAmount), "CNY")}
             </dd>
@@ -95,6 +109,15 @@ function FeeStatementCard({ statement }: { statement: FeeStatementSummary }) {
           </dd>
         </div>
       </dl>
+      <div className="mt-4">
+        <StudentFeePaymentPanel
+          feeStatementId={statement.id}
+          statementStatus={statement.status}
+          totalGbpAmount={statement.totalGbpAmount}
+          existingOrders={statement.paymentOrders ?? []}
+          onPaid={onPaid}
+        />
+      </div>
     </article>
   );
 }
@@ -104,6 +127,7 @@ export default function StudentFeeStatementsPage() {
   const [updating, setUpdating] = useState<UpdatingEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<"ALL" | "UNPAID" | "PAID">("ALL");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -132,17 +156,39 @@ export default function StudentFeeStatementsPage() {
   }, []);
 
   useEffect(() => {
-    load();
+    void load();
   }, [load]);
 
-  const hasContent = statements.length > 0 || updating.length > 0;
+  const filteredStatements = statements.filter((statement) => {
+    if (statusFilter === "PAID") return statement.status === "PAID";
+    if (statusFilter === "UNPAID") return statement.status === "ISSUED";
+    return true;
+  });
+
+  const hasContent = filteredStatements.length > 0 || updating.length > 0 || statements.length > 0;
 
   return (
     <div className="space-y-6">
       <PageHeader
         title="My fee statements"
-        description="View issued exam fee statements for your locked registrations."
+        description="View issued exam fee statements and pay online in GBP via WeChat or Alipay."
       />
+
+      <div className="flex flex-wrap items-center gap-2">
+        <label className="text-sm text-slate-600" htmlFor="student-fee-status-filter">
+          Filter
+        </label>
+        <select
+          id="student-fee-status-filter"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as "ALL" | "UNPAID" | "PAID")}
+          className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-800"
+        >
+          <option value="ALL">All</option>
+          <option value="UNPAID">Unpaid</option>
+          <option value="PAID">Paid</option>
+        </select>
+      </div>
 
       {error ? (
         <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -156,68 +202,19 @@ export default function StudentFeeStatementsPage() {
         <Card>
           <p className="text-sm text-slate-600">No issued fee statements yet.</p>
         </Card>
+      ) : filteredStatements.length === 0 && updating.length === 0 ? (
+        <Card>
+          <p className="text-sm text-slate-600">No statements match this filter.</p>
+        </Card>
       ) : (
-        <>
-          <div className="space-y-3 md:hidden">
-            {updating.map((entry, index) => (
-              <UpdatingCard key={`updating-${index}`} entry={entry} />
-            ))}
-            {statements.map((statement) => (
-              <FeeStatementCard key={statement.id} statement={statement} />
-            ))}
-          </div>
-          <Card className="hidden overflow-x-auto md:block">
-            <table className="min-w-full text-sm">
-              <thead>
-                <tr className="border-b text-left text-xs uppercase text-slate-500">
-                  <th className="py-2 pr-4">Statement</th>
-                  <th className="py-2 pr-4">Window</th>
-                  <th className="py-2 pr-4">Total GBP</th>
-                  <th className="py-2 pr-4">Total CNY</th>
-                  <th className="py-2 pr-4">Issued</th>
-                </tr>
-              </thead>
-              <tbody>
-                {updating.map((entry, index) => (
-                  <tr key={`updating-${index}`} className="border-b border-amber-100 bg-amber-50/60">
-                    <td className="py-2 pr-4 font-medium text-amber-950">Updating</td>
-                    <td className="py-2 pr-4 text-amber-950">
-                      {entry.registrationWindow.title}
-                      <span className="block text-xs text-amber-800">{entry.message}</span>
-                    </td>
-                    <td className="py-2 pr-4">—</td>
-                    <td className="py-2 pr-4">—</td>
-                    <td className="py-2 pr-4">—</td>
-                  </tr>
-                ))}
-                {statements.map((statement) => (
-                  <tr key={statement.id} className="border-b border-slate-100">
-                    <td className="py-2 pr-4">{statement.statementNo}</td>
-                    <td className="py-2 pr-4">
-                      {statement.registrationWindow.title}
-                      <span className="block text-xs text-slate-500">
-                        {statement.registrationWindow.examBoard.code} ·{" "}
-                        {statement.registrationWindow.examSeries.name} (
-                        {statement.registrationWindow.examSeries.year})
-                      </span>
-                    </td>
-                    <td className="py-2 pr-4">
-                      {formatMoney(Number(statement.totalGbpAmount), "GBP")}
-                    </td>
-                    <td className="py-2 pr-4">
-                      {formatMoney(Number(statement.totalCnyAmount), "CNY")}
-                    </td>
-                    <td className="py-2 pr-4">
-                      {statement.issuedAt
-                        ? new Date(statement.issuedAt).toLocaleDateString()
-                        : "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Card>
-        </>
+        <div className="space-y-4">
+          {updating.map((entry, index) => (
+            <UpdatingCard key={`updating-${index}`} entry={entry} />
+          ))}
+          {filteredStatements.map((statement) => (
+            <FeeStatementCard key={statement.id} statement={statement} onPaid={() => void load()} />
+          ))}
+        </div>
       )}
     </div>
   );

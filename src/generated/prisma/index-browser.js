@@ -677,6 +677,30 @@ exports.Prisma.FeeStatementScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.PaymentOrderScalarFieldEnum = {
+  id: 'id',
+  feeStatementId: 'feeStatementId',
+  partnerOrderId: 'partnerOrderId',
+  channel: 'channel',
+  currency: 'currency',
+  amountMinor: 'amountMinor',
+  amountGbp: 'amountGbp',
+  status: 'status',
+  description: 'description',
+  codeUrl: 'codeUrl',
+  qrcodeImg: 'qrcodeImg',
+  payUrl: 'payUrl',
+  globepayOrderId: 'globepayOrderId',
+  paidAt: 'paidAt',
+  notifyPayload: 'notifyPayload',
+  cancelledAt: 'cancelledAt',
+  cancelledByUserId: 'cancelledByUserId',
+  cancelNote: 'cancelNote',
+  version: 'version',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.FeeStatementItemScalarFieldEnum = {
   id: 'id',
   feeStatementId: 'feeStatementId',
@@ -1270,6 +1294,20 @@ exports.Prisma.FeeStatementOrderByRelevanceFieldEnum = {
   regenerationChangedByUserId: 'regenerationChangedByUserId'
 };
 
+exports.Prisma.PaymentOrderOrderByRelevanceFieldEnum = {
+  id: 'id',
+  feeStatementId: 'feeStatementId',
+  partnerOrderId: 'partnerOrderId',
+  currency: 'currency',
+  description: 'description',
+  codeUrl: 'codeUrl',
+  qrcodeImg: 'qrcodeImg',
+  payUrl: 'payUrl',
+  globepayOrderId: 'globepayOrderId',
+  cancelledByUserId: 'cancelledByUserId',
+  cancelNote: 'cancelNote'
+};
+
 exports.Prisma.FeeStatementItemOrderByRelevanceFieldEnum = {
   id: 'id',
   feeStatementId: 'feeStatementId',
@@ -1714,6 +1752,20 @@ exports.FeeStatementStatus = exports.$Enums.FeeStatementStatus = {
   NEEDS_REGENERATION: 'NEEDS_REGENERATION'
 };
 
+exports.PaymentChannel = exports.$Enums.PaymentChannel = {
+  Wechat: 'Wechat',
+  Alipay: 'Alipay'
+};
+
+exports.PaymentOrderStatus = exports.$Enums.PaymentOrderStatus = {
+  CREATED: 'CREATED',
+  PAYING: 'PAYING',
+  PAID: 'PAID',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED',
+  FAILED: 'FAILED'
+};
+
 exports.FeeScheduleServiceType = exports.$Enums.FeeScheduleServiceType = {
   CANDIDATE_REGISTRATION: 'CANDIDATE_REGISTRATION',
   EXAM_ENTRY: 'EXAM_ENTRY',
@@ -1865,6 +1917,7 @@ exports.Prisma.ModelName = {
   FeeRule: 'FeeRule',
   ExchangeRate: 'ExchangeRate',
   FeeStatement: 'FeeStatement',
+  PaymentOrder: 'PaymentOrder',
   FeeStatementItem: 'FeeStatementItem',
   FeeAuditLog: 'FeeAuditLog',
   ReviewWindow: 'ReviewWindow',

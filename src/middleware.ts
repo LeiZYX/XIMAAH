@@ -15,6 +15,8 @@ const PUBLIC_AUTH_PATHS = [
   "/api/auth/reset-password",
 ];
 
+const PUBLIC_POST_APIS = ["/api/payments/globepay/notify"];
+
 const PUBLIC_GET_APIS = [
   "/api/calendar",
   "/api/calendar/events",
@@ -30,6 +32,7 @@ const PUBLIC_GET_APIS = [
 
 function isPublicApi(pathname: string, method: string): boolean {
   if (PUBLIC_AUTH_PATHS.some((path) => pathname.startsWith(path))) return true;
+  if (PUBLIC_POST_APIS.some((path) => pathname === path)) return true;
   if (method === "GET" && PUBLIC_GET_APIS.some((path) => pathname === path || pathname.startsWith(`${path}/`))) {
     return true;
   }
