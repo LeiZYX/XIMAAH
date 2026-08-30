@@ -33,6 +33,7 @@ import {
 } from "@/lib/registrations/window";
 import { applyLockedRegistrationAdjustment } from "@/lib/registrations/locked-registration-adjustment";
 import {
+  resolveActiveFeeStage,
   resolveEntryTypeForRegistration,
   type RegistrationFeeStageRecord,
 } from "@/lib/registrations/fee-stages";
@@ -261,6 +262,17 @@ async function applyCandidateRegistrationWorkflow(
   }
 
   const staffOverrideAllowed = ["ADMIN", "EXAM_OFFICER"].includes(performedBy.role);
+
+  const activeStage = resolveActiveFeeStage(
+    feeStages as RegistrationFeeStageRecord[],
+    now,
+  );
+  if (!activeStage && !input.entryTypeOverride) {
+    throw new RegistrationError(
+      "No active fee stage for this registration window. Select Normal, Late, or High Late for the added exams.",
+      400,
+    );
+  }
 
   const entryResolution = resolveEntryTypeForRegistration({
     feeStages: feeStages as RegistrationFeeStageRecord[],
@@ -672,6 +684,7 @@ export async function applyStaffStudentRegistrationAfterStudentClose(
       {
         reason,
         addExamSessionIds: uniqueSessionIds,
+        entryTypeOverride: input.entryTypeOverride,
         teacherRequestedBy: input.teacherRequestedBy,
       },
     );

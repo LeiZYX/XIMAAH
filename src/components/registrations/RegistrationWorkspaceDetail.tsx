@@ -175,6 +175,7 @@ interface WorkspaceData {
   registrationWindow: {
     id: string;
     title: string;
+    status?: string;
     studentRegistrationOpenAt: string;
     studentRegistrationCloseAt: string;
     registrationCloseAt: string;
@@ -285,6 +286,7 @@ export function RegistrationWorkspaceDetail({
   const [confirmFeeImpact, setConfirmFeeImpact] = useState(false);
   const [includeCandidateRegistrationFee, setIncludeCandidateRegistrationFee] = useState(false);
   const [candidateRegistrationFeeReason, setCandidateRegistrationFeeReason] = useState("");
+  const [entryTypeOverride, setEntryTypeOverride] = useState<"" | "NORMAL" | "LATE" | "HIGH_LATE">("");
   const [savingFeeSelection, setSavingFeeSelection] = useState(false);
   const [displayCurrency, setDisplayCurrency] = useState<FeeStatementDisplayCurrencyOption>(
     DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
@@ -416,6 +418,9 @@ export function RegistrationWorkspaceDetail({
           replacements: pendingReplace,
           includeCandidateRegistrationFee,
           candidateRegistrationFeeReason: candidateRegistrationFeeReason.trim() || undefined,
+          ...(entryTypeOverride && (pendingAdd.length > 0 || pendingReplace.length > 0)
+            ? { entryTypeOverride }
+            : {}),
         }),
       });
       if (!response.ok) {
@@ -427,6 +432,7 @@ export function RegistrationWorkspaceDetail({
       setPendingRemove([]);
       setPendingReplace([]);
       setReason("");
+      setEntryTypeOverride("");
       setAdjustMode(null);
       setConfirmFeeImpact(false);
       setFeeStatementRefreshKey((key) => key + 1);
@@ -455,6 +461,13 @@ export function RegistrationWorkspaceDetail({
       includeCandidateRegistrationFee !== workspace?.includeCandidateRegistrationFee;
     if (!hasPendingChanges && !feeSelectionChanged) {
       setError("No changes to apply.");
+      return;
+    }
+
+    const addingExams = pendingAdd.length > 0 || pendingReplace.length > 0;
+    const windowClosed = workspace?.registrationWindow.status === "CLOSED";
+    if (addingExams && windowClosed && !entryTypeOverride) {
+      setError("Select which fee stage to charge for added exams (Normal, Late, or High Late).");
       return;
     }
 
@@ -869,6 +882,30 @@ export function RegistrationWorkspaceDetail({
                 <span className="mb-1 block font-medium text-slate-700">Adjustment reason *</span>
                 <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={3} className="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Required reason for exam adjustments" />
               </label>
+              {pendingAdd.length > 0 || pendingReplace.length > 0 ? (
+                <label className="mt-3 block">
+                  <span className="mb-1 block font-medium text-slate-700">
+                    Fee entry stage
+                    {workspace.registrationWindow.status === "CLOSED" ? " *" : ""}
+                  </span>
+                  <select
+                    value={entryTypeOverride}
+                    onChange={(e) =>
+                      setEntryTypeOverride(e.target.value as "" | "NORMAL" | "LATE" | "HIGH_LATE")
+                    }
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2"
+                  >
+                    <option value="">
+                      {workspace.registrationWindow.status === "CLOSED"
+                        ? "Select fee stage…"
+                        : "Automatic (current fee stage)"}
+                    </option>
+                    <option value="NORMAL">Normal Entry</option>
+                    <option value="LATE">Late Entry</option>
+                    <option value="HIGH_LATE">High Late Entry</option>
+                  </select>
+                </label>
+              ) : null}
               {includeCandidateRegistrationFee !== workspace.includeCandidateRegistrationFee ? (
                 <label className="mt-3 block">
                   <span className="mb-1 block font-medium text-slate-700">

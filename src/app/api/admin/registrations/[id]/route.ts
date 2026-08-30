@@ -56,6 +56,7 @@ export async function POST(
     replacements?: Array<{ registrationId: string; newExamSessionId: string }>;
     includeCandidateRegistrationFee?: boolean;
     candidateRegistrationFeeReason?: string;
+    entryTypeOverride?: string;
   }>(body, []);
 
   if (!data?.reason?.trim()) {
@@ -68,6 +69,15 @@ export async function POST(
     !data.candidateRegistrationFeeReason?.trim()
   ) {
     return jsonError("Reason is required when adding or removing Candidate Registration Fee", 400);
+  }
+
+  const FEE_ENTRY_TYPES = new Set(["NORMAL", "LATE", "HIGH_LATE"]);
+  let entryTypeOverride: "NORMAL" | "LATE" | "HIGH_LATE" | undefined;
+  if (data.entryTypeOverride) {
+    if (!FEE_ENTRY_TYPES.has(data.entryTypeOverride)) {
+      return jsonError("entryTypeOverride must be NORMAL, LATE, or HIGH_LATE", 400);
+    }
+    entryTypeOverride = data.entryTypeOverride as "NORMAL" | "LATE" | "HIGH_LATE";
   }
 
   try {
@@ -87,6 +97,7 @@ export async function POST(
         replacements: data.replacements,
         includeCandidateRegistrationFee: data.includeCandidateRegistrationFee,
         candidateRegistrationFeeReason: data.candidateRegistrationFeeReason,
+        entryTypeOverride,
       },
     );
     return NextResponse.json(workspace);

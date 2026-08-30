@@ -9,9 +9,19 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.2.2";
+export const CURRENT_VERSION = "1.2.3";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.2.3",
+    releaseDate: "2026-08-30",
+    summary:
+      "Choose fee stage when adding exams after a closed window; fix regenerate statement FK error.",
+    changes: [
+      "Help student register after deadline and post-lock add: select Normal, Late, or High Late when the window is closed (required) or override automatically timed stages",
+      "Fix Regenerate Revised Statement foreign-key error after add-then-remove exam changes",
+    ],
+  },
   {
     version: "1.2.2",
     releaseDate: "2026-08-30",

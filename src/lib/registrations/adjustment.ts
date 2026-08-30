@@ -24,6 +24,7 @@ import type { FeeStatementChangeReasonCode } from "@/lib/fees/statement-lifecycl
 import { applyCandidateRegistrationFeeSelection } from "@/lib/fees/candidate-registration-fee";
 import { assertStudentCanRegister } from "@/lib/students/archive";
 import {
+  resolveActiveFeeStage,
   resolveEntryTypeForRegistration,
   type RegistrationFeeStageRecord,
 } from "@/lib/registrations/fee-stages";
@@ -45,6 +46,8 @@ export interface PostLockAdjustmentInput {
   replacements?: Array<{ registrationId: string; newExamSessionId: string }>;
   includeCandidateRegistrationFee?: boolean;
   candidateRegistrationFeeReason?: string;
+  /** When fee stages are no longer active (e.g. window closed), staff must choose the fee stage. */
+  entryTypeOverride?: import("@/generated/prisma/enums").FeeEntryType;
   teacherRequestedBy?: { name: string; role: UserRole };
 }
 
@@ -166,9 +169,24 @@ export async function applyPostLockAdjustment(
     throw new RegistrationError("Adjustments are only allowed for locked registrations", 400);
   }
 
+  const addIds = input.addExamSessionIds ?? [];
+  const activeStage = resolveActiveFeeStage(
+    feeStages as RegistrationFeeStageRecord[],
+    now,
+  );
+  const addingExams = addIds.length > 0 || (input.replacements?.length ?? 0) > 0;
+  if (addingExams && !activeStage && !input.entryTypeOverride) {
+    throw new RegistrationError(
+      "No active fee stage for this registration window. Select Normal, Late, or High Late for the added exams.",
+      400,
+    );
+  }
+
   const entryResolution = resolveEntryTypeForRegistration({
     feeStages: feeStages as RegistrationFeeStageRecord[],
     now,
+    overrideEntryType: input.entryTypeOverride,
+    allowOverride: Boolean(input.entryTypeOverride),
   });
 
   const candidate = await resolveCandidateForRegistration({
@@ -180,7 +198,6 @@ export async function applyPostLockAdjustment(
   }
   const candidateSnaps = candidateRegistrationSnapshots(candidate);
 
-  const addIds = input.addExamSessionIds ?? [];
   if (addIds.length > 0 && candidate.candidateType === "INTERNAL" && workspace.studentId) {
     await assertStudentCanRegister(workspace.studentId);
   }
@@ -367,6 +384,8 @@ export async function applyPostLockAdjustment(
         reason,
         entryType: entryResolution.entryType,
         feeStageId: entryResolution.feeStageId,
+        entryTypeOverridden: entryResolution.entryTypeOverridden,
+        entryTypeOverrideReason: entryResolution.entryTypeOverridden ? reason : null,
       };
 
       const lockedAt = workspace.lockedAt ?? now;

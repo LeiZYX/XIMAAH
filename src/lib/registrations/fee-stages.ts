@@ -145,9 +145,11 @@ export function resolveEntryTypeForRegistration(input: {
   const active = resolveActiveFeeStage(enabledStages, now);
 
   if (input.overrideEntryType && input.allowOverride) {
+    const matchingStage =
+      enabledStages.find((stage) => stage.stageCode === input.overrideEntryType) ?? null;
     return {
       entryType: input.overrideEntryType,
-      feeStageId: active?.id ?? null,
+      feeStageId: matchingStage?.id ?? active?.id ?? null,
       entryTypeOverridden: true,
       isLateRegistration: isLateEntryType(input.overrideEntryType),
       defaultedToNormal: false,

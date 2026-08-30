@@ -73,6 +73,7 @@ export function LateRegistrationModal({
   const registrationWindowId = windowSelector.registrationWindowId;
   const selectedWindow = windowSelector.selectedWindow as {
     id: string;
+    status?: string;
     examSeries: { id: string; name: string; year: number };
     examBoard: { id: string; name: string };
   } | null;
@@ -86,11 +87,17 @@ export function LateRegistrationModal({
   const [existingExams, setExistingExams] = useState<ExistingExamRow[]>([]);
   const [existingExamsLoading, setExistingExamsLoading] = useState(false);
   const [reason, setReason] = useState("");
+  const [entryTypeOverride, setEntryTypeOverride] = useState<"" | "NORMAL" | "LATE" | "HIGH_LATE">(
+    "",
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const isStaffFlow = windowFilter === "staff";
   const isTeacherFlow = windowFilter === "teacher";
+  const windowStatus = String(selectedWindow?.status ?? "");
+  const requiresFeeStageChoice =
+    isStaffFlow && (windowStatus === "CLOSED" || windowStatus === "ARCHIVED");
 
   const blockedSessionIds = useMemo(
     () => new Set(existingExams.map((exam) => exam.examSession.id)),
@@ -234,6 +241,10 @@ export function LateRegistrationModal({
       setError("Reason is required.");
       return;
     }
+    if (requiresFeeStageChoice && !entryTypeOverride) {
+      setError("Select which fee stage to charge (Normal, Late, or High Late).");
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -254,6 +265,7 @@ export function LateRegistrationModal({
                 registrationWindowId,
                 examSessionIds: selectedSessionIds,
                 reason: reason.trim(),
+                ...(entryTypeOverride ? { entryTypeOverride } : {}),
               },
         ),
       });
@@ -331,9 +343,39 @@ export function LateRegistrationModal({
                 setSelectedSessionIds([]);
                 setAddSessionIds([]);
                 setRemovalIds(new Set());
+                setEntryTypeOverride("");
               },
             }}
           />
+
+          {isStaffFlow && selectedWindow ? (
+            <label className="block text-sm">
+              <span className="mb-1 block font-medium text-slate-700">
+                Fee entry stage{requiresFeeStageChoice ? " *" : ""}
+              </span>
+              <select
+                value={entryTypeOverride}
+                onChange={(e) =>
+                  setEntryTypeOverride(e.target.value as "" | "NORMAL" | "LATE" | "HIGH_LATE")
+                }
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              >
+                <option value="">
+                  {requiresFeeStageChoice
+                    ? "Select fee stage…"
+                    : "Automatic (current fee stage)"}
+                </option>
+                <option value="NORMAL">Normal Entry</option>
+                <option value="LATE">Late Entry</option>
+                <option value="HIGH_LATE">High Late Entry</option>
+              </select>
+              <p className="mt-1 text-xs text-slate-500">
+                {requiresFeeStageChoice
+                  ? "This registration window is closed and fee stages are no longer timed. Choose which fee rule to apply to the added exams."
+                  : "Leave automatic unless you need to force a specific fee stage."}
+              </p>
+            </label>
+          ) : null}
 
           {isStaffFlow && candidateDetailBasePath ? (
             <RegistrationExamBoardIdentitySection
