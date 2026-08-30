@@ -81,14 +81,25 @@ export async function POST(request: NextRequest) {
   if (!data) return jsonError("testEmail is required");
 
   if (!(await isSmtpConfigured())) {
-    return jsonError("SMTP is not configured", 400);
+    return jsonError(
+      "SMTP is not configured. Set host, from address, SMTP user (full mailbox), and password.",
+      400,
+    );
   }
 
-  await sendMail({
-    to: data.testEmail,
-    subject: "XIMA Assessment Hub SMTP test",
-    text: "This is a test email from XIMA Assessment Hub.",
-  });
+  try {
+    await sendMail({
+      to: data.testEmail,
+      subject: "XIMA Assessment Hub SMTP test",
+      text: "This is a test email from XIMA Assessment Hub (Aliyun Mail SMTP).",
+    });
+  } catch (error) {
+    console.error("POST /api/admin/users/password-settings test email failed:", error);
+    return jsonError(
+      error instanceof Error ? error.message : "Test email failed",
+      502,
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

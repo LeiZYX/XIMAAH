@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { normalizeSmtpSecure } from "@/lib/mail/smtp-ports";
 
 export interface ResolvedEmailSettings {
   smtpHost: string;
@@ -15,11 +16,14 @@ export interface ResolvedEmailSettings {
 
 const SETTINGS_ID = "default";
 
+/** Default matches Aliyun Mail recommended SSL port when no settings exist yet. */
+const DEFAULT_SMTP_PORT = 465;
+
 function envFallback() {
   return {
     smtpHost: process.env.SMTP_HOST?.trim() || "",
-    smtpPort: Number(process.env.SMTP_PORT ?? 587),
-    smtpSecure: process.env.SMTP_SECURE === "true",
+    smtpPort: Number(process.env.SMTP_PORT ?? DEFAULT_SMTP_PORT),
+    smtpSecure: process.env.SMTP_SECURE === "true" || Number(process.env.SMTP_PORT ?? DEFAULT_SMTP_PORT) === 465,
     smtpUser: process.env.SMTP_USER?.trim() || "",
     smtpPassword: process.env.SMTP_PASSWORD || "",
     mailFrom:
@@ -43,7 +47,12 @@ export async function getResolvedEmailSettings(): Promise<ResolvedEmailSettings>
 
   const smtpHost = stored?.smtpHost?.trim() || env.smtpHost;
   const smtpPort = stored?.smtpPort ?? env.smtpPort;
-  const smtpSecure = stored?.smtpSecure ?? env.smtpSecure;
+  const resolvedPort =
+    Number.isFinite(smtpPort) && smtpPort > 0 ? Number(smtpPort) : DEFAULT_SMTP_PORT;
+  const smtpSecure = normalizeSmtpSecure(
+    resolvedPort,
+    stored?.smtpSecure ?? env.smtpSecure,
+  );
   const smtpUser = stored?.smtpUser?.trim() || env.smtpUser;
   const smtpPassword = stored?.smtpPassword || env.smtpPassword;
   const mailFrom = stored?.mailFrom?.trim() || env.mailFrom;
@@ -53,7 +62,7 @@ export async function getResolvedEmailSettings(): Promise<ResolvedEmailSettings>
 
   return {
     smtpHost,
-    smtpPort: Number.isFinite(smtpPort) && smtpPort > 0 ? smtpPort : 587,
+    smtpPort: resolvedPort,
     smtpSecure,
     smtpUser,
     smtpPassword,
@@ -63,7 +72,8 @@ export async function getResolvedEmailSettings(): Promise<ResolvedEmailSettings>
         ? passwordResetExpiresMinutes
         : 60,
     appUrl,
-    smtpConfigured: Boolean(smtpHost && mailFrom),
+    // Aliyun Mail requires authenticated SMTP (full mailbox + password/security password).
+    smtpConfigured: Boolean(smtpHost && mailFrom && smtpUser && smtpPassword),
     hasStoredPassword: Boolean(stored?.smtpPassword),
   };
 }
@@ -84,11 +94,15 @@ export async function saveEmailSettings(input: EmailSettingsInput) {
     where: { id: SETTINGS_ID },
   });
 
+  const smtpPort =
+    typeof input.smtpPort === "number" && input.smtpPort > 0
+      ? input.smtpPort
+      : DEFAULT_SMTP_PORT;
+
   const data = {
     smtpHost: input.smtpHost?.trim() || null,
-    smtpPort:
-      typeof input.smtpPort === "number" && input.smtpPort > 0 ? input.smtpPort : 587,
-    smtpSecure: input.smtpSecure ?? false,
+    smtpPort,
+    smtpSecure: normalizeSmtpSecure(smtpPort, input.smtpSecure),
     smtpUser: input.smtpUser?.trim() || null,
     mailFrom: input.mailFrom?.trim() || null,
     passwordResetExpiresMinutes:
