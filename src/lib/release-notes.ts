@@ -9,9 +9,17 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.2.1";
+export const CURRENT_VERSION = "1.2.2";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.2.2",
+    releaseDate: "2026-08-30",
+    summary: "Student fee payment page auto-refreshes after online pay.",
+    changes: [
+      "While a WeChat/Alipay QR is awaiting payment, the page polls GlobePay so status flips to Paid without tapping Refresh",
+    ],
+  },
   {
     version: "1.2.1",
     releaseDate: "2026-08-30",

@@ -88,6 +88,67 @@ export function StudentFeePaymentPanel({
     return next;
   }, [feeStatementId, onPaid, statementStatus]);
 
+  const syncActiveOrder = useCallback(async (orderId: string, options?: { quiet?: boolean }) => {
+    if (!options?.quiet) {
+      setSyncing(true);
+      setError(null);
+    }
+    try {
+      const response = await fetch(`/api/payments/orders/${orderId}/sync`, {
+        method: "POST",
+      });
+      const data = await readJsonResponse<{ order?: StudentPaymentOrder; error?: string }>(
+        response,
+      );
+      if (!response.ok || !data.order) {
+        throw new Error(data.error ?? "Could not sync payment status");
+      }
+      setActiveOrder(data.order);
+      setOrders((prev) => {
+        const exists = prev.some((o) => o.id === data.order!.id);
+        return exists
+          ? prev.map((o) => (o.id === data.order!.id ? data.order! : o))
+          : [data.order!, ...prev];
+      });
+      if (data.order.status === "PAID") {
+        setMessage("Payment received. Thank you.");
+        onPaid?.();
+      } else if (!options?.quiet) {
+        setMessage(`Current status: ${paymentOrderStatusLabel(data.order.status)}`);
+      }
+      return data.order;
+    } catch (err) {
+      if (!options?.quiet) {
+        setError(err instanceof Error ? err.message : "Could not sync payment status");
+      }
+      return null;
+    } finally {
+      if (!options?.quiet) setSyncing(false);
+    }
+  }, [onPaid]);
+
+  // While waiting for payment, poll GlobePay so the UI flips to Paid without a manual Refresh
+  // (webhook notify may be delayed or unreachable).
+  useEffect(() => {
+    const orderId = activeOrder?.id;
+    const awaiting =
+      activeOrder?.status === "CREATED" || activeOrder?.status === "PAYING";
+    if (!orderId || !awaiting) return;
+
+    let cancelled = false;
+    const tick = () => {
+      if (cancelled) return;
+      void syncActiveOrder(orderId, { quiet: true });
+    };
+    const intervalId = window.setInterval(tick, 4000);
+    const timeoutId = window.setTimeout(tick, 2500);
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+      window.clearTimeout(timeoutId);
+    };
+  }, [activeOrder?.id, activeOrder?.status, syncActiveOrder]);
+
   async function startPayment(channel: PaymentChannel) {
     setLoadingChannel(channel);
     setError(null);
@@ -128,32 +189,7 @@ export function StudentFeePaymentPanel({
       }
       return;
     }
-
-    setSyncing(true);
-    setError(null);
-    try {
-      const response = await fetch(`/api/payments/orders/${activeOrder.id}/sync`, {
-        method: "POST",
-      });
-      const data = await readJsonResponse<{ order?: StudentPaymentOrder; error?: string }>(
-        response,
-      );
-      if (!response.ok || !data.order) {
-        throw new Error(data.error ?? "Could not sync payment status");
-      }
-      setActiveOrder(data.order);
-      setOrders((prev) => prev.map((o) => (o.id === data.order!.id ? data.order! : o)));
-      if (data.order.status === "PAID") {
-        setMessage("Payment received. Thank you.");
-        onPaid?.();
-      } else {
-        setMessage(`Current status: ${paymentOrderStatusLabel(data.order.status)}`);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not sync payment status");
-    } finally {
-      setSyncing(false);
-    }
+    await syncActiveOrder(activeOrder.id);
   }
 
   if (statementStatus === "PAID" || activeOrder?.status === "PAID") {
@@ -205,7 +241,8 @@ export function StudentFeePaymentPanel({
           ) : (
             <>Amount due: {formatMoney(dueGbp, "GBP")}.</>
           )}{" "}
-          Choose WeChat or Alipay, then scan the QR code.
+          Choose WeChat or Alipay, then scan the QR code. Status updates automatically after payment
+          (or tap Refresh).
         </p>
       </div>
 
