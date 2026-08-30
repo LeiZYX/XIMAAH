@@ -32,6 +32,7 @@ export default function ExamOfficeRegistrationsPage() {
           assistedApiPath="/api/exam-office/assisted-registrations"
           officeOnlyApiPath="/api/exam-office/office-only-registrations"
           externalApiPath="/api/exam-office/external-candidate-registrations"
+          lateRegistrationApiPath="/api/exam-office/late-registrations"
           workspacesApiPath="/api/admin/registrations/workspaces"
           detailBasePath="/exam-office/registrations"
           candidateDetailBasePath="/exam-office/candidates"

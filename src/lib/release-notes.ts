@@ -9,9 +9,18 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.2.0";
+export const CURRENT_VERSION = "1.2.1";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.2.1",
+    releaseDate: "2026-08-30",
+    summary:
+      "Staff can help students who never registered after a window closes.",
+    changes: [
+      "Add Registration menu: Help student register after deadline (Admin and Exam Office)—select any student for Open or Closed windows when post-lock is enabled",
+    ],
+  },
   {
     version: "1.2.0",
     releaseDate: "2026-08-29",

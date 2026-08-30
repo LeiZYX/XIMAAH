@@ -32,6 +32,7 @@ export default function AdminRegistrationsPage() {
           assistedApiPath="/api/admin/assisted-registrations"
           officeOnlyApiPath="/api/admin/office-only-registrations"
           externalApiPath="/api/admin/external-candidate-registrations"
+          lateRegistrationApiPath="/api/admin/late-registrations"
           workspacesApiPath="/api/admin/registrations/workspaces"
           detailBasePath="/admin/registrations"
           candidateDetailBasePath="/admin/candidates"

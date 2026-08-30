@@ -1,16 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { LateRegistrationModal } from "@/components/registrations/LateRegistrationModal";
 import { PostLockAdjustmentPickerModal } from "@/components/registrations/PostLockAdjustmentPickerModal";
 import { StaffRegistrationModal } from "@/components/registrations/StaffRegistrationModal";
 import { ExternalCandidateRegistrationModal } from "@/components/registrations/ExternalCandidateRegistrationModal";
 
-type ModalMode = "assisted" | "office-only-internal" | "external" | "post-lock" | null;
+type ModalMode =
+  | "assisted"
+  | "office-only-internal"
+  | "external"
+  | "post-lock"
+  | "late-help"
+  | null;
 
 export function AddRegistrationDropdown({
   assistedApiPath,
   officeOnlyApiPath,
   externalApiPath,
+  lateRegistrationApiPath,
   workspacesApiPath,
   detailBasePath,
   candidateDetailBasePath,
@@ -18,6 +26,7 @@ export function AddRegistrationDropdown({
   assistedApiPath: string;
   officeOnlyApiPath: string;
   externalApiPath: string;
+  lateRegistrationApiPath: string;
   workspacesApiPath: string;
   detailBasePath: string;
   candidateDetailBasePath: string;
@@ -112,6 +121,20 @@ export function AddRegistrationDropdown({
                 className="block w-full px-4 py-2 text-left text-sm hover:bg-slate-50"
                 onClick={() => {
                   setOpen(false);
+                  setMode("late-help");
+                }}
+              >
+                Help student register after deadline
+                <span className="mt-0.5 block text-xs text-slate-500">
+                  For students who never registered (or need adds after student close). Works on Open or Closed
+                  windows when post-lock is enabled.
+                </span>
+              </button>
+              <button
+                type="button"
+                className="block w-full px-4 py-2 text-left text-sm hover:bg-slate-50"
+                onClick={() => {
+                  setOpen(false);
                   setMode("post-lock");
                 }}
               >
@@ -158,6 +181,21 @@ export function AddRegistrationDropdown({
           candidateDetailBasePath={candidateDetailBasePath}
           onClose={() => setMode(null)}
           onSubmitted={handleSubmitted}
+        />
+      ) : null}
+
+      {mode === "late-help" ? (
+        <LateRegistrationModal
+          title="Help student register after deadline"
+          submitLabel="Save registration"
+          apiPath={lateRegistrationApiPath}
+          windowFilter="staff"
+          candidateDetailBasePath={candidateDetailBasePath}
+          onClose={() => setMode(null)}
+          onSubmitted={(result) => {
+            handleSubmitted(result);
+            setMode(null);
+          }}
         />
       ) : null}
 
