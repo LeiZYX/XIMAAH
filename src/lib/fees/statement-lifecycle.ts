@@ -43,6 +43,15 @@ export function feeStatementChangeReasonLabel(code: FeeStatementChangeReasonCode
 }
 
 async function deleteFeeStatement(statementId: string) {
+  // Clear revision pointers that reference this row so delete cannot trip self-FKs.
+  await prisma.feeStatement.updateMany({
+    where: { revisedFromStatementId: statementId },
+    data: { revisedFromStatementId: null },
+  });
+  await prisma.feeStatement.updateMany({
+    where: { revisedToStatementId: statementId },
+    data: { revisedToStatementId: null },
+  });
   await prisma.feeStatementItem.deleteMany({ where: { feeStatementId: statementId } });
   await prisma.feeStatement.delete({ where: { id: statementId } });
 }
@@ -181,15 +190,18 @@ export async function finalizeRevisedFeeStatement(params: {
 
   if (outdated.length === 0) return null;
 
-  const primary =
-    outdated.find((row) => row.issuedAt !== null) ?? outdated[0]!;
+  // Never-issued drafts/outdated rows can be removed. Issued rows must be kept as REVISED
+  // history — and must still exist when we set revisedFromStatementId on the new statement.
+  const neverIssued = outdated.filter((row) => row.issuedAt === null);
+  const issuedHistory = outdated.filter((row) => row.issuedAt !== null);
 
-  for (const old of outdated) {
-    if (!old.issuedAt) {
-      await deleteFeeStatement(old.id);
-      continue;
-    }
+  for (const old of neverIssued) {
+    await deleteFeeStatement(old.id);
+  }
 
+  const primary = issuedHistory[0] ?? null;
+
+  for (const old of issuedHistory) {
     await prisma.feeStatement.update({
       where: { id: old.id },
       data: {
@@ -199,10 +211,12 @@ export async function finalizeRevisedFeeStatement(params: {
     });
   }
 
-  await prisma.feeStatement.update({
-    where: { id: params.newStatementId },
-    data: { revisedFromStatementId: primary.id },
-  });
+  if (primary) {
+    await prisma.feeStatement.update({
+      where: { id: params.newStatementId },
+      data: { revisedFromStatementId: primary.id },
+    });
+  }
 
   await createFeeAuditLog({
     action: "FEE_STATEMENT_REGENERATED_REVISED",
@@ -213,6 +227,8 @@ export async function finalizeRevisedFeeStatement(params: {
       newStatementId: params.newStatementId,
       previousStatementIds: outdated.map((row) => row.id),
       previousStatementNos: outdated.map((row) => row.statementNo),
+      revisedFromStatementId: primary?.id ?? null,
+      discardedNeverIssuedIds: neverIssued.map((row) => row.id),
     },
   }).catch((error) => {
     console.error("Fee audit log failed:", error);
