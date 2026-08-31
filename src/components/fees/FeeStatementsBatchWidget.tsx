@@ -1,6 +1,5 @@
 "use client";
 
-import { Card } from "@/components/ui/Card";
 import { FeeStatementsBatchPanel } from "@/components/fees/FeeStatementsBatchPanel";
 import { CandidateInvoicesBatchPanel } from "@/components/fees/CandidateInvoicesBatchPanel";
 import type { StaffRegistrationTypeFilter } from "@/lib/registrations/workspace-type-filters";
@@ -39,7 +38,7 @@ export function FeeStatementsBatchWidget({
         title="Restricted fee statements"
         description="Generate restricted fee statements (FS-RI) for office-only restricted registrations."
         candidateColumnLabel="Student"
-        itemLabel="invoices"
+        itemLabel="fee statements"
       />
     );
   }
@@ -53,7 +52,7 @@ export function FeeStatementsBatchWidget({
       title="External candidate fee statements"
       description="Generate external candidate fee statements (FS-EX). Exam documents are managed separately under Exam Documents."
       candidateColumnLabel="Candidate"
-      itemLabel="invoices"
+      itemLabel="fee statements"
     />
   );
 }

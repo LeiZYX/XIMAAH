@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -8,6 +8,8 @@ import {
   FeeStatementPrintModal,
   type FeeStatementPrintData,
 } from "@/components/fees/FeeStatementPrintModal";
+import { StatementPaymentOrdersPanel } from "@/components/fees/StatementPaymentOrdersPanel";
+import { StudentFeePaymentPanel } from "@/components/fees/StudentFeePaymentPanel";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
@@ -46,7 +48,7 @@ export function CandidateInvoicesBatchPanel({
   title,
   description,
   candidateColumnLabel = "Candidate",
-  itemLabel = "invoices",
+  itemLabel = "fee statements",
 }: CandidateInvoicesBatchPanelProps) {
   const [statements, setStatements] = useState<FeeStatementPrintData[]>([]);
   const [loading, setLoading] = useState(false);
@@ -60,13 +62,15 @@ export function CandidateInvoicesBatchPanel({
   const [pageSize, setPageSize] = useState<number>(LIST_PAGE_SIZES[0]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [paymentFilter, setPaymentFilter] = useState<"all" | "unpaid" | "paid">("all");
   const [previewStatement, setPreviewStatement] = useState<{
     statement: FeeStatementPrintData;
     autoPrint: boolean;
   } | null>(null);
 
   useEffect(() => {
-    setPage(1);
+    const timeoutId = window.setTimeout(() => setPage(1), 0);
+    return () => window.clearTimeout(timeoutId);
   }, [registrationWindowId, statementKind]);
 
   const load = useCallback(async () => {
@@ -84,6 +88,9 @@ export function CandidateInvoicesBatchPanel({
         pageSize: String(pageSize),
         statementKind,
       });
+      if (paymentFilter !== "all") {
+        params.set("paymentStatus", paymentFilter);
+      }
       const response = await fetch(`/api/fee-statements?${params.toString()}`);
       const data = await readJsonResponse<PaginatedStatements>(response);
       if (response.ok && data.statements) {
@@ -102,10 +109,11 @@ export function CandidateInvoicesBatchPanel({
     } finally {
       setListLoading(false);
     }
-  }, [registrationWindowId, page, pageSize, statementKind]);
+  }, [registrationWindowId, page, pageSize, statementKind, paymentFilter]);
 
   useEffect(() => {
-    void load();
+    const timeoutId = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(timeoutId);
   }, [load]);
 
   async function batchGenerate(issue: boolean) {
@@ -152,6 +160,27 @@ export function CandidateInvoicesBatchPanel({
     }
   }
 
+  async function issueStatement(statementId: string) {
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch("/api/fee-statements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "issue", statementId }),
+      });
+      const data = await readJsonResponse<{ error?: string; statementNo?: string }>(response);
+      if (!response.ok) throw new Error(data.error ?? "Issue failed");
+      setMessage(`${data.statementNo ?? "Fee statement"} issued.`);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Issue failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <>
       <Card className="space-y-4">
@@ -165,6 +194,19 @@ export function CandidateInvoicesBatchPanel({
             <option value="GBP">Display GBP</option>
             <option value="CNY">Display CNY</option>
             <option value="BOTH">Display GBP + CNY</option>
+          </select>
+          <select
+            value={paymentFilter}
+            onChange={(e) => {
+              setPaymentFilter(e.target.value as "all" | "unpaid" | "paid");
+              setPage(1);
+            }}
+            className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            aria-label="Filter by payment status"
+          >
+            <option value="all">All payment statuses</option>
+            <option value="unpaid">Unpaid (Issued)</option>
+            <option value="paid">Paid</option>
           </select>
           <button
             type="button"
@@ -197,50 +239,104 @@ export function CandidateInvoicesBatchPanel({
         ) : listLoading && statements.length === 0 ? (
           <p className="text-sm text-slate-500">Loading...</p>
         ) : statements.length === 0 ? (
-          <p className="text-sm text-slate-500">No invoices for this window yet.</p>
+            <p className="text-sm text-slate-500">
+              {paymentFilter === "unpaid"
+                ? "No unpaid (issued) fee statements for this window."
+                : paymentFilter === "paid"
+                  ? "No paid fee statements for this window."
+                  : "No fee statements for this window yet."}
+            </p>
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[640px] text-left text-sm">
+              <table className="w-full min-w-[980px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 text-slate-600">
-                    <th className="py-2 pr-4 font-medium">Invoice</th>
+                    <th className="py-2 pr-4 font-medium">Statement</th>
                     <th className="py-2 pr-4 font-medium">{candidateColumnLabel}</th>
                     <th className="py-2 pr-4 font-medium">Status</th>
+                    <th className="py-2 pr-4 font-medium">Online payment</th>
                     <th className="py-2 font-medium text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {statements.map((statement) => (
-                    <tr key={statement.id} className="border-b border-slate-100">
-                      <td className="py-2 pr-4 font-medium text-slate-900">{statement.statementNo}</td>
-                      <td className="py-2 pr-4">{statement.studentNameSnapshot}</td>
-                      <td className="py-2 pr-4">
-                        <span
-                          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${feeStatementStatusClass(statement.status)}`}
-                        >
-                          {feeStatementStatusLabel(statement.status)}
-                        </span>
-                      </td>
-                      <td className="py-2">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            type="button"
-                            onClick={() => setPreviewStatement({ statement, autoPrint: false })}
-                            className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                    <Fragment key={statement.id}>
+                      <tr key={statement.id} className="border-b border-slate-100">
+                        <td className="py-2 pr-4 font-medium text-slate-900">{statement.statementNo}</td>
+                        <td className="py-2 pr-4">{statement.studentNameSnapshot}</td>
+                        <td className="py-2 pr-4">
+                          <span
+                            className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${feeStatementStatusClass(statement.status)}`}
                           >
-                            Preview
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setPreviewStatement({ statement, autoPrint: true })}
-                            className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-                          >
-                            Print
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                            {feeStatementStatusLabel(statement.status)}
+                          </span>
+                        </td>
+                        <td className="py-2 pr-4 align-top">
+                          <StatementPaymentOrdersPanel
+                            orders={statement.paymentOrders ?? []}
+                            compact
+                            onChanged={() => void load()}
+                          />
+                        </td>
+                        <td className="py-2">
+                          <div className="flex items-center justify-end gap-2">
+                            {statement.status === "DRAFT" ? (
+                              <button
+                                type="button"
+                                disabled={loading}
+                                onClick={() => void issueStatement(statement.id)}
+                                className="rounded-lg bg-indigo-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+                              >
+                                Issue
+                              </button>
+                            ) : null}
+                            <button
+                              type="button"
+                              onClick={() => setPreviewStatement({ statement, autoPrint: false })}
+                              className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                            >
+                              Preview
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setPreviewStatement({ statement, autoPrint: true })}
+                              className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+                            >
+                              Print
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      {statement.status === "ISSUED" ||
+                      statement.status === "PAID" ||
+                      (statement.paymentOrders?.length ?? 0) > 0 ? (
+                        <tr key={`${statement.id}-payment`} className="border-b border-slate-200 bg-slate-50/50">
+                          <td colSpan={5} className="px-4 py-3">
+                            {statement.status === "ISSUED" ? (
+                              <StudentFeePaymentPanel
+                                feeStatementId={statement.id}
+                                statementStatus={statement.status}
+                                totalGbpAmount={statement.totalGbpAmount}
+                                amountDueGbpAmount={statement.amountDueGbpAmount}
+                                previouslyPaidGbpAmount={statement.previouslyPaidGbpAmount}
+                                existingOrders={statement.paymentOrders ?? []}
+                                onPaid={() => void load()}
+                              />
+                            ) : null}
+                            {statement.status === "PAID" ? (
+                              <p className="text-sm font-medium text-emerald-800">Payment complete.</p>
+                            ) : null}
+                            <div className="mt-2">
+                              <StatementPaymentOrdersPanel
+                                orders={statement.paymentOrders ?? []}
+                                onChanged={() => void load()}
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      ) : null}
+                    </Fragment>
                   ))}
                 </tbody>
               </table>

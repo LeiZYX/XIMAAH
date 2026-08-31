@@ -31,6 +31,7 @@ import { createFeeAuditLog } from "@/lib/fees/audit";
 import {
   computeStatementPaymentSplit,
   sumWorkspacePaidGbp,
+  statementAmountDueGbp,
 } from "@/lib/fees/payment-due";
 import { finalizeRevisedFeeStatement } from "@/lib/fees/statement-lifecycle";
 
@@ -655,9 +656,11 @@ export async function issueFeeStatement(statementId: string) {
     throw new FeeError(`Cannot issue: ${parts.join("; ")}.`);
   }
 
+  const nextStatus = statementAmountDueGbp(statement) <= 0 ? "PAID" : "ISSUED";
+
   return prisma.feeStatement.update({
     where: { id: statementId },
-    data: { status: "ISSUED", issuedAt: new Date() },
+    data: { status: nextStatus, issuedAt: new Date() },
     include: {
       items: true,
       registrationWindow: {

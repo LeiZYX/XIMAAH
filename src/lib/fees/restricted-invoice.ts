@@ -8,6 +8,7 @@ import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-curre
 import { findMatchingFeeRuleWithFallback } from "@/lib/fees/match";
 import type { ExchangeRateRecord, FeeRuleRecord } from "@/lib/fees/types";
 import { FeeError, issueFeeStatement, ensureWorkspaceLockedForBilling } from "@/lib/fees/statement";
+import { computeStatementPaymentSplit, sumWorkspacePaidGbp } from "@/lib/fees/payment-due";
 import { centreInfoFromExamBoard } from "@/lib/exam-boards/centre";
 import { prisma } from "@/lib/prisma";
 
@@ -199,6 +200,17 @@ export async function generateOfficeInvoice(params: {
   const statementNo = await generateOfficeInvoiceNumber(config.registrationType);
   const totalGbp = lines.reduce((sum, line) => sum + line.lineTotalGbp, 0);
   const totalCny = lines.reduce((sum, line) => sum + line.lineTotalCny, 0);
+  const paymentSplit = computeStatementPaymentSplit({
+    totalGbp,
+    totalCny,
+    previouslyPaidGbp: await sumWorkspacePaidGbp(workspaceId),
+  });
+  const noFurtherPaymentDue = issue && paymentSplit.amountDueGbp <= 0;
+  const paymentNotes = noFurtherPaymentDue
+    ? "No additional payment due. Previous online payments cover this fee statement."
+    : paymentSplit.previouslyPaidGbp > 0
+      ? `Balance due after previous payment(s) of £${paymentSplit.previouslyPaidGbp.toFixed(2)}. Full fee total £${paymentSplit.totalGbp.toFixed(2)}.`
+      : null;
 
   const statement = await prisma.feeStatement.create({
     data: {
@@ -218,11 +230,16 @@ export async function generateOfficeInvoice(params: {
       emailSnapshot: snapshot.emailSnapshot,
       assessmentHubCandidateNumberSnapshot: snapshot.assessmentHubCandidateNumberSnapshot,
       candidateTypeSnapshot: snapshot.candidateTypeSnapshot,
-      status: issue ? "ISSUED" : "DRAFT",
-      totalGbpAmount: totalGbp,
-      totalCnyAmount: totalCny,
+      status: noFurtherPaymentDue ? "PAID" : issue ? "ISSUED" : "DRAFT",
+      totalGbpAmount: paymentSplit.totalGbp,
+      totalCnyAmount: paymentSplit.totalCny,
+      previouslyPaidGbpAmount: paymentSplit.previouslyPaidGbp,
+      previouslyPaidCnyAmount: paymentSplit.previouslyPaidCny,
+      amountDueGbpAmount: paymentSplit.amountDueGbp,
+      amountDueCnyAmount: paymentSplit.amountDueCny,
+      paymentNotes,
       generatedByUserId,
-      issuedAt: issue ? new Date() : null,
+      issuedAt: issue || noFurtherPaymentDue ? new Date() : null,
       items: { create: lines },
     },
     include: { items: true, registrationWindow: { include: { examBoard: true } } },
