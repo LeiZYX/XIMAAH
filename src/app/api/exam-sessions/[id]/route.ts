@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseDate, parseJsonBody } from "@/lib/api";
+import { validateExamSessionReferences } from "@/lib/exam-sessions/validation";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -14,20 +15,24 @@ export async function PUT(request: NextRequest, context: RouteContext) {
     date: string;
     paperId: string;
     examSeriesId: string;
+    examBoardId: string;
     startTime?: string;
     endTime?: string;
     venue?: string;
     notes?: string;
-  }>(body, ["date", "paperId", "examSeriesId"]);
+  }>(body, ["date", "paperId", "examSeriesId", "examBoardId"]);
 
   if (!data) {
-    return jsonError("Date, paper, and exam series are required");
+    return jsonError("Date, paper, exam series, and exam board are required");
   }
 
   const date = parseDate(data.date);
   if (!date) {
     return jsonError("Invalid date");
   }
+
+  const referenceError = await validateExamSessionReferences(data);
+  if (referenceError) return jsonError(referenceError, 400);
 
   try {
     const examSession = await prisma.examSession.update({

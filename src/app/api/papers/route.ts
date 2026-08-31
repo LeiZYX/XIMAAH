@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
             select: {
               name: true,
               level: true,
-              examBoard: { select: { name: true, code: true } },
+              examBoard: { select: { id: true, name: true, code: true } },
             },
           },
         },

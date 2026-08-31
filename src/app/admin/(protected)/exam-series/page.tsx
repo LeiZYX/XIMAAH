@@ -4,7 +4,6 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { FormField, SelectField } from "@/components/admin/FormFields";
 import { AdminStatus, fetchJsonList } from "@/components/admin/useAdminList";
-import { ImportPreviewPanel } from "@/components/admin/ImportPreviewPanel";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 
@@ -84,14 +83,6 @@ export default function ExamSeriesPage() {
       <PageHeader
         title="Exam Series"
         description="Exam windows such as Summer 2026 or November resits."
-      />
-      <ImportPreviewPanel
-        title="Upload Edexcel official timetable"
-        description="Upload an official Pearson Edexcel XLSX timetable to preview and import its qualifications, subjects, papers, and exam sessions. The exam board and exam series are created or reused from the timetable metadata."
-        accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        previewEndpoint="/api/import/preview/pearson-excel"
-        source="pearson-excel"
-        accent="sky"
       />
       <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
         <Card>
