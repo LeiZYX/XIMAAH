@@ -244,6 +244,17 @@ async function applyCandidateRegistrationWorkflow(
   const uniqueSessionIds = [...new Set(input.examSessionIds)];
   const { window, sessions } = await loadSessionsForWindow(input.registrationWindowId, uniqueSessionIds);
   await assertNoDuplicateSessions(candidate.id, uniqueSessionIds);
+  const cancelledRegistrations = await prisma.studentExamRegistration.findMany({
+    where: {
+      candidateId: candidate.id,
+      examSessionId: { in: uniqueSessionIds },
+      status: RegistrationStatus.CANCELLED,
+    },
+    select: { id: true, examSessionId: true },
+  });
+  const cancelledBySession = new Map(
+    cancelledRegistrations.map((registration) => [registration.examSessionId, registration.id]),
+  );
 
   const now = new Date();
   const feeStages = await prisma.registrationFeeStage.findMany({
@@ -344,36 +355,45 @@ async function applyCandidateRegistrationWorkflow(
           ? RegistrationAuditAction.ENTRY_TYPE_OVERRIDDEN
           : metadata.auditAction);
 
-      const row = await tx.studentExamRegistration.create({
-        data: {
-          candidateId: candidate.id,
-          studentId,
-          registrationWorkspaceId: workspace!.id,
-          examSessionId: session.id,
-          registrationWindowId: window.id,
-          examBoardId: window.examBoardId,
-          examSeriesId: window.examSeriesId,
-          subjectId: session.paper.subjectId,
-          paperId: session.paper.id,
-          ...snapshots,
-          status: lockImmediately ? RegistrationStatus.LOCKED : RegistrationStatus.ACTIVE,
-          lockedAt: lockImmediately ? now : null,
-          registrationSource: metadata.registrationSource,
-          visibility: metadata.visibility,
-          billingScope: metadata.billingScope,
-          registrationType: metadata.registrationType,
-          ...visibilityFlags,
-          addedByUserId: performedBy.id,
-          addedByRole: performedBy.role,
-          addedAt: now,
-          reason,
-          entryType: entryResolution.entryType,
-          feeStageId: entryResolution.feeStageId,
-          entryTypeOverridden: entryResolution.entryTypeOverridden,
-          entryTypeOverrideReason: entryResolution.entryTypeOverridden ? reason : null,
-        },
-        include: registrationInclude,
-      });
+      const registrationData = {
+        candidateId: candidate.id,
+        studentId,
+        registrationWorkspaceId: workspace!.id,
+        examSessionId: session.id,
+        registrationWindowId: window.id,
+        examBoardId: window.examBoardId,
+        examSeriesId: window.examSeriesId,
+        subjectId: session.paper.subjectId,
+        paperId: session.paper.id,
+        ...snapshots,
+        status: lockImmediately ? RegistrationStatus.LOCKED : RegistrationStatus.ACTIVE,
+        lockedAt: lockImmediately ? now : null,
+        cancelledAt: null,
+        registrationSource: metadata.registrationSource,
+        visibility: metadata.visibility,
+        billingScope: metadata.billingScope,
+        registrationType: metadata.registrationType,
+        ...visibilityFlags,
+        addedByUserId: performedBy.id,
+        addedByRole: performedBy.role,
+        addedAt: now,
+        reason,
+        entryType: entryResolution.entryType,
+        feeStageId: entryResolution.feeStageId,
+        entryTypeOverridden: entryResolution.entryTypeOverridden,
+        entryTypeOverrideReason: entryResolution.entryTypeOverridden ? reason : null,
+      };
+      const cancelledRegistrationId = cancelledBySession.get(session.id);
+      const row = cancelledRegistrationId
+        ? await tx.studentExamRegistration.update({
+            where: { id: cancelledRegistrationId },
+            data: registrationData,
+            include: registrationInclude,
+          })
+        : await tx.studentExamRegistration.create({
+            data: registrationData,
+            include: registrationInclude,
+          });
 
       await createRegistrationAuditLog(
         {
