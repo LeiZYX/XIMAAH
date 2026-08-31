@@ -1,12 +1,14 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { FormField, SelectField, TextAreaField } from "@/components/admin/FormFields";
 import { AdminStatus, fetchJsonList } from "@/components/admin/useAdminList";
 import { ExcelFileDropzone } from "@/components/ui/ExcelFileDropzone";
 import { Card } from "@/components/ui/Card";
+import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { LIST_PAGE_SIZES } from "@/lib/pagination";
 
 interface ExamBoard {
   id: string;
@@ -66,36 +68,85 @@ export default function ExamSessionsPage() {
   const [importing, setImporting] = useState(false);
   const [importMessage, setImportMessage] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(LIST_PAGE_SIZES[0]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [filters, setFilters] = useState({
+    examBoardId: "",
+    examSeriesId: "",
+    paperId: "",
+    paperQ: "",
+  });
 
-  const load = useCallback(async () => {
+  const updateFilters = useCallback((patch: Partial<typeof filters>) => {
+    setFilters((prev) => ({ ...prev, ...patch }));
+    setPage(1);
+  }, []);
+
+  const loadOptions = useCallback(async () => {
+    const [papersList, seriesList, boards] = await Promise.all([
+      fetchJsonList<Paper>("/api/papers"),
+      fetchJsonList<ExamSeries>("/api/exam-series"),
+      fetchJsonList<ExamBoard>("/api/exam-boards"),
+    ]);
+    setPapers(papersList);
+    setExamSeries(seriesList);
+    setExamBoards(boards);
+  }, []);
+
+  const loadSessions = useCallback(async () => {
     setLoading(true);
     setLoadError(null);
     try {
-      const [sessions, papersList, seriesList, boards] = await Promise.all([
-        fetchJsonList<ExamSession>("/api/exam-sessions"),
-        fetchJsonList<Paper>("/api/papers"),
-        fetchJsonList<ExamSeries>("/api/exam-series"),
-        fetchJsonList<ExamBoard>("/api/exam-boards"),
-      ]);
-      setItems(sessions);
-      setPapers(papersList);
-      setExamSeries(seriesList);
-      setExamBoards(boards);
+      const params = new URLSearchParams({
+        page: String(page),
+        pageSize: String(pageSize),
+      });
+      if (filters.examBoardId) params.set("examBoardId", filters.examBoardId);
+      if (filters.examSeriesId) params.set("examSeriesId", filters.examSeriesId);
+      if (filters.paperId) params.set("paperId", filters.paperId);
+      if (filters.paperQ.trim()) params.set("paperQ", filters.paperQ.trim());
+
+      const response = await fetch(`/api/exam-sessions?${params.toString()}`);
+      const data = (await response.json()) as {
+        sessions?: ExamSession[];
+        total?: number;
+        page?: number;
+        totalPages?: number;
+        error?: string;
+      };
+      if (!response.ok) {
+        throw new Error(data.error ?? "Failed to load exam sessions");
+      }
+
+      setItems(Array.isArray(data.sessions) ? data.sessions : []);
+      setTotal(data.total ?? 0);
+      setTotalPages(data.totalPages ?? 0);
+      if (typeof data.page === "number") setPage(data.page);
     } catch (error) {
       setItems([]);
-      setExamBoards([]);
-      setPapers([]);
-      setExamSeries([]);
-      setLoadError(error instanceof Error ? error.message : "Failed to load data");
+      setTotal(0);
+      setTotalPages(0);
+      setLoadError(error instanceof Error ? error.message : "Failed to load exam sessions");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filters, page, pageSize]);
 
   useEffect(() => {
-    const timeoutId = window.setTimeout(() => void load(), 0);
+    const timeoutId = window.setTimeout(() => {
+      void loadOptions().catch(() => {
+        setLoadError("Failed to load form options");
+      });
+    }, 0);
     return () => window.clearTimeout(timeoutId);
-  }, [load]);
+  }, [loadOptions]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => void loadSessions(), 0);
+    return () => window.clearTimeout(timeoutId);
+  }, [loadSessions]);
 
   const availablePapers = form.examBoardId
     ? papers.filter((paper) => paper.subject.qualification.examBoard.id === form.examBoardId)
@@ -103,6 +154,28 @@ export default function ExamSessionsPage() {
   const availableSeries = form.examBoardId
     ? examSeries.filter((series) => series.examBoard.id === form.examBoardId)
     : [];
+
+  const filterPapers = useMemo(() => {
+    const boardId = filters.examBoardId;
+    return boardId
+      ? papers.filter((paper) => paper.subject.qualification.examBoard.id === boardId)
+      : papers;
+  }, [filters.examBoardId, papers]);
+
+  const filterSeries = useMemo(() => {
+    const boardId = filters.examBoardId;
+    return boardId ? examSeries.filter((series) => series.examBoard.id === boardId) : examSeries;
+  }, [examSeries, filters.examBoardId]);
+
+  const exportHref = useMemo(() => {
+    const params = new URLSearchParams();
+    if (filters.examBoardId) params.set("examBoardId", filters.examBoardId);
+    if (filters.examSeriesId) params.set("examSeriesId", filters.examSeriesId);
+    if (filters.paperId) params.set("paperId", filters.paperId);
+    if (filters.paperQ.trim()) params.set("paperQ", filters.paperQ.trim());
+    const query = params.toString();
+    return query ? `/api/exam-sessions/export?${query}` : "/api/exam-sessions/export";
+  }, [filters]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -117,7 +190,7 @@ export default function ExamSessionsPage() {
 
     setForm(emptyForm);
     setEditingId(null);
-    await load();
+    await loadSessions();
   }
 
   async function handleImport(event: FormEvent<HTMLFormElement>) {
@@ -155,7 +228,7 @@ export default function ExamSessionsPage() {
       if (data.errors?.length) {
         setImportError(data.errors.slice(0, 5).join(" "));
       }
-      await load();
+      await loadSessions();
     } catch (error) {
       setImportError(error instanceof Error ? error.message : "Session import failed");
     } finally {
@@ -306,8 +379,74 @@ export default function ExamSessionsPage() {
             </button>
           </form>
         </Card>
-        <Card className="overflow-x-auto p-0">
-          <div className="p-4">
+        <Card className="space-y-4 overflow-x-auto p-0">
+          <div className="space-y-3 border-b border-slate-100 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-sm font-semibold text-slate-900">Session list</h2>
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.href = exportHref;
+                }}
+                className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              >
+                Export Excel
+              </button>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+              <select
+                value={filters.examBoardId}
+                onChange={(e) =>
+                  updateFilters({
+                    examBoardId: e.target.value,
+                    examSeriesId: "",
+                    paperId: "",
+                  })
+                }
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                aria-label="Filter by exam board"
+              >
+                <option value="">All exam boards</option>
+                {examBoards.map((board) => (
+                  <option key={board.id} value={board.id}>
+                    {board.code} — {board.name}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={filters.examSeriesId}
+                onChange={(e) => updateFilters({ examSeriesId: e.target.value })}
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                aria-label="Filter by exam series"
+              >
+                <option value="">All series</option>
+                {filterSeries.map((series) => (
+                  <option key={series.id} value={series.id}>
+                    {series.examBoard.code} · {series.name} ({series.year})
+                  </option>
+                ))}
+              </select>
+              <select
+                value={filters.paperId}
+                onChange={(e) => updateFilters({ paperId: e.target.value })}
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                aria-label="Filter by paper"
+              >
+                <option value="">All papers</option>
+                {filterPapers.map((paper) => (
+                  <option key={paper.id} value={paper.id}>
+                    {paper.code} — {paper.title}
+                  </option>
+                ))}
+              </select>
+              <input
+                value={filters.paperQ}
+                onChange={(e) => updateFilters({ paperQ: e.target.value })}
+                placeholder="Search paper code / title"
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                aria-label="Fuzzy search paper"
+              />
+            </div>
             <AdminStatus
               loading={loading}
               error={loadError}
@@ -315,66 +454,83 @@ export default function ExamSessionsPage() {
               entityName="exam sessions"
             />
           </div>
-          <table className="min-w-full divide-y divide-slate-200 text-sm">
-            <thead className="bg-slate-50">
-              <tr>
-                <th className="px-4 py-3 text-left">Exam Board</th>
-                <th className="px-4 py-3 text-left">Date</th>
-                <th className="px-4 py-3 text-left">Paper</th>
-                <th className="px-4 py-3 text-left">Series</th>
-                <th className="px-4 py-3 text-left">Time</th>
-                <th className="px-4 py-3 text-left">Venue</th>
-                <th className="px-4 py-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-200">
-              {items.map((item) => (
-                <tr key={item.id}>
-                  <td className="px-4 py-3">
-                    {item.examSeries.examBoard.code} — {item.examSeries.examBoard.name}
-                  </td>
-                  <td className="px-4 py-3">
-                    {new Date(item.date).toLocaleDateString("en-GB")}
-                  </td>
-                  <td className="px-4 py-3">{item.paper.code}</td>
-                  <td className="px-4 py-3">{item.examSeries.name}</td>
-                  <td className="px-4 py-3">
-                    {item.startTime
-                      ? `${item.startTime}${item.endTime ? `–${item.endTime}` : ""}`
-                      : "All day"}
-                  </td>
-                  <td className="px-4 py-3">{item.venue ?? "—"}</td>
-                  <td className="px-4 py-3 text-right">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingId(item.id);
-                        setForm({
-                          date: item.date.split("T")[0],
-                          startTime: item.startTime ?? "",
-                          endTime: item.endTime ?? "",
-                          venue: item.venue ?? "",
-                          notes: item.notes ?? "",
-                          paperId: item.paper.id,
-                          examSeriesId: item.examSeries.id,
-                          examBoardId: item.examSeries.examBoard.id,
-                        });
-                      }}
-                      className="mr-2 text-sm text-indigo-600"
-                    >
-                      Edit
-                    </button>
-                    <DeleteButton
-                      onDelete={async () => {
-                        await fetch(`/api/exam-sessions/${item.id}`, { method: "DELETE" });
-                        await load();
-                      }}
-                    />
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-slate-200 text-sm">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="px-4 py-3 text-left">Exam Board</th>
+                  <th className="px-4 py-3 text-left">Date</th>
+                  <th className="px-4 py-3 text-left">Paper</th>
+                  <th className="px-4 py-3 text-left">Series</th>
+                  <th className="px-4 py-3 text-left">Time</th>
+                  <th className="px-4 py-3 text-left">Venue</th>
+                  <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {items.map((item) => (
+                  <tr key={item.id}>
+                    <td className="px-4 py-3">
+                      {item.examSeries.examBoard.code} — {item.examSeries.examBoard.name}
+                    </td>
+                    <td className="px-4 py-3">
+                      {new Date(item.date).toLocaleDateString("en-GB")}
+                    </td>
+                    <td className="px-4 py-3">{item.paper.code}</td>
+                    <td className="px-4 py-3">{item.examSeries.name}</td>
+                    <td className="px-4 py-3">
+                      {item.startTime
+                        ? `${item.startTime}${item.endTime ? `–${item.endTime}` : ""}`
+                        : "All day"}
+                    </td>
+                    <td className="px-4 py-3">{item.venue ?? "—"}</td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingId(item.id);
+                          setForm({
+                            date: item.date.split("T")[0],
+                            startTime: item.startTime ?? "",
+                            endTime: item.endTime ?? "",
+                            venue: item.venue ?? "",
+                            notes: item.notes ?? "",
+                            paperId: item.paper.id,
+                            examSeriesId: item.examSeries.id,
+                            examBoardId: item.examSeries.examBoard.id,
+                          });
+                        }}
+                        className="mr-2 text-sm text-indigo-600"
+                      >
+                        Edit
+                      </button>
+                      <DeleteButton
+                        onDelete={async () => {
+                          await fetch(`/api/exam-sessions/${item.id}`, { method: "DELETE" });
+                          await loadSessions();
+                        }}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="px-4 pb-4">
+            <ListPagination
+              page={page}
+              pageSize={pageSize}
+              total={total}
+              totalPages={totalPages}
+              loading={loading}
+              itemLabel="exam sessions"
+              onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
+            />
+          </div>
         </Card>
       </div>
     </div>

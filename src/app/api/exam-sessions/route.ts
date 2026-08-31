@@ -1,59 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseDate, parseJsonBody } from "@/lib/api";
 import { filterExamSessions, EXAM_SESSION_SEARCH_LIMIT } from "@/lib/exam-session-search";
+import {
+  buildExamSessionListWhere,
+  listExamSessions,
+} from "@/lib/exam-sessions/list";
 import { validateExamSessionReferences } from "@/lib/exam-sessions/validation";
+import { buildPaginationMeta, parseListPagination } from "@/lib/pagination";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
-  const examSeriesId = request.nextUrl.searchParams.get("examSeriesId");
-  const paperId = request.nextUrl.searchParams.get("paperId");
-  const examBoardId = request.nextUrl.searchParams.get("examBoardId");
-  const subjectId = request.nextUrl.searchParams.get("subjectId");
-  const query = request.nextUrl.searchParams.get("q")?.trim() ?? "";
-  const limitParam = request.nextUrl.searchParams.get("limit");
+  const params = request.nextUrl.searchParams;
+  const examSeriesId = params.get("examSeriesId");
+  const paperId = params.get("paperId");
+  const examBoardId = params.get("examBoardId");
+  const subjectId = params.get("subjectId");
+  const paperQ = params.get("paperQ")?.trim() ?? "";
+  const query = params.get("q")?.trim() ?? "";
+  const limitParam = params.get("limit");
   const parsedLimit = limitParam ? Number.parseInt(limitParam, 10) : Number.NaN;
   const limit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? parsedLimit : undefined;
+  const paginated = params.has("page") || params.has("pageSize");
 
-  const examSessions = await prisma.examSession.findMany({
-    where: {
-      ...(examSeriesId ? { examSeriesId } : {}),
-      ...(paperId ? { paperId } : {}),
-      ...(examBoardId ? { examSeries: { examBoardId } } : {}),
-      ...(subjectId ? { paper: { subjectId } } : {}),
-    },
-    orderBy: { date: "asc" },
-    include: {
-      paper: {
-        select: {
-          id: true,
-          code: true,
-          title: true,
-          subject: {
-            select: {
-              name: true,
-              qualification: {
-                select: {
-                  name: true,
-                  examBoard: { select: { name: true, code: true } },
-                },
-              },
-            },
-          },
-        },
-      },
-      examSeries: {
-        select: {
-          id: true,
-          name: true,
-          year: true,
-          examBoard: { select: { id: true, name: true, code: true } },
-        },
-      },
-    },
+  const where = buildExamSessionListWhere({
+    examBoardId,
+    examSeriesId,
+    paperId,
+    subjectId,
+    paperQ,
   });
+
+  if (paginated) {
+    const { page, pageSize } = parseListPagination(params);
+    const total = await prisma.examSession.count({ where });
+    const { skip, page: safePage, totalPages, pageSize: safePageSize } = buildPaginationMeta(
+      total,
+      page,
+      pageSize,
+    );
+    const sessions = await listExamSessions({ where, skip, take: safePageSize });
+    return NextResponse.json({
+      sessions,
+      total,
+      page: safePage,
+      totalPages,
+      pageSize: safePageSize,
+    });
+  }
+
+  const examSessions = await listExamSessions({ where });
 
   let filtered = examSessions;
   if (query) {
