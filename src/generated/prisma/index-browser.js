@@ -310,6 +310,19 @@ exports.Prisma.RegistrationWindowScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.BoardSubmissionBaselineScalarFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  version: 'version',
+  kind: 'kind',
+  submittedAt: 'submittedAt',
+  submittedByUserId: 'submittedByUserId',
+  candidateCount: 'candidateCount',
+  entryCount: 'entryCount',
+  fileCount: 'fileCount',
+  notes: 'notes'
+};
+
 exports.Prisma.RegistrationWindowIncludedSeriesScalarFieldEnum = {
   id: 'id',
   registrationWindowId: 'registrationWindowId',
@@ -1112,6 +1125,13 @@ exports.Prisma.RegistrationWindowOrderByRelevanceFieldEnum = {
   createdById: 'createdById'
 };
 
+exports.Prisma.BoardSubmissionBaselineOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  submittedByUserId: 'submittedByUserId',
+  notes: 'notes'
+};
+
 exports.Prisma.RegistrationWindowIncludedSeriesOrderByRelevanceFieldEnum = {
   id: 'id',
   registrationWindowId: 'registrationWindowId',
@@ -1655,6 +1675,11 @@ exports.RegistrationWindowStatus = exports.$Enums.RegistrationWindowStatus = {
   ARCHIVED: 'ARCHIVED'
 };
 
+exports.BoardSubmissionKind = exports.$Enums.BoardSubmissionKind = {
+  BULK_ENTRIES: 'BULK_ENTRIES',
+  AMENDMENT: 'AMENDMENT'
+};
+
 exports.FeeEntryType = exports.$Enums.FeeEntryType = {
   NORMAL: 'NORMAL',
   LATE: 'LATE',
@@ -1993,6 +2018,7 @@ exports.Prisma.ModelName = {
   CandidateExamIdentity: 'CandidateExamIdentity',
   TeacherAssignment: 'TeacherAssignment',
   RegistrationWindow: 'RegistrationWindow',
+  BoardSubmissionBaseline: 'BoardSubmissionBaseline',
   RegistrationWindowIncludedSeries: 'RegistrationWindowIncludedSeries',
   RegistrationFeeStage: 'RegistrationFeeStage',
   RegistrationWorkspace: 'RegistrationWorkspace',

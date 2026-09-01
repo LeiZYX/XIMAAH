@@ -288,6 +288,11 @@ enum OfflineWithdrawalRefundStatus {
   ZERO_NO_REFUND
 }
 
+enum BoardSubmissionKind {
+  BULK_ENTRIES
+  AMENDMENT
+}
+
 enum ReviewWindowStatus {
   DRAFT
   OPEN
@@ -497,6 +502,7 @@ model User {
   paymentOrdersCancelled            PaymentOrder[]              @relation("PaymentOrderCancelledBy")
   offlineWithdrawalRefundsCreated   OfflineWithdrawalRefund[]   @relation("OfflineWithdrawalRefundCreatedBy")
   offlineWithdrawalRefundsCompleted OfflineWithdrawalRefund[]   @relation("OfflineWithdrawalRefundCompletedBy")
+  boardSubmissionBaselinesSubmitted BoardSubmissionBaseline[]   @relation("BoardSubmissionSubmitter")
 
   @@index([role])
   @@index([isActive])
@@ -787,12 +793,32 @@ model RegistrationWindow {
   examDocumentAuditLogs    ExamDocumentAuditLog[]
   postResultsAuditLogs     PostResultsAuditLog[]
   offlineWithdrawalRefunds OfflineWithdrawalRefund[]
+  boardSubmissionBaselines BoardSubmissionBaseline[]
 
   @@index([examBoardId])
   @@index([examSeriesId])
   @@index([academicYear])
   @@index([status])
   @@index([studentRegistrationOpenAt, studentRegistrationCloseAt, registrationCloseAt], map: "RegistrationWindow_timing_idx")
+}
+
+model BoardSubmissionBaseline {
+  id                   String              @id @default(cuid())
+  registrationWindowId String
+  registrationWindow   RegistrationWindow  @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  version              Int
+  kind                 BoardSubmissionKind
+  submittedAt          DateTime            @default(now())
+  submittedByUserId    String?
+  submittedBy          User?               @relation("BoardSubmissionSubmitter", fields: [submittedByUserId], references: [id], onDelete: SetNull)
+  candidateCount       Int                 @default(0)
+  entryCount           Int                 @default(0)
+  fileCount            Int                 @default(1)
+  notes                String?             @db.Text
+
+  @@unique([registrationWindowId, version])
+  @@index([registrationWindowId])
+  @@index([submittedAt])
 }
 
 /// Applicable exam sessions for a registration window (exam series / seasons per board).
