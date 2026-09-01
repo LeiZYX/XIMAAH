@@ -12,6 +12,7 @@ import { parseGradeInput } from "@/lib/students/profile-enums";
 import {
   buildCandidateIdentityUpdate,
   parseDateOfBirth,
+  resolveSyncedNameParts,
   validateCandidateIdentity,
 } from "@/lib/candidates/identity";
 import { upsertCandidateExamIdentity } from "@/lib/candidates/exam-board-identity";
@@ -52,8 +53,14 @@ export interface CandidateImportRow {
 }
 
 function rowToIdentityInput(row: CandidateImportRow) {
-  let firstName = row.firstName?.trim() || "";
-  let lastName = row.lastName?.trim() || "";
+  const synced = resolveSyncedNameParts({
+    firstName: row.firstName,
+    lastName: row.lastName,
+    givenNamePinyin: row.givenNamePinyin,
+    surnamePinyin: row.surnamePinyin,
+  });
+  let firstName = synced.firstName;
+  let lastName = synced.lastName;
   const legalEnglishName =
     row.legalEnglishName?.trim() ||
     [firstName, lastName].filter(Boolean).join(" ") ||
@@ -71,11 +78,19 @@ function rowToIdentityInput(row: CandidateImportRow) {
     }
   }
 
+  const preferredEnglishName =
+    row.preferredEnglishName?.trim() ||
+    (row.englishName?.trim() &&
+    row.englishName.trim().toUpperCase() !== [firstName, lastName].filter(Boolean).join(" ").toUpperCase()
+      ? row.englishName.trim()
+      : null) ||
+    null;
+
   return {
     chineseName: row.chineseName?.trim() || null,
-    surnamePinyin: row.surnamePinyin?.trim() || null,
-    givenNamePinyin: row.givenNamePinyin?.trim() || null,
-    preferredEnglishName: row.preferredEnglishName?.trim() || null,
+    surnamePinyin: lastName || null,
+    givenNamePinyin: firstName || null,
+    preferredEnglishName,
     firstName: firstName || null,
     lastName: lastName || null,
     legalEnglishName,

@@ -42,8 +42,6 @@ interface StudentFormState {
   lastName: string;
   preferredEnglishName: string;
   chineseName: string;
-  pinyinLastName: string;
-  pinyinFirstName: string;
   studentNumber: string;
   idNumber: string;
   passportNumber: string;
@@ -62,8 +60,6 @@ const emptyForm = (): StudentFormState => ({
   lastName: "",
   preferredEnglishName: "",
   chineseName: "",
-  pinyinLastName: "",
-  pinyinFirstName: "",
   studentNumber: "",
   idNumber: "",
   passportNumber: "",
@@ -212,12 +208,10 @@ export function StudentUsersManager() {
     setEditingId(row.id);
     setViewStudentId(row.studentId);
     setForm({
-      firstName: row.firstName ?? "",
-      lastName: row.lastName ?? "",
+      firstName: row.firstName ?? row.pinyinFirstName ?? "",
+      lastName: row.lastName ?? row.pinyinLastName ?? "",
       preferredEnglishName: row.preferredEnglishName ?? "",
       chineseName: row.chineseName ?? "",
-      pinyinLastName: row.pinyinLastName ?? "",
-      pinyinFirstName: row.pinyinFirstName ?? "",
       studentNumber: row.studentNo ?? "",
       idNumber: row.idNumber ?? row.idCardNumber ?? "",
       passportNumber: row.passportNumber ?? "",
@@ -244,8 +238,6 @@ export function StudentUsersManager() {
       lastName: form.lastName.trim(),
       preferredEnglishName: form.preferredEnglishName.trim() || undefined,
       chineseName: form.chineseName.trim() || undefined,
-      pinyinLastName: form.pinyinLastName.trim() || undefined,
-      pinyinFirstName: form.pinyinFirstName.trim() || undefined,
       studentNumber: form.studentNumber.trim() || undefined,
       idNumber: form.idNumber.trim() || undefined,
       passportNumber: form.passportNumber.trim() || undefined,
@@ -570,6 +562,7 @@ export function StudentUsersManager() {
                 </label>
                 <label className="block text-sm text-slate-700">
                   Firstname *
+                  <span className="ml-1 font-normal text-slate-500">(Pinyin given name)</span>
                   <input
                     required
                     value={form.firstName}
@@ -579,32 +572,11 @@ export function StudentUsersManager() {
                 </label>
                 <label className="block text-sm text-slate-700">
                   Lastname *
+                  <span className="ml-1 font-normal text-slate-500">(Pinyin surname)</span>
                   <input
                     required
                     value={form.lastName}
                     onChange={(e) => setForm((prev) => ({ ...prev, lastName: e.target.value }))}
-                    className={`mt-1 ${inputClass}`}
-                  />
-                </label>
-                <label className="block text-sm text-slate-700">
-                  Pinyin last name *
-                  <input
-                    required
-                    value={form.pinyinLastName}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, pinyinLastName: e.target.value }))
-                    }
-                    className={`mt-1 ${inputClass}`}
-                  />
-                </label>
-                <label className="block text-sm text-slate-700">
-                  Pinyin first name *
-                  <input
-                    required
-                    value={form.pinyinFirstName}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, pinyinFirstName: e.target.value }))
-                    }
                     className={`mt-1 ${inputClass}`}
                   />
                 </label>

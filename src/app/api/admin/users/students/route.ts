@@ -22,10 +22,16 @@ export async function GET(request: NextRequest) {
   if (auth.error) return auth.error;
   if (!canManageUsers(auth.user.role)) return jsonError("Forbidden", 403);
 
-  const filters = parseStudentIdentityFilters(request.nextUrl.searchParams);
-  const { page, pageSize } = parseListPagination(request.nextUrl.searchParams);
-  const result = await listStudentIdentities(filters, page, pageSize);
-  return NextResponse.json(result);
+  try {
+    const filters = parseStudentIdentityFilters(request.nextUrl.searchParams);
+    const { page, pageSize } = parseListPagination(request.nextUrl.searchParams);
+    const result = await listStudentIdentities(filters, page, pageSize);
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("[admin/users/students] list failed", error);
+    const message = error instanceof Error ? error.message : "Failed to load students";
+    return jsonError(message, 500);
+  }
 }
 
 export async function POST(request: NextRequest) {

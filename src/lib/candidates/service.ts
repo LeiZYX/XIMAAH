@@ -245,8 +245,8 @@ export async function createExternalCandidate(input: {
       assessmentHubCandidateNumber:
         input.assessmentHubCandidateNumber?.trim() || generateAssessmentHubCandidateNumber(),
       chineseName: input.chineseName?.trim() || null,
-      surnamePinyin: input.surnamePinyin?.trim() || null,
-      givenNamePinyin: input.givenNamePinyin?.trim() || null,
+      surnamePinyin: lastName,
+      givenNamePinyin: firstName,
       preferredEnglishName: input.preferredEnglishName?.trim() || null,
       firstName,
       lastName,

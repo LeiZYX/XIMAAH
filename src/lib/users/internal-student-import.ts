@@ -12,7 +12,7 @@ import {
   parseGenderInput,
   parseGradeInput,
 } from "@/lib/students/profile-enums";
-import { composeLegalEnglishName, computeDisplayName } from "@/lib/candidates/identity";
+import { composeLegalEnglishName, computeDisplayName, resolveSyncedNameParts } from "@/lib/candidates/identity";
 import { logUserAudit } from "@/lib/users/audit";
 import { INTERNAL_STUDENT_IMPORT_COLUMNS } from "@/lib/users/internal-student-import-template";
 
@@ -24,8 +24,10 @@ export interface InternalStudentImportRow {
   lastName: string;
   englishName?: string;
   schoolStudentNumber?: string;
-  pinyinLastName: string;
-  pinyinFirstName: string;
+  /** @deprecated Alias for lastName / Firstname scheme A */
+  pinyinLastName?: string;
+  /** @deprecated Alias for firstName */
+  pinyinFirstName?: string;
   idNumber?: string;
   passportNumber?: string;
   gender: Gender;
@@ -235,16 +237,19 @@ export function validateInternalStudentImportRows(
     }
 
     if (!row.chineseName) errors.push({ row: rowNum, message: "Chinese Name is required" });
-    const hasNameParts = Boolean(row.firstName?.trim() && row.lastName?.trim());
+    const names = resolveSyncedNameParts({
+      firstName: row.firstName,
+      lastName: row.lastName,
+      givenNamePinyin: row.pinyinFirstName,
+      surnamePinyin: row.pinyinLastName,
+    });
     const hasLegacyEnglishName = Boolean(row.englishName?.trim());
-    if (!hasNameParts && !hasLegacyEnglishName) {
+    if ((!names.firstName || !names.lastName) && !hasLegacyEnglishName) {
       errors.push({
         row: rowNum,
-        message: "Firstname and Lastname are required (or English Name for legacy rows)",
+        message: "Firstname and Lastname are required",
       });
     }
-    if (!row.pinyinLastName) errors.push({ row: rowNum, message: "Pinyin Last Name is required" });
-    if (!row.pinyinFirstName) errors.push({ row: rowNum, message: "Pinyin First Name is required" });
     if (!row.gender) errors.push({ row: rowNum, message: "Gender is required" });
     if (!row.dateOfBirth) errors.push({ row: rowNum, message: "Date of Birth is required" });
     if (!row.grade) errors.push({ row: rowNum, message: "Grade must be one of G9, G10, G11, G12" });
@@ -316,11 +321,21 @@ async function findMatchingCandidate(
 
 function resolveImportNames(row: Pick<
   InternalStudentImportRow,
-  "firstName" | "lastName" | "preferredEnglishName" | "englishName"
+  | "firstName"
+  | "lastName"
+  | "preferredEnglishName"
+  | "englishName"
+  | "pinyinFirstName"
+  | "pinyinLastName"
 >) {
-  let firstName = row.firstName?.trim() || "";
-  let lastName = row.lastName?.trim() || "";
-  const preferredEnglishName = row.preferredEnglishName?.trim() || null;
+  const synced = resolveSyncedNameParts({
+    firstName: row.firstName,
+    lastName: row.lastName,
+    givenNamePinyin: row.pinyinFirstName,
+    surnamePinyin: row.pinyinLastName,
+  });
+  let firstName = synced.firstName;
+  let lastName = synced.lastName;
   const legacyEnglishName = row.englishName?.trim() || "";
 
   if ((!firstName || !lastName) && legacyEnglishName) {
@@ -333,6 +348,14 @@ function resolveImportNames(row: Pick<
       lastName = lastName || parts[parts.length - 1];
     }
   }
+
+  const preferredEnglishName =
+    row.preferredEnglishName?.trim() ||
+    (legacyEnglishName &&
+    legacyEnglishName.toUpperCase() !== composeLegalEnglishName({ firstName, lastName }).toUpperCase()
+      ? legacyEnglishName
+      : null) ||
+    null;
 
   const legalEnglishName =
     composeLegalEnglishName({
@@ -400,8 +423,8 @@ function candidateProfileUpdate(
     lastName: names.lastName,
     englishName: names.displayName,
     legalEnglishName: names.legalEnglishName,
-    surnamePinyin: row.pinyinLastName,
-    givenNamePinyin: row.pinyinFirstName,
+    surnamePinyin: names.lastName,
+    givenNamePinyin: names.firstName,
     idNumber: row.idNumber ?? null,
     passportNumber: row.passportNumber ?? null,
     idDocumentNumber: row.idNumber ?? null,
@@ -570,8 +593,8 @@ export async function commitInternalStudentImportRows(
             lastName: names.lastName,
             englishName: names.displayName,
             legalEnglishName: names.legalEnglishName,
-            surnamePinyin: row.pinyinLastName,
-            givenNamePinyin: row.pinyinFirstName,
+            surnamePinyin: names.lastName,
+            givenNamePinyin: names.firstName,
             idNumber: row.idNumber ?? null,
             passportNumber: row.passportNumber ?? null,
             idDocumentNumber: row.idNumber ?? null,
@@ -610,13 +633,16 @@ export async function commitInternalStudentImportRows(
 export function isCompleteInternalStudentImportRow(
   row: Partial<InternalStudentImportRow> & { rowNumber: number },
 ): row is InternalStudentImportRow {
-  const hasNameParts = Boolean(row.firstName?.trim() && row.lastName?.trim());
+  const names = resolveSyncedNameParts({
+    firstName: row.firstName,
+    lastName: row.lastName,
+    givenNamePinyin: row.pinyinFirstName,
+    surnamePinyin: row.pinyinLastName,
+  });
   const hasLegacyEnglishName = Boolean(row.englishName?.trim());
   return Boolean(
     row.chineseName &&
-      (hasNameParts || hasLegacyEnglishName) &&
-      row.pinyinLastName &&
-      row.pinyinFirstName &&
+      ((names.firstName && names.lastName) || hasLegacyEnglishName) &&
       row.gender &&
       row.dateOfBirth &&
       row.grade &&

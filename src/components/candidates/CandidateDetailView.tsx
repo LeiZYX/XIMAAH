@@ -106,11 +106,11 @@ export function CandidateDetailView({
     setCandidate(data);
     setIdentityForm({
       chineseName: String(data.chineseName ?? ""),
-      surnamePinyin: String(data.surnamePinyin ?? ""),
-      givenNamePinyin: String(data.givenNamePinyin ?? ""),
       preferredEnglishName: String(data.preferredEnglishName ?? ""),
-      firstName: String(data.firstName ?? ""),
-      lastName: String(data.lastName ?? ""),
+      firstName: String(data.firstName ?? data.givenNamePinyin ?? ""),
+      lastName: String(data.lastName ?? data.surnamePinyin ?? ""),
+      surnamePinyin: String(data.lastName ?? data.surnamePinyin ?? ""),
+      givenNamePinyin: String(data.firstName ?? data.givenNamePinyin ?? ""),
       gender: (data.gender as Gender) ?? "",
       dateOfBirth:
         data.dateOfBirth ? String(data.dateOfBirth).slice(0, 10) : "",
@@ -464,24 +464,18 @@ export function CandidateDetailView({
               <input required disabled={readOnly} value={identityForm.chineseName} onChange={(e) => setIdentityForm({ ...identityForm, chineseName: e.target.value })} className={inputClass} />
             </label>
             <label className="text-sm">
-              <span className="mb-1 block text-slate-600">Surname (Pinyin) *</span>
-              <input required disabled={readOnly} value={identityForm.surnamePinyin} onChange={(e) => setIdentityForm({ ...identityForm, surnamePinyin: e.target.value.toUpperCase() })} className={inputClass} />
-            </label>
-            <label className="text-sm">
-              <span className="mb-1 block text-slate-600">Given Name (Pinyin) *</span>
-              <input required disabled={readOnly} value={identityForm.givenNamePinyin} onChange={(e) => setIdentityForm({ ...identityForm, givenNamePinyin: e.target.value.toUpperCase() })} className={inputClass} />
-            </label>
-            <label className="text-sm">
               <span className="mb-1 block text-slate-600">Preferred English Name</span>
               <input disabled={readOnly} value={identityForm.preferredEnglishName} onChange={(e) => setIdentityForm({ ...identityForm, preferredEnglishName: e.target.value })} className={inputClass} />
             </label>
             <label className="text-sm">
               <span className="mb-1 block text-slate-600">Firstname *</span>
-              <input required disabled={readOnly} value={identityForm.firstName} onChange={(e) => setIdentityForm({ ...identityForm, firstName: e.target.value })} className={inputClass} />
+              <span className="mb-1 block text-xs font-normal text-slate-500">Pinyin given name (Edexcel Firstname)</span>
+              <input required disabled={readOnly} value={identityForm.firstName} onChange={(e) => setIdentityForm({ ...identityForm, firstName: e.target.value, givenNamePinyin: e.target.value })} className={inputClass} />
             </label>
             <label className="text-sm">
               <span className="mb-1 block text-slate-600">Lastname *</span>
-              <input required disabled={readOnly} value={identityForm.lastName} onChange={(e) => setIdentityForm({ ...identityForm, lastName: e.target.value })} className={inputClass} />
+              <span className="mb-1 block text-xs font-normal text-slate-500">Pinyin surname (Edexcel Lastname)</span>
+              <input required disabled={readOnly} value={identityForm.lastName} onChange={(e) => setIdentityForm({ ...identityForm, lastName: e.target.value, surnamePinyin: e.target.value })} className={inputClass} />
             </label>
             <Field label="Display Name" value={computeDisplayName(identityForm)} />
             <label className="text-sm">

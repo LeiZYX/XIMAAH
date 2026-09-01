@@ -42,8 +42,6 @@ type ExportCandidate = Pick<
 
 export const CANDIDATE_IMPORT_HEADERS = [
   "chineseName",
-  "surnamePinyin",
-  "givenNamePinyin",
   "preferredEnglishName",
   "firstName",
   "lastName",
@@ -75,13 +73,13 @@ export function candidatesToCsv(candidates: ExportCandidate[]): string {
   const header = [...CANDIDATE_IMPORT_HEADERS];
   const lines = candidates.map((candidate) => {
     const primaryIdentity = candidate.examIdentities?.[0];
+    const firstName = candidate.firstName ?? candidate.givenNamePinyin;
+    const lastName = candidate.lastName ?? candidate.surnamePinyin;
     return [
       candidate.chineseName,
-      candidate.surnamePinyin,
-      candidate.givenNamePinyin,
       candidate.preferredEnglishName,
-      candidate.firstName,
-      candidate.lastName,
+      firstName,
+      lastName,
       candidate.legalEnglishName ?? candidate.englishName,
       candidate.gender ? genderLabel(candidate.gender) : "",
       formatDateOfBirth(candidate.dateOfBirth) === "—" ? "" : formatDateOfBirth(candidate.dateOfBirth),

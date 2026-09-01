@@ -275,9 +275,9 @@ export function ExternalCandidateRegistrationModal({
                     key={field}
                     placeholder={
                       field === "firstName"
-                        ? "Firstname *"
+                        ? "Firstname * (Pinyin given)"
                         : field === "lastName"
-                          ? "Lastname *"
+                          ? "Lastname * (Pinyin surname)"
                           : field === "preferredEnglishName"
                             ? "Preferred English Name"
                             : field

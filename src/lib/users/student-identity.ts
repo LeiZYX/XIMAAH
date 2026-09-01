@@ -22,7 +22,7 @@ import {
 import { resolveSchoolStudentNumber } from "@/lib/students/identifiers";
 import { buildPaginationMeta } from "@/lib/pagination";
 import { containsFilter } from "@/lib/db/string-filters";
-import { composeLegalEnglishName, computeDisplayName } from "@/lib/candidates/identity";
+import { composeLegalEnglishName, computeDisplayName, resolveSyncedNameParts } from "@/lib/candidates/identity";
 import { logUserAudit } from "@/lib/users/audit";
 import { prisma } from "@/lib/prisma";
 
@@ -78,8 +78,8 @@ function mapStudentRow(
     pinyinLastName: candidate?.surnamePinyin ?? null,
     pinyinFirstName: candidate?.givenNamePinyin ?? null,
     preferredEnglishName: candidate?.preferredEnglishName ?? null,
-    firstName: candidate?.firstName ?? null,
-    lastName: candidate?.lastName ?? null,
+    firstName: candidate?.firstName ?? candidate?.givenNamePinyin ?? null,
+    lastName: candidate?.lastName ?? candidate?.surnamePinyin ?? null,
     idNumber: candidate?.idNumber ?? profile?.idCardNumber ?? null,
     passportNumber: candidate?.passportNumber ?? null,
     dateOfBirth: candidate?.dateOfBirth ? formatDateOfBirth(candidate.dateOfBirth) : null,
@@ -164,9 +164,6 @@ const INTERNAL_STUDENT_EXPORT_COLUMNS = [
   "Preferred English Name",
   "Firstname",
   "Lastname",
-  "English Name",
-  "Pinyin Last Name",
-  "Pinyin First Name",
   "ID Number",
   "Passport Number",
   "Gender",
@@ -185,11 +182,8 @@ export async function exportStudentIdentities(filters: StudentIdentityFilters) {
     "School Student Number": row.studentNo ?? "",
     "Chinese Name": row.chineseName ?? "",
     "Preferred English Name": row.preferredEnglishName ?? "",
-    Firstname: row.firstName ?? "",
-    Lastname: row.lastName ?? "",
-    "English Name": row.name,
-    "Pinyin Last Name": row.pinyinLastName ?? "",
-    "Pinyin First Name": row.pinyinFirstName ?? "",
+    Firstname: row.firstName ?? row.pinyinFirstName ?? "",
+    Lastname: row.lastName ?? row.pinyinLastName ?? "",
     "ID Number": row.idNumber ?? row.idCardNumber ?? "",
     "Passport Number": row.passportNumber ?? "",
     Gender: row.gender ?? "",
@@ -412,9 +406,22 @@ export async function upsertStudentIdentity(
     throw new Error("Grade must be one of G9, G10, G11, G12");
   }
 
-  const firstName = input.firstName?.trim() || null;
-  const lastName = input.lastName?.trim() || null;
-  const preferredEnglishName = input.preferredEnglishName?.trim() || null;
+  const names = resolveSyncedNameParts({
+    firstName: input.firstName,
+    lastName: input.lastName,
+    givenNamePinyin: input.pinyinFirstName,
+    surnamePinyin: input.pinyinLastName,
+  });
+  const firstName = names.firstName || null;
+  const lastName = names.lastName || null;
+  const preferredEnglishName =
+    input.preferredEnglishName?.trim() ||
+    // Legacy: englishName alone was often the preferred nickname
+    (input.englishName?.trim() &&
+    input.englishName.trim().toUpperCase() !== composeLegalEnglishName({ firstName, lastName }).toUpperCase()
+      ? input.englishName.trim()
+      : null) ||
+    null;
   const legalEnglishName =
     composeLegalEnglishName({
       firstName,
@@ -483,8 +490,8 @@ export async function upsertStudentIdentity(
     lastName,
     englishName: displayName,
     legalEnglishName,
-    surnamePinyin: input.pinyinLastName ?? null,
-    givenNamePinyin: input.pinyinFirstName ?? null,
+    surnamePinyin: lastName,
+    givenNamePinyin: firstName,
     assessmentHubCandidateNumber,
     idNumber: idNumber ?? null,
     passportNumber: input.passportNumber ?? null,
@@ -586,8 +593,8 @@ export async function upsertStudentIdentity(
           englishName: displayName,
           legalEnglishName,
           chineseName: input.chineseName ?? null,
-          surnamePinyin: input.pinyinLastName ?? null,
-          givenNamePinyin: input.pinyinFirstName ?? null,
+          surnamePinyin: lastName,
+          givenNamePinyin: firstName,
           idNumber: idNumber ?? null,
           passportNumber: input.passportNumber ?? null,
           idDocumentNumber: idNumber ?? null,

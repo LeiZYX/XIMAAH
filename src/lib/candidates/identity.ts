@@ -40,16 +40,39 @@ export function composeLegalEnglishName(input: {
   return input.legalEnglishName?.trim() ?? "";
 }
 
+/**
+ * Scheme A: Firstname ≡ Pinyin First Name, Lastname ≡ Pinyin Last Name.
+ * Prefer explicit Firstname/Lastname; fall back to pinyin fields (and vice versa on write).
+ */
+export function resolveSyncedNameParts(input: {
+  firstName?: string | null;
+  lastName?: string | null;
+  givenNamePinyin?: string | null;
+  surnamePinyin?: string | null;
+}): { firstName: string; lastName: string; givenNamePinyin: string; surnamePinyin: string } {
+  const firstName = (input.firstName?.trim() || input.givenNamePinyin?.trim() || "").trim();
+  const lastName = (input.lastName?.trim() || input.surnamePinyin?.trim() || "").trim();
+  return {
+    firstName,
+    lastName,
+    givenNamePinyin: firstName,
+    surnamePinyin: lastName,
+  };
+}
+
 export function computeDisplayName(candidate: {
   preferredEnglishName?: string | null;
   firstName?: string | null;
   lastName?: string | null;
+  givenNamePinyin?: string | null;
+  surnamePinyin?: string | null;
   legalEnglishName?: string | null;
   englishName?: string | null;
 }): string {
   const preferred = candidate.preferredEnglishName?.trim();
   if (preferred) return preferred;
-  const fromParts = composeLegalEnglishName(candidate);
+  const parts = resolveSyncedNameParts(candidate);
+  const fromParts = composeLegalEnglishName(parts);
   if (fromParts) return fromParts;
   const legal = candidate.legalEnglishName?.trim();
   if (legal) return legal;
@@ -118,11 +141,10 @@ export function maskIdDocumentNumber(value: string | null | undefined): string {
 
 export function validateCandidateIdentity(input: CandidateIdentityInput): string[] {
   const errors: string[] = [];
+  const names = resolveSyncedNameParts(input);
   if (!input.chineseName?.trim()) errors.push("Chinese Name is required");
-  if (!input.surnamePinyin?.trim()) errors.push("Surname (Pinyin) is required");
-  if (!input.givenNamePinyin?.trim()) errors.push("Given Name (Pinyin) is required");
-  if (!input.firstName?.trim()) errors.push("Firstname is required");
-  if (!input.lastName?.trim()) errors.push("Lastname is required");
+  if (!names.firstName) errors.push("Firstname is required");
+  if (!names.lastName) errors.push("Lastname is required");
   if (!input.gender) errors.push("Gender is required");
   if (!input.dateOfBirth) errors.push("Date of Birth is required");
   if (!input.idDocumentType) errors.push("ID Document Type is required");
@@ -148,8 +170,9 @@ export function formatDateOfBirth(value: Date | string | null | undefined): stri
 }
 
 export function buildCandidateIdentityUpdate(input: CandidateIdentityInput) {
-  const firstName = input.firstName?.trim() || null;
-  const lastName = input.lastName?.trim() || null;
+  const names = resolveSyncedNameParts(input);
+  const firstName = names.firstName || null;
+  const lastName = names.lastName || null;
   const legalEnglishName =
     composeLegalEnglishName({ firstName, lastName, legalEnglishName: input.legalEnglishName }) ||
     null;
@@ -164,8 +187,8 @@ export function buildCandidateIdentityUpdate(input: CandidateIdentityInput) {
 
   return {
     chineseName: input.chineseName?.trim() || null,
-    surnamePinyin: input.surnamePinyin?.trim() || null,
-    givenNamePinyin: input.givenNamePinyin?.trim() || null,
+    surnamePinyin: lastName,
+    givenNamePinyin: firstName,
     preferredEnglishName,
     firstName,
     lastName,
