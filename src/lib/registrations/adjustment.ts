@@ -528,6 +528,24 @@ export async function applyPostLockAdjustment(
     }
   });
 
+  const removedRegistrationIds = [
+    ...removeIds,
+    ...replacements.map((row) => row.registrationId),
+  ];
+  let withdrawalSummary: string | null = null;
+  if (removedRegistrationIds.length > 0) {
+    const { recordOfflineWithdrawalRefundsForRemovals, summarizeWithdrawalRefunds } = await import(
+      "@/lib/fees/withdrawal-refund"
+    );
+    const calcs = await recordOfflineWithdrawalRefundsForRemovals({
+      workspaceId,
+      registrationIds: removedRegistrationIds,
+      performedByUserId: performedBy.id,
+      now,
+    });
+    withdrawalSummary = summarizeWithdrawalRefunds(calcs);
+  }
+
   const hasExamChanges = addIds.length > 0 || removeIds.length > 0 || replacements.length > 0;
   if (hasExamChanges || feeSelectionChanged) {
     let reasonCode: FeeStatementChangeReasonCode = "MANUAL_BILLING_ADJUSTMENT";
@@ -543,11 +561,12 @@ export async function applyPostLockAdjustment(
       reasonCode = "EXAM_REMOVED";
     }
 
+    const noteParts = [reason, withdrawalSummary].filter(Boolean);
     await markFeeStatementsNeedsRegeneration({
       workspaceId,
       reasonCode,
       performedByUserId: performedBy.id,
-      note: reason,
+      note: noteParts.join(" · "),
     });
   }
 
@@ -567,5 +586,7 @@ export async function applyPostLockAdjustment(
   ) {
     throw new RegistrationError("Post-lock adjustment must not change the confirmation number", 500);
   }
-  return updated;
+  return updated
+    ? { ...updated, withdrawalRefundSummary: withdrawalSummary }
+    : updated;
 }

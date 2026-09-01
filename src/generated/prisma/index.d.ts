@@ -195,6 +195,11 @@ export type PaymentOrder = $Result.DefaultSelection<Prisma.$PaymentOrderPayload>
  */
 export type FeeStatementItem = $Result.DefaultSelection<Prisma.$FeeStatementItemPayload>
 /**
+ * Model OfflineWithdrawalRefund
+ * Ledger for withdrawal credits. Money is refunded offline by finance — never via GlobePay.
+ */
+export type OfflineWithdrawalRefund = $Result.DefaultSelection<Prisma.$OfflineWithdrawalRefundPayload>
+/**
  * Model FeeAuditLog
  * 
  */
@@ -597,10 +602,21 @@ export const FeeAuditAction: {
   CANDIDATE_REGISTRATION_FEE_ADDED: 'CANDIDATE_REGISTRATION_FEE_ADDED',
   CANDIDATE_REGISTRATION_FEE_REMOVED: 'CANDIDATE_REGISTRATION_FEE_REMOVED',
   ADDITIONAL_SERVICE_ADDED: 'ADDITIONAL_SERVICE_ADDED',
-  ADDITIONAL_SERVICE_REMOVED: 'ADDITIONAL_SERVICE_REMOVED'
+  ADDITIONAL_SERVICE_REMOVED: 'ADDITIONAL_SERVICE_REMOVED',
+  OFFLINE_WITHDRAWAL_REFUND_RECORDED: 'OFFLINE_WITHDRAWAL_REFUND_RECORDED',
+  OFFLINE_WITHDRAWAL_REFUND_COMPLETED: 'OFFLINE_WITHDRAWAL_REFUND_COMPLETED'
 };
 
 export type FeeAuditAction = (typeof FeeAuditAction)[keyof typeof FeeAuditAction]
+
+
+export const OfflineWithdrawalRefundStatus: {
+  PENDING_OFFLINE: 'PENDING_OFFLINE',
+  COMPLETED: 'COMPLETED',
+  ZERO_NO_REFUND: 'ZERO_NO_REFUND'
+};
+
+export type OfflineWithdrawalRefundStatus = (typeof OfflineWithdrawalRefundStatus)[keyof typeof OfflineWithdrawalRefundStatus]
 
 
 export const ReviewWindowStatus: {
@@ -945,6 +961,10 @@ export const ExamDocumentAuditAction: typeof $Enums.ExamDocumentAuditAction
 export type FeeAuditAction = $Enums.FeeAuditAction
 
 export const FeeAuditAction: typeof $Enums.FeeAuditAction
+
+export type OfflineWithdrawalRefundStatus = $Enums.OfflineWithdrawalRefundStatus
+
+export const OfflineWithdrawalRefundStatus: typeof $Enums.OfflineWithdrawalRefundStatus
 
 export type ReviewWindowStatus = $Enums.ReviewWindowStatus
 
@@ -1507,6 +1527,16 @@ export class PrismaClient<
     * ```
     */
   get feeStatementItem(): Prisma.FeeStatementItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.offlineWithdrawalRefund`: Exposes CRUD operations for the **OfflineWithdrawalRefund** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OfflineWithdrawalRefunds
+    * const offlineWithdrawalRefunds = await prisma.offlineWithdrawalRefund.findMany()
+    * ```
+    */
+  get offlineWithdrawalRefund(): Prisma.OfflineWithdrawalRefundDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.feeAuditLog`: Exposes CRUD operations for the **FeeAuditLog** model.
@@ -2094,6 +2124,7 @@ export namespace Prisma {
     FeeStatement: 'FeeStatement',
     PaymentOrder: 'PaymentOrder',
     FeeStatementItem: 'FeeStatementItem',
+    OfflineWithdrawalRefund: 'OfflineWithdrawalRefund',
     FeeAuditLog: 'FeeAuditLog',
     ReviewWindow: 'ReviewWindow',
     ReviewWindowService: 'ReviewWindowService',
@@ -2123,7 +2154,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
+      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4503,6 +4534,72 @@ export namespace Prisma {
           }
         }
       }
+      OfflineWithdrawalRefund: {
+        payload: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>
+        fields: Prisma.OfflineWithdrawalRefundFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OfflineWithdrawalRefundFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfflineWithdrawalRefundPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OfflineWithdrawalRefundFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfflineWithdrawalRefundPayload>
+          }
+          findFirst: {
+            args: Prisma.OfflineWithdrawalRefundFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfflineWithdrawalRefundPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OfflineWithdrawalRefundFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfflineWithdrawalRefundPayload>
+          }
+          findMany: {
+            args: Prisma.OfflineWithdrawalRefundFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfflineWithdrawalRefundPayload>[]
+          }
+          create: {
+            args: Prisma.OfflineWithdrawalRefundCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfflineWithdrawalRefundPayload>
+          }
+          createMany: {
+            args: Prisma.OfflineWithdrawalRefundCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.OfflineWithdrawalRefundDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfflineWithdrawalRefundPayload>
+          }
+          update: {
+            args: Prisma.OfflineWithdrawalRefundUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfflineWithdrawalRefundPayload>
+          }
+          deleteMany: {
+            args: Prisma.OfflineWithdrawalRefundDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OfflineWithdrawalRefundUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.OfflineWithdrawalRefundUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OfflineWithdrawalRefundPayload>
+          }
+          aggregate: {
+            args: Prisma.OfflineWithdrawalRefundAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOfflineWithdrawalRefund>
+          }
+          groupBy: {
+            args: Prisma.OfflineWithdrawalRefundGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OfflineWithdrawalRefundGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OfflineWithdrawalRefundCountArgs<ExtArgs>
+            result: $Utils.Optional<OfflineWithdrawalRefundCountAggregateOutputType> | number
+          }
+        }
+      }
       FeeAuditLog: {
         payload: Prisma.$FeeAuditLogPayload<ExtArgs>
         fields: Prisma.FeeAuditLogFieldRefs
@@ -5361,6 +5458,7 @@ export namespace Prisma {
     feeStatement?: FeeStatementOmit
     paymentOrder?: PaymentOrderOmit
     feeStatementItem?: FeeStatementItemOmit
+    offlineWithdrawalRefund?: OfflineWithdrawalRefundOmit
     feeAuditLog?: FeeAuditLogOmit
     reviewWindow?: ReviewWindowOmit
     reviewWindowService?: ReviewWindowServiceOmit
@@ -5490,6 +5588,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated: number
     candidateExamIdentitiesUpdated: number
     paymentOrdersCancelled: number
+    offlineWithdrawalRefundsCreated: number
+    offlineWithdrawalRefundsCompleted: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5531,6 +5631,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: boolean | UserCountOutputTypeCountCandidateExamIdentitiesCreatedArgs
     candidateExamIdentitiesUpdated?: boolean | UserCountOutputTypeCountCandidateExamIdentitiesUpdatedArgs
     paymentOrdersCancelled?: boolean | UserCountOutputTypeCountPaymentOrdersCancelledArgs
+    offlineWithdrawalRefundsCreated?: boolean | UserCountOutputTypeCountOfflineWithdrawalRefundsCreatedArgs
+    offlineWithdrawalRefundsCompleted?: boolean | UserCountOutputTypeCountOfflineWithdrawalRefundsCompletedArgs
   }
 
   // Custom InputTypes
@@ -5810,6 +5912,20 @@ export namespace Prisma {
     where?: PaymentOrderWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountOfflineWithdrawalRefundsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfflineWithdrawalRefundWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountOfflineWithdrawalRefundsCompletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfflineWithdrawalRefundWhereInput
+  }
+
 
   /**
    * Count Type CandidateCountOutputType
@@ -5829,6 +5945,7 @@ export namespace Prisma {
     accessToScriptRequests: number
     certificateRequests: number
     postResultsAuditLogs: number
+    offlineWithdrawalRefunds: number
   }
 
   export type CandidateCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5845,6 +5962,7 @@ export namespace Prisma {
     accessToScriptRequests?: boolean | CandidateCountOutputTypeCountAccessToScriptRequestsArgs
     certificateRequests?: boolean | CandidateCountOutputTypeCountCertificateRequestsArgs
     postResultsAuditLogs?: boolean | CandidateCountOutputTypeCountPostResultsAuditLogsArgs
+    offlineWithdrawalRefunds?: boolean | CandidateCountOutputTypeCountOfflineWithdrawalRefundsArgs
   }
 
   // Custom InputTypes
@@ -5949,6 +6067,13 @@ export namespace Prisma {
     where?: PostResultsAuditLogWhereInput
   }
 
+  /**
+   * CandidateCountOutputType without action
+   */
+  export type CandidateCountOutputTypeCountOfflineWithdrawalRefundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfflineWithdrawalRefundWhereInput
+  }
+
 
   /**
    * Count Type RegistrationWindowCountOutputType
@@ -5967,6 +6092,7 @@ export namespace Prisma {
     includedSeries: number
     examDocumentAuditLogs: number
     postResultsAuditLogs: number
+    offlineWithdrawalRefunds: number
   }
 
   export type RegistrationWindowCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5982,6 +6108,7 @@ export namespace Prisma {
     includedSeries?: boolean | RegistrationWindowCountOutputTypeCountIncludedSeriesArgs
     examDocumentAuditLogs?: boolean | RegistrationWindowCountOutputTypeCountExamDocumentAuditLogsArgs
     postResultsAuditLogs?: boolean | RegistrationWindowCountOutputTypeCountPostResultsAuditLogsArgs
+    offlineWithdrawalRefunds?: boolean | RegistrationWindowCountOutputTypeCountOfflineWithdrawalRefundsArgs
   }
 
   // Custom InputTypes
@@ -6079,6 +6206,13 @@ export namespace Prisma {
     where?: PostResultsAuditLogWhereInput
   }
 
+  /**
+   * RegistrationWindowCountOutputType without action
+   */
+  export type RegistrationWindowCountOutputTypeCountOfflineWithdrawalRefundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfflineWithdrawalRefundWhereInput
+  }
+
 
   /**
    * Count Type RegistrationFeeStageCountOutputType
@@ -6138,6 +6272,7 @@ export namespace Prisma {
     auditLogs: number
     changeRequests: number
     feeStatements: number
+    offlineWithdrawalRefunds: number
   }
 
   export type RegistrationWorkspaceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6145,6 +6280,7 @@ export namespace Prisma {
     auditLogs?: boolean | RegistrationWorkspaceCountOutputTypeCountAuditLogsArgs
     changeRequests?: boolean | RegistrationWorkspaceCountOutputTypeCountChangeRequestsArgs
     feeStatements?: boolean | RegistrationWorkspaceCountOutputTypeCountFeeStatementsArgs
+    offlineWithdrawalRefunds?: boolean | RegistrationWorkspaceCountOutputTypeCountOfflineWithdrawalRefundsArgs
   }
 
   // Custom InputTypes
@@ -6184,6 +6320,13 @@ export namespace Prisma {
    */
   export type RegistrationWorkspaceCountOutputTypeCountFeeStatementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FeeStatementWhereInput
+  }
+
+  /**
+   * RegistrationWorkspaceCountOutputType without action
+   */
+  export type RegistrationWorkspaceCountOutputTypeCountOfflineWithdrawalRefundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfflineWithdrawalRefundWhereInput
   }
 
 
@@ -6869,6 +7012,7 @@ export namespace Prisma {
     examDocumentAuditLogs: number
     reviewRequests: number
     accessToScriptRequests: number
+    offlineWithdrawalRefunds: number
   }
 
   export type ExamSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6882,6 +7026,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: boolean | ExamSessionCountOutputTypeCountExamDocumentAuditLogsArgs
     reviewRequests?: boolean | ExamSessionCountOutputTypeCountReviewRequestsArgs
     accessToScriptRequests?: boolean | ExamSessionCountOutputTypeCountAccessToScriptRequestsArgs
+    offlineWithdrawalRefunds?: boolean | ExamSessionCountOutputTypeCountOfflineWithdrawalRefundsArgs
   }
 
   // Custom InputTypes
@@ -6963,6 +7108,13 @@ export namespace Prisma {
    */
   export type ExamSessionCountOutputTypeCountAccessToScriptRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AccessToScriptRequestWhereInput
+  }
+
+  /**
+   * ExamSessionCountOutputType without action
+   */
+  export type ExamSessionCountOutputTypeCountOfflineWithdrawalRefundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfflineWithdrawalRefundWhereInput
   }
 
 
@@ -7508,6 +7660,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: boolean | User$candidateExamIdentitiesCreatedArgs<ExtArgs>
     candidateExamIdentitiesUpdated?: boolean | User$candidateExamIdentitiesUpdatedArgs<ExtArgs>
     paymentOrdersCancelled?: boolean | User$paymentOrdersCancelledArgs<ExtArgs>
+    offlineWithdrawalRefundsCreated?: boolean | User$offlineWithdrawalRefundsCreatedArgs<ExtArgs>
+    offlineWithdrawalRefundsCompleted?: boolean | User$offlineWithdrawalRefundsCompletedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -7571,6 +7725,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: boolean | User$candidateExamIdentitiesCreatedArgs<ExtArgs>
     candidateExamIdentitiesUpdated?: boolean | User$candidateExamIdentitiesUpdatedArgs<ExtArgs>
     paymentOrdersCancelled?: boolean | User$paymentOrdersCancelledArgs<ExtArgs>
+    offlineWithdrawalRefundsCreated?: boolean | User$offlineWithdrawalRefundsCreatedArgs<ExtArgs>
+    offlineWithdrawalRefundsCompleted?: boolean | User$offlineWithdrawalRefundsCompletedArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -7618,6 +7774,8 @@ export namespace Prisma {
       candidateExamIdentitiesCreated: Prisma.$CandidateExamIdentityPayload<ExtArgs>[]
       candidateExamIdentitiesUpdated: Prisma.$CandidateExamIdentityPayload<ExtArgs>[]
       paymentOrdersCancelled: Prisma.$PaymentOrderPayload<ExtArgs>[]
+      offlineWithdrawalRefundsCreated: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
+      offlineWithdrawalRefundsCompleted: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8013,6 +8171,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated<T extends User$candidateExamIdentitiesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$candidateExamIdentitiesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateExamIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     candidateExamIdentitiesUpdated<T extends User$candidateExamIdentitiesUpdatedArgs<ExtArgs> = {}>(args?: Subset<T, User$candidateExamIdentitiesUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateExamIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     paymentOrdersCancelled<T extends User$paymentOrdersCancelledArgs<ExtArgs> = {}>(args?: Subset<T, User$paymentOrdersCancelledArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    offlineWithdrawalRefundsCreated<T extends User$offlineWithdrawalRefundsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$offlineWithdrawalRefundsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    offlineWithdrawalRefundsCompleted<T extends User$offlineWithdrawalRefundsCompletedArgs<ExtArgs> = {}>(args?: Subset<T, User$offlineWithdrawalRefundsCompletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9363,6 +9523,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PaymentOrderScalarFieldEnum | PaymentOrderScalarFieldEnum[]
+  }
+
+  /**
+   * User.offlineWithdrawalRefundsCreated
+   */
+  export type User$offlineWithdrawalRefundsCreatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    where?: OfflineWithdrawalRefundWhereInput
+    orderBy?: OfflineWithdrawalRefundOrderByWithRelationInput | OfflineWithdrawalRefundOrderByWithRelationInput[]
+    cursor?: OfflineWithdrawalRefundWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfflineWithdrawalRefundScalarFieldEnum | OfflineWithdrawalRefundScalarFieldEnum[]
+  }
+
+  /**
+   * User.offlineWithdrawalRefundsCompleted
+   */
+  export type User$offlineWithdrawalRefundsCompletedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    where?: OfflineWithdrawalRefundWhereInput
+    orderBy?: OfflineWithdrawalRefundOrderByWithRelationInput | OfflineWithdrawalRefundOrderByWithRelationInput[]
+    cursor?: OfflineWithdrawalRefundWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfflineWithdrawalRefundScalarFieldEnum | OfflineWithdrawalRefundScalarFieldEnum[]
   }
 
   /**
@@ -16747,6 +16955,7 @@ export namespace Prisma {
     accessToScriptRequests?: boolean | Candidate$accessToScriptRequestsArgs<ExtArgs>
     certificateRequests?: boolean | Candidate$certificateRequestsArgs<ExtArgs>
     postResultsAuditLogs?: boolean | Candidate$postResultsAuditLogsArgs<ExtArgs>
+    offlineWithdrawalRefunds?: boolean | Candidate$offlineWithdrawalRefundsArgs<ExtArgs>
     _count?: boolean | CandidateCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["candidate"]>
 
@@ -16805,6 +17014,7 @@ export namespace Prisma {
     accessToScriptRequests?: boolean | Candidate$accessToScriptRequestsArgs<ExtArgs>
     certificateRequests?: boolean | Candidate$certificateRequestsArgs<ExtArgs>
     postResultsAuditLogs?: boolean | Candidate$postResultsAuditLogsArgs<ExtArgs>
+    offlineWithdrawalRefunds?: boolean | Candidate$offlineWithdrawalRefundsArgs<ExtArgs>
     _count?: boolean | CandidateCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -16825,6 +17035,7 @@ export namespace Prisma {
       accessToScriptRequests: Prisma.$AccessToScriptRequestPayload<ExtArgs>[]
       certificateRequests: Prisma.$CertificateRequestPayload<ExtArgs>[]
       postResultsAuditLogs: Prisma.$PostResultsAuditLogPayload<ExtArgs>[]
+      offlineWithdrawalRefunds: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -17224,6 +17435,7 @@ export namespace Prisma {
     accessToScriptRequests<T extends Candidate$accessToScriptRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$accessToScriptRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessToScriptRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     certificateRequests<T extends Candidate$certificateRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$certificateRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CertificateRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     postResultsAuditLogs<T extends Candidate$postResultsAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$postResultsAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostResultsAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    offlineWithdrawalRefunds<T extends Candidate$offlineWithdrawalRefundsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$offlineWithdrawalRefundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17958,6 +18170,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PostResultsAuditLogScalarFieldEnum | PostResultsAuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * Candidate.offlineWithdrawalRefunds
+   */
+  export type Candidate$offlineWithdrawalRefundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    where?: OfflineWithdrawalRefundWhereInput
+    orderBy?: OfflineWithdrawalRefundOrderByWithRelationInput | OfflineWithdrawalRefundOrderByWithRelationInput[]
+    cursor?: OfflineWithdrawalRefundWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfflineWithdrawalRefundScalarFieldEnum | OfflineWithdrawalRefundScalarFieldEnum[]
   }
 
   /**
@@ -21231,6 +21467,7 @@ export namespace Prisma {
     includedSeries?: boolean | RegistrationWindow$includedSeriesArgs<ExtArgs>
     examDocumentAuditLogs?: boolean | RegistrationWindow$examDocumentAuditLogsArgs<ExtArgs>
     postResultsAuditLogs?: boolean | RegistrationWindow$postResultsAuditLogsArgs<ExtArgs>
+    offlineWithdrawalRefunds?: boolean | RegistrationWindow$offlineWithdrawalRefundsArgs<ExtArgs>
     _count?: boolean | RegistrationWindowCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["registrationWindow"]>
 
@@ -21273,6 +21510,7 @@ export namespace Prisma {
     includedSeries?: boolean | RegistrationWindow$includedSeriesArgs<ExtArgs>
     examDocumentAuditLogs?: boolean | RegistrationWindow$examDocumentAuditLogsArgs<ExtArgs>
     postResultsAuditLogs?: boolean | RegistrationWindow$postResultsAuditLogsArgs<ExtArgs>
+    offlineWithdrawalRefunds?: boolean | RegistrationWindow$offlineWithdrawalRefundsArgs<ExtArgs>
     _count?: boolean | RegistrationWindowCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -21294,6 +21532,7 @@ export namespace Prisma {
       includedSeries: Prisma.$RegistrationWindowIncludedSeriesPayload<ExtArgs>[]
       examDocumentAuditLogs: Prisma.$ExamDocumentAuditLogPayload<ExtArgs>[]
       postResultsAuditLogs: Prisma.$PostResultsAuditLogPayload<ExtArgs>[]
+      offlineWithdrawalRefunds: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -21674,6 +21913,7 @@ export namespace Prisma {
     includedSeries<T extends RegistrationWindow$includedSeriesArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$includedSeriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationWindowIncludedSeriesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     examDocumentAuditLogs<T extends RegistrationWindow$examDocumentAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$examDocumentAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamDocumentAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     postResultsAuditLogs<T extends RegistrationWindow$postResultsAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$postResultsAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostResultsAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    offlineWithdrawalRefunds<T extends RegistrationWindow$offlineWithdrawalRefundsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$offlineWithdrawalRefundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -22367,6 +22607,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PostResultsAuditLogScalarFieldEnum | PostResultsAuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * RegistrationWindow.offlineWithdrawalRefunds
+   */
+  export type RegistrationWindow$offlineWithdrawalRefundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    where?: OfflineWithdrawalRefundWhereInput
+    orderBy?: OfflineWithdrawalRefundOrderByWithRelationInput | OfflineWithdrawalRefundOrderByWithRelationInput[]
+    cursor?: OfflineWithdrawalRefundWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfflineWithdrawalRefundScalarFieldEnum | OfflineWithdrawalRefundScalarFieldEnum[]
   }
 
   /**
@@ -24910,6 +25174,7 @@ export namespace Prisma {
     auditLogs?: boolean | RegistrationWorkspace$auditLogsArgs<ExtArgs>
     changeRequests?: boolean | RegistrationWorkspace$changeRequestsArgs<ExtArgs>
     feeStatements?: boolean | RegistrationWorkspace$feeStatementsArgs<ExtArgs>
+    offlineWithdrawalRefunds?: boolean | RegistrationWorkspace$offlineWithdrawalRefundsArgs<ExtArgs>
     _count?: boolean | RegistrationWorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["registrationWorkspace"]>
 
@@ -24968,6 +25233,7 @@ export namespace Prisma {
     auditLogs?: boolean | RegistrationWorkspace$auditLogsArgs<ExtArgs>
     changeRequests?: boolean | RegistrationWorkspace$changeRequestsArgs<ExtArgs>
     feeStatements?: boolean | RegistrationWorkspace$feeStatementsArgs<ExtArgs>
+    offlineWithdrawalRefunds?: boolean | RegistrationWorkspace$offlineWithdrawalRefundsArgs<ExtArgs>
     _count?: boolean | RegistrationWorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -24985,6 +25251,7 @@ export namespace Prisma {
       auditLogs: Prisma.$RegistrationAuditLogPayload<ExtArgs>[]
       changeRequests: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
       feeStatements: Prisma.$FeeStatementPayload<ExtArgs>[]
+      offlineWithdrawalRefunds: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -25375,6 +25642,7 @@ export namespace Prisma {
     auditLogs<T extends RegistrationWorkspace$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspace$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     changeRequests<T extends RegistrationWorkspace$changeRequestsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspace$changeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeStatements<T extends RegistrationWorkspace$feeStatementsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspace$feeStatementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    offlineWithdrawalRefunds<T extends RegistrationWorkspace$offlineWithdrawalRefundsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspace$offlineWithdrawalRefundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -25991,6 +26259,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeeStatementScalarFieldEnum | FeeStatementScalarFieldEnum[]
+  }
+
+  /**
+   * RegistrationWorkspace.offlineWithdrawalRefunds
+   */
+  export type RegistrationWorkspace$offlineWithdrawalRefundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    where?: OfflineWithdrawalRefundWhereInput
+    orderBy?: OfflineWithdrawalRefundOrderByWithRelationInput | OfflineWithdrawalRefundOrderByWithRelationInput[]
+    cursor?: OfflineWithdrawalRefundWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfflineWithdrawalRefundScalarFieldEnum | OfflineWithdrawalRefundScalarFieldEnum[]
   }
 
   /**
@@ -39840,6 +40132,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: boolean | ExamSession$examDocumentAuditLogsArgs<ExtArgs>
     reviewRequests?: boolean | ExamSession$reviewRequestsArgs<ExtArgs>
     accessToScriptRequests?: boolean | ExamSession$accessToScriptRequestsArgs<ExtArgs>
+    offlineWithdrawalRefunds?: boolean | ExamSession$offlineWithdrawalRefundsArgs<ExtArgs>
     _count?: boolean | ExamSessionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["examSession"]>
 
@@ -39875,6 +40168,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: boolean | ExamSession$examDocumentAuditLogsArgs<ExtArgs>
     reviewRequests?: boolean | ExamSession$reviewRequestsArgs<ExtArgs>
     accessToScriptRequests?: boolean | ExamSession$accessToScriptRequestsArgs<ExtArgs>
+    offlineWithdrawalRefunds?: boolean | ExamSession$offlineWithdrawalRefundsArgs<ExtArgs>
     _count?: boolean | ExamSessionCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -39894,6 +40188,7 @@ export namespace Prisma {
       examDocumentAuditLogs: Prisma.$ExamDocumentAuditLogPayload<ExtArgs>[]
       reviewRequests: Prisma.$ReviewRequestPayload<ExtArgs>[]
       accessToScriptRequests: Prisma.$AccessToScriptRequestPayload<ExtArgs>[]
+      offlineWithdrawalRefunds: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -40261,6 +40556,7 @@ export namespace Prisma {
     examDocumentAuditLogs<T extends ExamSession$examDocumentAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$examDocumentAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamDocumentAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewRequests<T extends ExamSession$reviewRequestsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$reviewRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessToScriptRequests<T extends ExamSession$accessToScriptRequestsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$accessToScriptRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessToScriptRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    offlineWithdrawalRefunds<T extends ExamSession$offlineWithdrawalRefundsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$offlineWithdrawalRefundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -40901,6 +41197,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AccessToScriptRequestScalarFieldEnum | AccessToScriptRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ExamSession.offlineWithdrawalRefunds
+   */
+  export type ExamSession$offlineWithdrawalRefundsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    where?: OfflineWithdrawalRefundWhereInput
+    orderBy?: OfflineWithdrawalRefundOrderByWithRelationInput | OfflineWithdrawalRefundOrderByWithRelationInput[]
+    cursor?: OfflineWithdrawalRefundWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OfflineWithdrawalRefundScalarFieldEnum | OfflineWithdrawalRefundScalarFieldEnum[]
   }
 
   /**
@@ -50869,6 +51189,1293 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: FeeStatementItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OfflineWithdrawalRefund
+   */
+
+  export type AggregateOfflineWithdrawalRefund = {
+    _count: OfflineWithdrawalRefundCountAggregateOutputType | null
+    _avg: OfflineWithdrawalRefundAvgAggregateOutputType | null
+    _sum: OfflineWithdrawalRefundSumAggregateOutputType | null
+    _min: OfflineWithdrawalRefundMinAggregateOutputType | null
+    _max: OfflineWithdrawalRefundMaxAggregateOutputType | null
+  }
+
+  export type OfflineWithdrawalRefundAvgAggregateOutputType = {
+    salesAmountGbp: Decimal | null
+    salesAmountCny: Decimal | null
+    configuredRefundPercent: Decimal | null
+    paymentFeePercent: Decimal | null
+    effectiveRefundPercent: Decimal | null
+    creditGbp: Decimal | null
+    creditCny: Decimal | null
+  }
+
+  export type OfflineWithdrawalRefundSumAggregateOutputType = {
+    salesAmountGbp: Decimal | null
+    salesAmountCny: Decimal | null
+    configuredRefundPercent: Decimal | null
+    paymentFeePercent: Decimal | null
+    effectiveRefundPercent: Decimal | null
+    creditGbp: Decimal | null
+    creditCny: Decimal | null
+  }
+
+  export type OfflineWithdrawalRefundMinAggregateOutputType = {
+    id: string | null
+    registrationWorkspaceId: string | null
+    registrationWindowId: string | null
+    candidateId: string | null
+    studentId: string | null
+    registrationId: string | null
+    examSessionId: string | null
+    paperCodeSnapshot: string | null
+    subjectSnapshot: string | null
+    feeStageCode: $Enums.FeeEntryType | null
+    salesAmountGbp: Decimal | null
+    salesAmountCny: Decimal | null
+    configuredRefundPercent: Decimal | null
+    paymentFeePercent: Decimal | null
+    effectiveRefundPercent: Decimal | null
+    creditGbp: Decimal | null
+    creditCny: Decimal | null
+    status: $Enums.OfflineWithdrawalRefundStatus | null
+    policyNotes: string | null
+    calculationNotes: string | null
+    createdByUserId: string | null
+    completedAt: Date | null
+    completedByUserId: string | null
+    offlineReference: string | null
+    offlineNote: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OfflineWithdrawalRefundMaxAggregateOutputType = {
+    id: string | null
+    registrationWorkspaceId: string | null
+    registrationWindowId: string | null
+    candidateId: string | null
+    studentId: string | null
+    registrationId: string | null
+    examSessionId: string | null
+    paperCodeSnapshot: string | null
+    subjectSnapshot: string | null
+    feeStageCode: $Enums.FeeEntryType | null
+    salesAmountGbp: Decimal | null
+    salesAmountCny: Decimal | null
+    configuredRefundPercent: Decimal | null
+    paymentFeePercent: Decimal | null
+    effectiveRefundPercent: Decimal | null
+    creditGbp: Decimal | null
+    creditCny: Decimal | null
+    status: $Enums.OfflineWithdrawalRefundStatus | null
+    policyNotes: string | null
+    calculationNotes: string | null
+    createdByUserId: string | null
+    completedAt: Date | null
+    completedByUserId: string | null
+    offlineReference: string | null
+    offlineNote: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type OfflineWithdrawalRefundCountAggregateOutputType = {
+    id: number
+    registrationWorkspaceId: number
+    registrationWindowId: number
+    candidateId: number
+    studentId: number
+    registrationId: number
+    examSessionId: number
+    paperCodeSnapshot: number
+    subjectSnapshot: number
+    feeStageCode: number
+    salesAmountGbp: number
+    salesAmountCny: number
+    configuredRefundPercent: number
+    paymentFeePercent: number
+    effectiveRefundPercent: number
+    creditGbp: number
+    creditCny: number
+    status: number
+    policyNotes: number
+    calculationNotes: number
+    createdByUserId: number
+    completedAt: number
+    completedByUserId: number
+    offlineReference: number
+    offlineNote: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type OfflineWithdrawalRefundAvgAggregateInputType = {
+    salesAmountGbp?: true
+    salesAmountCny?: true
+    configuredRefundPercent?: true
+    paymentFeePercent?: true
+    effectiveRefundPercent?: true
+    creditGbp?: true
+    creditCny?: true
+  }
+
+  export type OfflineWithdrawalRefundSumAggregateInputType = {
+    salesAmountGbp?: true
+    salesAmountCny?: true
+    configuredRefundPercent?: true
+    paymentFeePercent?: true
+    effectiveRefundPercent?: true
+    creditGbp?: true
+    creditCny?: true
+  }
+
+  export type OfflineWithdrawalRefundMinAggregateInputType = {
+    id?: true
+    registrationWorkspaceId?: true
+    registrationWindowId?: true
+    candidateId?: true
+    studentId?: true
+    registrationId?: true
+    examSessionId?: true
+    paperCodeSnapshot?: true
+    subjectSnapshot?: true
+    feeStageCode?: true
+    salesAmountGbp?: true
+    salesAmountCny?: true
+    configuredRefundPercent?: true
+    paymentFeePercent?: true
+    effectiveRefundPercent?: true
+    creditGbp?: true
+    creditCny?: true
+    status?: true
+    policyNotes?: true
+    calculationNotes?: true
+    createdByUserId?: true
+    completedAt?: true
+    completedByUserId?: true
+    offlineReference?: true
+    offlineNote?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OfflineWithdrawalRefundMaxAggregateInputType = {
+    id?: true
+    registrationWorkspaceId?: true
+    registrationWindowId?: true
+    candidateId?: true
+    studentId?: true
+    registrationId?: true
+    examSessionId?: true
+    paperCodeSnapshot?: true
+    subjectSnapshot?: true
+    feeStageCode?: true
+    salesAmountGbp?: true
+    salesAmountCny?: true
+    configuredRefundPercent?: true
+    paymentFeePercent?: true
+    effectiveRefundPercent?: true
+    creditGbp?: true
+    creditCny?: true
+    status?: true
+    policyNotes?: true
+    calculationNotes?: true
+    createdByUserId?: true
+    completedAt?: true
+    completedByUserId?: true
+    offlineReference?: true
+    offlineNote?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type OfflineWithdrawalRefundCountAggregateInputType = {
+    id?: true
+    registrationWorkspaceId?: true
+    registrationWindowId?: true
+    candidateId?: true
+    studentId?: true
+    registrationId?: true
+    examSessionId?: true
+    paperCodeSnapshot?: true
+    subjectSnapshot?: true
+    feeStageCode?: true
+    salesAmountGbp?: true
+    salesAmountCny?: true
+    configuredRefundPercent?: true
+    paymentFeePercent?: true
+    effectiveRefundPercent?: true
+    creditGbp?: true
+    creditCny?: true
+    status?: true
+    policyNotes?: true
+    calculationNotes?: true
+    createdByUserId?: true
+    completedAt?: true
+    completedByUserId?: true
+    offlineReference?: true
+    offlineNote?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type OfflineWithdrawalRefundAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OfflineWithdrawalRefund to aggregate.
+     */
+    where?: OfflineWithdrawalRefundWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfflineWithdrawalRefunds to fetch.
+     */
+    orderBy?: OfflineWithdrawalRefundOrderByWithRelationInput | OfflineWithdrawalRefundOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OfflineWithdrawalRefundWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfflineWithdrawalRefunds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfflineWithdrawalRefunds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OfflineWithdrawalRefunds
+    **/
+    _count?: true | OfflineWithdrawalRefundCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OfflineWithdrawalRefundAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OfflineWithdrawalRefundSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OfflineWithdrawalRefundMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OfflineWithdrawalRefundMaxAggregateInputType
+  }
+
+  export type GetOfflineWithdrawalRefundAggregateType<T extends OfflineWithdrawalRefundAggregateArgs> = {
+        [P in keyof T & keyof AggregateOfflineWithdrawalRefund]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOfflineWithdrawalRefund[P]>
+      : GetScalarType<T[P], AggregateOfflineWithdrawalRefund[P]>
+  }
+
+
+
+
+  export type OfflineWithdrawalRefundGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OfflineWithdrawalRefundWhereInput
+    orderBy?: OfflineWithdrawalRefundOrderByWithAggregationInput | OfflineWithdrawalRefundOrderByWithAggregationInput[]
+    by: OfflineWithdrawalRefundScalarFieldEnum[] | OfflineWithdrawalRefundScalarFieldEnum
+    having?: OfflineWithdrawalRefundScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OfflineWithdrawalRefundCountAggregateInputType | true
+    _avg?: OfflineWithdrawalRefundAvgAggregateInputType
+    _sum?: OfflineWithdrawalRefundSumAggregateInputType
+    _min?: OfflineWithdrawalRefundMinAggregateInputType
+    _max?: OfflineWithdrawalRefundMaxAggregateInputType
+  }
+
+  export type OfflineWithdrawalRefundGroupByOutputType = {
+    id: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId: string | null
+    studentId: string | null
+    registrationId: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal
+    salesAmountCny: Decimal | null
+    configuredRefundPercent: Decimal
+    paymentFeePercent: Decimal
+    effectiveRefundPercent: Decimal
+    creditGbp: Decimal
+    creditCny: Decimal | null
+    status: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes: string | null
+    calculationNotes: string | null
+    createdByUserId: string
+    completedAt: Date | null
+    completedByUserId: string | null
+    offlineReference: string | null
+    offlineNote: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: OfflineWithdrawalRefundCountAggregateOutputType | null
+    _avg: OfflineWithdrawalRefundAvgAggregateOutputType | null
+    _sum: OfflineWithdrawalRefundSumAggregateOutputType | null
+    _min: OfflineWithdrawalRefundMinAggregateOutputType | null
+    _max: OfflineWithdrawalRefundMaxAggregateOutputType | null
+  }
+
+  type GetOfflineWithdrawalRefundGroupByPayload<T extends OfflineWithdrawalRefundGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OfflineWithdrawalRefundGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OfflineWithdrawalRefundGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OfflineWithdrawalRefundGroupByOutputType[P]>
+            : GetScalarType<T[P], OfflineWithdrawalRefundGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OfflineWithdrawalRefundSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    registrationWorkspaceId?: boolean
+    registrationWindowId?: boolean
+    candidateId?: boolean
+    studentId?: boolean
+    registrationId?: boolean
+    examSessionId?: boolean
+    paperCodeSnapshot?: boolean
+    subjectSnapshot?: boolean
+    feeStageCode?: boolean
+    salesAmountGbp?: boolean
+    salesAmountCny?: boolean
+    configuredRefundPercent?: boolean
+    paymentFeePercent?: boolean
+    effectiveRefundPercent?: boolean
+    creditGbp?: boolean
+    creditCny?: boolean
+    status?: boolean
+    policyNotes?: boolean
+    calculationNotes?: boolean
+    createdByUserId?: boolean
+    completedAt?: boolean
+    completedByUserId?: boolean
+    offlineReference?: boolean
+    offlineNote?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    registrationWorkspace?: boolean | RegistrationWorkspaceDefaultArgs<ExtArgs>
+    registrationWindow?: boolean | RegistrationWindowDefaultArgs<ExtArgs>
+    candidate?: boolean | OfflineWithdrawalRefund$candidateArgs<ExtArgs>
+    examSession?: boolean | ExamSessionDefaultArgs<ExtArgs>
+    createdByUser?: boolean | UserDefaultArgs<ExtArgs>
+    completedByUser?: boolean | OfflineWithdrawalRefund$completedByUserArgs<ExtArgs>
+  }, ExtArgs["result"]["offlineWithdrawalRefund"]>
+
+
+
+  export type OfflineWithdrawalRefundSelectScalar = {
+    id?: boolean
+    registrationWorkspaceId?: boolean
+    registrationWindowId?: boolean
+    candidateId?: boolean
+    studentId?: boolean
+    registrationId?: boolean
+    examSessionId?: boolean
+    paperCodeSnapshot?: boolean
+    subjectSnapshot?: boolean
+    feeStageCode?: boolean
+    salesAmountGbp?: boolean
+    salesAmountCny?: boolean
+    configuredRefundPercent?: boolean
+    paymentFeePercent?: boolean
+    effectiveRefundPercent?: boolean
+    creditGbp?: boolean
+    creditCny?: boolean
+    status?: boolean
+    policyNotes?: boolean
+    calculationNotes?: boolean
+    createdByUserId?: boolean
+    completedAt?: boolean
+    completedByUserId?: boolean
+    offlineReference?: boolean
+    offlineNote?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type OfflineWithdrawalRefundOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "registrationWorkspaceId" | "registrationWindowId" | "candidateId" | "studentId" | "registrationId" | "examSessionId" | "paperCodeSnapshot" | "subjectSnapshot" | "feeStageCode" | "salesAmountGbp" | "salesAmountCny" | "configuredRefundPercent" | "paymentFeePercent" | "effectiveRefundPercent" | "creditGbp" | "creditCny" | "status" | "policyNotes" | "calculationNotes" | "createdByUserId" | "completedAt" | "completedByUserId" | "offlineReference" | "offlineNote" | "createdAt" | "updatedAt", ExtArgs["result"]["offlineWithdrawalRefund"]>
+  export type OfflineWithdrawalRefundInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    registrationWorkspace?: boolean | RegistrationWorkspaceDefaultArgs<ExtArgs>
+    registrationWindow?: boolean | RegistrationWindowDefaultArgs<ExtArgs>
+    candidate?: boolean | OfflineWithdrawalRefund$candidateArgs<ExtArgs>
+    examSession?: boolean | ExamSessionDefaultArgs<ExtArgs>
+    createdByUser?: boolean | UserDefaultArgs<ExtArgs>
+    completedByUser?: boolean | OfflineWithdrawalRefund$completedByUserArgs<ExtArgs>
+  }
+
+  export type $OfflineWithdrawalRefundPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OfflineWithdrawalRefund"
+    objects: {
+      registrationWorkspace: Prisma.$RegistrationWorkspacePayload<ExtArgs>
+      registrationWindow: Prisma.$RegistrationWindowPayload<ExtArgs>
+      candidate: Prisma.$CandidatePayload<ExtArgs> | null
+      examSession: Prisma.$ExamSessionPayload<ExtArgs>
+      createdByUser: Prisma.$UserPayload<ExtArgs>
+      completedByUser: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      registrationWorkspaceId: string
+      registrationWindowId: string
+      candidateId: string | null
+      studentId: string | null
+      registrationId: string | null
+      examSessionId: string
+      paperCodeSnapshot: string
+      subjectSnapshot: string
+      feeStageCode: $Enums.FeeEntryType
+      salesAmountGbp: Prisma.Decimal
+      salesAmountCny: Prisma.Decimal | null
+      configuredRefundPercent: Prisma.Decimal
+      paymentFeePercent: Prisma.Decimal
+      effectiveRefundPercent: Prisma.Decimal
+      creditGbp: Prisma.Decimal
+      creditCny: Prisma.Decimal | null
+      status: $Enums.OfflineWithdrawalRefundStatus
+      policyNotes: string | null
+      calculationNotes: string | null
+      createdByUserId: string
+      completedAt: Date | null
+      completedByUserId: string | null
+      offlineReference: string | null
+      offlineNote: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["offlineWithdrawalRefund"]>
+    composites: {}
+  }
+
+  type OfflineWithdrawalRefundGetPayload<S extends boolean | null | undefined | OfflineWithdrawalRefundDefaultArgs> = $Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload, S>
+
+  type OfflineWithdrawalRefundCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OfflineWithdrawalRefundFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OfflineWithdrawalRefundCountAggregateInputType | true
+    }
+
+  export interface OfflineWithdrawalRefundDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OfflineWithdrawalRefund'], meta: { name: 'OfflineWithdrawalRefund' } }
+    /**
+     * Find zero or one OfflineWithdrawalRefund that matches the filter.
+     * @param {OfflineWithdrawalRefundFindUniqueArgs} args - Arguments to find a OfflineWithdrawalRefund
+     * @example
+     * // Get one OfflineWithdrawalRefund
+     * const offlineWithdrawalRefund = await prisma.offlineWithdrawalRefund.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OfflineWithdrawalRefundFindUniqueArgs>(args: SelectSubset<T, OfflineWithdrawalRefundFindUniqueArgs<ExtArgs>>): Prisma__OfflineWithdrawalRefundClient<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OfflineWithdrawalRefund that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OfflineWithdrawalRefundFindUniqueOrThrowArgs} args - Arguments to find a OfflineWithdrawalRefund
+     * @example
+     * // Get one OfflineWithdrawalRefund
+     * const offlineWithdrawalRefund = await prisma.offlineWithdrawalRefund.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OfflineWithdrawalRefundFindUniqueOrThrowArgs>(args: SelectSubset<T, OfflineWithdrawalRefundFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OfflineWithdrawalRefundClient<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OfflineWithdrawalRefund that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfflineWithdrawalRefundFindFirstArgs} args - Arguments to find a OfflineWithdrawalRefund
+     * @example
+     * // Get one OfflineWithdrawalRefund
+     * const offlineWithdrawalRefund = await prisma.offlineWithdrawalRefund.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OfflineWithdrawalRefundFindFirstArgs>(args?: SelectSubset<T, OfflineWithdrawalRefundFindFirstArgs<ExtArgs>>): Prisma__OfflineWithdrawalRefundClient<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OfflineWithdrawalRefund that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfflineWithdrawalRefundFindFirstOrThrowArgs} args - Arguments to find a OfflineWithdrawalRefund
+     * @example
+     * // Get one OfflineWithdrawalRefund
+     * const offlineWithdrawalRefund = await prisma.offlineWithdrawalRefund.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OfflineWithdrawalRefundFindFirstOrThrowArgs>(args?: SelectSubset<T, OfflineWithdrawalRefundFindFirstOrThrowArgs<ExtArgs>>): Prisma__OfflineWithdrawalRefundClient<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OfflineWithdrawalRefunds that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfflineWithdrawalRefundFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OfflineWithdrawalRefunds
+     * const offlineWithdrawalRefunds = await prisma.offlineWithdrawalRefund.findMany()
+     * 
+     * // Get first 10 OfflineWithdrawalRefunds
+     * const offlineWithdrawalRefunds = await prisma.offlineWithdrawalRefund.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const offlineWithdrawalRefundWithIdOnly = await prisma.offlineWithdrawalRefund.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OfflineWithdrawalRefundFindManyArgs>(args?: SelectSubset<T, OfflineWithdrawalRefundFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OfflineWithdrawalRefund.
+     * @param {OfflineWithdrawalRefundCreateArgs} args - Arguments to create a OfflineWithdrawalRefund.
+     * @example
+     * // Create one OfflineWithdrawalRefund
+     * const OfflineWithdrawalRefund = await prisma.offlineWithdrawalRefund.create({
+     *   data: {
+     *     // ... data to create a OfflineWithdrawalRefund
+     *   }
+     * })
+     * 
+     */
+    create<T extends OfflineWithdrawalRefundCreateArgs>(args: SelectSubset<T, OfflineWithdrawalRefundCreateArgs<ExtArgs>>): Prisma__OfflineWithdrawalRefundClient<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OfflineWithdrawalRefunds.
+     * @param {OfflineWithdrawalRefundCreateManyArgs} args - Arguments to create many OfflineWithdrawalRefunds.
+     * @example
+     * // Create many OfflineWithdrawalRefunds
+     * const offlineWithdrawalRefund = await prisma.offlineWithdrawalRefund.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OfflineWithdrawalRefundCreateManyArgs>(args?: SelectSubset<T, OfflineWithdrawalRefundCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a OfflineWithdrawalRefund.
+     * @param {OfflineWithdrawalRefundDeleteArgs} args - Arguments to delete one OfflineWithdrawalRefund.
+     * @example
+     * // Delete one OfflineWithdrawalRefund
+     * const OfflineWithdrawalRefund = await prisma.offlineWithdrawalRefund.delete({
+     *   where: {
+     *     // ... filter to delete one OfflineWithdrawalRefund
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OfflineWithdrawalRefundDeleteArgs>(args: SelectSubset<T, OfflineWithdrawalRefundDeleteArgs<ExtArgs>>): Prisma__OfflineWithdrawalRefundClient<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OfflineWithdrawalRefund.
+     * @param {OfflineWithdrawalRefundUpdateArgs} args - Arguments to update one OfflineWithdrawalRefund.
+     * @example
+     * // Update one OfflineWithdrawalRefund
+     * const offlineWithdrawalRefund = await prisma.offlineWithdrawalRefund.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OfflineWithdrawalRefundUpdateArgs>(args: SelectSubset<T, OfflineWithdrawalRefundUpdateArgs<ExtArgs>>): Prisma__OfflineWithdrawalRefundClient<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OfflineWithdrawalRefunds.
+     * @param {OfflineWithdrawalRefundDeleteManyArgs} args - Arguments to filter OfflineWithdrawalRefunds to delete.
+     * @example
+     * // Delete a few OfflineWithdrawalRefunds
+     * const { count } = await prisma.offlineWithdrawalRefund.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OfflineWithdrawalRefundDeleteManyArgs>(args?: SelectSubset<T, OfflineWithdrawalRefundDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OfflineWithdrawalRefunds.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfflineWithdrawalRefundUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OfflineWithdrawalRefunds
+     * const offlineWithdrawalRefund = await prisma.offlineWithdrawalRefund.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OfflineWithdrawalRefundUpdateManyArgs>(args: SelectSubset<T, OfflineWithdrawalRefundUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one OfflineWithdrawalRefund.
+     * @param {OfflineWithdrawalRefundUpsertArgs} args - Arguments to update or create a OfflineWithdrawalRefund.
+     * @example
+     * // Update or create a OfflineWithdrawalRefund
+     * const offlineWithdrawalRefund = await prisma.offlineWithdrawalRefund.upsert({
+     *   create: {
+     *     // ... data to create a OfflineWithdrawalRefund
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OfflineWithdrawalRefund we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OfflineWithdrawalRefundUpsertArgs>(args: SelectSubset<T, OfflineWithdrawalRefundUpsertArgs<ExtArgs>>): Prisma__OfflineWithdrawalRefundClient<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OfflineWithdrawalRefunds.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfflineWithdrawalRefundCountArgs} args - Arguments to filter OfflineWithdrawalRefunds to count.
+     * @example
+     * // Count the number of OfflineWithdrawalRefunds
+     * const count = await prisma.offlineWithdrawalRefund.count({
+     *   where: {
+     *     // ... the filter for the OfflineWithdrawalRefunds we want to count
+     *   }
+     * })
+    **/
+    count<T extends OfflineWithdrawalRefundCountArgs>(
+      args?: Subset<T, OfflineWithdrawalRefundCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OfflineWithdrawalRefundCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OfflineWithdrawalRefund.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfflineWithdrawalRefundAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OfflineWithdrawalRefundAggregateArgs>(args: Subset<T, OfflineWithdrawalRefundAggregateArgs>): Prisma.PrismaPromise<GetOfflineWithdrawalRefundAggregateType<T>>
+
+    /**
+     * Group by OfflineWithdrawalRefund.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OfflineWithdrawalRefundGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OfflineWithdrawalRefundGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OfflineWithdrawalRefundGroupByArgs['orderBy'] }
+        : { orderBy?: OfflineWithdrawalRefundGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OfflineWithdrawalRefundGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOfflineWithdrawalRefundGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OfflineWithdrawalRefund model
+   */
+  readonly fields: OfflineWithdrawalRefundFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OfflineWithdrawalRefund.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OfflineWithdrawalRefundClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    registrationWorkspace<T extends RegistrationWorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspaceDefaultArgs<ExtArgs>>): Prisma__RegistrationWorkspaceClient<$Result.GetResult<Prisma.$RegistrationWorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    registrationWindow<T extends RegistrationWindowDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindowDefaultArgs<ExtArgs>>): Prisma__RegistrationWindowClient<$Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    candidate<T extends OfflineWithdrawalRefund$candidateArgs<ExtArgs> = {}>(args?: Subset<T, OfflineWithdrawalRefund$candidateArgs<ExtArgs>>): Prisma__CandidateClient<$Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    examSession<T extends ExamSessionDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamSessionDefaultArgs<ExtArgs>>): Prisma__ExamSessionClient<$Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    createdByUser<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    completedByUser<T extends OfflineWithdrawalRefund$completedByUserArgs<ExtArgs> = {}>(args?: Subset<T, OfflineWithdrawalRefund$completedByUserArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OfflineWithdrawalRefund model
+   */
+  interface OfflineWithdrawalRefundFieldRefs {
+    readonly id: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly registrationWorkspaceId: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly registrationWindowId: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly candidateId: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly studentId: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly registrationId: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly examSessionId: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly paperCodeSnapshot: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly subjectSnapshot: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly feeStageCode: FieldRef<"OfflineWithdrawalRefund", 'FeeEntryType'>
+    readonly salesAmountGbp: FieldRef<"OfflineWithdrawalRefund", 'Decimal'>
+    readonly salesAmountCny: FieldRef<"OfflineWithdrawalRefund", 'Decimal'>
+    readonly configuredRefundPercent: FieldRef<"OfflineWithdrawalRefund", 'Decimal'>
+    readonly paymentFeePercent: FieldRef<"OfflineWithdrawalRefund", 'Decimal'>
+    readonly effectiveRefundPercent: FieldRef<"OfflineWithdrawalRefund", 'Decimal'>
+    readonly creditGbp: FieldRef<"OfflineWithdrawalRefund", 'Decimal'>
+    readonly creditCny: FieldRef<"OfflineWithdrawalRefund", 'Decimal'>
+    readonly status: FieldRef<"OfflineWithdrawalRefund", 'OfflineWithdrawalRefundStatus'>
+    readonly policyNotes: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly calculationNotes: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly createdByUserId: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly completedAt: FieldRef<"OfflineWithdrawalRefund", 'DateTime'>
+    readonly completedByUserId: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly offlineReference: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly offlineNote: FieldRef<"OfflineWithdrawalRefund", 'String'>
+    readonly createdAt: FieldRef<"OfflineWithdrawalRefund", 'DateTime'>
+    readonly updatedAt: FieldRef<"OfflineWithdrawalRefund", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OfflineWithdrawalRefund findUnique
+   */
+  export type OfflineWithdrawalRefundFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    /**
+     * Filter, which OfflineWithdrawalRefund to fetch.
+     */
+    where: OfflineWithdrawalRefundWhereUniqueInput
+  }
+
+  /**
+   * OfflineWithdrawalRefund findUniqueOrThrow
+   */
+  export type OfflineWithdrawalRefundFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    /**
+     * Filter, which OfflineWithdrawalRefund to fetch.
+     */
+    where: OfflineWithdrawalRefundWhereUniqueInput
+  }
+
+  /**
+   * OfflineWithdrawalRefund findFirst
+   */
+  export type OfflineWithdrawalRefundFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    /**
+     * Filter, which OfflineWithdrawalRefund to fetch.
+     */
+    where?: OfflineWithdrawalRefundWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfflineWithdrawalRefunds to fetch.
+     */
+    orderBy?: OfflineWithdrawalRefundOrderByWithRelationInput | OfflineWithdrawalRefundOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OfflineWithdrawalRefunds.
+     */
+    cursor?: OfflineWithdrawalRefundWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfflineWithdrawalRefunds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfflineWithdrawalRefunds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OfflineWithdrawalRefunds.
+     */
+    distinct?: OfflineWithdrawalRefundScalarFieldEnum | OfflineWithdrawalRefundScalarFieldEnum[]
+  }
+
+  /**
+   * OfflineWithdrawalRefund findFirstOrThrow
+   */
+  export type OfflineWithdrawalRefundFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    /**
+     * Filter, which OfflineWithdrawalRefund to fetch.
+     */
+    where?: OfflineWithdrawalRefundWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfflineWithdrawalRefunds to fetch.
+     */
+    orderBy?: OfflineWithdrawalRefundOrderByWithRelationInput | OfflineWithdrawalRefundOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OfflineWithdrawalRefunds.
+     */
+    cursor?: OfflineWithdrawalRefundWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfflineWithdrawalRefunds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfflineWithdrawalRefunds.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OfflineWithdrawalRefunds.
+     */
+    distinct?: OfflineWithdrawalRefundScalarFieldEnum | OfflineWithdrawalRefundScalarFieldEnum[]
+  }
+
+  /**
+   * OfflineWithdrawalRefund findMany
+   */
+  export type OfflineWithdrawalRefundFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    /**
+     * Filter, which OfflineWithdrawalRefunds to fetch.
+     */
+    where?: OfflineWithdrawalRefundWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OfflineWithdrawalRefunds to fetch.
+     */
+    orderBy?: OfflineWithdrawalRefundOrderByWithRelationInput | OfflineWithdrawalRefundOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OfflineWithdrawalRefunds.
+     */
+    cursor?: OfflineWithdrawalRefundWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OfflineWithdrawalRefunds from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OfflineWithdrawalRefunds.
+     */
+    skip?: number
+    distinct?: OfflineWithdrawalRefundScalarFieldEnum | OfflineWithdrawalRefundScalarFieldEnum[]
+  }
+
+  /**
+   * OfflineWithdrawalRefund create
+   */
+  export type OfflineWithdrawalRefundCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OfflineWithdrawalRefund.
+     */
+    data: XOR<OfflineWithdrawalRefundCreateInput, OfflineWithdrawalRefundUncheckedCreateInput>
+  }
+
+  /**
+   * OfflineWithdrawalRefund createMany
+   */
+  export type OfflineWithdrawalRefundCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OfflineWithdrawalRefunds.
+     */
+    data: OfflineWithdrawalRefundCreateManyInput | OfflineWithdrawalRefundCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OfflineWithdrawalRefund update
+   */
+  export type OfflineWithdrawalRefundUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OfflineWithdrawalRefund.
+     */
+    data: XOR<OfflineWithdrawalRefundUpdateInput, OfflineWithdrawalRefundUncheckedUpdateInput>
+    /**
+     * Choose, which OfflineWithdrawalRefund to update.
+     */
+    where: OfflineWithdrawalRefundWhereUniqueInput
+  }
+
+  /**
+   * OfflineWithdrawalRefund updateMany
+   */
+  export type OfflineWithdrawalRefundUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OfflineWithdrawalRefunds.
+     */
+    data: XOR<OfflineWithdrawalRefundUpdateManyMutationInput, OfflineWithdrawalRefundUncheckedUpdateManyInput>
+    /**
+     * Filter which OfflineWithdrawalRefunds to update
+     */
+    where?: OfflineWithdrawalRefundWhereInput
+    /**
+     * Limit how many OfflineWithdrawalRefunds to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OfflineWithdrawalRefund upsert
+   */
+  export type OfflineWithdrawalRefundUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OfflineWithdrawalRefund to update in case it exists.
+     */
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    /**
+     * In case the OfflineWithdrawalRefund found by the `where` argument doesn't exist, create a new OfflineWithdrawalRefund with this data.
+     */
+    create: XOR<OfflineWithdrawalRefundCreateInput, OfflineWithdrawalRefundUncheckedCreateInput>
+    /**
+     * In case the OfflineWithdrawalRefund was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OfflineWithdrawalRefundUpdateInput, OfflineWithdrawalRefundUncheckedUpdateInput>
+  }
+
+  /**
+   * OfflineWithdrawalRefund delete
+   */
+  export type OfflineWithdrawalRefundDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
+    /**
+     * Filter which OfflineWithdrawalRefund to delete.
+     */
+    where: OfflineWithdrawalRefundWhereUniqueInput
+  }
+
+  /**
+   * OfflineWithdrawalRefund deleteMany
+   */
+  export type OfflineWithdrawalRefundDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OfflineWithdrawalRefunds to delete
+     */
+    where?: OfflineWithdrawalRefundWhereInput
+    /**
+     * Limit how many OfflineWithdrawalRefunds to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OfflineWithdrawalRefund.candidate
+   */
+  export type OfflineWithdrawalRefund$candidateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Candidate
+     */
+    select?: CandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Candidate
+     */
+    omit?: CandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateInclude<ExtArgs> | null
+    where?: CandidateWhereInput
+  }
+
+  /**
+   * OfflineWithdrawalRefund.completedByUser
+   */
+  export type OfflineWithdrawalRefund$completedByUserArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * OfflineWithdrawalRefund without action
+   */
+  export type OfflineWithdrawalRefundDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OfflineWithdrawalRefund
+     */
+    select?: OfflineWithdrawalRefundSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OfflineWithdrawalRefund
+     */
+    omit?: OfflineWithdrawalRefundOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OfflineWithdrawalRefundInclude<ExtArgs> | null
   }
 
 
@@ -63918,6 +65525,39 @@ export namespace Prisma {
   export type FeeStatementItemScalarFieldEnum = (typeof FeeStatementItemScalarFieldEnum)[keyof typeof FeeStatementItemScalarFieldEnum]
 
 
+  export const OfflineWithdrawalRefundScalarFieldEnum: {
+    id: 'id',
+    registrationWorkspaceId: 'registrationWorkspaceId',
+    registrationWindowId: 'registrationWindowId',
+    candidateId: 'candidateId',
+    studentId: 'studentId',
+    registrationId: 'registrationId',
+    examSessionId: 'examSessionId',
+    paperCodeSnapshot: 'paperCodeSnapshot',
+    subjectSnapshot: 'subjectSnapshot',
+    feeStageCode: 'feeStageCode',
+    salesAmountGbp: 'salesAmountGbp',
+    salesAmountCny: 'salesAmountCny',
+    configuredRefundPercent: 'configuredRefundPercent',
+    paymentFeePercent: 'paymentFeePercent',
+    effectiveRefundPercent: 'effectiveRefundPercent',
+    creditGbp: 'creditGbp',
+    creditCny: 'creditCny',
+    status: 'status',
+    policyNotes: 'policyNotes',
+    calculationNotes: 'calculationNotes',
+    createdByUserId: 'createdByUserId',
+    completedAt: 'completedAt',
+    completedByUserId: 'completedByUserId',
+    offlineReference: 'offlineReference',
+    offlineNote: 'offlineNote',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type OfflineWithdrawalRefundScalarFieldEnum = (typeof OfflineWithdrawalRefundScalarFieldEnum)[keyof typeof OfflineWithdrawalRefundScalarFieldEnum]
+
+
   export const FeeAuditLogScalarFieldEnum: {
     id: 'id',
     action: 'action',
@@ -64668,6 +66308,27 @@ export namespace Prisma {
   export type FeeStatementItemOrderByRelevanceFieldEnum = (typeof FeeStatementItemOrderByRelevanceFieldEnum)[keyof typeof FeeStatementItemOrderByRelevanceFieldEnum]
 
 
+  export const OfflineWithdrawalRefundOrderByRelevanceFieldEnum: {
+    id: 'id',
+    registrationWorkspaceId: 'registrationWorkspaceId',
+    registrationWindowId: 'registrationWindowId',
+    candidateId: 'candidateId',
+    studentId: 'studentId',
+    registrationId: 'registrationId',
+    examSessionId: 'examSessionId',
+    paperCodeSnapshot: 'paperCodeSnapshot',
+    subjectSnapshot: 'subjectSnapshot',
+    policyNotes: 'policyNotes',
+    calculationNotes: 'calculationNotes',
+    createdByUserId: 'createdByUserId',
+    completedByUserId: 'completedByUserId',
+    offlineReference: 'offlineReference',
+    offlineNote: 'offlineNote'
+  };
+
+  export type OfflineWithdrawalRefundOrderByRelevanceFieldEnum = (typeof OfflineWithdrawalRefundOrderByRelevanceFieldEnum)[keyof typeof OfflineWithdrawalRefundOrderByRelevanceFieldEnum]
+
+
   export const FeeAuditLogOrderByRelevanceFieldEnum: {
     id: 'id',
     registrationWindowId: 'registrationWindowId',
@@ -65129,6 +66790,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'OfflineWithdrawalRefundStatus'
+   */
+  export type EnumOfflineWithdrawalRefundStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OfflineWithdrawalRefundStatus'>
+    
+
+
+  /**
    * Reference to a field of type 'FeeAuditAction'
    */
   export type EnumFeeAuditActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeAuditAction'>
@@ -65279,6 +66947,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityListRelationFilter
     candidateExamIdentitiesUpdated?: CandidateExamIdentityListRelationFilter
     paymentOrdersCancelled?: PaymentOrderListRelationFilter
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundListRelationFilter
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -65335,6 +67005,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityOrderByRelationAggregateInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityOrderByRelationAggregateInput
     paymentOrdersCancelled?: PaymentOrderOrderByRelationAggregateInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundOrderByRelationAggregateInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -65395,6 +67067,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityListRelationFilter
     candidateExamIdentitiesUpdated?: CandidateExamIdentityListRelationFilter
     paymentOrdersCancelled?: PaymentOrderListRelationFilter
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundListRelationFilter
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundListRelationFilter
   }, "id" | "username" | "email" | "phone" | "studentNo">
 
   export type UserOrderByWithAggregationInput = {
@@ -66020,6 +67694,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
     certificateRequests?: CertificateRequestListRelationFilter
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
   }
 
   export type CandidateOrderByWithRelationInput = {
@@ -66071,6 +67746,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestOrderByRelationAggregateInput
     certificateRequests?: CertificateRequestOrderByRelationAggregateInput
     postResultsAuditLogs?: PostResultsAuditLogOrderByRelationAggregateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundOrderByRelationAggregateInput
     _relevance?: CandidateOrderByRelevanceInput
   }
 
@@ -66126,6 +67802,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
     certificateRequests?: CertificateRequestListRelationFilter
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
   }, "id" | "studentId" | "userId">
 
   export type CandidateOrderByWithAggregationInput = {
@@ -66476,6 +68153,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesListRelationFilter
     examDocumentAuditLogs?: ExamDocumentAuditLogListRelationFilter
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
   }
 
   export type RegistrationWindowOrderByWithRelationInput = {
@@ -66511,6 +68189,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesOrderByRelationAggregateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogOrderByRelationAggregateInput
     postResultsAuditLogs?: PostResultsAuditLogOrderByRelationAggregateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundOrderByRelationAggregateInput
     _relevance?: RegistrationWindowOrderByRelevanceInput
   }
 
@@ -66550,6 +68229,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesListRelationFilter
     examDocumentAuditLogs?: ExamDocumentAuditLogListRelationFilter
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
   }, "id">
 
   export type RegistrationWindowOrderByWithAggregationInput = {
@@ -66825,6 +68505,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogListRelationFilter
     changeRequests?: RegistrationChangeRequestListRelationFilter
     feeStatements?: FeeStatementListRelationFilter
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
   }
 
   export type RegistrationWorkspaceOrderByWithRelationInput = {
@@ -66876,6 +68557,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogOrderByRelationAggregateInput
     changeRequests?: RegistrationChangeRequestOrderByRelationAggregateInput
     feeStatements?: FeeStatementOrderByRelationAggregateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundOrderByRelationAggregateInput
     _relevance?: RegistrationWorkspaceOrderByRelevanceInput
   }
 
@@ -66933,6 +68615,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogListRelationFilter
     changeRequests?: RegistrationChangeRequestListRelationFilter
     feeStatements?: FeeStatementListRelationFilter
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
   }, "id" | "registrationNumber" | "confirmationNumber" | "candidateId_registrationWindowId_registrationType" | "studentId_registrationWindowId_registrationType">
 
   export type RegistrationWorkspaceOrderByWithAggregationInput = {
@@ -68441,6 +70124,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
   }
 
   export type ExamSessionOrderByWithRelationInput = {
@@ -68469,6 +70153,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogOrderByRelationAggregateInput
     reviewRequests?: ReviewRequestOrderByRelationAggregateInput
     accessToScriptRequests?: AccessToScriptRequestOrderByRelationAggregateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundOrderByRelationAggregateInput
     _relevance?: ExamSessionOrderByRelevanceInput
   }
 
@@ -68501,6 +70186,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
   }, "id">
 
   export type ExamSessionOrderByWithAggregationInput = {
@@ -69689,6 +71375,189 @@ export namespace Prisma {
     lineTotalCny?: DecimalWithAggregatesFilter<"FeeStatementItem"> | Decimal | DecimalJsLike | number | string
     quantity?: IntWithAggregatesFilter<"FeeStatementItem"> | number
     createdAt?: DateTimeWithAggregatesFilter<"FeeStatementItem"> | Date | string
+  }
+
+  export type OfflineWithdrawalRefundWhereInput = {
+    AND?: OfflineWithdrawalRefundWhereInput | OfflineWithdrawalRefundWhereInput[]
+    OR?: OfflineWithdrawalRefundWhereInput[]
+    NOT?: OfflineWithdrawalRefundWhereInput | OfflineWithdrawalRefundWhereInput[]
+    id?: StringFilter<"OfflineWithdrawalRefund"> | string
+    registrationWorkspaceId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    registrationWindowId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    candidateId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    studentId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    registrationId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    examSessionId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    paperCodeSnapshot?: StringFilter<"OfflineWithdrawalRefund"> | string
+    subjectSnapshot?: StringFilter<"OfflineWithdrawalRefund"> | string
+    feeStageCode?: EnumFeeEntryTypeFilter<"OfflineWithdrawalRefund"> | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: DecimalNullableFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    creditCny?: DecimalNullableFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFilter<"OfflineWithdrawalRefund"> | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    calculationNotes?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    createdByUserId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    completedAt?: DateTimeNullableFilter<"OfflineWithdrawalRefund"> | Date | string | null
+    completedByUserId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    offlineReference?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    offlineNote?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    createdAt?: DateTimeFilter<"OfflineWithdrawalRefund"> | Date | string
+    updatedAt?: DateTimeFilter<"OfflineWithdrawalRefund"> | Date | string
+    registrationWorkspace?: XOR<RegistrationWorkspaceScalarRelationFilter, RegistrationWorkspaceWhereInput>
+    registrationWindow?: XOR<RegistrationWindowScalarRelationFilter, RegistrationWindowWhereInput>
+    candidate?: XOR<CandidateNullableScalarRelationFilter, CandidateWhereInput> | null
+    examSession?: XOR<ExamSessionScalarRelationFilter, ExamSessionWhereInput>
+    createdByUser?: XOR<UserScalarRelationFilter, UserWhereInput>
+    completedByUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type OfflineWithdrawalRefundOrderByWithRelationInput = {
+    id?: SortOrder
+    registrationWorkspaceId?: SortOrder
+    registrationWindowId?: SortOrder
+    candidateId?: SortOrderInput | SortOrder
+    studentId?: SortOrderInput | SortOrder
+    registrationId?: SortOrderInput | SortOrder
+    examSessionId?: SortOrder
+    paperCodeSnapshot?: SortOrder
+    subjectSnapshot?: SortOrder
+    feeStageCode?: SortOrder
+    salesAmountGbp?: SortOrder
+    salesAmountCny?: SortOrderInput | SortOrder
+    configuredRefundPercent?: SortOrder
+    paymentFeePercent?: SortOrder
+    effectiveRefundPercent?: SortOrder
+    creditGbp?: SortOrder
+    creditCny?: SortOrderInput | SortOrder
+    status?: SortOrder
+    policyNotes?: SortOrderInput | SortOrder
+    calculationNotes?: SortOrderInput | SortOrder
+    createdByUserId?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    completedByUserId?: SortOrderInput | SortOrder
+    offlineReference?: SortOrderInput | SortOrder
+    offlineNote?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    registrationWorkspace?: RegistrationWorkspaceOrderByWithRelationInput
+    registrationWindow?: RegistrationWindowOrderByWithRelationInput
+    candidate?: CandidateOrderByWithRelationInput
+    examSession?: ExamSessionOrderByWithRelationInput
+    createdByUser?: UserOrderByWithRelationInput
+    completedByUser?: UserOrderByWithRelationInput
+    _relevance?: OfflineWithdrawalRefundOrderByRelevanceInput
+  }
+
+  export type OfflineWithdrawalRefundWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: OfflineWithdrawalRefundWhereInput | OfflineWithdrawalRefundWhereInput[]
+    OR?: OfflineWithdrawalRefundWhereInput[]
+    NOT?: OfflineWithdrawalRefundWhereInput | OfflineWithdrawalRefundWhereInput[]
+    registrationWorkspaceId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    registrationWindowId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    candidateId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    studentId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    registrationId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    examSessionId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    paperCodeSnapshot?: StringFilter<"OfflineWithdrawalRefund"> | string
+    subjectSnapshot?: StringFilter<"OfflineWithdrawalRefund"> | string
+    feeStageCode?: EnumFeeEntryTypeFilter<"OfflineWithdrawalRefund"> | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: DecimalNullableFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    creditCny?: DecimalNullableFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFilter<"OfflineWithdrawalRefund"> | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    calculationNotes?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    createdByUserId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    completedAt?: DateTimeNullableFilter<"OfflineWithdrawalRefund"> | Date | string | null
+    completedByUserId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    offlineReference?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    offlineNote?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    createdAt?: DateTimeFilter<"OfflineWithdrawalRefund"> | Date | string
+    updatedAt?: DateTimeFilter<"OfflineWithdrawalRefund"> | Date | string
+    registrationWorkspace?: XOR<RegistrationWorkspaceScalarRelationFilter, RegistrationWorkspaceWhereInput>
+    registrationWindow?: XOR<RegistrationWindowScalarRelationFilter, RegistrationWindowWhereInput>
+    candidate?: XOR<CandidateNullableScalarRelationFilter, CandidateWhereInput> | null
+    examSession?: XOR<ExamSessionScalarRelationFilter, ExamSessionWhereInput>
+    createdByUser?: XOR<UserScalarRelationFilter, UserWhereInput>
+    completedByUser?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type OfflineWithdrawalRefundOrderByWithAggregationInput = {
+    id?: SortOrder
+    registrationWorkspaceId?: SortOrder
+    registrationWindowId?: SortOrder
+    candidateId?: SortOrderInput | SortOrder
+    studentId?: SortOrderInput | SortOrder
+    registrationId?: SortOrderInput | SortOrder
+    examSessionId?: SortOrder
+    paperCodeSnapshot?: SortOrder
+    subjectSnapshot?: SortOrder
+    feeStageCode?: SortOrder
+    salesAmountGbp?: SortOrder
+    salesAmountCny?: SortOrderInput | SortOrder
+    configuredRefundPercent?: SortOrder
+    paymentFeePercent?: SortOrder
+    effectiveRefundPercent?: SortOrder
+    creditGbp?: SortOrder
+    creditCny?: SortOrderInput | SortOrder
+    status?: SortOrder
+    policyNotes?: SortOrderInput | SortOrder
+    calculationNotes?: SortOrderInput | SortOrder
+    createdByUserId?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    completedByUserId?: SortOrderInput | SortOrder
+    offlineReference?: SortOrderInput | SortOrder
+    offlineNote?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: OfflineWithdrawalRefundCountOrderByAggregateInput
+    _avg?: OfflineWithdrawalRefundAvgOrderByAggregateInput
+    _max?: OfflineWithdrawalRefundMaxOrderByAggregateInput
+    _min?: OfflineWithdrawalRefundMinOrderByAggregateInput
+    _sum?: OfflineWithdrawalRefundSumOrderByAggregateInput
+  }
+
+  export type OfflineWithdrawalRefundScalarWhereWithAggregatesInput = {
+    AND?: OfflineWithdrawalRefundScalarWhereWithAggregatesInput | OfflineWithdrawalRefundScalarWhereWithAggregatesInput[]
+    OR?: OfflineWithdrawalRefundScalarWhereWithAggregatesInput[]
+    NOT?: OfflineWithdrawalRefundScalarWhereWithAggregatesInput | OfflineWithdrawalRefundScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OfflineWithdrawalRefund"> | string
+    registrationWorkspaceId?: StringWithAggregatesFilter<"OfflineWithdrawalRefund"> | string
+    registrationWindowId?: StringWithAggregatesFilter<"OfflineWithdrawalRefund"> | string
+    candidateId?: StringNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | string | null
+    studentId?: StringNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | string | null
+    registrationId?: StringNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | string | null
+    examSessionId?: StringWithAggregatesFilter<"OfflineWithdrawalRefund"> | string
+    paperCodeSnapshot?: StringWithAggregatesFilter<"OfflineWithdrawalRefund"> | string
+    subjectSnapshot?: StringWithAggregatesFilter<"OfflineWithdrawalRefund"> | string
+    feeStageCode?: EnumFeeEntryTypeWithAggregatesFilter<"OfflineWithdrawalRefund"> | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalWithAggregatesFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: DecimalNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalWithAggregatesFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalWithAggregatesFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalWithAggregatesFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalWithAggregatesFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    creditCny?: DecimalNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusWithAggregatesFilter<"OfflineWithdrawalRefund"> | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: StringNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | string | null
+    calculationNotes?: StringNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | string | null
+    createdByUserId?: StringWithAggregatesFilter<"OfflineWithdrawalRefund"> | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | Date | string | null
+    completedByUserId?: StringNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | string | null
+    offlineReference?: StringNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | string | null
+    offlineNote?: StringNullableWithAggregatesFilter<"OfflineWithdrawalRefund"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"OfflineWithdrawalRefund"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"OfflineWithdrawalRefund"> | Date | string
   }
 
   export type FeeAuditLogWhereInput = {
@@ -70976,6 +72845,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -71032,6 +72903,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUpdateInput = {
@@ -71088,6 +72961,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -71144,6 +73019,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -71804,6 +73681,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateInput = {
@@ -71854,6 +73732,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUpdateInput = {
@@ -71904,6 +73783,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateInput = {
@@ -71954,6 +73834,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateCreateManyInput = {
@@ -72319,6 +74200,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateInput = {
@@ -72351,6 +74233,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUpdateInput = {
@@ -72383,6 +74266,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateInput = {
@@ -72415,6 +74299,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowCreateManyInput = {
@@ -72700,6 +74585,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateInput = {
@@ -72744,6 +74630,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUpdateInput = {
@@ -72788,6 +74675,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateInput = {
@@ -72832,6 +74720,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceCreateManyInput = {
@@ -74494,6 +76383,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateInput = {
@@ -74519,6 +76409,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUpdateInput = {
@@ -74544,6 +76435,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateInput = {
@@ -74569,6 +76461,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionCreateManyInput = {
@@ -75873,6 +77766,210 @@ export namespace Prisma {
     lineTotalCny?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     quantity?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundCreateInput = {
+    id?: string
+    studentId?: string | null
+    registrationId?: string | null
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    completedAt?: Date | string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    candidate?: CandidateCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    examSession: ExamSessionCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    createdByUser: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCreatedInput
+    completedByUser?: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCompletedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfflineWithdrawalRefundUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    candidate?: CandidateUpdateOneWithoutOfflineWithdrawalRefundsNestedInput
+    examSession?: ExamSessionUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    createdByUser?: UserUpdateOneRequiredWithoutOfflineWithdrawalRefundsCreatedNestedInput
+    completedByUser?: UserUpdateOneWithoutOfflineWithdrawalRefundsCompletedNestedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundCreateManyInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfflineWithdrawalRefundUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeeAuditLogCreateInput = {
@@ -77330,6 +79427,12 @@ export namespace Prisma {
     none?: PaymentOrderWhereInput
   }
 
+  export type OfflineWithdrawalRefundListRelationFilter = {
+    every?: OfflineWithdrawalRefundWhereInput
+    some?: OfflineWithdrawalRefundWhereInput
+    none?: OfflineWithdrawalRefundWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -77436,6 +79539,10 @@ export namespace Prisma {
   }
 
   export type PaymentOrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OfflineWithdrawalRefundOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -81044,6 +83151,144 @@ export namespace Prisma {
     _max?: NestedEnumFeeCurrencyNullableFilter<$PrismaModel>
   }
 
+  export type EnumOfflineWithdrawalRefundStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.OfflineWithdrawalRefundStatus | EnumOfflineWithdrawalRefundStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OfflineWithdrawalRefundStatus[]
+    notIn?: $Enums.OfflineWithdrawalRefundStatus[]
+    not?: NestedEnumOfflineWithdrawalRefundStatusFilter<$PrismaModel> | $Enums.OfflineWithdrawalRefundStatus
+  }
+
+  export type RegistrationWorkspaceScalarRelationFilter = {
+    is?: RegistrationWorkspaceWhereInput
+    isNot?: RegistrationWorkspaceWhereInput
+  }
+
+  export type OfflineWithdrawalRefundOrderByRelevanceInput = {
+    fields: OfflineWithdrawalRefundOrderByRelevanceFieldEnum | OfflineWithdrawalRefundOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type OfflineWithdrawalRefundCountOrderByAggregateInput = {
+    id?: SortOrder
+    registrationWorkspaceId?: SortOrder
+    registrationWindowId?: SortOrder
+    candidateId?: SortOrder
+    studentId?: SortOrder
+    registrationId?: SortOrder
+    examSessionId?: SortOrder
+    paperCodeSnapshot?: SortOrder
+    subjectSnapshot?: SortOrder
+    feeStageCode?: SortOrder
+    salesAmountGbp?: SortOrder
+    salesAmountCny?: SortOrder
+    configuredRefundPercent?: SortOrder
+    paymentFeePercent?: SortOrder
+    effectiveRefundPercent?: SortOrder
+    creditGbp?: SortOrder
+    creditCny?: SortOrder
+    status?: SortOrder
+    policyNotes?: SortOrder
+    calculationNotes?: SortOrder
+    createdByUserId?: SortOrder
+    completedAt?: SortOrder
+    completedByUserId?: SortOrder
+    offlineReference?: SortOrder
+    offlineNote?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OfflineWithdrawalRefundAvgOrderByAggregateInput = {
+    salesAmountGbp?: SortOrder
+    salesAmountCny?: SortOrder
+    configuredRefundPercent?: SortOrder
+    paymentFeePercent?: SortOrder
+    effectiveRefundPercent?: SortOrder
+    creditGbp?: SortOrder
+    creditCny?: SortOrder
+  }
+
+  export type OfflineWithdrawalRefundMaxOrderByAggregateInput = {
+    id?: SortOrder
+    registrationWorkspaceId?: SortOrder
+    registrationWindowId?: SortOrder
+    candidateId?: SortOrder
+    studentId?: SortOrder
+    registrationId?: SortOrder
+    examSessionId?: SortOrder
+    paperCodeSnapshot?: SortOrder
+    subjectSnapshot?: SortOrder
+    feeStageCode?: SortOrder
+    salesAmountGbp?: SortOrder
+    salesAmountCny?: SortOrder
+    configuredRefundPercent?: SortOrder
+    paymentFeePercent?: SortOrder
+    effectiveRefundPercent?: SortOrder
+    creditGbp?: SortOrder
+    creditCny?: SortOrder
+    status?: SortOrder
+    policyNotes?: SortOrder
+    calculationNotes?: SortOrder
+    createdByUserId?: SortOrder
+    completedAt?: SortOrder
+    completedByUserId?: SortOrder
+    offlineReference?: SortOrder
+    offlineNote?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OfflineWithdrawalRefundMinOrderByAggregateInput = {
+    id?: SortOrder
+    registrationWorkspaceId?: SortOrder
+    registrationWindowId?: SortOrder
+    candidateId?: SortOrder
+    studentId?: SortOrder
+    registrationId?: SortOrder
+    examSessionId?: SortOrder
+    paperCodeSnapshot?: SortOrder
+    subjectSnapshot?: SortOrder
+    feeStageCode?: SortOrder
+    salesAmountGbp?: SortOrder
+    salesAmountCny?: SortOrder
+    configuredRefundPercent?: SortOrder
+    paymentFeePercent?: SortOrder
+    effectiveRefundPercent?: SortOrder
+    creditGbp?: SortOrder
+    creditCny?: SortOrder
+    status?: SortOrder
+    policyNotes?: SortOrder
+    calculationNotes?: SortOrder
+    createdByUserId?: SortOrder
+    completedAt?: SortOrder
+    completedByUserId?: SortOrder
+    offlineReference?: SortOrder
+    offlineNote?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type OfflineWithdrawalRefundSumOrderByAggregateInput = {
+    salesAmountGbp?: SortOrder
+    salesAmountCny?: SortOrder
+    configuredRefundPercent?: SortOrder
+    paymentFeePercent?: SortOrder
+    effectiveRefundPercent?: SortOrder
+    creditGbp?: SortOrder
+    creditCny?: SortOrder
+  }
+
+  export type EnumOfflineWithdrawalRefundStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OfflineWithdrawalRefundStatus | EnumOfflineWithdrawalRefundStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OfflineWithdrawalRefundStatus[]
+    notIn?: $Enums.OfflineWithdrawalRefundStatus[]
+    not?: NestedEnumOfflineWithdrawalRefundStatusWithAggregatesFilter<$PrismaModel> | $Enums.OfflineWithdrawalRefundStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOfflineWithdrawalRefundStatusFilter<$PrismaModel>
+    _max?: NestedEnumOfflineWithdrawalRefundStatusFilter<$PrismaModel>
+  }
+
   export type EnumFeeAuditActionFilter<$PrismaModel = never> = {
     equals?: $Enums.FeeAuditAction | EnumFeeAuditActionFieldRefInput<$PrismaModel>
     in?: $Enums.FeeAuditAction[]
@@ -82214,6 +84459,20 @@ export namespace Prisma {
     connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
   }
 
+  export type OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCreatedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput> | OfflineWithdrawalRefundCreateWithoutCreatedByUserInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCreatedByUserInput | OfflineWithdrawalRefundCreateOrConnectWithoutCreatedByUserInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCreatedByUserInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+  }
+
+  export type OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCompletedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput> | OfflineWithdrawalRefundCreateWithoutCompletedByUserInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCompletedByUserInput | OfflineWithdrawalRefundCreateOrConnectWithoutCompletedByUserInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCompletedByUserInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+  }
+
   export type SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -82496,6 +84755,20 @@ export namespace Prisma {
     connectOrCreate?: PaymentOrderCreateOrConnectWithoutCancelledByInput | PaymentOrderCreateOrConnectWithoutCancelledByInput[]
     createMany?: PaymentOrderCreateManyCancelledByInputEnvelope
     connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCreatedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput> | OfflineWithdrawalRefundCreateWithoutCreatedByUserInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCreatedByUserInput | OfflineWithdrawalRefundCreateOrConnectWithoutCreatedByUserInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCreatedByUserInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCompletedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput> | OfflineWithdrawalRefundCreateWithoutCompletedByUserInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCompletedByUserInput | OfflineWithdrawalRefundCreateOrConnectWithoutCompletedByUserInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCompletedByUserInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -83080,6 +85353,34 @@ export namespace Prisma {
     deleteMany?: PaymentOrderScalarWhereInput | PaymentOrderScalarWhereInput[]
   }
 
+  export type OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCreatedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput> | OfflineWithdrawalRefundCreateWithoutCreatedByUserInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCreatedByUserInput | OfflineWithdrawalRefundCreateOrConnectWithoutCreatedByUserInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCreatedByUserInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCreatedByUserInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCreatedByUserInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCreatedByUserInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCreatedByUserInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutCreatedByUserInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutCreatedByUserInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
+  }
+
+  export type OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCompletedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput> | OfflineWithdrawalRefundCreateWithoutCompletedByUserInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCompletedByUserInput | OfflineWithdrawalRefundCreateOrConnectWithoutCompletedByUserInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCompletedByUserInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCompletedByUserInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCompletedByUserInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCompletedByUserInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCompletedByUserInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutCompletedByUserInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutCompletedByUserInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
+  }
+
   export type SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -83642,6 +85943,34 @@ export namespace Prisma {
     deleteMany?: PaymentOrderScalarWhereInput | PaymentOrderScalarWhereInput[]
   }
 
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCreatedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput> | OfflineWithdrawalRefundCreateWithoutCreatedByUserInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCreatedByUserInput | OfflineWithdrawalRefundCreateOrConnectWithoutCreatedByUserInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCreatedByUserInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCreatedByUserInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCreatedByUserInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCreatedByUserInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCreatedByUserInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutCreatedByUserInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutCreatedByUserInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCompletedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput> | OfflineWithdrawalRefundCreateWithoutCompletedByUserInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCompletedByUserInput | OfflineWithdrawalRefundCreateOrConnectWithoutCompletedByUserInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCompletedByUserInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCompletedByUserInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCompletedByUserInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCompletedByUserInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCompletedByUserInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutCompletedByUserInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutCompletedByUserInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
     create?: XOR<UserCreateWithoutPasswordResetTokensInput, UserUncheckedCreateWithoutPasswordResetTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutPasswordResetTokensInput
@@ -83921,6 +86250,13 @@ export namespace Prisma {
     connect?: PostResultsAuditLogWhereUniqueInput | PostResultsAuditLogWhereUniqueInput[]
   }
 
+  export type OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCandidateInput, OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput> | OfflineWithdrawalRefundCreateWithoutCandidateInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCandidateInput | OfflineWithdrawalRefundCreateOrConnectWithoutCandidateInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCandidateInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+  }
+
   export type CandidateExamIdentityUncheckedCreateNestedManyWithoutCandidateInput = {
     create?: XOR<CandidateExamIdentityCreateWithoutCandidateInput, CandidateExamIdentityUncheckedCreateWithoutCandidateInput> | CandidateExamIdentityCreateWithoutCandidateInput[] | CandidateExamIdentityUncheckedCreateWithoutCandidateInput[]
     connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutCandidateInput | CandidateExamIdentityCreateOrConnectWithoutCandidateInput[]
@@ -84010,6 +86346,13 @@ export namespace Prisma {
     connectOrCreate?: PostResultsAuditLogCreateOrConnectWithoutCandidateInput | PostResultsAuditLogCreateOrConnectWithoutCandidateInput[]
     createMany?: PostResultsAuditLogCreateManyCandidateInputEnvelope
     connect?: PostResultsAuditLogWhereUniqueInput | PostResultsAuditLogWhereUniqueInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCandidateInput, OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput> | OfflineWithdrawalRefundCreateWithoutCandidateInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCandidateInput | OfflineWithdrawalRefundCreateOrConnectWithoutCandidateInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCandidateInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
   }
 
   export type EnumCandidateTypeFieldUpdateOperationsInput = {
@@ -84220,6 +86563,20 @@ export namespace Prisma {
     deleteMany?: PostResultsAuditLogScalarWhereInput | PostResultsAuditLogScalarWhereInput[]
   }
 
+  export type OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCandidateInput, OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput> | OfflineWithdrawalRefundCreateWithoutCandidateInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCandidateInput | OfflineWithdrawalRefundCreateOrConnectWithoutCandidateInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCandidateInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCandidateInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCandidateInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCandidateInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCandidateInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutCandidateInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutCandidateInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
+  }
+
   export type CandidateExamIdentityUncheckedUpdateManyWithoutCandidateNestedInput = {
     create?: XOR<CandidateExamIdentityCreateWithoutCandidateInput, CandidateExamIdentityUncheckedCreateWithoutCandidateInput> | CandidateExamIdentityCreateWithoutCandidateInput[] | CandidateExamIdentityUncheckedCreateWithoutCandidateInput[]
     connectOrCreate?: CandidateExamIdentityCreateOrConnectWithoutCandidateInput | CandidateExamIdentityCreateOrConnectWithoutCandidateInput[]
@@ -84400,6 +86757,20 @@ export namespace Prisma {
     update?: PostResultsAuditLogUpdateWithWhereUniqueWithoutCandidateInput | PostResultsAuditLogUpdateWithWhereUniqueWithoutCandidateInput[]
     updateMany?: PostResultsAuditLogUpdateManyWithWhereWithoutCandidateInput | PostResultsAuditLogUpdateManyWithWhereWithoutCandidateInput[]
     deleteMany?: PostResultsAuditLogScalarWhereInput | PostResultsAuditLogScalarWhereInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutCandidateInput, OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput> | OfflineWithdrawalRefundCreateWithoutCandidateInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutCandidateInput | OfflineWithdrawalRefundCreateOrConnectWithoutCandidateInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCandidateInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCandidateInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyCandidateInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCandidateInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCandidateInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutCandidateInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutCandidateInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
   }
 
   export type CandidateCreateNestedOneWithoutCandidateAuditLogsInput = {
@@ -84628,6 +86999,13 @@ export namespace Prisma {
     connect?: PostResultsAuditLogWhereUniqueInput | PostResultsAuditLogWhereUniqueInput[]
   }
 
+  export type OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput> | OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWindowInput | OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWindowInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyRegistrationWindowInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+  }
+
   export type StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput = {
     create?: XOR<StudentExamRegistrationCreateWithoutRegistrationWindowInput, StudentExamRegistrationUncheckedCreateWithoutRegistrationWindowInput> | StudentExamRegistrationCreateWithoutRegistrationWindowInput[] | StudentExamRegistrationUncheckedCreateWithoutRegistrationWindowInput[]
     connectOrCreate?: StudentExamRegistrationCreateOrConnectWithoutRegistrationWindowInput | StudentExamRegistrationCreateOrConnectWithoutRegistrationWindowInput[]
@@ -84710,6 +87088,13 @@ export namespace Prisma {
     connectOrCreate?: PostResultsAuditLogCreateOrConnectWithoutRegistrationWindowInput | PostResultsAuditLogCreateOrConnectWithoutRegistrationWindowInput[]
     createMany?: PostResultsAuditLogCreateManyRegistrationWindowInputEnvelope
     connect?: PostResultsAuditLogWhereUniqueInput | PostResultsAuditLogWhereUniqueInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput> | OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWindowInput | OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWindowInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyRegistrationWindowInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
   }
 
   export type EnumRegistrationWindowStatusFieldUpdateOperationsInput = {
@@ -84918,6 +87303,20 @@ export namespace Prisma {
     deleteMany?: PostResultsAuditLogScalarWhereInput | PostResultsAuditLogScalarWhereInput[]
   }
 
+  export type OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput> | OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWindowInput | OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWindowInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutRegistrationWindowInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutRegistrationWindowInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyRegistrationWindowInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutRegistrationWindowInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutRegistrationWindowInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutRegistrationWindowInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutRegistrationWindowInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
+  }
+
   export type StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput = {
     create?: XOR<StudentExamRegistrationCreateWithoutRegistrationWindowInput, StudentExamRegistrationUncheckedCreateWithoutRegistrationWindowInput> | StudentExamRegistrationCreateWithoutRegistrationWindowInput[] | StudentExamRegistrationUncheckedCreateWithoutRegistrationWindowInput[]
     connectOrCreate?: StudentExamRegistrationCreateOrConnectWithoutRegistrationWindowInput | StudentExamRegistrationCreateOrConnectWithoutRegistrationWindowInput[]
@@ -85084,6 +87483,20 @@ export namespace Prisma {
     update?: PostResultsAuditLogUpdateWithWhereUniqueWithoutRegistrationWindowInput | PostResultsAuditLogUpdateWithWhereUniqueWithoutRegistrationWindowInput[]
     updateMany?: PostResultsAuditLogUpdateManyWithWhereWithoutRegistrationWindowInput | PostResultsAuditLogUpdateManyWithWhereWithoutRegistrationWindowInput[]
     deleteMany?: PostResultsAuditLogScalarWhereInput | PostResultsAuditLogScalarWhereInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput> | OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWindowInput | OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWindowInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutRegistrationWindowInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutRegistrationWindowInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyRegistrationWindowInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutRegistrationWindowInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutRegistrationWindowInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutRegistrationWindowInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutRegistrationWindowInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
   }
 
   export type RegistrationWindowCreateNestedOneWithoutIncludedSeriesInput = {
@@ -85332,6 +87745,13 @@ export namespace Prisma {
     connect?: FeeStatementWhereUniqueInput | FeeStatementWhereUniqueInput[]
   }
 
+  export type OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput> | OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWorkspaceInput | OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWorkspaceInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyRegistrationWorkspaceInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+  }
+
   export type StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput = {
     create?: XOR<StudentExamRegistrationCreateWithoutRegistrationWorkspaceInput, StudentExamRegistrationUncheckedCreateWithoutRegistrationWorkspaceInput> | StudentExamRegistrationCreateWithoutRegistrationWorkspaceInput[] | StudentExamRegistrationUncheckedCreateWithoutRegistrationWorkspaceInput[]
     connectOrCreate?: StudentExamRegistrationCreateOrConnectWithoutRegistrationWorkspaceInput | StudentExamRegistrationCreateOrConnectWithoutRegistrationWorkspaceInput[]
@@ -85358,6 +87778,13 @@ export namespace Prisma {
     connectOrCreate?: FeeStatementCreateOrConnectWithoutRegistrationWorkspaceInput | FeeStatementCreateOrConnectWithoutRegistrationWorkspaceInput[]
     createMany?: FeeStatementCreateManyRegistrationWorkspaceInputEnvelope
     connect?: FeeStatementWhereUniqueInput | FeeStatementWhereUniqueInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput> | OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWorkspaceInput | OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWorkspaceInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyRegistrationWorkspaceInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
   }
 
   export type NullableEnumUserRoleFieldUpdateOperationsInput = {
@@ -85504,6 +87931,20 @@ export namespace Prisma {
     deleteMany?: FeeStatementScalarWhereInput | FeeStatementScalarWhereInput[]
   }
 
+  export type OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput> | OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWorkspaceInput | OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWorkspaceInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyRegistrationWorkspaceInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutRegistrationWorkspaceInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutRegistrationWorkspaceInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
+  }
+
   export type StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput = {
     create?: XOR<StudentExamRegistrationCreateWithoutRegistrationWorkspaceInput, StudentExamRegistrationUncheckedCreateWithoutRegistrationWorkspaceInput> | StudentExamRegistrationCreateWithoutRegistrationWorkspaceInput[] | StudentExamRegistrationUncheckedCreateWithoutRegistrationWorkspaceInput[]
     connectOrCreate?: StudentExamRegistrationCreateOrConnectWithoutRegistrationWorkspaceInput | StudentExamRegistrationCreateOrConnectWithoutRegistrationWorkspaceInput[]
@@ -85558,6 +87999,20 @@ export namespace Prisma {
     update?: FeeStatementUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput | FeeStatementUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput[]
     updateMany?: FeeStatementUpdateManyWithWhereWithoutRegistrationWorkspaceInput | FeeStatementUpdateManyWithWhereWithoutRegistrationWorkspaceInput[]
     deleteMany?: FeeStatementScalarWhereInput | FeeStatementScalarWhereInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput> | OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWorkspaceInput | OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWorkspaceInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyRegistrationWorkspaceInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutRegistrationWorkspaceInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutRegistrationWorkspaceInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
   }
 
   export type CandidateCreateNestedOneWithoutExamRegistrationsInput = {
@@ -88688,6 +91143,13 @@ export namespace Prisma {
     connect?: AccessToScriptRequestWhereUniqueInput | AccessToScriptRequestWhereUniqueInput[]
   }
 
+  export type OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutExamSessionInput, OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput> | OfflineWithdrawalRefundCreateWithoutExamSessionInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutExamSessionInput | OfflineWithdrawalRefundCreateOrConnectWithoutExamSessionInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyExamSessionInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+  }
+
   export type StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput = {
     create?: XOR<StudentExamRegistrationCreateWithoutExamSessionInput, StudentExamRegistrationUncheckedCreateWithoutExamSessionInput> | StudentExamRegistrationCreateWithoutExamSessionInput[] | StudentExamRegistrationUncheckedCreateWithoutExamSessionInput[]
     connectOrCreate?: StudentExamRegistrationCreateOrConnectWithoutExamSessionInput | StudentExamRegistrationCreateOrConnectWithoutExamSessionInput[]
@@ -88756,6 +91218,13 @@ export namespace Prisma {
     connectOrCreate?: AccessToScriptRequestCreateOrConnectWithoutExamSessionInput | AccessToScriptRequestCreateOrConnectWithoutExamSessionInput[]
     createMany?: AccessToScriptRequestCreateManyExamSessionInputEnvelope
     connect?: AccessToScriptRequestWhereUniqueInput | AccessToScriptRequestWhereUniqueInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutExamSessionInput, OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput> | OfflineWithdrawalRefundCreateWithoutExamSessionInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutExamSessionInput | OfflineWithdrawalRefundCreateOrConnectWithoutExamSessionInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyExamSessionInputEnvelope
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
   }
 
   export type PaperUpdateOneRequiredWithoutExamSessionsNestedInput = {
@@ -88924,6 +91393,20 @@ export namespace Prisma {
     deleteMany?: AccessToScriptRequestScalarWhereInput | AccessToScriptRequestScalarWhereInput[]
   }
 
+  export type OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutExamSessionInput, OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput> | OfflineWithdrawalRefundCreateWithoutExamSessionInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutExamSessionInput | OfflineWithdrawalRefundCreateOrConnectWithoutExamSessionInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutExamSessionInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutExamSessionInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyExamSessionInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutExamSessionInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutExamSessionInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutExamSessionInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutExamSessionInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
+  }
+
   export type StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput = {
     create?: XOR<StudentExamRegistrationCreateWithoutExamSessionInput, StudentExamRegistrationUncheckedCreateWithoutExamSessionInput> | StudentExamRegistrationCreateWithoutExamSessionInput[] | StudentExamRegistrationUncheckedCreateWithoutExamSessionInput[]
     connectOrCreate?: StudentExamRegistrationCreateOrConnectWithoutExamSessionInput | StudentExamRegistrationCreateOrConnectWithoutExamSessionInput[]
@@ -89062,6 +91545,20 @@ export namespace Prisma {
     update?: AccessToScriptRequestUpdateWithWhereUniqueWithoutExamSessionInput | AccessToScriptRequestUpdateWithWhereUniqueWithoutExamSessionInput[]
     updateMany?: AccessToScriptRequestUpdateManyWithWhereWithoutExamSessionInput | AccessToScriptRequestUpdateManyWithWhereWithoutExamSessionInput[]
     deleteMany?: AccessToScriptRequestScalarWhereInput | AccessToScriptRequestScalarWhereInput[]
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput = {
+    create?: XOR<OfflineWithdrawalRefundCreateWithoutExamSessionInput, OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput> | OfflineWithdrawalRefundCreateWithoutExamSessionInput[] | OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput[]
+    connectOrCreate?: OfflineWithdrawalRefundCreateOrConnectWithoutExamSessionInput | OfflineWithdrawalRefundCreateOrConnectWithoutExamSessionInput[]
+    upsert?: OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutExamSessionInput | OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutExamSessionInput[]
+    createMany?: OfflineWithdrawalRefundCreateManyExamSessionInputEnvelope
+    set?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    disconnect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    delete?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    connect?: OfflineWithdrawalRefundWhereUniqueInput | OfflineWithdrawalRefundWhereUniqueInput[]
+    update?: OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutExamSessionInput | OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutExamSessionInput[]
+    updateMany?: OfflineWithdrawalRefundUpdateManyWithWhereWithoutExamSessionInput | OfflineWithdrawalRefundUpdateManyWithWhereWithoutExamSessionInput[]
+    deleteMany?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
   }
 
   export type ExamBoardCreateNestedOneWithoutKeyDatesInput = {
@@ -90232,6 +92729,98 @@ export namespace Prisma {
     delete?: ExamSessionWhereInput | boolean
     connect?: ExamSessionWhereUniqueInput
     update?: XOR<XOR<ExamSessionUpdateToOneWithWhereWithoutFeeStatementItemsInput, ExamSessionUpdateWithoutFeeStatementItemsInput>, ExamSessionUncheckedUpdateWithoutFeeStatementItemsInput>
+  }
+
+  export type RegistrationWorkspaceCreateNestedOneWithoutOfflineWithdrawalRefundsInput = {
+    create?: XOR<RegistrationWorkspaceCreateWithoutOfflineWithdrawalRefundsInput, RegistrationWorkspaceUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    connectOrCreate?: RegistrationWorkspaceCreateOrConnectWithoutOfflineWithdrawalRefundsInput
+    connect?: RegistrationWorkspaceWhereUniqueInput
+  }
+
+  export type RegistrationWindowCreateNestedOneWithoutOfflineWithdrawalRefundsInput = {
+    create?: XOR<RegistrationWindowCreateWithoutOfflineWithdrawalRefundsInput, RegistrationWindowUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    connectOrCreate?: RegistrationWindowCreateOrConnectWithoutOfflineWithdrawalRefundsInput
+    connect?: RegistrationWindowWhereUniqueInput
+  }
+
+  export type CandidateCreateNestedOneWithoutOfflineWithdrawalRefundsInput = {
+    create?: XOR<CandidateCreateWithoutOfflineWithdrawalRefundsInput, CandidateUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    connectOrCreate?: CandidateCreateOrConnectWithoutOfflineWithdrawalRefundsInput
+    connect?: CandidateWhereUniqueInput
+  }
+
+  export type ExamSessionCreateNestedOneWithoutOfflineWithdrawalRefundsInput = {
+    create?: XOR<ExamSessionCreateWithoutOfflineWithdrawalRefundsInput, ExamSessionUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    connectOrCreate?: ExamSessionCreateOrConnectWithoutOfflineWithdrawalRefundsInput
+    connect?: ExamSessionWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutOfflineWithdrawalRefundsCreatedInput = {
+    create?: XOR<UserCreateWithoutOfflineWithdrawalRefundsCreatedInput, UserUncheckedCreateWithoutOfflineWithdrawalRefundsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOfflineWithdrawalRefundsCreatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutOfflineWithdrawalRefundsCompletedInput = {
+    create?: XOR<UserCreateWithoutOfflineWithdrawalRefundsCompletedInput, UserUncheckedCreateWithoutOfflineWithdrawalRefundsCompletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOfflineWithdrawalRefundsCompletedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput = {
+    set?: $Enums.OfflineWithdrawalRefundStatus
+  }
+
+  export type RegistrationWorkspaceUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput = {
+    create?: XOR<RegistrationWorkspaceCreateWithoutOfflineWithdrawalRefundsInput, RegistrationWorkspaceUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    connectOrCreate?: RegistrationWorkspaceCreateOrConnectWithoutOfflineWithdrawalRefundsInput
+    upsert?: RegistrationWorkspaceUpsertWithoutOfflineWithdrawalRefundsInput
+    connect?: RegistrationWorkspaceWhereUniqueInput
+    update?: XOR<XOR<RegistrationWorkspaceUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsInput, RegistrationWorkspaceUpdateWithoutOfflineWithdrawalRefundsInput>, RegistrationWorkspaceUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type RegistrationWindowUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput = {
+    create?: XOR<RegistrationWindowCreateWithoutOfflineWithdrawalRefundsInput, RegistrationWindowUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    connectOrCreate?: RegistrationWindowCreateOrConnectWithoutOfflineWithdrawalRefundsInput
+    upsert?: RegistrationWindowUpsertWithoutOfflineWithdrawalRefundsInput
+    connect?: RegistrationWindowWhereUniqueInput
+    update?: XOR<XOR<RegistrationWindowUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsInput, RegistrationWindowUpdateWithoutOfflineWithdrawalRefundsInput>, RegistrationWindowUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type CandidateUpdateOneWithoutOfflineWithdrawalRefundsNestedInput = {
+    create?: XOR<CandidateCreateWithoutOfflineWithdrawalRefundsInput, CandidateUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    connectOrCreate?: CandidateCreateOrConnectWithoutOfflineWithdrawalRefundsInput
+    upsert?: CandidateUpsertWithoutOfflineWithdrawalRefundsInput
+    disconnect?: CandidateWhereInput | boolean
+    delete?: CandidateWhereInput | boolean
+    connect?: CandidateWhereUniqueInput
+    update?: XOR<XOR<CandidateUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsInput, CandidateUpdateWithoutOfflineWithdrawalRefundsInput>, CandidateUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type ExamSessionUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput = {
+    create?: XOR<ExamSessionCreateWithoutOfflineWithdrawalRefundsInput, ExamSessionUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    connectOrCreate?: ExamSessionCreateOrConnectWithoutOfflineWithdrawalRefundsInput
+    upsert?: ExamSessionUpsertWithoutOfflineWithdrawalRefundsInput
+    connect?: ExamSessionWhereUniqueInput
+    update?: XOR<XOR<ExamSessionUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsInput, ExamSessionUpdateWithoutOfflineWithdrawalRefundsInput>, ExamSessionUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutOfflineWithdrawalRefundsCreatedNestedInput = {
+    create?: XOR<UserCreateWithoutOfflineWithdrawalRefundsCreatedInput, UserUncheckedCreateWithoutOfflineWithdrawalRefundsCreatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOfflineWithdrawalRefundsCreatedInput
+    upsert?: UserUpsertWithoutOfflineWithdrawalRefundsCreatedInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsCreatedInput, UserUpdateWithoutOfflineWithdrawalRefundsCreatedInput>, UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCreatedInput>
+  }
+
+  export type UserUpdateOneWithoutOfflineWithdrawalRefundsCompletedNestedInput = {
+    create?: XOR<UserCreateWithoutOfflineWithdrawalRefundsCompletedInput, UserUncheckedCreateWithoutOfflineWithdrawalRefundsCompletedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutOfflineWithdrawalRefundsCompletedInput
+    upsert?: UserUpsertWithoutOfflineWithdrawalRefundsCompletedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsCompletedInput, UserUpdateWithoutOfflineWithdrawalRefundsCompletedInput>, UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCompletedInput>
   }
 
   export type RegistrationWindowCreateNestedOneWithoutFeeAuditLogsInput = {
@@ -92504,6 +95093,23 @@ export namespace Prisma {
     _max?: NestedEnumFeeCurrencyNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumOfflineWithdrawalRefundStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.OfflineWithdrawalRefundStatus | EnumOfflineWithdrawalRefundStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OfflineWithdrawalRefundStatus[]
+    notIn?: $Enums.OfflineWithdrawalRefundStatus[]
+    not?: NestedEnumOfflineWithdrawalRefundStatusFilter<$PrismaModel> | $Enums.OfflineWithdrawalRefundStatus
+  }
+
+  export type NestedEnumOfflineWithdrawalRefundStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.OfflineWithdrawalRefundStatus | EnumOfflineWithdrawalRefundStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.OfflineWithdrawalRefundStatus[]
+    notIn?: $Enums.OfflineWithdrawalRefundStatus[]
+    not?: NestedEnumOfflineWithdrawalRefundStatusWithAggregatesFilter<$PrismaModel> | $Enums.OfflineWithdrawalRefundStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumOfflineWithdrawalRefundStatusFilter<$PrismaModel>
+    _max?: NestedEnumOfflineWithdrawalRefundStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumFeeAuditActionFilter<$PrismaModel = never> = {
     equals?: $Enums.FeeAuditAction | EnumFeeAuditActionFieldRefInput<$PrismaModel>
     in?: $Enums.FeeAuditAction[]
@@ -92881,6 +95487,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutCreatedByInput = {
@@ -92912,6 +95519,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutCreatedByInput = {
@@ -93229,6 +95837,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutStudentInput = {
@@ -93272,6 +95881,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutStudentInput = {
@@ -93325,6 +95935,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutLastAdjustedByUserInput = {
@@ -93368,6 +95979,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutLastAdjustedByUserInput = {
@@ -94111,6 +96723,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutUserInput = {
@@ -94160,6 +96773,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutUserInput = {
@@ -94287,6 +96901,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutRestrictedCreatedByInput = {
@@ -94330,6 +96945,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutRestrictedCreatedByInput = {
@@ -94383,6 +96999,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutRestrictedUpdatedByInput = {
@@ -94426,6 +97043,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutRestrictedUpdatedByInput = {
@@ -95095,6 +97713,142 @@ export namespace Prisma {
 
   export type PaymentOrderCreateManyCancelledByInputEnvelope = {
     data: PaymentOrderCreateManyCancelledByInput | PaymentOrderCreateManyCancelledByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OfflineWithdrawalRefundCreateWithoutCreatedByUserInput = {
+    id?: string
+    studentId?: string | null
+    registrationId?: string | null
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    completedAt?: Date | string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    candidate?: CandidateCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    examSession: ExamSessionCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    completedByUser?: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCompletedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfflineWithdrawalRefundCreateOrConnectWithoutCreatedByUserInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    create: XOR<OfflineWithdrawalRefundCreateWithoutCreatedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput>
+  }
+
+  export type OfflineWithdrawalRefundCreateManyCreatedByUserInputEnvelope = {
+    data: OfflineWithdrawalRefundCreateManyCreatedByUserInput | OfflineWithdrawalRefundCreateManyCreatedByUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OfflineWithdrawalRefundCreateWithoutCompletedByUserInput = {
+    id?: string
+    studentId?: string | null
+    registrationId?: string | null
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    completedAt?: Date | string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    candidate?: CandidateCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    examSession: ExamSessionCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    createdByUser: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCreatedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfflineWithdrawalRefundCreateOrConnectWithoutCompletedByUserInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    create: XOR<OfflineWithdrawalRefundCreateWithoutCompletedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput>
+  }
+
+  export type OfflineWithdrawalRefundCreateManyCompletedByUserInputEnvelope = {
+    data: OfflineWithdrawalRefundCreateManyCompletedByUserInput | OfflineWithdrawalRefundCreateManyCompletedByUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -95818,6 +98572,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutUserInput = {
@@ -95867,6 +98622,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type TeacherProfileUpsertWithoutUserInput = {
@@ -96479,6 +99235,71 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"PaymentOrder"> | Date | string
   }
 
+  export type OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCreatedByUserInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    update: XOR<OfflineWithdrawalRefundUpdateWithoutCreatedByUserInput, OfflineWithdrawalRefundUncheckedUpdateWithoutCreatedByUserInput>
+    create: XOR<OfflineWithdrawalRefundCreateWithoutCreatedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCreatedByUserInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCreatedByUserInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    data: XOR<OfflineWithdrawalRefundUpdateWithoutCreatedByUserInput, OfflineWithdrawalRefundUncheckedUpdateWithoutCreatedByUserInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateManyWithWhereWithoutCreatedByUserInput = {
+    where: OfflineWithdrawalRefundScalarWhereInput
+    data: XOR<OfflineWithdrawalRefundUpdateManyMutationInput, OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserInput>
+  }
+
+  export type OfflineWithdrawalRefundScalarWhereInput = {
+    AND?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
+    OR?: OfflineWithdrawalRefundScalarWhereInput[]
+    NOT?: OfflineWithdrawalRefundScalarWhereInput | OfflineWithdrawalRefundScalarWhereInput[]
+    id?: StringFilter<"OfflineWithdrawalRefund"> | string
+    registrationWorkspaceId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    registrationWindowId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    candidateId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    studentId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    registrationId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    examSessionId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    paperCodeSnapshot?: StringFilter<"OfflineWithdrawalRefund"> | string
+    subjectSnapshot?: StringFilter<"OfflineWithdrawalRefund"> | string
+    feeStageCode?: EnumFeeEntryTypeFilter<"OfflineWithdrawalRefund"> | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: DecimalNullableFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string
+    creditCny?: DecimalNullableFilter<"OfflineWithdrawalRefund"> | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFilter<"OfflineWithdrawalRefund"> | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    calculationNotes?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    createdByUserId?: StringFilter<"OfflineWithdrawalRefund"> | string
+    completedAt?: DateTimeNullableFilter<"OfflineWithdrawalRefund"> | Date | string | null
+    completedByUserId?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    offlineReference?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    offlineNote?: StringNullableFilter<"OfflineWithdrawalRefund"> | string | null
+    createdAt?: DateTimeFilter<"OfflineWithdrawalRefund"> | Date | string
+    updatedAt?: DateTimeFilter<"OfflineWithdrawalRefund"> | Date | string
+  }
+
+  export type OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCompletedByUserInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    update: XOR<OfflineWithdrawalRefundUpdateWithoutCompletedByUserInput, OfflineWithdrawalRefundUncheckedUpdateWithoutCompletedByUserInput>
+    create: XOR<OfflineWithdrawalRefundCreateWithoutCompletedByUserInput, OfflineWithdrawalRefundUncheckedCreateWithoutCompletedByUserInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCompletedByUserInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    data: XOR<OfflineWithdrawalRefundUpdateWithoutCompletedByUserInput, OfflineWithdrawalRefundUncheckedUpdateWithoutCompletedByUserInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateManyWithWhereWithoutCompletedByUserInput = {
+    where: OfflineWithdrawalRefundScalarWhereInput
+    data: XOR<OfflineWithdrawalRefundUpdateManyMutationInput, OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserInput>
+  }
+
   export type UserCreateWithoutPasswordResetTokensInput = {
     id?: string
     name: string
@@ -96532,6 +99353,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -96587,6 +99410,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -96658,6 +99483,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -96713,6 +99540,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserCreateWithoutStudentProfileInput = {
@@ -96768,6 +99597,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentProfileInput = {
@@ -96823,6 +99654,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -96894,6 +99727,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentProfileInput = {
@@ -96949,6 +99784,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserCreateWithoutTeacherProfileInput = {
@@ -97004,6 +99841,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutTeacherProfileInput = {
@@ -97059,6 +99898,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutTeacherProfileInput = {
@@ -97130,6 +99971,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherProfileInput = {
@@ -97185,6 +100028,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserCreateWithoutUserAuditLogsTargetInput = {
@@ -97240,6 +100085,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsTargetInput = {
@@ -97295,6 +100142,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsTargetInput = {
@@ -97355,6 +100204,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsPerformedInput = {
@@ -97410,6 +100261,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsPerformedInput = {
@@ -97481,6 +100334,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsTargetInput = {
@@ -97536,6 +100391,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUpsertWithoutUserAuditLogsPerformedInput = {
@@ -97602,6 +100459,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsPerformedInput = {
@@ -97657,6 +100516,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExamDocumentAuditLogsInput = {
@@ -97688,6 +100549,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutExamDocumentAuditLogsInput = {
@@ -97719,6 +100581,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutExamDocumentAuditLogsInput = {
@@ -97748,6 +100611,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutExamDocumentAuditLogsInput = {
@@ -97772,6 +100636,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutExamDocumentAuditLogsInput = {
@@ -97826,6 +100691,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutExamDocumentAuditLogsInput = {
@@ -97875,6 +100741,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutExamDocumentAuditLogsInput = {
@@ -97935,6 +100802,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -97990,6 +100859,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutExamDocumentAuditLogsPerformedInput = {
@@ -98037,6 +100908,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutExamDocumentAuditLogsInput = {
@@ -98068,6 +100940,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ExamSessionUpsertWithoutExamDocumentAuditLogsInput = {
@@ -98103,6 +100976,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutExamDocumentAuditLogsInput = {
@@ -98127,6 +101001,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type CandidateUpsertWithoutExamDocumentAuditLogsInput = {
@@ -98187,6 +101062,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutExamDocumentAuditLogsInput = {
@@ -98236,6 +101112,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type UserUpsertWithoutExamDocumentAuditLogsPerformedInput = {
@@ -98302,6 +101179,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -98357,6 +101236,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserCreateWithoutCandidateInput = {
@@ -98412,6 +101293,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutCandidateInput = {
@@ -98467,6 +101350,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutCandidateInput = {
@@ -98555,6 +101440,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutCandidateInput = {
@@ -98598,6 +101484,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutCandidateInput = {
@@ -99218,6 +102105,74 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OfflineWithdrawalRefundCreateWithoutCandidateInput = {
+    id?: string
+    studentId?: string | null
+    registrationId?: string | null
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    completedAt?: Date | string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    examSession: ExamSessionCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    createdByUser: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCreatedInput
+    completedByUser?: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCompletedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfflineWithdrawalRefundCreateOrConnectWithoutCandidateInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    create: XOR<OfflineWithdrawalRefundCreateWithoutCandidateInput, OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput>
+  }
+
+  export type OfflineWithdrawalRefundCreateManyCandidateInputEnvelope = {
+    data: OfflineWithdrawalRefundCreateManyCandidateInput | OfflineWithdrawalRefundCreateManyCandidateInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutCandidateInput = {
     update: XOR<UserUpdateWithoutCandidateInput, UserUncheckedUpdateWithoutCandidateInput>
     create: XOR<UserCreateWithoutCandidateInput, UserUncheckedCreateWithoutCandidateInput>
@@ -99282,6 +102237,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateInput = {
@@ -99337,6 +102294,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type CandidateExamIdentityUpsertWithWhereUniqueWithoutCandidateInput = {
@@ -99547,6 +102506,22 @@ export namespace Prisma {
     data: XOR<PostResultsAuditLogUpdateManyMutationInput, PostResultsAuditLogUncheckedUpdateManyWithoutCandidateInput>
   }
 
+  export type OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutCandidateInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    update: XOR<OfflineWithdrawalRefundUpdateWithoutCandidateInput, OfflineWithdrawalRefundUncheckedUpdateWithoutCandidateInput>
+    create: XOR<OfflineWithdrawalRefundCreateWithoutCandidateInput, OfflineWithdrawalRefundUncheckedCreateWithoutCandidateInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutCandidateInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    data: XOR<OfflineWithdrawalRefundUpdateWithoutCandidateInput, OfflineWithdrawalRefundUncheckedUpdateWithoutCandidateInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateManyWithWhereWithoutCandidateInput = {
+    where: OfflineWithdrawalRefundScalarWhereInput
+    data: XOR<OfflineWithdrawalRefundUpdateManyMutationInput, OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateInput>
+  }
+
   export type CandidateCreateWithoutCandidateAuditLogsInput = {
     id?: string
     studentId: string
@@ -99594,6 +102569,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutCandidateAuditLogsInput = {
@@ -99643,6 +102619,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutCandidateAuditLogsInput = {
@@ -99703,6 +102680,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutCandidateAuditLogsPerformedInput = {
@@ -99758,6 +102737,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutCandidateAuditLogsPerformedInput = {
@@ -99823,6 +102804,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutCandidateAuditLogsInput = {
@@ -99872,6 +102854,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type UserUpsertWithoutCandidateAuditLogsPerformedInput = {
@@ -99938,6 +102921,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateAuditLogsPerformedInput = {
@@ -99993,6 +102978,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type CandidateCreateWithoutExamIdentitiesInput = {
@@ -100042,6 +103029,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutExamIdentitiesInput = {
@@ -100091,6 +103079,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutExamIdentitiesInput = {
@@ -100236,6 +103225,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutCandidateExamIdentitiesCreatedInput = {
@@ -100291,6 +103282,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutCandidateExamIdentitiesCreatedInput = {
@@ -100351,6 +103344,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -100406,6 +103401,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -100471,6 +103468,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutExamIdentitiesInput = {
@@ -100520,6 +103518,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type ExamBoardUpsertWithoutCandidateExamIdentitiesInput = {
@@ -100677,6 +103676,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateExamIdentitiesCreatedInput = {
@@ -100732,6 +103733,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUpsertWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -100798,6 +103801,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -100853,6 +103858,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserCreateWithoutTeacherAssignmentsInput = {
@@ -100908,6 +103915,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutTeacherAssignmentsInput = {
@@ -100963,6 +103972,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutTeacherAssignmentsInput = {
@@ -101077,6 +104088,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherAssignmentsInput = {
@@ -101132,6 +104145,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type SubjectUpsertWithoutTeacherAssignmentsInput = {
@@ -101374,6 +104389,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWindowsInput = {
@@ -101429,6 +104446,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWindowsInput = {
@@ -101579,6 +104598,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutRegistrationWindowInput = {
@@ -101622,6 +104642,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutRegistrationWindowInput = {
@@ -102120,6 +105141,74 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput = {
+    id?: string
+    studentId?: string | null
+    registrationId?: string | null
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    completedAt?: Date | string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    candidate?: CandidateCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    examSession: ExamSessionCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    createdByUser: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCreatedInput
+    completedByUser?: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCompletedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput = {
+    id?: string
+    registrationWorkspaceId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWindowInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    create: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput>
+  }
+
+  export type OfflineWithdrawalRefundCreateManyRegistrationWindowInputEnvelope = {
+    data: OfflineWithdrawalRefundCreateManyRegistrationWindowInput | OfflineWithdrawalRefundCreateManyRegistrationWindowInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ExamBoardUpsertWithoutRegistrationWindowsInput = {
     update: XOR<ExamBoardUpdateWithoutRegistrationWindowsInput, ExamBoardUncheckedUpdateWithoutRegistrationWindowsInput>
     create: XOR<ExamBoardCreateWithoutRegistrationWindowsInput, ExamBoardUncheckedCreateWithoutRegistrationWindowsInput>
@@ -102334,6 +105423,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWindowsInput = {
@@ -102389,6 +105480,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWindowInput = {
@@ -102614,6 +105707,22 @@ export namespace Prisma {
     data: XOR<PostResultsAuditLogUpdateManyMutationInput, PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowInput>
   }
 
+  export type OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutRegistrationWindowInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    update: XOR<OfflineWithdrawalRefundUpdateWithoutRegistrationWindowInput, OfflineWithdrawalRefundUncheckedUpdateWithoutRegistrationWindowInput>
+    create: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWindowInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWindowInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutRegistrationWindowInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    data: XOR<OfflineWithdrawalRefundUpdateWithoutRegistrationWindowInput, OfflineWithdrawalRefundUncheckedUpdateWithoutRegistrationWindowInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateManyWithWhereWithoutRegistrationWindowInput = {
+    where: OfflineWithdrawalRefundScalarWhereInput
+    data: XOR<OfflineWithdrawalRefundUpdateManyMutationInput, OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowInput>
+  }
+
   export type RegistrationWindowCreateWithoutIncludedSeriesInput = {
     id?: string
     title: string
@@ -102643,6 +105752,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutIncludedSeriesInput = {
@@ -102674,6 +105784,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutIncludedSeriesInput = {
@@ -102774,6 +105885,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutIncludedSeriesInput = {
@@ -102805,6 +105917,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ExamSeriesUpsertWithoutIncludedInWindowsInput = {
@@ -102895,6 +106008,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutFeeStagesInput = {
@@ -102926,6 +106040,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutFeeStagesInput = {
@@ -102974,6 +106089,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutFeeStageInput = {
@@ -103017,6 +106133,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutFeeStageInput = {
@@ -103239,6 +106356,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutFeeStagesInput = {
@@ -103270,6 +106388,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithWhereUniqueWithoutFeeStageInput = {
@@ -103367,6 +106486,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutRegistrationWorkspacesInput = {
@@ -103416,6 +106536,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutRegistrationWorkspacesInput = {
@@ -103476,6 +106597,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWorkspacesInput = {
@@ -103531,6 +106654,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWorkspacesInput = {
@@ -103567,6 +106692,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutWorkspacesInput = {
@@ -103598,6 +106724,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutWorkspacesInput = {
@@ -103658,6 +106785,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutWorkspacesLastAdjustedInput = {
@@ -103713,6 +106842,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutWorkspacesLastAdjustedInput = {
@@ -103818,6 +106949,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsCreatedInput = {
@@ -103873,6 +107006,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsCreatedInput = {
@@ -103933,6 +107068,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -103988,6 +107125,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsUpdatedInput = {
@@ -104321,6 +107460,74 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput = {
+    id?: string
+    studentId?: string | null
+    registrationId?: string | null
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    completedAt?: Date | string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    candidate?: CandidateCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    examSession: ExamSessionCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    createdByUser: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCreatedInput
+    completedByUser?: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCompletedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput = {
+    id?: string
+    registrationWindowId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfflineWithdrawalRefundCreateOrConnectWithoutRegistrationWorkspaceInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    create: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput>
+  }
+
+  export type OfflineWithdrawalRefundCreateManyRegistrationWorkspaceInputEnvelope = {
+    data: OfflineWithdrawalRefundCreateManyRegistrationWorkspaceInput | OfflineWithdrawalRefundCreateManyRegistrationWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CandidateUpsertWithoutRegistrationWorkspacesInput = {
     update: XOR<CandidateUpdateWithoutRegistrationWorkspacesInput, CandidateUncheckedUpdateWithoutRegistrationWorkspacesInput>
     create: XOR<CandidateCreateWithoutRegistrationWorkspacesInput, CandidateUncheckedCreateWithoutRegistrationWorkspacesInput>
@@ -104379,6 +107586,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutRegistrationWorkspacesInput = {
@@ -104428,6 +107636,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type UserUpsertWithoutRegistrationWorkspacesInput = {
@@ -104494,6 +107703,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWorkspacesInput = {
@@ -104549,6 +107760,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutWorkspacesInput = {
@@ -104591,6 +107804,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutWorkspacesInput = {
@@ -104622,6 +107836,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type UserUpsertWithoutWorkspacesLastAdjustedInput = {
@@ -104688,6 +107903,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkspacesLastAdjustedInput = {
@@ -104743,6 +107960,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutWorkspacesInput = {
@@ -104860,6 +108079,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsCreatedInput = {
@@ -104915,6 +108136,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUpsertWithoutRestrictedRegistrationsUpdatedInput = {
@@ -104981,6 +108204,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -105036,6 +108261,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput = {
@@ -105102,6 +108329,22 @@ export namespace Prisma {
     data: XOR<FeeStatementUpdateManyMutationInput, FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceInput>
   }
 
+  export type OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    update: XOR<OfflineWithdrawalRefundUpdateWithoutRegistrationWorkspaceInput, OfflineWithdrawalRefundUncheckedUpdateWithoutRegistrationWorkspaceInput>
+    create: XOR<OfflineWithdrawalRefundCreateWithoutRegistrationWorkspaceInput, OfflineWithdrawalRefundUncheckedCreateWithoutRegistrationWorkspaceInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    data: XOR<OfflineWithdrawalRefundUpdateWithoutRegistrationWorkspaceInput, OfflineWithdrawalRefundUncheckedUpdateWithoutRegistrationWorkspaceInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateManyWithWhereWithoutRegistrationWorkspaceInput = {
+    where: OfflineWithdrawalRefundScalarWhereInput
+    data: XOR<OfflineWithdrawalRefundUpdateManyMutationInput, OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceInput>
+  }
+
   export type CandidateCreateWithoutExamRegistrationsInput = {
     id?: string
     studentId: string
@@ -105149,6 +108392,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutExamRegistrationsInput = {
@@ -105198,6 +108442,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutExamRegistrationsInput = {
@@ -105258,6 +108503,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentRegistrationsInput = {
@@ -105313,6 +108560,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentRegistrationsInput = {
@@ -105361,6 +108610,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutRegistrationsInput = {
@@ -105404,6 +108654,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutRegistrationsInput = {
@@ -105433,6 +108684,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutStudentExamRegistrationsInput = {
@@ -105457,6 +108709,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutStudentExamRegistrationsInput = {
@@ -105493,6 +108746,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutRegistrationsInput = {
@@ -105524,6 +108778,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutRegistrationsInput = {
@@ -105804,6 +109059,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationsAddedInput = {
@@ -105859,6 +109116,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationsAddedInput = {
@@ -106137,6 +109396,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutExamRegistrationsInput = {
@@ -106186,6 +109446,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type UserUpsertWithoutStudentRegistrationsInput = {
@@ -106252,6 +109513,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentRegistrationsInput = {
@@ -106307,6 +109570,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutRegistrationsInput = {
@@ -106361,6 +109626,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutRegistrationsInput = {
@@ -106404,6 +109670,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type ExamSessionUpsertWithoutStudentExamRegistrationsInput = {
@@ -106439,6 +109706,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutStudentExamRegistrationsInput = {
@@ -106463,6 +109731,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutRegistrationsInput = {
@@ -106505,6 +109774,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutRegistrationsInput = {
@@ -106536,6 +109806,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ExamBoardUpsertWithoutStudentExamRegistrationsInput = {
@@ -106846,6 +110117,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationsAddedInput = {
@@ -106901,6 +110174,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutRegistrationsInput = {
@@ -107043,6 +110318,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutAuditLogsInput = {
@@ -107086,6 +110362,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutAuditLogsInput = {
@@ -107122,6 +110399,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutRegistrationAuditLogsInput = {
@@ -107153,6 +110431,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutRegistrationAuditLogsInput = {
@@ -107207,6 +110486,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutAuditLogsInput = {
@@ -107256,6 +110536,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutAuditLogsInput = {
@@ -107316,6 +110597,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -107371,6 +110654,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsAsStudentInput = {
@@ -107542,6 +110827,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutRegistrationAuditLogsInput = {
@@ -107566,6 +110852,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutRegistrationAuditLogsInput = {
@@ -107626,6 +110913,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput = {
@@ -107681,6 +110970,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsPerformedInput = {
@@ -107740,6 +111031,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutAuditLogsInput = {
@@ -107783,6 +111075,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutRegistrationAuditLogsInput = {
@@ -107825,6 +111118,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutRegistrationAuditLogsInput = {
@@ -107856,6 +111150,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type CandidateUpsertWithoutAuditLogsInput = {
@@ -107916,6 +111211,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutAuditLogsInput = {
@@ -107965,6 +111261,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type UserUpsertWithoutRegistrationAuditLogsAsStudentInput = {
@@ -108031,6 +111328,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -108086,6 +111385,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithoutAuditLogsInput = {
@@ -108275,6 +111576,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutRegistrationAuditLogsInput = {
@@ -108299,6 +111601,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type UserUpsertWithoutRegistrationAuditLogsPerformedInput = {
@@ -108365,6 +111668,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsPerformedInput = {
@@ -108420,6 +111725,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type RegistrationWorkspaceCreateWithoutChangeRequestsInput = {
@@ -108463,6 +111770,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutChangeRequestsInput = {
@@ -108506,6 +111814,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutChangeRequestsInput = {
@@ -108542,6 +111851,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutChangeRequestsInput = {
@@ -108573,6 +111883,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutChangeRequestsInput = {
@@ -108633,6 +111944,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentChangeRequestsInput = {
@@ -108688,6 +112001,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentChangeRequestsInput = {
@@ -108742,6 +112057,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutChangeRequestsInput = {
@@ -108791,6 +112107,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutChangeRequestsInput = {
@@ -108851,6 +112168,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationChangeRequestsInput = {
@@ -108906,6 +112225,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationChangeRequestsInput = {
@@ -108935,6 +112256,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutChangeRequestTargetsInput = {
@@ -108959,6 +112281,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutChangeRequestTargetsInput = {
@@ -108988,6 +112311,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutChangeRequestReplacementsInput = {
@@ -109012,6 +112336,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutChangeRequestReplacementsInput = {
@@ -109072,6 +112397,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewedChangeRequestsInput = {
@@ -109127,6 +112454,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewedChangeRequestsInput = {
@@ -109208,6 +112537,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutChangeRequestsInput = {
@@ -109251,6 +112581,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutChangeRequestsInput = {
@@ -109293,6 +112624,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutChangeRequestsInput = {
@@ -109324,6 +112656,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type UserUpsertWithoutStudentChangeRequestsInput = {
@@ -109390,6 +112723,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentChangeRequestsInput = {
@@ -109445,6 +112780,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type CandidateUpsertWithoutChangeRequestsInput = {
@@ -109505,6 +112842,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutChangeRequestsInput = {
@@ -109554,6 +112892,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type UserUpsertWithoutRegistrationChangeRequestsInput = {
@@ -109620,6 +112959,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationChangeRequestsInput = {
@@ -109675,6 +113016,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type ExamSessionUpsertWithoutChangeRequestTargetsInput = {
@@ -109710,6 +113053,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutChangeRequestTargetsInput = {
@@ -109734,6 +113078,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUpsertWithoutChangeRequestReplacementsInput = {
@@ -109769,6 +113114,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutChangeRequestReplacementsInput = {
@@ -109793,6 +113139,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type UserUpsertWithoutReviewedChangeRequestsInput = {
@@ -109859,6 +113206,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewedChangeRequestsInput = {
@@ -109914,6 +113263,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type RegistrationChangeRequestExamSessionUpsertWithWhereUniqueWithoutChangeRequestInput = {
@@ -110011,6 +113362,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutChangeRequestExamSessionsInput = {
@@ -110035,6 +113387,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutChangeRequestExamSessionsInput = {
@@ -110128,6 +113481,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutChangeRequestExamSessionsInput = {
@@ -110152,6 +113506,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type QualificationCreateWithoutExamBoardInput = {
@@ -110433,6 +113788,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutExamBoardInput = {
@@ -110464,6 +113820,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutExamBoardInput = {
@@ -113291,6 +116648,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutPaperInput = {
@@ -113315,6 +116673,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutPaperInput = {
@@ -114069,6 +117428,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutExamSeriesInput = {
@@ -114093,6 +117453,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutExamSeriesInput = {
@@ -114216,6 +117577,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutExamSeriesInput = {
@@ -114247,6 +117609,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutExamSeriesInput = {
@@ -115750,6 +119113,74 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type OfflineWithdrawalRefundCreateWithoutExamSessionInput = {
+    id?: string
+    studentId?: string | null
+    registrationId?: string | null
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    completedAt?: Date | string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    candidate?: CandidateCreateNestedOneWithoutOfflineWithdrawalRefundsInput
+    createdByUser: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCreatedInput
+    completedByUser?: UserCreateNestedOneWithoutOfflineWithdrawalRefundsCompletedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfflineWithdrawalRefundCreateOrConnectWithoutExamSessionInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    create: XOR<OfflineWithdrawalRefundCreateWithoutExamSessionInput, OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput>
+  }
+
+  export type OfflineWithdrawalRefundCreateManyExamSessionInputEnvelope = {
+    data: OfflineWithdrawalRefundCreateManyExamSessionInput | OfflineWithdrawalRefundCreateManyExamSessionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PaperUpsertWithoutExamSessionsInput = {
     update: XOR<PaperUpdateWithoutExamSessionsInput, PaperUncheckedUpdateWithoutExamSessionsInput>
     create: XOR<PaperCreateWithoutExamSessionsInput, PaperUncheckedCreateWithoutExamSessionsInput>
@@ -116096,6 +119527,22 @@ export namespace Prisma {
   export type AccessToScriptRequestUpdateManyWithWhereWithoutExamSessionInput = {
     where: AccessToScriptRequestScalarWhereInput
     data: XOR<AccessToScriptRequestUpdateManyMutationInput, AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionInput>
+  }
+
+  export type OfflineWithdrawalRefundUpsertWithWhereUniqueWithoutExamSessionInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    update: XOR<OfflineWithdrawalRefundUpdateWithoutExamSessionInput, OfflineWithdrawalRefundUncheckedUpdateWithoutExamSessionInput>
+    create: XOR<OfflineWithdrawalRefundCreateWithoutExamSessionInput, OfflineWithdrawalRefundUncheckedCreateWithoutExamSessionInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateWithWhereUniqueWithoutExamSessionInput = {
+    where: OfflineWithdrawalRefundWhereUniqueInput
+    data: XOR<OfflineWithdrawalRefundUpdateWithoutExamSessionInput, OfflineWithdrawalRefundUncheckedUpdateWithoutExamSessionInput>
+  }
+
+  export type OfflineWithdrawalRefundUpdateManyWithWhereWithoutExamSessionInput = {
+    where: OfflineWithdrawalRefundScalarWhereInput
+    data: XOR<OfflineWithdrawalRefundUpdateManyMutationInput, OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionInput>
   }
 
   export type ExamBoardCreateWithoutKeyDatesInput = {
@@ -117344,6 +120791,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutSourceDocumentsInput = {
@@ -117399,6 +120848,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutSourceDocumentsInput = {
@@ -117530,6 +120981,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutSourceDocumentInput = {
@@ -117554,6 +121006,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutSourceDocumentInput = {
@@ -117803,6 +121256,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSourceDocumentsInput = {
@@ -117858,6 +121313,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type PaperUpsertWithWhereUniqueWithoutSourceDocumentInput = {
@@ -117969,6 +121426,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutFeeRulesInput = {
@@ -118000,6 +121458,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutFeeRulesInput = {
@@ -118282,6 +121741,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutFeeRulesInput = {
@@ -118306,6 +121766,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutFeeRulesInput = {
@@ -118366,6 +121827,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeRulesCreatedInput = {
@@ -118421,6 +121884,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeRulesCreatedInput = {
@@ -118468,6 +121933,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutFeeRulesInput = {
@@ -118499,6 +121965,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ExamBoardUpsertWithoutFeeRulesInput = {
@@ -118817,6 +122284,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutFeeRulesInput = {
@@ -118841,6 +122309,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type UserUpsertWithoutFeeRulesCreatedInput = {
@@ -118907,6 +122376,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeRulesCreatedInput = {
@@ -118962,6 +122433,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExchangeRatesInput = {
@@ -118993,6 +122466,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutExchangeRatesInput = {
@@ -119024,6 +122498,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutExchangeRatesInput = {
@@ -119084,6 +122559,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutExchangeRatesCreatedInput = {
@@ -119139,6 +122616,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutExchangeRatesCreatedInput = {
@@ -119186,6 +122665,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutExchangeRatesInput = {
@@ -119217,6 +122697,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type UserUpsertWithoutExchangeRatesCreatedInput = {
@@ -119283,6 +122764,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExchangeRatesCreatedInput = {
@@ -119338,6 +122821,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type CandidateCreateWithoutFeeStatementsInput = {
@@ -119387,6 +122872,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutFeeStatementsInput = {
@@ -119436,6 +122922,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutFeeStatementsInput = {
@@ -119496,6 +122983,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsAsStudentInput = {
@@ -119551,6 +123040,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsAsStudentInput = {
@@ -119599,6 +123090,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceUncheckedCreateWithoutFeeStatementsInput = {
@@ -119642,6 +123134,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
   export type RegistrationWorkspaceCreateOrConnectWithoutFeeStatementsInput = {
@@ -119678,6 +123171,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutFeeStatementsInput = {
@@ -119709,6 +123203,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutFeeStatementsInput = {
@@ -119816,6 +123311,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsGeneratedInput = {
@@ -119871,6 +123368,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsGeneratedInput = {
@@ -120337,6 +123836,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsRegenerationChangedInput = {
@@ -120392,6 +123893,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsRegenerationChangedInput = {
@@ -120761,6 +124264,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutFeeStatementsInput = {
@@ -120810,6 +124314,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type UserUpsertWithoutFeeStatementsAsStudentInput = {
@@ -120876,6 +124381,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsAsStudentInput = {
@@ -120931,6 +124438,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutFeeStatementsInput = {
@@ -120985,6 +124494,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutFeeStatementsInput = {
@@ -121028,6 +124538,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutFeeStatementsInput = {
@@ -121070,6 +124581,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutFeeStatementsInput = {
@@ -121101,6 +124613,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ReviewWindowUpsertWithoutFeeStatementsInput = {
@@ -121220,6 +124733,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsGeneratedInput = {
@@ -121275,6 +124790,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutSuccessorStatementsInput = {
@@ -121583,6 +125100,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsRegenerationChangedInput = {
@@ -121638,6 +125157,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeStatementInput = {
@@ -121888,6 +125409,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutPaymentOrdersCancelledInput = {
@@ -121943,6 +125466,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutPaymentOrdersCancelledInput = {
@@ -122119,6 +125644,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPaymentOrdersCancelledInput = {
@@ -122174,6 +125701,8 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type FeeStatementCreateWithoutItemsInput = {
@@ -122352,6 +125881,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutFeeStatementItemsInput = {
@@ -122376,6 +125906,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutFeeStatementItemsInput = {
@@ -122582,6 +126113,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutFeeStatementItemsInput = {
@@ -122606,6 +126138,1163 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
+  }
+
+  export type RegistrationWorkspaceCreateWithoutOfflineWithdrawalRefundsInput = {
+    id?: string
+    lockedAt?: Date | string | null
+    lastAdjustedByRole?: $Enums.UserRole | null
+    lastAdjustedAt?: Date | string | null
+    lastAdjustmentReason?: string | null
+    lastAdjustmentSummary?: string | null
+    hasPostLockAdjustment?: boolean
+    isLateRegistration?: boolean
+    entryType?: $Enums.FeeEntryType
+    entryTypeOverridden?: boolean
+    entryTypeOverrideReason?: string | null
+    registrationSource?: $Enums.RegistrationSource
+    visibility?: $Enums.RegistrationVisibility
+    billingScope?: $Enums.BillingScope
+    registrationType?: $Enums.RegistrationType
+    reason?: string | null
+    visibleToStudent?: boolean
+    visibleToTeacher?: boolean
+    visibleInStudentPortal?: boolean
+    visibleInTeacherPortal?: boolean
+    visibleInStudentDocuments?: boolean
+    visibleInStudentBilling?: boolean
+    restrictedReason?: string | null
+    restrictedCreatedAt?: Date | string | null
+    restrictedUpdatedAt?: Date | string | null
+    includeCandidateRegistrationFee?: boolean
+    registrationNumber?: string | null
+    confirmationNumber?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    candidate?: CandidateCreateNestedOneWithoutRegistrationWorkspacesInput
+    student?: UserCreateNestedOneWithoutRegistrationWorkspacesInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutWorkspacesInput
+    lastAdjustedByUser?: UserCreateNestedOneWithoutWorkspacesLastAdjustedInput
+    feeStage?: RegistrationFeeStageCreateNestedOneWithoutWorkspacesInput
+    restrictedCreatedBy?: UserCreateNestedOneWithoutRestrictedRegistrationsCreatedInput
+    restrictedUpdatedBy?: UserCreateNestedOneWithoutRestrictedRegistrationsUpdatedInput
+    registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
+    auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
+    changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+  }
+
+  export type RegistrationWorkspaceUncheckedCreateWithoutOfflineWithdrawalRefundsInput = {
+    id?: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationWindowId: string
+    lockedAt?: Date | string | null
+    lastAdjustedByUserId?: string | null
+    lastAdjustedByRole?: $Enums.UserRole | null
+    lastAdjustedAt?: Date | string | null
+    lastAdjustmentReason?: string | null
+    lastAdjustmentSummary?: string | null
+    hasPostLockAdjustment?: boolean
+    isLateRegistration?: boolean
+    entryType?: $Enums.FeeEntryType
+    feeStageId?: string | null
+    entryTypeOverridden?: boolean
+    entryTypeOverrideReason?: string | null
+    registrationSource?: $Enums.RegistrationSource
+    visibility?: $Enums.RegistrationVisibility
+    billingScope?: $Enums.BillingScope
+    registrationType?: $Enums.RegistrationType
+    reason?: string | null
+    visibleToStudent?: boolean
+    visibleToTeacher?: boolean
+    visibleInStudentPortal?: boolean
+    visibleInTeacherPortal?: boolean
+    visibleInStudentDocuments?: boolean
+    visibleInStudentBilling?: boolean
+    restrictedReason?: string | null
+    restrictedCreatedById?: string | null
+    restrictedCreatedAt?: Date | string | null
+    restrictedUpdatedById?: string | null
+    restrictedUpdatedAt?: Date | string | null
+    includeCandidateRegistrationFee?: boolean
+    registrationNumber?: string | null
+    confirmationNumber?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  }
+
+  export type RegistrationWorkspaceCreateOrConnectWithoutOfflineWithdrawalRefundsInput = {
+    where: RegistrationWorkspaceWhereUniqueInput
+    create: XOR<RegistrationWorkspaceCreateWithoutOfflineWithdrawalRefundsInput, RegistrationWorkspaceUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type RegistrationWindowCreateWithoutOfflineWithdrawalRefundsInput = {
+    id?: string
+    title: string
+    academicYear: string
+    studentRegistrationOpenAt: Date | string
+    studentRegistrationCloseAt: Date | string
+    registrationCloseAt: Date | string
+    status?: $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: boolean
+    eoAssistedRegistrationEnabled?: boolean
+    officeOnlyRegistrationEnabled?: boolean
+    postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
+    examSeries: ExamSeriesCreateNestedOneWithoutRegistrationWindowsInput
+    createdBy?: UserCreateNestedOneWithoutRegistrationWindowsInput
+    registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
+    workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
+    changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
+    registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+    feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+    feeAuditLogs?: FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+  }
+
+  export type RegistrationWindowUncheckedCreateWithoutOfflineWithdrawalRefundsInput = {
+    id?: string
+    examBoardId: string
+    examSeriesId: string
+    title: string
+    academicYear: string
+    studentRegistrationOpenAt: Date | string
+    studentRegistrationCloseAt: Date | string
+    registrationCloseAt: Date | string
+    status?: $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: boolean
+    eoAssistedRegistrationEnabled?: boolean
+    officeOnlyRegistrationEnabled?: boolean
+    postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeAuditLogs?: FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  }
+
+  export type RegistrationWindowCreateOrConnectWithoutOfflineWithdrawalRefundsInput = {
+    where: RegistrationWindowWhereUniqueInput
+    create: XOR<RegistrationWindowCreateWithoutOfflineWithdrawalRefundsInput, RegistrationWindowUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type CandidateCreateWithoutOfflineWithdrawalRefundsInput = {
+    id?: string
+    studentId: string
+    assessmentHubCandidateNumber: string
+    candidateType: $Enums.CandidateType
+    studentNumber?: string | null
+    englishName: string
+    chineseName?: string | null
+    surnamePinyin?: string | null
+    givenNamePinyin?: string | null
+    preferredEnglishName?: string | null
+    legalEnglishName?: string | null
+    email?: string | null
+    phone?: string | null
+    dateOfBirth?: Date | string | null
+    gender?: $Enums.Gender | null
+    nationality?: string | null
+    idDocumentType?: $Enums.IdDocumentType | null
+    idDocumentNumber?: string | null
+    idNumber?: string | null
+    passportNumber?: string | null
+    photoUrl?: string | null
+    emergencyContactName?: string | null
+    emergencyContactPhone?: string | null
+    schoolName?: string | null
+    grade?: $Enums.Grade | null
+    className?: string | null
+    graduationYear?: number | null
+    status?: $Enums.CandidateStatus
+    loginEnabled?: boolean
+    sourceSystem?: string | null
+    externalId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutCandidateInput
+    examIdentities?: CandidateExamIdentityCreateNestedManyWithoutCandidateInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutCandidateInput
+    examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
+    auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
+    changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
+    candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutCandidateInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutCandidateInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
+    certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
+    postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+  }
+
+  export type CandidateUncheckedCreateWithoutOfflineWithdrawalRefundsInput = {
+    id?: string
+    studentId: string
+    assessmentHubCandidateNumber: string
+    candidateType: $Enums.CandidateType
+    userId?: string | null
+    studentNumber?: string | null
+    englishName: string
+    chineseName?: string | null
+    surnamePinyin?: string | null
+    givenNamePinyin?: string | null
+    preferredEnglishName?: string | null
+    legalEnglishName?: string | null
+    email?: string | null
+    phone?: string | null
+    dateOfBirth?: Date | string | null
+    gender?: $Enums.Gender | null
+    nationality?: string | null
+    idDocumentType?: $Enums.IdDocumentType | null
+    idDocumentNumber?: string | null
+    idNumber?: string | null
+    passportNumber?: string | null
+    photoUrl?: string | null
+    emergencyContactName?: string | null
+    emergencyContactPhone?: string | null
+    schoolName?: string | null
+    grade?: $Enums.Grade | null
+    className?: string | null
+    graduationYear?: number | null
+    status?: $Enums.CandidateStatus
+    loginEnabled?: boolean
+    sourceSystem?: string | null
+    externalId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examIdentities?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCandidateInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutCandidateInput
+    examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
+    auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutCandidateInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutCandidateInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
+    certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+  }
+
+  export type CandidateCreateOrConnectWithoutOfflineWithdrawalRefundsInput = {
+    where: CandidateWhereUniqueInput
+    create: XOR<CandidateCreateWithoutOfflineWithdrawalRefundsInput, CandidateUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type ExamSessionCreateWithoutOfflineWithdrawalRefundsInput = {
+    id?: string
+    date: Date | string
+    startTime?: string | null
+    endTime?: string | null
+    timezone?: string | null
+    venue?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    paper: PaperCreateNestedOneWithoutExamSessionsInput
+    examSeries: ExamSeriesCreateNestedOneWithoutExamSessionsInput
+    sourceDocument?: SourceDocumentCreateNestedOneWithoutExamSessionsInput
+    studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+    registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+    changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+    changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+    changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
+    feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+  }
+
+  export type ExamSessionUncheckedCreateWithoutOfflineWithdrawalRefundsInput = {
+    id?: string
+    date: Date | string
+    startTime?: string | null
+    endTime?: string | null
+    timezone?: string | null
+    venue?: string | null
+    notes?: string | null
+    paperId: string
+    examSeriesId: string
+    sourceDocumentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+    registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+    changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+    changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+    changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+    feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+  }
+
+  export type ExamSessionCreateOrConnectWithoutOfflineWithdrawalRefundsInput = {
+    where: ExamSessionWhereUniqueInput
+    create: XOR<ExamSessionCreateWithoutOfflineWithdrawalRefundsInput, ExamSessionUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type UserCreateWithoutOfflineWithdrawalRefundsCreatedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+  }
+
+  export type UserUncheckedCreateWithoutOfflineWithdrawalRefundsCreatedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+  }
+
+  export type UserCreateOrConnectWithoutOfflineWithdrawalRefundsCreatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOfflineWithdrawalRefundsCreatedInput, UserUncheckedCreateWithoutOfflineWithdrawalRefundsCreatedInput>
+  }
+
+  export type UserCreateWithoutOfflineWithdrawalRefundsCompletedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+  }
+
+  export type UserUncheckedCreateWithoutOfflineWithdrawalRefundsCompletedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+  }
+
+  export type UserCreateOrConnectWithoutOfflineWithdrawalRefundsCompletedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutOfflineWithdrawalRefundsCompletedInput, UserUncheckedCreateWithoutOfflineWithdrawalRefundsCompletedInput>
+  }
+
+  export type RegistrationWorkspaceUpsertWithoutOfflineWithdrawalRefundsInput = {
+    update: XOR<RegistrationWorkspaceUpdateWithoutOfflineWithdrawalRefundsInput, RegistrationWorkspaceUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+    create: XOR<RegistrationWorkspaceCreateWithoutOfflineWithdrawalRefundsInput, RegistrationWorkspaceUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    where?: RegistrationWorkspaceWhereInput
+  }
+
+  export type RegistrationWorkspaceUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsInput = {
+    where?: RegistrationWorkspaceWhereInput
+    data: XOR<RegistrationWorkspaceUpdateWithoutOfflineWithdrawalRefundsInput, RegistrationWorkspaceUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type RegistrationWorkspaceUpdateWithoutOfflineWithdrawalRefundsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAdjustedByRole?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    lastAdjustedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAdjustmentReason?: NullableStringFieldUpdateOperationsInput | string | null
+    lastAdjustmentSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    hasPostLockAdjustment?: BoolFieldUpdateOperationsInput | boolean
+    isLateRegistration?: BoolFieldUpdateOperationsInput | boolean
+    entryType?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    entryTypeOverridden?: BoolFieldUpdateOperationsInput | boolean
+    entryTypeOverrideReason?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationSource?: EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+    visibility?: EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+    billingScope?: EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+    registrationType?: EnumRegistrationTypeFieldUpdateOperationsInput | $Enums.RegistrationType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    visibleToStudent?: BoolFieldUpdateOperationsInput | boolean
+    visibleToTeacher?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentPortal?: BoolFieldUpdateOperationsInput | boolean
+    visibleInTeacherPortal?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentDocuments?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentBilling?: BoolFieldUpdateOperationsInput | boolean
+    restrictedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    candidate?: CandidateUpdateOneWithoutRegistrationWorkspacesNestedInput
+    student?: UserUpdateOneWithoutRegistrationWorkspacesNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutWorkspacesNestedInput
+    lastAdjustedByUser?: UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput
+    feeStage?: RegistrationFeeStageUpdateOneWithoutWorkspacesNestedInput
+    restrictedCreatedBy?: UserUpdateOneWithoutRestrictedRegistrationsCreatedNestedInput
+    restrictedUpdatedBy?: UserUpdateOneWithoutRestrictedRegistrationsUpdatedNestedInput
+    registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
+    auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
+    changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+  }
+
+  export type RegistrationWorkspaceUncheckedUpdateWithoutOfflineWithdrawalRefundsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAdjustedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastAdjustedByRole?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    lastAdjustedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAdjustmentReason?: NullableStringFieldUpdateOperationsInput | string | null
+    lastAdjustmentSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    hasPostLockAdjustment?: BoolFieldUpdateOperationsInput | boolean
+    isLateRegistration?: BoolFieldUpdateOperationsInput | boolean
+    entryType?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    feeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    entryTypeOverridden?: BoolFieldUpdateOperationsInput | boolean
+    entryTypeOverrideReason?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationSource?: EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+    visibility?: EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+    billingScope?: EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+    registrationType?: EnumRegistrationTypeFieldUpdateOperationsInput | $Enums.RegistrationType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    visibleToStudent?: BoolFieldUpdateOperationsInput | boolean
+    visibleToTeacher?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentPortal?: BoolFieldUpdateOperationsInput | boolean
+    visibleInTeacherPortal?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentDocuments?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentBilling?: BoolFieldUpdateOperationsInput | boolean
+    restrictedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictedCreatedById?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  }
+
+  export type RegistrationWindowUpsertWithoutOfflineWithdrawalRefundsInput = {
+    update: XOR<RegistrationWindowUpdateWithoutOfflineWithdrawalRefundsInput, RegistrationWindowUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+    create: XOR<RegistrationWindowCreateWithoutOfflineWithdrawalRefundsInput, RegistrationWindowUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    where?: RegistrationWindowWhereInput
+  }
+
+  export type RegistrationWindowUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsInput = {
+    where?: RegistrationWindowWhereInput
+    data: XOR<RegistrationWindowUpdateWithoutOfflineWithdrawalRefundsInput, RegistrationWindowUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type RegistrationWindowUpdateWithoutOfflineWithdrawalRefundsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    academicYear?: StringFieldUpdateOperationsInput | string
+    studentRegistrationOpenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentRegistrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+    examSeries?: ExamSeriesUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+    createdBy?: UserUpdateOneWithoutRegistrationWindowsNestedInput
+    registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
+    workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
+    changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
+    registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+    feeStatements?: FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+    feeAuditLogs?: FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+  }
+
+  export type RegistrationWindowUncheckedUpdateWithoutOfflineWithdrawalRefundsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    examSeriesId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    academicYear?: StringFieldUpdateOperationsInput | string
+    studentRegistrationOpenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentRegistrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeAuditLogs?: FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  }
+
+  export type CandidateUpsertWithoutOfflineWithdrawalRefundsInput = {
+    update: XOR<CandidateUpdateWithoutOfflineWithdrawalRefundsInput, CandidateUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+    create: XOR<CandidateCreateWithoutOfflineWithdrawalRefundsInput, CandidateUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    where?: CandidateWhereInput
+  }
+
+  export type CandidateUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsInput = {
+    where?: CandidateWhereInput
+    data: XOR<CandidateUpdateWithoutOfflineWithdrawalRefundsInput, CandidateUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type CandidateUpdateWithoutOfflineWithdrawalRefundsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    assessmentHubCandidateNumber?: StringFieldUpdateOperationsInput | string
+    candidateType?: EnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType
+    studentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    englishName?: StringFieldUpdateOperationsInput | string
+    chineseName?: NullableStringFieldUpdateOperationsInput | string | null
+    surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
+    givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    idDocumentType?: NullableEnumIdDocumentTypeFieldUpdateOperationsInput | $Enums.IdDocumentType | null
+    idDocumentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    passportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyContactName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyContactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    schoolName?: NullableStringFieldUpdateOperationsInput | string | null
+    grade?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    graduationYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCandidateStatusFieldUpdateOperationsInput | $Enums.CandidateStatus
+    loginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    sourceSystem?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutCandidateNestedInput
+    examIdentities?: CandidateExamIdentityUpdateManyWithoutCandidateNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutCandidateNestedInput
+    examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
+    auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
+    changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
+    candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutCandidateNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutCandidateNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
+    certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type CandidateUncheckedUpdateWithoutOfflineWithdrawalRefundsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    assessmentHubCandidateNumber?: StringFieldUpdateOperationsInput | string
+    candidateType?: EnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    englishName?: StringFieldUpdateOperationsInput | string
+    chineseName?: NullableStringFieldUpdateOperationsInput | string | null
+    surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
+    givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    idDocumentType?: NullableEnumIdDocumentTypeFieldUpdateOperationsInput | $Enums.IdDocumentType | null
+    idDocumentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    passportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyContactName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyContactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    schoolName?: NullableStringFieldUpdateOperationsInput | string | null
+    grade?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    graduationYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCandidateStatusFieldUpdateOperationsInput | $Enums.CandidateStatus
+    loginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    sourceSystem?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examIdentities?: CandidateExamIdentityUncheckedUpdateManyWithoutCandidateNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutCandidateNestedInput
+    examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
+    auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type ExamSessionUpsertWithoutOfflineWithdrawalRefundsInput = {
+    update: XOR<ExamSessionUpdateWithoutOfflineWithdrawalRefundsInput, ExamSessionUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+    create: XOR<ExamSessionCreateWithoutOfflineWithdrawalRefundsInput, ExamSessionUncheckedCreateWithoutOfflineWithdrawalRefundsInput>
+    where?: ExamSessionWhereInput
+  }
+
+  export type ExamSessionUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsInput = {
+    where?: ExamSessionWhereInput
+    data: XOR<ExamSessionUpdateWithoutOfflineWithdrawalRefundsInput, ExamSessionUncheckedUpdateWithoutOfflineWithdrawalRefundsInput>
+  }
+
+  export type ExamSessionUpdateWithoutOfflineWithdrawalRefundsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    venue?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paper?: PaperUpdateOneRequiredWithoutExamSessionsNestedInput
+    examSeries?: ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
+    sourceDocument?: SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+    registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+    changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+    changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+    changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
+    feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+  }
+
+  export type ExamSessionUncheckedUpdateWithoutOfflineWithdrawalRefundsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    venue?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    paperId?: StringFieldUpdateOperationsInput | string
+    examSeriesId?: StringFieldUpdateOperationsInput | string
+    sourceDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+    registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+    changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+    changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+    changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+    feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+  }
+
+  export type UserUpsertWithoutOfflineWithdrawalRefundsCreatedInput = {
+    update: XOR<UserUpdateWithoutOfflineWithdrawalRefundsCreatedInput, UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCreatedInput>
+    create: XOR<UserCreateWithoutOfflineWithdrawalRefundsCreatedInput, UserUncheckedCreateWithoutOfflineWithdrawalRefundsCreatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsCreatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOfflineWithdrawalRefundsCreatedInput, UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCreatedInput>
+  }
+
+  export type UserUpdateWithoutOfflineWithdrawalRefundsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCreatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+  }
+
+  export type UserUpsertWithoutOfflineWithdrawalRefundsCompletedInput = {
+    update: XOR<UserUpdateWithoutOfflineWithdrawalRefundsCompletedInput, UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCompletedInput>
+    create: XOR<UserCreateWithoutOfflineWithdrawalRefundsCompletedInput, UserUncheckedCreateWithoutOfflineWithdrawalRefundsCompletedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutOfflineWithdrawalRefundsCompletedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutOfflineWithdrawalRefundsCompletedInput, UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCompletedInput>
+  }
+
+  export type UserUpdateWithoutOfflineWithdrawalRefundsCompletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCompletedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
   }
 
   export type RegistrationWindowCreateWithoutFeeAuditLogsInput = {
@@ -122637,6 +127326,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutFeeAuditLogsInput = {
@@ -122668,6 +127358,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutFeeAuditLogsInput = {
@@ -122728,6 +127419,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeAuditLogsPerformedInput = {
@@ -122783,6 +127476,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeAuditLogsPerformedInput = {
@@ -122830,6 +127525,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutFeeAuditLogsInput = {
@@ -122861,6 +127557,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type UserUpsertWithoutFeeAuditLogsPerformedInput = {
@@ -122927,6 +127624,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeAuditLogsPerformedInput = {
@@ -122982,6 +127681,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type ExamBoardCreateWithoutReviewWindowsInput = {
@@ -123175,6 +127876,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewWindowsCreatedInput = {
@@ -123230,6 +127933,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewWindowsCreatedInput = {
@@ -123803,6 +128508,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewWindowsCreatedInput = {
@@ -123858,6 +128565,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type ReviewWindowServiceUpsertWithWhereUniqueWithoutReviewWindowInput = {
@@ -124179,6 +128888,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutReviewRequestsInput = {
@@ -124228,6 +128938,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutReviewRequestsInput = {
@@ -124492,6 +129203,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutReviewRequestsInput = {
@@ -124516,6 +129228,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutReviewRequestsInput = {
@@ -124658,6 +129371,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsRequestedInput = {
@@ -124713,6 +129428,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsRequestedInput = {
@@ -124773,6 +129490,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsReviewedInput = {
@@ -124828,6 +129547,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsReviewedInput = {
@@ -125045,6 +129766,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutReviewRequestsInput = {
@@ -125094,6 +129816,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type ExamBoardUpsertWithoutReviewRequestsInput = {
@@ -125382,6 +130105,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutReviewRequestsInput = {
@@ -125406,6 +130130,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type SubjectUpsertWithoutReviewRequestsInput = {
@@ -125566,6 +130291,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsRequestedInput = {
@@ -125621,6 +130348,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUpsertWithoutReviewRequestsReviewedInput = {
@@ -125687,6 +130416,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsReviewedInput = {
@@ -125742,6 +130473,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutReviewRequestsInput = {
@@ -125943,6 +130676,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutCashInRequestsInput = {
@@ -125992,6 +130726,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutCashInRequestsInput = {
@@ -126266,6 +131001,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutCashInRequestsRequestedInput = {
@@ -126321,6 +131058,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutCashInRequestsRequestedInput = {
@@ -126538,6 +131277,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutCashInRequestsInput = {
@@ -126587,6 +131327,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type ExamBoardUpsertWithoutCashInRequestsInput = {
@@ -126891,6 +131632,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCashInRequestsRequestedInput = {
@@ -126946,6 +131689,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutCashInRequestsInput = {
@@ -127147,6 +131892,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutAccessToScriptRequestsInput = {
@@ -127196,6 +131942,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutAccessToScriptRequestsInput = {
@@ -127460,6 +132207,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionUncheckedCreateWithoutAccessToScriptRequestsInput = {
@@ -127484,6 +132232,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
   }
 
   export type ExamSessionCreateOrConnectWithoutAccessToScriptRequestsInput = {
@@ -127626,6 +132375,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutAccessToScriptRequestsRequestedInput = {
@@ -127681,6 +132432,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutAccessToScriptRequestsRequestedInput = {
@@ -127898,6 +132651,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutAccessToScriptRequestsInput = {
@@ -127947,6 +132701,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type ExamBoardUpsertWithoutAccessToScriptRequestsInput = {
@@ -128235,6 +132990,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutAccessToScriptRequestsInput = {
@@ -128259,6 +133015,7 @@ export namespace Prisma {
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type SubjectUpsertWithoutAccessToScriptRequestsInput = {
@@ -128419,6 +133176,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccessToScriptRequestsRequestedInput = {
@@ -128474,6 +133233,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutAccessToScriptRequestsInput = {
@@ -128675,6 +133436,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutCandidateInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutCertificateRequestsInput = {
@@ -128724,6 +133486,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutCandidateInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutCertificateRequestsInput = {
@@ -128922,6 +133685,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutCertificateRequestsRequestedInput = {
@@ -128977,6 +133742,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutCertificateRequestsRequestedInput = {
@@ -129194,6 +133961,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutCandidateNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutCertificateRequestsInput = {
@@ -129243,6 +134011,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutCandidateNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type ExamBoardUpsertWithoutCertificateRequestsInput = {
@@ -129459,6 +134228,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCertificateRequestsRequestedInput = {
@@ -129514,6 +134285,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutCertificateRequestsInput = {
@@ -129874,6 +134647,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeSchedulesCreatedInput = {
@@ -129929,6 +134704,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeSchedulesCreatedInput = {
@@ -130292,6 +135069,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeSchedulesCreatedInput = {
@@ -130347,6 +135126,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeScheduleInput = {
@@ -130412,6 +135193,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutCandidateInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateUncheckedCreateWithoutPostResultsAuditLogsInput = {
@@ -130461,6 +135243,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutCandidateInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type CandidateCreateOrConnectWithoutPostResultsAuditLogsInput = {
@@ -130635,6 +135418,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
     includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutPostResultsAuditLogsInput = {
@@ -130666,6 +135450,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutPostResultsAuditLogsInput = {
@@ -130773,6 +135558,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutPostResultsAuditLogsPerformedInput = {
@@ -130828,6 +135615,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutPostResultsAuditLogsPerformedInput = {
@@ -130893,6 +135682,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutCandidateNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
   }
 
   export type CandidateUncheckedUpdateWithoutPostResultsAuditLogsInput = {
@@ -130942,6 +135732,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutCandidateNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type ExamBoardUpsertWithoutPostResultsAuditLogsInput = {
@@ -131134,6 +135925,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutPostResultsAuditLogsInput = {
@@ -131165,6 +135957,7 @@ export namespace Prisma {
     feeAuditLogs?: FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ReviewWindowUpsertWithoutPostResultsAuditLogsInput = {
@@ -131284,6 +136077,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostResultsAuditLogsPerformedInput = {
@@ -131339,6 +136134,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserCreateWithoutBackupSettingsUpdatedInput = {
@@ -131394,6 +136191,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutBackupSettingsUpdatedInput = {
@@ -131449,6 +136248,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutBackupSettingsUpdatedInput = {
@@ -131520,6 +136321,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupSettingsUpdatedInput = {
@@ -131575,6 +136378,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserCreateWithoutBackupJobsTriggeredInput = {
@@ -131630,6 +136435,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserUncheckedCreateWithoutBackupJobsTriggeredInput = {
@@ -131685,6 +136492,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
   }
 
   export type UserCreateOrConnectWithoutBackupJobsTriggeredInput = {
@@ -131756,6 +136565,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupJobsTriggeredInput = {
@@ -131811,6 +136622,8 @@ export namespace Prisma {
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
   }
 
   export type SourceDocumentCreateManyUploadedByInput = {
@@ -132644,6 +137457,64 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type OfflineWithdrawalRefundCreateManyCreatedByUserInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfflineWithdrawalRefundCreateManyCompletedByUserInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type SourceDocumentUpdateWithoutUploadedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -132749,6 +137620,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutCreatedByInput = {
@@ -132780,6 +137652,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateManyWithoutCreatedByInput = {
@@ -133175,6 +138048,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutStudentInput = {
@@ -133218,6 +138092,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateManyWithoutStudentInput = {
@@ -133300,6 +138175,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutLastAdjustedByUserInput = {
@@ -133343,6 +138219,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserInput = {
@@ -134319,6 +139196,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutRestrictedCreatedByInput = {
@@ -134362,6 +139240,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByInput = {
@@ -134444,6 +139323,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutRestrictedUpdatedByInput = {
@@ -134487,6 +139367,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByInput = {
@@ -135285,6 +140166,180 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type OfflineWithdrawalRefundUpdateWithoutCreatedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    candidate?: CandidateUpdateOneWithoutOfflineWithdrawalRefundsNestedInput
+    examSession?: ExamSessionUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    completedByUser?: UserUpdateOneWithoutOfflineWithdrawalRefundsCompletedNestedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateWithoutCreatedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundUpdateWithoutCompletedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    candidate?: CandidateUpdateOneWithoutOfflineWithdrawalRefundsNestedInput
+    examSession?: ExamSessionUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    createdByUser?: UserUpdateOneRequiredWithoutOfflineWithdrawalRefundsCreatedNestedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateWithoutCompletedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CandidateExamIdentityCreateManyCandidateInput = {
     id?: string
     examBoardId: string
@@ -135576,6 +140631,35 @@ export namespace Prisma {
     metadata?: string | null
   }
 
+  export type OfflineWithdrawalRefundCreateManyCandidateInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type CandidateExamIdentityUpdateWithoutCandidateInput = {
     id?: StringFieldUpdateOperationsInput | string
     centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
@@ -135662,6 +140746,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutCandidateInput = {
@@ -135705,6 +140790,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateManyWithoutCandidateInput = {
@@ -136481,6 +141567,93 @@ export namespace Prisma {
     metadata?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type OfflineWithdrawalRefundUpdateWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    examSession?: ExamSessionUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    createdByUser?: UserUpdateOneRequiredWithoutOfflineWithdrawalRefundsCreatedNestedInput
+    completedByUser?: UserUpdateOneWithoutOfflineWithdrawalRefundsCompletedNestedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StudentExamRegistrationCreateManyRegistrationWindowInput = {
     id?: string
     candidateId?: string | null
@@ -136744,6 +141917,35 @@ export namespace Prisma {
     metadata?: string | null
   }
 
+  export type OfflineWithdrawalRefundCreateManyRegistrationWindowInput = {
+    id?: string
+    registrationWorkspaceId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type StudentExamRegistrationUpdateWithoutRegistrationWindowInput = {
     id?: StringFieldUpdateOperationsInput | string
     studentNameSnapshot?: StringFieldUpdateOperationsInput | string
@@ -136920,6 +142122,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutRegistrationWindowInput = {
@@ -136963,6 +142166,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowInput = {
@@ -137571,6 +142775,93 @@ export namespace Prisma {
     metadata?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type OfflineWithdrawalRefundUpdateWithoutRegistrationWindowInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    candidate?: CandidateUpdateOneWithoutOfflineWithdrawalRefundsNestedInput
+    examSession?: ExamSessionUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    createdByUser?: UserUpdateOneRequiredWithoutOfflineWithdrawalRefundsCreatedNestedInput
+    completedByUser?: UserUpdateOneWithoutOfflineWithdrawalRefundsCompletedNestedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateWithoutRegistrationWindowInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RegistrationWorkspaceCreateManyFeeStageInput = {
     id?: string
     candidateId?: string | null
@@ -137723,6 +143014,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateWithoutFeeStageInput = {
@@ -137766,6 +143058,7 @@ export namespace Prisma {
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
   export type RegistrationWorkspaceUncheckedUpdateManyWithoutFeeStageInput = {
@@ -138156,6 +143449,35 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type OfflineWithdrawalRefundCreateManyRegistrationWorkspaceInput = {
+    id?: string
+    registrationWindowId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    examSessionId: string
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -138573,6 +143895,93 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundUpdateWithoutRegistrationWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    candidate?: CandidateUpdateOneWithoutOfflineWithdrawalRefundsNestedInput
+    examSession?: ExamSessionUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    createdByUser?: UserUpdateOneRequiredWithoutOfflineWithdrawalRefundsCreatedNestedInput
+    completedByUser?: UserUpdateOneWithoutOfflineWithdrawalRefundsCompletedNestedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateWithoutRegistrationWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    examSessionId?: StringFieldUpdateOperationsInput | string
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -139462,6 +144871,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutExamBoardInput = {
@@ -139493,6 +144903,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateManyWithoutExamBoardInput = {
@@ -141517,6 +146928,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutPaperInput = {
@@ -141541,6 +146953,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateManyWithoutPaperInput = {
@@ -142259,6 +147672,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutExamSeriesInput = {
@@ -142283,6 +147697,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateManyWithoutExamSeriesInput = {
@@ -142421,6 +147836,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutExamSeriesInput = {
@@ -142452,6 +147868,7 @@ export namespace Prisma {
     includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateManyWithoutExamSeriesInput = {
@@ -143225,6 +148642,35 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type OfflineWithdrawalRefundCreateManyExamSessionInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationId?: string | null
+    paperCodeSnapshot: string
+    subjectSnapshot: string
+    feeStageCode: $Enums.FeeEntryType
+    salesAmountGbp: Decimal | DecimalJsLike | number | string
+    salesAmountCny?: Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent: Decimal | DecimalJsLike | number | string
+    paymentFeePercent: Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent: Decimal | DecimalJsLike | number | string
+    creditGbp: Decimal | DecimalJsLike | number | string
+    creditCny?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: string | null
+    calculationNotes?: string | null
+    createdByUserId: string
+    completedAt?: Date | string | null
+    completedByUserId?: string | null
+    offlineReference?: string | null
+    offlineNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type StudentExamRegistrationUpdateWithoutExamSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
     studentNameSnapshot?: StringFieldUpdateOperationsInput | string
@@ -143901,6 +149347,93 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type OfflineWithdrawalRefundUpdateWithoutExamSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutOfflineWithdrawalRefundsNestedInput
+    candidate?: CandidateUpdateOneWithoutOfflineWithdrawalRefundsNestedInput
+    createdByUser?: UserUpdateOneRequiredWithoutOfflineWithdrawalRefundsCreatedNestedInput
+    completedByUser?: UserUpdateOneWithoutOfflineWithdrawalRefundsCompletedNestedInput
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateWithoutExamSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperCodeSnapshot?: StringFieldUpdateOperationsInput | string
+    subjectSnapshot?: StringFieldUpdateOperationsInput | string
+    feeStageCode?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    salesAmountGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesAmountCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    configuredRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    effectiveRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditGbp?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    creditCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumOfflineWithdrawalRefundStatusFieldUpdateOperationsInput | $Enums.OfflineWithdrawalRefundStatus
+    policyNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    calculationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineReference?: NullableStringFieldUpdateOperationsInput | string | null
+    offlineNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PaperCreateManySourceDocumentInput = {
     id?: string
     code: string
@@ -144092,6 +149625,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateWithoutSourceDocumentInput = {
@@ -144116,6 +149650,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
   }
 
   export type ExamSessionUncheckedUpdateManyWithoutSourceDocumentInput = {

@@ -10,6 +10,7 @@ interface FeeManagementNavProps {
 const feeLinks = (base: string) => [
   { href: `${base}/fee-rules`, label: "Fee Rules" },
   { href: `${base}/fee-statements`, label: "Fee Statements" },
+  { href: `${base}/offline-withdrawal-refunds`, label: "Offline Refunds" },
   { href: `${base}/fee-summary`, label: "Fee Summary" },
   { href: `${base}/fee-details`, label: "Fee Details" },
   { href: `${base}/fee-statements/batch-print`, label: "Batch Print" },

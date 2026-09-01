@@ -10,6 +10,7 @@ import {
 } from "@/lib/fees/candidate-registration-fee";
 import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-currency";
 import { findMatchingFeeRuleWithFallback, resolveEntryTypeForRegistration } from "@/lib/fees/match";
+import { roundMoney } from "@/lib/fees/money";
 import type {
   CalculatedFeeLine,
   ExchangeRateRecord,
@@ -490,15 +491,29 @@ export async function generateFeeStatement(params: {
     previouslyPaidGbp,
   });
 
+  const pendingOffline = await prisma.offlineWithdrawalRefund.aggregate({
+    where: {
+      registrationWorkspaceId: workspaceId,
+      status: "PENDING_OFFLINE",
+    },
+    _sum: { creditGbp: true },
+  });
+  const pendingOfflineCredit = roundMoney(Number(pendingOffline._sum.creditGbp ?? 0));
+
   const noFurtherPaymentDue = issue && paymentSplit.amountDueGbp <= 0;
   const initialStatus = noFurtherPaymentDue ? "PAID" : issue ? "ISSUED" : "DRAFT";
-  const paymentNotes = noFurtherPaymentDue
+  const basePaymentNotes = noFurtherPaymentDue
     ? previouslyPaidGbp > 0
       ? `No additional payment due. Previous online payments £${paymentSplit.previouslyPaidGbp.toFixed(2)} cover the revised total £${paymentSplit.totalGbp.toFixed(2)}.`
       : `No payment due.`
     : previouslyPaidGbp > 0
       ? `Balance due after previous payment(s) of £${paymentSplit.previouslyPaidGbp.toFixed(2)}. Full fee total £${paymentSplit.totalGbp.toFixed(2)}.`
       : null;
+  const offlineNote =
+    pendingOfflineCredit > 0
+      ? `Offline refund pending £${pendingOfflineCredit.toFixed(2)} (finance processes outside the payment platform).`
+      : null;
+  const paymentNotes = [basePaymentNotes, offlineNote].filter(Boolean).join(" ") || null;
 
   const statement = await prisma.feeStatement.create({
     data: {

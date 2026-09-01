@@ -107,6 +107,7 @@ export function adminStaffSections(base: "/admin" | "/exam-office"): SidebarSect
       links: [
         { href: `${prefix}/fee-schedules`, label: "Fee Schedule" },
         { href: `${prefix}/fee-statements`, label: "Fee Statements" },
+        { href: `${prefix}/offline-withdrawal-refunds`, label: "Offline Refunds" },
         { href: `${prefix}/fee-summary`, label: "Fee Summary" },
         { href: `${prefix}/fee-details`, label: "Fee Details" },
         { href: `${prefix}/fees/export`, label: "Exports" },

@@ -278,6 +278,14 @@ enum FeeAuditAction {
   CANDIDATE_REGISTRATION_FEE_REMOVED
   ADDITIONAL_SERVICE_ADDED
   ADDITIONAL_SERVICE_REMOVED
+  OFFLINE_WITHDRAWAL_REFUND_RECORDED
+  OFFLINE_WITHDRAWAL_REFUND_COMPLETED
+}
+
+enum OfflineWithdrawalRefundStatus {
+  PENDING_OFFLINE
+  COMPLETED
+  ZERO_NO_REFUND
 }
 
 enum ReviewWindowStatus {
@@ -487,6 +495,8 @@ model User {
   candidateExamIdentitiesCreated     CandidateExamIdentity[] @relation("CandidateExamIdentityCreatedBy")
   candidateExamIdentitiesUpdated     CandidateExamIdentity[] @relation("CandidateExamIdentityUpdatedBy")
   paymentOrdersCancelled             PaymentOrder[] @relation("PaymentOrderCancelledBy")
+  offlineWithdrawalRefundsCreated    OfflineWithdrawalRefund[] @relation("OfflineWithdrawalRefundCreatedBy")
+  offlineWithdrawalRefundsCompleted  OfflineWithdrawalRefund[] @relation("OfflineWithdrawalRefundCompletedBy")
 
   @@index([role])
   @@index([isActive])
@@ -659,6 +669,7 @@ model Candidate {
   accessToScriptRequests AccessToScriptRequest[]
   certificateRequests    CertificateRequest[]
   postResultsAuditLogs   PostResultsAuditLog[]
+  offlineWithdrawalRefunds OfflineWithdrawalRefund[]
 
   @@index([candidateType])
   @@index([status])
@@ -771,6 +782,7 @@ model RegistrationWindow {
   includedSeries RegistrationWindowIncludedSeries[]
   examDocumentAuditLogs ExamDocumentAuditLog[]
   postResultsAuditLogs  PostResultsAuditLog[]
+  offlineWithdrawalRefunds OfflineWithdrawalRefund[]
 
   @@index([examBoardId])
   @@index([examSeriesId])
@@ -877,6 +889,7 @@ model RegistrationWorkspace {
   auditLogs      RegistrationAuditLog[]
   changeRequests RegistrationChangeRequest[]
   feeStatements  FeeStatement[]
+  offlineWithdrawalRefunds OfflineWithdrawalRefund[]
 
   @@unique([candidateId, registrationWindowId, registrationType], map: "rw_candidate_window_type_uq")
   @@unique([studentId, registrationWindowId, registrationType], map: "rw_student_window_type_uq")
@@ -1273,6 +1286,7 @@ model ExamSession {
   examDocumentAuditLogs     ExamDocumentAuditLog[]
   reviewRequests            ReviewRequest[]
   accessToScriptRequests    AccessToScriptRequest[]
+  offlineWithdrawalRefunds  OfflineWithdrawalRefund[]
 
   @@index([paperId])
   @@index([examSeriesId])
@@ -1565,6 +1579,52 @@ model FeeStatementItem {
   @@index([examSessionId])
   @@index([feeScheduleId])
   @@index([serviceType])
+}
+
+/// Ledger for withdrawal credits. Money is refunded offline by finance — never via GlobePay.
+model OfflineWithdrawalRefund {
+  id                       String                        @id @default(cuid())
+  registrationWorkspaceId  String
+  registrationWorkspace    RegistrationWorkspace         @relation(fields: [registrationWorkspaceId], references: [id], onDelete: Cascade)
+  registrationWindowId     String
+  registrationWindow       RegistrationWindow            @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  candidateId              String?
+  candidate                Candidate?                    @relation(fields: [candidateId], references: [id], onDelete: SetNull)
+  studentId                String?
+  registrationId           String?
+  examSessionId            String
+  examSession              ExamSession                   @relation(fields: [examSessionId], references: [id], onDelete: Cascade)
+  paperCodeSnapshot        String
+  subjectSnapshot          String
+  feeStageCode             FeeEntryType
+  salesAmountGbp           Decimal                       @db.Decimal(12, 2)
+  salesAmountCny           Decimal?                      @db.Decimal(12, 2)
+  configuredRefundPercent  Decimal                       @db.Decimal(5, 2)
+  paymentFeePercent        Decimal                       @db.Decimal(5, 2)
+  effectiveRefundPercent   Decimal                       @db.Decimal(5, 2)
+  creditGbp                Decimal                       @db.Decimal(12, 2)
+  creditCny                Decimal?                      @db.Decimal(12, 2)
+  status                   OfflineWithdrawalRefundStatus @default(PENDING_OFFLINE)
+  policyNotes              String?                       @db.Text
+  calculationNotes         String?                       @db.Text
+  createdByUserId          String
+  createdByUser            User                          @relation("OfflineWithdrawalRefundCreatedBy", fields: [createdByUserId], references: [id], onDelete: Cascade)
+  completedAt              DateTime?
+  completedByUserId        String?
+  completedByUser          User?                         @relation("OfflineWithdrawalRefundCompletedBy", fields: [completedByUserId], references: [id], onDelete: SetNull)
+  offlineReference         String?
+  offlineNote              String?                       @db.Text
+  createdAt                DateTime                      @default(now())
+  updatedAt                DateTime                      @updatedAt
+
+  @@index([registrationWorkspaceId])
+  @@index([registrationWindowId])
+  @@index([candidateId])
+  @@index([examSessionId])
+  @@index([status])
+  @@index([createdByUserId])
+  @@index([completedByUserId])
+  @@index([createdAt])
 }
 
 model FeeAuditLog {

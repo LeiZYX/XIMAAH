@@ -278,6 +278,14 @@ enum FeeAuditAction {
   CANDIDATE_REGISTRATION_FEE_REMOVED
   ADDITIONAL_SERVICE_ADDED
   ADDITIONAL_SERVICE_REMOVED
+  OFFLINE_WITHDRAWAL_REFUND_RECORDED
+  OFFLINE_WITHDRAWAL_REFUND_COMPLETED
+}
+
+enum OfflineWithdrawalRefundStatus {
+  PENDING_OFFLINE
+  COMPLETED
+  ZERO_NO_REFUND
 }
 
 enum ReviewWindowStatus {
@@ -446,47 +454,49 @@ model User {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  sourceDocuments                  SourceDocument[]
-  studentProfile                   StudentProfile?
-  teacherAssignments               TeacherAssignment[]         @relation("TeacherAssignments")
-  registrationWindows              RegistrationWindow[]        @relation("RegistrationWindowCreator")
-  studentRegistrations             StudentExamRegistration[]   @relation("StudentRegistrations")
-  passwordResetTokens              PasswordResetToken[]
-  registrationAuditLogsAsStudent   RegistrationAuditLog[]      @relation("RegistrationAuditStudent")
-  registrationAuditLogsPerformed   RegistrationAuditLog[]      @relation("RegistrationAuditPerformer")
-  registrationWorkspaces           RegistrationWorkspace[]     @relation("StudentRegistrationWorkspaces")
-  workspacesLastAdjusted           RegistrationWorkspace[]     @relation("WorkspaceLastAdjuster")
-  registrationChangeRequests       RegistrationChangeRequest[] @relation("ChangeRequestRequester")
-  reviewedChangeRequests           RegistrationChangeRequest[] @relation("ChangeRequestReviewer")
-  studentChangeRequests            RegistrationChangeRequest[] @relation("ChangeRequestStudent")
-  feeRulesCreated                  FeeRule[]                   @relation("FeeRuleCreator")
-  exchangeRatesCreated             ExchangeRate[]              @relation("ExchangeRateCreator")
-  feeStatementsGenerated           FeeStatement[]              @relation("FeeStatementGenerator")
-  feeStatementsAsStudent           FeeStatement[]              @relation("FeeStatementStudent")
-  feeStatementsRegenerationChanged FeeStatement[]              @relation("FeeStatementRegenerationChanged")
-  feeAuditLogsPerformed            FeeAuditLog[]               @relation("FeeAuditPerformer")
-  registrationsAdded               StudentExamRegistration[]   @relation("RegistrationAddedBy")
-  candidate                        Candidate?
-  teacherProfile                   TeacherProfile?
-  userAuditLogsPerformed           UserAuditLog[]              @relation("UserAuditPerformer")
-  userAuditLogsTarget              UserAuditLog[]              @relation("UserAuditTarget")
-  restrictedRegistrationsCreated   RegistrationWorkspace[]     @relation("RestrictedRegistrationCreator")
-  restrictedRegistrationsUpdated   RegistrationWorkspace[]     @relation("RestrictedRegistrationUpdater")
-  examDocumentAuditLogsPerformed   ExamDocumentAuditLog[]      @relation("ExamDocumentAuditPerformer")
-  candidateAuditLogsPerformed      CandidateAuditLog[]         @relation("CandidateAuditPerformer")
-  reviewWindowsCreated             ReviewWindow[]              @relation("ReviewWindowCreator")
-  feeSchedulesCreated              FeeSchedule[]               @relation("FeeScheduleCreator")
-  reviewRequestsRequested          ReviewRequest[]             @relation("ReviewRequestRequester")
-  reviewRequestsReviewed           ReviewRequest[]             @relation("ReviewRequestReviewer")
-  cashInRequestsRequested          CashInRequest[]             @relation("CashInRequestRequester")
-  accessToScriptRequestsRequested  AccessToScriptRequest[]     @relation("AccessToScriptRequester")
-  certificateRequestsRequested     CertificateRequest[]        @relation("CertificateRequestRequester")
-  postResultsAuditLogsPerformed    PostResultsAuditLog[]       @relation("PostResultsAuditPerformer")
-  backupSettingsUpdated            BackupSetting[]             @relation("BackupSettingsUpdater")
-  backupJobsTriggered              BackupJob[]                 @relation("BackupJobTriggeredBy")
-  candidateExamIdentitiesCreated   CandidateExamIdentity[]     @relation("CandidateExamIdentityCreatedBy")
-  candidateExamIdentitiesUpdated   CandidateExamIdentity[]     @relation("CandidateExamIdentityUpdatedBy")
-  paymentOrdersCancelled           PaymentOrder[]              @relation("PaymentOrderCancelledBy")
+  sourceDocuments                   SourceDocument[]
+  studentProfile                    StudentProfile?
+  teacherAssignments                TeacherAssignment[]         @relation("TeacherAssignments")
+  registrationWindows               RegistrationWindow[]        @relation("RegistrationWindowCreator")
+  studentRegistrations              StudentExamRegistration[]   @relation("StudentRegistrations")
+  passwordResetTokens               PasswordResetToken[]
+  registrationAuditLogsAsStudent    RegistrationAuditLog[]      @relation("RegistrationAuditStudent")
+  registrationAuditLogsPerformed    RegistrationAuditLog[]      @relation("RegistrationAuditPerformer")
+  registrationWorkspaces            RegistrationWorkspace[]     @relation("StudentRegistrationWorkspaces")
+  workspacesLastAdjusted            RegistrationWorkspace[]     @relation("WorkspaceLastAdjuster")
+  registrationChangeRequests        RegistrationChangeRequest[] @relation("ChangeRequestRequester")
+  reviewedChangeRequests            RegistrationChangeRequest[] @relation("ChangeRequestReviewer")
+  studentChangeRequests             RegistrationChangeRequest[] @relation("ChangeRequestStudent")
+  feeRulesCreated                   FeeRule[]                   @relation("FeeRuleCreator")
+  exchangeRatesCreated              ExchangeRate[]              @relation("ExchangeRateCreator")
+  feeStatementsGenerated            FeeStatement[]              @relation("FeeStatementGenerator")
+  feeStatementsAsStudent            FeeStatement[]              @relation("FeeStatementStudent")
+  feeStatementsRegenerationChanged  FeeStatement[]              @relation("FeeStatementRegenerationChanged")
+  feeAuditLogsPerformed             FeeAuditLog[]               @relation("FeeAuditPerformer")
+  registrationsAdded                StudentExamRegistration[]   @relation("RegistrationAddedBy")
+  candidate                         Candidate?
+  teacherProfile                    TeacherProfile?
+  userAuditLogsPerformed            UserAuditLog[]              @relation("UserAuditPerformer")
+  userAuditLogsTarget               UserAuditLog[]              @relation("UserAuditTarget")
+  restrictedRegistrationsCreated    RegistrationWorkspace[]     @relation("RestrictedRegistrationCreator")
+  restrictedRegistrationsUpdated    RegistrationWorkspace[]     @relation("RestrictedRegistrationUpdater")
+  examDocumentAuditLogsPerformed    ExamDocumentAuditLog[]      @relation("ExamDocumentAuditPerformer")
+  candidateAuditLogsPerformed       CandidateAuditLog[]         @relation("CandidateAuditPerformer")
+  reviewWindowsCreated              ReviewWindow[]              @relation("ReviewWindowCreator")
+  feeSchedulesCreated               FeeSchedule[]               @relation("FeeScheduleCreator")
+  reviewRequestsRequested           ReviewRequest[]             @relation("ReviewRequestRequester")
+  reviewRequestsReviewed            ReviewRequest[]             @relation("ReviewRequestReviewer")
+  cashInRequestsRequested           CashInRequest[]             @relation("CashInRequestRequester")
+  accessToScriptRequestsRequested   AccessToScriptRequest[]     @relation("AccessToScriptRequester")
+  certificateRequestsRequested      CertificateRequest[]        @relation("CertificateRequestRequester")
+  postResultsAuditLogsPerformed     PostResultsAuditLog[]       @relation("PostResultsAuditPerformer")
+  backupSettingsUpdated             BackupSetting[]             @relation("BackupSettingsUpdater")
+  backupJobsTriggered               BackupJob[]                 @relation("BackupJobTriggeredBy")
+  candidateExamIdentitiesCreated    CandidateExamIdentity[]     @relation("CandidateExamIdentityCreatedBy")
+  candidateExamIdentitiesUpdated    CandidateExamIdentity[]     @relation("CandidateExamIdentityUpdatedBy")
+  paymentOrdersCancelled            PaymentOrder[]              @relation("PaymentOrderCancelledBy")
+  offlineWithdrawalRefundsCreated   OfflineWithdrawalRefund[]   @relation("OfflineWithdrawalRefundCreatedBy")
+  offlineWithdrawalRefundsCompleted OfflineWithdrawalRefund[]   @relation("OfflineWithdrawalRefundCompletedBy")
 
   @@index([role])
   @@index([isActive])
@@ -646,19 +656,20 @@ model Candidate {
   createdAt                    DateTime        @default(now())
   updatedAt                    DateTime        @updatedAt
 
-  examIdentities         CandidateExamIdentity[]
-  registrationWorkspaces RegistrationWorkspace[]
-  examRegistrations      StudentExamRegistration[]
-  auditLogs              RegistrationAuditLog[]
-  changeRequests         RegistrationChangeRequest[]
-  feeStatements          FeeStatement[]
-  examDocumentAuditLogs  ExamDocumentAuditLog[]
-  candidateAuditLogs     CandidateAuditLog[]
-  reviewRequests         ReviewRequest[]
-  cashInRequests         CashInRequest[]
-  accessToScriptRequests AccessToScriptRequest[]
-  certificateRequests    CertificateRequest[]
-  postResultsAuditLogs   PostResultsAuditLog[]
+  examIdentities           CandidateExamIdentity[]
+  registrationWorkspaces   RegistrationWorkspace[]
+  examRegistrations        StudentExamRegistration[]
+  auditLogs                RegistrationAuditLog[]
+  changeRequests           RegistrationChangeRequest[]
+  feeStatements            FeeStatement[]
+  examDocumentAuditLogs    ExamDocumentAuditLog[]
+  candidateAuditLogs       CandidateAuditLog[]
+  reviewRequests           ReviewRequest[]
+  cashInRequests           CashInRequest[]
+  accessToScriptRequests   AccessToScriptRequest[]
+  certificateRequests      CertificateRequest[]
+  postResultsAuditLogs     PostResultsAuditLog[]
+  offlineWithdrawalRefunds OfflineWithdrawalRefund[]
 
   @@index([candidateType])
   @@index([status])
@@ -759,18 +770,19 @@ model RegistrationWindow {
   createdAt                      DateTime                 @default(now())
   updatedAt                      DateTime                 @updatedAt
 
-  registrations         StudentExamRegistration[]
-  workspaces            RegistrationWorkspace[]
-  changeRequests        RegistrationChangeRequest[]
-  feeStages             RegistrationFeeStage[]
-  registrationAuditLogs RegistrationAuditLog[]
-  feeRules              FeeRule[]
-  exchangeRates         ExchangeRate[]
-  feeStatements         FeeStatement[]
-  feeAuditLogs          FeeAuditLog[]
-  includedSeries        RegistrationWindowIncludedSeries[]
-  examDocumentAuditLogs ExamDocumentAuditLog[]
-  postResultsAuditLogs  PostResultsAuditLog[]
+  registrations            StudentExamRegistration[]
+  workspaces               RegistrationWorkspace[]
+  changeRequests           RegistrationChangeRequest[]
+  feeStages                RegistrationFeeStage[]
+  registrationAuditLogs    RegistrationAuditLog[]
+  feeRules                 FeeRule[]
+  exchangeRates            ExchangeRate[]
+  feeStatements            FeeStatement[]
+  feeAuditLogs             FeeAuditLog[]
+  includedSeries           RegistrationWindowIncludedSeries[]
+  examDocumentAuditLogs    ExamDocumentAuditLog[]
+  postResultsAuditLogs     PostResultsAuditLog[]
+  offlineWithdrawalRefunds OfflineWithdrawalRefund[]
 
   @@index([examBoardId])
   @@index([examSeriesId])
@@ -873,10 +885,11 @@ model RegistrationWorkspace {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  registrations  StudentExamRegistration[]
-  auditLogs      RegistrationAuditLog[]
-  changeRequests RegistrationChangeRequest[]
-  feeStatements  FeeStatement[]
+  registrations            StudentExamRegistration[]
+  auditLogs                RegistrationAuditLog[]
+  changeRequests           RegistrationChangeRequest[]
+  feeStatements            FeeStatement[]
+  offlineWithdrawalRefunds OfflineWithdrawalRefund[]
 
   @@unique([candidateId, registrationWindowId, registrationType], map: "rw_candidate_window_type_uq")
   @@unique([studentId, registrationWindowId, registrationType], map: "rw_student_window_type_uq")
@@ -1273,6 +1286,7 @@ model ExamSession {
   examDocumentAuditLogs     ExamDocumentAuditLog[]
   reviewRequests            ReviewRequest[]
   accessToScriptRequests    AccessToScriptRequest[]
+  offlineWithdrawalRefunds  OfflineWithdrawalRefund[]
 
   @@index([paperId])
   @@index([examSeriesId])
@@ -1569,6 +1583,52 @@ model FeeStatementItem {
   @@index([examSessionId])
   @@index([feeScheduleId])
   @@index([serviceType])
+}
+
+/// Ledger for withdrawal credits. Money is refunded offline by finance — never via GlobePay.
+model OfflineWithdrawalRefund {
+  id                      String                        @id @default(cuid())
+  registrationWorkspaceId String
+  registrationWorkspace   RegistrationWorkspace         @relation(fields: [registrationWorkspaceId], references: [id], onDelete: Cascade)
+  registrationWindowId    String
+  registrationWindow      RegistrationWindow            @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  candidateId             String?
+  candidate               Candidate?                    @relation(fields: [candidateId], references: [id], onDelete: SetNull)
+  studentId               String?
+  registrationId          String?
+  examSessionId           String
+  examSession             ExamSession                   @relation(fields: [examSessionId], references: [id], onDelete: Cascade)
+  paperCodeSnapshot       String
+  subjectSnapshot         String
+  feeStageCode            FeeEntryType
+  salesAmountGbp          Decimal                       @db.Decimal(12, 2)
+  salesAmountCny          Decimal?                      @db.Decimal(12, 2)
+  configuredRefundPercent Decimal                       @db.Decimal(5, 2)
+  paymentFeePercent       Decimal                       @db.Decimal(5, 2)
+  effectiveRefundPercent  Decimal                       @db.Decimal(5, 2)
+  creditGbp               Decimal                       @db.Decimal(12, 2)
+  creditCny               Decimal?                      @db.Decimal(12, 2)
+  status                  OfflineWithdrawalRefundStatus @default(PENDING_OFFLINE)
+  policyNotes             String?                       @db.Text
+  calculationNotes        String?                       @db.Text
+  createdByUserId         String
+  createdByUser           User                          @relation("OfflineWithdrawalRefundCreatedBy", fields: [createdByUserId], references: [id], onDelete: Cascade)
+  completedAt             DateTime?
+  completedByUserId       String?
+  completedByUser         User?                         @relation("OfflineWithdrawalRefundCompletedBy", fields: [completedByUserId], references: [id], onDelete: SetNull)
+  offlineReference        String?
+  offlineNote             String?                       @db.Text
+  createdAt               DateTime                      @default(now())
+  updatedAt               DateTime                      @updatedAt
+
+  @@index([registrationWorkspaceId])
+  @@index([registrationWindowId])
+  @@index([candidateId])
+  @@index([examSessionId])
+  @@index([status])
+  @@index([createdByUserId])
+  @@index([completedByUserId])
+  @@index([createdAt])
 }
 
 model FeeAuditLog {
