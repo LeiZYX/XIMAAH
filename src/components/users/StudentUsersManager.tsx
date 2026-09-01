@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { CandidateLifecycleActions } from "@/components/candidates/CandidateLifecycleActions";
 import { SetPasswordModal } from "@/components/users/SetPasswordModal";
 import { ListPagination } from "@/components/ui/ListPagination";
@@ -79,6 +79,54 @@ const buttonClass =
   "rounded border border-slate-300 bg-white px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50";
 const primaryButtonClass =
   "rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800";
+
+function ActionIconButton({
+  label,
+  onClick,
+  tone = "neutral",
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  tone?: "neutral" | "primary" | "danger";
+  children: ReactNode;
+}) {
+  const toneClass =
+    tone === "primary"
+      ? "text-indigo-700 ring-indigo-200 hover:bg-indigo-50"
+      : tone === "danger"
+        ? "text-red-700 ring-red-200 hover:bg-red-50"
+        : "text-slate-700 ring-slate-200 hover:bg-slate-50";
+  return (
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      onClick={onClick}
+      className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ring-1 ring-inset ${toneClass}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function ActionIcon({ children }: { children: ReactNode }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4"
+      aria-hidden
+    >
+      {children}
+    </svg>
+  );
+}
 
 function genderLabel(gender: string | null) {
   if (gender === "MALE") return "Male";
@@ -456,36 +504,52 @@ export function StudentUsersManager() {
                     <td className="border border-slate-200 px-3 py-2">
                       {row.isActive ? "Active" : "Inactive"}
                     </td>
-                    <td className="border border-slate-200 px-3 py-2">
-                      <div className="flex flex-wrap gap-2">
-                        <button
-                          type="button"
-                          onClick={() => openEdit(row)}
-                          className="text-indigo-700 hover:underline"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          type="button"
+                    <td className="border border-slate-200 px-2 py-2">
+                      <div className="flex min-w-[10.5rem] flex-wrap items-center gap-1">
+                        <ActionIconButton label="Edit" tone="primary" onClick={() => openEdit(row)}>
+                          <ActionIcon>
+                            <path d="M12 20h9" />
+                            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                          </ActionIcon>
+                        </ActionIconButton>
+                        <ActionIconButton
+                          label={row.isActive ? "Deactivate" : "Activate"}
                           onClick={() => void setActive(row.id, !row.isActive)}
-                          className="text-slate-700 hover:underline"
                         >
-                          {row.isActive ? "Deactivate" : "Activate"}
-                        </button>
-                        <button
-                          type="button"
+                          <ActionIcon>
+                            {row.isActive ? (
+                              <>
+                                <circle cx="12" cy="8" r="3.5" />
+                                <path d="M5 20a7 7 0 0 1 10.5-6" />
+                                <path d="M16 16l5 5M21 16l-5 5" />
+                              </>
+                            ) : (
+                              <>
+                                <circle cx="12" cy="8" r="3.5" />
+                                <path d="M5 20a7 7 0 0 1 14 0" />
+                                <path d="M16 14l2 2 4-4" />
+                              </>
+                            )}
+                          </ActionIcon>
+                        </ActionIconButton>
+                        <ActionIconButton
+                          label="Reset password"
                           onClick={() => void resetPassword(row.id)}
-                          className="text-slate-700 hover:underline"
                         >
-                          Reset password
-                        </button>
-                        <button
-                          type="button"
+                          <ActionIcon>
+                            <path d="M3 12a9 9 0 1 0 3-6.7" />
+                            <path d="M3 4v5h5" />
+                            <path d="M12 8v4l2.5 1.5" />
+                          </ActionIcon>
+                        </ActionIconButton>
+                        <ActionIconButton
+                          label="Set password"
                           onClick={() => setSetPasswordUser(row)}
-                          className="text-slate-700 hover:underline"
                         >
-                          Set password
-                        </button>
+                          <ActionIcon>
+                            <path d="M12.5 15.5a3.5 3.5 0 1 0-3.3-2.2L3 19v2h2l1-1h2v-2h2v-2l2.2-2.2" />
+                          </ActionIcon>
+                        </ActionIconButton>
                         {row.candidateId ? (
                           <CandidateLifecycleActions
                             candidateId={row.candidateId}
@@ -493,6 +557,7 @@ export function StudentUsersManager() {
                             status={row.status}
                             canArchive
                             canDelete
+                            iconOnly
                             onChanged={() => void load()}
                             onDeleted={() => void load()}
                           />
