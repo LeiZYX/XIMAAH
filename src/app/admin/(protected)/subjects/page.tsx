@@ -5,7 +5,9 @@ import { DeleteButton } from "@/components/admin/DeleteButton";
 import { FormField, SelectField } from "@/components/admin/FormFields";
 import { AdminStatus, fetchJsonList } from "@/components/admin/useAdminList";
 import { Card } from "@/components/ui/Card";
+import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { LIST_PAGE_SIZES } from "@/lib/pagination";
 
 interface Qualification {
   id: string;
@@ -33,29 +35,62 @@ export default function SubjectsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(LIST_PAGE_SIZES[0]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const load = useCallback(async () => {
+  const loadQualifications = useCallback(async () => {
+    try {
+      const qualificationsList = await fetchJsonList<Qualification & { id: string }>(
+        "/api/qualifications",
+      );
+      setQualifications(qualificationsList);
+    } catch {
+      setQualifications([]);
+    }
+  }, []);
+
+  const loadItems = useCallback(async () => {
     setLoading(true);
     setLoadError(null);
     try {
-      const [subjects, qualifications] = await Promise.all([
-        fetchJsonList<Subject>("/api/subjects"),
-        fetchJsonList<Qualification>("/api/qualifications"),
-      ]);
-      setItems(subjects);
-      setQualifications(qualifications);
+      const params = new URLSearchParams({
+        page: String(page),
+        pageSize: String(pageSize),
+      });
+      const response = await fetch(`/api/subjects?${params.toString()}`);
+      const data = (await response.json()) as {
+        subjects?: Subject[];
+        total?: number;
+        page?: number;
+        totalPages?: number;
+        error?: string;
+      };
+      if (!response.ok) {
+        throw new Error(data.error ?? "Failed to load subjects");
+      }
+      setItems(Array.isArray(data.subjects) ? data.subjects : []);
+      setTotal(data.total ?? 0);
+      setTotalPages(data.totalPages ?? 0);
+      if (typeof data.page === "number") setPage(data.page);
     } catch (error) {
       setItems([]);
-      setQualifications([]);
+      setTotal(0);
+      setTotalPages(0);
       setLoadError(error instanceof Error ? error.message : "Failed to load data");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, pageSize]);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    void loadQualifications();
+  }, [loadQualifications]);
+
+  useEffect(() => {
+    void loadItems();
+  }, [loadItems]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -70,7 +105,7 @@ export default function SubjectsPage() {
 
     setForm(emptyForm);
     setEditingId(null);
-    await load();
+    await loadItems();
   }
 
   return (
@@ -164,7 +199,7 @@ export default function SubjectsPage() {
                     <DeleteButton
                       onDelete={async () => {
                         await fetch(`/api/subjects/${item.id}`, { method: "DELETE" });
-                        await load();
+                        await loadItems();
                       }}
                     />
                   </td>
@@ -172,6 +207,21 @@ export default function SubjectsPage() {
               ))}
             </tbody>
           </table>
+          <div className="px-4 pb-4">
+            <ListPagination
+              page={page}
+              pageSize={pageSize}
+              total={total}
+              totalPages={totalPages}
+              loading={loading}
+              itemLabel="subjects"
+              onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
+            />
+          </div>
         </Card>
       </div>
     </div>

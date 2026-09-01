@@ -5,7 +5,9 @@ import { DeleteButton } from "@/components/admin/DeleteButton";
 import { FormField, SelectField } from "@/components/admin/FormFields";
 import { AdminStatus, fetchJsonList } from "@/components/admin/useAdminList";
 import { Card } from "@/components/ui/Card";
+import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { LIST_PAGE_SIZES } from "@/lib/pagination";
 
 interface Subject {
   id: string;
@@ -34,29 +36,60 @@ export default function PapersPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(LIST_PAGE_SIZES[0]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const load = useCallback(async () => {
+  const loadSubjects = useCallback(async () => {
+    try {
+      const subjectsList = await fetchJsonList<Subject>("/api/subjects");
+      setSubjects(subjectsList);
+    } catch {
+      setSubjects([]);
+    }
+  }, []);
+
+  const loadItems = useCallback(async () => {
     setLoading(true);
     setLoadError(null);
     try {
-      const [papers, subjectsList] = await Promise.all([
-        fetchJsonList<Paper>("/api/papers"),
-        fetchJsonList<Subject>("/api/subjects"),
-      ]);
-      setItems(papers);
-      setSubjects(subjectsList);
+      const params = new URLSearchParams({
+        page: String(page),
+        pageSize: String(pageSize),
+      });
+      const response = await fetch(`/api/papers?${params.toString()}`);
+      const data = (await response.json()) as {
+        papers?: Paper[];
+        total?: number;
+        page?: number;
+        totalPages?: number;
+        error?: string;
+      };
+      if (!response.ok) {
+        throw new Error(data.error ?? "Failed to load papers");
+      }
+      setItems(Array.isArray(data.papers) ? data.papers : []);
+      setTotal(data.total ?? 0);
+      setTotalPages(data.totalPages ?? 0);
+      if (typeof data.page === "number") setPage(data.page);
     } catch (error) {
       setItems([]);
-      setSubjects([]);
+      setTotal(0);
+      setTotalPages(0);
       setLoadError(error instanceof Error ? error.message : "Failed to load data");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, pageSize]);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    void loadSubjects();
+  }, [loadSubjects]);
+
+  useEffect(() => {
+    void loadItems();
+  }, [loadItems]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -71,7 +104,7 @@ export default function PapersPage() {
 
     setForm(emptyForm);
     setEditingId(null);
-    await load();
+    await loadItems();
   }
 
   return (
@@ -174,7 +207,7 @@ export default function PapersPage() {
                     <DeleteButton
                       onDelete={async () => {
                         await fetch(`/api/papers/${item.id}`, { method: "DELETE" });
-                        await load();
+                        await loadItems();
                       }}
                     />
                   </td>
@@ -182,6 +215,21 @@ export default function PapersPage() {
               ))}
             </tbody>
           </table>
+          <div className="px-4 pb-4">
+            <ListPagination
+              page={page}
+              pageSize={pageSize}
+              total={total}
+              totalPages={totalPages}
+              loading={loading}
+              itemLabel="papers"
+              onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
+            />
+          </div>
         </Card>
       </div>
     </div>

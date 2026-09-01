@@ -6,6 +6,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { CandidateExamBoardIdentitiesTab } from "@/components/candidates/CandidateExamBoardIdentitiesTab";
 import type { CandidateExamIdentityFormPayload } from "@/components/candidates/CandidateExamBoardIdentitiesTab";
 import { CandidateLifecycleActions } from "@/components/candidates/CandidateLifecycleActions";
+import {
+  FeeStatementPrintModal,
+  type FeeStatementPrintData,
+} from "@/components/fees/FeeStatementPrintModal";
 import { SetPasswordModal } from "@/components/users/SetPasswordModal";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -89,8 +93,11 @@ export function CandidateDetailView({
   const [photoUploading, setPhotoUploading] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [setPasswordOpen, setSetPasswordOpen] = useState(false);
+  const [previewStatement, setPreviewStatement] = useState<FeeStatementPrintData | null>(null);
+  const [loadingStatementId, setLoadingStatementId] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const portalBasePath = backHref.startsWith("/exam-office") ? "/exam-office" : "/admin";
 
   useEffect(() => {
     setActiveTab(resolveCandidateDetailTab(searchParams.get("tab")));
@@ -193,6 +200,32 @@ export function CandidateDetailView({
     }
     setMessage("Candidate profile saved.");
     setCandidate(data);
+  }
+
+  async function openFeeStatement(statementId: string) {
+    setLoadingStatementId(statementId);
+    setError(null);
+    try {
+      const response = await fetch(
+        `/api/fee-statements?statementId=${encodeURIComponent(statementId)}&includeSuperseded=true`,
+      );
+      const data = (await response.json()) as {
+        statements?: FeeStatementPrintData[];
+        error?: string;
+      };
+      if (!response.ok) {
+        throw new Error(data.error ?? "Failed to load fee statement");
+      }
+      const statement = data.statements?.[0];
+      if (!statement) {
+        throw new Error("Fee statement not found");
+      }
+      setPreviewStatement(statement);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load fee statement");
+    } finally {
+      setLoadingStatementId(null);
+    }
   }
 
   async function saveExamIdentity(payload: CandidateExamIdentityFormPayload) {
@@ -413,6 +446,14 @@ export function CandidateDetailView({
         onSubmit={submitForceSetPassword}
       />
 
+      {previewStatement ? (
+        <FeeStatementPrintModal
+          statements={[previewStatement]}
+          displayCurrency={previewStatement.displayCurrency}
+          onClose={() => setPreviewStatement(null)}
+        />
+      ) : null}
+
       <Card className="space-y-4">
         <SectionTitle>Profile Photo</SectionTitle>
         <div className="flex flex-wrap items-start gap-4">
@@ -589,9 +630,15 @@ export function CandidateDetailView({
           <ul className="space-y-2 text-sm">
             {workspaces.map((workspace) => {
               const window = workspace.registrationWindow as { title: string };
+              const examCount = String((workspace.registrations as unknown[])?.length ?? 0);
               return (
                 <li key={String(workspace.id)}>
-                  {window.title} · {String((workspace.registrations as unknown[])?.length ?? 0)} exam(s)
+                  <Link
+                    href={`${portalBasePath}/registrations/${String(workspace.id)}`}
+                    className="text-indigo-600 hover:text-indigo-800 hover:underline"
+                  >
+                    {window.title} · {examCount} exam(s)
+                  </Link>
                 </li>
               );
             })}
@@ -605,11 +652,24 @@ export function CandidateDetailView({
           <p className="text-sm text-slate-500">No fee statements yet.</p>
         ) : (
           <ul className="space-y-2 text-sm">
-            {feeStatements.map((statement) => (
-              <li key={String(statement.id)}>
-                {String(statement.statementNo)} · {String(statement.status)}
-              </li>
-            ))}
+            {feeStatements.map((statement) => {
+              const statementId = String(statement.id);
+              const loading = loadingStatementId === statementId;
+              return (
+                <li key={statementId}>
+                  <button
+                    type="button"
+                    onClick={() => void openFeeStatement(statementId)}
+                    disabled={loading}
+                    className="text-left text-indigo-600 hover:text-indigo-800 hover:underline disabled:opacity-50"
+                  >
+                    {loading
+                      ? "Loading..."
+                      : `${String(statement.statementNo)} · ${String(statement.status)}`}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
       </Card>

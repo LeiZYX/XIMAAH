@@ -123,6 +123,7 @@ export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const registrationWindowId = params.get("registrationWindowId");
   const workspaceId = params.get("workspaceId");
+  const statementId = params.get("statementId");
   const all = params.get("all") === "true";
 
   const statementInclude = {
@@ -168,6 +169,17 @@ export async function GET(request: NextRequest) {
     where.status = "PAID";
   } else if (paymentStatus === "unpaid") {
     where.status = "ISSUED";
+  }
+
+  if (statementId) {
+    const statement = await prisma.feeStatement.findUnique({
+      where: { id: statementId },
+      include: statementInclude,
+    });
+    if (!statement) {
+      return jsonError("Fee statement not found", 404);
+    }
+    return NextResponse.json({ statements: [statement] });
   }
 
   if (workspaceId) {

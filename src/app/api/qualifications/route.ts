@@ -1,20 +1,51 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
+import { buildPaginationMeta, parseListPagination } from "@/lib/pagination";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+const qualificationInclude = {
+  examBoard: { select: { id: true, name: true, code: true } },
+  _count: { select: { subjects: true } },
+} as const;
+
 export async function GET(request: NextRequest) {
-  const examBoardId = request.nextUrl.searchParams.get("examBoardId");
+  const params = request.nextUrl.searchParams;
+  const examBoardId = params.get("examBoardId");
+  const paginated = params.has("page") || params.has("pageSize");
+  const where = examBoardId ? { examBoardId } : undefined;
+  const orderBy = [{ level: "asc" as const }, { name: "asc" as const }];
+
+  if (paginated) {
+    const { page, pageSize } = parseListPagination(params);
+    const total = await prisma.qualification.count({ where });
+    const { skip, page: safePage, totalPages, pageSize: safePageSize } = buildPaginationMeta(
+      total,
+      page,
+      pageSize,
+    );
+    const qualifications = await prisma.qualification.findMany({
+      where,
+      orderBy,
+      include: qualificationInclude,
+      skip,
+      take: safePageSize,
+    });
+    return NextResponse.json({
+      qualifications,
+      total,
+      page: safePage,
+      totalPages,
+      pageSize: safePageSize,
+    });
+  }
 
   const qualifications = await prisma.qualification.findMany({
-    where: examBoardId ? { examBoardId } : undefined,
-    orderBy: [{ level: "asc" }, { name: "asc" }],
-    include: {
-      examBoard: { select: { id: true, name: true, code: true } },
-      _count: { select: { subjects: true } },
-    },
+    where,
+    orderBy,
+    include: qualificationInclude,
   });
 
   return NextResponse.json(qualifications);

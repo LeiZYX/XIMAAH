@@ -5,7 +5,9 @@ import { DeleteButton } from "@/components/admin/DeleteButton";
 import { FormField, SelectField } from "@/components/admin/FormFields";
 import { AdminStatus, fetchJsonList } from "@/components/admin/useAdminList";
 import { Card } from "@/components/ui/Card";
+import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { LIST_PAGE_SIZES } from "@/lib/pagination";
 
 interface ExamBoard {
   id: string;
@@ -31,29 +33,60 @@ export default function QualificationsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState<number>(LIST_PAGE_SIZES[0]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const load = useCallback(async () => {
+  const loadBoards = useCallback(async () => {
+    try {
+      const boards = await fetchJsonList<ExamBoard>("/api/exam-boards");
+      setExamBoards(boards);
+    } catch {
+      setExamBoards([]);
+    }
+  }, []);
+
+  const loadItems = useCallback(async () => {
     setLoading(true);
     setLoadError(null);
     try {
-      const [qualifications, boards] = await Promise.all([
-        fetchJsonList<Qualification>("/api/qualifications"),
-        fetchJsonList<ExamBoard>("/api/exam-boards"),
-      ]);
-      setItems(qualifications);
-      setExamBoards(boards);
+      const params = new URLSearchParams({
+        page: String(page),
+        pageSize: String(pageSize),
+      });
+      const response = await fetch(`/api/qualifications?${params.toString()}`);
+      const data = (await response.json()) as {
+        qualifications?: Qualification[];
+        total?: number;
+        page?: number;
+        totalPages?: number;
+        error?: string;
+      };
+      if (!response.ok) {
+        throw new Error(data.error ?? "Failed to load qualifications");
+      }
+      setItems(Array.isArray(data.qualifications) ? data.qualifications : []);
+      setTotal(data.total ?? 0);
+      setTotalPages(data.totalPages ?? 0);
+      if (typeof data.page === "number") setPage(data.page);
     } catch (error) {
       setItems([]);
-      setExamBoards([]);
+      setTotal(0);
+      setTotalPages(0);
       setLoadError(error instanceof Error ? error.message : "Failed to load data");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, pageSize]);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    void loadBoards();
+  }, [loadBoards]);
+
+  useEffect(() => {
+    void loadItems();
+  }, [loadItems]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -70,7 +103,7 @@ export default function QualificationsPage() {
 
     setForm(emptyForm);
     setEditingId(null);
-    await load();
+    await loadItems();
   }
 
   return (
@@ -170,7 +203,7 @@ export default function QualificationsPage() {
                     <DeleteButton
                       onDelete={async () => {
                         await fetch(`/api/qualifications/${item.id}`, { method: "DELETE" });
-                        await load();
+                        await loadItems();
                       }}
                     />
                   </td>
@@ -178,6 +211,21 @@ export default function QualificationsPage() {
               ))}
             </tbody>
           </table>
+          <div className="px-4 pb-4">
+            <ListPagination
+              page={page}
+              pageSize={pageSize}
+              total={total}
+              totalPages={totalPages}
+              loading={loading}
+              itemLabel="qualifications"
+              onPageChange={setPage}
+              onPageSizeChange={(size) => {
+                setPageSize(size);
+                setPage(1);
+              }}
+            />
+          </div>
         </Card>
       </div>
     </div>
