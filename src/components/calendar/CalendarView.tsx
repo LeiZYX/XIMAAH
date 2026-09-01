@@ -16,7 +16,7 @@ import {
   LEVEL_CATEGORY_OPTIONS,
   peakEventMonth,
   qualificationMatchesLevelCategory,
-  summarizeEventMonths,
+  groupEventsByMonth,
   type LevelCategory,
 } from "@/lib/level-categories";
 import { examBoardAccent } from "@/lib/exam-board-colors";
@@ -206,6 +206,41 @@ function highlightCalendarEventElement(root: HTMLElement | null, el: HTMLElement
   clearCalendarSelectionHighlight(root);
   const host = el.classList.contains("fc-event") ? el : el.closest<HTMLElement>(".fc-event");
   host?.setAttribute("data-xima-selected", "true");
+}
+
+function EventMonthSummary({
+  eventCount,
+  events,
+  onMonthClick,
+  searchActive,
+}: {
+  eventCount: number;
+  events: CalendarEvent[];
+  onMonthClick: (monthKey: string) => void;
+  searchActive: boolean;
+}) {
+  const months = groupEventsByMonth(events);
+  if (months.length === 0) return null;
+
+  return (
+    <p className="text-sm font-medium text-slate-700">
+      {searchActive
+        ? `${eventCount} matching event${eventCount === 1 ? "" : "s"} · `
+        : `${eventCount} event${eventCount === 1 ? "" : "s"} · `}
+      {months.map((month, index) => (
+        <span key={month.monthKey}>
+          {index > 0 ? ", " : null}
+          <button
+            type="button"
+            onClick={() => onMonthClick(month.monthKey)}
+            className="font-semibold text-indigo-600 underline decoration-indigo-300 underline-offset-2 hover:text-indigo-700"
+          >
+            {month.label} ({month.count})
+          </button>
+        </span>
+      ))}
+    </p>
+  );
 }
 
 export function CalendarView() {
@@ -485,6 +520,10 @@ export function CalendarView() {
     }
   }, [visibleEvents, selectedEvent]);
 
+  const navigateToMonth = useCallback((monthKey: string) => {
+    calendarRef.current?.getApi()?.gotoDate(`${monthKey}-01`);
+  }, []);
+
   const searchActive = searchQuery.trim().length > 0;
   const isStudent = currentUser?.role === "STUDENT";
   const selectedProps = selectedEvent?.extendedProps ?? {};
@@ -614,7 +653,7 @@ export function CalendarView() {
               ) : null}
             </div>
             {searchActive ? (
-              <p className="mt-1 text-xs text-slate-500">
+              <p className="mt-1 text-sm font-medium text-slate-700">
                 Matching {visibleEvents.length} of {events.length} event
                 {events.length === 1 ? "" : "s"}
               </p>
@@ -676,16 +715,24 @@ export function CalendarView() {
           </div>
 
           {!initialLoading && visibleEvents.length > 0 ? (
-            <p className="text-xs text-slate-500">
-              {searchActive
-                ? `${visibleEvents.length} matching event${visibleEvents.length === 1 ? "" : "s"} · ${summarizeEventMonths(visibleEvents) ?? "No dates"}`
-                : filters.levelCategories.length > 0 || filters.examBoardIds.length > 0
-                  ? `${visibleEvents.length} event${visibleEvents.length === 1 ? "" : "s"} · ${summarizeEventMonths(visibleEvents) ?? "No dates"}`
-                  : `${visibleEvents.length} total events · use filters above to narrow by level, board, or series`}
-            </p>
+            searchActive ||
+            filters.levelCategories.length > 0 ||
+            filters.examBoardIds.length > 0 ? (
+              <EventMonthSummary
+                eventCount={visibleEvents.length}
+                events={visibleEvents}
+                onMonthClick={navigateToMonth}
+                searchActive={searchActive}
+              />
+            ) : (
+              <p className="text-sm text-slate-600">
+                {visibleEvents.length} total events · use filters above to narrow by level, board, or
+                series
+              </p>
+            )
           ) : null}
           {!initialLoading && searchActive && visibleEvents.length === 0 ? (
-            <p className="text-xs text-amber-700">No events match your search.</p>
+            <p className="text-sm font-medium text-amber-700">No events match your search.</p>
           ) : null}
         </div>
 

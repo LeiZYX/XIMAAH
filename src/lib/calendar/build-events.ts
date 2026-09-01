@@ -21,6 +21,10 @@ import {
 import { canStudentRegisterInWindow, describeStudentRegistrationAvailability } from "@/lib/registrations/window";
 import { indexWindowsByBoardSeries } from "@/lib/registrations/included-series";
 import type { RegistrationFeeStageRecord } from "@/lib/registrations/fee-stages";
+import {
+  examSessionCalendarEnd,
+  examSessionCalendarStart,
+} from "@/lib/calendar/session-datetime";
 import type { CalendarEvent } from "@/lib/types";
 
 export interface CalendarQueryParams {
@@ -33,35 +37,6 @@ export interface CalendarQueryParams {
   showKeyDates: boolean;
   studentId?: string;
   registeredOnly?: boolean;
-}
-
-function sessionEndTime(date: Date, startTime?: string | null, endTime?: string | null) {
-  if (endTime) {
-    const [hours, minutes] = endTime.split(":").map(Number);
-    const end = new Date(date);
-    end.setHours(hours, minutes, 0, 0);
-    return end.toISOString();
-  }
-
-  if (startTime) {
-    const [hours, minutes] = startTime.split(":").map(Number);
-    const end = new Date(date);
-    end.setHours(hours + 2, minutes, 0, 0);
-    return end.toISOString();
-  }
-
-  return undefined;
-}
-
-function sessionStartTime(date: Date, startTime?: string | null) {
-  if (!startTime) {
-    return date.toISOString().split("T")[0];
-  }
-
-  const [hours, minutes] = startTime.split(":").map(Number);
-  const start = new Date(date);
-  start.setHours(hours, minutes, 0, 0);
-  return start.toISOString();
 }
 
 export async function buildCalendarEvents(params: CalendarQueryParams): Promise<CalendarEvent[]> {
@@ -276,8 +251,8 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
       events.push({
         id: `session-${session.id}`,
         title: `${calendarTimeLabel} ${calendarDetailLabel}`.trim(),
-        start: sessionStartTime(session.date, session.startTime),
-        end: sessionEndTime(session.date, session.startTime, session.endTime),
+        start: examSessionCalendarStart(session.date, session.startTime),
+        end: examSessionCalendarEnd(session.date, session.startTime, session.endTime),
         allDay: !session.startTime,
         type: "session",
         backgroundColor: isLocked

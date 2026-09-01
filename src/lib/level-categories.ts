@@ -143,13 +143,18 @@ export function matchesAnyLevelCategory(
   );
 }
 
-export function summarizeEventMonths(events: { start: string }[]): string | null {
-  if (events.length === 0) return null;
+export interface EventMonthSummary {
+  monthKey: string;
+  label: string;
+  count: number;
+}
+
+export function groupEventsByMonth(events: { start: string }[]): EventMonthSummary[] {
+  if (events.length === 0) return [];
 
   const monthCounts = new Map<string, number>();
   for (const event of events) {
-    const date = new Date(event.start);
-    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+    const key = event.start.slice(0, 7);
     monthCounts.set(key, (monthCounts.get(key) ?? 0) + 1);
   }
 
@@ -158,9 +163,18 @@ export function summarizeEventMonths(events: { start: string }[]): string | null
     .sort((left, right) => left[0].localeCompare(right[0]))
     .map(([monthKey, count]) => {
       const [year, month] = monthKey.split("-").map(Number);
-      return `${formatter.format(new Date(year, month - 1, 1))} (${count})`;
-    })
-    .join(", ");
+      return {
+        monthKey,
+        label: formatter.format(new Date(year, month - 1, 1)),
+        count,
+      };
+    });
+}
+
+export function summarizeEventMonths(events: { start: string }[]): string | null {
+  const groups = groupEventsByMonth(events);
+  if (groups.length === 0) return null;
+  return groups.map((group) => `${group.label} (${group.count})`).join(", ");
 }
 
 export function peakEventMonth(events: { start: string }[]): string | null {
