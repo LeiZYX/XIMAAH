@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { ExamBoardWithdrawalPolicyPanel } from "@/components/exam-boards/ExamBoardWithdrawalPolicyPanel";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { FormField, TextAreaField } from "@/components/admin/FormFields";
 import { AdminStatus, useAdminList } from "@/components/admin/useAdminList";
@@ -298,6 +299,16 @@ export function ExamBoardsManager({
           </table>
         </Card>
       </div>
+
+      {editingId ? (
+        <div className="mt-6">
+          <ExamBoardWithdrawalPolicyPanel
+            examBoardId={editingId}
+            examBoardLabel={form.name || form.code || editingId}
+            canEdit
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

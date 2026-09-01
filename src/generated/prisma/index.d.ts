@@ -120,6 +120,11 @@ export type RegistrationChangeRequestExamSession = $Result.DefaultSelection<Pris
  */
 export type ExamBoard = $Result.DefaultSelection<Prisma.$ExamBoardPayload>
 /**
+ * Model ExamBoardWithdrawalPolicy
+ * Per-exam-board defaults for withdrawal refunds (copied onto new registration windows).
+ */
+export type ExamBoardWithdrawalPolicy = $Result.DefaultSelection<Prisma.$ExamBoardWithdrawalPolicyPayload>
+/**
  * Model Qualification
  * 
  */
@@ -457,6 +462,13 @@ export const FeeEntryType: {
 };
 
 export type FeeEntryType = (typeof FeeEntryType)[keyof typeof FeeEntryType]
+
+
+export const WithdrawalRefundBasis: {
+  SALES_AMOUNT: 'SALES_AMOUNT'
+};
+
+export type WithdrawalRefundBasis = (typeof WithdrawalRefundBasis)[keyof typeof WithdrawalRefundBasis]
 
 
 export const FeeCurrency: {
@@ -889,6 +901,10 @@ export const RegistrationChangeRequestStatus: typeof $Enums.RegistrationChangeRe
 export type FeeEntryType = $Enums.FeeEntryType
 
 export const FeeEntryType: typeof $Enums.FeeEntryType
+
+export type WithdrawalRefundBasis = $Enums.WithdrawalRefundBasis
+
+export const WithdrawalRefundBasis: typeof $Enums.WithdrawalRefundBasis
 
 export type FeeCurrency = $Enums.FeeCurrency
 
@@ -1341,6 +1357,16 @@ export class PrismaClient<
     * ```
     */
   get examBoard(): Prisma.ExamBoardDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.examBoardWithdrawalPolicy`: Exposes CRUD operations for the **ExamBoardWithdrawalPolicy** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ExamBoardWithdrawalPolicies
+    * const examBoardWithdrawalPolicies = await prisma.examBoardWithdrawalPolicy.findMany()
+    * ```
+    */
+  get examBoardWithdrawalPolicy(): Prisma.ExamBoardWithdrawalPolicyDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.qualification`: Exposes CRUD operations for the **Qualification** model.
@@ -2053,6 +2079,7 @@ export namespace Prisma {
     RegistrationChangeRequest: 'RegistrationChangeRequest',
     RegistrationChangeRequestExamSession: 'RegistrationChangeRequestExamSession',
     ExamBoard: 'ExamBoard',
+    ExamBoardWithdrawalPolicy: 'ExamBoardWithdrawalPolicy',
     Qualification: 'Qualification',
     Subject: 'Subject',
     CalendarSubjectSelection: 'CalendarSubjectSelection',
@@ -2096,7 +2123,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
+      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3483,6 +3510,72 @@ export namespace Prisma {
           count: {
             args: Prisma.ExamBoardCountArgs<ExtArgs>
             result: $Utils.Optional<ExamBoardCountAggregateOutputType> | number
+          }
+        }
+      }
+      ExamBoardWithdrawalPolicy: {
+        payload: Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>
+        fields: Prisma.ExamBoardWithdrawalPolicyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ExamBoardWithdrawalPolicyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamBoardWithdrawalPolicyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ExamBoardWithdrawalPolicyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamBoardWithdrawalPolicyPayload>
+          }
+          findFirst: {
+            args: Prisma.ExamBoardWithdrawalPolicyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamBoardWithdrawalPolicyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ExamBoardWithdrawalPolicyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamBoardWithdrawalPolicyPayload>
+          }
+          findMany: {
+            args: Prisma.ExamBoardWithdrawalPolicyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamBoardWithdrawalPolicyPayload>[]
+          }
+          create: {
+            args: Prisma.ExamBoardWithdrawalPolicyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamBoardWithdrawalPolicyPayload>
+          }
+          createMany: {
+            args: Prisma.ExamBoardWithdrawalPolicyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.ExamBoardWithdrawalPolicyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamBoardWithdrawalPolicyPayload>
+          }
+          update: {
+            args: Prisma.ExamBoardWithdrawalPolicyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamBoardWithdrawalPolicyPayload>
+          }
+          deleteMany: {
+            args: Prisma.ExamBoardWithdrawalPolicyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ExamBoardWithdrawalPolicyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ExamBoardWithdrawalPolicyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ExamBoardWithdrawalPolicyPayload>
+          }
+          aggregate: {
+            args: Prisma.ExamBoardWithdrawalPolicyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateExamBoardWithdrawalPolicy>
+          }
+          groupBy: {
+            args: Prisma.ExamBoardWithdrawalPolicyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ExamBoardWithdrawalPolicyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ExamBoardWithdrawalPolicyCountArgs<ExtArgs>
+            result: $Utils.Optional<ExamBoardWithdrawalPolicyCountAggregateOutputType> | number
           }
         }
       }
@@ -5253,6 +5346,7 @@ export namespace Prisma {
     registrationChangeRequest?: RegistrationChangeRequestOmit
     registrationChangeRequestExamSession?: RegistrationChangeRequestExamSessionOmit
     examBoard?: ExamBoardOmit
+    examBoardWithdrawalPolicy?: ExamBoardWithdrawalPolicyOmit
     qualification?: QualificationOmit
     subject?: SubjectOmit
     calendarSubjectSelection?: CalendarSubjectSelectionOmit
@@ -20834,8 +20928,18 @@ export namespace Prisma {
 
   export type AggregateRegistrationWindow = {
     _count: RegistrationWindowCountAggregateOutputType | null
+    _avg: RegistrationWindowAvgAggregateOutputType | null
+    _sum: RegistrationWindowSumAggregateOutputType | null
     _min: RegistrationWindowMinAggregateOutputType | null
     _max: RegistrationWindowMaxAggregateOutputType | null
+  }
+
+  export type RegistrationWindowAvgAggregateOutputType = {
+    paymentFeePercent: Decimal | null
+  }
+
+  export type RegistrationWindowSumAggregateOutputType = {
+    paymentFeePercent: Decimal | null
   }
 
   export type RegistrationWindowMinAggregateOutputType = {
@@ -20852,6 +20956,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled: boolean | null
     officeOnlyRegistrationEnabled: boolean | null
     postLockAdjustmentEnabled: boolean | null
+    paymentFeePercent: Decimal | null
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -20871,6 +20976,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled: boolean | null
     officeOnlyRegistrationEnabled: boolean | null
     postLockAdjustmentEnabled: boolean | null
+    paymentFeePercent: Decimal | null
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -20890,12 +20996,21 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled: number
     officeOnlyRegistrationEnabled: number
     postLockAdjustmentEnabled: number
+    paymentFeePercent: number
     createdById: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
+
+  export type RegistrationWindowAvgAggregateInputType = {
+    paymentFeePercent?: true
+  }
+
+  export type RegistrationWindowSumAggregateInputType = {
+    paymentFeePercent?: true
+  }
 
   export type RegistrationWindowMinAggregateInputType = {
     id?: true
@@ -20911,6 +21026,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: true
     officeOnlyRegistrationEnabled?: true
     postLockAdjustmentEnabled?: true
+    paymentFeePercent?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -20930,6 +21046,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: true
     officeOnlyRegistrationEnabled?: true
     postLockAdjustmentEnabled?: true
+    paymentFeePercent?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -20949,6 +21066,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: true
     officeOnlyRegistrationEnabled?: true
     postLockAdjustmentEnabled?: true
+    paymentFeePercent?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -20993,6 +21111,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: RegistrationWindowAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RegistrationWindowSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: RegistrationWindowMinAggregateInputType
@@ -21023,6 +21153,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: RegistrationWindowCountAggregateInputType | true
+    _avg?: RegistrationWindowAvgAggregateInputType
+    _sum?: RegistrationWindowSumAggregateInputType
     _min?: RegistrationWindowMinAggregateInputType
     _max?: RegistrationWindowMaxAggregateInputType
   }
@@ -21041,10 +21173,13 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled: boolean
     officeOnlyRegistrationEnabled: boolean
     postLockAdjustmentEnabled: boolean
+    paymentFeePercent: Decimal
     createdById: string | null
     createdAt: Date
     updatedAt: Date
     _count: RegistrationWindowCountAggregateOutputType | null
+    _avg: RegistrationWindowAvgAggregateOutputType | null
+    _sum: RegistrationWindowSumAggregateOutputType | null
     _min: RegistrationWindowMinAggregateOutputType | null
     _max: RegistrationWindowMaxAggregateOutputType | null
   }
@@ -21077,6 +21212,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -21114,12 +21250,13 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RegistrationWindowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "examBoardId" | "examSeriesId" | "title" | "academicYear" | "studentRegistrationOpenAt" | "studentRegistrationCloseAt" | "registrationCloseAt" | "status" | "studentSelfRegistrationEnabled" | "eoAssistedRegistrationEnabled" | "officeOnlyRegistrationEnabled" | "postLockAdjustmentEnabled" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationWindow"]>
+  export type RegistrationWindowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "examBoardId" | "examSeriesId" | "title" | "academicYear" | "studentRegistrationOpenAt" | "studentRegistrationCloseAt" | "registrationCloseAt" | "status" | "studentSelfRegistrationEnabled" | "eoAssistedRegistrationEnabled" | "officeOnlyRegistrationEnabled" | "postLockAdjustmentEnabled" | "paymentFeePercent" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationWindow"]>
   export type RegistrationWindowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
     examSeries?: boolean | ExamSeriesDefaultArgs<ExtArgs>
@@ -21175,6 +21312,10 @@ export namespace Prisma {
       eoAssistedRegistrationEnabled: boolean
       officeOnlyRegistrationEnabled: boolean
       postLockAdjustmentEnabled: boolean
+      /**
+       * Payment platform fee retained on withdrawal refunds (copied from exam-board policy).
+       */
+      paymentFeePercent: Prisma.Decimal
       createdById: string | null
       createdAt: Date
       updatedAt: Date
@@ -21575,6 +21716,7 @@ export namespace Prisma {
     readonly eoAssistedRegistrationEnabled: FieldRef<"RegistrationWindow", 'Boolean'>
     readonly officeOnlyRegistrationEnabled: FieldRef<"RegistrationWindow", 'Boolean'>
     readonly postLockAdjustmentEnabled: FieldRef<"RegistrationWindow", 'Boolean'>
+    readonly paymentFeePercent: FieldRef<"RegistrationWindow", 'Decimal'>
     readonly createdById: FieldRef<"RegistrationWindow", 'String'>
     readonly createdAt: FieldRef<"RegistrationWindow", 'DateTime'>
     readonly updatedAt: FieldRef<"RegistrationWindow", 'DateTime'>
@@ -23182,10 +23324,12 @@ export namespace Prisma {
 
   export type RegistrationFeeStageAvgAggregateOutputType = {
     sequence: number | null
+    withdrawalRefundPercent: Decimal | null
   }
 
   export type RegistrationFeeStageSumAggregateOutputType = {
     sequence: number | null
+    withdrawalRefundPercent: Decimal | null
   }
 
   export type RegistrationFeeStageMinAggregateOutputType = {
@@ -23198,6 +23342,10 @@ export namespace Prisma {
     endAt: Date | null
     enabled: boolean | null
     notes: string | null
+    withdrawalRefundEnabled: boolean | null
+    withdrawalRefundPercent: Decimal | null
+    withdrawalRefundBasis: $Enums.WithdrawalRefundBasis | null
+    withdrawalNotes: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -23212,6 +23360,10 @@ export namespace Prisma {
     endAt: Date | null
     enabled: boolean | null
     notes: string | null
+    withdrawalRefundEnabled: boolean | null
+    withdrawalRefundPercent: Decimal | null
+    withdrawalRefundBasis: $Enums.WithdrawalRefundBasis | null
+    withdrawalNotes: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -23226,6 +23378,10 @@ export namespace Prisma {
     endAt: number
     enabled: number
     notes: number
+    withdrawalRefundEnabled: number
+    withdrawalRefundPercent: number
+    withdrawalRefundBasis: number
+    withdrawalNotes: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -23234,10 +23390,12 @@ export namespace Prisma {
 
   export type RegistrationFeeStageAvgAggregateInputType = {
     sequence?: true
+    withdrawalRefundPercent?: true
   }
 
   export type RegistrationFeeStageSumAggregateInputType = {
     sequence?: true
+    withdrawalRefundPercent?: true
   }
 
   export type RegistrationFeeStageMinAggregateInputType = {
@@ -23250,6 +23408,10 @@ export namespace Prisma {
     endAt?: true
     enabled?: true
     notes?: true
+    withdrawalRefundEnabled?: true
+    withdrawalRefundPercent?: true
+    withdrawalRefundBasis?: true
+    withdrawalNotes?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -23264,6 +23426,10 @@ export namespace Prisma {
     endAt?: true
     enabled?: true
     notes?: true
+    withdrawalRefundEnabled?: true
+    withdrawalRefundPercent?: true
+    withdrawalRefundBasis?: true
+    withdrawalNotes?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -23278,6 +23444,10 @@ export namespace Prisma {
     endAt?: true
     enabled?: true
     notes?: true
+    withdrawalRefundEnabled?: true
+    withdrawalRefundPercent?: true
+    withdrawalRefundBasis?: true
+    withdrawalNotes?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -23379,6 +23549,10 @@ export namespace Prisma {
     endAt: Date
     enabled: boolean
     notes: string | null
+    withdrawalRefundEnabled: boolean
+    withdrawalRefundPercent: Decimal
+    withdrawalRefundBasis: $Enums.WithdrawalRefundBasis
+    withdrawalNotes: string | null
     createdAt: Date
     updatedAt: Date
     _count: RegistrationFeeStageCountAggregateOutputType | null
@@ -23412,6 +23586,10 @@ export namespace Prisma {
     endAt?: boolean
     enabled?: boolean
     notes?: boolean
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: boolean
+    withdrawalRefundBasis?: boolean
+    withdrawalNotes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     registrationWindow?: boolean | RegistrationWindowDefaultArgs<ExtArgs>
@@ -23433,11 +23611,15 @@ export namespace Prisma {
     endAt?: boolean
     enabled?: boolean
     notes?: boolean
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: boolean
+    withdrawalRefundBasis?: boolean
+    withdrawalNotes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RegistrationFeeStageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "registrationWindowId" | "stageCode" | "stageName" | "sequence" | "startAt" | "endAt" | "enabled" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationFeeStage"]>
+  export type RegistrationFeeStageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "registrationWindowId" | "stageCode" | "stageName" | "sequence" | "startAt" | "endAt" | "enabled" | "notes" | "withdrawalRefundEnabled" | "withdrawalRefundPercent" | "withdrawalRefundBasis" | "withdrawalNotes" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationFeeStage"]>
   export type RegistrationFeeStageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     registrationWindow?: boolean | RegistrationWindowDefaultArgs<ExtArgs>
     workspaces?: boolean | RegistrationFeeStage$workspacesArgs<ExtArgs>
@@ -23464,6 +23646,16 @@ export namespace Prisma {
       endAt: Date
       enabled: boolean
       notes: string | null
+      /**
+       * When false, removals in this stage do not credit fees (Phase 2).
+       */
+      withdrawalRefundEnabled: boolean
+      /**
+       * Configured refund percent of sales amount before payment-fee ceiling.
+       */
+      withdrawalRefundPercent: Prisma.Decimal
+      withdrawalRefundBasis: $Enums.WithdrawalRefundBasis
+      withdrawalNotes: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["registrationFeeStage"]>
@@ -23848,6 +24040,10 @@ export namespace Prisma {
     readonly endAt: FieldRef<"RegistrationFeeStage", 'DateTime'>
     readonly enabled: FieldRef<"RegistrationFeeStage", 'Boolean'>
     readonly notes: FieldRef<"RegistrationFeeStage", 'String'>
+    readonly withdrawalRefundEnabled: FieldRef<"RegistrationFeeStage", 'Boolean'>
+    readonly withdrawalRefundPercent: FieldRef<"RegistrationFeeStage", 'Decimal'>
+    readonly withdrawalRefundBasis: FieldRef<"RegistrationFeeStage", 'WithdrawalRefundBasis'>
+    readonly withdrawalNotes: FieldRef<"RegistrationFeeStage", 'String'>
     readonly createdAt: FieldRef<"RegistrationFeeStage", 'DateTime'>
     readonly updatedAt: FieldRef<"RegistrationFeeStage", 'DateTime'>
   }
@@ -31180,6 +31376,7 @@ export namespace Prisma {
     accessToScriptRequests?: boolean | ExamBoard$accessToScriptRequestsArgs<ExtArgs>
     certificateRequests?: boolean | ExamBoard$certificateRequestsArgs<ExtArgs>
     postResultsAuditLogs?: boolean | ExamBoard$postResultsAuditLogsArgs<ExtArgs>
+    withdrawalPolicy?: boolean | ExamBoard$withdrawalPolicyArgs<ExtArgs>
     _count?: boolean | ExamBoardCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["examBoard"]>
 
@@ -31227,6 +31424,7 @@ export namespace Prisma {
     accessToScriptRequests?: boolean | ExamBoard$accessToScriptRequestsArgs<ExtArgs>
     certificateRequests?: boolean | ExamBoard$certificateRequestsArgs<ExtArgs>
     postResultsAuditLogs?: boolean | ExamBoard$postResultsAuditLogsArgs<ExtArgs>
+    withdrawalPolicy?: boolean | ExamBoard$withdrawalPolicyArgs<ExtArgs>
     _count?: boolean | ExamBoardCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -31250,6 +31448,7 @@ export namespace Prisma {
       accessToScriptRequests: Prisma.$AccessToScriptRequestPayload<ExtArgs>[]
       certificateRequests: Prisma.$CertificateRequestPayload<ExtArgs>[]
       postResultsAuditLogs: Prisma.$PostResultsAuditLogPayload<ExtArgs>[]
+      withdrawalPolicy: Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -31629,6 +31828,7 @@ export namespace Prisma {
     accessToScriptRequests<T extends ExamBoard$accessToScriptRequestsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$accessToScriptRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessToScriptRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     certificateRequests<T extends ExamBoard$certificateRequestsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$certificateRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CertificateRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     postResultsAuditLogs<T extends ExamBoard$postResultsAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$postResultsAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostResultsAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    withdrawalPolicy<T extends ExamBoard$withdrawalPolicyArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$withdrawalPolicyArgs<ExtArgs>>): Prisma__ExamBoardWithdrawalPolicyClient<$Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -32429,6 +32629,25 @@ export namespace Prisma {
   }
 
   /**
+   * ExamBoard.withdrawalPolicy
+   */
+  export type ExamBoard$withdrawalPolicyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
+    where?: ExamBoardWithdrawalPolicyWhereInput
+  }
+
+  /**
    * ExamBoard without action
    */
   export type ExamBoardDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -32444,6 +32663,1069 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ExamBoardInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ExamBoardWithdrawalPolicy
+   */
+
+  export type AggregateExamBoardWithdrawalPolicy = {
+    _count: ExamBoardWithdrawalPolicyCountAggregateOutputType | null
+    _avg: ExamBoardWithdrawalPolicyAvgAggregateOutputType | null
+    _sum: ExamBoardWithdrawalPolicySumAggregateOutputType | null
+    _min: ExamBoardWithdrawalPolicyMinAggregateOutputType | null
+    _max: ExamBoardWithdrawalPolicyMaxAggregateOutputType | null
+  }
+
+  export type ExamBoardWithdrawalPolicyAvgAggregateOutputType = {
+    paymentFeePercent: Decimal | null
+    normalRefundPercent: Decimal | null
+    lateRefundPercent: Decimal | null
+    highLateRefundPercent: Decimal | null
+  }
+
+  export type ExamBoardWithdrawalPolicySumAggregateOutputType = {
+    paymentFeePercent: Decimal | null
+    normalRefundPercent: Decimal | null
+    lateRefundPercent: Decimal | null
+    highLateRefundPercent: Decimal | null
+  }
+
+  export type ExamBoardWithdrawalPolicyMinAggregateOutputType = {
+    id: string | null
+    examBoardId: string | null
+    paymentFeePercent: Decimal | null
+    refundBasis: $Enums.WithdrawalRefundBasis | null
+    normalRefundEnabled: boolean | null
+    normalRefundPercent: Decimal | null
+    lateRefundEnabled: boolean | null
+    lateRefundPercent: Decimal | null
+    highLateRefundEnabled: boolean | null
+    highLateRefundPercent: Decimal | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ExamBoardWithdrawalPolicyMaxAggregateOutputType = {
+    id: string | null
+    examBoardId: string | null
+    paymentFeePercent: Decimal | null
+    refundBasis: $Enums.WithdrawalRefundBasis | null
+    normalRefundEnabled: boolean | null
+    normalRefundPercent: Decimal | null
+    lateRefundEnabled: boolean | null
+    lateRefundPercent: Decimal | null
+    highLateRefundEnabled: boolean | null
+    highLateRefundPercent: Decimal | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ExamBoardWithdrawalPolicyCountAggregateOutputType = {
+    id: number
+    examBoardId: number
+    paymentFeePercent: number
+    refundBasis: number
+    normalRefundEnabled: number
+    normalRefundPercent: number
+    lateRefundEnabled: number
+    lateRefundPercent: number
+    highLateRefundEnabled: number
+    highLateRefundPercent: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ExamBoardWithdrawalPolicyAvgAggregateInputType = {
+    paymentFeePercent?: true
+    normalRefundPercent?: true
+    lateRefundPercent?: true
+    highLateRefundPercent?: true
+  }
+
+  export type ExamBoardWithdrawalPolicySumAggregateInputType = {
+    paymentFeePercent?: true
+    normalRefundPercent?: true
+    lateRefundPercent?: true
+    highLateRefundPercent?: true
+  }
+
+  export type ExamBoardWithdrawalPolicyMinAggregateInputType = {
+    id?: true
+    examBoardId?: true
+    paymentFeePercent?: true
+    refundBasis?: true
+    normalRefundEnabled?: true
+    normalRefundPercent?: true
+    lateRefundEnabled?: true
+    lateRefundPercent?: true
+    highLateRefundEnabled?: true
+    highLateRefundPercent?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ExamBoardWithdrawalPolicyMaxAggregateInputType = {
+    id?: true
+    examBoardId?: true
+    paymentFeePercent?: true
+    refundBasis?: true
+    normalRefundEnabled?: true
+    normalRefundPercent?: true
+    lateRefundEnabled?: true
+    lateRefundPercent?: true
+    highLateRefundEnabled?: true
+    highLateRefundPercent?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ExamBoardWithdrawalPolicyCountAggregateInputType = {
+    id?: true
+    examBoardId?: true
+    paymentFeePercent?: true
+    refundBasis?: true
+    normalRefundEnabled?: true
+    normalRefundPercent?: true
+    lateRefundEnabled?: true
+    lateRefundPercent?: true
+    highLateRefundEnabled?: true
+    highLateRefundPercent?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ExamBoardWithdrawalPolicyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamBoardWithdrawalPolicy to aggregate.
+     */
+    where?: ExamBoardWithdrawalPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamBoardWithdrawalPolicies to fetch.
+     */
+    orderBy?: ExamBoardWithdrawalPolicyOrderByWithRelationInput | ExamBoardWithdrawalPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ExamBoardWithdrawalPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamBoardWithdrawalPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamBoardWithdrawalPolicies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ExamBoardWithdrawalPolicies
+    **/
+    _count?: true | ExamBoardWithdrawalPolicyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ExamBoardWithdrawalPolicyAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ExamBoardWithdrawalPolicySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ExamBoardWithdrawalPolicyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ExamBoardWithdrawalPolicyMaxAggregateInputType
+  }
+
+  export type GetExamBoardWithdrawalPolicyAggregateType<T extends ExamBoardWithdrawalPolicyAggregateArgs> = {
+        [P in keyof T & keyof AggregateExamBoardWithdrawalPolicy]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateExamBoardWithdrawalPolicy[P]>
+      : GetScalarType<T[P], AggregateExamBoardWithdrawalPolicy[P]>
+  }
+
+
+
+
+  export type ExamBoardWithdrawalPolicyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ExamBoardWithdrawalPolicyWhereInput
+    orderBy?: ExamBoardWithdrawalPolicyOrderByWithAggregationInput | ExamBoardWithdrawalPolicyOrderByWithAggregationInput[]
+    by: ExamBoardWithdrawalPolicyScalarFieldEnum[] | ExamBoardWithdrawalPolicyScalarFieldEnum
+    having?: ExamBoardWithdrawalPolicyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ExamBoardWithdrawalPolicyCountAggregateInputType | true
+    _avg?: ExamBoardWithdrawalPolicyAvgAggregateInputType
+    _sum?: ExamBoardWithdrawalPolicySumAggregateInputType
+    _min?: ExamBoardWithdrawalPolicyMinAggregateInputType
+    _max?: ExamBoardWithdrawalPolicyMaxAggregateInputType
+  }
+
+  export type ExamBoardWithdrawalPolicyGroupByOutputType = {
+    id: string
+    examBoardId: string
+    paymentFeePercent: Decimal
+    refundBasis: $Enums.WithdrawalRefundBasis
+    normalRefundEnabled: boolean
+    normalRefundPercent: Decimal
+    lateRefundEnabled: boolean
+    lateRefundPercent: Decimal
+    highLateRefundEnabled: boolean
+    highLateRefundPercent: Decimal
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ExamBoardWithdrawalPolicyCountAggregateOutputType | null
+    _avg: ExamBoardWithdrawalPolicyAvgAggregateOutputType | null
+    _sum: ExamBoardWithdrawalPolicySumAggregateOutputType | null
+    _min: ExamBoardWithdrawalPolicyMinAggregateOutputType | null
+    _max: ExamBoardWithdrawalPolicyMaxAggregateOutputType | null
+  }
+
+  type GetExamBoardWithdrawalPolicyGroupByPayload<T extends ExamBoardWithdrawalPolicyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ExamBoardWithdrawalPolicyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ExamBoardWithdrawalPolicyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ExamBoardWithdrawalPolicyGroupByOutputType[P]>
+            : GetScalarType<T[P], ExamBoardWithdrawalPolicyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ExamBoardWithdrawalPolicySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    examBoardId?: boolean
+    paymentFeePercent?: boolean
+    refundBasis?: boolean
+    normalRefundEnabled?: boolean
+    normalRefundPercent?: boolean
+    lateRefundEnabled?: boolean
+    lateRefundPercent?: boolean
+    highLateRefundEnabled?: boolean
+    highLateRefundPercent?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["examBoardWithdrawalPolicy"]>
+
+
+
+  export type ExamBoardWithdrawalPolicySelectScalar = {
+    id?: boolean
+    examBoardId?: boolean
+    paymentFeePercent?: boolean
+    refundBasis?: boolean
+    normalRefundEnabled?: boolean
+    normalRefundPercent?: boolean
+    lateRefundEnabled?: boolean
+    lateRefundPercent?: boolean
+    highLateRefundEnabled?: boolean
+    highLateRefundPercent?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ExamBoardWithdrawalPolicyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "examBoardId" | "paymentFeePercent" | "refundBasis" | "normalRefundEnabled" | "normalRefundPercent" | "lateRefundEnabled" | "lateRefundPercent" | "highLateRefundEnabled" | "highLateRefundPercent" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["examBoardWithdrawalPolicy"]>
+  export type ExamBoardWithdrawalPolicyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
+  }
+
+  export type $ExamBoardWithdrawalPolicyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ExamBoardWithdrawalPolicy"
+    objects: {
+      examBoard: Prisma.$ExamBoardPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      examBoardId: string
+      paymentFeePercent: Prisma.Decimal
+      refundBasis: $Enums.WithdrawalRefundBasis
+      normalRefundEnabled: boolean
+      normalRefundPercent: Prisma.Decimal
+      lateRefundEnabled: boolean
+      lateRefundPercent: Prisma.Decimal
+      highLateRefundEnabled: boolean
+      highLateRefundPercent: Prisma.Decimal
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["examBoardWithdrawalPolicy"]>
+    composites: {}
+  }
+
+  type ExamBoardWithdrawalPolicyGetPayload<S extends boolean | null | undefined | ExamBoardWithdrawalPolicyDefaultArgs> = $Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload, S>
+
+  type ExamBoardWithdrawalPolicyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ExamBoardWithdrawalPolicyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ExamBoardWithdrawalPolicyCountAggregateInputType | true
+    }
+
+  export interface ExamBoardWithdrawalPolicyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ExamBoardWithdrawalPolicy'], meta: { name: 'ExamBoardWithdrawalPolicy' } }
+    /**
+     * Find zero or one ExamBoardWithdrawalPolicy that matches the filter.
+     * @param {ExamBoardWithdrawalPolicyFindUniqueArgs} args - Arguments to find a ExamBoardWithdrawalPolicy
+     * @example
+     * // Get one ExamBoardWithdrawalPolicy
+     * const examBoardWithdrawalPolicy = await prisma.examBoardWithdrawalPolicy.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ExamBoardWithdrawalPolicyFindUniqueArgs>(args: SelectSubset<T, ExamBoardWithdrawalPolicyFindUniqueArgs<ExtArgs>>): Prisma__ExamBoardWithdrawalPolicyClient<$Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ExamBoardWithdrawalPolicy that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ExamBoardWithdrawalPolicyFindUniqueOrThrowArgs} args - Arguments to find a ExamBoardWithdrawalPolicy
+     * @example
+     * // Get one ExamBoardWithdrawalPolicy
+     * const examBoardWithdrawalPolicy = await prisma.examBoardWithdrawalPolicy.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ExamBoardWithdrawalPolicyFindUniqueOrThrowArgs>(args: SelectSubset<T, ExamBoardWithdrawalPolicyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ExamBoardWithdrawalPolicyClient<$Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamBoardWithdrawalPolicy that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamBoardWithdrawalPolicyFindFirstArgs} args - Arguments to find a ExamBoardWithdrawalPolicy
+     * @example
+     * // Get one ExamBoardWithdrawalPolicy
+     * const examBoardWithdrawalPolicy = await prisma.examBoardWithdrawalPolicy.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ExamBoardWithdrawalPolicyFindFirstArgs>(args?: SelectSubset<T, ExamBoardWithdrawalPolicyFindFirstArgs<ExtArgs>>): Prisma__ExamBoardWithdrawalPolicyClient<$Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ExamBoardWithdrawalPolicy that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamBoardWithdrawalPolicyFindFirstOrThrowArgs} args - Arguments to find a ExamBoardWithdrawalPolicy
+     * @example
+     * // Get one ExamBoardWithdrawalPolicy
+     * const examBoardWithdrawalPolicy = await prisma.examBoardWithdrawalPolicy.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ExamBoardWithdrawalPolicyFindFirstOrThrowArgs>(args?: SelectSubset<T, ExamBoardWithdrawalPolicyFindFirstOrThrowArgs<ExtArgs>>): Prisma__ExamBoardWithdrawalPolicyClient<$Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ExamBoardWithdrawalPolicies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamBoardWithdrawalPolicyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ExamBoardWithdrawalPolicies
+     * const examBoardWithdrawalPolicies = await prisma.examBoardWithdrawalPolicy.findMany()
+     * 
+     * // Get first 10 ExamBoardWithdrawalPolicies
+     * const examBoardWithdrawalPolicies = await prisma.examBoardWithdrawalPolicy.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const examBoardWithdrawalPolicyWithIdOnly = await prisma.examBoardWithdrawalPolicy.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ExamBoardWithdrawalPolicyFindManyArgs>(args?: SelectSubset<T, ExamBoardWithdrawalPolicyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ExamBoardWithdrawalPolicy.
+     * @param {ExamBoardWithdrawalPolicyCreateArgs} args - Arguments to create a ExamBoardWithdrawalPolicy.
+     * @example
+     * // Create one ExamBoardWithdrawalPolicy
+     * const ExamBoardWithdrawalPolicy = await prisma.examBoardWithdrawalPolicy.create({
+     *   data: {
+     *     // ... data to create a ExamBoardWithdrawalPolicy
+     *   }
+     * })
+     * 
+     */
+    create<T extends ExamBoardWithdrawalPolicyCreateArgs>(args: SelectSubset<T, ExamBoardWithdrawalPolicyCreateArgs<ExtArgs>>): Prisma__ExamBoardWithdrawalPolicyClient<$Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ExamBoardWithdrawalPolicies.
+     * @param {ExamBoardWithdrawalPolicyCreateManyArgs} args - Arguments to create many ExamBoardWithdrawalPolicies.
+     * @example
+     * // Create many ExamBoardWithdrawalPolicies
+     * const examBoardWithdrawalPolicy = await prisma.examBoardWithdrawalPolicy.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ExamBoardWithdrawalPolicyCreateManyArgs>(args?: SelectSubset<T, ExamBoardWithdrawalPolicyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ExamBoardWithdrawalPolicy.
+     * @param {ExamBoardWithdrawalPolicyDeleteArgs} args - Arguments to delete one ExamBoardWithdrawalPolicy.
+     * @example
+     * // Delete one ExamBoardWithdrawalPolicy
+     * const ExamBoardWithdrawalPolicy = await prisma.examBoardWithdrawalPolicy.delete({
+     *   where: {
+     *     // ... filter to delete one ExamBoardWithdrawalPolicy
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ExamBoardWithdrawalPolicyDeleteArgs>(args: SelectSubset<T, ExamBoardWithdrawalPolicyDeleteArgs<ExtArgs>>): Prisma__ExamBoardWithdrawalPolicyClient<$Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ExamBoardWithdrawalPolicy.
+     * @param {ExamBoardWithdrawalPolicyUpdateArgs} args - Arguments to update one ExamBoardWithdrawalPolicy.
+     * @example
+     * // Update one ExamBoardWithdrawalPolicy
+     * const examBoardWithdrawalPolicy = await prisma.examBoardWithdrawalPolicy.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ExamBoardWithdrawalPolicyUpdateArgs>(args: SelectSubset<T, ExamBoardWithdrawalPolicyUpdateArgs<ExtArgs>>): Prisma__ExamBoardWithdrawalPolicyClient<$Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ExamBoardWithdrawalPolicies.
+     * @param {ExamBoardWithdrawalPolicyDeleteManyArgs} args - Arguments to filter ExamBoardWithdrawalPolicies to delete.
+     * @example
+     * // Delete a few ExamBoardWithdrawalPolicies
+     * const { count } = await prisma.examBoardWithdrawalPolicy.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ExamBoardWithdrawalPolicyDeleteManyArgs>(args?: SelectSubset<T, ExamBoardWithdrawalPolicyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ExamBoardWithdrawalPolicies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamBoardWithdrawalPolicyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ExamBoardWithdrawalPolicies
+     * const examBoardWithdrawalPolicy = await prisma.examBoardWithdrawalPolicy.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ExamBoardWithdrawalPolicyUpdateManyArgs>(args: SelectSubset<T, ExamBoardWithdrawalPolicyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ExamBoardWithdrawalPolicy.
+     * @param {ExamBoardWithdrawalPolicyUpsertArgs} args - Arguments to update or create a ExamBoardWithdrawalPolicy.
+     * @example
+     * // Update or create a ExamBoardWithdrawalPolicy
+     * const examBoardWithdrawalPolicy = await prisma.examBoardWithdrawalPolicy.upsert({
+     *   create: {
+     *     // ... data to create a ExamBoardWithdrawalPolicy
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ExamBoardWithdrawalPolicy we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ExamBoardWithdrawalPolicyUpsertArgs>(args: SelectSubset<T, ExamBoardWithdrawalPolicyUpsertArgs<ExtArgs>>): Prisma__ExamBoardWithdrawalPolicyClient<$Result.GetResult<Prisma.$ExamBoardWithdrawalPolicyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ExamBoardWithdrawalPolicies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamBoardWithdrawalPolicyCountArgs} args - Arguments to filter ExamBoardWithdrawalPolicies to count.
+     * @example
+     * // Count the number of ExamBoardWithdrawalPolicies
+     * const count = await prisma.examBoardWithdrawalPolicy.count({
+     *   where: {
+     *     // ... the filter for the ExamBoardWithdrawalPolicies we want to count
+     *   }
+     * })
+    **/
+    count<T extends ExamBoardWithdrawalPolicyCountArgs>(
+      args?: Subset<T, ExamBoardWithdrawalPolicyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ExamBoardWithdrawalPolicyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ExamBoardWithdrawalPolicy.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamBoardWithdrawalPolicyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ExamBoardWithdrawalPolicyAggregateArgs>(args: Subset<T, ExamBoardWithdrawalPolicyAggregateArgs>): Prisma.PrismaPromise<GetExamBoardWithdrawalPolicyAggregateType<T>>
+
+    /**
+     * Group by ExamBoardWithdrawalPolicy.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ExamBoardWithdrawalPolicyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ExamBoardWithdrawalPolicyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ExamBoardWithdrawalPolicyGroupByArgs['orderBy'] }
+        : { orderBy?: ExamBoardWithdrawalPolicyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ExamBoardWithdrawalPolicyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetExamBoardWithdrawalPolicyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ExamBoardWithdrawalPolicy model
+   */
+  readonly fields: ExamBoardWithdrawalPolicyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ExamBoardWithdrawalPolicy.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ExamBoardWithdrawalPolicyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    examBoard<T extends ExamBoardDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoardDefaultArgs<ExtArgs>>): Prisma__ExamBoardClient<$Result.GetResult<Prisma.$ExamBoardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ExamBoardWithdrawalPolicy model
+   */
+  interface ExamBoardWithdrawalPolicyFieldRefs {
+    readonly id: FieldRef<"ExamBoardWithdrawalPolicy", 'String'>
+    readonly examBoardId: FieldRef<"ExamBoardWithdrawalPolicy", 'String'>
+    readonly paymentFeePercent: FieldRef<"ExamBoardWithdrawalPolicy", 'Decimal'>
+    readonly refundBasis: FieldRef<"ExamBoardWithdrawalPolicy", 'WithdrawalRefundBasis'>
+    readonly normalRefundEnabled: FieldRef<"ExamBoardWithdrawalPolicy", 'Boolean'>
+    readonly normalRefundPercent: FieldRef<"ExamBoardWithdrawalPolicy", 'Decimal'>
+    readonly lateRefundEnabled: FieldRef<"ExamBoardWithdrawalPolicy", 'Boolean'>
+    readonly lateRefundPercent: FieldRef<"ExamBoardWithdrawalPolicy", 'Decimal'>
+    readonly highLateRefundEnabled: FieldRef<"ExamBoardWithdrawalPolicy", 'Boolean'>
+    readonly highLateRefundPercent: FieldRef<"ExamBoardWithdrawalPolicy", 'Decimal'>
+    readonly notes: FieldRef<"ExamBoardWithdrawalPolicy", 'String'>
+    readonly createdAt: FieldRef<"ExamBoardWithdrawalPolicy", 'DateTime'>
+    readonly updatedAt: FieldRef<"ExamBoardWithdrawalPolicy", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ExamBoardWithdrawalPolicy findUnique
+   */
+  export type ExamBoardWithdrawalPolicyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamBoardWithdrawalPolicy to fetch.
+     */
+    where: ExamBoardWithdrawalPolicyWhereUniqueInput
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy findUniqueOrThrow
+   */
+  export type ExamBoardWithdrawalPolicyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamBoardWithdrawalPolicy to fetch.
+     */
+    where: ExamBoardWithdrawalPolicyWhereUniqueInput
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy findFirst
+   */
+  export type ExamBoardWithdrawalPolicyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamBoardWithdrawalPolicy to fetch.
+     */
+    where?: ExamBoardWithdrawalPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamBoardWithdrawalPolicies to fetch.
+     */
+    orderBy?: ExamBoardWithdrawalPolicyOrderByWithRelationInput | ExamBoardWithdrawalPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamBoardWithdrawalPolicies.
+     */
+    cursor?: ExamBoardWithdrawalPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamBoardWithdrawalPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamBoardWithdrawalPolicies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamBoardWithdrawalPolicies.
+     */
+    distinct?: ExamBoardWithdrawalPolicyScalarFieldEnum | ExamBoardWithdrawalPolicyScalarFieldEnum[]
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy findFirstOrThrow
+   */
+  export type ExamBoardWithdrawalPolicyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamBoardWithdrawalPolicy to fetch.
+     */
+    where?: ExamBoardWithdrawalPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamBoardWithdrawalPolicies to fetch.
+     */
+    orderBy?: ExamBoardWithdrawalPolicyOrderByWithRelationInput | ExamBoardWithdrawalPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ExamBoardWithdrawalPolicies.
+     */
+    cursor?: ExamBoardWithdrawalPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamBoardWithdrawalPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamBoardWithdrawalPolicies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ExamBoardWithdrawalPolicies.
+     */
+    distinct?: ExamBoardWithdrawalPolicyScalarFieldEnum | ExamBoardWithdrawalPolicyScalarFieldEnum[]
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy findMany
+   */
+  export type ExamBoardWithdrawalPolicyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
+    /**
+     * Filter, which ExamBoardWithdrawalPolicies to fetch.
+     */
+    where?: ExamBoardWithdrawalPolicyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ExamBoardWithdrawalPolicies to fetch.
+     */
+    orderBy?: ExamBoardWithdrawalPolicyOrderByWithRelationInput | ExamBoardWithdrawalPolicyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ExamBoardWithdrawalPolicies.
+     */
+    cursor?: ExamBoardWithdrawalPolicyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ExamBoardWithdrawalPolicies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ExamBoardWithdrawalPolicies.
+     */
+    skip?: number
+    distinct?: ExamBoardWithdrawalPolicyScalarFieldEnum | ExamBoardWithdrawalPolicyScalarFieldEnum[]
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy create
+   */
+  export type ExamBoardWithdrawalPolicyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ExamBoardWithdrawalPolicy.
+     */
+    data: XOR<ExamBoardWithdrawalPolicyCreateInput, ExamBoardWithdrawalPolicyUncheckedCreateInput>
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy createMany
+   */
+  export type ExamBoardWithdrawalPolicyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ExamBoardWithdrawalPolicies.
+     */
+    data: ExamBoardWithdrawalPolicyCreateManyInput | ExamBoardWithdrawalPolicyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy update
+   */
+  export type ExamBoardWithdrawalPolicyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ExamBoardWithdrawalPolicy.
+     */
+    data: XOR<ExamBoardWithdrawalPolicyUpdateInput, ExamBoardWithdrawalPolicyUncheckedUpdateInput>
+    /**
+     * Choose, which ExamBoardWithdrawalPolicy to update.
+     */
+    where: ExamBoardWithdrawalPolicyWhereUniqueInput
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy updateMany
+   */
+  export type ExamBoardWithdrawalPolicyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ExamBoardWithdrawalPolicies.
+     */
+    data: XOR<ExamBoardWithdrawalPolicyUpdateManyMutationInput, ExamBoardWithdrawalPolicyUncheckedUpdateManyInput>
+    /**
+     * Filter which ExamBoardWithdrawalPolicies to update
+     */
+    where?: ExamBoardWithdrawalPolicyWhereInput
+    /**
+     * Limit how many ExamBoardWithdrawalPolicies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy upsert
+   */
+  export type ExamBoardWithdrawalPolicyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ExamBoardWithdrawalPolicy to update in case it exists.
+     */
+    where: ExamBoardWithdrawalPolicyWhereUniqueInput
+    /**
+     * In case the ExamBoardWithdrawalPolicy found by the `where` argument doesn't exist, create a new ExamBoardWithdrawalPolicy with this data.
+     */
+    create: XOR<ExamBoardWithdrawalPolicyCreateInput, ExamBoardWithdrawalPolicyUncheckedCreateInput>
+    /**
+     * In case the ExamBoardWithdrawalPolicy was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ExamBoardWithdrawalPolicyUpdateInput, ExamBoardWithdrawalPolicyUncheckedUpdateInput>
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy delete
+   */
+  export type ExamBoardWithdrawalPolicyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
+    /**
+     * Filter which ExamBoardWithdrawalPolicy to delete.
+     */
+    where: ExamBoardWithdrawalPolicyWhereUniqueInput
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy deleteMany
+   */
+  export type ExamBoardWithdrawalPolicyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ExamBoardWithdrawalPolicies to delete
+     */
+    where?: ExamBoardWithdrawalPolicyWhereInput
+    /**
+     * Limit how many ExamBoardWithdrawalPolicies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ExamBoardWithdrawalPolicy without action
+   */
+  export type ExamBoardWithdrawalPolicyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamBoardWithdrawalPolicy
+     */
+    select?: ExamBoardWithdrawalPolicySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamBoardWithdrawalPolicy
+     */
+    omit?: ExamBoardWithdrawalPolicyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamBoardWithdrawalPolicyInclude<ExtArgs> | null
   }
 
 
@@ -62110,6 +63392,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled: 'eoAssistedRegistrationEnabled',
     officeOnlyRegistrationEnabled: 'officeOnlyRegistrationEnabled',
     postLockAdjustmentEnabled: 'postLockAdjustmentEnabled',
+    paymentFeePercent: 'paymentFeePercent',
     createdById: 'createdById',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -62138,6 +63421,10 @@ export namespace Prisma {
     endAt: 'endAt',
     enabled: 'enabled',
     notes: 'notes',
+    withdrawalRefundEnabled: 'withdrawalRefundEnabled',
+    withdrawalRefundPercent: 'withdrawalRefundPercent',
+    withdrawalRefundBasis: 'withdrawalRefundBasis',
+    withdrawalNotes: 'withdrawalNotes',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -62326,6 +63613,25 @@ export namespace Prisma {
   };
 
   export type ExamBoardScalarFieldEnum = (typeof ExamBoardScalarFieldEnum)[keyof typeof ExamBoardScalarFieldEnum]
+
+
+  export const ExamBoardWithdrawalPolicyScalarFieldEnum: {
+    id: 'id',
+    examBoardId: 'examBoardId',
+    paymentFeePercent: 'paymentFeePercent',
+    refundBasis: 'refundBasis',
+    normalRefundEnabled: 'normalRefundEnabled',
+    normalRefundPercent: 'normalRefundPercent',
+    lateRefundEnabled: 'lateRefundEnabled',
+    lateRefundPercent: 'lateRefundPercent',
+    highLateRefundEnabled: 'highLateRefundEnabled',
+    highLateRefundPercent: 'highLateRefundPercent',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ExamBoardWithdrawalPolicyScalarFieldEnum = (typeof ExamBoardWithdrawalPolicyScalarFieldEnum)[keyof typeof ExamBoardWithdrawalPolicyScalarFieldEnum]
 
 
   export const QualificationScalarFieldEnum: {
@@ -63031,7 +64337,8 @@ export namespace Prisma {
     id: 'id',
     registrationWindowId: 'registrationWindowId',
     stageName: 'stageName',
-    notes: 'notes'
+    notes: 'notes',
+    withdrawalNotes: 'withdrawalNotes'
   };
 
   export type RegistrationFeeStageOrderByRelevanceFieldEnum = (typeof RegistrationFeeStageOrderByRelevanceFieldEnum)[keyof typeof RegistrationFeeStageOrderByRelevanceFieldEnum]
@@ -63156,6 +64463,15 @@ export namespace Prisma {
   };
 
   export type ExamBoardOrderByRelevanceFieldEnum = (typeof ExamBoardOrderByRelevanceFieldEnum)[keyof typeof ExamBoardOrderByRelevanceFieldEnum]
+
+
+  export const ExamBoardWithdrawalPolicyOrderByRelevanceFieldEnum: {
+    id: 'id',
+    examBoardId: 'examBoardId',
+    notes: 'notes'
+  };
+
+  export type ExamBoardWithdrawalPolicyOrderByRelevanceFieldEnum = (typeof ExamBoardWithdrawalPolicyOrderByRelevanceFieldEnum)[keyof typeof ExamBoardWithdrawalPolicyOrderByRelevanceFieldEnum]
 
 
   export const QualificationOrderByRelevanceFieldEnum: {
@@ -63652,9 +64968,23 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
    * Reference to a field of type 'FeeEntryType'
    */
   export type EnumFeeEntryTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeEntryType'>
+    
+
+
+  /**
+   * Reference to a field of type 'WithdrawalRefundBasis'
+   */
+  export type EnumWithdrawalRefundBasisFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WithdrawalRefundBasis'>
     
 
 
@@ -63739,13 +65069,6 @@ export namespace Prisma {
    * Reference to a field of type 'FeeCurrency'
    */
   export type EnumFeeCurrencyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeCurrency'>
-    
-
-
-  /**
-   * Reference to a field of type 'Decimal'
-   */
-  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
     
 
 
@@ -65134,6 +66457,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     officeOnlyRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     postLockAdjustmentEnabled?: BoolFilter<"RegistrationWindow"> | boolean
+    paymentFeePercent?: DecimalFilter<"RegistrationWindow"> | Decimal | DecimalJsLike | number | string
     createdById?: StringNullableFilter<"RegistrationWindow"> | string | null
     createdAt?: DateTimeFilter<"RegistrationWindow"> | Date | string
     updatedAt?: DateTimeFilter<"RegistrationWindow"> | Date | string
@@ -65168,6 +66492,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: SortOrder
     officeOnlyRegistrationEnabled?: SortOrder
     postLockAdjustmentEnabled?: SortOrder
+    paymentFeePercent?: SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -65206,6 +66531,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     officeOnlyRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     postLockAdjustmentEnabled?: BoolFilter<"RegistrationWindow"> | boolean
+    paymentFeePercent?: DecimalFilter<"RegistrationWindow"> | Decimal | DecimalJsLike | number | string
     createdById?: StringNullableFilter<"RegistrationWindow"> | string | null
     createdAt?: DateTimeFilter<"RegistrationWindow"> | Date | string
     updatedAt?: DateTimeFilter<"RegistrationWindow"> | Date | string
@@ -65240,12 +66566,15 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: SortOrder
     officeOnlyRegistrationEnabled?: SortOrder
     postLockAdjustmentEnabled?: SortOrder
+    paymentFeePercent?: SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: RegistrationWindowCountOrderByAggregateInput
+    _avg?: RegistrationWindowAvgOrderByAggregateInput
     _max?: RegistrationWindowMaxOrderByAggregateInput
     _min?: RegistrationWindowMinOrderByAggregateInput
+    _sum?: RegistrationWindowSumOrderByAggregateInput
   }
 
   export type RegistrationWindowScalarWhereWithAggregatesInput = {
@@ -65265,6 +66594,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolWithAggregatesFilter<"RegistrationWindow"> | boolean
     officeOnlyRegistrationEnabled?: BoolWithAggregatesFilter<"RegistrationWindow"> | boolean
     postLockAdjustmentEnabled?: BoolWithAggregatesFilter<"RegistrationWindow"> | boolean
+    paymentFeePercent?: DecimalWithAggregatesFilter<"RegistrationWindow"> | Decimal | DecimalJsLike | number | string
     createdById?: StringNullableWithAggregatesFilter<"RegistrationWindow"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"RegistrationWindow"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"RegistrationWindow"> | Date | string
@@ -65338,6 +66668,10 @@ export namespace Prisma {
     endAt?: DateTimeFilter<"RegistrationFeeStage"> | Date | string
     enabled?: BoolFilter<"RegistrationFeeStage"> | boolean
     notes?: StringNullableFilter<"RegistrationFeeStage"> | string | null
+    withdrawalRefundEnabled?: BoolFilter<"RegistrationFeeStage"> | boolean
+    withdrawalRefundPercent?: DecimalFilter<"RegistrationFeeStage"> | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFilter<"RegistrationFeeStage"> | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: StringNullableFilter<"RegistrationFeeStage"> | string | null
     createdAt?: DateTimeFilter<"RegistrationFeeStage"> | Date | string
     updatedAt?: DateTimeFilter<"RegistrationFeeStage"> | Date | string
     registrationWindow?: XOR<RegistrationWindowScalarRelationFilter, RegistrationWindowWhereInput>
@@ -65356,6 +66690,10 @@ export namespace Prisma {
     endAt?: SortOrder
     enabled?: SortOrder
     notes?: SortOrderInput | SortOrder
+    withdrawalRefundEnabled?: SortOrder
+    withdrawalRefundPercent?: SortOrder
+    withdrawalRefundBasis?: SortOrder
+    withdrawalNotes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     registrationWindow?: RegistrationWindowOrderByWithRelationInput
@@ -65379,6 +66717,10 @@ export namespace Prisma {
     endAt?: DateTimeFilter<"RegistrationFeeStage"> | Date | string
     enabled?: BoolFilter<"RegistrationFeeStage"> | boolean
     notes?: StringNullableFilter<"RegistrationFeeStage"> | string | null
+    withdrawalRefundEnabled?: BoolFilter<"RegistrationFeeStage"> | boolean
+    withdrawalRefundPercent?: DecimalFilter<"RegistrationFeeStage"> | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFilter<"RegistrationFeeStage"> | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: StringNullableFilter<"RegistrationFeeStage"> | string | null
     createdAt?: DateTimeFilter<"RegistrationFeeStage"> | Date | string
     updatedAt?: DateTimeFilter<"RegistrationFeeStage"> | Date | string
     registrationWindow?: XOR<RegistrationWindowScalarRelationFilter, RegistrationWindowWhereInput>
@@ -65397,6 +66739,10 @@ export namespace Prisma {
     endAt?: SortOrder
     enabled?: SortOrder
     notes?: SortOrderInput | SortOrder
+    withdrawalRefundEnabled?: SortOrder
+    withdrawalRefundPercent?: SortOrder
+    withdrawalRefundBasis?: SortOrder
+    withdrawalNotes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: RegistrationFeeStageCountOrderByAggregateInput
@@ -65419,6 +66765,10 @@ export namespace Prisma {
     endAt?: DateTimeWithAggregatesFilter<"RegistrationFeeStage"> | Date | string
     enabled?: BoolWithAggregatesFilter<"RegistrationFeeStage"> | boolean
     notes?: StringNullableWithAggregatesFilter<"RegistrationFeeStage"> | string | null
+    withdrawalRefundEnabled?: BoolWithAggregatesFilter<"RegistrationFeeStage"> | boolean
+    withdrawalRefundPercent?: DecimalWithAggregatesFilter<"RegistrationFeeStage"> | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisWithAggregatesFilter<"RegistrationFeeStage"> | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: StringNullableWithAggregatesFilter<"RegistrationFeeStage"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"RegistrationFeeStage"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"RegistrationFeeStage"> | Date | string
   }
@@ -66376,6 +67726,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
     certificateRequests?: CertificateRequestListRelationFilter
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
+    withdrawalPolicy?: XOR<ExamBoardWithdrawalPolicyNullableScalarRelationFilter, ExamBoardWithdrawalPolicyWhereInput> | null
   }
 
   export type ExamBoardOrderByWithRelationInput = {
@@ -66416,6 +67767,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestOrderByRelationAggregateInput
     certificateRequests?: CertificateRequestOrderByRelationAggregateInput
     postResultsAuditLogs?: PostResultsAuditLogOrderByRelationAggregateInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyOrderByWithRelationInput
     _relevance?: ExamBoardOrderByRelevanceInput
   }
 
@@ -66460,6 +67812,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
     certificateRequests?: CertificateRequestListRelationFilter
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
+    withdrawalPolicy?: XOR<ExamBoardWithdrawalPolicyNullableScalarRelationFilter, ExamBoardWithdrawalPolicyWhereInput> | null
   }, "id" | "code">
 
   export type ExamBoardOrderByWithAggregationInput = {
@@ -66512,6 +67865,104 @@ export namespace Prisma {
     defaultExamOfficerEmail?: StringNullableWithAggregatesFilter<"ExamBoard"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ExamBoard"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ExamBoard"> | Date | string
+  }
+
+  export type ExamBoardWithdrawalPolicyWhereInput = {
+    AND?: ExamBoardWithdrawalPolicyWhereInput | ExamBoardWithdrawalPolicyWhereInput[]
+    OR?: ExamBoardWithdrawalPolicyWhereInput[]
+    NOT?: ExamBoardWithdrawalPolicyWhereInput | ExamBoardWithdrawalPolicyWhereInput[]
+    id?: StringFilter<"ExamBoardWithdrawalPolicy"> | string
+    examBoardId?: StringFilter<"ExamBoardWithdrawalPolicy"> | string
+    paymentFeePercent?: DecimalFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    refundBasis?: EnumWithdrawalRefundBasisFilter<"ExamBoardWithdrawalPolicy"> | $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: BoolFilter<"ExamBoardWithdrawalPolicy"> | boolean
+    normalRefundPercent?: DecimalFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: BoolFilter<"ExamBoardWithdrawalPolicy"> | boolean
+    lateRefundPercent?: DecimalFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: BoolFilter<"ExamBoardWithdrawalPolicy"> | boolean
+    highLateRefundPercent?: DecimalFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    notes?: StringNullableFilter<"ExamBoardWithdrawalPolicy"> | string | null
+    createdAt?: DateTimeFilter<"ExamBoardWithdrawalPolicy"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamBoardWithdrawalPolicy"> | Date | string
+    examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
+  }
+
+  export type ExamBoardWithdrawalPolicyOrderByWithRelationInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    paymentFeePercent?: SortOrder
+    refundBasis?: SortOrder
+    normalRefundEnabled?: SortOrder
+    normalRefundPercent?: SortOrder
+    lateRefundEnabled?: SortOrder
+    lateRefundPercent?: SortOrder
+    highLateRefundEnabled?: SortOrder
+    highLateRefundPercent?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    examBoard?: ExamBoardOrderByWithRelationInput
+    _relevance?: ExamBoardWithdrawalPolicyOrderByRelevanceInput
+  }
+
+  export type ExamBoardWithdrawalPolicyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    examBoardId?: string
+    AND?: ExamBoardWithdrawalPolicyWhereInput | ExamBoardWithdrawalPolicyWhereInput[]
+    OR?: ExamBoardWithdrawalPolicyWhereInput[]
+    NOT?: ExamBoardWithdrawalPolicyWhereInput | ExamBoardWithdrawalPolicyWhereInput[]
+    paymentFeePercent?: DecimalFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    refundBasis?: EnumWithdrawalRefundBasisFilter<"ExamBoardWithdrawalPolicy"> | $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: BoolFilter<"ExamBoardWithdrawalPolicy"> | boolean
+    normalRefundPercent?: DecimalFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: BoolFilter<"ExamBoardWithdrawalPolicy"> | boolean
+    lateRefundPercent?: DecimalFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: BoolFilter<"ExamBoardWithdrawalPolicy"> | boolean
+    highLateRefundPercent?: DecimalFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    notes?: StringNullableFilter<"ExamBoardWithdrawalPolicy"> | string | null
+    createdAt?: DateTimeFilter<"ExamBoardWithdrawalPolicy"> | Date | string
+    updatedAt?: DateTimeFilter<"ExamBoardWithdrawalPolicy"> | Date | string
+    examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
+  }, "id" | "examBoardId">
+
+  export type ExamBoardWithdrawalPolicyOrderByWithAggregationInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    paymentFeePercent?: SortOrder
+    refundBasis?: SortOrder
+    normalRefundEnabled?: SortOrder
+    normalRefundPercent?: SortOrder
+    lateRefundEnabled?: SortOrder
+    lateRefundPercent?: SortOrder
+    highLateRefundEnabled?: SortOrder
+    highLateRefundPercent?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ExamBoardWithdrawalPolicyCountOrderByAggregateInput
+    _avg?: ExamBoardWithdrawalPolicyAvgOrderByAggregateInput
+    _max?: ExamBoardWithdrawalPolicyMaxOrderByAggregateInput
+    _min?: ExamBoardWithdrawalPolicyMinOrderByAggregateInput
+    _sum?: ExamBoardWithdrawalPolicySumOrderByAggregateInput
+  }
+
+  export type ExamBoardWithdrawalPolicyScalarWhereWithAggregatesInput = {
+    AND?: ExamBoardWithdrawalPolicyScalarWhereWithAggregatesInput | ExamBoardWithdrawalPolicyScalarWhereWithAggregatesInput[]
+    OR?: ExamBoardWithdrawalPolicyScalarWhereWithAggregatesInput[]
+    NOT?: ExamBoardWithdrawalPolicyScalarWhereWithAggregatesInput | ExamBoardWithdrawalPolicyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | string
+    examBoardId?: StringWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | string
+    paymentFeePercent?: DecimalWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    refundBasis?: EnumWithdrawalRefundBasisWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: BoolWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | boolean
+    normalRefundPercent?: DecimalWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: BoolWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | boolean
+    lateRefundPercent?: DecimalWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: BoolWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | boolean
+    highLateRefundPercent?: DecimalWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | Decimal | DecimalJsLike | number | string
+    notes?: StringNullableWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ExamBoardWithdrawalPolicy"> | Date | string
   }
 
   export type QualificationWhereInput = {
@@ -70850,6 +72301,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -70883,6 +72335,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -70912,6 +72365,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -70945,6 +72399,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -70976,6 +72431,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -70993,6 +72449,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -71011,6 +72468,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -71072,6 +72530,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     registrationWindow: RegistrationWindowCreateNestedOneWithoutFeeStagesInput
@@ -71090,6 +72552,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutFeeStageInput
@@ -71106,6 +72572,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutFeeStagesNestedInput
@@ -71124,6 +72594,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutFeeStageNestedInput
@@ -71141,6 +72615,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -71154,6 +72632,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -71168,6 +72650,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -72200,6 +73686,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateInput = {
@@ -72240,6 +73727,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUpdateInput = {
@@ -72280,6 +73768,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateInput = {
@@ -72320,6 +73809,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardCreateManyInput = {
@@ -72387,6 +73877,117 @@ export namespace Prisma {
     centreTimeZone?: NullableStringFieldUpdateOperationsInput | string | null
     defaultExamOfficerName?: NullableStringFieldUpdateOperationsInput | string | null
     defaultExamOfficerEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamBoardWithdrawalPolicyCreateInput = {
+    id?: string
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    refundBasis?: $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: boolean
+    normalRefundPercent?: Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: boolean
+    lateRefundPercent?: Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: boolean
+    highLateRefundPercent?: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutWithdrawalPolicyInput
+  }
+
+  export type ExamBoardWithdrawalPolicyUncheckedCreateInput = {
+    id?: string
+    examBoardId: string
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    refundBasis?: $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: boolean
+    normalRefundPercent?: Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: boolean
+    lateRefundPercent?: Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: boolean
+    highLateRefundPercent?: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamBoardWithdrawalPolicyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    normalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    lateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    highLateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutWithdrawalPolicyNestedInput
+  }
+
+  export type ExamBoardWithdrawalPolicyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    normalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    lateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    highLateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamBoardWithdrawalPolicyCreateManyInput = {
+    id?: string
+    examBoardId: string
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    refundBasis?: $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: boolean
+    normalRefundPercent?: Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: boolean
+    lateRefundPercent?: Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: boolean
+    highLateRefundPercent?: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamBoardWithdrawalPolicyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    normalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    lateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    highLateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamBoardWithdrawalPolicyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    normalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    lateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    highLateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -76910,6 +78511,17 @@ export namespace Prisma {
     not?: NestedEnumRegistrationWindowStatusFilter<$PrismaModel> | $Enums.RegistrationWindowStatus
   }
 
+  export type DecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
   export type ExamSeriesScalarRelationFilter = {
     is?: ExamSeriesWhereInput
     isNot?: ExamSeriesWhereInput
@@ -76955,9 +78567,14 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: SortOrder
     officeOnlyRegistrationEnabled?: SortOrder
     postLockAdjustmentEnabled?: SortOrder
+    paymentFeePercent?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type RegistrationWindowAvgOrderByAggregateInput = {
+    paymentFeePercent?: SortOrder
   }
 
   export type RegistrationWindowMaxOrderByAggregateInput = {
@@ -76974,6 +78591,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: SortOrder
     officeOnlyRegistrationEnabled?: SortOrder
     postLockAdjustmentEnabled?: SortOrder
+    paymentFeePercent?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -76993,9 +78611,14 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: SortOrder
     officeOnlyRegistrationEnabled?: SortOrder
     postLockAdjustmentEnabled?: SortOrder
+    paymentFeePercent?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type RegistrationWindowSumOrderByAggregateInput = {
+    paymentFeePercent?: SortOrder
   }
 
   export type EnumRegistrationWindowStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -77006,6 +78629,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRegistrationWindowStatusFilter<$PrismaModel>
     _max?: NestedEnumRegistrationWindowStatusFilter<$PrismaModel>
+  }
+
+  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type RegistrationWindowScalarRelationFilter = {
@@ -77052,6 +78691,13 @@ export namespace Prisma {
     not?: NestedEnumFeeEntryTypeFilter<$PrismaModel> | $Enums.FeeEntryType
   }
 
+  export type EnumWithdrawalRefundBasisFilter<$PrismaModel = never> = {
+    equals?: $Enums.WithdrawalRefundBasis | EnumWithdrawalRefundBasisFieldRefInput<$PrismaModel>
+    in?: $Enums.WithdrawalRefundBasis[]
+    notIn?: $Enums.WithdrawalRefundBasis[]
+    not?: NestedEnumWithdrawalRefundBasisFilter<$PrismaModel> | $Enums.WithdrawalRefundBasis
+  }
+
   export type RegistrationFeeStageOrderByRelevanceInput = {
     fields: RegistrationFeeStageOrderByRelevanceFieldEnum | RegistrationFeeStageOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -77073,12 +78719,17 @@ export namespace Prisma {
     endAt?: SortOrder
     enabled?: SortOrder
     notes?: SortOrder
+    withdrawalRefundEnabled?: SortOrder
+    withdrawalRefundPercent?: SortOrder
+    withdrawalRefundBasis?: SortOrder
+    withdrawalNotes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type RegistrationFeeStageAvgOrderByAggregateInput = {
     sequence?: SortOrder
+    withdrawalRefundPercent?: SortOrder
   }
 
   export type RegistrationFeeStageMaxOrderByAggregateInput = {
@@ -77091,6 +78742,10 @@ export namespace Prisma {
     endAt?: SortOrder
     enabled?: SortOrder
     notes?: SortOrder
+    withdrawalRefundEnabled?: SortOrder
+    withdrawalRefundPercent?: SortOrder
+    withdrawalRefundBasis?: SortOrder
+    withdrawalNotes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -77105,12 +78760,17 @@ export namespace Prisma {
     endAt?: SortOrder
     enabled?: SortOrder
     notes?: SortOrder
+    withdrawalRefundEnabled?: SortOrder
+    withdrawalRefundPercent?: SortOrder
+    withdrawalRefundBasis?: SortOrder
+    withdrawalNotes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type RegistrationFeeStageSumOrderByAggregateInput = {
     sequence?: SortOrder
+    withdrawalRefundPercent?: SortOrder
   }
 
   export type EnumFeeEntryTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -77121,6 +78781,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFeeEntryTypeFilter<$PrismaModel>
     _max?: NestedEnumFeeEntryTypeFilter<$PrismaModel>
+  }
+
+  export type EnumWithdrawalRefundBasisWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WithdrawalRefundBasis | EnumWithdrawalRefundBasisFieldRefInput<$PrismaModel>
+    in?: $Enums.WithdrawalRefundBasis[]
+    notIn?: $Enums.WithdrawalRefundBasis[]
+    not?: NestedEnumWithdrawalRefundBasisWithAggregatesFilter<$PrismaModel> | $Enums.WithdrawalRefundBasis
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWithdrawalRefundBasisFilter<$PrismaModel>
+    _max?: NestedEnumWithdrawalRefundBasisFilter<$PrismaModel>
   }
 
   export type EnumUserRoleNullableFilter<$PrismaModel = never> = {
@@ -77931,6 +79601,11 @@ export namespace Prisma {
     none?: CalendarSubjectSelectionWhereInput
   }
 
+  export type ExamBoardWithdrawalPolicyNullableScalarRelationFilter = {
+    is?: ExamBoardWithdrawalPolicyWhereInput | null
+    isNot?: ExamBoardWithdrawalPolicyWhereInput | null
+  }
+
   export type QualificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -78024,6 +79699,74 @@ export namespace Prisma {
     defaultExamOfficerEmail?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type ExamBoardWithdrawalPolicyOrderByRelevanceInput = {
+    fields: ExamBoardWithdrawalPolicyOrderByRelevanceFieldEnum | ExamBoardWithdrawalPolicyOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type ExamBoardWithdrawalPolicyCountOrderByAggregateInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    paymentFeePercent?: SortOrder
+    refundBasis?: SortOrder
+    normalRefundEnabled?: SortOrder
+    normalRefundPercent?: SortOrder
+    lateRefundEnabled?: SortOrder
+    lateRefundPercent?: SortOrder
+    highLateRefundEnabled?: SortOrder
+    highLateRefundPercent?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamBoardWithdrawalPolicyAvgOrderByAggregateInput = {
+    paymentFeePercent?: SortOrder
+    normalRefundPercent?: SortOrder
+    lateRefundPercent?: SortOrder
+    highLateRefundPercent?: SortOrder
+  }
+
+  export type ExamBoardWithdrawalPolicyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    paymentFeePercent?: SortOrder
+    refundBasis?: SortOrder
+    normalRefundEnabled?: SortOrder
+    normalRefundPercent?: SortOrder
+    lateRefundEnabled?: SortOrder
+    lateRefundPercent?: SortOrder
+    highLateRefundEnabled?: SortOrder
+    highLateRefundPercent?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamBoardWithdrawalPolicyMinOrderByAggregateInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    paymentFeePercent?: SortOrder
+    refundBasis?: SortOrder
+    normalRefundEnabled?: SortOrder
+    normalRefundPercent?: SortOrder
+    lateRefundEnabled?: SortOrder
+    lateRefundPercent?: SortOrder
+    highLateRefundEnabled?: SortOrder
+    highLateRefundPercent?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ExamBoardWithdrawalPolicySumOrderByAggregateInput = {
+    paymentFeePercent?: SortOrder
+    normalRefundPercent?: SortOrder
+    lateRefundPercent?: SortOrder
+    highLateRefundPercent?: SortOrder
   }
 
   export type SubjectListRelationFilter = {
@@ -78573,17 +80316,6 @@ export namespace Prisma {
     not?: NestedEnumFeeCurrencyFilter<$PrismaModel> | $Enums.FeeCurrency
   }
 
-  export type DecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
   export type DecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
@@ -78699,22 +80431,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFeeCurrencyFilter<$PrismaModel>
     _max?: NestedEnumFeeCurrencyFilter<$PrismaModel>
-  }
-
-  export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -83000,6 +84716,14 @@ export namespace Prisma {
     set?: $Enums.RegistrationWindowStatus
   }
 
+  export type DecimalFieldUpdateOperationsInput = {
+    set?: Decimal | DecimalJsLike | number | string
+    increment?: Decimal | DecimalJsLike | number | string
+    decrement?: Decimal | DecimalJsLike | number | string
+    multiply?: Decimal | DecimalJsLike | number | string
+    divide?: Decimal | DecimalJsLike | number | string
+  }
+
   export type ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput = {
     create?: XOR<ExamBoardCreateWithoutRegistrationWindowsInput, ExamBoardUncheckedCreateWithoutRegistrationWindowsInput>
     connectOrCreate?: ExamBoardCreateOrConnectWithoutRegistrationWindowsInput
@@ -83440,6 +85164,10 @@ export namespace Prisma {
 
   export type EnumFeeEntryTypeFieldUpdateOperationsInput = {
     set?: $Enums.FeeEntryType
+  }
+
+  export type EnumWithdrawalRefundBasisFieldUpdateOperationsInput = {
+    set?: $Enums.WithdrawalRefundBasis
   }
 
   export type RegistrationWindowUpdateOneRequiredWithoutFeeStagesNestedInput = {
@@ -84603,6 +86331,12 @@ export namespace Prisma {
     connect?: PostResultsAuditLogWhereUniqueInput | PostResultsAuditLogWhereUniqueInput[]
   }
 
+  export type ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput = {
+    create?: XOR<ExamBoardWithdrawalPolicyCreateWithoutExamBoardInput, ExamBoardWithdrawalPolicyUncheckedCreateWithoutExamBoardInput>
+    connectOrCreate?: ExamBoardWithdrawalPolicyCreateOrConnectWithoutExamBoardInput
+    connect?: ExamBoardWithdrawalPolicyWhereUniqueInput
+  }
+
   export type QualificationUncheckedCreateNestedManyWithoutExamBoardInput = {
     create?: XOR<QualificationCreateWithoutExamBoardInput, QualificationUncheckedCreateWithoutExamBoardInput> | QualificationCreateWithoutExamBoardInput[] | QualificationUncheckedCreateWithoutExamBoardInput[]
     connectOrCreate?: QualificationCreateOrConnectWithoutExamBoardInput | QualificationCreateOrConnectWithoutExamBoardInput[]
@@ -84720,6 +86454,12 @@ export namespace Prisma {
     connectOrCreate?: PostResultsAuditLogCreateOrConnectWithoutExamBoardInput | PostResultsAuditLogCreateOrConnectWithoutExamBoardInput[]
     createMany?: PostResultsAuditLogCreateManyExamBoardInputEnvelope
     connect?: PostResultsAuditLogWhereUniqueInput | PostResultsAuditLogWhereUniqueInput[]
+  }
+
+  export type ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput = {
+    create?: XOR<ExamBoardWithdrawalPolicyCreateWithoutExamBoardInput, ExamBoardWithdrawalPolicyUncheckedCreateWithoutExamBoardInput>
+    connectOrCreate?: ExamBoardWithdrawalPolicyCreateOrConnectWithoutExamBoardInput
+    connect?: ExamBoardWithdrawalPolicyWhereUniqueInput
   }
 
   export type QualificationUpdateManyWithoutExamBoardNestedInput = {
@@ -84960,6 +86700,16 @@ export namespace Prisma {
     deleteMany?: PostResultsAuditLogScalarWhereInput | PostResultsAuditLogScalarWhereInput[]
   }
 
+  export type ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput = {
+    create?: XOR<ExamBoardWithdrawalPolicyCreateWithoutExamBoardInput, ExamBoardWithdrawalPolicyUncheckedCreateWithoutExamBoardInput>
+    connectOrCreate?: ExamBoardWithdrawalPolicyCreateOrConnectWithoutExamBoardInput
+    upsert?: ExamBoardWithdrawalPolicyUpsertWithoutExamBoardInput
+    disconnect?: ExamBoardWithdrawalPolicyWhereInput | boolean
+    delete?: ExamBoardWithdrawalPolicyWhereInput | boolean
+    connect?: ExamBoardWithdrawalPolicyWhereUniqueInput
+    update?: XOR<XOR<ExamBoardWithdrawalPolicyUpdateToOneWithWhereWithoutExamBoardInput, ExamBoardWithdrawalPolicyUpdateWithoutExamBoardInput>, ExamBoardWithdrawalPolicyUncheckedUpdateWithoutExamBoardInput>
+  }
+
   export type QualificationUncheckedUpdateManyWithoutExamBoardNestedInput = {
     create?: XOR<QualificationCreateWithoutExamBoardInput, QualificationUncheckedCreateWithoutExamBoardInput> | QualificationCreateWithoutExamBoardInput[] | QualificationUncheckedCreateWithoutExamBoardInput[]
     connectOrCreate?: QualificationCreateOrConnectWithoutExamBoardInput | QualificationCreateOrConnectWithoutExamBoardInput[]
@@ -85196,6 +86946,30 @@ export namespace Prisma {
     update?: PostResultsAuditLogUpdateWithWhereUniqueWithoutExamBoardInput | PostResultsAuditLogUpdateWithWhereUniqueWithoutExamBoardInput[]
     updateMany?: PostResultsAuditLogUpdateManyWithWhereWithoutExamBoardInput | PostResultsAuditLogUpdateManyWithWhereWithoutExamBoardInput[]
     deleteMany?: PostResultsAuditLogScalarWhereInput | PostResultsAuditLogScalarWhereInput[]
+  }
+
+  export type ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput = {
+    create?: XOR<ExamBoardWithdrawalPolicyCreateWithoutExamBoardInput, ExamBoardWithdrawalPolicyUncheckedCreateWithoutExamBoardInput>
+    connectOrCreate?: ExamBoardWithdrawalPolicyCreateOrConnectWithoutExamBoardInput
+    upsert?: ExamBoardWithdrawalPolicyUpsertWithoutExamBoardInput
+    disconnect?: ExamBoardWithdrawalPolicyWhereInput | boolean
+    delete?: ExamBoardWithdrawalPolicyWhereInput | boolean
+    connect?: ExamBoardWithdrawalPolicyWhereUniqueInput
+    update?: XOR<XOR<ExamBoardWithdrawalPolicyUpdateToOneWithWhereWithoutExamBoardInput, ExamBoardWithdrawalPolicyUpdateWithoutExamBoardInput>, ExamBoardWithdrawalPolicyUncheckedUpdateWithoutExamBoardInput>
+  }
+
+  export type ExamBoardCreateNestedOneWithoutWithdrawalPolicyInput = {
+    create?: XOR<ExamBoardCreateWithoutWithdrawalPolicyInput, ExamBoardUncheckedCreateWithoutWithdrawalPolicyInput>
+    connectOrCreate?: ExamBoardCreateOrConnectWithoutWithdrawalPolicyInput
+    connect?: ExamBoardWhereUniqueInput
+  }
+
+  export type ExamBoardUpdateOneRequiredWithoutWithdrawalPolicyNestedInput = {
+    create?: XOR<ExamBoardCreateWithoutWithdrawalPolicyInput, ExamBoardUncheckedCreateWithoutWithdrawalPolicyInput>
+    connectOrCreate?: ExamBoardCreateOrConnectWithoutWithdrawalPolicyInput
+    upsert?: ExamBoardUpsertWithoutWithdrawalPolicyInput
+    connect?: ExamBoardWhereUniqueInput
+    update?: XOR<XOR<ExamBoardUpdateToOneWithWhereWithoutWithdrawalPolicyInput, ExamBoardUpdateWithoutWithdrawalPolicyInput>, ExamBoardUncheckedUpdateWithoutWithdrawalPolicyInput>
   }
 
   export type ExamBoardCreateNestedOneWithoutQualificationsInput = {
@@ -87756,14 +89530,6 @@ export namespace Prisma {
     set?: $Enums.FeeCurrency
   }
 
-  export type DecimalFieldUpdateOperationsInput = {
-    set?: Decimal | DecimalJsLike | number | string
-    increment?: Decimal | DecimalJsLike | number | string
-    decrement?: Decimal | DecimalJsLike | number | string
-    multiply?: Decimal | DecimalJsLike | number | string
-    divide?: Decimal | DecimalJsLike | number | string
-  }
-
   export type NullableDecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string | null
     increment?: Decimal | DecimalJsLike | number | string
@@ -90147,6 +91913,17 @@ export namespace Prisma {
     not?: NestedEnumRegistrationWindowStatusFilter<$PrismaModel> | $Enums.RegistrationWindowStatus
   }
 
+  export type NestedDecimalFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+  }
+
   export type NestedEnumRegistrationWindowStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.RegistrationWindowStatus | EnumRegistrationWindowStatusFieldRefInput<$PrismaModel>
     in?: $Enums.RegistrationWindowStatus[]
@@ -90157,11 +91934,34 @@ export namespace Prisma {
     _max?: NestedEnumRegistrationWindowStatusFilter<$PrismaModel>
   }
 
+  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
+    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
+    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedDecimalFilter<$PrismaModel>
+    _sum?: NestedDecimalFilter<$PrismaModel>
+    _min?: NestedDecimalFilter<$PrismaModel>
+    _max?: NestedDecimalFilter<$PrismaModel>
+  }
+
   export type NestedEnumFeeEntryTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.FeeEntryType | EnumFeeEntryTypeFieldRefInput<$PrismaModel>
     in?: $Enums.FeeEntryType[]
     notIn?: $Enums.FeeEntryType[]
     not?: NestedEnumFeeEntryTypeFilter<$PrismaModel> | $Enums.FeeEntryType
+  }
+
+  export type NestedEnumWithdrawalRefundBasisFilter<$PrismaModel = never> = {
+    equals?: $Enums.WithdrawalRefundBasis | EnumWithdrawalRefundBasisFieldRefInput<$PrismaModel>
+    in?: $Enums.WithdrawalRefundBasis[]
+    notIn?: $Enums.WithdrawalRefundBasis[]
+    not?: NestedEnumWithdrawalRefundBasisFilter<$PrismaModel> | $Enums.WithdrawalRefundBasis
   }
 
   export type NestedEnumFeeEntryTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -90172,6 +91972,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFeeEntryTypeFilter<$PrismaModel>
     _max?: NestedEnumFeeEntryTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumWithdrawalRefundBasisWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.WithdrawalRefundBasis | EnumWithdrawalRefundBasisFieldRefInput<$PrismaModel>
+    in?: $Enums.WithdrawalRefundBasis[]
+    notIn?: $Enums.WithdrawalRefundBasis[]
+    not?: NestedEnumWithdrawalRefundBasisWithAggregatesFilter<$PrismaModel> | $Enums.WithdrawalRefundBasis
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumWithdrawalRefundBasisFilter<$PrismaModel>
+    _max?: NestedEnumWithdrawalRefundBasisFilter<$PrismaModel>
   }
 
   export type NestedEnumUserRoleNullableFilter<$PrismaModel = never> = {
@@ -90487,17 +92297,6 @@ export namespace Prisma {
     not?: NestedEnumFeeCurrencyFilter<$PrismaModel> | $Enums.FeeCurrency
   }
 
-  export type NestedDecimalFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
   export type NestedDecimalNullableFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel> | null
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | null
@@ -90524,22 +92323,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFeeCurrencyFilter<$PrismaModel>
     _max?: NestedEnumFeeCurrencyFilter<$PrismaModel>
-  }
-
-  export type NestedDecimalWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    in?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    notIn?: Decimal[] | DecimalJsLike[] | number[] | string[]
-    lt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    lte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
-    not?: NestedDecimalWithAggregatesFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedDecimalFilter<$PrismaModel>
-    _sum?: NestedDecimalFilter<$PrismaModel>
-    _min?: NestedDecimalFilter<$PrismaModel>
-    _max?: NestedDecimalFilter<$PrismaModel>
   }
 
   export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -91081,6 +92864,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -91113,6 +92897,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -93457,6 +95242,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     officeOnlyRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     postLockAdjustmentEnabled?: BoolFilter<"RegistrationWindow"> | boolean
+    paymentFeePercent?: DecimalFilter<"RegistrationWindow"> | Decimal | DecimalJsLike | number | string
     createdById?: StringNullableFilter<"RegistrationWindow"> | string | null
     createdAt?: DateTimeFilter<"RegistrationWindow"> | Date | string
     updatedAt?: DateTimeFilter<"RegistrationWindow"> | Date | string
@@ -95885,6 +97671,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -95917,6 +97704,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -96232,6 +98020,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -96264,6 +98053,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -98345,6 +100135,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutCandidateExamIdentitiesInput = {
@@ -98384,6 +100175,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutCandidateExamIdentitiesInput = {
@@ -98778,6 +100570,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutCandidateExamIdentitiesInput = {
@@ -98817,6 +100610,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type UserUpsertWithoutCandidateExamIdentitiesCreatedInput = {
@@ -99426,6 +101220,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutRegistrationWindowsInput = {
@@ -99465,6 +101260,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutRegistrationWindowsInput = {
@@ -99899,6 +101695,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutFeeStageInput
@@ -99915,6 +101715,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutFeeStageInput
@@ -100364,6 +102168,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutRegistrationWindowsInput = {
@@ -100403,6 +102208,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamSeriesUpsertWithoutRegistrationWindowsInput = {
@@ -100662,6 +102468,10 @@ export namespace Prisma {
     endAt?: DateTimeFilter<"RegistrationFeeStage"> | Date | string
     enabled?: BoolFilter<"RegistrationFeeStage"> | boolean
     notes?: StringNullableFilter<"RegistrationFeeStage"> | string | null
+    withdrawalRefundEnabled?: BoolFilter<"RegistrationFeeStage"> | boolean
+    withdrawalRefundPercent?: DecimalFilter<"RegistrationFeeStage"> | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFilter<"RegistrationFeeStage"> | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: StringNullableFilter<"RegistrationFeeStage"> | string | null
     createdAt?: DateTimeFilter<"RegistrationFeeStage"> | Date | string
     updatedAt?: DateTimeFilter<"RegistrationFeeStage"> | Date | string
   }
@@ -100816,6 +102626,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -100848,6 +102659,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -100945,6 +102757,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -100977,6 +102790,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -101064,6 +102878,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -101096,6 +102911,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -101406,6 +103222,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -101438,6 +103255,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -101732,6 +103550,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -101764,6 +103583,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -101909,6 +103729,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     registrationWindow: RegistrationWindowCreateNestedOneWithoutFeeStagesInput
@@ -101926,6 +103750,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutFeeStageInput
@@ -102746,6 +104574,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -102778,6 +104607,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -102935,6 +104765,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutFeeStagesNestedInput
@@ -102952,6 +104786,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutFeeStageNestedInput
@@ -103638,6 +105476,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -103670,6 +105509,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -103728,6 +105568,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutStudentExamRegistrationsInput = {
@@ -103767,6 +105608,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutStudentExamRegistrationsInput = {
@@ -104033,6 +105875,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     registrationWindow: RegistrationWindowCreateNestedOneWithoutFeeStagesInput
@@ -104050,6 +105896,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutFeeStageInput
@@ -104638,6 +106488,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -104670,6 +106521,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -104734,6 +106586,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutStudentExamRegistrationsInput = {
@@ -104773,6 +106626,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamSeriesUpsertWithoutStudentExamRegistrationsInput = {
@@ -105069,6 +106923,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutFeeStagesNestedInput
@@ -105086,6 +106944,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutFeeStageNestedInput
@@ -105243,6 +107105,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -105275,6 +107138,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -105620,6 +107484,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     registrationWindow: RegistrationWindowCreateNestedOneWithoutFeeStagesInput
@@ -105637,6 +107505,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutFeeStageInput
@@ -105936,6 +107808,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -105968,6 +107841,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -106337,6 +108211,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutFeeStagesNestedInput
@@ -106354,6 +108232,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutFeeStageNestedInput
@@ -106643,6 +108525,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -106675,6 +108558,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -107392,6 +109276,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -107424,6 +109309,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108530,6 +110416,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examSeries: ExamSeriesCreateNestedOneWithoutRegistrationWindowsInput
@@ -108561,6 +110448,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -109116,6 +111004,41 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ExamBoardWithdrawalPolicyCreateWithoutExamBoardInput = {
+    id?: string
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    refundBasis?: $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: boolean
+    normalRefundPercent?: Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: boolean
+    lateRefundPercent?: Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: boolean
+    highLateRefundPercent?: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamBoardWithdrawalPolicyUncheckedCreateWithoutExamBoardInput = {
+    id?: string
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    refundBasis?: $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: boolean
+    normalRefundPercent?: Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: boolean
+    lateRefundPercent?: Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: boolean
+    highLateRefundPercent?: Decimal | DecimalJsLike | number | string
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExamBoardWithdrawalPolicyCreateOrConnectWithoutExamBoardInput = {
+    where: ExamBoardWithdrawalPolicyWhereUniqueInput
+    create: XOR<ExamBoardWithdrawalPolicyCreateWithoutExamBoardInput, ExamBoardWithdrawalPolicyUncheckedCreateWithoutExamBoardInput>
+  }
+
   export type QualificationUpsertWithWhereUniqueWithoutExamBoardInput = {
     where: QualificationWhereUniqueInput
     update: XOR<QualificationUpdateWithoutExamBoardInput, QualificationUncheckedUpdateWithoutExamBoardInput>
@@ -109465,6 +111388,223 @@ export namespace Prisma {
     data: XOR<PostResultsAuditLogUpdateManyMutationInput, PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardInput>
   }
 
+  export type ExamBoardWithdrawalPolicyUpsertWithoutExamBoardInput = {
+    update: XOR<ExamBoardWithdrawalPolicyUpdateWithoutExamBoardInput, ExamBoardWithdrawalPolicyUncheckedUpdateWithoutExamBoardInput>
+    create: XOR<ExamBoardWithdrawalPolicyCreateWithoutExamBoardInput, ExamBoardWithdrawalPolicyUncheckedCreateWithoutExamBoardInput>
+    where?: ExamBoardWithdrawalPolicyWhereInput
+  }
+
+  export type ExamBoardWithdrawalPolicyUpdateToOneWithWhereWithoutExamBoardInput = {
+    where?: ExamBoardWithdrawalPolicyWhereInput
+    data: XOR<ExamBoardWithdrawalPolicyUpdateWithoutExamBoardInput, ExamBoardWithdrawalPolicyUncheckedUpdateWithoutExamBoardInput>
+  }
+
+  export type ExamBoardWithdrawalPolicyUpdateWithoutExamBoardInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    normalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    lateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    highLateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamBoardWithdrawalPolicyUncheckedUpdateWithoutExamBoardInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    refundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    normalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    normalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    lateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    lateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    highLateRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    highLateRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamBoardCreateWithoutWithdrawalPolicyInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    country: string
+    region?: string | null
+    website?: string | null
+    timezone?: string | null
+    calendarSubjectFilterEnabled?: boolean
+    centreName?: string | null
+    centreNumber?: string | null
+    centreAddress?: string | null
+    centreEmail?: string | null
+    centrePhone?: string | null
+    centreCountry?: string | null
+    centreTimeZone?: string | null
+    defaultExamOfficerName?: string | null
+    defaultExamOfficerEmail?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    qualifications?: QualificationCreateNestedManyWithoutExamBoardInput
+    examSeries?: ExamSeriesCreateNestedManyWithoutExamBoardInput
+    keyDates?: KeyDateCreateNestedManyWithoutExamBoardInput
+    resources?: ResourceCreateNestedManyWithoutExamBoardInput
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
+    calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
+    studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
+    feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
+    candidateExamIdentities?: CandidateExamIdentityCreateNestedManyWithoutExamBoardInput
+    reviewWindows?: ReviewWindowCreateNestedManyWithoutExamBoardInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
+    certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
+    postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+  }
+
+  export type ExamBoardUncheckedCreateWithoutWithdrawalPolicyInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    country: string
+    region?: string | null
+    website?: string | null
+    timezone?: string | null
+    calendarSubjectFilterEnabled?: boolean
+    centreName?: string | null
+    centreNumber?: string | null
+    centreAddress?: string | null
+    centreEmail?: string | null
+    centrePhone?: string | null
+    centreCountry?: string | null
+    centreTimeZone?: string | null
+    defaultExamOfficerName?: string | null
+    defaultExamOfficerEmail?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    qualifications?: QualificationUncheckedCreateNestedManyWithoutExamBoardInput
+    examSeries?: ExamSeriesUncheckedCreateNestedManyWithoutExamBoardInput
+    keyDates?: KeyDateUncheckedCreateNestedManyWithoutExamBoardInput
+    resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
+    candidateExamIdentities?: CandidateExamIdentityUncheckedCreateNestedManyWithoutExamBoardInput
+    reviewWindows?: ReviewWindowUncheckedCreateNestedManyWithoutExamBoardInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+  }
+
+  export type ExamBoardCreateOrConnectWithoutWithdrawalPolicyInput = {
+    where: ExamBoardWhereUniqueInput
+    create: XOR<ExamBoardCreateWithoutWithdrawalPolicyInput, ExamBoardUncheckedCreateWithoutWithdrawalPolicyInput>
+  }
+
+  export type ExamBoardUpsertWithoutWithdrawalPolicyInput = {
+    update: XOR<ExamBoardUpdateWithoutWithdrawalPolicyInput, ExamBoardUncheckedUpdateWithoutWithdrawalPolicyInput>
+    create: XOR<ExamBoardCreateWithoutWithdrawalPolicyInput, ExamBoardUncheckedCreateWithoutWithdrawalPolicyInput>
+    where?: ExamBoardWhereInput
+  }
+
+  export type ExamBoardUpdateToOneWithWhereWithoutWithdrawalPolicyInput = {
+    where?: ExamBoardWhereInput
+    data: XOR<ExamBoardUpdateWithoutWithdrawalPolicyInput, ExamBoardUncheckedUpdateWithoutWithdrawalPolicyInput>
+  }
+
+  export type ExamBoardUpdateWithoutWithdrawalPolicyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarSubjectFilterEnabled?: BoolFieldUpdateOperationsInput | boolean
+    centreName?: NullableStringFieldUpdateOperationsInput | string | null
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    centreAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    centreEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    centrePhone?: NullableStringFieldUpdateOperationsInput | string | null
+    centreCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    centreTimeZone?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerName?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    qualifications?: QualificationUpdateManyWithoutExamBoardNestedInput
+    examSeries?: ExamSeriesUpdateManyWithoutExamBoardNestedInput
+    keyDates?: KeyDateUpdateManyWithoutExamBoardNestedInput
+    resources?: ResourceUpdateManyWithoutExamBoardNestedInput
+    sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
+    candidateExamIdentities?: CandidateExamIdentityUpdateManyWithoutExamBoardNestedInput
+    reviewWindows?: ReviewWindowUpdateManyWithoutExamBoardNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
+    certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+  }
+
+  export type ExamBoardUncheckedUpdateWithoutWithdrawalPolicyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarSubjectFilterEnabled?: BoolFieldUpdateOperationsInput | boolean
+    centreName?: NullableStringFieldUpdateOperationsInput | string | null
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    centreAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    centreEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    centrePhone?: NullableStringFieldUpdateOperationsInput | string | null
+    centreCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    centreTimeZone?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerName?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    qualifications?: QualificationUncheckedUpdateManyWithoutExamBoardNestedInput
+    examSeries?: ExamSeriesUncheckedUpdateManyWithoutExamBoardNestedInput
+    keyDates?: KeyDateUncheckedUpdateManyWithoutExamBoardNestedInput
+    resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
+    candidateExamIdentities?: CandidateExamIdentityUncheckedUpdateManyWithoutExamBoardNestedInput
+    reviewWindows?: ReviewWindowUncheckedUpdateManyWithoutExamBoardNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+  }
+
   export type ExamBoardCreateWithoutQualificationsInput = {
     id?: string
     name: string
@@ -109502,6 +111642,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutQualificationsInput = {
@@ -109541,6 +111682,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutQualificationsInput = {
@@ -109844,6 +111986,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutQualificationsInput = {
@@ -109883,6 +112026,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type SubjectUpsertWithWhereUniqueWithoutQualificationInput = {
@@ -110806,6 +112950,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutCalendarSubjectSelectionsInput = {
@@ -110845,6 +112990,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutCalendarSubjectSelectionsInput = {
@@ -110943,6 +113089,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutCalendarSubjectSelectionsInput = {
@@ -110982,6 +113129,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type SubjectUpsertWithoutCalendarSubjectSelectionsInput = {
@@ -111806,6 +113954,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutExamSeriesInput = {
@@ -111845,6 +113994,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutExamSeriesInput = {
@@ -112049,6 +114199,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -112080,6 +114231,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -112605,6 +114757,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutExamSeriesInput = {
@@ -112644,6 +114797,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type SourceDocumentUpsertWithoutExamSeriesInput = {
@@ -113981,6 +116135,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutKeyDatesInput = {
@@ -114020,6 +116175,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutKeyDatesInput = {
@@ -114216,6 +116372,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutKeyDatesInput = {
@@ -114255,6 +116412,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type SubjectUpsertWithoutKeyDatesInput = {
@@ -114453,6 +116611,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutResourcesInput = {
@@ -114492,6 +116651,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutResourcesInput = {
@@ -114760,6 +116920,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutResourcesInput = {
@@ -114799,6 +116960,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type QualificationUpsertWithoutResourcesInput = {
@@ -115081,6 +117243,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutSourceDocumentsInput = {
@@ -115120,6 +117283,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutSourceDocumentsInput = {
@@ -115532,6 +117696,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutSourceDocumentsInput = {
@@ -115571,6 +117736,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type UserUpsertWithoutSourceDocumentsInput = {
@@ -115786,6 +117952,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -115818,6 +117985,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -115876,6 +118044,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutFeeRulesInput = {
@@ -115915,6 +118084,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutFeeRulesInput = {
@@ -116281,6 +118451,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -116313,6 +118484,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -116377,6 +118549,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutFeeRulesInput = {
@@ -116416,6 +118589,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamSeriesUpsertWithoutFeeRulesInput = {
@@ -116802,6 +118976,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -116834,6 +119009,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -116993,6 +119169,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -117025,6 +119202,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -117483,6 +119661,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -117515,6 +119694,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -118873,6 +121053,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -118905,6 +121086,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -120438,6 +122620,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -120470,6 +122653,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -120629,6 +122813,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -120661,6 +122846,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -120835,6 +123021,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutReviewWindowsInput = {
@@ -120874,6 +123061,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutReviewWindowsInput = {
@@ -121449,6 +123637,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutReviewWindowsInput = {
@@ -121488,6 +123677,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamSeriesUpsertWithoutReviewWindowsInput = {
@@ -122082,6 +124272,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutReviewRequestsInput = {
@@ -122121,6 +124312,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutReviewRequestsInput = {
@@ -122952,6 +125144,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutReviewRequestsInput = {
@@ -122991,6 +125184,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamSeriesUpsertWithoutReviewRequestsInput = {
@@ -123842,6 +126036,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutCashInRequestsInput = {
@@ -123881,6 +126076,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutCashInRequestsInput = {
@@ -124441,6 +126637,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutCashInRequestsInput = {
@@ -124480,6 +126677,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamSeriesUpsertWithoutCashInRequestsInput = {
@@ -125042,6 +127240,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutAccessToScriptRequestsInput = {
@@ -125081,6 +127280,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutAccessToScriptRequestsInput = {
@@ -125797,6 +127997,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutAccessToScriptRequestsInput = {
@@ -125836,6 +128037,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamSeriesUpsertWithoutAccessToScriptRequestsInput = {
@@ -126566,6 +128768,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutCertificateRequestsInput = {
@@ -126605,6 +128808,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutCertificateRequestsInput = {
@@ -127089,6 +129293,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutCertificateRequestsInput = {
@@ -127128,6 +129333,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamSeriesUpsertWithoutCertificateRequestsInput = {
@@ -127452,6 +129658,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutFeeSchedulesInput = {
@@ -127491,6 +129698,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutFeeSchedulesInput = {
@@ -127844,6 +130052,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutFeeSchedulesInput = {
@@ -127883,6 +130092,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type QualificationUpsertWithoutFeeSchedulesInput = {
@@ -128295,6 +130505,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardUncheckedCreateWithoutPostResultsAuditLogsInput = {
@@ -128334,6 +130545,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
   }
 
   export type ExamBoardCreateOrConnectWithoutPostResultsAuditLogsInput = {
@@ -128406,6 +130618,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
@@ -128438,6 +130651,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -128778,6 +130992,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamBoardUncheckedUpdateWithoutPostResultsAuditLogsInput = {
@@ -128817,6 +131032,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
   }
 
   export type ExamSeriesUpsertWithoutPostResultsAuditLogsInput = {
@@ -128901,6 +131117,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -128933,6 +131150,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -129631,6 +131849,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -130513,6 +132732,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -130545,6 +132765,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -130575,6 +132796,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -134370,6 +136592,10 @@ export namespace Prisma {
     endAt: Date | string
     enabled?: boolean
     notes?: string | null
+    withdrawalRefundEnabled?: boolean
+    withdrawalRefundPercent?: Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -134849,6 +137075,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspaces?: RegistrationWorkspaceUpdateManyWithoutFeeStageNestedInput
@@ -134865,6 +137095,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutFeeStageNestedInput
@@ -134881,6 +137115,10 @@ export namespace Prisma {
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enabled?: BoolFieldUpdateOperationsInput | boolean
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    withdrawalRefundEnabled?: BoolFieldUpdateOperationsInput | boolean
+    withdrawalRefundPercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    withdrawalRefundBasis?: EnumWithdrawalRefundBasisFieldUpdateOperationsInput | $Enums.WithdrawalRefundBasis
+    withdrawalNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -136724,6 +138962,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -137206,6 +139445,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examSeries?: ExamSeriesUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -137237,6 +139477,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -137267,6 +139508,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -139819,6 +142061,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -140161,6 +142404,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
@@ -140192,6 +142436,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -140222,6 +142467,7 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

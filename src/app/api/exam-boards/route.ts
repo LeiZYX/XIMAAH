@@ -5,6 +5,7 @@ import {
   examBoardWriteData,
   parseExamBoardCentreFields,
 } from "@/lib/exam-boards/form";
+import { ensureExamBoardWithdrawalPolicy } from "@/lib/fees/withdrawal-policy-service";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -87,6 +88,7 @@ export async function POST(request: NextRequest) {
     const examBoard = await prisma.examBoard.create({
       data: examBoardWriteData({ ...data, ...centreFields }),
     });
+    await ensureExamBoardWithdrawalPolicy(examBoard.id);
     return NextResponse.json(examBoard, { status: 201 });
   } catch (error) {
     const message =

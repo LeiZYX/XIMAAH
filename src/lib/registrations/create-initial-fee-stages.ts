@@ -1,10 +1,13 @@
 import type { FeeEntryType } from "@/generated/prisma/enums";
 import type { RegistrationWindowTimingSource } from "@/lib/registrations/sync-fee-stages-from-window";
+import { defaultStageWithdrawal } from "@/lib/fees/withdrawal-policy";
+import { loadWithdrawalPolicyForBoard } from "@/lib/fees/withdrawal-policy-service";
 import { prisma } from "@/lib/prisma";
 
 type InitialFeeStageOptions = {
   lateEntryEnabled: boolean;
   highLateEntryEnabled: boolean;
+  examBoardId: string;
 };
 
 export async function createInitialFeeStagesForWindow(
@@ -12,6 +15,13 @@ export async function createInitialFeeStagesForWindow(
   window: RegistrationWindowTimingSource,
   options: InitialFeeStageOptions,
 ) {
+  const policy = await loadWithdrawalPolicyForBoard(options.examBoardId);
+
+  await prisma.registrationWindow.update({
+    where: { id: registrationWindowId },
+    data: { paymentFeePercent: policy.paymentFeePercent },
+  });
+
   const durationMs =
     window.registrationCloseAt.getTime() - window.studentRegistrationOpenAt.getTime();
   const third = Math.floor(durationMs / 3);
@@ -46,6 +56,8 @@ export async function createInitialFeeStagesForWindow(
         ? window.registrationCloseAt
         : new Date(window.studentRegistrationOpenAt.getTime() + third * (index + 1) - 1);
 
+    const withdrawal = defaultStageWithdrawal(template.stageCode, policy);
+
     await prisma.registrationFeeStage.upsert({
       where: {
         registrationWindowId_stageCode: {
@@ -59,6 +71,10 @@ export async function createInitialFeeStagesForWindow(
         startAt: stageStart,
         endAt: stageEnd,
         enabled: template.enabled,
+        withdrawalRefundEnabled: withdrawal.withdrawalRefundEnabled,
+        withdrawalRefundPercent: withdrawal.withdrawalRefundPercent,
+        withdrawalRefundBasis: withdrawal.withdrawalRefundBasis,
+        withdrawalNotes: withdrawal.withdrawalNotes,
       },
       create: {
         registrationWindowId,
@@ -68,6 +84,10 @@ export async function createInitialFeeStagesForWindow(
         startAt: stageStart,
         endAt: stageEnd,
         enabled: template.enabled,
+        withdrawalRefundEnabled: withdrawal.withdrawalRefundEnabled,
+        withdrawalRefundPercent: withdrawal.withdrawalRefundPercent,
+        withdrawalRefundBasis: withdrawal.withdrawalRefundBasis,
+        withdrawalNotes: withdrawal.withdrawalNotes,
       },
     });
   }

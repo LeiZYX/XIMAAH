@@ -302,6 +302,7 @@ exports.Prisma.RegistrationWindowScalarFieldEnum = {
   eoAssistedRegistrationEnabled: 'eoAssistedRegistrationEnabled',
   officeOnlyRegistrationEnabled: 'officeOnlyRegistrationEnabled',
   postLockAdjustmentEnabled: 'postLockAdjustmentEnabled',
+  paymentFeePercent: 'paymentFeePercent',
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -324,6 +325,10 @@ exports.Prisma.RegistrationFeeStageScalarFieldEnum = {
   endAt: 'endAt',
   enabled: 'enabled',
   notes: 'notes',
+  withdrawalRefundEnabled: 'withdrawalRefundEnabled',
+  withdrawalRefundPercent: 'withdrawalRefundPercent',
+  withdrawalRefundBasis: 'withdrawalRefundBasis',
+  withdrawalNotes: 'withdrawalNotes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -489,6 +494,22 @@ exports.Prisma.ExamBoardScalarFieldEnum = {
   centreTimeZone: 'centreTimeZone',
   defaultExamOfficerName: 'defaultExamOfficerName',
   defaultExamOfficerEmail: 'defaultExamOfficerEmail',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ExamBoardWithdrawalPolicyScalarFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  paymentFeePercent: 'paymentFeePercent',
+  refundBasis: 'refundBasis',
+  normalRefundEnabled: 'normalRefundEnabled',
+  normalRefundPercent: 'normalRefundPercent',
+  lateRefundEnabled: 'lateRefundEnabled',
+  lateRefundPercent: 'lateRefundPercent',
+  highLateRefundEnabled: 'highLateRefundEnabled',
+  highLateRefundPercent: 'highLateRefundPercent',
+  notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -1067,7 +1088,8 @@ exports.Prisma.RegistrationFeeStageOrderByRelevanceFieldEnum = {
   id: 'id',
   registrationWindowId: 'registrationWindowId',
   stageName: 'stageName',
-  notes: 'notes'
+  notes: 'notes',
+  withdrawalNotes: 'withdrawalNotes'
 };
 
 exports.Prisma.RegistrationWorkspaceOrderByRelevanceFieldEnum = {
@@ -1171,6 +1193,12 @@ exports.Prisma.ExamBoardOrderByRelevanceFieldEnum = {
   centreTimeZone: 'centreTimeZone',
   defaultExamOfficerName: 'defaultExamOfficerName',
   defaultExamOfficerEmail: 'defaultExamOfficerEmail'
+};
+
+exports.Prisma.ExamBoardWithdrawalPolicyOrderByRelevanceFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  notes: 'notes'
 };
 
 exports.Prisma.QualificationOrderByRelevanceFieldEnum = {
@@ -1581,6 +1609,10 @@ exports.FeeEntryType = exports.$Enums.FeeEntryType = {
   HIGH_LATE: 'HIGH_LATE'
 };
 
+exports.WithdrawalRefundBasis = exports.$Enums.WithdrawalRefundBasis = {
+  SALES_AMOUNT: 'SALES_AMOUNT'
+};
+
 exports.RegistrationSource = exports.$Enums.RegistrationSource = {
   STUDENT_SUBMITTED: 'STUDENT_SUBMITTED',
   TEACHER_REQUEST_APPROVED: 'TEACHER_REQUEST_APPROVED',
@@ -1909,6 +1941,7 @@ exports.Prisma.ModelName = {
   RegistrationChangeRequest: 'RegistrationChangeRequest',
   RegistrationChangeRequestExamSession: 'RegistrationChangeRequestExamSession',
   ExamBoard: 'ExamBoard',
+  ExamBoardWithdrawalPolicy: 'ExamBoardWithdrawalPolicy',
   Qualification: 'Qualification',
   Subject: 'Subject',
   CalendarSubjectSelection: 'CalendarSubjectSelection',

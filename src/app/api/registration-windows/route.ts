@@ -224,6 +224,7 @@ export async function POST(request: NextRequest) {
     {
       lateEntryEnabled: data.lateEntryEnabled ?? true,
       highLateEntryEnabled: data.highLateEntryEnabled ?? true,
+      examBoardId,
     },
   );
 

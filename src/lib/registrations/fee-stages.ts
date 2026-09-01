@@ -1,4 +1,5 @@
 import type { FeeEntryType } from "@/generated/prisma/enums";
+import type { Prisma } from "@/generated/prisma/client";
 import { RegistrationError } from "@/lib/registrations/errors";
 
 export interface RegistrationFeeStageRecord {
@@ -11,6 +12,10 @@ export interface RegistrationFeeStageRecord {
   endAt: Date;
   enabled: boolean;
   notes?: string | null;
+  withdrawalRefundEnabled?: boolean;
+  withdrawalRefundPercent?: number | Prisma.Decimal;
+  withdrawalRefundBasis?: "SALES_AMOUNT";
+  withdrawalNotes?: string | null;
 }
 
 /** @deprecated Use RegistrationFeeStageRecord */

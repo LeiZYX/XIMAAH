@@ -173,6 +173,11 @@ enum FeeEntryType {
   HIGH_LATE
 }
 
+/// Refund calculation uses the full sales amount (student-facing price).
+enum WithdrawalRefundBasis {
+  SALES_AMOUNT
+}
+
 enum FeeCurrency {
   GBP
   CNY
@@ -747,6 +752,8 @@ model RegistrationWindow {
   eoAssistedRegistrationEnabled  Boolean                  @default(true)
   officeOnlyRegistrationEnabled  Boolean                  @default(true)
   postLockAdjustmentEnabled      Boolean                  @default(true)
+  /// Payment platform fee retained on withdrawal refunds (copied from exam-board policy).
+  paymentFeePercent              Decimal                  @default(2) @db.Decimal(5, 2)
   createdById                    String?
   createdBy                      User?                    @relation("RegistrationWindowCreator", fields: [createdById], references: [id], onDelete: SetNull)
   createdAt                      DateTime                 @default(now())
@@ -787,18 +794,24 @@ model RegistrationWindowIncludedSeries {
 }
 
 model RegistrationFeeStage {
-  id                   String             @id @default(cuid())
-  registrationWindowId String
-  registrationWindow   RegistrationWindow @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
-  stageCode            FeeEntryType
-  stageName            String
-  sequence             Int
-  startAt              DateTime
-  endAt                DateTime
-  enabled              Boolean            @default(true)
-  notes                String?            @db.Text
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
+  id                      String                @id @default(cuid())
+  registrationWindowId    String
+  registrationWindow      RegistrationWindow    @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  stageCode               FeeEntryType
+  stageName               String
+  sequence                Int
+  startAt                 DateTime
+  endAt                   DateTime
+  enabled                 Boolean               @default(true)
+  notes                   String?               @db.Text
+  /// When false, removals in this stage do not credit fees (Phase 2).
+  withdrawalRefundEnabled Boolean               @default(true)
+  /// Configured refund percent of sales amount before payment-fee ceiling.
+  withdrawalRefundPercent Decimal               @default(100) @db.Decimal(5, 2)
+  withdrawalRefundBasis   WithdrawalRefundBasis @default(SALES_AMOUNT)
+  withdrawalNotes         String?               @db.Text
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
 
   workspaces    RegistrationWorkspace[]
   registrations StudentExamRegistration[]
@@ -1098,8 +1111,27 @@ model ExamBoard {
   accessToScriptRequests    AccessToScriptRequest[]
   certificateRequests       CertificateRequest[]
   postResultsAuditLogs      PostResultsAuditLog[]
+  withdrawalPolicy          ExamBoardWithdrawalPolicy?
 
   @@index([country])
+}
+
+/// Per-exam-board defaults for withdrawal refunds (copied onto new registration windows).
+model ExamBoardWithdrawalPolicy {
+  id                    String                @id @default(cuid())
+  examBoardId           String                @unique
+  examBoard             ExamBoard             @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  paymentFeePercent     Decimal               @default(2) @db.Decimal(5, 2)
+  refundBasis           WithdrawalRefundBasis @default(SALES_AMOUNT)
+  normalRefundEnabled   Boolean               @default(true)
+  normalRefundPercent   Decimal               @default(100) @db.Decimal(5, 2)
+  lateRefundEnabled     Boolean               @default(true)
+  lateRefundPercent     Decimal               @default(50) @db.Decimal(5, 2)
+  highLateRefundEnabled Boolean               @default(false)
+  highLateRefundPercent Decimal               @default(0) @db.Decimal(5, 2)
+  notes                 String?               @db.Text
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
 }
 
 model Qualification {

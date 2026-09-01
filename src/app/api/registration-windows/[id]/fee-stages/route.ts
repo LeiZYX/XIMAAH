@@ -52,7 +52,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         endAt: string;
         enabled: boolean;
         notes?: string | null;
+        withdrawalRefundEnabled?: boolean;
+        withdrawalRefundPercent?: number;
+        withdrawalNotes?: string | null;
       }>;
+      paymentFeePercent?: number;
     }>(body, ["feeStages"]);
 
     if (!data?.feeStages) {
@@ -62,7 +66,28 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const window = await prisma.registrationWindow.findUnique({ where: { id } });
     if (!window) return jsonError("Registration window not found", 404);
 
+    if (
+      data.paymentFeePercent != null &&
+      (!Number.isFinite(Number(data.paymentFeePercent)) ||
+        Number(data.paymentFeePercent) < 0 ||
+        Number(data.paymentFeePercent) > 100)
+    ) {
+      return jsonError("Payment fee percent must be between 0 and 100", 400);
+    }
+
     if (data.feeStages.length > 0) {
+      for (const stage of data.feeStages) {
+        if (stage.withdrawalRefundPercent != null) {
+          const percent = Number(stage.withdrawalRefundPercent);
+          if (!Number.isFinite(percent) || percent < 0 || percent > 100) {
+            return jsonError(
+              `${feeStageLabel(stage.stageCode)}: withdrawal refund percent must be between 0 and 100`,
+              400,
+            );
+          }
+        }
+      }
+
       const boundStages = applyWindowTimingToFeeStages(
         data.feeStages.map((stage) => ({
           ...stage,
@@ -82,6 +107,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         endAt: stage.endAt instanceof Date ? stage.endAt : new Date(stage.endAt),
         enabled: stage.enabled,
         notes: stage.notes ?? null,
+        withdrawalRefundEnabled: stage.withdrawalRefundEnabled,
+        withdrawalRefundPercent: stage.withdrawalRefundPercent,
+        withdrawalNotes: stage.withdrawalNotes ?? null,
       }));
 
       assertFeeStageDatesValid(parsed, window);
@@ -92,6 +120,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     });
 
     const results = await prisma.$transaction(async (tx) => {
+      if (data.paymentFeePercent != null) {
+        await tx.registrationWindow.update({
+          where: { id },
+          data: { paymentFeePercent: Number(data.paymentFeePercent) },
+        });
+      }
+
       if (data.feeStages.length === 0) {
         await tx.registrationFeeStage.deleteMany({ where: { registrationWindowId: id } });
         return [];
@@ -118,6 +153,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       for (const stage of boundIncoming) {
         const startAt = stage.startAt instanceof Date ? stage.startAt : new Date(stage.startAt);
         const endAt = stage.endAt instanceof Date ? stage.endAt : new Date(stage.endAt);
+        const refundEnabled = stage.withdrawalRefundEnabled ?? true;
+        const refundPercent = refundEnabled
+          ? Number(stage.withdrawalRefundPercent ?? 100)
+          : 0;
         const row = await tx.registrationFeeStage.upsert({
           where: {
             registrationWindowId_stageCode: {
@@ -134,6 +173,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             endAt,
             enabled: stage.enabled,
             notes: stage.notes?.trim() || null,
+            withdrawalRefundEnabled: refundEnabled,
+            withdrawalRefundPercent: refundPercent,
+            withdrawalRefundBasis: "SALES_AMOUNT",
+            withdrawalNotes: stage.withdrawalNotes?.trim() || null,
           },
           update: {
             stageName: stage.stageName.trim(),
@@ -142,6 +185,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
             endAt,
             enabled: stage.enabled,
             notes: stage.notes?.trim() || null,
+            withdrawalRefundEnabled: refundEnabled,
+            withdrawalRefundPercent: refundPercent,
+            withdrawalRefundBasis: "SALES_AMOUNT",
+            withdrawalNotes: stage.withdrawalNotes?.trim() || null,
           },
         });
         saved.push(row);
