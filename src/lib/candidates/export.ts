@@ -15,6 +15,8 @@ type ExportCandidate = Pick<
   | "surnamePinyin"
   | "givenNamePinyin"
   | "preferredEnglishName"
+  | "firstName"
+  | "lastName"
   | "legalEnglishName"
   | "englishName"
   | "gender"
@@ -43,6 +45,8 @@ export const CANDIDATE_IMPORT_HEADERS = [
   "surnamePinyin",
   "givenNamePinyin",
   "preferredEnglishName",
+  "firstName",
+  "lastName",
   "legalEnglishName",
   "gender",
   "dateOfBirth",
@@ -76,6 +80,8 @@ export function candidatesToCsv(candidates: ExportCandidate[]): string {
       candidate.surnamePinyin,
       candidate.givenNamePinyin,
       candidate.preferredEnglishName,
+      candidate.firstName,
+      candidate.lastName,
       candidate.legalEnglishName ?? candidate.englishName,
       candidate.gender ? genderLabel(candidate.gender) : "",
       formatDateOfBirth(candidate.dateOfBirth) === "—" ? "" : formatDateOfBirth(candidate.dateOfBirth),

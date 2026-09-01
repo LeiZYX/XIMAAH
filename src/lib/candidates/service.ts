@@ -55,10 +55,15 @@ export async function syncCandidateFromStudentUser(userId: string) {
       data: {
         englishName: computeDisplayName({
           preferredEnglishName: user.candidate.preferredEnglishName,
+          firstName: user.candidate.firstName,
+          lastName: user.candidate.lastName,
           legalEnglishName: user.candidate.legalEnglishName ?? user.name,
           englishName: user.name,
         }),
-        legalEnglishName: user.candidate.legalEnglishName ?? user.name,
+        legalEnglishName:
+          [user.candidate.firstName, user.candidate.lastName].filter(Boolean).join(" ") ||
+          user.candidate.legalEnglishName ||
+          user.name,
         ...(schoolStudentNumber ? { studentNumber: schoolStudentNumber } : {}),
         email: profile.email ?? user.email,
         phone: profile.phone ?? user.phone,
@@ -200,6 +205,8 @@ export async function createExternalCandidate(input: {
   surnamePinyin?: string | null;
   givenNamePinyin?: string | null;
   preferredEnglishName?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
   legalEnglishName?: string | null;
   englishName?: string | null;
   email?: string | null;
@@ -217,9 +224,17 @@ export async function createExternalCandidate(input: {
   assessmentHubCandidateNumber?: string | null;
   externalId?: string | null;
 }) {
-  const legalEnglishName = input.legalEnglishName?.trim() || input.englishName?.trim() || "";
+  const firstName = input.firstName?.trim() || null;
+  const lastName = input.lastName?.trim() || null;
+  const legalEnglishName =
+    [firstName, lastName].filter(Boolean).join(" ") ||
+    input.legalEnglishName?.trim() ||
+    input.englishName?.trim() ||
+    "";
   const displayName = computeDisplayName({
     preferredEnglishName: input.preferredEnglishName,
+    firstName,
+    lastName,
     legalEnglishName,
   });
 
@@ -233,6 +248,8 @@ export async function createExternalCandidate(input: {
       surnamePinyin: input.surnamePinyin?.trim() || null,
       givenNamePinyin: input.givenNamePinyin?.trim() || null,
       preferredEnglishName: input.preferredEnglishName?.trim() || null,
+      firstName,
+      lastName,
       legalEnglishName: legalEnglishName || null,
       englishName: displayName || legalEnglishName,
       email: input.email?.trim() || null,

@@ -16543,6 +16543,8 @@ export namespace Prisma {
     surnamePinyin: string | null
     givenNamePinyin: string | null
     preferredEnglishName: string | null
+    firstName: string | null
+    lastName: string | null
     legalEnglishName: string | null
     email: string | null
     phone: string | null
@@ -16580,6 +16582,8 @@ export namespace Prisma {
     surnamePinyin: string | null
     givenNamePinyin: string | null
     preferredEnglishName: string | null
+    firstName: string | null
+    lastName: string | null
     legalEnglishName: string | null
     email: string | null
     phone: string | null
@@ -16617,6 +16621,8 @@ export namespace Prisma {
     surnamePinyin: number
     givenNamePinyin: number
     preferredEnglishName: number
+    firstName: number
+    lastName: number
     legalEnglishName: number
     email: number
     phone: number
@@ -16664,6 +16670,8 @@ export namespace Prisma {
     surnamePinyin?: true
     givenNamePinyin?: true
     preferredEnglishName?: true
+    firstName?: true
+    lastName?: true
     legalEnglishName?: true
     email?: true
     phone?: true
@@ -16701,6 +16709,8 @@ export namespace Prisma {
     surnamePinyin?: true
     givenNamePinyin?: true
     preferredEnglishName?: true
+    firstName?: true
+    lastName?: true
     legalEnglishName?: true
     email?: true
     phone?: true
@@ -16738,6 +16748,8 @@ export namespace Prisma {
     surnamePinyin?: true
     givenNamePinyin?: true
     preferredEnglishName?: true
+    firstName?: true
+    lastName?: true
     legalEnglishName?: true
     email?: true
     phone?: true
@@ -16862,6 +16874,8 @@ export namespace Prisma {
     surnamePinyin: string | null
     givenNamePinyin: string | null
     preferredEnglishName: string | null
+    firstName: string | null
+    lastName: string | null
     legalEnglishName: string | null
     email: string | null
     phone: string | null
@@ -16918,6 +16932,8 @@ export namespace Prisma {
     surnamePinyin?: boolean
     givenNamePinyin?: boolean
     preferredEnglishName?: boolean
+    firstName?: boolean
+    lastName?: boolean
     legalEnglishName?: boolean
     email?: boolean
     phone?: boolean
@@ -16973,6 +16989,8 @@ export namespace Prisma {
     surnamePinyin?: boolean
     givenNamePinyin?: boolean
     preferredEnglishName?: boolean
+    firstName?: boolean
+    lastName?: boolean
     legalEnglishName?: boolean
     email?: boolean
     phone?: boolean
@@ -16998,7 +17016,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CandidateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "assessmentHubCandidateNumber" | "candidateType" | "userId" | "studentNumber" | "englishName" | "chineseName" | "surnamePinyin" | "givenNamePinyin" | "preferredEnglishName" | "legalEnglishName" | "email" | "phone" | "dateOfBirth" | "gender" | "nationality" | "idDocumentType" | "idDocumentNumber" | "idNumber" | "passportNumber" | "photoUrl" | "emergencyContactName" | "emergencyContactPhone" | "schoolName" | "grade" | "className" | "graduationYear" | "status" | "loginEnabled" | "sourceSystem" | "externalId" | "createdAt" | "updatedAt", ExtArgs["result"]["candidate"]>
+  export type CandidateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "assessmentHubCandidateNumber" | "candidateType" | "userId" | "studentNumber" | "englishName" | "chineseName" | "surnamePinyin" | "givenNamePinyin" | "preferredEnglishName" | "firstName" | "lastName" | "legalEnglishName" | "email" | "phone" | "dateOfBirth" | "gender" | "nationality" | "idDocumentType" | "idDocumentNumber" | "idNumber" | "passportNumber" | "photoUrl" | "emergencyContactName" | "emergencyContactPhone" | "schoolName" | "grade" | "className" | "graduationYear" | "status" | "loginEnabled" | "sourceSystem" | "externalId" | "createdAt" | "updatedAt", ExtArgs["result"]["candidate"]>
   export type CandidateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | Candidate$userArgs<ExtArgs>
     examIdentities?: boolean | Candidate$examIdentitiesArgs<ExtArgs>
@@ -17058,6 +17076,14 @@ export namespace Prisma {
       surnamePinyin: string | null
       givenNamePinyin: string | null
       preferredEnglishName: string | null
+      /**
+       * Legal given name used for exam-board submissions (Edexcel Firstname).
+       */
+      firstName: string | null
+      /**
+       * Legal family name used for exam-board submissions (Edexcel Lastname).
+       */
+      lastName: string | null
       legalEnglishName: string | null
       email: string | null
       phone: string | null
@@ -17476,6 +17502,8 @@ export namespace Prisma {
     readonly surnamePinyin: FieldRef<"Candidate", 'String'>
     readonly givenNamePinyin: FieldRef<"Candidate", 'String'>
     readonly preferredEnglishName: FieldRef<"Candidate", 'String'>
+    readonly firstName: FieldRef<"Candidate", 'String'>
+    readonly lastName: FieldRef<"Candidate", 'String'>
     readonly legalEnglishName: FieldRef<"Candidate", 'String'>
     readonly email: FieldRef<"Candidate", 'String'>
     readonly phone: FieldRef<"Candidate", 'String'>
@@ -64915,6 +64943,8 @@ export namespace Prisma {
     surnamePinyin: 'surnamePinyin',
     givenNamePinyin: 'givenNamePinyin',
     preferredEnglishName: 'preferredEnglishName',
+    firstName: 'firstName',
+    lastName: 'lastName',
     legalEnglishName: 'legalEnglishName',
     email: 'email',
     phone: 'phone',
@@ -65900,6 +65930,8 @@ export namespace Prisma {
     surnamePinyin: 'surnamePinyin',
     givenNamePinyin: 'givenNamePinyin',
     preferredEnglishName: 'preferredEnglishName',
+    firstName: 'firstName',
+    lastName: 'lastName',
     legalEnglishName: 'legalEnglishName',
     email: 'email',
     phone: 'phone',
@@ -67657,6 +67689,8 @@ export namespace Prisma {
     surnamePinyin?: StringNullableFilter<"Candidate"> | string | null
     givenNamePinyin?: StringNullableFilter<"Candidate"> | string | null
     preferredEnglishName?: StringNullableFilter<"Candidate"> | string | null
+    firstName?: StringNullableFilter<"Candidate"> | string | null
+    lastName?: StringNullableFilter<"Candidate"> | string | null
     legalEnglishName?: StringNullableFilter<"Candidate"> | string | null
     email?: StringNullableFilter<"Candidate"> | string | null
     phone?: StringNullableFilter<"Candidate"> | string | null
@@ -67709,6 +67743,8 @@ export namespace Prisma {
     surnamePinyin?: SortOrderInput | SortOrder
     givenNamePinyin?: SortOrderInput | SortOrder
     preferredEnglishName?: SortOrderInput | SortOrder
+    firstName?: SortOrderInput | SortOrder
+    lastName?: SortOrderInput | SortOrder
     legalEnglishName?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
@@ -67765,6 +67801,8 @@ export namespace Prisma {
     surnamePinyin?: StringNullableFilter<"Candidate"> | string | null
     givenNamePinyin?: StringNullableFilter<"Candidate"> | string | null
     preferredEnglishName?: StringNullableFilter<"Candidate"> | string | null
+    firstName?: StringNullableFilter<"Candidate"> | string | null
+    lastName?: StringNullableFilter<"Candidate"> | string | null
     legalEnglishName?: StringNullableFilter<"Candidate"> | string | null
     email?: StringNullableFilter<"Candidate"> | string | null
     phone?: StringNullableFilter<"Candidate"> | string | null
@@ -67817,6 +67855,8 @@ export namespace Prisma {
     surnamePinyin?: SortOrderInput | SortOrder
     givenNamePinyin?: SortOrderInput | SortOrder
     preferredEnglishName?: SortOrderInput | SortOrder
+    firstName?: SortOrderInput | SortOrder
+    lastName?: SortOrderInput | SortOrder
     legalEnglishName?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
@@ -67862,6 +67902,8 @@ export namespace Prisma {
     surnamePinyin?: StringNullableWithAggregatesFilter<"Candidate"> | string | null
     givenNamePinyin?: StringNullableWithAggregatesFilter<"Candidate"> | string | null
     preferredEnglishName?: StringNullableWithAggregatesFilter<"Candidate"> | string | null
+    firstName?: StringNullableWithAggregatesFilter<"Candidate"> | string | null
+    lastName?: StringNullableWithAggregatesFilter<"Candidate"> | string | null
     legalEnglishName?: StringNullableWithAggregatesFilter<"Candidate"> | string | null
     email?: StringNullableWithAggregatesFilter<"Candidate"> | string | null
     phone?: StringNullableWithAggregatesFilter<"Candidate"> | string | null
@@ -73644,6 +73686,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -73696,6 +73740,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -73746,6 +73792,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -73798,6 +73846,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -73849,6 +73899,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -73885,6 +73937,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -73922,6 +73976,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80290,6 +80346,8 @@ export namespace Prisma {
     surnamePinyin?: SortOrder
     givenNamePinyin?: SortOrder
     preferredEnglishName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     legalEnglishName?: SortOrder
     email?: SortOrder
     phone?: SortOrder
@@ -80331,6 +80389,8 @@ export namespace Prisma {
     surnamePinyin?: SortOrder
     givenNamePinyin?: SortOrder
     preferredEnglishName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     legalEnglishName?: SortOrder
     email?: SortOrder
     phone?: SortOrder
@@ -80368,6 +80428,8 @@ export namespace Prisma {
     surnamePinyin?: SortOrder
     givenNamePinyin?: SortOrder
     preferredEnglishName?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
     legalEnglishName?: SortOrder
     email?: SortOrder
     phone?: SortOrder
@@ -96687,6 +96749,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -96737,6 +96801,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -98536,6 +98602,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -98586,6 +98654,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -100655,6 +100725,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -100706,6 +100778,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -101026,6 +101100,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -101077,6 +101153,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -102533,6 +102611,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -102584,6 +102664,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -102768,6 +102850,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -102819,6 +102903,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -102993,6 +103079,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -103044,6 +103132,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -103432,6 +103522,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -103483,6 +103575,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -106450,6 +106544,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -106501,6 +106597,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -107550,6 +107648,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -107601,6 +107701,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -108356,6 +108458,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -108407,6 +108511,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -109360,6 +109466,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -109411,6 +109519,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -110450,6 +110560,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -110501,6 +110613,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -111175,6 +111289,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -111226,6 +111342,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -112021,6 +112139,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -112072,6 +112192,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -112806,6 +112928,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -112857,6 +112981,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -122836,6 +122962,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -122887,6 +123015,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -124228,6 +124358,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -124279,6 +124411,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -126314,6 +126448,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -126365,6 +126501,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -126897,6 +127035,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -126948,6 +127088,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -128852,6 +128994,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -128903,6 +129047,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -129730,6 +129876,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -129781,6 +129929,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -130640,6 +130790,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -130691,6 +130843,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -131241,6 +131395,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131292,6 +131448,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -131856,6 +132014,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -131907,6 +132067,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -132615,6 +132777,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -132666,6 +132830,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -133400,6 +133566,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -133451,6 +133619,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -133925,6 +134095,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -133976,6 +134148,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -135157,6 +135331,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -135208,6 +135384,8 @@ export namespace Prisma {
     surnamePinyin?: string | null
     givenNamePinyin?: string | null
     preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
     legalEnglishName?: string | null
     email?: string | null
     phone?: string | null
@@ -135646,6 +135824,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -135697,6 +135877,8 @@ export namespace Prisma {
     surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
     preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
     legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null

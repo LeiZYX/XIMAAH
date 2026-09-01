@@ -54,7 +54,9 @@ export function ExternalCandidateRegistrationModal({
   const [candidates, setCandidates] = useState<CandidateOption[]>([]);
   const [selectedCandidate, setSelectedCandidate] = useState<CandidateOption | null>(null);
   const [newCandidate, setNewCandidate] = useState({
-    englishName: "",
+    firstName: "",
+    lastName: "",
+    preferredEnglishName: "",
     chineseName: "",
     email: "",
     phone: "",
@@ -150,8 +152,8 @@ export function ExternalCandidateRegistrationModal({
       setError("Select an existing external candidate or create a new one.");
       return;
     }
-    if (!useExisting && !newCandidate.englishName.trim()) {
-      setError("English name is required for new external candidate.");
+    if (!useExisting && (!newCandidate.firstName.trim() || !newCandidate.lastName.trim())) {
+      setError("Firstname and Lastname are required for new external candidate.");
       return;
     }
     if (!registrationWindowId || selectedSessionIds.length === 0) {
@@ -257,17 +259,34 @@ export function ExternalCandidateRegistrationModal({
                 then return here to register for exams.
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
-              {(["englishName", "chineseName", "email", "phone", "schoolName", "externalId"] as const).map(
-                (field) => (
+              {(
+                [
+                  "firstName",
+                  "lastName",
+                  "preferredEnglishName",
+                  "chineseName",
+                  "email",
+                  "phone",
+                  "schoolName",
+                  "externalId",
+                ] as const
+              ).map((field) => (
                   <input
                     key={field}
-                    placeholder={field}
+                    placeholder={
+                      field === "firstName"
+                        ? "Firstname *"
+                        : field === "lastName"
+                          ? "Lastname *"
+                          : field === "preferredEnglishName"
+                            ? "Preferred English Name"
+                            : field
+                    }
                     value={newCandidate[field]}
                     onChange={(e) => setNewCandidate({ ...newCandidate, [field]: e.target.value })}
                     className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
                   />
-                ),
-              )}
+                ))}
               </div>
             </>
           )}

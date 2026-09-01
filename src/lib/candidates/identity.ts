@@ -8,6 +8,8 @@ export interface CandidateIdentityInput {
   surnamePinyin?: string | null;
   givenNamePinyin?: string | null;
   preferredEnglishName?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
   legalEnglishName?: string | null;
   gender?: Gender | null;
   dateOfBirth?: Date | string | null;
@@ -26,13 +28,29 @@ export interface CandidateIdentityInput {
   status?: string | null;
 }
 
+export function composeLegalEnglishName(input: {
+  firstName?: string | null;
+  lastName?: string | null;
+  legalEnglishName?: string | null;
+}): string {
+  const firstName = input.firstName?.trim() ?? "";
+  const lastName = input.lastName?.trim() ?? "";
+  const composed = [firstName, lastName].filter(Boolean).join(" ").trim();
+  if (composed) return composed;
+  return input.legalEnglishName?.trim() ?? "";
+}
+
 export function computeDisplayName(candidate: {
   preferredEnglishName?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
   legalEnglishName?: string | null;
   englishName?: string | null;
 }): string {
   const preferred = candidate.preferredEnglishName?.trim();
   if (preferred) return preferred;
+  const fromParts = composeLegalEnglishName(candidate);
+  if (fromParts) return fromParts;
   const legal = candidate.legalEnglishName?.trim();
   if (legal) return legal;
   return candidate.englishName?.trim() ?? "";
@@ -103,7 +121,8 @@ export function validateCandidateIdentity(input: CandidateIdentityInput): string
   if (!input.chineseName?.trim()) errors.push("Chinese Name is required");
   if (!input.surnamePinyin?.trim()) errors.push("Surname (Pinyin) is required");
   if (!input.givenNamePinyin?.trim()) errors.push("Given Name (Pinyin) is required");
-  if (!input.legalEnglishName?.trim()) errors.push("Legal English Name is required");
+  if (!input.firstName?.trim()) errors.push("Firstname is required");
+  if (!input.lastName?.trim()) errors.push("Lastname is required");
   if (!input.gender) errors.push("Gender is required");
   if (!input.dateOfBirth) errors.push("Date of Birth is required");
   if (!input.idDocumentType) errors.push("ID Document Type is required");
@@ -129,9 +148,18 @@ export function formatDateOfBirth(value: Date | string | null | undefined): stri
 }
 
 export function buildCandidateIdentityUpdate(input: CandidateIdentityInput) {
-  const legalEnglishName = input.legalEnglishName?.trim() || null;
+  const firstName = input.firstName?.trim() || null;
+  const lastName = input.lastName?.trim() || null;
+  const legalEnglishName =
+    composeLegalEnglishName({ firstName, lastName, legalEnglishName: input.legalEnglishName }) ||
+    null;
   const preferredEnglishName = input.preferredEnglishName?.trim() || null;
-  const displayName = computeDisplayName({ preferredEnglishName, legalEnglishName });
+  const displayName = computeDisplayName({
+    preferredEnglishName,
+    firstName,
+    lastName,
+    legalEnglishName,
+  });
   const idDocumentNumber = input.idDocumentNumber?.trim() || null;
 
   return {
@@ -139,6 +167,8 @@ export function buildCandidateIdentityUpdate(input: CandidateIdentityInput) {
     surnamePinyin: input.surnamePinyin?.trim() || null,
     givenNamePinyin: input.givenNamePinyin?.trim() || null,
     preferredEnglishName,
+    firstName,
+    lastName,
     legalEnglishName,
     englishName: displayName || legalEnglishName || "",
     gender: input.gender ?? null,
@@ -172,6 +202,8 @@ export type CandidateProfileRecord = {
   surnamePinyin?: string | null;
   givenNamePinyin?: string | null;
   preferredEnglishName?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
   legalEnglishName?: string | null;
   gender?: Gender | null;
   dateOfBirth?: Date | string | null;

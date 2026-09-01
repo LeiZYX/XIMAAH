@@ -12,13 +12,17 @@ import {
   parseGenderInput,
   parseGradeInput,
 } from "@/lib/students/profile-enums";
+import { composeLegalEnglishName, computeDisplayName } from "@/lib/candidates/identity";
 import { logUserAudit } from "@/lib/users/audit";
 import { INTERNAL_STUDENT_IMPORT_COLUMNS } from "@/lib/users/internal-student-import-template";
 
 export interface InternalStudentImportRow {
   rowNumber: number;
   chineseName: string;
-  englishName: string;
+  preferredEnglishName?: string;
+  firstName: string;
+  lastName: string;
+  englishName?: string;
   schoolStudentNumber?: string;
   pinyinLastName: string;
   pinyinFirstName: string;
@@ -67,6 +71,12 @@ function normalizeHeader(value: string): string {
 const HEADER_ALIASES: Record<string, keyof Omit<InternalStudentImportRow, "rowNumber">> = {
   "chinese name": "chineseName",
   chinesename: "chineseName",
+  "preferred english name": "preferredEnglishName",
+  preferredenglishname: "preferredEnglishName",
+  firstname: "firstName",
+  "first name": "firstName",
+  lastname: "lastName",
+  "last name": "lastName",
   "english name": "englishName",
   englishname: "englishName",
   "school student number": "schoolStudentNumber",
@@ -137,7 +147,10 @@ function mapRow(
   return {
     rowNumber,
     chineseName: cellText(mapped.chineseName),
-    englishName: cellText(mapped.englishName),
+    preferredEnglishName: cellText(mapped.preferredEnglishName) || undefined,
+    firstName: cellText(mapped.firstName),
+    lastName: cellText(mapped.lastName),
+    englishName: cellText(mapped.englishName) || undefined,
     schoolStudentNumber: cellText(mapped.schoolStudentNumber) || undefined,
     pinyinLastName: cellText(mapped.pinyinLastName),
     pinyinFirstName: cellText(mapped.pinyinFirstName),
@@ -222,7 +235,14 @@ export function validateInternalStudentImportRows(
     }
 
     if (!row.chineseName) errors.push({ row: rowNum, message: "Chinese Name is required" });
-    if (!row.englishName) errors.push({ row: rowNum, message: "English Name is required" });
+    const hasNameParts = Boolean(row.firstName?.trim() && row.lastName?.trim());
+    const hasLegacyEnglishName = Boolean(row.englishName?.trim());
+    if (!hasNameParts && !hasLegacyEnglishName) {
+      errors.push({
+        row: rowNum,
+        message: "Firstname and Lastname are required (or English Name for legacy rows)",
+      });
+    }
     if (!row.pinyinLastName) errors.push({ row: rowNum, message: "Pinyin Last Name is required" });
     if (!row.pinyinFirstName) errors.push({ row: rowNum, message: "Pinyin First Name is required" });
     if (!row.gender) errors.push({ row: rowNum, message: "Gender is required" });
@@ -294,6 +314,49 @@ async function findMatchingCandidate(
   return { candidate: null };
 }
 
+function resolveImportNames(row: Pick<
+  InternalStudentImportRow,
+  "firstName" | "lastName" | "preferredEnglishName" | "englishName"
+>) {
+  let firstName = row.firstName?.trim() || "";
+  let lastName = row.lastName?.trim() || "";
+  const preferredEnglishName = row.preferredEnglishName?.trim() || null;
+  const legacyEnglishName = row.englishName?.trim() || "";
+
+  if ((!firstName || !lastName) && legacyEnglishName) {
+    const parts = legacyEnglishName.split(/\s+/).filter(Boolean);
+    if (parts.length === 1) {
+      firstName = firstName || parts[0];
+      lastName = lastName || parts[0];
+    } else if (parts.length >= 2) {
+      firstName = firstName || parts.slice(0, -1).join(" ");
+      lastName = lastName || parts[parts.length - 1];
+    }
+  }
+
+  const legalEnglishName =
+    composeLegalEnglishName({
+      firstName,
+      lastName,
+      legalEnglishName: legacyEnglishName,
+    }) || legacyEnglishName;
+  const displayName = computeDisplayName({
+    preferredEnglishName,
+    firstName,
+    lastName,
+    legalEnglishName,
+    englishName: legacyEnglishName,
+  });
+
+  return {
+    firstName,
+    lastName,
+    preferredEnglishName,
+    legalEnglishName,
+    displayName,
+  };
+}
+
 export async function previewInternalStudentImportRows(
   rows: InternalStudentImportRow[],
 ): Promise<InternalStudentImportPreviewItem[]> {
@@ -301,11 +364,12 @@ export async function previewInternalStudentImportRows(
 
   for (const row of rows) {
     const { candidate, matchBy } = await findMatchingCandidate(row);
+    const names = resolveImportNames(row);
     preview.push({
       row: row.rowNumber,
       action: candidate ? "update" : "create",
       matchBy,
-      englishName: row.englishName,
+      englishName: names.displayName,
       chineseName: row.chineseName,
       email: row.email,
       grade: row.grade,
@@ -327,11 +391,15 @@ function candidateProfileUpdate(
   row: InternalStudentImportRow,
   extras: { schoolStudentNumber?: string; userId: string },
 ): Prisma.CandidateUncheckedUpdateInput {
+  const names = resolveImportNames(row);
   return {
     candidateType: "INTERNAL",
     chineseName: row.chineseName,
-    englishName: row.englishName,
-    legalEnglishName: row.englishName,
+    preferredEnglishName: names.preferredEnglishName,
+    firstName: names.firstName,
+    lastName: names.lastName,
+    englishName: names.displayName,
+    legalEnglishName: names.legalEnglishName,
     surnamePinyin: row.pinyinLastName,
     givenNamePinyin: row.pinyinFirstName,
     idNumber: row.idNumber ?? null,
@@ -364,10 +432,11 @@ async function upsertAuthForCandidate(
   });
 
   if (candidate.userId) {
+    const names = resolveImportNames(row);
     const user = await prisma.user.update({
       where: { id: candidate.userId },
       data: {
-        name: row.englishName,
+        name: names.displayName,
         email: row.email,
         phone: row.phone,
         studentNo: profileStudentNo,
@@ -396,10 +465,11 @@ async function upsertAuthForCandidate(
     return user.id;
   }
 
+  const names = resolveImportNames(row);
   const passwordHash = await hashPassword(passwordSeed);
   const user = await prisma.user.create({
     data: {
-      name: row.englishName,
+      name: names.displayName,
       email: row.email,
       phone: row.phone,
       studentNo: profileStudentNo,
@@ -465,10 +535,11 @@ export async function commitInternalStudentImportRows(
     const schoolStudentNumber = row.schoolStudentNumber?.trim() || undefined;
     const profileStudentNo = profileLoginStudentNo({ schoolStudentNumber, permanentStudentId });
     const passwordHash = await hashPassword(row.email);
+    const names = resolveImportNames(row);
 
     await prisma.user.create({
       data: {
-        name: row.englishName,
+        name: names.displayName,
         email: row.email,
         phone: row.phone,
         studentNo: profileStudentNo,
@@ -494,8 +565,11 @@ export async function commitInternalStudentImportRows(
             assessmentHubCandidateNumber: generateAssessmentHubCandidateNumber(),
             studentNumber: schoolStudentNumber ?? null,
             chineseName: row.chineseName,
-            englishName: row.englishName,
-            legalEnglishName: row.englishName,
+            preferredEnglishName: names.preferredEnglishName,
+            firstName: names.firstName,
+            lastName: names.lastName,
+            englishName: names.displayName,
+            legalEnglishName: names.legalEnglishName,
             surnamePinyin: row.pinyinLastName,
             givenNamePinyin: row.pinyinFirstName,
             idNumber: row.idNumber ?? null,
@@ -536,9 +610,11 @@ export async function commitInternalStudentImportRows(
 export function isCompleteInternalStudentImportRow(
   row: Partial<InternalStudentImportRow> & { rowNumber: number },
 ): row is InternalStudentImportRow {
+  const hasNameParts = Boolean(row.firstName?.trim() && row.lastName?.trim());
+  const hasLegacyEnglishName = Boolean(row.englishName?.trim());
   return Boolean(
     row.chineseName &&
-      row.englishName &&
+      (hasNameParts || hasLegacyEnglishName) &&
       row.pinyinLastName &&
       row.pinyinFirstName &&
       row.gender &&

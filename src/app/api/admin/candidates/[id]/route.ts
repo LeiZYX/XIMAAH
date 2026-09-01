@@ -116,6 +116,8 @@ export async function PATCH(
         givenNamePinyin: data.identity.givenNamePinyin ?? existing.givenNamePinyin,
         preferredEnglishName:
           data.identity.preferredEnglishName ?? existing.preferredEnglishName,
+        firstName: data.identity.firstName ?? existing.firstName,
+        lastName: data.identity.lastName ?? existing.lastName,
         legalEnglishName: data.identity.legalEnglishName ?? existing.legalEnglishName,
         gender: data.identity.gender ?? existing.gender,
         dateOfBirth: data.identity.dateOfBirth ?? existing.dateOfBirth,
@@ -156,7 +158,9 @@ export async function PATCH(
       const nameChanged =
         existing.englishName !== updateData.englishName ||
         existing.legalEnglishName !== updateData.legalEnglishName ||
-        existing.preferredEnglishName !== updateData.preferredEnglishName;
+        existing.preferredEnglishName !== updateData.preferredEnglishName ||
+        existing.firstName !== updateData.firstName ||
+        existing.lastName !== updateData.lastName;
       const documentChanged = existing.idDocumentNumber !== updateData.idDocumentNumber;
 
       await createCandidateAuditLog({

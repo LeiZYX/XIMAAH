@@ -632,6 +632,10 @@ model Candidate {
   surnamePinyin                String?
   givenNamePinyin              String?
   preferredEnglishName         String?
+  /// Legal given name used for exam-board submissions (Edexcel Firstname).
+  firstName                    String?
+  /// Legal family name used for exam-board submissions (Edexcel Lastname).
+  lastName                     String?
   legalEnglishName             String?
   email                        String?
   phone                        String?

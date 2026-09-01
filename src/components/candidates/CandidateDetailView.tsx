@@ -64,7 +64,8 @@ export function CandidateDetailView({
     surnamePinyin: "",
     givenNamePinyin: "",
     preferredEnglishName: "",
-    legalEnglishName: "",
+    firstName: "",
+    lastName: "",
     gender: "" as Gender | "",
     dateOfBirth: "",
     nationality: "",
@@ -108,7 +109,8 @@ export function CandidateDetailView({
       surnamePinyin: String(data.surnamePinyin ?? ""),
       givenNamePinyin: String(data.givenNamePinyin ?? ""),
       preferredEnglishName: String(data.preferredEnglishName ?? ""),
-      legalEnglishName: String(data.legalEnglishName ?? data.englishName ?? ""),
+      firstName: String(data.firstName ?? ""),
+      lastName: String(data.lastName ?? ""),
       gender: (data.gender as Gender) ?? "",
       dateOfBirth:
         data.dateOfBirth ? String(data.dateOfBirth).slice(0, 10) : "",
@@ -147,6 +149,8 @@ export function CandidateDetailView({
       candidate
         ? computeDisplayName({
             preferredEnglishName: String(candidate.preferredEnglishName ?? ""),
+            firstName: String(candidate.firstName ?? ""),
+            lastName: String(candidate.lastName ?? ""),
             legalEnglishName: String(candidate.legalEnglishName ?? candidate.englishName ?? ""),
             englishName: String(candidate.englishName ?? ""),
           })
@@ -472,8 +476,12 @@ export function CandidateDetailView({
               <input disabled={readOnly} value={identityForm.preferredEnglishName} onChange={(e) => setIdentityForm({ ...identityForm, preferredEnglishName: e.target.value })} className={inputClass} />
             </label>
             <label className="text-sm">
-              <span className="mb-1 block text-slate-600">Legal English Name *</span>
-              <input required disabled={readOnly} value={identityForm.legalEnglishName} onChange={(e) => setIdentityForm({ ...identityForm, legalEnglishName: e.target.value.toUpperCase() })} className={inputClass} />
+              <span className="mb-1 block text-slate-600">Firstname *</span>
+              <input required disabled={readOnly} value={identityForm.firstName} onChange={(e) => setIdentityForm({ ...identityForm, firstName: e.target.value })} className={inputClass} />
+            </label>
+            <label className="text-sm">
+              <span className="mb-1 block text-slate-600">Lastname *</span>
+              <input required disabled={readOnly} value={identityForm.lastName} onChange={(e) => setIdentityForm({ ...identityForm, lastName: e.target.value })} className={inputClass} />
             </label>
             <Field label="Display Name" value={computeDisplayName(identityForm)} />
             <label className="text-sm">

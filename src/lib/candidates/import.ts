@@ -27,6 +27,8 @@ export interface CandidateImportRow {
   surnamePinyin?: string;
   givenNamePinyin?: string;
   preferredEnglishName?: string;
+  firstName?: string;
+  lastName?: string;
   legalEnglishName?: string;
   englishName?: string;
   gender?: string;
@@ -50,12 +52,32 @@ export interface CandidateImportRow {
 }
 
 function rowToIdentityInput(row: CandidateImportRow) {
-  const legalEnglishName = row.legalEnglishName?.trim() || row.englishName?.trim() || "";
+  let firstName = row.firstName?.trim() || "";
+  let lastName = row.lastName?.trim() || "";
+  const legalEnglishName =
+    row.legalEnglishName?.trim() ||
+    [firstName, lastName].filter(Boolean).join(" ") ||
+    row.englishName?.trim() ||
+    "";
+
+  if ((!firstName || !lastName) && legalEnglishName) {
+    const parts = legalEnglishName.split(/\s+/).filter(Boolean);
+    if (parts.length === 1) {
+      firstName = firstName || parts[0];
+      lastName = lastName || parts[0];
+    } else if (parts.length >= 2) {
+      firstName = firstName || parts.slice(0, -1).join(" ");
+      lastName = lastName || parts[parts.length - 1];
+    }
+  }
+
   return {
     chineseName: row.chineseName?.trim() || null,
     surnamePinyin: row.surnamePinyin?.trim() || null,
     givenNamePinyin: row.givenNamePinyin?.trim() || null,
     preferredEnglishName: row.preferredEnglishName?.trim() || null,
+    firstName: firstName || null,
+    lastName: lastName || null,
     legalEnglishName,
     gender: parseGenderInput(row.gender) ?? null,
     dateOfBirth: parseDateOfBirth(row.dateOfBirth),

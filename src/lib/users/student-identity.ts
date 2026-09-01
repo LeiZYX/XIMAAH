@@ -21,7 +21,8 @@ import {
 } from "@/lib/students/profile-enums";
 import { resolveSchoolStudentNumber } from "@/lib/students/identifiers";
 import { buildPaginationMeta } from "@/lib/pagination";
-import { containsFilter, equalsFilter } from "@/lib/db/string-filters";
+import { containsFilter } from "@/lib/db/string-filters";
+import { composeLegalEnglishName, computeDisplayName } from "@/lib/candidates/identity";
 import { logUserAudit } from "@/lib/users/audit";
 import { prisma } from "@/lib/prisma";
 
@@ -56,9 +57,16 @@ function mapStudentRow(
 ) {
   const candidate = student.candidate;
   const profile = student.studentProfile;
+  const displayName = computeDisplayName({
+    preferredEnglishName: candidate?.preferredEnglishName,
+    firstName: candidate?.firstName,
+    lastName: candidate?.lastName,
+    legalEnglishName: candidate?.legalEnglishName,
+    englishName: candidate?.englishName ?? student.name,
+  });
   return {
     id: student.id,
-    name: candidate?.englishName ?? student.name,
+    name: displayName || student.name,
     email: candidate?.email ?? student.email ?? profile?.email ?? null,
     phone: candidate?.phone ?? student.phone ?? profile?.phone ?? null,
     isActive: student.isActive,
@@ -69,6 +77,9 @@ function mapStudentRow(
     chineseName: candidate?.chineseName ?? null,
     pinyinLastName: candidate?.surnamePinyin ?? null,
     pinyinFirstName: candidate?.givenNamePinyin ?? null,
+    preferredEnglishName: candidate?.preferredEnglishName ?? null,
+    firstName: candidate?.firstName ?? null,
+    lastName: candidate?.lastName ?? null,
     idNumber: candidate?.idNumber ?? profile?.idCardNumber ?? null,
     passportNumber: candidate?.passportNumber ?? null,
     dateOfBirth: candidate?.dateOfBirth ? formatDateOfBirth(candidate.dateOfBirth) : null,
@@ -118,6 +129,11 @@ export async function listStudentIdentities(
       { candidate: { is: { assessmentHubCandidateNumber: containsFilter(filters.q) } } },
       { candidate: { is: { studentId: containsFilter(filters.q) } } },
       { candidate: { is: { chineseName: containsFilter(filters.q) } } },
+      { candidate: { is: { firstName: containsFilter(filters.q) } } },
+      { candidate: { is: { lastName: containsFilter(filters.q) } } },
+      { candidate: { is: { preferredEnglishName: containsFilter(filters.q) } } },
+      { candidate: { is: { legalEnglishName: containsFilter(filters.q) } } },
+      { candidate: { is: { englishName: containsFilter(filters.q) } } },
     ];
   }
 
@@ -145,6 +161,9 @@ const INTERNAL_STUDENT_EXPORT_COLUMNS = [
   "Student ID",
   "School Student Number",
   "Chinese Name",
+  "Preferred English Name",
+  "Firstname",
+  "Lastname",
   "English Name",
   "Pinyin Last Name",
   "Pinyin First Name",
@@ -165,6 +184,9 @@ export async function exportStudentIdentities(filters: StudentIdentityFilters) {
     "Student ID": row.studentId ?? "",
     "School Student Number": row.studentNo ?? "",
     "Chinese Name": row.chineseName ?? "",
+    "Preferred English Name": row.preferredEnglishName ?? "",
+    Firstname: row.firstName ?? "",
+    Lastname: row.lastName ?? "",
     "English Name": row.name,
     "Pinyin Last Name": row.pinyinLastName ?? "",
     "Pinyin First Name": row.pinyinFirstName ?? "",
@@ -362,7 +384,10 @@ export async function upsertStudentIdentity(
   performedById: string,
   input: {
     id?: string;
-    englishName: string;
+    firstName?: string;
+    lastName?: string;
+    preferredEnglishName?: string;
+    englishName?: string;
     chineseName?: string;
     pinyinLastName?: string;
     pinyinFirstName?: string;
@@ -386,6 +411,26 @@ export async function upsertStudentIdentity(
   if (!grade) {
     throw new Error("Grade must be one of G9, G10, G11, G12");
   }
+
+  const firstName = input.firstName?.trim() || null;
+  const lastName = input.lastName?.trim() || null;
+  const preferredEnglishName = input.preferredEnglishName?.trim() || null;
+  const legalEnglishName =
+    composeLegalEnglishName({
+      firstName,
+      lastName,
+      legalEnglishName: input.englishName,
+    }) || null;
+  if (!firstName || !lastName) {
+    throw new Error("Firstname and Lastname are required");
+  }
+  const displayName = computeDisplayName({
+    preferredEnglishName,
+    firstName,
+    lastName,
+    legalEnglishName,
+    englishName: input.englishName,
+  });
 
   const idNumber = input.idNumber ?? input.idCardNumber;
   const dateOfBirth = input.dateOfBirth ? parseDateOfBirthInput(input.dateOfBirth) : undefined;
@@ -433,8 +478,11 @@ export async function upsertStudentIdentity(
 
   const candidateData = {
     chineseName: input.chineseName ?? null,
-    englishName: input.englishName,
-    legalEnglishName: input.englishName,
+    preferredEnglishName,
+    firstName,
+    lastName,
+    englishName: displayName,
+    legalEnglishName,
     surnamePinyin: input.pinyinLastName ?? null,
     givenNamePinyin: input.pinyinFirstName ?? null,
     assessmentHubCandidateNumber,
@@ -457,7 +505,7 @@ export async function upsertStudentIdentity(
     const user = await prisma.user.update({
       where: { id: input.id },
       data: {
-        name: input.englishName,
+        name: displayName,
         email: input.email ?? null,
         phone: input.phone ?? null,
         studentNo: profileStudentNo,
@@ -507,7 +555,7 @@ export async function upsertStudentIdentity(
 
   const user = await prisma.user.create({
     data: {
-      name: input.englishName,
+      name: displayName,
       email: input.email ?? null,
       phone: input.phone ?? null,
       studentNo: profileStudentNo,
@@ -532,8 +580,11 @@ export async function upsertStudentIdentity(
           studentId: permanentStudentId!,
           candidateType: input.studentType ?? "INTERNAL",
           assessmentHubCandidateNumber,
-          englishName: input.englishName,
-          legalEnglishName: input.englishName,
+          preferredEnglishName,
+          firstName,
+          lastName,
+          englishName: displayName,
+          legalEnglishName,
           chineseName: input.chineseName ?? null,
           surnamePinyin: input.pinyinLastName ?? null,
           givenNamePinyin: input.pinyinFirstName ?? null,

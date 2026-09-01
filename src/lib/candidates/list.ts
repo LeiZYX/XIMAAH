@@ -68,6 +68,10 @@ export function buildCandidateWhere(filters: CandidateListFilters): Prisma.Candi
   if (filters.q) {
     where.OR = [
       { englishName: containsFilter(filters.q) },
+      { firstName: containsFilter(filters.q) },
+      { lastName: containsFilter(filters.q) },
+      { preferredEnglishName: containsFilter(filters.q) },
+      { legalEnglishName: containsFilter(filters.q) },
       { chineseName: containsFilter(filters.q) },
       { assessmentHubCandidateNumber: containsFilter(filters.q) },
       { studentId: containsFilter(filters.q) },

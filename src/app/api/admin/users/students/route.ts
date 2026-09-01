@@ -64,7 +64,10 @@ export async function POST(request: NextRequest) {
 
   const body = await request.json();
   const data = parseJsonBody<{
-    englishName: string;
+    firstName: string;
+    lastName: string;
+    preferredEnglishName?: string;
+    englishName?: string;
     chineseName?: string;
     pinyinLastName?: string;
     pinyinFirstName?: string;
@@ -82,7 +85,7 @@ export async function POST(request: NextRequest) {
     isActive?: boolean;
     studentType?: "INTERNAL" | "EXTERNAL";
     password?: string;
-  }>(body, ["englishName", "grade", "className"]);
+  }>(body, ["firstName", "lastName", "grade", "className"]);
 
   if (!data) return jsonError("Missing required fields");
   rejectImportedStudentId((body as { studentId?: unknown }).studentId);

@@ -23,6 +23,9 @@ interface StudentRow {
   chineseName: string | null;
   pinyinLastName: string | null;
   pinyinFirstName: string | null;
+  preferredEnglishName: string | null;
+  firstName: string | null;
+  lastName: string | null;
   idNumber: string | null;
   passportNumber: string | null;
   dateOfBirth: string | null;
@@ -35,7 +38,9 @@ interface StudentRow {
 }
 
 interface StudentFormState {
-  englishName: string;
+  firstName: string;
+  lastName: string;
+  preferredEnglishName: string;
   chineseName: string;
   pinyinLastName: string;
   pinyinFirstName: string;
@@ -53,7 +58,9 @@ interface StudentFormState {
 }
 
 const emptyForm = (): StudentFormState => ({
-  englishName: "",
+  firstName: "",
+  lastName: "",
+  preferredEnglishName: "",
   chineseName: "",
   pinyinLastName: "",
   pinyinFirstName: "",
@@ -205,7 +212,9 @@ export function StudentUsersManager() {
     setEditingId(row.id);
     setViewStudentId(row.studentId);
     setForm({
-      englishName: row.name,
+      firstName: row.firstName ?? "",
+      lastName: row.lastName ?? "",
+      preferredEnglishName: row.preferredEnglishName ?? "",
       chineseName: row.chineseName ?? "",
       pinyinLastName: row.pinyinLastName ?? "",
       pinyinFirstName: row.pinyinFirstName ?? "",
@@ -231,7 +240,9 @@ export function StudentUsersManager() {
     setMessage(null);
 
     const payload = {
-      englishName: form.englishName.trim(),
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      preferredEnglishName: form.preferredEnglishName.trim() || undefined,
       chineseName: form.chineseName.trim() || undefined,
       pinyinLastName: form.pinyinLastName.trim() || undefined,
       pinyinFirstName: form.pinyinFirstName.trim() || undefined,
@@ -411,7 +422,9 @@ export function StudentUsersManager() {
                   </th>
                   <th className="border border-slate-200 px-3 py-2">Student ID</th>
                   <th className="border border-slate-200 px-3 py-2">School Student Number</th>
-                  <th className="border border-slate-200 px-3 py-2">English name</th>
+                  <th className="border border-slate-200 px-3 py-2">Display name</th>
+                  <th className="border border-slate-200 px-3 py-2">Firstname</th>
+                  <th className="border border-slate-200 px-3 py-2">Lastname</th>
                   <th className="border border-slate-200 px-3 py-2">Chinese name</th>
                   <th className="border border-slate-200 px-3 py-2">ID card</th>
                   <th className="border border-slate-200 px-3 py-2">Gender</th>
@@ -437,6 +450,8 @@ export function StudentUsersManager() {
                     </td>
                     <td className="border border-slate-200 px-3 py-2">{row.studentNo ?? "—"}</td>
                     <td className="border border-slate-200 px-3 py-2">{row.name}</td>
+                    <td className="border border-slate-200 px-3 py-2">{row.firstName ?? "—"}</td>
+                    <td className="border border-slate-200 px-3 py-2">{row.lastName ?? "—"}</td>
                     <td className="border border-slate-200 px-3 py-2">{row.chineseName ?? "—"}</td>
                     <td className="border border-slate-200 px-3 py-2">{row.idCardNumber ?? "—"}</td>
                     <td className="border border-slate-200 px-3 py-2">{genderLabel(row.gender)}</td>
@@ -544,11 +559,30 @@ export function StudentUsersManager() {
                   />
                 </label>
                 <label className="block text-sm text-slate-700">
-                  English name *
+                  Preferred English Name
+                  <input
+                    value={form.preferredEnglishName}
+                    onChange={(e) =>
+                      setForm((prev) => ({ ...prev, preferredEnglishName: e.target.value }))
+                    }
+                    className={`mt-1 ${inputClass}`}
+                  />
+                </label>
+                <label className="block text-sm text-slate-700">
+                  Firstname *
                   <input
                     required
-                    value={form.englishName}
-                    onChange={(e) => setForm((prev) => ({ ...prev, englishName: e.target.value }))}
+                    value={form.firstName}
+                    onChange={(e) => setForm((prev) => ({ ...prev, firstName: e.target.value }))}
+                    className={`mt-1 ${inputClass}`}
+                  />
+                </label>
+                <label className="block text-sm text-slate-700">
+                  Lastname *
+                  <input
+                    required
+                    value={form.lastName}
+                    onChange={(e) => setForm((prev) => ({ ...prev, lastName: e.target.value }))}
                     className={`mt-1 ${inputClass}`}
                   />
                 </label>

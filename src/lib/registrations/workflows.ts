@@ -61,7 +61,10 @@ export interface StaffRegistrationInput {
 export interface ExternalCandidateRegistrationInput {
   candidateId?: string;
   newCandidate?: {
-    englishName: string;
+    firstName?: string;
+    lastName?: string;
+    preferredEnglishName?: string;
+    englishName?: string;
     chineseName?: string;
     email?: string;
     phone?: string;
@@ -593,6 +596,16 @@ export async function applyExternalCandidateRegistration(
       throw new RegistrationError("External candidate not found", 404);
     }
     candidate = existing;
+  } else if (
+    input.newCandidate?.firstName?.trim() &&
+    input.newCandidate?.lastName?.trim()
+  ) {
+    candidate = await createExternalCandidate({
+      ...input.newCandidate,
+      dateOfBirth: input.newCandidate.dateOfBirth
+        ? new Date(input.newCandidate.dateOfBirth)
+        : undefined,
+    });
   } else if (input.newCandidate?.englishName?.trim()) {
     candidate = await createExternalCandidate({
       ...input.newCandidate,

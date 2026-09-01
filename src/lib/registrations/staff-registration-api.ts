@@ -136,7 +136,11 @@ export async function createExternalCandidateRegistrationHandler(request: NextRe
   if (!data?.registrationWindowId) {
     return jsonError("registrationWindowId is required", 400);
   }
-  if (!data.candidateId && !data.newCandidate?.englishName?.trim()) {
+  if (
+    !data.candidateId &&
+    !(data.newCandidate?.firstName?.trim() && data.newCandidate?.lastName?.trim()) &&
+    !data.newCandidate?.englishName?.trim()
+  ) {
     return jsonError("Select an existing external candidate or provide new candidate details", 400);
   }
 
