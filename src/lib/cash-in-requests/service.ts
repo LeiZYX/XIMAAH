@@ -1,4 +1,9 @@
 import type { PostResultRequestStatus } from "@/generated/prisma/client";
+import {
+  assertCashInPaidBeforeSentToBoard,
+  cancelUnpaidCashInFeeStatement,
+  issueCashInFeeStatement,
+} from "@/lib/cash-in-requests/billing";
 import { resolveCashInFee } from "@/lib/fees/cash-in-fee";
 import { toNumber } from "@/lib/fees/money";
 import { prisma } from "@/lib/prisma";
@@ -28,6 +33,16 @@ export const cashInRequestInclude = {
       version: true,
       salesAmount: true,
       salesCurrency: true,
+    },
+  },
+  feeStatement: {
+    select: {
+      id: true,
+      statementNo: true,
+      status: true,
+      totalGbpAmount: true,
+      amountDueGbpAmount: true,
+      issuedAt: true,
     },
   },
   requestedBy: { select: { id: true, name: true } },
@@ -166,6 +181,17 @@ export async function createCashInRequest(input: {
     },
   });
 
+  if (created.status === "SUBMITTED") {
+    await issueCashInFeeStatement({
+      cashInRequestId: created.id,
+      performedByUserId: input.requestedByUserId,
+    });
+    return prisma.cashInRequest.findUniqueOrThrow({
+      where: { id: created.id },
+      include: cashInRequestInclude,
+    });
+  }
+
   return created;
 }
 
@@ -184,6 +210,10 @@ export async function updateCashInRequestStatus(input: {
 
   if (input.status === "CANCELLED" && !canCancelCashInRequest(existing.status)) {
     throw new Error("Cash-in requests cannot be cancelled after they are sent to the board");
+  }
+
+  if (input.status === "SENT_TO_BOARD") {
+    await assertCashInPaidBeforeSentToBoard(input.id);
   }
 
   if (input.status === "SUBMITTED" && existing.quotedSalesAmount == null) {
@@ -226,7 +256,15 @@ export async function updateCashInRequestStatus(input: {
       },
     });
 
-    return updated;
+    await issueCashInFeeStatement({
+      cashInRequestId: updated.id,
+      performedByUserId: input.performedByUserId,
+    });
+
+    return prisma.cashInRequest.findUniqueOrThrow({
+      where: { id: updated.id },
+      include: cashInRequestInclude,
+    });
   }
 
   const updated = await prisma.cashInRequest.update({
@@ -251,6 +289,28 @@ export async function updateCashInRequestStatus(input: {
       toStatus: updated.status,
     },
   });
+
+  if (updated.status === "SUBMITTED" && !updated.feeStatementId) {
+    await issueCashInFeeStatement({
+      cashInRequestId: updated.id,
+      performedByUserId: input.performedByUserId,
+    });
+    return prisma.cashInRequest.findUniqueOrThrow({
+      where: { id: updated.id },
+      include: cashInRequestInclude,
+    });
+  }
+
+  if (updated.status === "CANCELLED") {
+    await cancelUnpaidCashInFeeStatement({
+      cashInRequestId: updated.id,
+      performedByUserId: input.performedByUserId,
+    });
+    return prisma.cashInRequest.findUniqueOrThrow({
+      where: { id: updated.id },
+      include: cashInRequestInclude,
+    });
+  }
 
   return updated;
 }

@@ -86,6 +86,17 @@ export async function GET() {
           examSeries: { select: { name: true, year: true } },
         },
       },
+      cashInRequests: {
+        select: {
+          id: true,
+          cashInCode: true,
+          status: true,
+          examBoard: { select: { name: true, code: true } },
+          examSeries: { select: { name: true, year: true } },
+          subject: { select: { name: true, code: true } },
+          qualification: { select: { name: true, level: true } },
+        },
+      },
     },
     orderBy: [{ issuedAt: "desc" }],
   });

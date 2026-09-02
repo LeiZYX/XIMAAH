@@ -230,3 +230,40 @@ export async function backfillConfirmationNumbers(client: NumberingClient = pris
 
   return updated;
 }
+
+/** Post-results fee statements (cash-in, reviews, etc.): FS-PR-YYYY-###### */
+export function postResultsFeeStatementNumberPattern(year: number): string {
+  return `FS-PR-${year}-`;
+}
+
+export function formatPostResultsFeeStatementNumber(year: number, sequence: number): string {
+  return `${postResultsFeeStatementNumberPattern(year)}${String(sequence).padStart(6, "0")}`;
+}
+
+async function maxPostResultsFeeStatementSequence(
+  year: number,
+  client: NumberingClient = prisma,
+): Promise<number> {
+  const pattern = postResultsFeeStatementNumberPattern(year);
+  const rows = await client.feeStatement.findMany({
+    where: { statementNo: { startsWith: pattern } },
+    select: { statementNo: true },
+  });
+
+  let max = 0;
+  for (const row of rows) {
+    const sequence = parseDocumentSequence(row.statementNo, pattern);
+    if (sequence !== null && sequence > max) {
+      max = sequence;
+    }
+  }
+  return max;
+}
+
+export async function generatePostResultsFeeStatementNumber(
+  year = new Date().getFullYear(),
+  client: NumberingClient = prisma,
+): Promise<string> {
+  const nextSequence = (await maxPostResultsFeeStatementSequence(year, client)) + 1;
+  return formatPostResultsFeeStatementNumber(year, nextSequence);
+}

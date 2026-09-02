@@ -35,7 +35,7 @@ export function cashInRequestStatusLabel(status: string): string {
     case "DRAFT":
       return "Draft";
     case "SUBMITTED":
-      return "Submitted (awaiting board)";
+      return "Submitted (awaiting payment)";
     case "SENT_TO_BOARD":
       return "Sent to board";
     case "COMPLETED":

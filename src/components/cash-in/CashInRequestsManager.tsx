@@ -9,6 +9,8 @@ import {
   canCancelCashInRequest,
   cashInRequestStatusLabel,
 } from "@/lib/cash-in-requests/status";
+import { isCashInFeeStatementPayable } from "@/lib/cash-in-requests/billing";
+import { formatMoney } from "@/lib/fees/money";
 
 interface ExamBoardOption {
   id: string;
@@ -61,6 +63,13 @@ interface CashInRequestRow {
   qualification?: { level: string; code: string | null };
   subject?: { name: string; code: string };
   requestedBy?: { name: string | null };
+  feeStatement?: {
+    id: string;
+    statementNo: string;
+    status: string;
+    totalGbpAmount: string | number;
+    amountDueGbpAmount: string | number | null;
+  } | null;
 }
 
 export function CashInRequestsManager({
@@ -222,7 +231,7 @@ export function CashInRequestsManager({
     }
     if (status === "SENT_TO_BOARD") {
       const confirmed = window.confirm(
-        "Mark as sent to the exam board?\n\nAfter this, cancellation is blocked.",
+        "Mark as sent to the exam board?\n\nRequires the fee statement to be paid. After this, cancellation is blocked.",
       );
       if (!confirmed) return;
     }
@@ -247,7 +256,7 @@ export function CashInRequestsManager({
     <div className="space-y-6">
       <PageHeader
         title="Cash-in Requests"
-        description="Create and track cash-in requests without a review window. Codes and series pricing come from Cash-in Codes and Fee Schedule. Billing/payment arrives in a later phase."
+        description="Create and track cash-in requests. Submitting issues a student fee statement; payment is required before sending to the board."
       />
 
       <Card className="space-y-2 text-sm text-slate-700">
@@ -262,7 +271,8 @@ export function CashInRequestsManager({
           </Link>
         </p>
         <p>
-          Cancel is allowed only while status is Draft or Submitted (before Sent to board).
+          Flow: Draft → Submit (issues fee statement) → student pays → Sent to board → Complete.
+          Cancel is allowed only while Draft or Submitted (before Sent to board).
         </p>
       </Card>
 
@@ -463,6 +473,7 @@ export function CashInRequestsManager({
                   <th className="px-3 py-2 text-left">Subject</th>
                   <th className="px-3 py-2 text-left">Code</th>
                   <th className="px-3 py-2 text-left">Quote</th>
+                  <th className="px-3 py-2 text-left">Bill</th>
                   <th className="px-3 py-2 text-left">Status</th>
                   <th className="px-3 py-2 text-left">Actions</th>
                 </tr>
@@ -496,6 +507,27 @@ export function CashInRequestsManager({
                         ? `${row.quotedSalesCurrency} ${row.quotedSalesAmount}`
                         : "—"}
                     </td>
+                    <td className="px-3 py-2">
+                      {row.feeStatement ? (
+                        <>
+                          <div className="font-medium">{row.feeStatement.statementNo}</div>
+                          <div className="text-xs text-slate-500">
+                            {row.feeStatement.status}
+                            {row.feeStatement.status === "ISSUED"
+                              ? ` · due ${formatMoney(
+                                  Number(
+                                    row.feeStatement.amountDueGbpAmount ??
+                                      row.feeStatement.totalGbpAmount,
+                                  ),
+                                  "GBP",
+                                )}`
+                              : ""}
+                          </div>
+                        </>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
                     <td className="px-3 py-2">{cashInRequestStatusLabel(row.status)}</td>
                     <td className="px-3 py-2">
                       <div className="flex flex-wrap gap-2">
@@ -511,7 +543,15 @@ export function CashInRequestsManager({
                         {row.status === "SUBMITTED" ? (
                           <button
                             type="button"
-                            className="text-indigo-700 hover:underline"
+                            className="text-indigo-700 hover:underline disabled:cursor-not-allowed disabled:text-slate-400"
+                            disabled={
+                              !row.feeStatement || !isCashInFeeStatementPayable(row.feeStatement)
+                            }
+                            title={
+                              row.feeStatement && isCashInFeeStatementPayable(row.feeStatement)
+                                ? "Mark as sent to the exam board"
+                                : "Student payment required first"
+                            }
                             onClick={() => void changeStatus(row, "SENT_TO_BOARD")}
                           >
                             Sent to board

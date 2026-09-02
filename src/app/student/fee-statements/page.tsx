@@ -10,10 +10,25 @@ import {
 import { feeStatementStatusClass, feeStatementStatusLabel } from "@/lib/fees/workspace-status";
 import { formatMoney } from "@/lib/fees/money";
 
+interface WindowContext {
+  title?: string;
+  examBoard: { code: string; name?: string };
+  examSeries: { name: string; year: number };
+}
+
+interface CashInContext {
+  cashInCode: string;
+  examBoard: { code: string; name?: string };
+  examSeries: { name: string; year: number };
+  subject: { name: string; code: string };
+  qualification?: { name: string; level: string };
+}
+
 interface FeeStatementSummary {
   id: string;
   statementNo: string;
   status: string;
+  businessType?: string;
   totalGbpAmount: number | string;
   totalCnyAmount: number | string;
   previouslyPaidGbpAmount?: number | string | null;
@@ -21,17 +36,45 @@ interface FeeStatementSummary {
   paymentNotes?: string | null;
   issuedAt: string | null;
   paymentOrders?: StudentPaymentOrder[];
-  registrationWindow: {
-    title: string;
-    examBoard: { code: string };
-    examSeries: { name: string; year: number };
-  };
+  registrationWindow: WindowContext | null;
+  cashInRequests?: CashInContext[];
 }
 
 interface UpdatingEntry {
   status: "UPDATING";
   message: string;
-  registrationWindow: FeeStatementSummary["registrationWindow"] & { id?: string };
+  registrationWindow: WindowContext & { id?: string };
+}
+
+function statementContextLabel(statement: FeeStatementSummary): {
+  heading: string;
+  title: string;
+  detail: string;
+} {
+  const cashIn = statement.cashInRequests?.[0];
+  if (cashIn || statement.businessType === "POST_RESULTS") {
+    if (cashIn) {
+      return {
+        heading: "Cash-in",
+        title: `${cashIn.subject.code} · ${cashIn.cashInCode}`,
+        detail: `${cashIn.examBoard.code} · ${cashIn.examSeries.name} (${cashIn.examSeries.year})`,
+      };
+    }
+    return {
+      heading: "Post-results",
+      title: "Post-results fee",
+      detail: "Cash-in / review service",
+    };
+  }
+
+  const window = statement.registrationWindow;
+  return {
+    heading: "Registration window",
+    title: window?.title ?? "Registration",
+    detail: window
+      ? `${window.examBoard.code} · ${window.examSeries.name} (${window.examSeries.year})`
+      : "—",
+  };
 }
 
 function UpdatingCard({ entry }: { entry: UpdatingEntry }) {
@@ -68,6 +111,8 @@ function FeeStatementCard({
   statement: FeeStatementSummary;
   onPaid: () => void;
 }) {
+  const context = statementContextLabel(statement);
+
   return (
     <article className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex flex-wrap items-start justify-between gap-2">
@@ -83,13 +128,9 @@ function FeeStatementCard({
       </div>
       <dl className="mt-3 space-y-2 text-sm">
         <div>
-          <dt className="text-slate-500">Registration window</dt>
-          <dd className="font-medium text-slate-900">{statement.registrationWindow.title}</dd>
-          <dd className="text-xs text-slate-500">
-            {statement.registrationWindow.examBoard.code} ·{" "}
-            {statement.registrationWindow.examSeries.name} (
-            {statement.registrationWindow.examSeries.year})
-          </dd>
+          <dt className="text-slate-500">{context.heading}</dt>
+          <dd className="font-medium text-slate-900">{context.title}</dd>
+          <dd className="text-xs text-slate-500">{context.detail}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Fee total (GBP)</dt>
@@ -109,9 +150,7 @@ function FeeStatementCard({
               <dt className="text-slate-500">Amount due</dt>
               <dd className="font-medium text-slate-900">
                 {formatMoney(
-                  Number(
-                    statement.amountDueGbpAmount ?? statement.totalGbpAmount,
-                  ),
+                  Number(statement.amountDueGbpAmount ?? statement.totalGbpAmount),
                   "GBP",
                 )}
               </dd>
@@ -192,7 +231,7 @@ export default function StudentFeeStatementsPage() {
     <div className="space-y-6">
       <PageHeader
         title="My fee statements"
-        description="View issued exam fee statements and pay online in GBP via WeChat or Alipay."
+        description="View issued exam and cash-in fee statements and pay online in GBP via WeChat or Alipay."
       />
 
       <div className="flex flex-wrap items-center gap-2">
