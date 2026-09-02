@@ -18,8 +18,13 @@ WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 
 FROM base AS deps
+# China builds: apt already uses Aliyun; npm must not hit registry.npmjs.org slowly.
+# Rewrite lockfile resolved URLs so `npm ci` actually downloads from the mirror.
+ARG NPM_REGISTRY=https://registry.npmmirror.com
+ENV NPM_CONFIG_REGISTRY=${NPM_REGISTRY}
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN sed -i "s#https://registry.npmjs.org/#${NPM_REGISTRY%/}/#g" package-lock.json \
+  && npm ci
 
 FROM base AS builder
 ARG DATABASE_URL
