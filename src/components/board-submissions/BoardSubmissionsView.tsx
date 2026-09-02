@@ -200,7 +200,11 @@ export function BoardSubmissionsView({ basePath }: BoardSubmissionsViewProps) {
               onSubmitted={() => void loadSummary(selector.registrationWindowId)}
             />
           ) : (
-            <BoardSubmissionsAmendmentTab summary={summary} />
+            <BoardSubmissionsAmendmentTab
+              summary={summary}
+              basePath={basePath}
+              onSubmitted={() => void loadSummary(selector.registrationWindowId)}
+            />
           )}
         </>
       ) : null}
