@@ -109,6 +109,7 @@ export async function buildBulkEntriesPreview(
       registrationType: true,
       student: {
         select: {
+          studentProfile: { select: { gender: true, idCardNumber: true } },
           candidate: {
             select: {
               id: true,
@@ -121,10 +122,12 @@ export async function buildBulkEntriesPreview(
               englishName: true,
               gender: true,
               dateOfBirth: true,
+              idNumber: true,
+              idDocumentNumber: true,
               candidateType: true,
               user: {
                 select: {
-                  studentProfile: { select: { gender: true } },
+                  studentProfile: { select: { gender: true, idCardNumber: true } },
                 },
               },
               examIdentities: {
@@ -151,10 +154,12 @@ export async function buildBulkEntriesPreview(
           englishName: true,
           gender: true,
           dateOfBirth: true,
+          idNumber: true,
+          idDocumentNumber: true,
           candidateType: true,
           user: {
             select: {
-              studentProfile: { select: { gender: true } },
+              studentProfile: { select: { gender: true, idCardNumber: true } },
             },
           },
           examIdentities: {
@@ -199,7 +204,16 @@ export async function buildBulkEntriesPreview(
       candidate.legalEnglishName?.trim() ||
       candidate.englishName?.trim() ||
       "—";
-    const demographics = resolveBulkEntriesDemographics(candidate);
+    const demographics = resolveBulkEntriesDemographics({
+      gender: candidate.gender,
+      dateOfBirth: candidate.dateOfBirth,
+      idNumber: candidate.idNumber,
+      idDocumentNumber: candidate.idDocumentNumber,
+      candidateType: candidate.candidateType,
+      user: candidate.user,
+      studentProfile:
+        workspace.student?.studentProfile ?? candidate.user?.studentProfile ?? null,
+    });
     const gender = genderForEdexcel(demographics.gender);
     const dateOfBirth = formatDobForEdexcel(demographics.dateOfBirth);
 
