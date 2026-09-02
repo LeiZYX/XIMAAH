@@ -48,6 +48,22 @@ function removeRowToArray(row: AmendmentSheetRow): (string | number)[] {
   return values;
 }
 
+export function buildAmendmentSheetPreview(input: {
+  addRows: AmendmentSheetRow[];
+  removeRows: AmendmentSheetRow[];
+}) {
+  return {
+    add: {
+      headers: [...AMENDMENT_ADD_HEADERS],
+      rows: input.addRows.map(addRowToArray),
+    },
+    remove: {
+      headers: [...AMENDMENT_REMOVE_HEADERS],
+      rows: input.removeRows.map(removeRowToArray),
+    },
+  };
+}
+
 export function buildAmendmentWorkbook(input: {
   addRows: AmendmentSheetRow[];
   removeRows: AmendmentSheetRow[];

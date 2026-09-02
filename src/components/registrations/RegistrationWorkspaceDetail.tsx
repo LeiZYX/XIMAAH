@@ -776,34 +776,6 @@ export function RegistrationWorkspaceDetail({
         </div>
       </Card>
 
-      {allowPostLockAdjustment ? (
-        <Card className="space-y-4">
-          <CandidateRegistrationFeeSection
-            examBoardId={workspace.registrationWindow.examBoard.id}
-            examBoardName={workspace.registrationWindow.examBoard.name}
-            registrationWindowId={workspace.registrationWindow.id}
-            savedIncluded={workspace.includeCandidateRegistrationFee}
-            pendingIncluded={includeCandidateRegistrationFee}
-            onPendingIncludedChange={setIncludeCandidateRegistrationFee}
-            feeReason={candidateRegistrationFeeReason}
-            onFeeReasonChange={setCandidateRegistrationFeeReason}
-            savedAuditInfo={workspace.includeCandidateRegistrationFee ? feeAuditInfo : null}
-            displayCurrency={displayCurrency}
-            onDisplayCurrencyChange={setDisplayCurrency}
-            showDisplayCurrencySelector
-            disabled={savingFeeSelection || applying}
-            showSaveButton
-            saving={savingFeeSelection}
-            onSave={() => void saveFeeSelectionOnly()}
-          />
-          <BillingPreviewPanel
-            lines={billingPreviewLines}
-            displayCurrency={displayCurrency}
-            loading={billingPreviewLoading}
-          />
-        </Card>
-      ) : null}
-
       {allowPostLockAdjustment && isLocked ? (
         <Card>
           <h2 className="mb-3 text-lg font-semibold text-slate-900">Adjustment Panel</h2>
@@ -927,6 +899,34 @@ export function RegistrationWorkspaceDetail({
               </button>
             </div>
           ) : null}
+        </Card>
+      ) : null}
+
+      {allowPostLockAdjustment ? (
+        <Card className="space-y-4">
+          <CandidateRegistrationFeeSection
+            examBoardId={workspace.registrationWindow.examBoard.id}
+            examBoardName={workspace.registrationWindow.examBoard.name}
+            registrationWindowId={workspace.registrationWindow.id}
+            savedIncluded={workspace.includeCandidateRegistrationFee}
+            pendingIncluded={includeCandidateRegistrationFee}
+            onPendingIncludedChange={setIncludeCandidateRegistrationFee}
+            feeReason={candidateRegistrationFeeReason}
+            onFeeReasonChange={setCandidateRegistrationFeeReason}
+            savedAuditInfo={workspace.includeCandidateRegistrationFee ? feeAuditInfo : null}
+            displayCurrency={displayCurrency}
+            onDisplayCurrencyChange={setDisplayCurrency}
+            showDisplayCurrencySelector
+            disabled={savingFeeSelection || applying}
+            showSaveButton
+            saving={savingFeeSelection}
+            onSave={() => void saveFeeSelectionOnly()}
+          />
+          <BillingPreviewPanel
+            lines={billingPreviewLines}
+            displayCurrency={displayCurrency}
+            loading={billingPreviewLoading}
+          />
         </Card>
       ) : null}
 

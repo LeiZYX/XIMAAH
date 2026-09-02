@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import type { BoardSubmissionWindowSummary } from "@/lib/board-submissions/types";
 import type { AmendmentPreview } from "@/lib/board-submissions/amendment/types";
-import { amendmentUnitCode } from "@/lib/board-submissions/entry-utils";
+import { buildAmendmentSheetPreview } from "@/lib/board-submissions/amendment/export";
+import { BoardSubmissionExcelPreviewTable } from "@/components/board-submissions/BoardSubmissionExcelPreviewTable";
 import { Card } from "@/components/ui/Card";
 
 export function BoardSubmissionsAmendmentTab({
@@ -77,6 +78,14 @@ export function BoardSubmissionsAmendmentTab({
       setSubmitting(false);
     }
   }
+
+  const excelPreview =
+    preview && preview.hasChanges
+      ? buildAmendmentSheetPreview({
+          addRows: preview.addRows,
+          removeRows: preview.removeRows,
+        })
+      : null;
 
   return (
     <Card className="space-y-4">
@@ -186,73 +195,35 @@ export function BoardSubmissionsAmendmentTab({
             </div>
           </div>
 
-          {preview.addRows.length > 0 ? (
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-slate-900">Add sheet</h3>
-              <div className="overflow-x-auto rounded-lg border border-slate-200">
-                <table className="min-w-full divide-y divide-slate-200 text-sm">
-                  <thead className="bg-slate-50">
-                    <tr>
-                      <th className="px-4 py-3 text-left">Candidate</th>
-                      <th className="px-4 py-3 text-left">Centre</th>
-                      <th className="px-4 py-3 text-left">Cand No</th>
-                      <th className="px-4 py-3 text-left">Units</th>
-                      <th className="px-4 py-3 text-left">Issues</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-200">
-                    {preview.addRows.map((row, index) => (
-                      <tr key={`add-${row.candidateId}-${index}`}>
-                        <td className="px-4 py-3 font-medium text-slate-900">{row.displayName}</td>
-                        <td className="px-4 py-3">{row.centreNumber ?? "—"}</td>
-                        <td className="px-4 py-3">{row.candidateNumber ?? "—"}</td>
-                        <td className="px-4 py-3 text-slate-600">
-                          {row.entries
-                            .map((entry) => `${entry.specification}/${entry.specOption}`)
-                            .join(", ")}
-                        </td>
-                        <td className="px-4 py-3 text-slate-600">
-                          {row.issues.length > 0 ? row.issues.join(", ") : "Ready"}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+          {excelPreview && excelPreview.add.rows.length > 0 ? (
+            <BoardSubmissionExcelPreviewTable
+              title="Add sheet"
+              headers={excelPreview.add.headers}
+              rows={excelPreview.add.rows}
+            />
           ) : null}
 
-          {preview.removeRows.length > 0 ? (
-            <div className="space-y-2">
-              <h3 className="text-sm font-semibold text-slate-900">Remove sheet</h3>
-              <div className="overflow-x-auto rounded-lg border border-slate-200">
-                <table className="min-w-full divide-y divide-slate-200 text-sm">
-                  <thead className="bg-slate-50">
-                    <tr>
-                      <th className="px-4 py-3 text-left">Candidate</th>
-                      <th className="px-4 py-3 text-left">Centre</th>
-                      <th className="px-4 py-3 text-left">Cand No</th>
-                      <th className="px-4 py-3 text-left">Units</th>
-                      <th className="px-4 py-3 text-left">Issues</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-200">
-                    {preview.removeRows.map((row, index) => (
-                      <tr key={`remove-${row.candidateId}-${index}`}>
-                        <td className="px-4 py-3 font-medium text-slate-900">{row.displayName}</td>
-                        <td className="px-4 py-3">{row.centreNumber ?? "—"}</td>
-                        <td className="px-4 py-3">{row.candidateNumber ?? "—"}</td>
-                        <td className="px-4 py-3 text-slate-600">
-                          {row.entries.map((entry) => amendmentUnitCode(entry)).join(", ")}
-                        </td>
-                        <td className="px-4 py-3 text-slate-600">
-                          {row.issues.length > 0 ? row.issues.join(", ") : "Ready"}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+          {excelPreview && excelPreview.remove.rows.length > 0 ? (
+            <BoardSubmissionExcelPreviewTable
+              title="Remove sheet"
+              headers={excelPreview.remove.headers}
+              rows={excelPreview.remove.rows}
+            />
+          ) : null}
+
+          {preview.addRows.some((row) => row.issues.length > 0) ||
+          preview.removeRows.some((row) => row.issues.length > 0) ? (
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+              <p className="font-medium text-slate-900">Row validation</p>
+              <ul className="mt-2 space-y-1">
+                {[...preview.addRows, ...preview.removeRows]
+                  .filter((row) => row.issues.length > 0)
+                  .map((row, index) => (
+                    <li key={`${row.candidateId}-${index}`}>
+                      {row.displayName}: {row.issues.join(", ")}
+                    </li>
+                  ))}
+              </ul>
             </div>
           ) : null}
         </>

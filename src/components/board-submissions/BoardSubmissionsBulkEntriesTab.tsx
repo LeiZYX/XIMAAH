@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import type { BoardSubmissionWindowSummary } from "@/lib/board-submissions/types";
 import type { BulkEntriesPreview } from "@/lib/board-submissions/bulk-entries/types";
+import { BULK_ENTRIES_BASELINE_LOCKED_MESSAGE } from "@/lib/board-submissions/baseline";
 import { formatRegistrationTypes } from "@/lib/board-submissions/bulk-entries/identity";
 import { Card } from "@/components/ui/Card";
 
@@ -77,6 +78,11 @@ export function BoardSubmissionsBulkEntriesTab({
     }
   }
 
+  const submissionLockedByAmendment =
+    preview?.blockingIssues.includes(BULK_ENTRIES_BASELINE_LOCKED_MESSAGE) ?? false;
+  const exportBlockingIssues =
+    preview?.blockingIssues.filter((issue) => issue !== BULK_ENTRIES_BASELINE_LOCKED_MESSAGE) ??
+    [];
   const exportParts = preview?.fileCount ?? 1;
 
   return (
@@ -132,11 +138,21 @@ export function BoardSubmissionsBulkEntriesTab({
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {message ? <p className="text-sm text-emerald-700">{message}</p> : null}
 
-      {preview && preview.blockingIssues.length > 0 ? (
+      {submissionLockedByAmendment ? (
+        <div className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+          <p className="font-medium">{BULK_ENTRIES_BASELINE_LOCKED_MESSAGE}</p>
+          <p className="mt-1">
+            You can still download Bulk Entries here for reference. Baseline updates must go through
+            the Amendment tab.
+          </p>
+        </div>
+      ) : null}
+
+      {exportBlockingIssues.length > 0 ? (
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           <p className="font-medium">Resolve these issues before export or submit:</p>
           <ul className="mt-2 list-disc pl-5">
-            {preview.blockingIssues.map((issue) => (
+            {exportBlockingIssues.map((issue) => (
               <li key={issue}>{issue}</li>
             ))}
           </ul>

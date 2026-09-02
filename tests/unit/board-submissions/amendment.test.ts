@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { parseBaselineSnapshot } from "@/lib/board-submissions/baseline";
+import { buildAmendmentSheetPreview } from "@/lib/board-submissions/amendment/export";
 import {
+  AMENDMENT_ADD_HEADERS,
   AMENDMENT_ADD_SLOTS,
   AMENDMENT_REMOVE_SLOTS,
 } from "@/lib/board-submissions/amendment/constants";
+import type { AmendmentSheetRow } from "@/lib/board-submissions/amendment/types";
 import { diffEntryLists, entryKey } from "@/lib/board-submissions/entry-utils";
 import type { BulkEntrySlot } from "@/lib/board-submissions/bulk-entries/types";
 
@@ -14,6 +17,23 @@ function chunk(entries: BulkEntrySlot[], size: number): BulkEntrySlot[][] {
   }
   return chunks;
 }
+
+describe("buildAmendmentSheetPreview", () => {
+  it("uses official headers and row layout for the add sheet", () => {
+    const row: AmendmentSheetRow = {
+      candidateId: "c1",
+      displayName: "SAMPLE STUDENT",
+      centreNumber: "96834",
+      candidateNumber: "T00001",
+      entries: [{ specification: "WMA11", specOption: "01" }],
+      issues: [],
+    };
+
+    const preview = buildAmendmentSheetPreview({ addRows: [row], removeRows: [] });
+    expect(preview.add.headers).toEqual([...AMENDMENT_ADD_HEADERS]);
+    expect(preview.add.rows[0]).toEqual(["", "96834", "T00001", "SAMPLE STUDENT", "WMA11", "01", "", ""]);
+  });
+});
 
 describe("diffEntryLists", () => {
   it("returns adds and removes relative to baseline", () => {

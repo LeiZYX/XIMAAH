@@ -1,4 +1,26 @@
 import type { BulkEntriesSnapshotRow } from "@/lib/board-submissions/bulk-entries/types";
+import { normalizeBoardEntrySlot } from "@/lib/board-submissions/entry-utils";
+import { prisma } from "@/lib/prisma";
+
+export const BULK_ENTRIES_BASELINE_LOCKED_MESSAGE =
+  "An amendment baseline already exists. Mark further submissions from the Amendment tab.";
+
+export function canCreateBulkEntriesBaseline(input: {
+  hasAmendmentBaseline: boolean;
+  rowsReady: boolean;
+}): boolean {
+  return input.rowsReady && !input.hasAmendmentBaseline;
+}
+
+export async function hasAmendmentBaseline(registrationWindowId: string): Promise<boolean> {
+  const count = await prisma.boardSubmissionBaseline.count({
+    where: {
+      registrationWindowId,
+      kind: "AMENDMENT",
+    },
+  });
+  return count > 0;
+}
 
 export function parseBaselineSnapshot(value: unknown): BulkEntriesSnapshotRow[] {
   if (!Array.isArray(value)) return [];
@@ -18,7 +40,7 @@ export function parseBaselineSnapshot(value: unknown): BulkEntriesSnapshotRow[] 
             "specification" in entry ? String(entry.specification ?? "").trim() : "";
           const specOption = "specOption" in entry ? String(entry.specOption ?? "").trim() : "";
           if (!specification || !specOption) return [];
-          return [{ specification, specOption }];
+          return [normalizeBoardEntrySlot({ specification, specOption })];
         }),
       },
     ];

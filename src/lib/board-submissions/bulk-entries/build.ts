@@ -1,6 +1,12 @@
 import { resolveSyncedNameParts } from "@/lib/candidates/identity";
+import {
+  BULK_ENTRIES_BASELINE_LOCKED_MESSAGE,
+  canCreateBulkEntriesBaseline,
+  hasAmendmentBaseline,
+} from "@/lib/board-submissions/baseline";
 import { BULK_SPEC_SLOTS } from "@/lib/board-submissions/bulk-entries/constants";
 import { resolveBulkEntriesDemographics } from "@/lib/board-submissions/bulk-entries/identity";
+import { entryKey, resolveBoardEntryCodes } from "@/lib/board-submissions/entry-utils";
 import type {
   BulkEntriesCandidateRow,
   BulkEntriesFilePart,
@@ -24,10 +30,6 @@ function genderForEdexcel(gender: Gender | null): string | null {
   if (gender === "MALE") return "M";
   if (gender === "FEMALE") return "F";
   return null;
-}
-
-function entryKey(entry: BulkEntrySlot): string {
-  return `${entry.specification}::${entry.specOption}`;
 }
 
 function chunkEntries(entries: BulkEntrySlot[]): BulkEntrySlot[][] {
@@ -219,11 +221,12 @@ export async function buildBulkEntriesPreview(
 
     const entrySet = new Map<string, BulkEntrySlot>();
     for (const registration of workspace.registrations) {
-      const specification =
-        registration.subject.qualification.code?.trim() || registration.subject.code.trim();
-      const specOption = registration.paper.code.trim();
-      if (!specification || !specOption) continue;
-      const entry = { specification, specOption };
+      const entry = resolveBoardEntryCodes({
+        qualificationCode: registration.subject.qualification.code,
+        subjectCode: registration.subject.code,
+        paperCode: registration.paper.code,
+      });
+      if (!entry) continue;
       entrySet.set(entryKey(entry), entry);
     }
 
@@ -287,7 +290,12 @@ export async function buildBulkEntriesPreview(
   );
   const fileCount = rows.reduce((max, row) => Math.max(max, row.filePartCount), 1);
   const entryCount = rows.reduce((sum, row) => sum + row.entries.length, 0);
+  const rowsReady = rows.length > 0 && rows.every((row) => row.issues.length === 0);
+  const amendmentBaselineExists = await hasAmendmentBaseline(registrationWindowId);
   const blockingIssues = [...new Set(rows.flatMap((row) => row.issues))];
+  if (amendmentBaselineExists) {
+    blockingIssues.push(BULK_ENTRIES_BASELINE_LOCKED_MESSAGE);
+  }
 
   return {
     registrationWindowId: window.id,
@@ -299,8 +307,8 @@ export async function buildBulkEntriesPreview(
     registrationTypeCounts: countRegistrationTypes(rows),
     rows,
     blockingIssues,
-    canExport: rows.length > 0 && rows.every((row) => row.issues.length === 0),
-    canSubmit: rows.length > 0 && rows.every((row) => row.issues.length === 0),
+    canExport: rowsReady,
+    canSubmit: canCreateBulkEntriesBaseline({ hasAmendmentBaseline: amendmentBaselineExists, rowsReady }),
   };
 }
 
