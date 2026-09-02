@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import type { BoardSubmissionWindowSummary } from "@/lib/board-submissions/types";
 import type { BulkEntriesPreview } from "@/lib/board-submissions/bulk-entries/types";
-import { BULK_ENTRIES_BASELINE_LOCKED_MESSAGE } from "@/lib/board-submissions/baseline";
+import { BULK_ENTRIES_BASELINE_LOCKED_MESSAGE } from "@/lib/board-submissions/baseline-rules";
 import { formatRegistrationTypes } from "@/lib/board-submissions/bulk-entries/identity";
 import { Card } from "@/components/ui/Card";
 

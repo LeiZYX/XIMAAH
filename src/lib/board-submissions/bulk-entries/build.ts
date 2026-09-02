@@ -1,9 +1,9 @@
 import { resolveSyncedNameParts } from "@/lib/candidates/identity";
+import { hasAmendmentBaseline } from "@/lib/board-submissions/baseline";
 import {
   BULK_ENTRIES_BASELINE_LOCKED_MESSAGE,
   canCreateBulkEntriesBaseline,
-  hasAmendmentBaseline,
-} from "@/lib/board-submissions/baseline";
+} from "@/lib/board-submissions/baseline-rules";
 import { BULK_SPEC_SLOTS } from "@/lib/board-submissions/bulk-entries/constants";
 import { resolveBulkEntriesDemographics } from "@/lib/board-submissions/bulk-entries/identity";
 import { entryKey, resolveBoardEntryCodes } from "@/lib/board-submissions/entry-utils";

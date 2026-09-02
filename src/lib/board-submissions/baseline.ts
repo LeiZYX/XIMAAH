@@ -2,16 +2,6 @@ import type { BulkEntriesSnapshotRow } from "@/lib/board-submissions/bulk-entrie
 import { normalizeBoardEntrySlot } from "@/lib/board-submissions/entry-utils";
 import { prisma } from "@/lib/prisma";
 
-export const BULK_ENTRIES_BASELINE_LOCKED_MESSAGE =
-  "An amendment baseline already exists. Mark further submissions from the Amendment tab.";
-
-export function canCreateBulkEntriesBaseline(input: {
-  hasAmendmentBaseline: boolean;
-  rowsReady: boolean;
-}): boolean {
-  return input.rowsReady && !input.hasAmendmentBaseline;
-}
-
 export async function hasAmendmentBaseline(registrationWindowId: string): Promise<boolean> {
   const count = await prisma.boardSubmissionBaseline.count({
     where: {

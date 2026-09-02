@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canCreateBulkEntriesBaseline } from "@/lib/board-submissions/baseline";
+import { canCreateBulkEntriesBaseline } from "@/lib/board-submissions/baseline-rules";
 
 describe("canCreateBulkEntriesBaseline", () => {
   it("allows submit when rows are ready and no amendment baseline exists", () => {
