@@ -150,6 +150,11 @@ export type CashInCode = $Result.DefaultSelection<Prisma.$CashInCodePayload>
  */
 export type CalendarSubjectSelection = $Result.DefaultSelection<Prisma.$CalendarSubjectSelectionPayload>
 /**
+ * Model CalendarPaperSelection
+ * 
+ */
+export type CalendarPaperSelection = $Result.DefaultSelection<Prisma.$CalendarPaperSelectionPayload>
+/**
  * Model Paper
  * 
  */
@@ -1464,6 +1469,16 @@ export class PrismaClient<
   get calendarSubjectSelection(): Prisma.CalendarSubjectSelectionDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.calendarPaperSelection`: Exposes CRUD operations for the **CalendarPaperSelection** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CalendarPaperSelections
+    * const calendarPaperSelections = await prisma.calendarPaperSelection.findMany()
+    * ```
+    */
+  get calendarPaperSelection(): Prisma.CalendarPaperSelectionDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.paper`: Exposes CRUD operations for the **Paper** model.
     * Example usage:
     * ```ts
@@ -2160,6 +2175,7 @@ export namespace Prisma {
     Subject: 'Subject',
     CashInCode: 'CashInCode',
     CalendarSubjectSelection: 'CalendarSubjectSelection',
+    CalendarPaperSelection: 'CalendarPaperSelection',
     Paper: 'Paper',
     ExamSeries: 'ExamSeries',
     ExamSession: 'ExamSession',
@@ -2201,7 +2217,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
+      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3987,6 +4003,72 @@ export namespace Prisma {
           }
         }
       }
+      CalendarPaperSelection: {
+        payload: Prisma.$CalendarPaperSelectionPayload<ExtArgs>
+        fields: Prisma.CalendarPaperSelectionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CalendarPaperSelectionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarPaperSelectionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CalendarPaperSelectionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarPaperSelectionPayload>
+          }
+          findFirst: {
+            args: Prisma.CalendarPaperSelectionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarPaperSelectionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CalendarPaperSelectionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarPaperSelectionPayload>
+          }
+          findMany: {
+            args: Prisma.CalendarPaperSelectionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarPaperSelectionPayload>[]
+          }
+          create: {
+            args: Prisma.CalendarPaperSelectionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarPaperSelectionPayload>
+          }
+          createMany: {
+            args: Prisma.CalendarPaperSelectionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.CalendarPaperSelectionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarPaperSelectionPayload>
+          }
+          update: {
+            args: Prisma.CalendarPaperSelectionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarPaperSelectionPayload>
+          }
+          deleteMany: {
+            args: Prisma.CalendarPaperSelectionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CalendarPaperSelectionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CalendarPaperSelectionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CalendarPaperSelectionPayload>
+          }
+          aggregate: {
+            args: Prisma.CalendarPaperSelectionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCalendarPaperSelection>
+          }
+          groupBy: {
+            args: Prisma.CalendarPaperSelectionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CalendarPaperSelectionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CalendarPaperSelectionCountArgs<ExtArgs>
+            result: $Utils.Optional<CalendarPaperSelectionCountAggregateOutputType> | number
+          }
+        }
+      }
       Paper: {
         payload: Prisma.$PaperPayload<ExtArgs>
         fields: Prisma.PaperFieldRefs
@@ -5628,6 +5710,7 @@ export namespace Prisma {
     subject?: SubjectOmit
     cashInCode?: CashInCodeOmit
     calendarSubjectSelection?: CalendarSubjectSelectionOmit
+    calendarPaperSelection?: CalendarPaperSelectionOmit
     paper?: PaperOmit
     examSeries?: ExamSeriesOmit
     examSession?: ExamSessionOmit
@@ -6620,6 +6703,7 @@ export namespace Prisma {
     resources: number
     sourceDocuments: number
     calendarSubjectSelections: number
+    calendarPaperSelections: number
     registrationWindows: number
     studentExamRegistrations: number
     feeRules: number
@@ -6641,6 +6725,7 @@ export namespace Prisma {
     resources?: boolean | ExamBoardCountOutputTypeCountResourcesArgs
     sourceDocuments?: boolean | ExamBoardCountOutputTypeCountSourceDocumentsArgs
     calendarSubjectSelections?: boolean | ExamBoardCountOutputTypeCountCalendarSubjectSelectionsArgs
+    calendarPaperSelections?: boolean | ExamBoardCountOutputTypeCountCalendarPaperSelectionsArgs
     registrationWindows?: boolean | ExamBoardCountOutputTypeCountRegistrationWindowsArgs
     studentExamRegistrations?: boolean | ExamBoardCountOutputTypeCountStudentExamRegistrationsArgs
     feeRules?: boolean | ExamBoardCountOutputTypeCountFeeRulesArgs
@@ -6706,6 +6791,13 @@ export namespace Prisma {
    */
   export type ExamBoardCountOutputTypeCountCalendarSubjectSelectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CalendarSubjectSelectionWhereInput
+  }
+
+  /**
+   * ExamBoardCountOutputType without action
+   */
+  export type ExamBoardCountOutputTypeCountCalendarPaperSelectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CalendarPaperSelectionWhereInput
   }
 
   /**
@@ -7011,6 +7103,7 @@ export namespace Prisma {
     feeSchedules: number
     reviewRequests: number
     accessToScriptRequests: number
+    calendarPaperSelections: number
   }
 
   export type PaperCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7021,6 +7114,7 @@ export namespace Prisma {
     feeSchedules?: boolean | PaperCountOutputTypeCountFeeSchedulesArgs
     reviewRequests?: boolean | PaperCountOutputTypeCountReviewRequestsArgs
     accessToScriptRequests?: boolean | PaperCountOutputTypeCountAccessToScriptRequestsArgs
+    calendarPaperSelections?: boolean | PaperCountOutputTypeCountCalendarPaperSelectionsArgs
   }
 
   // Custom InputTypes
@@ -7081,6 +7175,13 @@ export namespace Prisma {
    */
   export type PaperCountOutputTypeCountAccessToScriptRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AccessToScriptRequestWhereInput
+  }
+
+  /**
+   * PaperCountOutputType without action
+   */
+  export type PaperCountOutputTypeCountCalendarPaperSelectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CalendarPaperSelectionWhereInput
   }
 
 
@@ -33045,6 +33146,7 @@ export namespace Prisma {
     resources?: boolean | ExamBoard$resourcesArgs<ExtArgs>
     sourceDocuments?: boolean | ExamBoard$sourceDocumentsArgs<ExtArgs>
     calendarSubjectSelections?: boolean | ExamBoard$calendarSubjectSelectionsArgs<ExtArgs>
+    calendarPaperSelections?: boolean | ExamBoard$calendarPaperSelectionsArgs<ExtArgs>
     registrationWindows?: boolean | ExamBoard$registrationWindowsArgs<ExtArgs>
     studentExamRegistrations?: boolean | ExamBoard$studentExamRegistrationsArgs<ExtArgs>
     feeRules?: boolean | ExamBoard$feeRulesArgs<ExtArgs>
@@ -33094,6 +33196,7 @@ export namespace Prisma {
     resources?: boolean | ExamBoard$resourcesArgs<ExtArgs>
     sourceDocuments?: boolean | ExamBoard$sourceDocumentsArgs<ExtArgs>
     calendarSubjectSelections?: boolean | ExamBoard$calendarSubjectSelectionsArgs<ExtArgs>
+    calendarPaperSelections?: boolean | ExamBoard$calendarPaperSelectionsArgs<ExtArgs>
     registrationWindows?: boolean | ExamBoard$registrationWindowsArgs<ExtArgs>
     studentExamRegistrations?: boolean | ExamBoard$studentExamRegistrationsArgs<ExtArgs>
     feeRules?: boolean | ExamBoard$feeRulesArgs<ExtArgs>
@@ -33119,6 +33222,7 @@ export namespace Prisma {
       resources: Prisma.$ResourcePayload<ExtArgs>[]
       sourceDocuments: Prisma.$SourceDocumentPayload<ExtArgs>[]
       calendarSubjectSelections: Prisma.$CalendarSubjectSelectionPayload<ExtArgs>[]
+      calendarPaperSelections: Prisma.$CalendarPaperSelectionPayload<ExtArgs>[]
       registrationWindows: Prisma.$RegistrationWindowPayload<ExtArgs>[]
       studentExamRegistrations: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
       feeRules: Prisma.$FeeRulePayload<ExtArgs>[]
@@ -33500,6 +33604,7 @@ export namespace Prisma {
     resources<T extends ExamBoard$resourcesArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$resourcesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ResourcePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     sourceDocuments<T extends ExamBoard$sourceDocumentsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$sourceDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SourceDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     calendarSubjectSelections<T extends ExamBoard$calendarSubjectSelectionsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$calendarSubjectSelectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CalendarSubjectSelectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    calendarPaperSelections<T extends ExamBoard$calendarPaperSelectionsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$calendarPaperSelectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     registrationWindows<T extends ExamBoard$registrationWindowsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$registrationWindowsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     studentExamRegistrations<T extends ExamBoard$studentExamRegistrationsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$studentExamRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeRules<T extends ExamBoard$feeRulesArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$feeRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -34046,6 +34151,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CalendarSubjectSelectionScalarFieldEnum | CalendarSubjectSelectionScalarFieldEnum[]
+  }
+
+  /**
+   * ExamBoard.calendarPaperSelections
+   */
+  export type ExamBoard$calendarPaperSelectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    where?: CalendarPaperSelectionWhereInput
+    orderBy?: CalendarPaperSelectionOrderByWithRelationInput | CalendarPaperSelectionOrderByWithRelationInput[]
+    cursor?: CalendarPaperSelectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CalendarPaperSelectionScalarFieldEnum | CalendarPaperSelectionScalarFieldEnum[]
   }
 
   /**
@@ -39740,6 +39869,928 @@ export namespace Prisma {
 
 
   /**
+   * Model CalendarPaperSelection
+   */
+
+  export type AggregateCalendarPaperSelection = {
+    _count: CalendarPaperSelectionCountAggregateOutputType | null
+    _min: CalendarPaperSelectionMinAggregateOutputType | null
+    _max: CalendarPaperSelectionMaxAggregateOutputType | null
+  }
+
+  export type CalendarPaperSelectionMinAggregateOutputType = {
+    id: string | null
+    examBoardId: string | null
+    paperId: string | null
+    createdAt: Date | null
+  }
+
+  export type CalendarPaperSelectionMaxAggregateOutputType = {
+    id: string | null
+    examBoardId: string | null
+    paperId: string | null
+    createdAt: Date | null
+  }
+
+  export type CalendarPaperSelectionCountAggregateOutputType = {
+    id: number
+    examBoardId: number
+    paperId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CalendarPaperSelectionMinAggregateInputType = {
+    id?: true
+    examBoardId?: true
+    paperId?: true
+    createdAt?: true
+  }
+
+  export type CalendarPaperSelectionMaxAggregateInputType = {
+    id?: true
+    examBoardId?: true
+    paperId?: true
+    createdAt?: true
+  }
+
+  export type CalendarPaperSelectionCountAggregateInputType = {
+    id?: true
+    examBoardId?: true
+    paperId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CalendarPaperSelectionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CalendarPaperSelection to aggregate.
+     */
+    where?: CalendarPaperSelectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CalendarPaperSelections to fetch.
+     */
+    orderBy?: CalendarPaperSelectionOrderByWithRelationInput | CalendarPaperSelectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CalendarPaperSelectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CalendarPaperSelections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CalendarPaperSelections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CalendarPaperSelections
+    **/
+    _count?: true | CalendarPaperSelectionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CalendarPaperSelectionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CalendarPaperSelectionMaxAggregateInputType
+  }
+
+  export type GetCalendarPaperSelectionAggregateType<T extends CalendarPaperSelectionAggregateArgs> = {
+        [P in keyof T & keyof AggregateCalendarPaperSelection]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCalendarPaperSelection[P]>
+      : GetScalarType<T[P], AggregateCalendarPaperSelection[P]>
+  }
+
+
+
+
+  export type CalendarPaperSelectionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CalendarPaperSelectionWhereInput
+    orderBy?: CalendarPaperSelectionOrderByWithAggregationInput | CalendarPaperSelectionOrderByWithAggregationInput[]
+    by: CalendarPaperSelectionScalarFieldEnum[] | CalendarPaperSelectionScalarFieldEnum
+    having?: CalendarPaperSelectionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CalendarPaperSelectionCountAggregateInputType | true
+    _min?: CalendarPaperSelectionMinAggregateInputType
+    _max?: CalendarPaperSelectionMaxAggregateInputType
+  }
+
+  export type CalendarPaperSelectionGroupByOutputType = {
+    id: string
+    examBoardId: string
+    paperId: string
+    createdAt: Date
+    _count: CalendarPaperSelectionCountAggregateOutputType | null
+    _min: CalendarPaperSelectionMinAggregateOutputType | null
+    _max: CalendarPaperSelectionMaxAggregateOutputType | null
+  }
+
+  type GetCalendarPaperSelectionGroupByPayload<T extends CalendarPaperSelectionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CalendarPaperSelectionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CalendarPaperSelectionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CalendarPaperSelectionGroupByOutputType[P]>
+            : GetScalarType<T[P], CalendarPaperSelectionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CalendarPaperSelectionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    examBoardId?: boolean
+    paperId?: boolean
+    createdAt?: boolean
+    examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
+    paper?: boolean | PaperDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["calendarPaperSelection"]>
+
+
+
+  export type CalendarPaperSelectionSelectScalar = {
+    id?: boolean
+    examBoardId?: boolean
+    paperId?: boolean
+    createdAt?: boolean
+  }
+
+  export type CalendarPaperSelectionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "examBoardId" | "paperId" | "createdAt", ExtArgs["result"]["calendarPaperSelection"]>
+  export type CalendarPaperSelectionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
+    paper?: boolean | PaperDefaultArgs<ExtArgs>
+  }
+
+  export type $CalendarPaperSelectionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CalendarPaperSelection"
+    objects: {
+      examBoard: Prisma.$ExamBoardPayload<ExtArgs>
+      paper: Prisma.$PaperPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      examBoardId: string
+      paperId: string
+      createdAt: Date
+    }, ExtArgs["result"]["calendarPaperSelection"]>
+    composites: {}
+  }
+
+  type CalendarPaperSelectionGetPayload<S extends boolean | null | undefined | CalendarPaperSelectionDefaultArgs> = $Result.GetResult<Prisma.$CalendarPaperSelectionPayload, S>
+
+  type CalendarPaperSelectionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CalendarPaperSelectionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CalendarPaperSelectionCountAggregateInputType | true
+    }
+
+  export interface CalendarPaperSelectionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CalendarPaperSelection'], meta: { name: 'CalendarPaperSelection' } }
+    /**
+     * Find zero or one CalendarPaperSelection that matches the filter.
+     * @param {CalendarPaperSelectionFindUniqueArgs} args - Arguments to find a CalendarPaperSelection
+     * @example
+     * // Get one CalendarPaperSelection
+     * const calendarPaperSelection = await prisma.calendarPaperSelection.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CalendarPaperSelectionFindUniqueArgs>(args: SelectSubset<T, CalendarPaperSelectionFindUniqueArgs<ExtArgs>>): Prisma__CalendarPaperSelectionClient<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CalendarPaperSelection that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CalendarPaperSelectionFindUniqueOrThrowArgs} args - Arguments to find a CalendarPaperSelection
+     * @example
+     * // Get one CalendarPaperSelection
+     * const calendarPaperSelection = await prisma.calendarPaperSelection.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CalendarPaperSelectionFindUniqueOrThrowArgs>(args: SelectSubset<T, CalendarPaperSelectionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CalendarPaperSelectionClient<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CalendarPaperSelection that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarPaperSelectionFindFirstArgs} args - Arguments to find a CalendarPaperSelection
+     * @example
+     * // Get one CalendarPaperSelection
+     * const calendarPaperSelection = await prisma.calendarPaperSelection.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CalendarPaperSelectionFindFirstArgs>(args?: SelectSubset<T, CalendarPaperSelectionFindFirstArgs<ExtArgs>>): Prisma__CalendarPaperSelectionClient<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CalendarPaperSelection that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarPaperSelectionFindFirstOrThrowArgs} args - Arguments to find a CalendarPaperSelection
+     * @example
+     * // Get one CalendarPaperSelection
+     * const calendarPaperSelection = await prisma.calendarPaperSelection.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CalendarPaperSelectionFindFirstOrThrowArgs>(args?: SelectSubset<T, CalendarPaperSelectionFindFirstOrThrowArgs<ExtArgs>>): Prisma__CalendarPaperSelectionClient<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CalendarPaperSelections that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarPaperSelectionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CalendarPaperSelections
+     * const calendarPaperSelections = await prisma.calendarPaperSelection.findMany()
+     * 
+     * // Get first 10 CalendarPaperSelections
+     * const calendarPaperSelections = await prisma.calendarPaperSelection.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const calendarPaperSelectionWithIdOnly = await prisma.calendarPaperSelection.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CalendarPaperSelectionFindManyArgs>(args?: SelectSubset<T, CalendarPaperSelectionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CalendarPaperSelection.
+     * @param {CalendarPaperSelectionCreateArgs} args - Arguments to create a CalendarPaperSelection.
+     * @example
+     * // Create one CalendarPaperSelection
+     * const CalendarPaperSelection = await prisma.calendarPaperSelection.create({
+     *   data: {
+     *     // ... data to create a CalendarPaperSelection
+     *   }
+     * })
+     * 
+     */
+    create<T extends CalendarPaperSelectionCreateArgs>(args: SelectSubset<T, CalendarPaperSelectionCreateArgs<ExtArgs>>): Prisma__CalendarPaperSelectionClient<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CalendarPaperSelections.
+     * @param {CalendarPaperSelectionCreateManyArgs} args - Arguments to create many CalendarPaperSelections.
+     * @example
+     * // Create many CalendarPaperSelections
+     * const calendarPaperSelection = await prisma.calendarPaperSelection.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CalendarPaperSelectionCreateManyArgs>(args?: SelectSubset<T, CalendarPaperSelectionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CalendarPaperSelection.
+     * @param {CalendarPaperSelectionDeleteArgs} args - Arguments to delete one CalendarPaperSelection.
+     * @example
+     * // Delete one CalendarPaperSelection
+     * const CalendarPaperSelection = await prisma.calendarPaperSelection.delete({
+     *   where: {
+     *     // ... filter to delete one CalendarPaperSelection
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CalendarPaperSelectionDeleteArgs>(args: SelectSubset<T, CalendarPaperSelectionDeleteArgs<ExtArgs>>): Prisma__CalendarPaperSelectionClient<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CalendarPaperSelection.
+     * @param {CalendarPaperSelectionUpdateArgs} args - Arguments to update one CalendarPaperSelection.
+     * @example
+     * // Update one CalendarPaperSelection
+     * const calendarPaperSelection = await prisma.calendarPaperSelection.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CalendarPaperSelectionUpdateArgs>(args: SelectSubset<T, CalendarPaperSelectionUpdateArgs<ExtArgs>>): Prisma__CalendarPaperSelectionClient<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CalendarPaperSelections.
+     * @param {CalendarPaperSelectionDeleteManyArgs} args - Arguments to filter CalendarPaperSelections to delete.
+     * @example
+     * // Delete a few CalendarPaperSelections
+     * const { count } = await prisma.calendarPaperSelection.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CalendarPaperSelectionDeleteManyArgs>(args?: SelectSubset<T, CalendarPaperSelectionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CalendarPaperSelections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarPaperSelectionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CalendarPaperSelections
+     * const calendarPaperSelection = await prisma.calendarPaperSelection.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CalendarPaperSelectionUpdateManyArgs>(args: SelectSubset<T, CalendarPaperSelectionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CalendarPaperSelection.
+     * @param {CalendarPaperSelectionUpsertArgs} args - Arguments to update or create a CalendarPaperSelection.
+     * @example
+     * // Update or create a CalendarPaperSelection
+     * const calendarPaperSelection = await prisma.calendarPaperSelection.upsert({
+     *   create: {
+     *     // ... data to create a CalendarPaperSelection
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CalendarPaperSelection we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CalendarPaperSelectionUpsertArgs>(args: SelectSubset<T, CalendarPaperSelectionUpsertArgs<ExtArgs>>): Prisma__CalendarPaperSelectionClient<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CalendarPaperSelections.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarPaperSelectionCountArgs} args - Arguments to filter CalendarPaperSelections to count.
+     * @example
+     * // Count the number of CalendarPaperSelections
+     * const count = await prisma.calendarPaperSelection.count({
+     *   where: {
+     *     // ... the filter for the CalendarPaperSelections we want to count
+     *   }
+     * })
+    **/
+    count<T extends CalendarPaperSelectionCountArgs>(
+      args?: Subset<T, CalendarPaperSelectionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CalendarPaperSelectionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CalendarPaperSelection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarPaperSelectionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CalendarPaperSelectionAggregateArgs>(args: Subset<T, CalendarPaperSelectionAggregateArgs>): Prisma.PrismaPromise<GetCalendarPaperSelectionAggregateType<T>>
+
+    /**
+     * Group by CalendarPaperSelection.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CalendarPaperSelectionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CalendarPaperSelectionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CalendarPaperSelectionGroupByArgs['orderBy'] }
+        : { orderBy?: CalendarPaperSelectionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CalendarPaperSelectionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCalendarPaperSelectionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CalendarPaperSelection model
+   */
+  readonly fields: CalendarPaperSelectionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CalendarPaperSelection.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CalendarPaperSelectionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    examBoard<T extends ExamBoardDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoardDefaultArgs<ExtArgs>>): Prisma__ExamBoardClient<$Result.GetResult<Prisma.$ExamBoardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    paper<T extends PaperDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PaperDefaultArgs<ExtArgs>>): Prisma__PaperClient<$Result.GetResult<Prisma.$PaperPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CalendarPaperSelection model
+   */
+  interface CalendarPaperSelectionFieldRefs {
+    readonly id: FieldRef<"CalendarPaperSelection", 'String'>
+    readonly examBoardId: FieldRef<"CalendarPaperSelection", 'String'>
+    readonly paperId: FieldRef<"CalendarPaperSelection", 'String'>
+    readonly createdAt: FieldRef<"CalendarPaperSelection", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CalendarPaperSelection findUnique
+   */
+  export type CalendarPaperSelectionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    /**
+     * Filter, which CalendarPaperSelection to fetch.
+     */
+    where: CalendarPaperSelectionWhereUniqueInput
+  }
+
+  /**
+   * CalendarPaperSelection findUniqueOrThrow
+   */
+  export type CalendarPaperSelectionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    /**
+     * Filter, which CalendarPaperSelection to fetch.
+     */
+    where: CalendarPaperSelectionWhereUniqueInput
+  }
+
+  /**
+   * CalendarPaperSelection findFirst
+   */
+  export type CalendarPaperSelectionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    /**
+     * Filter, which CalendarPaperSelection to fetch.
+     */
+    where?: CalendarPaperSelectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CalendarPaperSelections to fetch.
+     */
+    orderBy?: CalendarPaperSelectionOrderByWithRelationInput | CalendarPaperSelectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CalendarPaperSelections.
+     */
+    cursor?: CalendarPaperSelectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CalendarPaperSelections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CalendarPaperSelections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CalendarPaperSelections.
+     */
+    distinct?: CalendarPaperSelectionScalarFieldEnum | CalendarPaperSelectionScalarFieldEnum[]
+  }
+
+  /**
+   * CalendarPaperSelection findFirstOrThrow
+   */
+  export type CalendarPaperSelectionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    /**
+     * Filter, which CalendarPaperSelection to fetch.
+     */
+    where?: CalendarPaperSelectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CalendarPaperSelections to fetch.
+     */
+    orderBy?: CalendarPaperSelectionOrderByWithRelationInput | CalendarPaperSelectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CalendarPaperSelections.
+     */
+    cursor?: CalendarPaperSelectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CalendarPaperSelections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CalendarPaperSelections.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CalendarPaperSelections.
+     */
+    distinct?: CalendarPaperSelectionScalarFieldEnum | CalendarPaperSelectionScalarFieldEnum[]
+  }
+
+  /**
+   * CalendarPaperSelection findMany
+   */
+  export type CalendarPaperSelectionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    /**
+     * Filter, which CalendarPaperSelections to fetch.
+     */
+    where?: CalendarPaperSelectionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CalendarPaperSelections to fetch.
+     */
+    orderBy?: CalendarPaperSelectionOrderByWithRelationInput | CalendarPaperSelectionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CalendarPaperSelections.
+     */
+    cursor?: CalendarPaperSelectionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CalendarPaperSelections from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CalendarPaperSelections.
+     */
+    skip?: number
+    distinct?: CalendarPaperSelectionScalarFieldEnum | CalendarPaperSelectionScalarFieldEnum[]
+  }
+
+  /**
+   * CalendarPaperSelection create
+   */
+  export type CalendarPaperSelectionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CalendarPaperSelection.
+     */
+    data: XOR<CalendarPaperSelectionCreateInput, CalendarPaperSelectionUncheckedCreateInput>
+  }
+
+  /**
+   * CalendarPaperSelection createMany
+   */
+  export type CalendarPaperSelectionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CalendarPaperSelections.
+     */
+    data: CalendarPaperSelectionCreateManyInput | CalendarPaperSelectionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CalendarPaperSelection update
+   */
+  export type CalendarPaperSelectionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CalendarPaperSelection.
+     */
+    data: XOR<CalendarPaperSelectionUpdateInput, CalendarPaperSelectionUncheckedUpdateInput>
+    /**
+     * Choose, which CalendarPaperSelection to update.
+     */
+    where: CalendarPaperSelectionWhereUniqueInput
+  }
+
+  /**
+   * CalendarPaperSelection updateMany
+   */
+  export type CalendarPaperSelectionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CalendarPaperSelections.
+     */
+    data: XOR<CalendarPaperSelectionUpdateManyMutationInput, CalendarPaperSelectionUncheckedUpdateManyInput>
+    /**
+     * Filter which CalendarPaperSelections to update
+     */
+    where?: CalendarPaperSelectionWhereInput
+    /**
+     * Limit how many CalendarPaperSelections to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CalendarPaperSelection upsert
+   */
+  export type CalendarPaperSelectionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CalendarPaperSelection to update in case it exists.
+     */
+    where: CalendarPaperSelectionWhereUniqueInput
+    /**
+     * In case the CalendarPaperSelection found by the `where` argument doesn't exist, create a new CalendarPaperSelection with this data.
+     */
+    create: XOR<CalendarPaperSelectionCreateInput, CalendarPaperSelectionUncheckedCreateInput>
+    /**
+     * In case the CalendarPaperSelection was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CalendarPaperSelectionUpdateInput, CalendarPaperSelectionUncheckedUpdateInput>
+  }
+
+  /**
+   * CalendarPaperSelection delete
+   */
+  export type CalendarPaperSelectionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    /**
+     * Filter which CalendarPaperSelection to delete.
+     */
+    where: CalendarPaperSelectionWhereUniqueInput
+  }
+
+  /**
+   * CalendarPaperSelection deleteMany
+   */
+  export type CalendarPaperSelectionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CalendarPaperSelections to delete
+     */
+    where?: CalendarPaperSelectionWhereInput
+    /**
+     * Limit how many CalendarPaperSelections to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CalendarPaperSelection without action
+   */
+  export type CalendarPaperSelectionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Paper
    */
 
@@ -39970,6 +41021,7 @@ export namespace Prisma {
     feeSchedules?: boolean | Paper$feeSchedulesArgs<ExtArgs>
     reviewRequests?: boolean | Paper$reviewRequestsArgs<ExtArgs>
     accessToScriptRequests?: boolean | Paper$accessToScriptRequestsArgs<ExtArgs>
+    calendarPaperSelections?: boolean | Paper$calendarPaperSelectionsArgs<ExtArgs>
     _count?: boolean | PaperCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["paper"]>
 
@@ -39997,6 +41049,7 @@ export namespace Prisma {
     feeSchedules?: boolean | Paper$feeSchedulesArgs<ExtArgs>
     reviewRequests?: boolean | Paper$reviewRequestsArgs<ExtArgs>
     accessToScriptRequests?: boolean | Paper$accessToScriptRequestsArgs<ExtArgs>
+    calendarPaperSelections?: boolean | Paper$calendarPaperSelectionsArgs<ExtArgs>
     _count?: boolean | PaperCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -40012,6 +41065,7 @@ export namespace Prisma {
       feeSchedules: Prisma.$FeeSchedulePayload<ExtArgs>[]
       reviewRequests: Prisma.$ReviewRequestPayload<ExtArgs>[]
       accessToScriptRequests: Prisma.$AccessToScriptRequestPayload<ExtArgs>[]
+      calendarPaperSelections: Prisma.$CalendarPaperSelectionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -40371,6 +41425,7 @@ export namespace Prisma {
     feeSchedules<T extends Paper$feeSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, Paper$feeSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewRequests<T extends Paper$reviewRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Paper$reviewRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessToScriptRequests<T extends Paper$accessToScriptRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Paper$accessToScriptRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessToScriptRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    calendarPaperSelections<T extends Paper$calendarPaperSelectionsArgs<ExtArgs> = {}>(args?: Subset<T, Paper$calendarPaperSelectionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CalendarPaperSelectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -40935,6 +41990,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AccessToScriptRequestScalarFieldEnum | AccessToScriptRequestScalarFieldEnum[]
+  }
+
+  /**
+   * Paper.calendarPaperSelections
+   */
+  export type Paper$calendarPaperSelectionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CalendarPaperSelection
+     */
+    select?: CalendarPaperSelectionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CalendarPaperSelection
+     */
+    omit?: CalendarPaperSelectionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CalendarPaperSelectionInclude<ExtArgs> | null
+    where?: CalendarPaperSelectionWhereInput
+    orderBy?: CalendarPaperSelectionOrderByWithRelationInput | CalendarPaperSelectionOrderByWithRelationInput[]
+    cursor?: CalendarPaperSelectionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CalendarPaperSelectionScalarFieldEnum | CalendarPaperSelectionScalarFieldEnum[]
   }
 
   /**
@@ -67972,6 +69051,16 @@ export namespace Prisma {
   export type CalendarSubjectSelectionScalarFieldEnum = (typeof CalendarSubjectSelectionScalarFieldEnum)[keyof typeof CalendarSubjectSelectionScalarFieldEnum]
 
 
+  export const CalendarPaperSelectionScalarFieldEnum: {
+    id: 'id',
+    examBoardId: 'examBoardId',
+    paperId: 'paperId',
+    createdAt: 'createdAt'
+  };
+
+  export type CalendarPaperSelectionScalarFieldEnum = (typeof CalendarPaperSelectionScalarFieldEnum)[keyof typeof CalendarPaperSelectionScalarFieldEnum]
+
+
   export const PaperScalarFieldEnum: {
     id: 'id',
     code: 'code',
@@ -68870,6 +69959,15 @@ export namespace Prisma {
   };
 
   export type CalendarSubjectSelectionOrderByRelevanceFieldEnum = (typeof CalendarSubjectSelectionOrderByRelevanceFieldEnum)[keyof typeof CalendarSubjectSelectionOrderByRelevanceFieldEnum]
+
+
+  export const CalendarPaperSelectionOrderByRelevanceFieldEnum: {
+    id: 'id',
+    examBoardId: 'examBoardId',
+    paperId: 'paperId'
+  };
+
+  export type CalendarPaperSelectionOrderByRelevanceFieldEnum = (typeof CalendarPaperSelectionOrderByRelevanceFieldEnum)[keyof typeof CalendarPaperSelectionOrderByRelevanceFieldEnum]
 
 
   export const PaperOrderByRelevanceFieldEnum: {
@@ -72245,6 +73343,7 @@ export namespace Prisma {
     resources?: ResourceListRelationFilter
     sourceDocuments?: SourceDocumentListRelationFilter
     calendarSubjectSelections?: CalendarSubjectSelectionListRelationFilter
+    calendarPaperSelections?: CalendarPaperSelectionListRelationFilter
     registrationWindows?: RegistrationWindowListRelationFilter
     studentExamRegistrations?: StudentExamRegistrationListRelationFilter
     feeRules?: FeeRuleListRelationFilter
@@ -72287,6 +73386,7 @@ export namespace Prisma {
     resources?: ResourceOrderByRelationAggregateInput
     sourceDocuments?: SourceDocumentOrderByRelationAggregateInput
     calendarSubjectSelections?: CalendarSubjectSelectionOrderByRelationAggregateInput
+    calendarPaperSelections?: CalendarPaperSelectionOrderByRelationAggregateInput
     registrationWindows?: RegistrationWindowOrderByRelationAggregateInput
     studentExamRegistrations?: StudentExamRegistrationOrderByRelationAggregateInput
     feeRules?: FeeRuleOrderByRelationAggregateInput
@@ -72333,6 +73433,7 @@ export namespace Prisma {
     resources?: ResourceListRelationFilter
     sourceDocuments?: SourceDocumentListRelationFilter
     calendarSubjectSelections?: CalendarSubjectSelectionListRelationFilter
+    calendarPaperSelections?: CalendarPaperSelectionListRelationFilter
     registrationWindows?: RegistrationWindowListRelationFilter
     studentExamRegistrations?: StudentExamRegistrationListRelationFilter
     feeRules?: FeeRuleListRelationFilter
@@ -72818,6 +73919,61 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"CalendarSubjectSelection"> | Date | string
   }
 
+  export type CalendarPaperSelectionWhereInput = {
+    AND?: CalendarPaperSelectionWhereInput | CalendarPaperSelectionWhereInput[]
+    OR?: CalendarPaperSelectionWhereInput[]
+    NOT?: CalendarPaperSelectionWhereInput | CalendarPaperSelectionWhereInput[]
+    id?: StringFilter<"CalendarPaperSelection"> | string
+    examBoardId?: StringFilter<"CalendarPaperSelection"> | string
+    paperId?: StringFilter<"CalendarPaperSelection"> | string
+    createdAt?: DateTimeFilter<"CalendarPaperSelection"> | Date | string
+    examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
+    paper?: XOR<PaperScalarRelationFilter, PaperWhereInput>
+  }
+
+  export type CalendarPaperSelectionOrderByWithRelationInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    paperId?: SortOrder
+    createdAt?: SortOrder
+    examBoard?: ExamBoardOrderByWithRelationInput
+    paper?: PaperOrderByWithRelationInput
+    _relevance?: CalendarPaperSelectionOrderByRelevanceInput
+  }
+
+  export type CalendarPaperSelectionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    examBoardId_paperId?: CalendarPaperSelectionExamBoardIdPaperIdCompoundUniqueInput
+    AND?: CalendarPaperSelectionWhereInput | CalendarPaperSelectionWhereInput[]
+    OR?: CalendarPaperSelectionWhereInput[]
+    NOT?: CalendarPaperSelectionWhereInput | CalendarPaperSelectionWhereInput[]
+    examBoardId?: StringFilter<"CalendarPaperSelection"> | string
+    paperId?: StringFilter<"CalendarPaperSelection"> | string
+    createdAt?: DateTimeFilter<"CalendarPaperSelection"> | Date | string
+    examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
+    paper?: XOR<PaperScalarRelationFilter, PaperWhereInput>
+  }, "id" | "examBoardId_paperId">
+
+  export type CalendarPaperSelectionOrderByWithAggregationInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    paperId?: SortOrder
+    createdAt?: SortOrder
+    _count?: CalendarPaperSelectionCountOrderByAggregateInput
+    _max?: CalendarPaperSelectionMaxOrderByAggregateInput
+    _min?: CalendarPaperSelectionMinOrderByAggregateInput
+  }
+
+  export type CalendarPaperSelectionScalarWhereWithAggregatesInput = {
+    AND?: CalendarPaperSelectionScalarWhereWithAggregatesInput | CalendarPaperSelectionScalarWhereWithAggregatesInput[]
+    OR?: CalendarPaperSelectionScalarWhereWithAggregatesInput[]
+    NOT?: CalendarPaperSelectionScalarWhereWithAggregatesInput | CalendarPaperSelectionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CalendarPaperSelection"> | string
+    examBoardId?: StringWithAggregatesFilter<"CalendarPaperSelection"> | string
+    paperId?: StringWithAggregatesFilter<"CalendarPaperSelection"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"CalendarPaperSelection"> | Date | string
+  }
+
   export type PaperWhereInput = {
     AND?: PaperWhereInput | PaperWhereInput[]
     OR?: PaperWhereInput[]
@@ -72839,6 +73995,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
+    calendarPaperSelections?: CalendarPaperSelectionListRelationFilter
   }
 
   export type PaperOrderByWithRelationInput = {
@@ -72859,6 +74016,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleOrderByRelationAggregateInput
     reviewRequests?: ReviewRequestOrderByRelationAggregateInput
     accessToScriptRequests?: AccessToScriptRequestOrderByRelationAggregateInput
+    calendarPaperSelections?: CalendarPaperSelectionOrderByRelationAggregateInput
     _relevance?: PaperOrderByRelevanceInput
   }
 
@@ -72883,6 +74041,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
+    calendarPaperSelections?: CalendarPaperSelectionListRelationFilter
   }, "id">
 
   export type PaperOrderByWithAggregationInput = {
@@ -78676,6 +79835,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -78718,6 +79878,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -78760,6 +79921,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -78802,6 +79964,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -79328,6 +80491,53 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CalendarPaperSelectionCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutCalendarPaperSelectionsInput
+    paper: PaperCreateNestedOneWithoutCalendarPaperSelectionsInput
+  }
+
+  export type CalendarPaperSelectionUncheckedCreateInput = {
+    id?: string
+    examBoardId: string
+    paperId: string
+    createdAt?: Date | string
+  }
+
+  export type CalendarPaperSelectionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutCalendarPaperSelectionsNestedInput
+    paper?: PaperUpdateOneRequiredWithoutCalendarPaperSelectionsNestedInput
+  }
+
+  export type CalendarPaperSelectionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    paperId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarPaperSelectionCreateManyInput = {
+    id?: string
+    examBoardId: string
+    paperId: string
+    createdAt?: Date | string
+  }
+
+  export type CalendarPaperSelectionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarPaperSelectionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    paperId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PaperCreateInput = {
     id?: string
     code: string
@@ -79344,6 +80554,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUncheckedCreateInput = {
@@ -79362,6 +80573,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUpdateInput = {
@@ -79380,6 +80592,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateInput = {
@@ -79398,6 +80611,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperCreateManyInput = {
@@ -85073,6 +86287,12 @@ export namespace Prisma {
     none?: CalendarSubjectSelectionWhereInput
   }
 
+  export type CalendarPaperSelectionListRelationFilter = {
+    every?: CalendarPaperSelectionWhereInput
+    some?: CalendarPaperSelectionWhereInput
+    none?: CalendarPaperSelectionWhereInput
+  }
+
   export type CashInCodeListRelationFilter = {
     every?: CashInCodeWhereInput
     some?: CashInCodeWhereInput
@@ -85101,6 +86321,10 @@ export namespace Prisma {
   }
 
   export type CalendarSubjectSelectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CalendarPaperSelectionOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -85427,6 +86651,38 @@ export namespace Prisma {
     id?: SortOrder
     examBoardId?: SortOrder
     subjectId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CalendarPaperSelectionOrderByRelevanceInput = {
+    fields: CalendarPaperSelectionOrderByRelevanceFieldEnum | CalendarPaperSelectionOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type CalendarPaperSelectionExamBoardIdPaperIdCompoundUniqueInput = {
+    examBoardId: string
+    paperId: string
+  }
+
+  export type CalendarPaperSelectionCountOrderByAggregateInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    paperId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CalendarPaperSelectionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    paperId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CalendarPaperSelectionMinOrderByAggregateInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    paperId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -92289,6 +93545,13 @@ export namespace Prisma {
     connect?: CalendarSubjectSelectionWhereUniqueInput | CalendarSubjectSelectionWhereUniqueInput[]
   }
 
+  export type CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput = {
+    create?: XOR<CalendarPaperSelectionCreateWithoutExamBoardInput, CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput> | CalendarPaperSelectionCreateWithoutExamBoardInput[] | CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput[]
+    connectOrCreate?: CalendarPaperSelectionCreateOrConnectWithoutExamBoardInput | CalendarPaperSelectionCreateOrConnectWithoutExamBoardInput[]
+    createMany?: CalendarPaperSelectionCreateManyExamBoardInputEnvelope
+    connect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+  }
+
   export type RegistrationWindowCreateNestedManyWithoutExamBoardInput = {
     create?: XOR<RegistrationWindowCreateWithoutExamBoardInput, RegistrationWindowUncheckedCreateWithoutExamBoardInput> | RegistrationWindowCreateWithoutExamBoardInput[] | RegistrationWindowUncheckedCreateWithoutExamBoardInput[]
     connectOrCreate?: RegistrationWindowCreateOrConnectWithoutExamBoardInput | RegistrationWindowCreateOrConnectWithoutExamBoardInput[]
@@ -92419,6 +93682,13 @@ export namespace Prisma {
     connectOrCreate?: CalendarSubjectSelectionCreateOrConnectWithoutExamBoardInput | CalendarSubjectSelectionCreateOrConnectWithoutExamBoardInput[]
     createMany?: CalendarSubjectSelectionCreateManyExamBoardInputEnvelope
     connect?: CalendarSubjectSelectionWhereUniqueInput | CalendarSubjectSelectionWhereUniqueInput[]
+  }
+
+  export type CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput = {
+    create?: XOR<CalendarPaperSelectionCreateWithoutExamBoardInput, CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput> | CalendarPaperSelectionCreateWithoutExamBoardInput[] | CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput[]
+    connectOrCreate?: CalendarPaperSelectionCreateOrConnectWithoutExamBoardInput | CalendarPaperSelectionCreateOrConnectWithoutExamBoardInput[]
+    createMany?: CalendarPaperSelectionCreateManyExamBoardInputEnvelope
+    connect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
   }
 
   export type RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput = {
@@ -92593,6 +93863,20 @@ export namespace Prisma {
     update?: CalendarSubjectSelectionUpdateWithWhereUniqueWithoutExamBoardInput | CalendarSubjectSelectionUpdateWithWhereUniqueWithoutExamBoardInput[]
     updateMany?: CalendarSubjectSelectionUpdateManyWithWhereWithoutExamBoardInput | CalendarSubjectSelectionUpdateManyWithWhereWithoutExamBoardInput[]
     deleteMany?: CalendarSubjectSelectionScalarWhereInput | CalendarSubjectSelectionScalarWhereInput[]
+  }
+
+  export type CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput = {
+    create?: XOR<CalendarPaperSelectionCreateWithoutExamBoardInput, CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput> | CalendarPaperSelectionCreateWithoutExamBoardInput[] | CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput[]
+    connectOrCreate?: CalendarPaperSelectionCreateOrConnectWithoutExamBoardInput | CalendarPaperSelectionCreateOrConnectWithoutExamBoardInput[]
+    upsert?: CalendarPaperSelectionUpsertWithWhereUniqueWithoutExamBoardInput | CalendarPaperSelectionUpsertWithWhereUniqueWithoutExamBoardInput[]
+    createMany?: CalendarPaperSelectionCreateManyExamBoardInputEnvelope
+    set?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    disconnect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    delete?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    connect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    update?: CalendarPaperSelectionUpdateWithWhereUniqueWithoutExamBoardInput | CalendarPaperSelectionUpdateWithWhereUniqueWithoutExamBoardInput[]
+    updateMany?: CalendarPaperSelectionUpdateManyWithWhereWithoutExamBoardInput | CalendarPaperSelectionUpdateManyWithWhereWithoutExamBoardInput[]
+    deleteMany?: CalendarPaperSelectionScalarWhereInput | CalendarPaperSelectionScalarWhereInput[]
   }
 
   export type RegistrationWindowUpdateManyWithoutExamBoardNestedInput = {
@@ -92855,6 +94139,20 @@ export namespace Prisma {
     update?: CalendarSubjectSelectionUpdateWithWhereUniqueWithoutExamBoardInput | CalendarSubjectSelectionUpdateWithWhereUniqueWithoutExamBoardInput[]
     updateMany?: CalendarSubjectSelectionUpdateManyWithWhereWithoutExamBoardInput | CalendarSubjectSelectionUpdateManyWithWhereWithoutExamBoardInput[]
     deleteMany?: CalendarSubjectSelectionScalarWhereInput | CalendarSubjectSelectionScalarWhereInput[]
+  }
+
+  export type CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput = {
+    create?: XOR<CalendarPaperSelectionCreateWithoutExamBoardInput, CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput> | CalendarPaperSelectionCreateWithoutExamBoardInput[] | CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput[]
+    connectOrCreate?: CalendarPaperSelectionCreateOrConnectWithoutExamBoardInput | CalendarPaperSelectionCreateOrConnectWithoutExamBoardInput[]
+    upsert?: CalendarPaperSelectionUpsertWithWhereUniqueWithoutExamBoardInput | CalendarPaperSelectionUpsertWithWhereUniqueWithoutExamBoardInput[]
+    createMany?: CalendarPaperSelectionCreateManyExamBoardInputEnvelope
+    set?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    disconnect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    delete?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    connect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    update?: CalendarPaperSelectionUpdateWithWhereUniqueWithoutExamBoardInput | CalendarPaperSelectionUpdateWithWhereUniqueWithoutExamBoardInput[]
+    updateMany?: CalendarPaperSelectionUpdateManyWithWhereWithoutExamBoardInput | CalendarPaperSelectionUpdateManyWithWhereWithoutExamBoardInput[]
+    deleteMany?: CalendarPaperSelectionScalarWhereInput | CalendarPaperSelectionScalarWhereInput[]
   }
 
   export type RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput = {
@@ -93903,6 +95201,34 @@ export namespace Prisma {
     update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutCalendarSubjectSelectionsInput, SubjectUpdateWithoutCalendarSubjectSelectionsInput>, SubjectUncheckedUpdateWithoutCalendarSubjectSelectionsInput>
   }
 
+  export type ExamBoardCreateNestedOneWithoutCalendarPaperSelectionsInput = {
+    create?: XOR<ExamBoardCreateWithoutCalendarPaperSelectionsInput, ExamBoardUncheckedCreateWithoutCalendarPaperSelectionsInput>
+    connectOrCreate?: ExamBoardCreateOrConnectWithoutCalendarPaperSelectionsInput
+    connect?: ExamBoardWhereUniqueInput
+  }
+
+  export type PaperCreateNestedOneWithoutCalendarPaperSelectionsInput = {
+    create?: XOR<PaperCreateWithoutCalendarPaperSelectionsInput, PaperUncheckedCreateWithoutCalendarPaperSelectionsInput>
+    connectOrCreate?: PaperCreateOrConnectWithoutCalendarPaperSelectionsInput
+    connect?: PaperWhereUniqueInput
+  }
+
+  export type ExamBoardUpdateOneRequiredWithoutCalendarPaperSelectionsNestedInput = {
+    create?: XOR<ExamBoardCreateWithoutCalendarPaperSelectionsInput, ExamBoardUncheckedCreateWithoutCalendarPaperSelectionsInput>
+    connectOrCreate?: ExamBoardCreateOrConnectWithoutCalendarPaperSelectionsInput
+    upsert?: ExamBoardUpsertWithoutCalendarPaperSelectionsInput
+    connect?: ExamBoardWhereUniqueInput
+    update?: XOR<XOR<ExamBoardUpdateToOneWithWhereWithoutCalendarPaperSelectionsInput, ExamBoardUpdateWithoutCalendarPaperSelectionsInput>, ExamBoardUncheckedUpdateWithoutCalendarPaperSelectionsInput>
+  }
+
+  export type PaperUpdateOneRequiredWithoutCalendarPaperSelectionsNestedInput = {
+    create?: XOR<PaperCreateWithoutCalendarPaperSelectionsInput, PaperUncheckedCreateWithoutCalendarPaperSelectionsInput>
+    connectOrCreate?: PaperCreateOrConnectWithoutCalendarPaperSelectionsInput
+    upsert?: PaperUpsertWithoutCalendarPaperSelectionsInput
+    connect?: PaperWhereUniqueInput
+    update?: XOR<XOR<PaperUpdateToOneWithWhereWithoutCalendarPaperSelectionsInput, PaperUpdateWithoutCalendarPaperSelectionsInput>, PaperUncheckedUpdateWithoutCalendarPaperSelectionsInput>
+  }
+
   export type SubjectCreateNestedOneWithoutPapersInput = {
     create?: XOR<SubjectCreateWithoutPapersInput, SubjectUncheckedCreateWithoutPapersInput>
     connectOrCreate?: SubjectCreateOrConnectWithoutPapersInput
@@ -93964,6 +95290,13 @@ export namespace Prisma {
     connect?: AccessToScriptRequestWhereUniqueInput | AccessToScriptRequestWhereUniqueInput[]
   }
 
+  export type CalendarPaperSelectionCreateNestedManyWithoutPaperInput = {
+    create?: XOR<CalendarPaperSelectionCreateWithoutPaperInput, CalendarPaperSelectionUncheckedCreateWithoutPaperInput> | CalendarPaperSelectionCreateWithoutPaperInput[] | CalendarPaperSelectionUncheckedCreateWithoutPaperInput[]
+    connectOrCreate?: CalendarPaperSelectionCreateOrConnectWithoutPaperInput | CalendarPaperSelectionCreateOrConnectWithoutPaperInput[]
+    createMany?: CalendarPaperSelectionCreateManyPaperInputEnvelope
+    connect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+  }
+
   export type ExamSessionUncheckedCreateNestedManyWithoutPaperInput = {
     create?: XOR<ExamSessionCreateWithoutPaperInput, ExamSessionUncheckedCreateWithoutPaperInput> | ExamSessionCreateWithoutPaperInput[] | ExamSessionUncheckedCreateWithoutPaperInput[]
     connectOrCreate?: ExamSessionCreateOrConnectWithoutPaperInput | ExamSessionCreateOrConnectWithoutPaperInput[]
@@ -94011,6 +95344,13 @@ export namespace Prisma {
     connectOrCreate?: AccessToScriptRequestCreateOrConnectWithoutPaperInput | AccessToScriptRequestCreateOrConnectWithoutPaperInput[]
     createMany?: AccessToScriptRequestCreateManyPaperInputEnvelope
     connect?: AccessToScriptRequestWhereUniqueInput | AccessToScriptRequestWhereUniqueInput[]
+  }
+
+  export type CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput = {
+    create?: XOR<CalendarPaperSelectionCreateWithoutPaperInput, CalendarPaperSelectionUncheckedCreateWithoutPaperInput> | CalendarPaperSelectionCreateWithoutPaperInput[] | CalendarPaperSelectionUncheckedCreateWithoutPaperInput[]
+    connectOrCreate?: CalendarPaperSelectionCreateOrConnectWithoutPaperInput | CalendarPaperSelectionCreateOrConnectWithoutPaperInput[]
+    createMany?: CalendarPaperSelectionCreateManyPaperInputEnvelope
+    connect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
   }
 
   export type SubjectUpdateOneRequiredWithoutPapersNestedInput = {
@@ -94129,6 +95469,20 @@ export namespace Prisma {
     deleteMany?: AccessToScriptRequestScalarWhereInput | AccessToScriptRequestScalarWhereInput[]
   }
 
+  export type CalendarPaperSelectionUpdateManyWithoutPaperNestedInput = {
+    create?: XOR<CalendarPaperSelectionCreateWithoutPaperInput, CalendarPaperSelectionUncheckedCreateWithoutPaperInput> | CalendarPaperSelectionCreateWithoutPaperInput[] | CalendarPaperSelectionUncheckedCreateWithoutPaperInput[]
+    connectOrCreate?: CalendarPaperSelectionCreateOrConnectWithoutPaperInput | CalendarPaperSelectionCreateOrConnectWithoutPaperInput[]
+    upsert?: CalendarPaperSelectionUpsertWithWhereUniqueWithoutPaperInput | CalendarPaperSelectionUpsertWithWhereUniqueWithoutPaperInput[]
+    createMany?: CalendarPaperSelectionCreateManyPaperInputEnvelope
+    set?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    disconnect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    delete?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    connect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    update?: CalendarPaperSelectionUpdateWithWhereUniqueWithoutPaperInput | CalendarPaperSelectionUpdateWithWhereUniqueWithoutPaperInput[]
+    updateMany?: CalendarPaperSelectionUpdateManyWithWhereWithoutPaperInput | CalendarPaperSelectionUpdateManyWithWhereWithoutPaperInput[]
+    deleteMany?: CalendarPaperSelectionScalarWhereInput | CalendarPaperSelectionScalarWhereInput[]
+  }
+
   export type ExamSessionUncheckedUpdateManyWithoutPaperNestedInput = {
     create?: XOR<ExamSessionCreateWithoutPaperInput, ExamSessionUncheckedCreateWithoutPaperInput> | ExamSessionCreateWithoutPaperInput[] | ExamSessionUncheckedCreateWithoutPaperInput[]
     connectOrCreate?: ExamSessionCreateOrConnectWithoutPaperInput | ExamSessionCreateOrConnectWithoutPaperInput[]
@@ -94225,6 +95579,20 @@ export namespace Prisma {
     update?: AccessToScriptRequestUpdateWithWhereUniqueWithoutPaperInput | AccessToScriptRequestUpdateWithWhereUniqueWithoutPaperInput[]
     updateMany?: AccessToScriptRequestUpdateManyWithWhereWithoutPaperInput | AccessToScriptRequestUpdateManyWithWhereWithoutPaperInput[]
     deleteMany?: AccessToScriptRequestScalarWhereInput | AccessToScriptRequestScalarWhereInput[]
+  }
+
+  export type CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput = {
+    create?: XOR<CalendarPaperSelectionCreateWithoutPaperInput, CalendarPaperSelectionUncheckedCreateWithoutPaperInput> | CalendarPaperSelectionCreateWithoutPaperInput[] | CalendarPaperSelectionUncheckedCreateWithoutPaperInput[]
+    connectOrCreate?: CalendarPaperSelectionCreateOrConnectWithoutPaperInput | CalendarPaperSelectionCreateOrConnectWithoutPaperInput[]
+    upsert?: CalendarPaperSelectionUpsertWithWhereUniqueWithoutPaperInput | CalendarPaperSelectionUpsertWithWhereUniqueWithoutPaperInput[]
+    createMany?: CalendarPaperSelectionCreateManyPaperInputEnvelope
+    set?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    disconnect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    delete?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    connect?: CalendarPaperSelectionWhereUniqueInput | CalendarPaperSelectionWhereUniqueInput[]
+    update?: CalendarPaperSelectionUpdateWithWhereUniqueWithoutPaperInput | CalendarPaperSelectionUpdateWithWhereUniqueWithoutPaperInput[]
+    updateMany?: CalendarPaperSelectionUpdateManyWithWhereWithoutPaperInput | CalendarPaperSelectionUpdateManyWithWhereWithoutPaperInput[]
+    deleteMany?: CalendarPaperSelectionScalarWhereInput | CalendarPaperSelectionScalarWhereInput[]
   }
 
   export type ExamBoardCreateNestedOneWithoutExamSeriesInput = {
@@ -107168,6 +108536,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -107209,6 +108578,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -107623,6 +108993,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -107664,6 +109035,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -108303,6 +109675,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
     candidateExamIdentities?: CandidateExamIdentityCreateNestedManyWithoutExamBoardInput
@@ -108344,6 +109717,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
     candidateExamIdentities?: CandidateExamIdentityUncheckedCreateNestedManyWithoutExamBoardInput
@@ -109367,6 +110741,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
     candidateExamIdentities?: CandidateExamIdentityUpdateManyWithoutExamBoardNestedInput
@@ -109408,6 +110783,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
     candidateExamIdentities?: CandidateExamIdentityUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -113399,6 +114775,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
     candidateExamIdentities?: CandidateExamIdentityCreateNestedManyWithoutExamBoardInput
@@ -113440,6 +114817,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
     candidateExamIdentities?: CandidateExamIdentityUncheckedCreateNestedManyWithoutExamBoardInput
@@ -113574,6 +114952,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUncheckedCreateWithoutStudentExamRegistrationsInput = {
@@ -113591,6 +114970,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput
   }
 
   export type PaperCreateOrConnectWithoutStudentExamRegistrationsInput = {
@@ -114449,6 +115829,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
     candidateExamIdentities?: CandidateExamIdentityUpdateManyWithoutExamBoardNestedInput
@@ -114490,6 +115871,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
     candidateExamIdentities?: CandidateExamIdentityUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -114642,6 +116024,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateWithoutStudentExamRegistrationsInput = {
@@ -114659,6 +116042,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type UserUpsertWithoutRegistrationsAddedInput = {
@@ -118417,6 +119801,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CalendarPaperSelectionCreateWithoutExamBoardInput = {
+    id?: string
+    createdAt?: Date | string
+    paper: PaperCreateNestedOneWithoutCalendarPaperSelectionsInput
+  }
+
+  export type CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput = {
+    id?: string
+    paperId: string
+    createdAt?: Date | string
+  }
+
+  export type CalendarPaperSelectionCreateOrConnectWithoutExamBoardInput = {
+    where: CalendarPaperSelectionWhereUniqueInput
+    create: XOR<CalendarPaperSelectionCreateWithoutExamBoardInput, CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput>
+  }
+
+  export type CalendarPaperSelectionCreateManyExamBoardInputEnvelope = {
+    data: CalendarPaperSelectionCreateManyExamBoardInput | CalendarPaperSelectionCreateManyExamBoardInput[]
+    skipDuplicates?: boolean
+  }
+
   export type RegistrationWindowCreateWithoutExamBoardInput = {
     id?: string
     title: string
@@ -119279,6 +120685,32 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"CalendarSubjectSelection"> | Date | string
   }
 
+  export type CalendarPaperSelectionUpsertWithWhereUniqueWithoutExamBoardInput = {
+    where: CalendarPaperSelectionWhereUniqueInput
+    update: XOR<CalendarPaperSelectionUpdateWithoutExamBoardInput, CalendarPaperSelectionUncheckedUpdateWithoutExamBoardInput>
+    create: XOR<CalendarPaperSelectionCreateWithoutExamBoardInput, CalendarPaperSelectionUncheckedCreateWithoutExamBoardInput>
+  }
+
+  export type CalendarPaperSelectionUpdateWithWhereUniqueWithoutExamBoardInput = {
+    where: CalendarPaperSelectionWhereUniqueInput
+    data: XOR<CalendarPaperSelectionUpdateWithoutExamBoardInput, CalendarPaperSelectionUncheckedUpdateWithoutExamBoardInput>
+  }
+
+  export type CalendarPaperSelectionUpdateManyWithWhereWithoutExamBoardInput = {
+    where: CalendarPaperSelectionScalarWhereInput
+    data: XOR<CalendarPaperSelectionUpdateManyMutationInput, CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardInput>
+  }
+
+  export type CalendarPaperSelectionScalarWhereInput = {
+    AND?: CalendarPaperSelectionScalarWhereInput | CalendarPaperSelectionScalarWhereInput[]
+    OR?: CalendarPaperSelectionScalarWhereInput[]
+    NOT?: CalendarPaperSelectionScalarWhereInput | CalendarPaperSelectionScalarWhereInput[]
+    id?: StringFilter<"CalendarPaperSelection"> | string
+    examBoardId?: StringFilter<"CalendarPaperSelection"> | string
+    paperId?: StringFilter<"CalendarPaperSelection"> | string
+    createdAt?: DateTimeFilter<"CalendarPaperSelection"> | Date | string
+  }
+
   export type RegistrationWindowUpsertWithWhereUniqueWithoutExamBoardInput = {
     where: RegistrationWindowWhereUniqueInput
     update: XOR<RegistrationWindowUpdateWithoutExamBoardInput, RegistrationWindowUncheckedUpdateWithoutExamBoardInput>
@@ -119554,6 +120986,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -119595,6 +121028,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -119652,6 +121086,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -119693,6 +121128,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -119733,6 +121169,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -119774,6 +121211,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -120131,6 +121569,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -120172,6 +121611,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -120345,6 +121785,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUncheckedCreateWithoutSubjectInput = {
@@ -120362,6 +121803,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput
   }
 
   export type PaperCreateOrConnectWithoutSubjectInput = {
@@ -121184,6 +122626,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -121225,6 +122668,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -121362,6 +122806,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -121403,6 +122848,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -121535,6 +122981,7 @@ export namespace Prisma {
     keyDates?: KeyDateCreateNestedManyWithoutExamBoardInput
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -121576,6 +123023,7 @@ export namespace Prisma {
     keyDates?: KeyDateUncheckedCreateNestedManyWithoutExamBoardInput
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -121678,6 +123126,7 @@ export namespace Prisma {
     keyDates?: KeyDateUpdateManyWithoutExamBoardNestedInput
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -121719,6 +123168,7 @@ export namespace Prisma {
     keyDates?: KeyDateUncheckedUpdateManyWithoutExamBoardNestedInput
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -121783,6 +123233,278 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type ExamBoardCreateWithoutCalendarPaperSelectionsInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    country: string
+    region?: string | null
+    website?: string | null
+    timezone?: string | null
+    calendarSubjectFilterEnabled?: boolean
+    centreName?: string | null
+    centreNumber?: string | null
+    centreAddress?: string | null
+    centreEmail?: string | null
+    centrePhone?: string | null
+    centreCountry?: string | null
+    centreTimeZone?: string | null
+    defaultExamOfficerName?: string | null
+    defaultExamOfficerEmail?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    qualifications?: QualificationCreateNestedManyWithoutExamBoardInput
+    examSeries?: ExamSeriesCreateNestedManyWithoutExamBoardInput
+    keyDates?: KeyDateCreateNestedManyWithoutExamBoardInput
+    resources?: ResourceCreateNestedManyWithoutExamBoardInput
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
+    calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
+    studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
+    feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
+    candidateExamIdentities?: CandidateExamIdentityCreateNestedManyWithoutExamBoardInput
+    reviewWindows?: ReviewWindowCreateNestedManyWithoutExamBoardInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
+    certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
+    postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
+  }
+
+  export type ExamBoardUncheckedCreateWithoutCalendarPaperSelectionsInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    country: string
+    region?: string | null
+    website?: string | null
+    timezone?: string | null
+    calendarSubjectFilterEnabled?: boolean
+    centreName?: string | null
+    centreNumber?: string | null
+    centreAddress?: string | null
+    centreEmail?: string | null
+    centrePhone?: string | null
+    centreCountry?: string | null
+    centreTimeZone?: string | null
+    defaultExamOfficerName?: string | null
+    defaultExamOfficerEmail?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    qualifications?: QualificationUncheckedCreateNestedManyWithoutExamBoardInput
+    examSeries?: ExamSeriesUncheckedCreateNestedManyWithoutExamBoardInput
+    keyDates?: KeyDateUncheckedCreateNestedManyWithoutExamBoardInput
+    resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
+    candidateExamIdentities?: CandidateExamIdentityUncheckedCreateNestedManyWithoutExamBoardInput
+    reviewWindows?: ReviewWindowUncheckedCreateNestedManyWithoutExamBoardInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
+  }
+
+  export type ExamBoardCreateOrConnectWithoutCalendarPaperSelectionsInput = {
+    where: ExamBoardWhereUniqueInput
+    create: XOR<ExamBoardCreateWithoutCalendarPaperSelectionsInput, ExamBoardUncheckedCreateWithoutCalendarPaperSelectionsInput>
+  }
+
+  export type PaperCreateWithoutCalendarPaperSelectionsInput = {
+    id?: string
+    code: string
+    title: string
+    duration?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subject: SubjectCreateNestedOneWithoutPapersInput
+    sourceDocument?: SourceDocumentCreateNestedOneWithoutPapersInput
+    examSessions?: ExamSessionCreateNestedManyWithoutPaperInput
+    resources?: ResourceCreateNestedManyWithoutPaperInput
+    studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutPaperInput
+    feeRules?: FeeRuleCreateNestedManyWithoutPaperInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutPaperInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutPaperInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutPaperInput
+  }
+
+  export type PaperUncheckedCreateWithoutCalendarPaperSelectionsInput = {
+    id?: string
+    code: string
+    title: string
+    duration?: number | null
+    subjectId: string
+    sourceDocumentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examSessions?: ExamSessionUncheckedCreateNestedManyWithoutPaperInput
+    resources?: ResourceUncheckedCreateNestedManyWithoutPaperInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutPaperInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutPaperInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutPaperInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutPaperInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutPaperInput
+  }
+
+  export type PaperCreateOrConnectWithoutCalendarPaperSelectionsInput = {
+    where: PaperWhereUniqueInput
+    create: XOR<PaperCreateWithoutCalendarPaperSelectionsInput, PaperUncheckedCreateWithoutCalendarPaperSelectionsInput>
+  }
+
+  export type ExamBoardUpsertWithoutCalendarPaperSelectionsInput = {
+    update: XOR<ExamBoardUpdateWithoutCalendarPaperSelectionsInput, ExamBoardUncheckedUpdateWithoutCalendarPaperSelectionsInput>
+    create: XOR<ExamBoardCreateWithoutCalendarPaperSelectionsInput, ExamBoardUncheckedCreateWithoutCalendarPaperSelectionsInput>
+    where?: ExamBoardWhereInput
+  }
+
+  export type ExamBoardUpdateToOneWithWhereWithoutCalendarPaperSelectionsInput = {
+    where?: ExamBoardWhereInput
+    data: XOR<ExamBoardUpdateWithoutCalendarPaperSelectionsInput, ExamBoardUncheckedUpdateWithoutCalendarPaperSelectionsInput>
+  }
+
+  export type ExamBoardUpdateWithoutCalendarPaperSelectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarSubjectFilterEnabled?: BoolFieldUpdateOperationsInput | boolean
+    centreName?: NullableStringFieldUpdateOperationsInput | string | null
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    centreAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    centreEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    centrePhone?: NullableStringFieldUpdateOperationsInput | string | null
+    centreCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    centreTimeZone?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerName?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    qualifications?: QualificationUpdateManyWithoutExamBoardNestedInput
+    examSeries?: ExamSeriesUpdateManyWithoutExamBoardNestedInput
+    keyDates?: KeyDateUpdateManyWithoutExamBoardNestedInput
+    resources?: ResourceUpdateManyWithoutExamBoardNestedInput
+    sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
+    candidateExamIdentities?: CandidateExamIdentityUpdateManyWithoutExamBoardNestedInput
+    reviewWindows?: ReviewWindowUpdateManyWithoutExamBoardNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
+    certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
+  }
+
+  export type ExamBoardUncheckedUpdateWithoutCalendarPaperSelectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarSubjectFilterEnabled?: BoolFieldUpdateOperationsInput | boolean
+    centreName?: NullableStringFieldUpdateOperationsInput | string | null
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    centreAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    centreEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    centrePhone?: NullableStringFieldUpdateOperationsInput | string | null
+    centreCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    centreTimeZone?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerName?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    qualifications?: QualificationUncheckedUpdateManyWithoutExamBoardNestedInput
+    examSeries?: ExamSeriesUncheckedUpdateManyWithoutExamBoardNestedInput
+    keyDates?: KeyDateUncheckedUpdateManyWithoutExamBoardNestedInput
+    resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
+    candidateExamIdentities?: CandidateExamIdentityUncheckedUpdateManyWithoutExamBoardNestedInput
+    reviewWindows?: ReviewWindowUncheckedUpdateManyWithoutExamBoardNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
+  }
+
+  export type PaperUpsertWithoutCalendarPaperSelectionsInput = {
+    update: XOR<PaperUpdateWithoutCalendarPaperSelectionsInput, PaperUncheckedUpdateWithoutCalendarPaperSelectionsInput>
+    create: XOR<PaperCreateWithoutCalendarPaperSelectionsInput, PaperUncheckedCreateWithoutCalendarPaperSelectionsInput>
+    where?: PaperWhereInput
+  }
+
+  export type PaperUpdateToOneWithWhereWithoutCalendarPaperSelectionsInput = {
+    where?: PaperWhereInput
+    data: XOR<PaperUpdateWithoutCalendarPaperSelectionsInput, PaperUncheckedUpdateWithoutCalendarPaperSelectionsInput>
+  }
+
+  export type PaperUpdateWithoutCalendarPaperSelectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subject?: SubjectUpdateOneRequiredWithoutPapersNestedInput
+    sourceDocument?: SourceDocumentUpdateOneWithoutPapersNestedInput
+    examSessions?: ExamSessionUpdateManyWithoutPaperNestedInput
+    resources?: ResourceUpdateManyWithoutPaperNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutPaperNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutPaperNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutPaperNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutPaperNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutPaperNestedInput
+  }
+
+  export type PaperUncheckedUpdateWithoutCalendarPaperSelectionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    duration?: NullableIntFieldUpdateOperationsInput | number | null
+    subjectId?: StringFieldUpdateOperationsInput | string
+    sourceDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examSessions?: ExamSessionUncheckedUpdateManyWithoutPaperNestedInput
+    resources?: ResourceUncheckedUpdateManyWithoutPaperNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutPaperNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutPaperNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutPaperNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutPaperNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type SubjectCreateWithoutPapersInput = {
@@ -122299,6 +124021,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CalendarPaperSelectionCreateWithoutPaperInput = {
+    id?: string
+    createdAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutCalendarPaperSelectionsInput
+  }
+
+  export type CalendarPaperSelectionUncheckedCreateWithoutPaperInput = {
+    id?: string
+    examBoardId: string
+    createdAt?: Date | string
+  }
+
+  export type CalendarPaperSelectionCreateOrConnectWithoutPaperInput = {
+    where: CalendarPaperSelectionWhereUniqueInput
+    create: XOR<CalendarPaperSelectionCreateWithoutPaperInput, CalendarPaperSelectionUncheckedCreateWithoutPaperInput>
+  }
+
+  export type CalendarPaperSelectionCreateManyPaperInputEnvelope = {
+    data: CalendarPaperSelectionCreateManyPaperInput | CalendarPaperSelectionCreateManyPaperInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SubjectUpsertWithoutPapersInput = {
     update: XOR<SubjectUpdateWithoutPapersInput, SubjectUncheckedUpdateWithoutPapersInput>
     create: XOR<SubjectCreateWithoutPapersInput, SubjectUncheckedCreateWithoutPapersInput>
@@ -122531,6 +124275,22 @@ export namespace Prisma {
     data: XOR<AccessToScriptRequestUpdateManyMutationInput, AccessToScriptRequestUncheckedUpdateManyWithoutPaperInput>
   }
 
+  export type CalendarPaperSelectionUpsertWithWhereUniqueWithoutPaperInput = {
+    where: CalendarPaperSelectionWhereUniqueInput
+    update: XOR<CalendarPaperSelectionUpdateWithoutPaperInput, CalendarPaperSelectionUncheckedUpdateWithoutPaperInput>
+    create: XOR<CalendarPaperSelectionCreateWithoutPaperInput, CalendarPaperSelectionUncheckedCreateWithoutPaperInput>
+  }
+
+  export type CalendarPaperSelectionUpdateWithWhereUniqueWithoutPaperInput = {
+    where: CalendarPaperSelectionWhereUniqueInput
+    data: XOR<CalendarPaperSelectionUpdateWithoutPaperInput, CalendarPaperSelectionUncheckedUpdateWithoutPaperInput>
+  }
+
+  export type CalendarPaperSelectionUpdateManyWithWhereWithoutPaperInput = {
+    where: CalendarPaperSelectionScalarWhereInput
+    data: XOR<CalendarPaperSelectionUpdateManyMutationInput, CalendarPaperSelectionUncheckedUpdateManyWithoutPaperInput>
+  }
+
   export type ExamBoardCreateWithoutExamSeriesInput = {
     id?: string
     name: string
@@ -122557,6 +124317,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -122598,6 +124359,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -123446,6 +125208,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -123487,6 +125250,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -123792,6 +125556,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUncheckedCreateWithoutExamSessionsInput = {
@@ -123809,6 +125574,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput
   }
 
   export type PaperCreateOrConnectWithoutExamSessionsInput = {
@@ -124564,6 +126330,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateWithoutExamSessionsInput = {
@@ -124581,6 +126348,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type ExamSeriesUpsertWithoutExamSessionsInput = {
@@ -124930,6 +126698,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -124971,6 +126740,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -125173,6 +126943,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -125214,6 +126985,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -125418,6 +127190,7 @@ export namespace Prisma {
     keyDates?: KeyDateCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -125459,6 +127232,7 @@ export namespace Prisma {
     keyDates?: KeyDateUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -125574,6 +127348,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUncheckedCreateWithoutResourcesInput = {
@@ -125591,6 +127366,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput
   }
 
   export type PaperCreateOrConnectWithoutResourcesInput = {
@@ -125735,6 +127511,7 @@ export namespace Prisma {
     keyDates?: KeyDateUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -125776,6 +127553,7 @@ export namespace Prisma {
     keyDates?: KeyDateUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -125909,6 +127687,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateWithoutResourcesInput = {
@@ -125926,6 +127705,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type ExamSeriesUpsertWithoutResourcesInput = {
@@ -126066,6 +127846,7 @@ export namespace Prisma {
     keyDates?: KeyDateCreateNestedManyWithoutExamBoardInput
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -126107,6 +127888,7 @@ export namespace Prisma {
     keyDates?: KeyDateUncheckedCreateNestedManyWithoutExamBoardInput
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -126263,6 +128045,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUncheckedCreateWithoutSourceDocumentInput = {
@@ -126280,6 +128063,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput
   }
 
   export type PaperCreateOrConnectWithoutSourceDocumentInput = {
@@ -126531,6 +128315,7 @@ export namespace Prisma {
     keyDates?: KeyDateUpdateManyWithoutExamBoardNestedInput
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -126572,6 +128357,7 @@ export namespace Prisma {
     keyDates?: KeyDateUncheckedUpdateManyWithoutExamBoardNestedInput
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -126892,6 +128678,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     candidateExamIdentities?: CandidateExamIdentityCreateNestedManyWithoutExamBoardInput
@@ -126933,6 +128720,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     candidateExamIdentities?: CandidateExamIdentityUncheckedCreateNestedManyWithoutExamBoardInput
@@ -127102,6 +128890,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUncheckedCreateWithoutFeeRulesInput = {
@@ -127119,6 +128908,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput
   }
 
   export type PaperCreateOrConnectWithoutFeeRulesInput = {
@@ -127417,6 +129207,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     candidateExamIdentities?: CandidateExamIdentityUpdateManyWithoutExamBoardNestedInput
@@ -127458,6 +129249,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     candidateExamIdentities?: CandidateExamIdentityUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -127651,6 +129443,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateWithoutFeeRulesInput = {
@@ -127668,6 +129461,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type ExamSessionUpsertWithoutFeeRulesInput = {
@@ -133219,6 +135013,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -133260,6 +135055,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -133859,6 +135655,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -133900,6 +135697,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -134510,6 +136308,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -134551,6 +136350,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -134837,6 +136637,7 @@ export namespace Prisma {
     feeRules?: FeeRuleCreateNestedManyWithoutPaperInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUncheckedCreateWithoutReviewRequestsInput = {
@@ -134854,6 +136655,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutPaperInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput
   }
 
   export type PaperCreateOrConnectWithoutReviewRequestsInput = {
@@ -135408,6 +137210,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -135449,6 +137252,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -135765,6 +137569,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUpdateManyWithoutPaperNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateWithoutReviewRequestsInput = {
@@ -135782,6 +137587,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedUpdateManyWithoutPaperNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type UserUpsertWithoutReviewRequestsRequestedInput = {
@@ -136326,6 +138132,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -136367,6 +138174,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -137006,6 +138814,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -137047,6 +138856,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -137694,6 +139504,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -137735,6 +139546,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -138021,6 +139833,7 @@ export namespace Prisma {
     feeRules?: FeeRuleCreateNestedManyWithoutPaperInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUncheckedCreateWithoutAccessToScriptRequestsInput = {
@@ -138038,6 +139851,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutPaperInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput
   }
 
   export type PaperCreateOrConnectWithoutAccessToScriptRequestsInput = {
@@ -138471,6 +140285,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -138512,6 +140327,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -138828,6 +140644,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUpdateManyWithoutPaperNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateWithoutAccessToScriptRequestsInput = {
@@ -138845,6 +140662,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedUpdateManyWithoutPaperNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type UserUpsertWithoutAccessToScriptRequestsRequestedInput = {
@@ -139262,6 +141080,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -139303,6 +141122,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -139803,6 +141623,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -139844,6 +141665,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -140178,6 +142000,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -140219,6 +142042,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -140388,6 +142212,7 @@ export namespace Prisma {
     feeRules?: FeeRuleCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutPaperInput
   }
 
   export type PaperUncheckedCreateWithoutFeeSchedulesInput = {
@@ -140405,6 +142230,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutPaperInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutPaperInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutPaperInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutPaperInput
   }
 
   export type PaperCreateOrConnectWithoutFeeSchedulesInput = {
@@ -140695,6 +142521,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -140736,6 +142563,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -140929,6 +142757,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateWithoutFeeSchedulesInput = {
@@ -140946,6 +142775,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type UserUpsertWithoutFeeSchedulesCreatedInput = {
@@ -141243,6 +143073,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
@@ -141284,6 +143115,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
     sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedCreateNestedManyWithoutExamBoardInput
     registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
@@ -141750,6 +143582,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
@@ -141791,6 +143624,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
     sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
     calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
     registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -150519,6 +152353,12 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type CalendarPaperSelectionCreateManyExamBoardInput = {
+    id?: string
+    paperId: string
+    createdAt?: Date | string
+  }
+
   export type RegistrationWindowCreateManyExamBoardInput = {
     id?: string
     examSeriesId: string
@@ -151023,6 +152863,24 @@ export namespace Prisma {
   export type CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardInput = {
     id?: StringFieldUpdateOperationsInput | string
     subjectId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarPaperSelectionUpdateWithoutExamBoardInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paper?: PaperUpdateOneRequiredWithoutCalendarPaperSelectionsNestedInput
+  }
+
+  export type CalendarPaperSelectionUncheckedUpdateWithoutExamBoardInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paperId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarPaperSelectionUncheckedUpdateManyWithoutExamBoardInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paperId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -152486,6 +154344,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateWithoutSubjectInput = {
@@ -152503,6 +154362,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateManyWithoutSubjectInput = {
@@ -153310,6 +155170,12 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CalendarPaperSelectionCreateManyPaperInput = {
+    id?: string
+    examBoardId: string
+    createdAt?: Date | string
+  }
+
   export type ExamSessionUpdateWithoutPaperInput = {
     id?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -153823,6 +155689,24 @@ export namespace Prisma {
     feeStatementId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarPaperSelectionUpdateWithoutPaperInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutCalendarPaperSelectionsNestedInput
+  }
+
+  export type CalendarPaperSelectionUncheckedUpdateWithoutPaperInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CalendarPaperSelectionUncheckedUpdateManyWithoutPaperInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ExamSessionCreateManyExamSeriesInput = {
@@ -156058,6 +157942,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateWithoutSourceDocumentInput = {
@@ -156075,6 +157960,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutPaperNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutPaperNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutPaperNestedInput
+    calendarPaperSelections?: CalendarPaperSelectionUncheckedUpdateManyWithoutPaperNestedInput
   }
 
   export type PaperUncheckedUpdateManyWithoutSourceDocumentInput = {

@@ -568,6 +568,13 @@ exports.Prisma.CalendarSubjectSelectionScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.CalendarPaperSelectionScalarFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  paperId: 'paperId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.PaperScalarFieldEnum = {
   id: 'id',
   code: 'code',
@@ -1304,6 +1311,12 @@ exports.Prisma.CalendarSubjectSelectionOrderByRelevanceFieldEnum = {
   id: 'id',
   examBoardId: 'examBoardId',
   subjectId: 'subjectId'
+};
+
+exports.Prisma.CalendarPaperSelectionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  paperId: 'paperId'
 };
 
 exports.Prisma.PaperOrderByRelevanceFieldEnum = {
@@ -2069,6 +2082,7 @@ exports.Prisma.ModelName = {
   Subject: 'Subject',
   CashInCode: 'CashInCode',
   CalendarSubjectSelection: 'CalendarSubjectSelection',
+  CalendarPaperSelection: 'CalendarPaperSelection',
   Paper: 'Paper',
   ExamSeries: 'ExamSeries',
   ExamSession: 'ExamSession',

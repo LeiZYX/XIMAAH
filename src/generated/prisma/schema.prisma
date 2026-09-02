@@ -1147,6 +1147,7 @@ model ExamBoard {
   resources                 Resource[]
   sourceDocuments           SourceDocument[]
   calendarSubjectSelections CalendarSubjectSelection[]
+  calendarPaperSelections   CalendarPaperSelection[]
   registrationWindows       RegistrationWindow[]
   studentExamRegistrations  StudentExamRegistration[]
   feeRules                  FeeRule[]
@@ -1263,6 +1264,19 @@ model CalendarSubjectSelection {
   @@index([subjectId])
 }
 
+model CalendarPaperSelection {
+  id          String    @id @default(cuid())
+  examBoardId String
+  examBoard   ExamBoard @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  paperId     String
+  paper       Paper     @relation(fields: [paperId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  @@unique([examBoardId, paperId])
+  @@index([examBoardId])
+  @@index([paperId])
+}
+
 model Paper {
   id               String          @id @default(cuid())
   code             String
@@ -1282,6 +1296,7 @@ model Paper {
   feeSchedules             FeeSchedule[]
   reviewRequests           ReviewRequest[]
   accessToScriptRequests   AccessToScriptRequest[]
+  calendarPaperSelections  CalendarPaperSelection[]
 
   @@index([subjectId])
   @@index([sourceDocumentId])

@@ -16,6 +16,7 @@ import {
 } from "@/lib/calendar-events";
 import {
   getCalendarSubjectFilterState,
+  isSessionVisibleOnCalendar,
   isSubjectVisibleOnCalendar,
 } from "@/lib/calendar-subject-selections";
 import { canStudentRegisterInWindow, describeStudentRegistrationAvailability } from "@/lib/registrations/window";
@@ -205,10 +206,11 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
       }
 
       if (
-        !isSubjectVisibleOnCalendar(
+        !isSessionVisibleOnCalendar(
           filterState,
           qualification.examBoard.id,
           session.paper.subject.id,
+          session.paper.id,
         )
       ) {
         continue;
