@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import type { BoardSubmissionWindowSummary } from "@/lib/board-submissions/types";
 import type { BulkEntriesPreview } from "@/lib/board-submissions/bulk-entries/types";
+import { formatRegistrationTypes } from "@/lib/board-submissions/bulk-entries/identity";
 import { Card } from "@/components/ui/Card";
 
 export function BoardSubmissionsBulkEntriesTab({
@@ -85,7 +86,9 @@ export function BoardSubmissionsBulkEntriesTab({
           <h2 className="text-lg font-semibold text-slate-900">Bulk Entries</h2>
           <p className="mt-1 text-sm text-slate-600">
             Export the official Bulk Entries layout for the first submission to the exam board.
-            Candidates with more than 32 specifications are split across multiple files.
+            Candidates with more than 32 specifications are split across multiple files. This list
+            includes every locked registration in the window — internal, restricted internal, and
+            external.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -149,10 +152,28 @@ export function BoardSubmissionsBulkEntriesTab({
 
       {preview ? (
         <>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
             <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
               <p className="text-slate-500">Candidates</p>
               <p className="text-lg font-semibold text-slate-900">{preview.candidateCount}</p>
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+              <p className="text-slate-500">Internal</p>
+              <p className="text-lg font-semibold text-slate-900">
+                {preview.registrationTypeCounts.internal}
+              </p>
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+              <p className="text-slate-500">Restricted</p>
+              <p className="text-lg font-semibold text-slate-900">
+                {preview.registrationTypeCounts.restricted}
+              </p>
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
+              <p className="text-slate-500">External</p>
+              <p className="text-lg font-semibold text-slate-900">
+                {preview.registrationTypeCounts.external}
+              </p>
             </div>
             <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
               <p className="text-slate-500">Exam entries</p>
@@ -169,6 +190,7 @@ export function BoardSubmissionsBulkEntriesTab({
               <thead className="bg-slate-50">
                 <tr>
                   <th className="px-4 py-3 text-left">Candidate</th>
+                  <th className="px-4 py-3 text-left">Type</th>
                   <th className="px-4 py-3 text-left">UCI</th>
                   <th className="px-4 py-3 text-left">Cand No</th>
                   <th className="px-4 py-3 text-left">Entries</th>
@@ -179,7 +201,7 @@ export function BoardSubmissionsBulkEntriesTab({
               <tbody className="divide-y divide-slate-200">
                 {preview.rows.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-4 py-6 text-center text-slate-500">
+                    <td colSpan={7} className="px-4 py-6 text-center text-slate-500">
                       No locked registrations found for this window.
                     </td>
                   </tr>
@@ -187,6 +209,9 @@ export function BoardSubmissionsBulkEntriesTab({
                   preview.rows.map((row) => (
                     <tr key={row.candidateId}>
                       <td className="px-4 py-3 font-medium text-slate-900">{row.displayName}</td>
+                      <td className="px-4 py-3 text-slate-600">
+                        {formatRegistrationTypes(row.registrationTypes)}
+                      </td>
                       <td className="px-4 py-3">{row.uciNumber ?? "—"}</td>
                       <td className="px-4 py-3">{row.candidateNumber ?? "—"}</td>
                       <td className="px-4 py-3">{row.entries.length}</td>

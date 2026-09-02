@@ -1,9 +1,11 @@
 import { resolveSyncedNameParts } from "@/lib/candidates/identity";
 import { BULK_SPEC_SLOTS } from "@/lib/board-submissions/bulk-entries/constants";
+import { resolveBulkEntriesDemographics } from "@/lib/board-submissions/bulk-entries/identity";
 import type {
   BulkEntriesCandidateRow,
   BulkEntriesFilePart,
   BulkEntriesPreview,
+  BulkEntriesRegistrationTypeCounts,
   BulkEntriesSnapshotRow,
   BulkEntrySlot,
 } from "@/lib/board-submissions/bulk-entries/types";
@@ -55,6 +57,33 @@ function validateCandidateRow(input: {
   return issues;
 }
 
+function countRegistrationTypes(rows: BulkEntriesCandidateRow[]): BulkEntriesRegistrationTypeCounts {
+  const counts: BulkEntriesRegistrationTypeCounts = {
+    internal: 0,
+    restricted: 0,
+    external: 0,
+  };
+
+  for (const row of rows) {
+    if (row.registrationTypes.includes("EXTERNAL")) {
+      counts.external += 1;
+      continue;
+    }
+    if (row.registrationTypes.includes("RESTRICTED_INTERNAL")) {
+      counts.restricted += 1;
+      continue;
+    }
+    counts.internal += 1;
+  }
+
+  return counts;
+}
+
+function candidateTypeLabel(candidateType: string | null | undefined): string {
+  if (candidateType === "EXTERNAL") return "External";
+  return "Internal";
+}
+
 export async function buildBulkEntriesPreview(
   registrationWindowId: string,
 ): Promise<BulkEntriesPreview | null> {
@@ -73,10 +102,43 @@ export async function buildBulkEntriesPreview(
     where: {
       registrationWindowId,
       lockedAt: { not: null },
-      candidateId: { not: null },
+      OR: [{ candidateId: { not: null } }, { studentId: { not: null } }],
     },
     select: {
       candidateId: true,
+      registrationType: true,
+      student: {
+        select: {
+          candidate: {
+            select: {
+              id: true,
+              preferredEnglishName: true,
+              firstName: true,
+              lastName: true,
+              givenNamePinyin: true,
+              surnamePinyin: true,
+              legalEnglishName: true,
+              englishName: true,
+              gender: true,
+              dateOfBirth: true,
+              candidateType: true,
+              user: {
+                select: {
+                  studentProfile: { select: { gender: true } },
+                },
+              },
+              examIdentities: {
+                where: { examBoardId: window.examBoardId, status: { not: "ARCHIVED" } },
+                select: {
+                  uciNumber: true,
+                  candidateNumber: true,
+                },
+                take: 1,
+              },
+            },
+          },
+        },
+      },
       candidate: {
         select: {
           id: true,
@@ -89,6 +151,12 @@ export async function buildBulkEntriesPreview(
           englishName: true,
           gender: true,
           dateOfBirth: true,
+          candidateType: true,
+          user: {
+            select: {
+              studentProfile: { select: { gender: true } },
+            },
+          },
           examIdentities: {
             where: { examBoardId: window.examBoardId, status: { not: "ARCHIVED" } },
             select: {
@@ -117,8 +185,8 @@ export async function buildBulkEntriesPreview(
   const candidateMap = new Map<string, BulkEntriesCandidateRow>();
 
   for (const workspace of workspaces) {
-    const candidate = workspace.candidate;
-    const candidateId = workspace.candidateId;
+    const candidate = workspace.candidate ?? workspace.student?.candidate ?? null;
+    const candidateId = workspace.candidateId ?? candidate?.id ?? null;
     if (!candidate || !candidateId) continue;
 
     const identity = candidate.examIdentities[0] ?? null;
@@ -131,6 +199,9 @@ export async function buildBulkEntriesPreview(
       candidate.legalEnglishName?.trim() ||
       candidate.englishName?.trim() ||
       "—";
+    const demographics = resolveBulkEntriesDemographics(candidate);
+    const gender = genderForEdexcel(demographics.gender);
+    const dateOfBirth = formatDobForEdexcel(demographics.dateOfBirth);
 
     const entrySet = new Map<string, BulkEntrySlot>();
     for (const registration of workspace.registrations) {
@@ -151,6 +222,11 @@ export async function buildBulkEntriesPreview(
       existing.entries = [...merged.values()].sort((a, b) =>
         `${a.specification}:${a.specOption}`.localeCompare(`${b.specification}:${b.specOption}`),
       );
+      if (!existing.registrationTypes.includes(workspace.registrationType)) {
+        existing.registrationTypes.push(workspace.registrationType);
+      }
+      existing.gender = existing.gender ?? gender;
+      existing.dateOfBirth = existing.dateOfBirth ?? dateOfBirth;
       existing.issues = validateCandidateRow({
         uciNumber: existing.uciNumber,
         firstName: existing.firstName,
@@ -166,8 +242,6 @@ export async function buildBulkEntriesPreview(
     const entries = [...entrySet.values()].sort((a, b) =>
       `${a.specification}:${a.specOption}`.localeCompare(`${b.specification}:${b.specOption}`),
     );
-    const gender = genderForEdexcel(candidate.gender);
-    const dateOfBirth = formatDobForEdexcel(candidate.dateOfBirth);
     const issues = validateCandidateRow({
       uciNumber: identity?.uciNumber ?? null,
       firstName,
@@ -180,6 +254,8 @@ export async function buildBulkEntriesPreview(
     candidateMap.set(candidateId, {
       candidateId,
       displayName,
+      candidateType: candidateTypeLabel(candidate.candidateType),
+      registrationTypes: [workspace.registrationType],
       uciNumber: identity?.uciNumber?.trim() || null,
       candidateNumber: identity?.candidateNumber?.trim() || null,
       firstName,
@@ -206,6 +282,7 @@ export async function buildBulkEntriesPreview(
     candidateCount: rows.length,
     entryCount,
     fileCount,
+    registrationTypeCounts: countRegistrationTypes(rows),
     rows,
     blockingIssues,
     canExport: rows.length > 0 && rows.every((row) => row.issues.length === 0),

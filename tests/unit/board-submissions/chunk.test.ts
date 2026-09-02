@@ -13,6 +13,8 @@ function makeRow(entryCount: number): BulkEntriesCandidateRow {
   return {
     candidateId: `c-${entryCount}`,
     displayName: `Candidate ${entryCount}`,
+    candidateType: "Internal",
+    registrationTypes: ["INTERNAL_NORMAL"],
     uciNumber: "UCI123",
     candidateNumber: "001",
     firstName: "Test",

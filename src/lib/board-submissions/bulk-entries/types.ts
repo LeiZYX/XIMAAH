@@ -1,11 +1,21 @@
+import type { RegistrationType } from "@/generated/prisma/enums";
+
 export interface BulkEntrySlot {
   specification: string;
   specOption: string;
 }
 
+export interface BulkEntriesRegistrationTypeCounts {
+  internal: number;
+  restricted: number;
+  external: number;
+}
+
 export interface BulkEntriesCandidateRow {
   candidateId: string;
   displayName: string;
+  candidateType: string;
+  registrationTypes: RegistrationType[];
   uciNumber: string | null;
   candidateNumber: string | null;
   firstName: string;
@@ -24,6 +34,7 @@ export interface BulkEntriesPreview {
   candidateCount: number;
   entryCount: number;
   fileCount: number;
+  registrationTypeCounts: BulkEntriesRegistrationTypeCounts;
   rows: BulkEntriesCandidateRow[];
   blockingIssues: string[];
   canExport: boolean;
