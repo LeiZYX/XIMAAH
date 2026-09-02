@@ -12,7 +12,7 @@ export function parseBaselineSnapshot(value: unknown): BulkEntriesSnapshotRow[] 
     return [
       {
         candidateId,
-        entries: entries.flatMap((entry) => {
+        entries: entries.flatMap((entry: unknown) => {
           if (!entry || typeof entry !== "object") return [];
           const specification =
             "specification" in entry ? String(entry.specification ?? "").trim() : "";
