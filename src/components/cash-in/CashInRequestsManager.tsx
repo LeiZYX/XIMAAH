@@ -41,14 +41,9 @@ interface SubjectOption {
   name: string;
   code: string;
   cashInCode: string;
-}
-
-interface QualificationOption {
-  id: string;
-  name: string;
+  qualificationId: string;
   level: string;
-  code: string | null;
-  subjects: SubjectOption[];
+  qualificationCode: string | null;
 }
 
 interface CashInRequestRow {
@@ -90,7 +85,8 @@ export function CashInRequestsManager({
   const [selectedCandidate, setSelectedCandidate] = useState<CandidateOption | null>(null);
   const [rows, setRows] = useState<CashInRequestRow[]>([]);
   const [series, setSeries] = useState<SeriesOption[]>([]);
-  const [qualifications, setQualifications] = useState<QualificationOption[]>([]);
+  const [subjects, setSubjects] = useState<SubjectOption[]>([]);
+  const [subjectFilter, setSubjectFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -103,7 +99,6 @@ export function CashInRequestsManager({
 
   const [examBoardId, setExamBoardId] = useState("");
   const [examSeriesId, setExamSeriesId] = useState("");
-  const [qualificationId, setQualificationId] = useState("");
   const [subjectId, setSubjectId] = useState("");
   const [notes, setNotes] = useState("");
   const [quotePreview, setQuotePreview] = useState<{
@@ -113,13 +108,28 @@ export function CashInRequestsManager({
     salesCurrency?: string;
   } | null>(null);
 
-  const selectedQualification = useMemo(
-    () => qualifications.find((item) => item.id === qualificationId) ?? null,
-    [qualifications, qualificationId],
-  );
+  const filteredSubjects = useMemo(() => {
+    const q = subjectFilter.trim().toLowerCase();
+    const list = !q
+      ? subjects
+      : subjects.filter(
+          (item) =>
+            item.code.toLowerCase().includes(q) ||
+            item.name.toLowerCase().includes(q) ||
+            item.level.toLowerCase().includes(q) ||
+            item.cashInCode.toLowerCase().includes(q) ||
+            (item.qualificationCode ?? "").toLowerCase().includes(q),
+        );
+    if (subjectId && !list.some((item) => item.id === subjectId)) {
+      const selected = subjects.find((item) => item.id === subjectId);
+      if (selected) return [selected, ...list];
+    }
+    return list;
+  }, [subjects, subjectFilter, subjectId]);
+
   const selectedSubject = useMemo(
-    () => selectedQualification?.subjects.find((item) => item.id === subjectId) ?? null,
-    [selectedQualification, subjectId],
+    () => subjects.find((item) => item.id === subjectId) ?? null,
+    [subjects, subjectId],
   );
 
   const loadRows = useCallback(async (options?: { silent?: boolean }) => {
@@ -219,17 +229,17 @@ export function CashInRequestsManager({
 
   useEffect(() => {
     setExamSeriesId("");
-    setQualificationId("");
     setSubjectId("");
+    setSubjectFilter("");
     setSeries([]);
-    setQualifications([]);
+    setSubjects([]);
     setQuotePreview(null);
     if (!examBoardId) return;
     void fetch(`/api/cash-in-requests/options?examBoardId=${encodeURIComponent(examBoardId)}`)
-      .then((r) => (r.ok ? r.json() : { series: [], qualifications: [] }))
-      .then((data: { series: SeriesOption[]; qualifications: QualificationOption[] }) => {
+      .then((r) => (r.ok ? r.json() : { series: [], subjects: [] }))
+      .then((data: { series: SeriesOption[]; subjects: SubjectOption[] }) => {
         setSeries(data.series ?? []);
-        setQualifications(data.qualifications ?? []);
+        setSubjects(data.subjects ?? []);
       });
   }, [examBoardId]);
 
@@ -241,7 +251,9 @@ export function CashInRequestsManager({
       examSeriesId,
       subjectId,
     });
-    if (qualificationId) params.set("qualificationId", qualificationId);
+    if (selectedSubject?.qualificationId) {
+      params.set("qualificationId", selectedSubject.qualificationId);
+    }
     void fetch(`/api/fees/cash-in-quote?${params.toString()}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
@@ -253,7 +265,7 @@ export function CashInRequestsManager({
           salesCurrency: data.schedule?.salesCurrency,
         });
       });
-  }, [examBoardId, examSeriesId, qualificationId, subjectId]);
+  }, [examBoardId, examSeriesId, subjectId, selectedSubject?.qualificationId]);
 
   async function handleCreate(event: FormEvent) {
     event.preventDefault();
@@ -272,7 +284,6 @@ export function CashInRequestsManager({
           candidateId: selectedCandidate.id,
           examBoardId,
           examSeriesId,
-          qualificationId,
           subjectId,
           notes: notes || null,
           status: "DRAFT",
@@ -512,43 +523,37 @@ export function CashInRequestsManager({
               ))}
             </select>
           </label>
-          <label className="text-sm">
-            <span className="mb-1 block font-medium text-slate-700">Qualification</span>
-            <select
-              required
-              value={qualificationId}
-              onChange={(event) => {
-                setQualificationId(event.target.value);
-                setSubjectId("");
-              }}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2"
-              disabled={!examBoardId}
-            >
-              <option value="">Select qualification with cash-in codes</option>
-              {qualifications.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.level}
-                  {item.code ? ` · ${item.code}` : ""} — {item.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="text-sm">
+          <label className="text-sm md:col-span-2">
             <span className="mb-1 block font-medium text-slate-700">Subject</span>
+            <input
+              type="search"
+              value={subjectFilter}
+              onChange={(event) => setSubjectFilter(event.target.value)}
+              placeholder="Filter by code, name, level, or cash-in code…"
+              className="mb-2 w-full rounded-lg border border-slate-300 px-3 py-2"
+              disabled={!examBoardId}
+            />
             <select
               required
               value={subjectId}
               onChange={(event) => setSubjectId(event.target.value)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2"
-              disabled={!selectedQualification}
+              disabled={!examBoardId || subjects.length === 0}
             >
-              <option value="">Select subject</option>
-              {(selectedQualification?.subjects ?? []).map((item) => (
+              <option value="">
+                {subjects.length === 0
+                  ? "No subjects with cash-in codes"
+                  : "Select subject"}
+              </option>
+              {filteredSubjects.map((item) => (
                 <option key={item.id} value={item.id}>
-                  {item.code} — {item.name} ({item.cashInCode})
+                  {item.code} — {item.name} · {item.level} ({item.cashInCode})
                 </option>
               ))}
             </select>
+            {subjectFilter.trim() && filteredSubjects.length === 0 ? (
+              <p className="mt-1 text-xs text-amber-700">No subjects match this filter.</p>
+            ) : null}
           </label>
           <label className="text-sm">
             <span className="mb-1 block font-medium text-slate-700">Notes</span>

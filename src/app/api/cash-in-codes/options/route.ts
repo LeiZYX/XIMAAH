@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
-import { listQualificationsForBoard } from "@/lib/cash-in-codes/service";
+import { listQualificationsForBoard, listSubjectsForBoard } from "@/lib/cash-in-codes/service";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -14,8 +14,11 @@ export async function GET(request: NextRequest) {
   if (!examBoardId) return jsonError("examBoardId is required", 400);
 
   try {
-    const qualifications = await listQualificationsForBoard(examBoardId);
-    return NextResponse.json(qualifications);
+    const [subjects, qualifications] = await Promise.all([
+      listSubjectsForBoard(examBoardId),
+      listQualificationsForBoard(examBoardId),
+    ]);
+    return NextResponse.json({ subjects, qualifications });
   } catch (error) {
     console.error("GET /api/cash-in-codes/options failed:", error);
     return jsonError(

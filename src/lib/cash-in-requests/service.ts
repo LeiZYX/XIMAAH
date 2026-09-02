@@ -87,26 +87,19 @@ export async function createCashInRequest(input: {
   candidateId: string;
   examBoardId: string;
   examSeriesId: string;
-  qualificationId: string;
   subjectId: string;
+  /** Optional; when omitted, derived from subject.qualificationId */
+  qualificationId?: string;
   requestedByUserId: string;
   reason?: string | null;
   notes?: string | null;
   status?: "DRAFT" | "SUBMITTED";
 }) {
-  const [candidate, series, cashInCode, subject] = await Promise.all([
+  const [candidate, series, subject] = await Promise.all([
     prisma.candidate.findUnique({ where: { id: input.candidateId }, select: { id: true } }),
     prisma.examSeries.findFirst({
       where: { id: input.examSeriesId, examBoardId: input.examBoardId },
       select: { id: true },
-    }),
-    prisma.cashInCode.findFirst({
-      where: {
-        examBoardId: input.examBoardId,
-        qualificationId: input.qualificationId,
-        subjectId: input.subjectId,
-        active: true,
-      },
     }),
     prisma.subject.findUnique({
       where: { id: input.subjectId },
@@ -121,15 +114,26 @@ export async function createCashInRequest(input: {
   if (!candidate) throw new Error("Candidate not found");
   if (!series) throw new Error("Exam series not found for this exam board");
   if (!subject) throw new Error("Subject not found");
-  if (subject.qualificationId !== input.qualificationId) {
-    throw new Error("Subject does not belong to the selected qualification");
-  }
   if (subject.qualification.examBoardId !== input.examBoardId) {
     throw new Error("Subject does not belong to the selected exam board");
   }
+
+  const qualificationId = subject.qualificationId;
+  if (input.qualificationId && input.qualificationId !== qualificationId) {
+    throw new Error("Subject does not belong to the selected qualification");
+  }
+
+  const cashInCode = await prisma.cashInCode.findFirst({
+    where: {
+      examBoardId: input.examBoardId,
+      qualificationId,
+      subjectId: input.subjectId,
+      active: true,
+    },
+  });
   if (!cashInCode) {
     throw new Error(
-      "No active cash-in code configured for this board, qualification, and subject",
+      "No active cash-in code configured for this board and subject",
     );
   }
 
@@ -137,7 +141,7 @@ export async function createCashInRequest(input: {
   const quote = await resolveCashInFee({
     examBoardId: input.examBoardId,
     examSeriesId: input.examSeriesId,
-    qualificationId: input.qualificationId,
+    qualificationId,
     subjectId: input.subjectId,
   });
 
@@ -150,7 +154,7 @@ export async function createCashInRequest(input: {
       candidateId: input.candidateId,
       examBoardId: input.examBoardId,
       examSeriesId: input.examSeriesId,
-      qualificationId: input.qualificationId,
+      qualificationId,
       subjectId: input.subjectId,
       cashInCode: cashInCode.cashInCode,
       feeScheduleId: quote?.schedule.id ?? null,
@@ -364,36 +368,18 @@ export async function listCashInRequestFormOptions(examBoardId: string) {
     }),
   ]);
 
-  const qualificationMap = new Map<
-    string,
-    {
-      id: string;
-      name: string;
-      level: string;
-      code: string | null;
-      subjects: Array<{ id: string; name: string; code: string; cashInCode: string }>;
-    }
-  >();
-
-  for (const row of codes) {
-    const existing = qualificationMap.get(row.qualificationId) ?? {
-      id: row.qualification.id,
-      name: row.qualification.name,
-      level: row.qualification.level,
-      code: row.qualification.code,
-      subjects: [],
-    };
-    existing.subjects.push({
-      id: row.subject.id,
-      name: row.subject.name,
-      code: row.subject.code,
-      cashInCode: row.cashInCode,
-    });
-    qualificationMap.set(row.qualificationId, existing);
-  }
+  const subjects = codes.map((row) => ({
+    id: row.subject.id,
+    name: row.subject.name,
+    code: row.subject.code,
+    cashInCode: row.cashInCode,
+    qualificationId: row.qualification.id,
+    level: row.qualification.level,
+    qualificationCode: row.qualification.code,
+  }));
 
   return {
     series,
-    qualifications: [...qualificationMap.values()],
+    subjects,
   };
 }

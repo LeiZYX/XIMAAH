@@ -14,14 +14,9 @@ interface SubjectOption {
   id: string;
   name: string;
   code: string;
-}
-
-interface QualificationOption {
-  id: string;
-  name: string;
+  qualificationId: string;
   level: string;
-  code: string | null;
-  subjects: SubjectOption[];
+  qualificationCode: string | null;
 }
 
 interface CashInCodeRow {
@@ -36,7 +31,11 @@ interface CashInCodeRow {
     level: string;
     code: string | null;
   };
-  subject: SubjectOption;
+  subject: {
+    id: string;
+    name: string;
+    code: string;
+  };
 }
 
 interface ImportPreviewRow {
@@ -59,12 +58,12 @@ export function CashInCodesManager({ basePath }: { basePath: "/admin" | "/exam-o
   const [boards, setBoards] = useState<ExamBoardOption[]>([]);
   const [examBoardId, setExamBoardId] = useState("");
   const [rows, setRows] = useState<CashInCodeRow[]>([]);
-  const [qualifications, setQualifications] = useState<QualificationOption[]>([]);
+  const [subjects, setSubjects] = useState<SubjectOption[]>([]);
+  const [subjectFilter, setSubjectFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const [qualificationId, setQualificationId] = useState("");
   const [subjectId, setSubjectId] = useState("");
   const [cashInCode, setCashInCode] = useState("");
   const [notes, setNotes] = useState("");
@@ -80,9 +79,27 @@ export function CashInCodesManager({ basePath }: { basePath: "/admin" | "/exam-o
   } | null>(null);
   const [importing, setImporting] = useState(false);
 
-  const selectedQualification = useMemo(
-    () => qualifications.find((item) => item.id === qualificationId) ?? null,
-    [qualifications, qualificationId],
+  const filteredSubjects = useMemo(() => {
+    const q = subjectFilter.trim().toLowerCase();
+    const list = !q
+      ? subjects
+      : subjects.filter(
+          (item) =>
+            item.code.toLowerCase().includes(q) ||
+            item.name.toLowerCase().includes(q) ||
+            item.level.toLowerCase().includes(q) ||
+            (item.qualificationCode ?? "").toLowerCase().includes(q),
+        );
+    if (subjectId && !list.some((item) => item.id === subjectId)) {
+      const selected = subjects.find((item) => item.id === subjectId);
+      if (selected) return [selected, ...list];
+    }
+    return list;
+  }, [subjects, subjectFilter, subjectId]);
+
+  const selectedSubject = useMemo(
+    () => subjects.find((item) => item.id === subjectId) ?? null,
+    [subjects, subjectId],
   );
 
   const loadRows = useCallback(async (boardId: string) => {
@@ -109,14 +126,15 @@ export function CashInCodesManager({ basePath }: { basePath: "/admin" | "/exam-o
 
   const loadOptions = useCallback(async (boardId: string) => {
     if (!boardId) {
-      setQualifications([]);
+      setSubjects([]);
       return;
     }
     const response = await fetch(
       `/api/cash-in-codes/options?examBoardId=${encodeURIComponent(boardId)}`,
     );
     if (!response.ok) return;
-    setQualifications((await response.json()) as QualificationOption[]);
+    const data = (await response.json()) as { subjects?: SubjectOption[] };
+    setSubjects(Array.isArray(data.subjects) ? data.subjects : []);
   }, []);
 
   useEffect(() => {
@@ -130,8 +148,8 @@ export function CashInCodesManager({ basePath }: { basePath: "/admin" | "/exam-o
 
   useEffect(() => {
     if (!examBoardId) return;
-    setQualificationId("");
     setSubjectId("");
+    setSubjectFilter("");
     setImportPreview([]);
     setImportErrors([]);
     setImportMeta(null);
@@ -151,7 +169,6 @@ export function CashInCodesManager({ basePath }: { basePath: "/admin" | "/exam-o
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           examBoardId,
-          qualificationId,
           subjectId,
           cashInCode,
           notes: notes || null,
@@ -278,7 +295,7 @@ export function CashInCodesManager({ basePath }: { basePath: "/admin" | "/exam-o
     <div className="space-y-6">
       <PageHeader
         title="Cash-in Codes"
-        description="Maintain official cash-in entry codes by exam board, qualification, and subject. Download a template or upload bulk updates."
+        description="Maintain official cash-in entry codes by exam board and subject. Qualification is stored from the subject automatically. Download a template or upload bulk updates."
       />
 
       <Card className="space-y-3">
@@ -425,42 +442,41 @@ export function CashInCodesManager({ basePath }: { basePath: "/admin" | "/exam-o
       <Card className="space-y-4">
         <h2 className="text-sm font-semibold text-slate-900">Add cash-in code</h2>
         <form onSubmit={(event) => void handleCreate(event)} className="grid gap-4 md:grid-cols-2">
-          <label className="text-sm">
-            <span className="mb-1 block font-medium text-slate-700">Qualification</span>
-            <select
-              required
-              value={qualificationId}
-              onChange={(event) => {
-                setQualificationId(event.target.value);
-                setSubjectId("");
-              }}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2"
-            >
-              <option value="">Select qualification</option>
-              {qualifications.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.level}
-                  {item.code ? ` · ${item.code}` : ""} — {item.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="text-sm">
+          <label className="text-sm md:col-span-2">
             <span className="mb-1 block font-medium text-slate-700">Subject</span>
+            <input
+              type="search"
+              value={subjectFilter}
+              onChange={(event) => setSubjectFilter(event.target.value)}
+              placeholder="Filter by code, name, or level…"
+              className="mb-2 w-full rounded-lg border border-slate-300 px-3 py-2"
+              disabled={!examBoardId}
+            />
             <select
               required
               value={subjectId}
               onChange={(event) => setSubjectId(event.target.value)}
               className="w-full rounded-lg border border-slate-300 px-3 py-2"
-              disabled={!selectedQualification}
+              disabled={!examBoardId || subjects.length === 0}
             >
-              <option value="">Select subject</option>
-              {(selectedQualification?.subjects ?? []).map((item) => (
+              <option value="">
+                {subjects.length === 0 ? "No subjects for this board" : "Select subject"}
+              </option>
+              {filteredSubjects.map((item) => (
                 <option key={item.id} value={item.id}>
-                  {item.code} — {item.name}
+                  {item.code} — {item.name} · {item.level}
+                  {item.qualificationCode ? ` · ${item.qualificationCode}` : ""}
                 </option>
               ))}
             </select>
+            {selectedSubject ? (
+              <p className="mt-1 text-xs text-slate-500">
+                Level {selectedSubject.level} will be stored with this code (from subject).
+              </p>
+            ) : null}
+            {subjectFilter.trim() && filteredSubjects.length === 0 ? (
+              <p className="mt-1 text-xs text-amber-700">No subjects match this filter.</p>
+            ) : null}
           </label>
           <label className="text-sm">
             <span className="mb-1 block font-medium text-slate-700">Cash-in code</span>
@@ -505,8 +521,8 @@ export function CashInCodesManager({ basePath }: { basePath: "/admin" | "/exam-o
             <table className="min-w-full divide-y divide-slate-200 text-sm">
               <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-3 py-2 text-left">Qualification</th>
                   <th className="px-3 py-2 text-left">Subject</th>
+                  <th className="px-3 py-2 text-left">Level</th>
                   <th className="px-3 py-2 text-left">Cash-in Code</th>
                   <th className="px-3 py-2 text-left">Active</th>
                   <th className="px-3 py-2 text-left">Notes</th>
@@ -517,11 +533,11 @@ export function CashInCodesManager({ basePath }: { basePath: "/admin" | "/exam-o
                 {rows.map((row) => (
                   <tr key={row.id}>
                     <td className="px-3 py-2">
-                      {row.qualification.level}
-                      {row.qualification.code ? ` · ${row.qualification.code}` : ""}
+                      {row.subject.code} — {row.subject.name}
                     </td>
                     <td className="px-3 py-2">
-                      {row.subject.code} — {row.subject.name}
+                      {row.qualification.level}
+                      {row.qualification.code ? ` · ${row.qualification.code}` : ""}
                     </td>
                     <td className="px-3 py-2 font-medium text-slate-900">{row.cashInCode}</td>
                     <td className="px-3 py-2">{row.active ? "Active" : "Inactive"}</td>

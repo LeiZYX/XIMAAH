@@ -44,9 +44,10 @@ export async function buildCashInCodeExportRows(
 
 export async function createCashInCode(input: {
   examBoardId: string;
-  qualificationId: string;
   subjectId: string;
   cashInCode: string;
+  /** Optional; when omitted, derived from subject.qualificationId */
+  qualificationId?: string;
   active?: boolean;
   notes?: string | null;
 }) {
@@ -55,11 +56,13 @@ export async function createCashInCode(input: {
     select: { id: true, qualificationId: true, qualification: { select: { examBoardId: true } } },
   });
   if (!subject) throw new Error("Subject not found");
-  if (subject.qualificationId !== input.qualificationId) {
-    throw new Error("Subject does not belong to the selected qualification");
-  }
   if (subject.qualification.examBoardId !== input.examBoardId) {
     throw new Error("Subject does not belong to the selected exam board");
+  }
+
+  const qualificationId = subject.qualificationId;
+  if (input.qualificationId && input.qualificationId !== qualificationId) {
+    throw new Error("Subject does not belong to the selected qualification");
   }
 
   const code = input.cashInCode.trim().toUpperCase();
@@ -68,7 +71,7 @@ export async function createCashInCode(input: {
   return prisma.cashInCode.create({
     data: {
       examBoardId: input.examBoardId,
-      qualificationId: input.qualificationId,
+      qualificationId,
       subjectId: input.subjectId,
       cashInCode: code,
       active: input.active ?? true,
@@ -126,4 +129,28 @@ export async function listQualificationsForBoard(examBoardId: string) {
     },
     orderBy: [{ level: "asc" }, { name: "asc" }],
   });
+}
+
+/** Flat subject list for subject-first cash-in code UX (qualification derived server-side). */
+export async function listSubjectsForBoard(examBoardId: string) {
+  const rows = await prisma.subject.findMany({
+    where: { qualification: { examBoardId } },
+    select: {
+      id: true,
+      name: true,
+      code: true,
+      qualificationId: true,
+      qualification: { select: { level: true, code: true } },
+    },
+    orderBy: [{ qualification: { level: "asc" } }, { code: "asc" }, { name: "asc" }],
+  });
+
+  return rows.map((row) => ({
+    id: row.id,
+    name: row.name,
+    code: row.code,
+    qualificationId: row.qualificationId,
+    level: row.qualification.level,
+    qualificationCode: row.qualification.code,
+  }));
 }

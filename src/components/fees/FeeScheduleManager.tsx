@@ -114,8 +114,16 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
 
     if (isCashIn) {
       void fetch(`/api/cash-in-codes/options?examBoardId=${encodeURIComponent(examBoardId)}`)
-        .then((r) => (r.ok ? r.json() : []))
-        .then((data: QualificationOption[]) => setQualifications(data));
+        .then((r) => (r.ok ? r.json() : { qualifications: [] }))
+        .then((data: { qualifications?: QualificationOption[] } | QualificationOption[]) => {
+          // Prefer { qualifications }; tolerate legacy bare array.
+          const list = Array.isArray(data)
+            ? data
+            : Array.isArray(data.qualifications)
+              ? data.qualifications
+              : [];
+          setQualifications(list);
+        });
     }
   }, [examBoardId, isCashIn]);
 

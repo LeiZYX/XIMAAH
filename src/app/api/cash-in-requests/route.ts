@@ -45,28 +45,15 @@ export async function POST(request: NextRequest) {
     candidateId?: string;
     examBoardId?: string;
     examSeriesId?: string;
-    qualificationId?: string;
     subjectId?: string;
     reason?: string | null;
     notes?: string | null;
     status?: "DRAFT" | "SUBMITTED";
-  }>(body, [
-    "candidateId",
-    "examBoardId",
-    "examSeriesId",
-    "qualificationId",
-    "subjectId",
-  ]);
+  }>(body, ["candidateId", "examBoardId", "examSeriesId", "subjectId"]);
 
-  if (
-    !data?.candidateId ||
-    !data.examBoardId ||
-    !data.examSeriesId ||
-    !data.qualificationId ||
-    !data.subjectId
-  ) {
+  if (!data?.candidateId || !data.examBoardId || !data.examSeriesId || !data.subjectId) {
     return jsonError(
-      "candidateId, examBoardId, examSeriesId, qualificationId, and subjectId are required",
+      "candidateId, examBoardId, examSeriesId, and subjectId are required",
       400,
     );
   }
@@ -76,7 +63,6 @@ export async function POST(request: NextRequest) {
       candidateId: data.candidateId,
       examBoardId: data.examBoardId,
       examSeriesId: data.examSeriesId,
-      qualificationId: data.qualificationId,
       subjectId: data.subjectId,
       requestedByUserId: auth.user.id,
       reason: data.reason,

@@ -31,21 +31,19 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
   const data = parseJsonBody<{
     examBoardId?: string;
-    qualificationId?: string;
     subjectId?: string;
     cashInCode?: string;
     active?: boolean;
     notes?: string | null;
-  }>(body, ["examBoardId", "qualificationId", "subjectId", "cashInCode"]);
+  }>(body, ["examBoardId", "subjectId", "cashInCode"]);
 
-  if (!data?.examBoardId || !data.qualificationId || !data.subjectId || !data.cashInCode) {
-    return jsonError("examBoardId, qualificationId, subjectId, and cashInCode are required", 400);
+  if (!data?.examBoardId || !data.subjectId || !data.cashInCode) {
+    return jsonError("examBoardId, subjectId, and cashInCode are required", 400);
   }
 
   try {
     const row = await createCashInCode({
       examBoardId: data.examBoardId,
-      qualificationId: data.qualificationId,
       subjectId: data.subjectId,
       cashInCode: data.cashInCode,
       active: data.active,
