@@ -346,7 +346,9 @@ export async function syncPaymentOrderFromGlobePay(params: {
     throw error;
   }
 
-  if (remote.result_code === "PAY_SUCCESS") {
+  const remoteCode = String(remote.result_code ?? "").toUpperCase();
+
+  if (remoteCode === "PAY_SUCCESS") {
     const result = await markPaymentOrderPaid({
       partnerOrderId: order.partnerOrderId,
       globepayOrderId: remote.order_id,
@@ -356,7 +358,7 @@ export async function syncPaymentOrderFromGlobePay(params: {
     return serializePaymentOrder(result.order);
   }
 
-  if (remote.result_code === "PAYING") {
+  if (remoteCode === "PAYING") {
     const updated = await prisma.paymentOrder.update({
       where: { id: order.id },
       data: { status: "PAYING" },
@@ -364,10 +366,10 @@ export async function syncPaymentOrderFromGlobePay(params: {
     return serializePaymentOrder(updated);
   }
 
-  if (remote.result_code === "CLOSED" || remote.result_code === "PAY_FAIL") {
+  if (remoteCode === "CLOSED" || remoteCode === "PAY_FAIL") {
     const updated = await prisma.paymentOrder.update({
       where: { id: order.id },
-      data: { status: remote.result_code === "CLOSED" ? "CLOSED" : "FAILED" },
+      data: { status: remoteCode === "CLOSED" ? "CLOSED" : "FAILED" },
     });
     return serializePaymentOrder(updated);
   }

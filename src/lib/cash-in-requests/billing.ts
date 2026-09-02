@@ -278,3 +278,104 @@ export async function cancelUnpaidCashInFeeStatement(params: {
     select: { id: true, status: true, statementNo: true },
   });
 }
+
+/**
+ * Mark the linked cash-in fee statement as PAID for offline / alternative-channel payment
+ * (bank transfer, cash at office, etc.). Closes any open online payment orders.
+ */
+export async function markCashInFeePaidOffline(params: {
+  cashInRequestId: string;
+  performedByUserId: string;
+  note?: string | null;
+}) {
+  const request = await prisma.cashInRequest.findUnique({
+    where: { id: params.cashInRequestId },
+    include: {
+      feeStatement: true,
+    },
+  });
+
+  if (!request) throw new Error("Cash-in request not found");
+  if (request.status !== "SUBMITTED" && request.status !== "DRAFT") {
+    throw new Error("Offline payment can only be recorded before the request is sent to the board");
+  }
+  if (!request.feeStatement) {
+    throw new Error("No fee statement to mark as paid — submit the request first to issue an invoice");
+  }
+  if (request.feeStatement.status === "PAID") {
+    return {
+      cashInRequestId: request.id,
+      feeStatementId: request.feeStatement.id,
+      statementNo: request.feeStatement.statementNo,
+      alreadyPaid: true as const,
+    };
+  }
+  if (request.feeStatement.status !== "ISSUED") {
+    throw new Error(
+      `Cannot mark fee statement ${request.feeStatement.statementNo} as paid (status: ${request.feeStatement.status})`,
+    );
+  }
+
+  const noteText =
+    params.note?.trim() ||
+    "Marked paid offline (payment received outside WeChat/Alipay QR).";
+  const paymentNote = `Offline payment recorded by staff. ${noteText}`;
+
+  await prisma.$transaction(async (tx) => {
+    await tx.feeStatement.update({
+      where: { id: request.feeStatement!.id },
+      data: {
+        status: "PAID",
+        amountDueGbpAmount: 0,
+        amountDueCnyAmount: 0,
+        paymentNotes: request.feeStatement!.paymentNotes
+          ? `${request.feeStatement!.paymentNotes}\n${paymentNote}`
+          : paymentNote,
+      },
+    });
+
+    await tx.paymentOrder.updateMany({
+      where: {
+        feeStatementId: request.feeStatement!.id,
+        status: { in: ["CREATED", "PAYING"] },
+      },
+      data: { status: "CLOSED" },
+    });
+  });
+
+  await createFeeAuditLog({
+    action: "FEE_STATEMENT_MARKED_PAID_OFFLINE",
+    performedByUserId: params.performedByUserId,
+    note: paymentNote,
+    metadata: {
+      cashInRequestId: request.id,
+      feeStatementId: request.feeStatement.id,
+      statementNo: request.feeStatement.statementNo,
+      method: "OFFLINE",
+    },
+  });
+
+  await logPostResultsAudit({
+    action: "CASH_IN_FEE_MARKED_PAID_OFFLINE",
+    performedByUserId: params.performedByUserId,
+    candidateId: request.candidateId,
+    examBoardId: request.examBoardId,
+    examSeriesId: request.examSeriesId,
+    reviewWindowId: request.reviewWindowId,
+    serviceType: "CASH_IN",
+    notes: paymentNote,
+    metadata: {
+      cashInRequestId: request.id,
+      feeStatementId: request.feeStatement.id,
+      statementNo: request.feeStatement.statementNo,
+      method: "OFFLINE",
+    },
+  });
+
+  return {
+    cashInRequestId: request.id,
+    feeStatementId: request.feeStatement.id,
+    statementNo: request.feeStatement.statementNo,
+  };
+}
+

@@ -44,8 +44,8 @@ export function isCashInFeeStatementPayable(statement: {
   amountDueGbpAmount?: { toString(): string } | number | string | null;
   totalGbpAmount: { toString(): string } | number | string;
 }): boolean {
-  if (statement.status === "PAID") return true;
-  if (statement.status !== "ISSUED") return false;
+  if (String(statement.status).toUpperCase() === "PAID") return true;
+  if (String(statement.status).toUpperCase() !== "ISSUED") return false;
   const due =
     statement.amountDueGbpAmount != null && statement.amountDueGbpAmount !== ""
       ? toNumber(statement.amountDueGbpAmount)

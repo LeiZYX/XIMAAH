@@ -1,4 +1,5 @@
 import type { PostResultRequestStatus } from "@/generated/prisma/client";
+import { isCashInFeeStatementPayable } from "@/lib/cash-in-requests/billing-utils";
 
 export const CASH_IN_REQUEST_STATUSES = [
   "DRAFT",
@@ -30,12 +31,36 @@ export function canTransitionCashInRequestStatus(
   return allowed.includes(to as CashInRequestStatus);
 }
 
-export function cashInRequestStatusLabel(status: string): string {
+export function cashInRequestStatusLabel(
+  status: string,
+  feeStatement?: {
+    status: string;
+    amountDueGbpAmount?: { toString(): string } | number | string | null;
+    totalGbpAmount?: { toString(): string } | number | string;
+  } | null,
+): string {
   switch (status) {
     case "DRAFT":
       return "Draft";
-    case "SUBMITTED":
+    case "SUBMITTED": {
+      // No second arg (e.g. filter dropdown) → generic label
+      if (feeStatement === undefined) return "Submitted";
+      if (feeStatement === null) return "Submitted (no invoice)";
+      if (String(feeStatement.status).toUpperCase() === "PAID") {
+        return "Submitted (paid — ready for board)";
+      }
+      if (
+        feeStatement.totalGbpAmount != null &&
+        isCashInFeeStatementPayable({
+          status: feeStatement.status,
+          amountDueGbpAmount: feeStatement.amountDueGbpAmount,
+          totalGbpAmount: feeStatement.totalGbpAmount,
+        })
+      ) {
+        return "Submitted (paid — ready for board)";
+      }
       return "Submitted (awaiting payment)";
+    }
     case "SENT_TO_BOARD":
       return "Sent to board";
     case "COMPLETED":

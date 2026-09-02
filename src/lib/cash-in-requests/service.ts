@@ -3,6 +3,7 @@ import {
   assertCashInPaidBeforeSentToBoard,
   cancelUnpaidCashInFeeStatement,
   issueCashInFeeStatement,
+  markCashInFeePaidOffline,
 } from "@/lib/cash-in-requests/billing";
 import { resolveCashInFee } from "@/lib/fees/cash-in-fee";
 import { toNumber } from "@/lib/fees/money";
@@ -253,6 +254,7 @@ export async function updateCashInRequestStatus(input: {
         cashInRequestId: updated.id,
         fromStatus: existing.status,
         toStatus: updated.status,
+        action: "SUBMIT",
       },
     });
 
@@ -287,6 +289,16 @@ export async function updateCashInRequestStatus(input: {
       cashInRequestId: updated.id,
       fromStatus: existing.status,
       toStatus: updated.status,
+      action:
+        updated.status === "CANCELLED"
+          ? "CANCEL"
+          : updated.status === "SENT_TO_BOARD"
+            ? "SENT_TO_BOARD"
+            : updated.status === "SUBMITTED"
+              ? "SUBMIT"
+              : updated.status === "COMPLETED"
+                ? "COMPLETE"
+                : "STATUS_CHANGE",
     },
   });
 
@@ -313,6 +325,22 @@ export async function updateCashInRequestStatus(input: {
   }
 
   return updated;
+}
+
+export async function markCashInRequestPaidOffline(input: {
+  id: string;
+  performedByUserId: string;
+  note?: string | null;
+}) {
+  await markCashInFeePaidOffline({
+    cashInRequestId: input.id,
+    performedByUserId: input.performedByUserId,
+    note: input.note,
+  });
+  return prisma.cashInRequest.findUniqueOrThrow({
+    where: { id: input.id },
+    include: cashInRequestInclude,
+  });
 }
 
 export async function listCashInRequestFormOptions(examBoardId: string) {

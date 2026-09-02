@@ -52,4 +52,5 @@ export const POST_RESULTS_AUDIT_LABELS: Record<PostResultsAuditAction, string> =
   FEE_SCHEDULE_VERSION_CREATED: "Fee schedule version created",
   REGISTRATION_FEE_STATEMENT_GENERATED: "Registration fee statement generated",
   POST_RESULTS_FEE_STATEMENT_GENERATED: "Post-results fee statement generated",
+  CASH_IN_FEE_MARKED_PAID_OFFLINE: "Cash-in fee marked paid offline",
 };

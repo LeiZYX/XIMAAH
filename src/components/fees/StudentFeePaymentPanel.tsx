@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import { formatMoney } from "@/lib/fees/money";
 import {
@@ -58,13 +58,20 @@ export function StudentFeePaymentPanel({
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const onPaidRef = useRef(onPaid);
+  onPaidRef.current = onPaid;
 
   useEffect(() => {
     setOrders(existingOrders);
     const open =
       existingOrders.find((o) => o.status === "CREATED" || o.status === "PAYING") ?? null;
     const paid = existingOrders.find((o) => o.status === "PAID") ?? null;
-    setActiveOrder(paid ?? open);
+    setActiveOrder((prev) => {
+      // Keep a locally confirmed PAID state until the parent list catches up,
+      // so a silent refresh cannot flash the QR panel again.
+      if (prev?.status === "PAID" && !paid) return prev;
+      return paid ?? open;
+    });
   }, [existingOrders]);
 
   const refreshOrders = useCallback(async () => {
@@ -83,10 +90,10 @@ export function StudentFeePaymentPanel({
     const open = next.find((o) => o.status === "CREATED" || o.status === "PAYING");
     setActiveOrder(paid ?? open ?? null);
     if (paid || statementStatus === "PAID") {
-      onPaid?.();
+      onPaidRef.current?.();
     }
     return next;
-  }, [feeStatementId, onPaid, statementStatus]);
+  }, [feeStatementId, statementStatus]);
 
   const syncActiveOrder = useCallback(async (orderId: string, options?: { quiet?: boolean }) => {
     if (!options?.quiet) {
@@ -112,7 +119,7 @@ export function StudentFeePaymentPanel({
       });
       if (data.order.status === "PAID") {
         setMessage("Payment received. Thank you.");
-        onPaid?.();
+        onPaidRef.current?.();
       } else if (!options?.quiet) {
         setMessage(`Current status: ${paymentOrderStatusLabel(data.order.status)}`);
       }
@@ -125,10 +132,11 @@ export function StudentFeePaymentPanel({
     } finally {
       if (!options?.quiet) setSyncing(false);
     }
-  }, [onPaid]);
+  }, []);
 
-  // While waiting for payment, poll GlobePay so the UI flips to Paid without a manual Refresh
-  // (webhook notify may be delayed or unreachable).
+  // Poll GlobePay while awaiting payment. Also sync immediately when the tab
+  // becomes visible again (QR is often scanned on a phone with this tab backgrounded,
+  // and browsers throttle timers in background tabs).
   useEffect(() => {
     const orderId = activeOrder?.id;
     const awaiting =
@@ -140,12 +148,23 @@ export function StudentFeePaymentPanel({
       if (cancelled) return;
       void syncActiveOrder(orderId, { quiet: true });
     };
-    const intervalId = window.setInterval(tick, 4000);
-    const timeoutId = window.setTimeout(tick, 2500);
+    const onForeground = () => {
+      if (document.visibilityState === "visible") tick();
+    };
+
+    const intervalId = window.setInterval(tick, 3000);
+    const timeoutId = window.setTimeout(tick, 1200);
+    document.addEventListener("visibilitychange", onForeground);
+    window.addEventListener("focus", onForeground);
+    window.addEventListener("pageshow", onForeground);
+
     return () => {
       cancelled = true;
       window.clearInterval(intervalId);
       window.clearTimeout(timeoutId);
+      document.removeEventListener("visibilitychange", onForeground);
+      window.removeEventListener("focus", onForeground);
+      window.removeEventListener("pageshow", onForeground);
     };
   }, [activeOrder?.id, activeOrder?.status, syncActiveOrder]);
 

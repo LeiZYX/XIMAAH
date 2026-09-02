@@ -113,8 +113,10 @@ export function CashInRequestsManager({
     [selectedQualification, subjectId],
   );
 
-  const loadRows = useCallback(async () => {
-    setLoading(true);
+  const loadRows = useCallback(async (options?: { silent?: boolean }) => {
+    if (!options?.silent) {
+      setLoading(true);
+    }
     setError(null);
     try {
       const params = new URLSearchParams();
@@ -124,14 +126,33 @@ export function CashInRequestsManager({
       const response = await fetch(`/api/cash-in-requests?${params.toString()}`);
       const data = await response.json();
       if (!response.ok) throw new Error(data.error ?? "Failed to load requests");
-      setRows(data);
+      setRows(Array.isArray(data) ? data : []);
     } catch (err) {
-      setRows([]);
+      if (!options?.silent) {
+        setRows([]);
+      }
       setError(err instanceof Error ? err.message : "Failed to load requests");
     } finally {
-      setLoading(false);
+      if (!options?.silent) {
+        setLoading(false);
+      }
     }
   }, [filterBoardId, filterStatus, filterQ]);
+
+  const hasAwaitingPayment = useMemo(
+    () =>
+      rows.some(
+        (row) =>
+          row.status === "SUBMITTED" &&
+          (!row.feeStatement ||
+            String(row.feeStatement.status).toUpperCase() !== "PAID"),
+      ),
+    [rows],
+  );
+
+  useEffect(() => {
+    void loadRows();
+  }, [loadRows]);
 
   useEffect(() => {
     void fetch("/api/exam-boards")
@@ -148,9 +169,31 @@ export function CashInRequestsManager({
       .then((data) => setCandidates(Array.isArray(data) ? data : []));
   }, []);
 
+  // Quietly refresh while any submitted request still awaits payment, so Bill/Status
+  // update after the student pays without a manual page reload.
   useEffect(() => {
-    void loadRows();
-  }, [loadRows]);
+    if (!hasAwaitingPayment) return;
+
+    let cancelled = false;
+    const tick = () => {
+      if (cancelled) return;
+      void loadRows({ silent: true });
+    };
+    const onForeground = () => {
+      if (document.visibilityState === "visible") tick();
+    };
+
+    const intervalId = window.setInterval(tick, 5000);
+    document.addEventListener("visibilitychange", onForeground);
+    window.addEventListener("focus", onForeground);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", onForeground);
+      window.removeEventListener("focus", onForeground);
+    };
+  }, [hasAwaitingPayment, loadRows]);
 
   useEffect(() => {
     setExamSeriesId("");
@@ -248,8 +291,41 @@ export function CashInRequestsManager({
       setError(data.error ?? "Failed to update status");
       return;
     }
-    setMessage(`Updated to ${cashInRequestStatusLabel(status)}.`);
-    await loadRows();
+    setMessage(`Updated to ${cashInRequestStatusLabel(status, data.feeStatement)}.`);
+    await loadRows({ silent: true });
+  }
+
+  async function markPaidOffline(row: CashInRequestRow) {
+    const confirmed = window.confirm(
+      `Mark ${row.feeStatement?.statementNo ?? "this fee statement"} as PAID offline?\n\nUse this when the student paid by bank transfer, cash, or another channel (not WeChat/Alipay QR). This is audited.`,
+    );
+    if (!confirmed) return;
+
+    const paymentNote = window.prompt(
+      "Optional payment note / reference (bank slip no., cash receipt, etc.):",
+      "",
+    );
+    if (paymentNote === null) return;
+
+    setError(null);
+    setMessage(null);
+    const response = await fetch(`/api/cash-in-requests/${row.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        markPaidOffline: true,
+        paymentNote: paymentNote.trim() || null,
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      setError(data.error ?? "Failed to mark as paid");
+      return;
+    }
+    setMessage(
+      `Marked ${data.feeStatement?.statementNo ?? "fee statement"} as PAID offline.`,
+    );
+    await loadRows({ silent: true });
   }
 
   return (
@@ -271,8 +347,9 @@ export function CashInRequestsManager({
           </Link>
         </p>
         <p>
-          Flow: Draft → Submit (issues fee statement) → student pays → Sent to board → Complete.
-          Cancel is allowed only while Draft or Submitted (before Sent to board).
+          Flow: Draft → Submit (issues fee statement) → student pays online or staff marks paid
+          offline → Sent to board → Complete. Cancel is allowed only while Draft or Submitted
+          (before Sent to board). Status changes and offline payments are audited.
         </p>
       </Card>
 
@@ -447,7 +524,7 @@ export function CashInRequestsManager({
               ))}
             </select>
           </label>
-          <label className="text-sm md:col-span-2">
+          <label className="text-sm md:col-span-1">
             <span className="mb-1 block font-medium text-slate-700">Search</span>
             <input
               value={filterQ}
@@ -456,6 +533,15 @@ export function CashInRequestsManager({
               className="w-full rounded-lg border border-slate-300 px-3 py-2"
             />
           </label>
+          <div className="flex items-end">
+            <button
+              type="button"
+              onClick={() => void loadRows()}
+              className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              Refresh
+            </button>
+          </div>
         </div>
 
         {loading ? <p className="text-sm text-slate-600">Loading…</p> : null}
@@ -511,7 +597,13 @@ export function CashInRequestsManager({
                       {row.feeStatement ? (
                         <>
                           <div className="font-medium">{row.feeStatement.statementNo}</div>
-                          <div className="text-xs text-slate-500">
+                          <div
+                            className={`text-xs ${
+                              String(row.feeStatement.status).toUpperCase() === "PAID"
+                                ? "font-medium text-emerald-700"
+                                : "text-slate-500"
+                            }`}
+                          >
                             {row.feeStatement.status}
                             {row.feeStatement.status === "ISSUED"
                               ? ` · due ${formatMoney(
@@ -528,7 +620,9 @@ export function CashInRequestsManager({
                         "—"
                       )}
                     </td>
-                    <td className="px-3 py-2">{cashInRequestStatusLabel(row.status)}</td>
+                    <td className="px-3 py-2">
+                      {cashInRequestStatusLabel(row.status, row.feeStatement)}
+                    </td>
                     <td className="px-3 py-2">
                       <div className="flex flex-wrap gap-2">
                         {row.status === "DRAFT" ? (
@@ -541,21 +635,43 @@ export function CashInRequestsManager({
                           </button>
                         ) : null}
                         {row.status === "SUBMITTED" ? (
-                          <button
-                            type="button"
-                            className="text-indigo-700 hover:underline disabled:cursor-not-allowed disabled:text-slate-400"
-                            disabled={
-                              !row.feeStatement || !isCashInFeeStatementPayable(row.feeStatement)
-                            }
-                            title={
-                              row.feeStatement && isCashInFeeStatementPayable(row.feeStatement)
-                                ? "Mark as sent to the exam board"
-                                : "Student payment required first"
-                            }
-                            onClick={() => void changeStatus(row, "SENT_TO_BOARD")}
-                          >
-                            Sent to board
-                          </button>
+                          <>
+                            {row.feeStatement &&
+                            String(row.feeStatement.status).toUpperCase() !== "PAID" ? (
+                              <button
+                                type="button"
+                                className="text-emerald-700 hover:underline"
+                                onClick={() => void markPaidOffline(row)}
+                              >
+                                Mark paid (offline)
+                              </button>
+                            ) : null}
+                            <button
+                              type="button"
+                              className="text-indigo-700 hover:underline disabled:cursor-not-allowed disabled:text-slate-400"
+                              disabled={
+                                !row.feeStatement ||
+                                !isCashInFeeStatementPayable({
+                                  status: row.feeStatement.status,
+                                  amountDueGbpAmount: row.feeStatement.amountDueGbpAmount,
+                                  totalGbpAmount: row.feeStatement.totalGbpAmount,
+                                })
+                              }
+                              title={
+                                row.feeStatement &&
+                                isCashInFeeStatementPayable({
+                                  status: row.feeStatement.status,
+                                  amountDueGbpAmount: row.feeStatement.amountDueGbpAmount,
+                                  totalGbpAmount: row.feeStatement.totalGbpAmount,
+                                })
+                                  ? "Mark as sent to the exam board"
+                                  : "Student payment required first"
+                              }
+                              onClick={() => void changeStatus(row, "SENT_TO_BOARD")}
+                            >
+                              Sent to board
+                            </button>
+                          </>
                         ) : null}
                         {row.status === "SENT_TO_BOARD" ? (
                           <button

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   canCancelCashInRequest,
   canTransitionCashInRequestStatus,
+  cashInRequestStatusLabel,
 } from "@/lib/cash-in-requests/status";
 
 describe("cash-in request status rules", () => {
@@ -22,5 +23,24 @@ describe("cash-in request status rules", () => {
     expect(canTransitionCashInRequestStatus("SENT_TO_BOARD", "COMPLETED")).toBe(true);
     expect(canTransitionCashInRequestStatus("SENT_TO_BOARD", "CANCELLED")).toBe(false);
     expect(canTransitionCashInRequestStatus("COMPLETED", "CANCELLED")).toBe(false);
+  });
+
+  it("reflects payment state on submitted requests", () => {
+    expect(cashInRequestStatusLabel("SUBMITTED")).toBe("Submitted");
+    expect(cashInRequestStatusLabel("SUBMITTED", null)).toBe("Submitted (no invoice)");
+    expect(
+      cashInRequestStatusLabel("SUBMITTED", {
+        status: "ISSUED",
+        totalGbpAmount: 10,
+        amountDueGbpAmount: 10,
+      }),
+    ).toBe("Submitted (awaiting payment)");
+    expect(
+      cashInRequestStatusLabel("SUBMITTED", {
+        status: "PAID",
+        totalGbpAmount: 10,
+        amountDueGbpAmount: 0,
+      }),
+    ).toBe("Submitted (paid — ready for board)");
   });
 });

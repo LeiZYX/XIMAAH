@@ -3,7 +3,11 @@ import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { canManageRegistrationWindows } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
-import { cashInRequestInclude, updateCashInRequestStatus } from "@/lib/cash-in-requests/service";
+import {
+  cashInRequestInclude,
+  markCashInRequestPaidOffline,
+  updateCashInRequestStatus,
+} from "@/lib/cash-in-requests/service";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -40,11 +44,22 @@ export async function PATCH(
     status?: string;
     notes?: string | null;
     reason?: string | null;
+    markPaidOffline?: boolean;
+    paymentNote?: string | null;
   }>(body, []);
 
   if (!data) return jsonError("Invalid body", 400);
 
   try {
+    if (data.markPaidOffline) {
+      const updated = await markCashInRequestPaidOffline({
+        id,
+        performedByUserId: auth.user.id,
+        note: data.paymentNote ?? data.notes,
+      });
+      return NextResponse.json(updated);
+    }
+
     if (data.status) {
       const updated = await updateCashInRequestStatus({
         id,

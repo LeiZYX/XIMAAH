@@ -189,8 +189,10 @@ export default function StudentFeeStatementsPage() {
   const [error, setError] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<"ALL" | "UNPAID" | "PAID">("ALL");
 
-  const load = useCallback(async () => {
-    setLoading(true);
+  const load = useCallback(async (options?: { silent?: boolean }) => {
+    if (!options?.silent) {
+      setLoading(true);
+    }
     setError(null);
     try {
       const response = await fetch("/api/student/fee-statements");
@@ -208,10 +210,14 @@ export default function StudentFeeStatementsPage() {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not load fee statements");
-      setStatements([]);
-      setUpdating([]);
+      if (!options?.silent) {
+        setStatements([]);
+        setUpdating([]);
+      }
     } finally {
-      setLoading(false);
+      if (!options?.silent) {
+        setLoading(false);
+      }
     }
   }, []);
 
@@ -272,7 +278,11 @@ export default function StudentFeeStatementsPage() {
             <UpdatingCard key={`updating-${index}`} entry={entry} />
           ))}
           {filteredStatements.map((statement) => (
-            <FeeStatementCard key={statement.id} statement={statement} onPaid={() => void load()} />
+            <FeeStatementCard
+              key={statement.id}
+              statement={statement}
+              onPaid={() => void load({ silent: true })}
+            />
           ))}
         </div>
       )}
