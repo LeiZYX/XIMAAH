@@ -1,3 +1,4 @@
+import { resolveTimetableSubject } from "@/lib/qualifications/timetable-import";
 import { prisma } from "@/lib/prisma";
 
 export interface TimetableImportRow {
@@ -125,65 +126,31 @@ export async function importTimetableRows(
 
   for (const row of rows) {
     try {
-      const qualKey = `${row.qualificationLevel}:${row.syllabusCode}`;
-      let qualificationId = qualificationCache.get(qualKey);
-      if (!qualificationId) {
-        const existing = await prisma.qualification.findFirst({
-          where: {
-            examBoardId: examBoard.id,
-            level: row.qualificationLevel,
-            code: row.syllabusCode,
-          },
-        });
-        qualificationId =
-          existing?.id ??
-          (
-            await prisma.qualification.create({
-              data: {
-                examBoardId: examBoard.id,
-                level: row.qualificationLevel,
-                name: `${row.qualificationLevel} ${row.subject}`,
-                code: row.syllabusCode,
-              },
-            })
-          ).id;
-        qualificationCache.set(qualKey, qualificationId);
-        if (!existing) seenQualifications.add(qualificationId);
+      const resolution = await resolveTimetableSubject(
+        examBoard.id,
+        row,
+        qualificationCache,
+        subjectCache,
+      );
+      if (resolution.createdQualification) {
+        seenQualifications.add(resolution.qualificationId);
+      }
+      if (resolution.createdSubject) {
+        seenSubjects.add(resolution.subjectId);
       }
 
-      const subjectKey = `${qualificationId}:${row.syllabusCode}`;
-      let subjectId = subjectCache.get(subjectKey);
-      if (!subjectId) {
-        const existing = await prisma.subject.findFirst({
-          where: { qualificationId, code: row.syllabusCode },
-        });
-        subjectId =
-          existing?.id ??
-          (
-            await prisma.subject.create({
-              data: {
-                qualificationId,
-                name: row.subject,
-                code: row.syllabusCode,
-              },
-            })
-          ).id;
-        subjectCache.set(subjectKey, subjectId);
-        if (!existing) seenSubjects.add(subjectId);
-      }
-
-      const paperKey = `${subjectId}:${row.paperCode}`;
+      const paperKey = `${resolution.subjectId}:${row.paperCode}`;
       let paperId = paperCache.get(paperKey);
       if (!paperId) {
         const existing = await prisma.paper.findFirst({
-          where: { subjectId, code: row.paperCode },
+          where: { subjectId: resolution.subjectId, code: row.paperCode },
         });
         paperId =
           existing?.id ??
           (
             await prisma.paper.create({
               data: {
-                subjectId,
+                subjectId: resolution.subjectId,
                 code: row.paperCode,
                 title: row.title,
                 duration: row.durationMinutes,

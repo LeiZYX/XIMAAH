@@ -20,6 +20,7 @@
     "db:cleanup-registration-data": "tsx scripts/cleanup-registration-data.ts",
     "db:clear-students": "tsx scripts/clear-student-data.ts",
     "db:create-test-students": "tsx scripts/create-test-students.ts",
+    "db:audit-qualifications": "tsx scripts/audit-qualification-data.ts",
     "db:studio": "prisma studio",
     "backup:database": "tsx scripts/run-database-backup.ts"
   },

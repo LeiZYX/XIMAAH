@@ -55,4 +55,15 @@ describe("findMatchingFeeRuleWithFallback", () => {
     const match = findMatchingFeeRuleWithFallback(rules, { ...ctx, entryType: "HIGH_LATE" });
     expect(match?.id).toBe("normal");
   });
+
+  it("does not match when qualificationId differs even if subjectId matches", () => {
+    const rules = [baseRule({ id: "subject-rule", subjectId: "subject-1" })];
+    const match = findMatchingFeeRuleWithFallback(rules, {
+      ...ctx,
+      qualificationId: "qual-wrong",
+      subjectId: "subject-1",
+      entryType: "NORMAL",
+    });
+    expect(match).toBeNull();
+  });
 });

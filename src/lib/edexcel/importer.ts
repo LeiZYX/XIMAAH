@@ -1,5 +1,6 @@
 import type { EdexcelTimetableSource } from "@/lib/edexcel/timetables";
 import type { EdexcelTimetableRow } from "@/lib/edexcel/parser";
+import { resolveTimetableSubject } from "@/lib/qualifications/timetable-import";
 import { prisma } from "@/lib/prisma";
 
 const EXAM_BOARD_CODE = "EDEXCEL";
@@ -61,66 +62,6 @@ async function ensureExamSeries(examBoardId: string, source: EdexcelTimetableSou
   });
 }
 
-async function ensureQualification(
-  examBoardId: string,
-  row: EdexcelTimetableRow,
-  cache: Map<string, string>,
-) {
-  const key = `${row.qualificationLevel}:${row.syllabusCode}`;
-  const cached = cache.get(key);
-  if (cached) return cached;
-
-  const name = `${row.qualificationLevel} ${row.subject}`;
-  const existing = await prisma.qualification.findFirst({
-    where: {
-      examBoardId,
-      level: row.qualificationLevel,
-      code: row.syllabusCode,
-    },
-  });
-
-  const qualification =
-    existing ??
-    (await prisma.qualification.create({
-      data: {
-        examBoardId,
-        level: row.qualificationLevel,
-        name,
-        code: row.syllabusCode,
-      },
-    }));
-
-  cache.set(key, qualification.id);
-  return qualification.id;
-}
-
-async function ensureSubject(
-  qualificationId: string,
-  row: EdexcelTimetableRow,
-  cache: Map<string, string>,
-) {
-  const key = `${qualificationId}:${row.syllabusCode}`;
-  const cached = cache.get(key);
-  if (cached) return cached;
-
-  const existing = await prisma.subject.findFirst({
-    where: { qualificationId, code: row.syllabusCode },
-  });
-
-  const subject =
-    existing ??
-    (await prisma.subject.create({
-      data: {
-        qualificationId,
-        name: row.subject,
-        code: row.syllabusCode,
-      },
-    }));
-
-  cache.set(key, subject.id);
-  return subject.id;
-}
-
 async function ensurePaper(subjectId: string, row: EdexcelTimetableRow, cache: Map<string, string>) {
   const key = `${subjectId}:${row.paperCode}`;
   const cached = cache.get(key);
@@ -172,20 +113,21 @@ export async function importEdexcelRows(
 
   for (const row of rows) {
     try {
-      const beforeQual = qualificationCache.size;
-      const qualificationId = await ensureQualification(examBoard.id, row, qualificationCache);
-      if (qualificationCache.size > beforeQual) {
-        seenQualifications.add(qualificationId);
+      const resolution = await resolveTimetableSubject(
+        examBoard.id,
+        row,
+        qualificationCache,
+        subjectCache,
+      );
+      if (resolution.createdQualification) {
+        seenQualifications.add(resolution.qualificationId);
       }
-
-      const beforeSubject = subjectCache.size;
-      const subjectId = await ensureSubject(qualificationId, row, subjectCache);
-      if (subjectCache.size > beforeSubject) {
-        seenSubjects.add(subjectId);
+      if (resolution.createdSubject) {
+        seenSubjects.add(resolution.subjectId);
       }
 
       const beforePaper = paperCache.size;
-      const paperId = await ensurePaper(subjectId, row, paperCache);
+      const paperId = await ensurePaper(resolution.subjectId, row, paperCache);
       if (paperCache.size > beforePaper) {
         seenPapers.add(paperId);
       }
