@@ -79,6 +79,7 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY --from=builder /app/src/generated ./src/generated
 COPY --from=builder /app/src/lib ./src/lib
+COPY --from=builder /app/scripts ./scripts
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 

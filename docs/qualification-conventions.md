@@ -131,3 +131,13 @@ npm run db:audit-qualifications -- --output=tmp/post-merge-inventory.json
 - App can stay up for dry-run; for `--apply`, prefer a short maintenance window
 - No Prisma schema migration is required for this merge
 - After success, `syllabusStyleQualificationCount` should drop sharply
+
+### Level label cleanup
+
+If variants like `A-Level` vs `A Level` remain after merge:
+
+```bash
+docker compose exec app npx tsx scripts/normalize-qualification-levels.ts --dry-run
+docker compose exec app npx tsx scripts/normalize-qualification-levels.ts --apply
+docker compose exec app npx tsx scripts/audit-qualification-data.ts --fail-on-mismatch
+```

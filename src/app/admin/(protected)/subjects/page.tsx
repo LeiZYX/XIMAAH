@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { FormField, SelectField } from "@/components/admin/FormFields";
 import { AdminStatus, fetchJsonList } from "@/components/admin/useAdminList";
@@ -13,6 +13,7 @@ interface Qualification {
   id: string;
   name: string;
   level: string;
+  code: string | null;
   examBoard: { name: string; code: string };
 }
 
@@ -25,6 +26,16 @@ interface Subject {
 }
 
 const emptyForm = { name: "", code: "", qualificationId: "" };
+
+function qualificationOptionLabel(qual: Qualification): string {
+  const board = qual.examBoard.code;
+  const level = qual.level.trim();
+  // Post Phase-4: name usually equals level; avoid "Level — Level" noise.
+  if (!qual.name || qual.name.trim() === level) {
+    return `${board} · ${level}`;
+  }
+  return `${board} · ${level} — ${qual.name}`;
+}
 
 export default function SubjectsPage() {
   const [items, setItems] = useState<Subject[]>([]);
@@ -39,6 +50,26 @@ export default function SubjectsPage() {
   const [pageSize, setPageSize] = useState<number>(LIST_PAGE_SIZES[0]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+
+  const qualificationOptions = useMemo(
+    () =>
+      [...qualifications]
+        .sort(
+          (a, b) =>
+            a.examBoard.code.localeCompare(b.examBoard.code) ||
+            a.level.localeCompare(b.level) ||
+            a.name.localeCompare(b.name),
+        )
+        .map((qual) => ({
+          value: qual.id,
+          label: qualificationOptionLabel(qual),
+        })),
+    [qualifications],
+  );
+
+  const selectedQualificationMissing =
+    Boolean(form.qualificationId) &&
+    !qualifications.some((item) => item.id === form.qualificationId);
 
   const loadQualifications = useCallback(async () => {
     try {
@@ -105,14 +136,14 @@ export default function SubjectsPage() {
 
     setForm(emptyForm);
     setEditingId(null);
-    await loadItems();
+    await Promise.all([loadItems(), loadQualifications()]);
   }
 
   return (
     <div>
       <PageHeader
         title="Subjects"
-        description="Subjects linked to qualifications and exam boards."
+        description="Subjects hang under level-based qualifications (board + level). After timetable import / Phase 4 merge, pick the matching board level — not a per-syllabus qualification."
       />
       <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
         <Card>
@@ -121,18 +152,21 @@ export default function SubjectsPage() {
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <SelectField
-              label="Qualification"
+              label="Qualification (board · level)"
               name="qualificationId"
               value={form.qualificationId}
               onChange={(value) =>
                 setForm((current) => ({ ...current, qualificationId: value }))
               }
-              options={qualifications.map((qual) => ({
-                value: qual.id,
-                label: `${qual.examBoard.code} ${qual.level} — ${qual.name}`,
-              }))}
+              options={qualificationOptions}
               required
             />
+            {selectedQualificationMissing ? (
+              <p className="text-xs text-amber-700">
+                Current qualification is missing from the list. Re-select a board · level
+                qualification before saving.
+              </p>
+            ) : null}
             <FormField
               label="Name"
               name="name"
@@ -168,6 +202,7 @@ export default function SubjectsPage() {
             <thead className="bg-slate-50">
               <tr>
                 <th className="px-4 py-3 text-left">Board</th>
+                <th className="px-4 py-3 text-left">Level</th>
                 <th className="px-4 py-3 text-left">Code</th>
                 <th className="px-4 py-3 text-left">Name</th>
                 <th className="px-4 py-3 text-left">Papers</th>
@@ -178,6 +213,7 @@ export default function SubjectsPage() {
               {items.map((item) => (
                 <tr key={item.id}>
                   <td className="px-4 py-3">{item.qualification.examBoard.code}</td>
+                  <td className="px-4 py-3">{item.qualification.level}</td>
                   <td className="px-4 py-3">{item.code}</td>
                   <td className="px-4 py-3">{item.name}</td>
                   <td className="px-4 py-3">{item._count?.papers ?? 0}</td>

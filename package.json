@@ -22,6 +22,7 @@
     "db:create-test-students": "tsx scripts/create-test-students.ts",
     "db:audit-qualifications": "tsx scripts/audit-qualification-data.ts",
     "db:merge-qualifications": "tsx scripts/merge-qualifications.ts",
+    "db:normalize-qualification-levels": "tsx scripts/normalize-qualification-levels.ts",
     "db:studio": "prisma studio",
     "backup:database": "tsx scripts/run-database-backup.ts"
   },
