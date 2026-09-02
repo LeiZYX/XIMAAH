@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { datetimeLocalValueToIso } from "@/lib/datetime-local";
 import type { FeeScheduleServiceType } from "@/generated/prisma";
@@ -16,11 +17,35 @@ interface ScheduleRow {
   salesAmount: string;
   salesCurrency: string;
   examBoard?: { name: string; code: string };
+  examSeries?: { id: string; name: string; year: number } | null;
+  qualification?: { id: string; name: string; level: string; code: string | null } | null;
+  subject?: { id: string; name: string; code: string } | null;
 }
 
 interface ExamBoardOption {
   id: string;
   name: string;
+  code?: string;
+}
+
+interface ExamSeriesOption {
+  id: string;
+  name: string;
+  year: number;
+}
+
+interface SubjectOption {
+  id: string;
+  name: string;
+  code: string;
+}
+
+interface QualificationOption {
+  id: string;
+  name: string;
+  level: string;
+  code: string | null;
+  subjects: SubjectOption[];
 }
 
 const SERVICE_TYPES: FeeScheduleServiceType[] = [
@@ -35,20 +60,31 @@ const SERVICE_TYPES: FeeScheduleServiceType[] = [
   "ADMINISTRATIVE",
 ];
 
-export function FeeScheduleManager() {
+export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin" | "/exam-office" }) {
   const [schedules, setSchedules] = useState<ScheduleRow[]>([]);
   const [boards, setBoards] = useState<ExamBoardOption[]>([]);
+  const [series, setSeries] = useState<ExamSeriesOption[]>([]);
+  const [qualifications, setQualifications] = useState<QualificationOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const [examBoardId, setExamBoardId] = useState("");
   const [serviceType, setServiceType] = useState<FeeScheduleServiceType>("EXAM_ENTRY");
+  const [examSeriesId, setExamSeriesId] = useState("");
+  const [qualificationId, setQualificationId] = useState("");
+  const [subjectId, setSubjectId] = useState("");
   const [effectiveFrom, setEffectiveFrom] = useState("");
   const [costCurrency, setCostCurrency] = useState<"GBP" | "CNY">("GBP");
   const [costAmount, setCostAmount] = useState("");
   const [salesCurrency, setSalesCurrency] = useState<"GBP" | "CNY">("GBP");
   const [salesAmount, setSalesAmount] = useState("");
+
+  const isCashIn = serviceType === "CASH_IN";
+  const selectedQualification = useMemo(
+    () => qualifications.find((item) => item.id === qualificationId) ?? null,
+    [qualifications, qualificationId],
+  );
 
   async function loadSchedules() {
     setLoading(true);
@@ -58,11 +94,38 @@ export function FeeScheduleManager() {
   }
 
   useEffect(() => {
-    loadSchedules();
-    fetch("/api/exam-boards")
+    void loadSchedules();
+    void fetch("/api/exam-boards")
       .then((r) => (r.ok ? r.json() : []))
-      .then((data) => setBoards(data));
+      .then((data: ExamBoardOption[]) => setBoards(data));
   }, []);
+
+  useEffect(() => {
+    setExamSeriesId("");
+    setQualificationId("");
+    setSubjectId("");
+    setSeries([]);
+    setQualifications([]);
+    if (!examBoardId) return;
+
+    void fetch(`/api/exam-series?examBoardId=${encodeURIComponent(examBoardId)}`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data: ExamSeriesOption[]) => setSeries(data));
+
+    if (isCashIn) {
+      void fetch(`/api/cash-in-codes/options?examBoardId=${encodeURIComponent(examBoardId)}`)
+        .then((r) => (r.ok ? r.json() : []))
+        .then((data: QualificationOption[]) => setQualifications(data));
+    }
+  }, [examBoardId, isCashIn]);
+
+  useEffect(() => {
+    if (!isCashIn) {
+      setExamSeriesId("");
+      setQualificationId("");
+      setSubjectId("");
+    }
+  }, [isCashIn]);
 
   async function handleCreate(event: FormEvent) {
     event.preventDefault();
@@ -76,6 +139,9 @@ export function FeeScheduleManager() {
         body: JSON.stringify({
           examBoardId,
           serviceType,
+          examSeriesId: isCashIn && examSeriesId ? examSeriesId : null,
+          qualificationId: isCashIn && qualificationId ? qualificationId : null,
+          subjectId: isCashIn && subjectId ? subjectId : null,
           effectiveFrom: datetimeLocalValueToIso(effectiveFrom),
           costCurrency,
           costAmount: Number(costAmount),
@@ -103,8 +169,18 @@ export function FeeScheduleManager() {
     <div className="space-y-6">
       <PageHeader
         title="Fee Schedule"
-        description="Versioned fee schedule shared by registration and post-results services. Price changes create new versions."
+        description="Versioned fee schedule shared by registration and post-results services. For Cash-in, prefer pricing by exam series; leave series/subject empty for broader defaults."
       />
+
+      {isCashIn ? (
+        <p className="rounded-md border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+          Cash-in codes are configured separately.{" "}
+          <Link href={`${basePath}/cash-in-codes`} className="font-medium underline">
+            Open Cash-in Codes
+          </Link>
+          . Lookup order: series+subject → series → subject → board.
+        </p>
+      ) : null}
 
       {error ? (
         <p className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -145,6 +221,68 @@ export function FeeScheduleManager() {
               ))}
             </select>
           </label>
+
+          {isCashIn ? (
+            <>
+              <label className="text-sm">
+                <span className="mb-1 block font-medium text-slate-700">
+                  Exam series (optional)
+                </span>
+                <select
+                  value={examSeriesId}
+                  onChange={(e) => setExamSeriesId(e.target.value)}
+                  className="w-full border border-slate-300 px-3 py-2"
+                  disabled={!examBoardId}
+                >
+                  <option value="">Board / cross-series default</option>
+                  {series.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name} {item.year}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="text-sm">
+                <span className="mb-1 block font-medium text-slate-700">
+                  Qualification (optional)
+                </span>
+                <select
+                  value={qualificationId}
+                  onChange={(e) => {
+                    setQualificationId(e.target.value);
+                    setSubjectId("");
+                  }}
+                  className="w-full border border-slate-300 px-3 py-2"
+                  disabled={!examBoardId}
+                >
+                  <option value="">Any qualification</option>
+                  {qualifications.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.level}
+                      {item.code ? ` · ${item.code}` : ""} — {item.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="text-sm md:col-span-2">
+                <span className="mb-1 block font-medium text-slate-700">Subject (optional)</span>
+                <select
+                  value={subjectId}
+                  onChange={(e) => setSubjectId(e.target.value)}
+                  className="w-full border border-slate-300 px-3 py-2"
+                  disabled={!selectedQualification}
+                >
+                  <option value="">Any subject (series/board default)</option>
+                  {(selectedQualification?.subjects ?? []).map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.code} — {item.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </>
+          ) : null}
+
           <label className="text-sm">
             <span className="mb-1 block font-medium text-slate-700">Effective from</span>
             <input
@@ -221,6 +359,8 @@ export function FeeScheduleManager() {
                 <tr>
                   <th className="px-4 py-2">Board</th>
                   <th className="px-4 py-2">Service</th>
+                  <th className="px-4 py-2">Series</th>
+                  <th className="px-4 py-2">Subject</th>
                   <th className="px-4 py-2">Version</th>
                   <th className="px-4 py-2">Status</th>
                   <th className="px-4 py-2">Effective</th>
@@ -233,6 +373,18 @@ export function FeeScheduleManager() {
                   <tr key={row.id} className="border-t border-slate-100">
                     <td className="px-4 py-3">{row.examBoard?.name ?? "—"}</td>
                     <td className="px-4 py-3">{row.serviceType.replaceAll("_", " ")}</td>
+                    <td className="px-4 py-3">
+                      {row.examSeries
+                        ? `${row.examSeries.name} ${row.examSeries.year}`
+                        : "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      {row.subject
+                        ? `${row.subject.code} · ${row.subject.name}`
+                        : row.qualification
+                          ? row.qualification.level
+                          : "—"}
+                    </td>
                     <td className="px-4 py-3">v{row.version}</td>
                     <td className="px-4 py-3">{row.status}</td>
                     <td className="px-4 py-3">

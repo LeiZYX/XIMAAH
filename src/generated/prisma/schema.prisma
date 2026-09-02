@@ -1310,6 +1310,7 @@ model ExamSeries {
   accessToScriptRequests   AccessToScriptRequest[]
   certificateRequests      CertificateRequest[]
   postResultsAuditLogs     PostResultsAuditLog[]
+  feeSchedules             FeeSchedule[]
 
   @@index([examBoardId])
   @@index([year])
@@ -1887,6 +1888,8 @@ model FeeSchedule {
   examBoardId       String
   examBoard         ExamBoard              @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
   serviceType       FeeScheduleServiceType
+  examSeriesId      String?
+  examSeries        ExamSeries?            @relation(fields: [examSeriesId], references: [id], onDelete: SetNull)
   qualificationId   String?
   qualification     Qualification?         @relation(fields: [qualificationId], references: [id], onDelete: SetNull)
   subjectId         String?
@@ -1915,6 +1918,7 @@ model FeeSchedule {
 
   @@index([examBoardId])
   @@index([serviceType])
+  @@index([examSeriesId])
   @@index([status])
   @@index([effectiveFrom, effectiveTo])
   @@index([version])

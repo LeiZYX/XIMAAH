@@ -298,7 +298,11 @@ export function CashInCodesManager({ basePath }: { basePath: "/admin" | "/exam-o
           </select>
         </label>
         <p className="text-sm text-slate-600">
-          Requests and pricing come later. This page only manages the code catalog.{" "}
+          Pricing for cash-in is configured in{" "}
+          <a href={`${basePath}/fee-schedules`} className="text-indigo-700 hover:underline">
+            Fee Schedule
+          </a>{" "}
+          (service type CASH_IN, preferably by exam series). Requests come later.{" "}
           <a href={`${basePath}/cash-in-requests`} className="text-indigo-700 hover:underline">
             Cash-in Requests
           </a>

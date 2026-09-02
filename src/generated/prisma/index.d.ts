@@ -7099,6 +7099,7 @@ export namespace Prisma {
     accessToScriptRequests: number
     certificateRequests: number
     postResultsAuditLogs: number
+    feeSchedules: number
   }
 
   export type ExamSeriesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7115,6 +7116,7 @@ export namespace Prisma {
     accessToScriptRequests?: boolean | ExamSeriesCountOutputTypeCountAccessToScriptRequestsArgs
     certificateRequests?: boolean | ExamSeriesCountOutputTypeCountCertificateRequestsArgs
     postResultsAuditLogs?: boolean | ExamSeriesCountOutputTypeCountPostResultsAuditLogsArgs
+    feeSchedules?: boolean | ExamSeriesCountOutputTypeCountFeeSchedulesArgs
   }
 
   // Custom InputTypes
@@ -7217,6 +7219,13 @@ export namespace Prisma {
    */
   export type ExamSeriesCountOutputTypeCountPostResultsAuditLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PostResultsAuditLogWhereInput
+  }
+
+  /**
+   * ExamSeriesCountOutputType without action
+   */
+  export type ExamSeriesCountOutputTypeCountFeeSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeeScheduleWhereInput
   }
 
 
@@ -41180,6 +41189,7 @@ export namespace Prisma {
     accessToScriptRequests?: boolean | ExamSeries$accessToScriptRequestsArgs<ExtArgs>
     certificateRequests?: boolean | ExamSeries$certificateRequestsArgs<ExtArgs>
     postResultsAuditLogs?: boolean | ExamSeries$postResultsAuditLogsArgs<ExtArgs>
+    feeSchedules?: boolean | ExamSeries$feeSchedulesArgs<ExtArgs>
     _count?: boolean | ExamSeriesCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["examSeries"]>
 
@@ -41214,6 +41224,7 @@ export namespace Prisma {
     accessToScriptRequests?: boolean | ExamSeries$accessToScriptRequestsArgs<ExtArgs>
     certificateRequests?: boolean | ExamSeries$certificateRequestsArgs<ExtArgs>
     postResultsAuditLogs?: boolean | ExamSeries$postResultsAuditLogsArgs<ExtArgs>
+    feeSchedules?: boolean | ExamSeries$feeSchedulesArgs<ExtArgs>
     _count?: boolean | ExamSeriesCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -41235,6 +41246,7 @@ export namespace Prisma {
       accessToScriptRequests: Prisma.$AccessToScriptRequestPayload<ExtArgs>[]
       certificateRequests: Prisma.$CertificateRequestPayload<ExtArgs>[]
       postResultsAuditLogs: Prisma.$PostResultsAuditLogPayload<ExtArgs>[]
+      feeSchedules: Prisma.$FeeSchedulePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -41601,6 +41613,7 @@ export namespace Prisma {
     accessToScriptRequests<T extends ExamSeries$accessToScriptRequestsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSeries$accessToScriptRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessToScriptRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     certificateRequests<T extends ExamSeries$certificateRequestsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSeries$certificateRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CertificateRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     postResultsAuditLogs<T extends ExamSeries$postResultsAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSeries$postResultsAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostResultsAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    feeSchedules<T extends ExamSeries$feeSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, ExamSeries$feeSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -42310,6 +42323,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PostResultsAuditLogScalarFieldEnum | PostResultsAuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * ExamSeries.feeSchedules
+   */
+  export type ExamSeries$feeSchedulesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeSchedule
+     */
+    select?: FeeScheduleSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeSchedule
+     */
+    omit?: FeeScheduleOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeScheduleInclude<ExtArgs> | null
+    where?: FeeScheduleWhereInput
+    orderBy?: FeeScheduleOrderByWithRelationInput | FeeScheduleOrderByWithRelationInput[]
+    cursor?: FeeScheduleWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeeScheduleScalarFieldEnum | FeeScheduleScalarFieldEnum[]
   }
 
   /**
@@ -62724,6 +62761,7 @@ export namespace Prisma {
     id: string | null
     examBoardId: string | null
     serviceType: $Enums.FeeScheduleServiceType | null
+    examSeriesId: string | null
     qualificationId: string | null
     subjectId: string | null
     paperId: string | null
@@ -62749,6 +62787,7 @@ export namespace Prisma {
     id: string | null
     examBoardId: string | null
     serviceType: $Enums.FeeScheduleServiceType | null
+    examSeriesId: string | null
     qualificationId: string | null
     subjectId: string | null
     paperId: string | null
@@ -62774,6 +62813,7 @@ export namespace Prisma {
     id: number
     examBoardId: number
     serviceType: number
+    examSeriesId: number
     qualificationId: number
     subjectId: number
     paperId: number
@@ -62817,6 +62857,7 @@ export namespace Prisma {
     id?: true
     examBoardId?: true
     serviceType?: true
+    examSeriesId?: true
     qualificationId?: true
     subjectId?: true
     paperId?: true
@@ -62842,6 +62883,7 @@ export namespace Prisma {
     id?: true
     examBoardId?: true
     serviceType?: true
+    examSeriesId?: true
     qualificationId?: true
     subjectId?: true
     paperId?: true
@@ -62867,6 +62909,7 @@ export namespace Prisma {
     id?: true
     examBoardId?: true
     serviceType?: true
+    examSeriesId?: true
     qualificationId?: true
     subjectId?: true
     paperId?: true
@@ -62979,6 +63022,7 @@ export namespace Prisma {
     id: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId: string | null
     qualificationId: string | null
     subjectId: string | null
     paperId: string | null
@@ -63023,6 +63067,7 @@ export namespace Prisma {
     id?: boolean
     examBoardId?: boolean
     serviceType?: boolean
+    examSeriesId?: boolean
     qualificationId?: boolean
     subjectId?: boolean
     paperId?: boolean
@@ -63043,6 +63088,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
+    examSeries?: boolean | FeeSchedule$examSeriesArgs<ExtArgs>
     qualification?: boolean | FeeSchedule$qualificationArgs<ExtArgs>
     subject?: boolean | FeeSchedule$subjectArgs<ExtArgs>
     paper?: boolean | FeeSchedule$paperArgs<ExtArgs>
@@ -63057,6 +63103,7 @@ export namespace Prisma {
     id?: boolean
     examBoardId?: boolean
     serviceType?: boolean
+    examSeriesId?: boolean
     qualificationId?: boolean
     subjectId?: boolean
     paperId?: boolean
@@ -63078,9 +63125,10 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type FeeScheduleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "examBoardId" | "serviceType" | "qualificationId" | "subjectId" | "paperId" | "entryType" | "reviewType" | "version" | "effectiveFrom" | "effectiveTo" | "status" | "costCurrency" | "costAmount" | "salesCurrency" | "salesAmount" | "markupType" | "markupValue" | "exchangeRateToCny" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["feeSchedule"]>
+  export type FeeScheduleOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "examBoardId" | "serviceType" | "examSeriesId" | "qualificationId" | "subjectId" | "paperId" | "entryType" | "reviewType" | "version" | "effectiveFrom" | "effectiveTo" | "status" | "costCurrency" | "costAmount" | "salesCurrency" | "salesAmount" | "markupType" | "markupValue" | "exchangeRateToCny" | "createdByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["feeSchedule"]>
   export type FeeScheduleInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
+    examSeries?: boolean | FeeSchedule$examSeriesArgs<ExtArgs>
     qualification?: boolean | FeeSchedule$qualificationArgs<ExtArgs>
     subject?: boolean | FeeSchedule$subjectArgs<ExtArgs>
     paper?: boolean | FeeSchedule$paperArgs<ExtArgs>
@@ -63093,6 +63141,7 @@ export namespace Prisma {
     name: "FeeSchedule"
     objects: {
       examBoard: Prisma.$ExamBoardPayload<ExtArgs>
+      examSeries: Prisma.$ExamSeriesPayload<ExtArgs> | null
       qualification: Prisma.$QualificationPayload<ExtArgs> | null
       subject: Prisma.$SubjectPayload<ExtArgs> | null
       paper: Prisma.$PaperPayload<ExtArgs> | null
@@ -63103,6 +63152,7 @@ export namespace Prisma {
       id: string
       examBoardId: string
       serviceType: $Enums.FeeScheduleServiceType
+      examSeriesId: string | null
       qualificationId: string | null
       subjectId: string | null
       paperId: string | null
@@ -63463,6 +63513,7 @@ export namespace Prisma {
   export interface Prisma__FeeScheduleClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     examBoard<T extends ExamBoardDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoardDefaultArgs<ExtArgs>>): Prisma__ExamBoardClient<$Result.GetResult<Prisma.$ExamBoardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    examSeries<T extends FeeSchedule$examSeriesArgs<ExtArgs> = {}>(args?: Subset<T, FeeSchedule$examSeriesArgs<ExtArgs>>): Prisma__ExamSeriesClient<$Result.GetResult<Prisma.$ExamSeriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     qualification<T extends FeeSchedule$qualificationArgs<ExtArgs> = {}>(args?: Subset<T, FeeSchedule$qualificationArgs<ExtArgs>>): Prisma__QualificationClient<$Result.GetResult<Prisma.$QualificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     subject<T extends FeeSchedule$subjectArgs<ExtArgs> = {}>(args?: Subset<T, FeeSchedule$subjectArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     paper<T extends FeeSchedule$paperArgs<ExtArgs> = {}>(args?: Subset<T, FeeSchedule$paperArgs<ExtArgs>>): Prisma__PaperClient<$Result.GetResult<Prisma.$PaperPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -63500,6 +63551,7 @@ export namespace Prisma {
     readonly id: FieldRef<"FeeSchedule", 'String'>
     readonly examBoardId: FieldRef<"FeeSchedule", 'String'>
     readonly serviceType: FieldRef<"FeeSchedule", 'FeeScheduleServiceType'>
+    readonly examSeriesId: FieldRef<"FeeSchedule", 'String'>
     readonly qualificationId: FieldRef<"FeeSchedule", 'String'>
     readonly subjectId: FieldRef<"FeeSchedule", 'String'>
     readonly paperId: FieldRef<"FeeSchedule", 'String'>
@@ -63859,6 +63911,25 @@ export namespace Prisma {
      * Limit how many FeeSchedules to delete.
      */
     limit?: number
+  }
+
+  /**
+   * FeeSchedule.examSeries
+   */
+  export type FeeSchedule$examSeriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSeries
+     */
+    select?: ExamSeriesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSeries
+     */
+    omit?: ExamSeriesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSeriesInclude<ExtArgs> | null
+    where?: ExamSeriesWhereInput
   }
 
   /**
@@ -68158,6 +68229,7 @@ export namespace Prisma {
     id: 'id',
     examBoardId: 'examBoardId',
     serviceType: 'serviceType',
+    examSeriesId: 'examSeriesId',
     qualificationId: 'qualificationId',
     subjectId: 'subjectId',
     paperId: 'paperId',
@@ -68926,6 +68998,7 @@ export namespace Prisma {
   export const FeeScheduleOrderByRelevanceFieldEnum: {
     id: 'id',
     examBoardId: 'examBoardId',
+    examSeriesId: 'examSeriesId',
     qualificationId: 'qualificationId',
     subjectId: 'subjectId',
     paperId: 'paperId',
@@ -72701,6 +72774,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
     certificateRequests?: CertificateRequestListRelationFilter
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
+    feeSchedules?: FeeScheduleListRelationFilter
   }
 
   export type ExamSeriesOrderByWithRelationInput = {
@@ -72728,6 +72802,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestOrderByRelationAggregateInput
     certificateRequests?: CertificateRequestOrderByRelationAggregateInput
     postResultsAuditLogs?: PostResultsAuditLogOrderByRelationAggregateInput
+    feeSchedules?: FeeScheduleOrderByRelationAggregateInput
     _relevance?: ExamSeriesOrderByRelevanceInput
   }
 
@@ -72759,6 +72834,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
     certificateRequests?: CertificateRequestListRelationFilter
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
+    feeSchedules?: FeeScheduleListRelationFilter
   }, "id">
 
   export type ExamSeriesOrderByWithAggregationInput = {
@@ -75046,6 +75122,7 @@ export namespace Prisma {
     id?: StringFilter<"FeeSchedule"> | string
     examBoardId?: StringFilter<"FeeSchedule"> | string
     serviceType?: EnumFeeScheduleServiceTypeFilter<"FeeSchedule"> | $Enums.FeeScheduleServiceType
+    examSeriesId?: StringNullableFilter<"FeeSchedule"> | string | null
     qualificationId?: StringNullableFilter<"FeeSchedule"> | string | null
     subjectId?: StringNullableFilter<"FeeSchedule"> | string | null
     paperId?: StringNullableFilter<"FeeSchedule"> | string | null
@@ -75066,6 +75143,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FeeSchedule"> | Date | string
     updatedAt?: DateTimeFilter<"FeeSchedule"> | Date | string
     examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
+    examSeries?: XOR<ExamSeriesNullableScalarRelationFilter, ExamSeriesWhereInput> | null
     qualification?: XOR<QualificationNullableScalarRelationFilter, QualificationWhereInput> | null
     subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
     paper?: XOR<PaperNullableScalarRelationFilter, PaperWhereInput> | null
@@ -75077,6 +75155,7 @@ export namespace Prisma {
     id?: SortOrder
     examBoardId?: SortOrder
     serviceType?: SortOrder
+    examSeriesId?: SortOrderInput | SortOrder
     qualificationId?: SortOrderInput | SortOrder
     subjectId?: SortOrderInput | SortOrder
     paperId?: SortOrderInput | SortOrder
@@ -75097,6 +75176,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     examBoard?: ExamBoardOrderByWithRelationInput
+    examSeries?: ExamSeriesOrderByWithRelationInput
     qualification?: QualificationOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
     paper?: PaperOrderByWithRelationInput
@@ -75112,6 +75192,7 @@ export namespace Prisma {
     NOT?: FeeScheduleWhereInput | FeeScheduleWhereInput[]
     examBoardId?: StringFilter<"FeeSchedule"> | string
     serviceType?: EnumFeeScheduleServiceTypeFilter<"FeeSchedule"> | $Enums.FeeScheduleServiceType
+    examSeriesId?: StringNullableFilter<"FeeSchedule"> | string | null
     qualificationId?: StringNullableFilter<"FeeSchedule"> | string | null
     subjectId?: StringNullableFilter<"FeeSchedule"> | string | null
     paperId?: StringNullableFilter<"FeeSchedule"> | string | null
@@ -75132,6 +75213,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"FeeSchedule"> | Date | string
     updatedAt?: DateTimeFilter<"FeeSchedule"> | Date | string
     examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
+    examSeries?: XOR<ExamSeriesNullableScalarRelationFilter, ExamSeriesWhereInput> | null
     qualification?: XOR<QualificationNullableScalarRelationFilter, QualificationWhereInput> | null
     subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
     paper?: XOR<PaperNullableScalarRelationFilter, PaperWhereInput> | null
@@ -75143,6 +75225,7 @@ export namespace Prisma {
     id?: SortOrder
     examBoardId?: SortOrder
     serviceType?: SortOrder
+    examSeriesId?: SortOrderInput | SortOrder
     qualificationId?: SortOrderInput | SortOrder
     subjectId?: SortOrderInput | SortOrder
     paperId?: SortOrderInput | SortOrder
@@ -75176,6 +75259,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"FeeSchedule"> | string
     examBoardId?: StringWithAggregatesFilter<"FeeSchedule"> | string
     serviceType?: EnumFeeScheduleServiceTypeWithAggregatesFilter<"FeeSchedule"> | $Enums.FeeScheduleServiceType
+    examSeriesId?: StringNullableWithAggregatesFilter<"FeeSchedule"> | string | null
     qualificationId?: StringNullableWithAggregatesFilter<"FeeSchedule"> | string | null
     subjectId?: StringNullableWithAggregatesFilter<"FeeSchedule"> | string | null
     paperId?: StringNullableWithAggregatesFilter<"FeeSchedule"> | string | null
@@ -79158,6 +79242,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateInput = {
@@ -79183,6 +79268,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUpdateInput = {
@@ -79208,6 +79294,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateInput = {
@@ -79233,6 +79320,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesCreateManyInput = {
@@ -81650,6 +81738,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutFeeSchedulesInput
+    examSeries?: ExamSeriesCreateNestedOneWithoutFeeSchedulesInput
     qualification?: QualificationCreateNestedOneWithoutFeeSchedulesInput
     subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
@@ -81661,6 +81750,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     subjectId?: string | null
     paperId?: string | null
@@ -81702,6 +81792,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutFeeSchedulesNestedInput
+    examSeries?: ExamSeriesUpdateOneWithoutFeeSchedulesNestedInput
     qualification?: QualificationUpdateOneWithoutFeeSchedulesNestedInput
     subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
@@ -81713,6 +81804,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81739,6 +81831,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     subjectId?: string | null
     paperId?: string | null
@@ -81784,6 +81877,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -86857,6 +86951,7 @@ export namespace Prisma {
     id?: SortOrder
     examBoardId?: SortOrder
     serviceType?: SortOrder
+    examSeriesId?: SortOrder
     qualificationId?: SortOrder
     subjectId?: SortOrder
     paperId?: SortOrder
@@ -86890,6 +86985,7 @@ export namespace Prisma {
     id?: SortOrder
     examBoardId?: SortOrder
     serviceType?: SortOrder
+    examSeriesId?: SortOrder
     qualificationId?: SortOrder
     subjectId?: SortOrder
     paperId?: SortOrder
@@ -86915,6 +87011,7 @@ export namespace Prisma {
     id?: SortOrder
     examBoardId?: SortOrder
     serviceType?: SortOrder
+    examSeriesId?: SortOrder
     qualificationId?: SortOrder
     subjectId?: SortOrder
     paperId?: SortOrder
@@ -93938,6 +94035,13 @@ export namespace Prisma {
     connect?: PostResultsAuditLogWhereUniqueInput | PostResultsAuditLogWhereUniqueInput[]
   }
 
+  export type FeeScheduleCreateNestedManyWithoutExamSeriesInput = {
+    create?: XOR<FeeScheduleCreateWithoutExamSeriesInput, FeeScheduleUncheckedCreateWithoutExamSeriesInput> | FeeScheduleCreateWithoutExamSeriesInput[] | FeeScheduleUncheckedCreateWithoutExamSeriesInput[]
+    connectOrCreate?: FeeScheduleCreateOrConnectWithoutExamSeriesInput | FeeScheduleCreateOrConnectWithoutExamSeriesInput[]
+    createMany?: FeeScheduleCreateManyExamSeriesInputEnvelope
+    connect?: FeeScheduleWhereUniqueInput | FeeScheduleWhereUniqueInput[]
+  }
+
   export type ExamSessionUncheckedCreateNestedManyWithoutExamSeriesInput = {
     create?: XOR<ExamSessionCreateWithoutExamSeriesInput, ExamSessionUncheckedCreateWithoutExamSeriesInput> | ExamSessionCreateWithoutExamSeriesInput[] | ExamSessionUncheckedCreateWithoutExamSeriesInput[]
     connectOrCreate?: ExamSessionCreateOrConnectWithoutExamSeriesInput | ExamSessionCreateOrConnectWithoutExamSeriesInput[]
@@ -94027,6 +94131,13 @@ export namespace Prisma {
     connectOrCreate?: PostResultsAuditLogCreateOrConnectWithoutExamSeriesInput | PostResultsAuditLogCreateOrConnectWithoutExamSeriesInput[]
     createMany?: PostResultsAuditLogCreateManyExamSeriesInputEnvelope
     connect?: PostResultsAuditLogWhereUniqueInput | PostResultsAuditLogWhereUniqueInput[]
+  }
+
+  export type FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput = {
+    create?: XOR<FeeScheduleCreateWithoutExamSeriesInput, FeeScheduleUncheckedCreateWithoutExamSeriesInput> | FeeScheduleCreateWithoutExamSeriesInput[] | FeeScheduleUncheckedCreateWithoutExamSeriesInput[]
+    connectOrCreate?: FeeScheduleCreateOrConnectWithoutExamSeriesInput | FeeScheduleCreateOrConnectWithoutExamSeriesInput[]
+    createMany?: FeeScheduleCreateManyExamSeriesInputEnvelope
+    connect?: FeeScheduleWhereUniqueInput | FeeScheduleWhereUniqueInput[]
   }
 
   export type ExamBoardUpdateOneRequiredWithoutExamSeriesNestedInput = {
@@ -94229,6 +94340,20 @@ export namespace Prisma {
     deleteMany?: PostResultsAuditLogScalarWhereInput | PostResultsAuditLogScalarWhereInput[]
   }
 
+  export type FeeScheduleUpdateManyWithoutExamSeriesNestedInput = {
+    create?: XOR<FeeScheduleCreateWithoutExamSeriesInput, FeeScheduleUncheckedCreateWithoutExamSeriesInput> | FeeScheduleCreateWithoutExamSeriesInput[] | FeeScheduleUncheckedCreateWithoutExamSeriesInput[]
+    connectOrCreate?: FeeScheduleCreateOrConnectWithoutExamSeriesInput | FeeScheduleCreateOrConnectWithoutExamSeriesInput[]
+    upsert?: FeeScheduleUpsertWithWhereUniqueWithoutExamSeriesInput | FeeScheduleUpsertWithWhereUniqueWithoutExamSeriesInput[]
+    createMany?: FeeScheduleCreateManyExamSeriesInputEnvelope
+    set?: FeeScheduleWhereUniqueInput | FeeScheduleWhereUniqueInput[]
+    disconnect?: FeeScheduleWhereUniqueInput | FeeScheduleWhereUniqueInput[]
+    delete?: FeeScheduleWhereUniqueInput | FeeScheduleWhereUniqueInput[]
+    connect?: FeeScheduleWhereUniqueInput | FeeScheduleWhereUniqueInput[]
+    update?: FeeScheduleUpdateWithWhereUniqueWithoutExamSeriesInput | FeeScheduleUpdateWithWhereUniqueWithoutExamSeriesInput[]
+    updateMany?: FeeScheduleUpdateManyWithWhereWithoutExamSeriesInput | FeeScheduleUpdateManyWithWhereWithoutExamSeriesInput[]
+    deleteMany?: FeeScheduleScalarWhereInput | FeeScheduleScalarWhereInput[]
+  }
+
   export type ExamSessionUncheckedUpdateManyWithoutExamSeriesNestedInput = {
     create?: XOR<ExamSessionCreateWithoutExamSeriesInput, ExamSessionUncheckedCreateWithoutExamSeriesInput> | ExamSessionCreateWithoutExamSeriesInput[] | ExamSessionUncheckedCreateWithoutExamSeriesInput[]
     connectOrCreate?: ExamSessionCreateOrConnectWithoutExamSeriesInput | ExamSessionCreateOrConnectWithoutExamSeriesInput[]
@@ -94409,6 +94534,20 @@ export namespace Prisma {
     update?: PostResultsAuditLogUpdateWithWhereUniqueWithoutExamSeriesInput | PostResultsAuditLogUpdateWithWhereUniqueWithoutExamSeriesInput[]
     updateMany?: PostResultsAuditLogUpdateManyWithWhereWithoutExamSeriesInput | PostResultsAuditLogUpdateManyWithWhereWithoutExamSeriesInput[]
     deleteMany?: PostResultsAuditLogScalarWhereInput | PostResultsAuditLogScalarWhereInput[]
+  }
+
+  export type FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput = {
+    create?: XOR<FeeScheduleCreateWithoutExamSeriesInput, FeeScheduleUncheckedCreateWithoutExamSeriesInput> | FeeScheduleCreateWithoutExamSeriesInput[] | FeeScheduleUncheckedCreateWithoutExamSeriesInput[]
+    connectOrCreate?: FeeScheduleCreateOrConnectWithoutExamSeriesInput | FeeScheduleCreateOrConnectWithoutExamSeriesInput[]
+    upsert?: FeeScheduleUpsertWithWhereUniqueWithoutExamSeriesInput | FeeScheduleUpsertWithWhereUniqueWithoutExamSeriesInput[]
+    createMany?: FeeScheduleCreateManyExamSeriesInputEnvelope
+    set?: FeeScheduleWhereUniqueInput | FeeScheduleWhereUniqueInput[]
+    disconnect?: FeeScheduleWhereUniqueInput | FeeScheduleWhereUniqueInput[]
+    delete?: FeeScheduleWhereUniqueInput | FeeScheduleWhereUniqueInput[]
+    connect?: FeeScheduleWhereUniqueInput | FeeScheduleWhereUniqueInput[]
+    update?: FeeScheduleUpdateWithWhereUniqueWithoutExamSeriesInput | FeeScheduleUpdateWithWhereUniqueWithoutExamSeriesInput[]
+    updateMany?: FeeScheduleUpdateManyWithWhereWithoutExamSeriesInput | FeeScheduleUpdateManyWithWhereWithoutExamSeriesInput[]
+    deleteMany?: FeeScheduleScalarWhereInput | FeeScheduleScalarWhereInput[]
   }
 
   export type PaperCreateNestedOneWithoutExamSessionsInput = {
@@ -97111,6 +97250,12 @@ export namespace Prisma {
     connect?: ExamBoardWhereUniqueInput
   }
 
+  export type ExamSeriesCreateNestedOneWithoutFeeSchedulesInput = {
+    create?: XOR<ExamSeriesCreateWithoutFeeSchedulesInput, ExamSeriesUncheckedCreateWithoutFeeSchedulesInput>
+    connectOrCreate?: ExamSeriesCreateOrConnectWithoutFeeSchedulesInput
+    connect?: ExamSeriesWhereUniqueInput
+  }
+
   export type QualificationCreateNestedOneWithoutFeeSchedulesInput = {
     create?: XOR<QualificationCreateWithoutFeeSchedulesInput, QualificationUncheckedCreateWithoutFeeSchedulesInput>
     connectOrCreate?: QualificationCreateOrConnectWithoutFeeSchedulesInput
@@ -97163,6 +97308,16 @@ export namespace Prisma {
     upsert?: ExamBoardUpsertWithoutFeeSchedulesInput
     connect?: ExamBoardWhereUniqueInput
     update?: XOR<XOR<ExamBoardUpdateToOneWithWhereWithoutFeeSchedulesInput, ExamBoardUpdateWithoutFeeSchedulesInput>, ExamBoardUncheckedUpdateWithoutFeeSchedulesInput>
+  }
+
+  export type ExamSeriesUpdateOneWithoutFeeSchedulesNestedInput = {
+    create?: XOR<ExamSeriesCreateWithoutFeeSchedulesInput, ExamSeriesUncheckedCreateWithoutFeeSchedulesInput>
+    connectOrCreate?: ExamSeriesCreateOrConnectWithoutFeeSchedulesInput
+    upsert?: ExamSeriesUpsertWithoutFeeSchedulesInput
+    disconnect?: ExamSeriesWhereInput | boolean
+    delete?: ExamSeriesWhereInput | boolean
+    connect?: ExamSeriesWhereUniqueInput
+    update?: XOR<XOR<ExamSeriesUpdateToOneWithWhereWithoutFeeSchedulesInput, ExamSeriesUpdateWithoutFeeSchedulesInput>, ExamSeriesUncheckedUpdateWithoutFeeSchedulesInput>
   }
 
   export type QualificationUpdateOneWithoutFeeSchedulesNestedInput = {
@@ -100568,6 +100723,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutFeeSchedulesInput
+    examSeries?: ExamSeriesCreateNestedOneWithoutFeeSchedulesInput
     qualification?: QualificationCreateNestedOneWithoutFeeSchedulesInput
     subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
@@ -100578,6 +100734,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     subjectId?: string | null
     paperId?: string | null
@@ -102271,6 +102428,7 @@ export namespace Prisma {
     id?: StringFilter<"FeeSchedule"> | string
     examBoardId?: StringFilter<"FeeSchedule"> | string
     serviceType?: EnumFeeScheduleServiceTypeFilter<"FeeSchedule"> | $Enums.FeeScheduleServiceType
+    examSeriesId?: StringNullableFilter<"FeeSchedule"> | string | null
     qualificationId?: StringNullableFilter<"FeeSchedule"> | string | null
     subjectId?: StringNullableFilter<"FeeSchedule"> | string | null
     paperId?: StringNullableFilter<"FeeSchedule"> | string | null
@@ -107839,6 +107997,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutRegistrationWindowsInput = {
@@ -107863,6 +108022,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutRegistrationWindowsInput = {
@@ -108907,6 +109067,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutRegistrationWindowsInput = {
@@ -108931,6 +109092,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type UserUpsertWithoutRegistrationWindowsInput = {
@@ -109804,6 +109966,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutIncludedInWindowsInput = {
@@ -109828,6 +109991,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutIncludedInWindowsInput = {
@@ -109945,6 +110109,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutIncludedInWindowsInput = {
@@ -109969,6 +110134,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type RegistrationWindowCreateWithoutFeeStagesInput = {
@@ -112927,6 +113093,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutStudentExamRegistrationsInput = {
@@ -112951,6 +113118,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutStudentExamRegistrationsInput = {
@@ -113981,6 +114149,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutStudentExamRegistrationsInput = {
@@ -114005,6 +114174,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type SubjectUpsertWithoutStudentExamRegistrationsInput = {
@@ -117667,6 +117837,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutExamBoardInput = {
@@ -117691,6 +117862,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutExamBoardInput = {
@@ -118199,6 +118371,7 @@ export namespace Prisma {
     exchangeRateToCny?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    examSeries?: ExamSeriesCreateNestedOneWithoutFeeSchedulesInput
     qualification?: QualificationCreateNestedOneWithoutFeeSchedulesInput
     subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
@@ -118209,6 +118382,7 @@ export namespace Prisma {
   export type FeeScheduleUncheckedCreateWithoutExamBoardInput = {
     id?: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     subjectId?: string | null
     paperId?: string | null
@@ -119383,6 +119557,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutFeeSchedulesInput
+    examSeries?: ExamSeriesCreateNestedOneWithoutFeeSchedulesInput
     subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
     createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
@@ -119393,6 +119568,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     subjectId?: string | null
     paperId?: string | null
     entryType?: $Enums.FeeEntryType | null
@@ -120081,6 +120257,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutFeeSchedulesInput
+    examSeries?: ExamSeriesCreateNestedOneWithoutFeeSchedulesInput
     qualification?: QualificationCreateNestedOneWithoutFeeSchedulesInput
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
     createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
@@ -120091,6 +120268,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     paperId?: string | null
     entryType?: $Enums.FeeEntryType | null
@@ -121540,6 +121718,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutFeeSchedulesInput
+    examSeries?: ExamSeriesCreateNestedOneWithoutFeeSchedulesInput
     qualification?: QualificationCreateNestedOneWithoutFeeSchedulesInput
     subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
     createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
@@ -121550,6 +121729,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     subjectId?: string | null
     entryType?: $Enums.FeeEntryType | null
@@ -122713,6 +122893,68 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type FeeScheduleCreateWithoutExamSeriesInput = {
+    id?: string
+    serviceType: $Enums.FeeScheduleServiceType
+    entryType?: $Enums.FeeEntryType | null
+    reviewType?: string | null
+    version: number
+    effectiveFrom: Date | string
+    effectiveTo?: Date | string | null
+    status?: $Enums.FeeScheduleStatus
+    costCurrency: $Enums.FeeCurrency
+    costAmount: Decimal | DecimalJsLike | number | string
+    salesCurrency: $Enums.FeeCurrency
+    salesAmount: Decimal | DecimalJsLike | number | string
+    markupType?: $Enums.FeeMarkupType | null
+    markupValue?: Decimal | DecimalJsLike | number | string | null
+    exchangeRateToCny?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutFeeSchedulesInput
+    qualification?: QualificationCreateNestedOneWithoutFeeSchedulesInput
+    subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
+    paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
+    createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
+    feeStatementItems?: FeeStatementItemCreateNestedManyWithoutFeeScheduleInput
+  }
+
+  export type FeeScheduleUncheckedCreateWithoutExamSeriesInput = {
+    id?: string
+    examBoardId: string
+    serviceType: $Enums.FeeScheduleServiceType
+    qualificationId?: string | null
+    subjectId?: string | null
+    paperId?: string | null
+    entryType?: $Enums.FeeEntryType | null
+    reviewType?: string | null
+    version: number
+    effectiveFrom: Date | string
+    effectiveTo?: Date | string | null
+    status?: $Enums.FeeScheduleStatus
+    costCurrency: $Enums.FeeCurrency
+    costAmount: Decimal | DecimalJsLike | number | string
+    salesCurrency: $Enums.FeeCurrency
+    salesAmount: Decimal | DecimalJsLike | number | string
+    markupType?: $Enums.FeeMarkupType | null
+    markupValue?: Decimal | DecimalJsLike | number | string | null
+    exchangeRateToCny?: Decimal | DecimalJsLike | number | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeScheduleInput
+  }
+
+  export type FeeScheduleCreateOrConnectWithoutExamSeriesInput = {
+    where: FeeScheduleWhereUniqueInput
+    create: XOR<FeeScheduleCreateWithoutExamSeriesInput, FeeScheduleUncheckedCreateWithoutExamSeriesInput>
+  }
+
+  export type FeeScheduleCreateManyExamSeriesInputEnvelope = {
+    data: FeeScheduleCreateManyExamSeriesInput | FeeScheduleCreateManyExamSeriesInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ExamBoardUpsertWithoutExamSeriesInput = {
     update: XOR<ExamBoardUpdateWithoutExamSeriesInput, ExamBoardUncheckedUpdateWithoutExamSeriesInput>
     create: XOR<ExamBoardCreateWithoutExamSeriesInput, ExamBoardUncheckedCreateWithoutExamSeriesInput>
@@ -123065,6 +123307,22 @@ export namespace Prisma {
     data: XOR<PostResultsAuditLogUpdateManyMutationInput, PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesInput>
   }
 
+  export type FeeScheduleUpsertWithWhereUniqueWithoutExamSeriesInput = {
+    where: FeeScheduleWhereUniqueInput
+    update: XOR<FeeScheduleUpdateWithoutExamSeriesInput, FeeScheduleUncheckedUpdateWithoutExamSeriesInput>
+    create: XOR<FeeScheduleCreateWithoutExamSeriesInput, FeeScheduleUncheckedCreateWithoutExamSeriesInput>
+  }
+
+  export type FeeScheduleUpdateWithWhereUniqueWithoutExamSeriesInput = {
+    where: FeeScheduleWhereUniqueInput
+    data: XOR<FeeScheduleUpdateWithoutExamSeriesInput, FeeScheduleUncheckedUpdateWithoutExamSeriesInput>
+  }
+
+  export type FeeScheduleUpdateManyWithWhereWithoutExamSeriesInput = {
+    where: FeeScheduleScalarWhereInput
+    data: XOR<FeeScheduleUpdateManyMutationInput, FeeScheduleUncheckedUpdateManyWithoutExamSeriesInput>
+  }
+
   export type PaperCreateWithoutExamSessionsInput = {
     id?: string
     code: string
@@ -123126,6 +123384,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutExamSessionsInput = {
@@ -123150,6 +123409,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutExamSessionsInput = {
@@ -123902,6 +124162,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutExamSessionsInput = {
@@ -123926,6 +124187,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type SourceDocumentUpsertWithoutExamSessionsInput = {
@@ -124342,6 +124604,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutKeyDatesInput = {
@@ -124366,6 +124629,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutKeyDatesInput = {
@@ -124595,6 +124859,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutKeyDatesInput = {
@@ -124619,6 +124884,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type SourceDocumentUpsertWithoutKeyDatesInput = {
@@ -124900,6 +125166,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutResourcesInput = {
@@ -124924,6 +125191,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutResourcesInput = {
@@ -125239,6 +125507,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutResourcesInput = {
@@ -125263,6 +125532,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type SourceDocumentUpsertWithoutResourcesInput = {
@@ -125590,6 +125860,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutSourceDocumentInput = {
@@ -125614,6 +125885,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutSourceDocumentInput = {
@@ -126248,6 +126520,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutFeeRulesInput = {
@@ -126272,6 +126545,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutFeeRulesInput = {
@@ -126777,6 +127051,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutFeeRulesInput = {
@@ -126801,6 +127076,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type QualificationUpsertWithoutFeeRulesInput = {
@@ -130550,6 +130826,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     examBoard: ExamBoardCreateNestedOneWithoutFeeSchedulesInput
+    examSeries?: ExamSeriesCreateNestedOneWithoutFeeSchedulesInput
     qualification?: QualificationCreateNestedOneWithoutFeeSchedulesInput
     subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
@@ -130560,6 +130837,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     subjectId?: string | null
     paperId?: string | null
@@ -130776,6 +131054,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutFeeSchedulesNestedInput
+    examSeries?: ExamSeriesUpdateOneWithoutFeeSchedulesNestedInput
     qualification?: QualificationUpdateOneWithoutFeeSchedulesNestedInput
     subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
@@ -130786,6 +131065,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -132549,6 +132829,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutReviewWindowsInput = {
@@ -132573,6 +132854,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutReviewWindowsInput = {
@@ -133179,6 +133461,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutReviewWindowsInput = {
@@ -133203,6 +133486,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type UserUpsertWithoutReviewWindowsCreatedInput = {
@@ -133822,6 +134106,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutReviewRequestsInput = {
@@ -133846,6 +134131,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutReviewRequestsInput = {
@@ -134724,6 +135010,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutReviewRequestsInput = {
@@ -134748,6 +135035,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithoutReviewRequestsInput = {
@@ -135634,6 +135922,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutCashInRequestsInput = {
@@ -135658,6 +135947,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutCashInRequestsInput = {
@@ -136259,6 +136549,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutCashInRequestsInput = {
@@ -136283,6 +136574,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type QualificationUpsertWithoutCashInRequestsInput = {
@@ -136874,6 +137166,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutAccessToScriptRequestsInput = {
@@ -136898,6 +137191,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutAccessToScriptRequestsInput = {
@@ -137655,6 +137949,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutAccessToScriptRequestsInput = {
@@ -137679,6 +137974,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithoutAccessToScriptRequestsInput = {
@@ -138438,6 +138734,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamSeriesInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutCertificateRequestsInput = {
@@ -138462,6 +138759,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutCertificateRequestsInput = {
@@ -138983,6 +139281,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutExamSeriesNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutCertificateRequestsInput = {
@@ -139007,6 +139306,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type UserUpsertWithoutCertificateRequestsRequestedInput = {
@@ -139326,6 +139626,61 @@ export namespace Prisma {
   export type ExamBoardCreateOrConnectWithoutFeeSchedulesInput = {
     where: ExamBoardWhereUniqueInput
     create: XOR<ExamBoardCreateWithoutFeeSchedulesInput, ExamBoardUncheckedCreateWithoutFeeSchedulesInput>
+  }
+
+  export type ExamSeriesCreateWithoutFeeSchedulesInput = {
+    id?: string
+    name: string
+    year: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutExamSeriesInput
+    sourceDocument?: SourceDocumentCreateNestedOneWithoutExamSeriesInput
+    examSessions?: ExamSessionCreateNestedManyWithoutExamSeriesInput
+    keyDates?: KeyDateCreateNestedManyWithoutExamSeriesInput
+    resources?: ResourceCreateNestedManyWithoutExamSeriesInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamSeriesInput
+    includedInWindows?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutExamSeriesInput
+    studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamSeriesInput
+    feeRules?: FeeRuleCreateNestedManyWithoutExamSeriesInput
+    reviewWindows?: ReviewWindowCreateNestedManyWithoutExamSeriesInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSeriesInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutExamSeriesInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
+    certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
+    postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamSeriesInput
+  }
+
+  export type ExamSeriesUncheckedCreateWithoutFeeSchedulesInput = {
+    id?: string
+    name: string
+    year: number
+    examBoardId: string
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    sourceDocumentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examSessions?: ExamSessionUncheckedCreateNestedManyWithoutExamSeriesInput
+    keyDates?: KeyDateUncheckedCreateNestedManyWithoutExamSeriesInput
+    resources?: ResourceUncheckedCreateNestedManyWithoutExamSeriesInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamSeriesInput
+    includedInWindows?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutExamSeriesInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSeriesInput
+    reviewWindows?: ReviewWindowUncheckedCreateNestedManyWithoutExamSeriesInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSeriesInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamSeriesInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
+    certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamSeriesInput
+  }
+
+  export type ExamSeriesCreateOrConnectWithoutFeeSchedulesInput = {
+    where: ExamSeriesWhereUniqueInput
+    create: XOR<ExamSeriesCreateWithoutFeeSchedulesInput, ExamSeriesUncheckedCreateWithoutFeeSchedulesInput>
   }
 
   export type QualificationCreateWithoutFeeSchedulesInput = {
@@ -139727,6 +140082,67 @@ export namespace Prisma {
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
+  }
+
+  export type ExamSeriesUpsertWithoutFeeSchedulesInput = {
+    update: XOR<ExamSeriesUpdateWithoutFeeSchedulesInput, ExamSeriesUncheckedUpdateWithoutFeeSchedulesInput>
+    create: XOR<ExamSeriesCreateWithoutFeeSchedulesInput, ExamSeriesUncheckedCreateWithoutFeeSchedulesInput>
+    where?: ExamSeriesWhereInput
+  }
+
+  export type ExamSeriesUpdateToOneWithWhereWithoutFeeSchedulesInput = {
+    where?: ExamSeriesWhereInput
+    data: XOR<ExamSeriesUpdateWithoutFeeSchedulesInput, ExamSeriesUncheckedUpdateWithoutFeeSchedulesInput>
+  }
+
+  export type ExamSeriesUpdateWithoutFeeSchedulesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutExamSeriesNestedInput
+    sourceDocument?: SourceDocumentUpdateOneWithoutExamSeriesNestedInput
+    examSessions?: ExamSessionUpdateManyWithoutExamSeriesNestedInput
+    keyDates?: KeyDateUpdateManyWithoutExamSeriesNestedInput
+    resources?: ResourceUpdateManyWithoutExamSeriesNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutExamSeriesNestedInput
+    includedInWindows?: RegistrationWindowIncludedSeriesUpdateManyWithoutExamSeriesNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamSeriesNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutExamSeriesNestedInput
+    reviewWindows?: ReviewWindowUpdateManyWithoutExamSeriesNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutExamSeriesNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutExamSeriesNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
+    certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+  }
+
+  export type ExamSeriesUncheckedUpdateWithoutFeeSchedulesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    sourceDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examSessions?: ExamSessionUncheckedUpdateManyWithoutExamSeriesNestedInput
+    keyDates?: KeyDateUncheckedUpdateManyWithoutExamSeriesNestedInput
+    resources?: ResourceUncheckedUpdateManyWithoutExamSeriesNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamSeriesNestedInput
+    includedInWindows?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutExamSeriesNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSeriesNestedInput
+    reviewWindows?: ReviewWindowUncheckedUpdateManyWithoutExamSeriesNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
+    certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type QualificationUpsertWithoutFeeSchedulesInput = {
@@ -140227,6 +140643,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamSeriesInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesUncheckedCreateWithoutPostResultsAuditLogsInput = {
@@ -140251,6 +140668,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSeriesInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamSeriesInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamSeriesInput
   }
 
   export type ExamSeriesCreateOrConnectWithoutPostResultsAuditLogsInput = {
@@ -140738,6 +141156,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutExamSeriesNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutPostResultsAuditLogsInput = {
@@ -140762,6 +141181,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutPostResultsAuditLogsInput = {
@@ -142140,6 +142560,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     subjectId?: string | null
     paperId?: string | null
@@ -144453,6 +144874,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutFeeSchedulesNestedInput
+    examSeries?: ExamSeriesUpdateOneWithoutFeeSchedulesNestedInput
     qualification?: QualificationUpdateOneWithoutFeeSchedulesNestedInput
     subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
@@ -144463,6 +144885,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -144488,6 +144911,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -149471,6 +149895,7 @@ export namespace Prisma {
   export type FeeScheduleCreateManyExamBoardInput = {
     id?: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     subjectId?: string | null
     paperId?: string | null
@@ -149649,6 +150074,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutExamBoardInput = {
@@ -149673,6 +150099,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateManyWithoutExamBoardInput = {
@@ -150257,6 +150684,7 @@ export namespace Prisma {
     exchangeRateToCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examSeries?: ExamSeriesUpdateOneWithoutFeeSchedulesNestedInput
     qualification?: QualificationUpdateOneWithoutFeeSchedulesNestedInput
     subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
@@ -150267,6 +150695,7 @@ export namespace Prisma {
   export type FeeScheduleUncheckedUpdateWithoutExamBoardInput = {
     id?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -150292,6 +150721,7 @@ export namespace Prisma {
   export type FeeScheduleUncheckedUpdateManyWithoutExamBoardInput = {
     id?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -150652,6 +151082,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     subjectId?: string | null
     paperId?: string | null
     entryType?: $Enums.FeeEntryType | null
@@ -150883,6 +151314,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutFeeSchedulesNestedInput
+    examSeries?: ExamSeriesUpdateOneWithoutFeeSchedulesNestedInput
     subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
     createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
@@ -150893,6 +151325,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
     entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
@@ -150918,6 +151351,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
     entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
@@ -151142,6 +151576,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     paperId?: string | null
     entryType?: $Enums.FeeEntryType | null
@@ -151625,6 +152060,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutFeeSchedulesNestedInput
+    examSeries?: ExamSeriesUpdateOneWithoutFeeSchedulesNestedInput
     qualification?: QualificationUpdateOneWithoutFeeSchedulesNestedInput
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
     createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
@@ -151635,6 +152071,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
     entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
@@ -151660,6 +152097,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     paperId?: NullableStringFieldUpdateOperationsInput | string | null
     entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
@@ -151981,6 +152419,7 @@ export namespace Prisma {
     id?: string
     examBoardId: string
     serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
     qualificationId?: string | null
     subjectId?: string | null
     entryType?: $Enums.FeeEntryType | null
@@ -152376,6 +152815,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     examBoard?: ExamBoardUpdateOneRequiredWithoutFeeSchedulesNestedInput
+    examSeries?: ExamSeriesUpdateOneWithoutFeeSchedulesNestedInput
     qualification?: QualificationUpdateOneWithoutFeeSchedulesNestedInput
     subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
     createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
@@ -152386,6 +152826,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
@@ -152411,6 +152852,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
     qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
     subjectId?: NullableStringFieldUpdateOperationsInput | string | null
     entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
@@ -152783,6 +153225,31 @@ export namespace Prisma {
     reason?: string | null
     notes?: string | null
     metadata?: string | null
+  }
+
+  export type FeeScheduleCreateManyExamSeriesInput = {
+    id?: string
+    examBoardId: string
+    serviceType: $Enums.FeeScheduleServiceType
+    qualificationId?: string | null
+    subjectId?: string | null
+    paperId?: string | null
+    entryType?: $Enums.FeeEntryType | null
+    reviewType?: string | null
+    version: number
+    effectiveFrom: Date | string
+    effectiveTo?: Date | string | null
+    status?: $Enums.FeeScheduleStatus
+    costCurrency: $Enums.FeeCurrency
+    costAmount: Decimal | DecimalJsLike | number | string
+    salesCurrency: $Enums.FeeCurrency
+    salesAmount: Decimal | DecimalJsLike | number | string
+    markupType?: $Enums.FeeMarkupType | null
+    markupValue?: Decimal | DecimalJsLike | number | string | null
+    exchangeRateToCny?: Decimal | DecimalJsLike | number | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ExamSessionUpdateWithoutExamSeriesInput = {
@@ -153555,6 +154022,83 @@ export namespace Prisma {
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FeeScheduleUpdateWithoutExamSeriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
+    reviewType?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    effectiveTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumFeeScheduleStatusFieldUpdateOperationsInput | $Enums.FeeScheduleStatus
+    costCurrency?: EnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency
+    costAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesCurrency?: EnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency
+    salesAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    markupType?: NullableEnumFeeMarkupTypeFieldUpdateOperationsInput | $Enums.FeeMarkupType | null
+    markupValue?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    exchangeRateToCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutFeeSchedulesNestedInput
+    qualification?: QualificationUpdateOneWithoutFeeSchedulesNestedInput
+    subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
+    paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
+    feeStatementItems?: FeeStatementItemUpdateManyWithoutFeeScheduleNestedInput
+  }
+
+  export type FeeScheduleUncheckedUpdateWithoutExamSeriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperId?: NullableStringFieldUpdateOperationsInput | string | null
+    entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
+    reviewType?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    effectiveTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumFeeScheduleStatusFieldUpdateOperationsInput | $Enums.FeeScheduleStatus
+    costCurrency?: EnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency
+    costAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesCurrency?: EnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency
+    salesAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    markupType?: NullableEnumFeeMarkupTypeFieldUpdateOperationsInput | $Enums.FeeMarkupType | null
+    markupValue?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    exchangeRateToCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleNestedInput
+  }
+
+  export type FeeScheduleUncheckedUpdateManyWithoutExamSeriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperId?: NullableStringFieldUpdateOperationsInput | string | null
+    entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
+    reviewType?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    effectiveTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumFeeScheduleStatusFieldUpdateOperationsInput | $Enums.FeeScheduleStatus
+    costCurrency?: EnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency
+    costAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesCurrency?: EnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency
+    salesAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    markupType?: NullableEnumFeeMarkupTypeFieldUpdateOperationsInput | $Enums.FeeMarkupType | null
+    markupValue?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    exchangeRateToCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StudentExamRegistrationCreateManyExamSessionInput = {
@@ -154703,6 +155247,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateWithoutSourceDocumentInput = {
@@ -154727,6 +155272,7 @@ export namespace Prisma {
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamSeriesNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamSeriesNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamSeriesNestedInput
   }
 
   export type ExamSeriesUncheckedUpdateManyWithoutSourceDocumentInput = {

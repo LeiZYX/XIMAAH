@@ -17,16 +17,19 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const examBoardId = searchParams.get("examBoardId");
   const serviceType = searchParams.get("serviceType") as FeeScheduleServiceType | null;
+  const examSeriesId = searchParams.get("examSeriesId");
 
   const where: Record<string, unknown> = {};
   if (examBoardId) where.examBoardId = examBoardId;
   if (serviceType) where.serviceType = serviceType;
+  if (examSeriesId) where.examSeriesId = examSeriesId;
 
   const schedules = await prisma.feeSchedule.findMany({
     where,
     include: {
       examBoard: { select: { id: true, name: true, code: true } },
-      qualification: { select: { id: true, name: true } },
+      examSeries: { select: { id: true, name: true, year: true } },
+      qualification: { select: { id: true, name: true, level: true, code: true } },
       subject: { select: { id: true, name: true, code: true } },
       paper: { select: { id: true, code: true, title: true } },
       createdBy: { select: { id: true, name: true } },
@@ -52,6 +55,7 @@ export async function POST(request: NextRequest) {
   const data = parseJsonBody<{
     examBoardId: string;
     serviceType: FeeScheduleServiceType;
+    examSeriesId?: string | null;
     qualificationId?: string | null;
     subjectId?: string | null;
     paperId?: string | null;
@@ -81,10 +85,40 @@ export async function POST(request: NextRequest) {
   const board = await prisma.examBoard.findUnique({ where: { id: data.examBoardId } });
   if (!board) return jsonError("Exam board not found", 404);
 
+  if (data.examSeriesId) {
+    const series = await prisma.examSeries.findFirst({
+      where: { id: data.examSeriesId, examBoardId: data.examBoardId },
+      select: { id: true },
+    });
+    if (!series) return jsonError("Exam series not found for this exam board", 404);
+  }
+
+  if (data.subjectId) {
+    const subject = await prisma.subject.findUnique({
+      where: { id: data.subjectId },
+      select: {
+        id: true,
+        qualificationId: true,
+        qualification: { select: { examBoardId: true } },
+      },
+    });
+    if (!subject) return jsonError("Subject not found", 404);
+    if (subject.qualification.examBoardId !== data.examBoardId) {
+      return jsonError("Subject does not belong to the selected exam board", 400);
+    }
+    if (data.qualificationId && data.qualificationId !== subject.qualificationId) {
+      return jsonError("Subject does not belong to the selected qualification", 400);
+    }
+    if (!data.qualificationId) {
+      data.qualificationId = subject.qualificationId;
+    }
+  }
+
   try {
     const schedule = await createFeeScheduleVersion({
       examBoardId: data.examBoardId,
       serviceType: data.serviceType,
+      examSeriesId: data.examSeriesId,
       qualificationId: data.qualificationId,
       subjectId: data.subjectId,
       paperId: data.paperId,
@@ -106,6 +140,7 @@ export async function POST(request: NextRequest) {
       action: "FEE_SCHEDULE_VERSION_CREATED",
       performedByUserId: auth.user.id,
       examBoardId: data.examBoardId,
+      examSeriesId: data.examSeriesId ?? undefined,
       serviceType: data.serviceType,
       metadata: { feeScheduleId: schedule.id, version: schedule.version },
     });

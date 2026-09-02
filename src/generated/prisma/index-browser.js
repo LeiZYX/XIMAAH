@@ -927,6 +927,7 @@ exports.Prisma.FeeScheduleScalarFieldEnum = {
   id: 'id',
   examBoardId: 'examBoardId',
   serviceType: 'serviceType',
+  examSeriesId: 'examSeriesId',
   qualificationId: 'qualificationId',
   subjectId: 'subjectId',
   paperId: 'paperId',
@@ -1533,6 +1534,7 @@ exports.Prisma.CertificateRequestOrderByRelevanceFieldEnum = {
 exports.Prisma.FeeScheduleOrderByRelevanceFieldEnum = {
   id: 'id',
   examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
   qualificationId: 'qualificationId',
   subjectId: 'subjectId',
   paperId: 'paperId',

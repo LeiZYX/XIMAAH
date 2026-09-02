@@ -4,5 +4,5 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export default function ExamOfficeFeeSchedulesPage() {
-  return <FeeScheduleManager />;
+  return <FeeScheduleManager basePath="/exam-office" />;
 }

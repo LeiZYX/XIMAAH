@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 export interface FeeScheduleLookupInput {
   examBoardId: string;
   serviceType: FeeScheduleServiceType;
+  examSeriesId?: string | null;
   qualificationId?: string | null;
   subjectId?: string | null;
   paperId?: string | null;
@@ -19,6 +20,7 @@ export interface FeeScheduleLookupInput {
 export interface FeeScheduleVersionInput {
   examBoardId: string;
   serviceType: FeeScheduleServiceType;
+  examSeriesId?: string | null;
   qualificationId?: string | null;
   subjectId?: string | null;
   paperId?: string | null;
@@ -36,10 +38,11 @@ export interface FeeScheduleVersionInput {
   createdByUserId: string;
 }
 
-function scheduleScopeWhere(input: FeeScheduleLookupInput) {
+export function scheduleScopeWhere(input: FeeScheduleLookupInput | FeeScheduleVersionInput) {
   return {
     examBoardId: input.examBoardId,
     serviceType: input.serviceType,
+    examSeriesId: input.examSeriesId ?? null,
     qualificationId: input.qualificationId ?? null,
     subjectId: input.subjectId ?? null,
     paperId: input.paperId ?? null,
