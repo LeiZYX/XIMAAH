@@ -93,9 +93,9 @@ export function BoardSubmissionsAmendmentTab({
         <div>
           <h2 className="text-lg font-semibold text-slate-900">Amendment</h2>
           <p className="mt-1 text-sm text-slate-600">
-            After the Normal entry deadline, export Add and Remove sheets relative to the latest
-            submitted baseline. Add rows support up to 2 units each; Remove rows support up to 5
-            units each.
+            Export Add and Remove sheets for changes since the latest submitted baseline. After you
+            mark an amendment as submitted, download it from submission history below. New add/remove
+            rows appear here once registrations change again.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -115,7 +115,7 @@ export function BoardSubmissionsAmendmentTab({
               if (!preview?.canExport) event.preventDefault();
             }}
           >
-            Download
+            Download pending
           </a>
           <button
             type="button"
@@ -166,12 +166,17 @@ export function BoardSubmissionsAmendmentTab({
 
       {preview && !preview.hasChanges && hasBaseline ? (
         <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
-          No changes since baseline v{preview.baselineVersion}.
+          <p className="font-medium text-slate-900">No pending amendment</p>
+          <p className="mt-1">
+            Current registrations match baseline v{preview.baselineVersion}. Adjust registrations to
+            generate the next add/remove export, then mark it as submitted here.
+          </p>
         </div>
       ) : null}
 
       {preview && preview.hasChanges ? (
         <>
+          <h3 className="text-sm font-semibold text-slate-900">Pending amendment</h3>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm">
               <p className="text-slate-500">Candidates changed</p>
@@ -227,6 +232,52 @@ export function BoardSubmissionsAmendmentTab({
             </div>
           ) : null}
         </>
+      ) : null}
+
+      {preview && preview.submissionHistory.length > 0 ? (
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-slate-900">Submitted amendments</h3>
+          <div className="overflow-x-auto rounded-lg border border-slate-200">
+            <table className="min-w-full divide-y divide-slate-200 text-sm">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="px-4 py-3 text-left">Baseline</th>
+                  <th className="px-4 py-3 text-left">Compared to</th>
+                  <th className="px-4 py-3 text-left">Submitted</th>
+                  <th className="px-4 py-3 text-left">Adds</th>
+                  <th className="px-4 py-3 text-left">Removes</th>
+                  <th className="px-4 py-3 text-left">Download</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200">
+                {preview.submissionHistory.map((record) => (
+                  <tr key={record.baselineVersion}>
+                    <td className="px-4 py-3 font-medium text-slate-900">v{record.baselineVersion}</td>
+                    <td className="px-4 py-3 text-slate-600">v{record.comparedAgainstVersion}</td>
+                    <td className="px-4 py-3 text-slate-600">
+                      {new Date(record.submittedAt).toLocaleString()}
+                      {record.submittedByName ? ` · ${record.submittedByName}` : ""}
+                    </td>
+                    <td className="px-4 py-3">{record.addEntryCount}</td>
+                    <td className="px-4 py-3">{record.removeEntryCount}</td>
+                    <td className="px-4 py-3">
+                      {record.canDownload ? (
+                        <a
+                          href={`/api/board-submissions/amendment/export?registrationWindowId=${encodeURIComponent(registrationWindowId)}&baselineVersion=${record.baselineVersion}`}
+                          className="font-medium text-indigo-700 hover:text-indigo-900"
+                        >
+                          Download
+                        </a>
+                      ) : (
+                        <span className="text-slate-400">Unavailable</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       ) : null}
     </Card>
   );

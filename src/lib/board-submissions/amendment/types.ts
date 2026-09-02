@@ -9,6 +9,18 @@ export interface AmendmentSheetRow {
   issues: string[];
 }
 
+export interface AmendmentSubmissionRecord {
+  baselineVersion: number;
+  comparedAgainstVersion: number;
+  submittedAt: string;
+  submittedByName: string | null;
+  addEntryCount: number;
+  removeEntryCount: number;
+  addRowCount: number;
+  removeRowCount: number;
+  canDownload: boolean;
+}
+
 export interface AmendmentPreview {
   registrationWindowId: string;
   registrationWindowTitle: string;
@@ -26,4 +38,5 @@ export interface AmendmentPreview {
   hasChanges: boolean;
   canExport: boolean;
   canSubmit: boolean;
+  submissionHistory: AmendmentSubmissionRecord[];
 }

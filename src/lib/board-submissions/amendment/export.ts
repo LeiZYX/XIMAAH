@@ -84,11 +84,17 @@ export function buildAmendmentWorkbook(input: {
   return XLSX.write(workbook, { type: "buffer", bookType: "xlsx" }) as Buffer;
 }
 
-export function amendmentFilename(input: { windowTitle: string; examBoardCode: string }): string {
+export function amendmentFilename(input: {
+  windowTitle: string;
+  examBoardCode: string;
+  baselineVersion?: number;
+}): string {
   const safeTitle = input.windowTitle
     .replace(/[^\w\-]+/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "")
     .slice(0, 40);
-  return `${input.examBoardCode}-entry-amendment-${safeTitle || "window"}.xlsx`;
+  const versionSuffix =
+    input.baselineVersion !== undefined ? `-v${input.baselineVersion}` : "";
+  return `${input.examBoardCode}-entry-amendment${versionSuffix}-${safeTitle || "window"}.xlsx`;
 }

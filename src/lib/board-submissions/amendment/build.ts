@@ -1,22 +1,10 @@
 import { parseBaselineSnapshot } from "@/lib/board-submissions/baseline";
-import {
-  AMENDMENT_ADD_SLOTS,
-  AMENDMENT_REMOVE_SLOTS,
-} from "@/lib/board-submissions/amendment/constants";
+import { buildAmendmentSubmissionHistory } from "@/lib/board-submissions/amendment/history";
+import { buildAmendmentSheetRowsFromSnapshots } from "@/lib/board-submissions/amendment/snapshot-diff";
 import type { AmendmentPreview, AmendmentSheetRow } from "@/lib/board-submissions/amendment/types";
 import { buildBulkEntriesPreview } from "@/lib/board-submissions/bulk-entries/build";
 import type { BulkEntrySlot } from "@/lib/board-submissions/bulk-entries/types";
-import { diffEntryLists } from "@/lib/board-submissions/entry-utils";
 import { prisma } from "@/lib/prisma";
-
-function chunkEntries(entries: BulkEntrySlot[], size: number): BulkEntrySlot[][] {
-  if (entries.length === 0) return [];
-  const chunks: BulkEntrySlot[][] = [];
-  for (let index = 0; index < entries.length; index += size) {
-    chunks.push(entries.slice(index, index + size));
-  }
-  return chunks;
-}
 
 function validateAmendmentRow(input: {
   centreNumber: string | null;
@@ -32,31 +20,20 @@ function validateAmendmentRow(input: {
   return issues;
 }
 
-function buildSheetRows(input: {
-  candidateId: string;
-  displayName: string;
-  centreNumber: string | null;
-  candidateNumber: string | null;
-  entries: BulkEntrySlot[];
-  chunkSize: number;
-}): AmendmentSheetRow[] {
-  const chunks = chunkEntries(input.entries, input.chunkSize);
-  return chunks.map((entries) => {
-    const issues = validateAmendmentRow({
-      centreNumber: input.centreNumber,
-      candidateNumber: input.candidateNumber,
-      displayName: input.displayName,
-      entries,
-    });
-    return {
-      candidateId: input.candidateId,
-      displayName: input.displayName,
-      centreNumber: input.centreNumber,
-      candidateNumber: input.candidateNumber,
-      entries,
-      issues,
-    };
-  });
+function applyCentreNumbers(
+  rows: AmendmentSheetRow[],
+  centreNumbers: Map<string, string | null>,
+): AmendmentSheetRow[] {
+  return rows.map((row) => ({
+    ...row,
+    centreNumber: centreNumbers.get(row.candidateId) ?? row.centreNumber,
+    issues: validateAmendmentRow({
+      centreNumber: centreNumbers.get(row.candidateId) ?? row.centreNumber,
+      candidateNumber: row.candidateNumber,
+      displayName: row.displayName,
+      entries: row.entries,
+    }),
+  }));
 }
 
 export async function buildAmendmentPreview(
@@ -72,6 +49,11 @@ export async function buildAmendmentPreview(
     },
   });
   if (!window) return null;
+
+  const submissionHistory = await buildAmendmentSubmissionHistory(
+    registrationWindowId,
+    window.examBoardId,
+  );
 
   const baseline = await prisma.boardSubmissionBaseline.findFirst({
     where: { registrationWindowId },
@@ -100,23 +82,42 @@ export async function buildAmendmentPreview(
       hasChanges: false,
       canExport: false,
       canSubmit: false,
+      submissionHistory,
     };
   }
 
   const currentPreview = await buildBulkEntriesPreview(registrationWindowId);
   if (!currentPreview) return null;
 
-  const baselineRows = parseBaselineSnapshot(baseline.entrySnapshot);
-  const baselineMap = new Map(baselineRows.map((row) => [row.candidateId, row.entries]));
-  const currentMap = new Map(currentPreview.rows.map((row) => [row.candidateId, row]));
+  const liveCandidateDetails = new Map(
+    currentPreview.rows.map((row) => [
+      row.candidateId,
+      {
+        displayName: row.displayName,
+        candidateNumber: row.candidateNumber,
+        centreNumber: null as string | null,
+      },
+    ]),
+  );
 
-  const candidateIds = new Set([...baselineMap.keys(), ...currentMap.keys()]);
+  const diff = await buildAmendmentSheetRowsFromSnapshots({
+    examBoardId: window.examBoardId,
+    baselineRows: parseBaselineSnapshot(baseline.entrySnapshot),
+    currentRows: currentPreview.rows.map((row) => ({
+      candidateId: row.candidateId,
+      entries: row.entries,
+    })),
+    liveCandidateDetails,
+  });
+
   const centreNumbers = new Map<string, string | null>();
-
-  if (candidateIds.size > 0) {
+  if (diff.addRows.length > 0 || diff.removeRows.length > 0) {
+    const candidateIds = [
+      ...new Set([...diff.addRows, ...diff.removeRows].map((row) => row.candidateId)),
+    ];
     const identities = await prisma.candidateExamIdentity.findMany({
       where: {
-        candidateId: { in: [...candidateIds] },
+        candidateId: { in: candidateIds },
         examBoardId: window.examBoardId,
         status: { not: "ARCHIVED" },
       },
@@ -127,72 +128,13 @@ export async function buildAmendmentPreview(
     }
   }
 
-  const addRows: AmendmentSheetRow[] = [];
-  const removeRows: AmendmentSheetRow[] = [];
-  let addEntryCount = 0;
-  let removeEntryCount = 0;
-  const changedCandidateIds = new Set<string>();
-
-  for (const candidateId of candidateIds) {
-    const baselineEntries = baselineMap.get(candidateId) ?? [];
-    const currentRow = currentMap.get(candidateId);
-    const currentEntries = currentRow?.entries ?? [];
-    const { adds, removes } = diffEntryLists(baselineEntries, currentEntries);
-
-    if (adds.length === 0 && removes.length === 0) continue;
-    changedCandidateIds.add(candidateId);
-
-    const displayName = currentRow?.displayName ?? "—";
-    const candidateNumber = currentRow?.candidateNumber ?? null;
-    const centreNumber = centreNumbers.get(candidateId) ?? null;
-
-    if (adds.length > 0) {
-      addEntryCount += adds.length;
-      addRows.push(
-        ...buildSheetRows({
-          candidateId,
-          displayName,
-          centreNumber,
-          candidateNumber,
-          entries: adds,
-          chunkSize: AMENDMENT_ADD_SLOTS,
-        }),
-      );
-    }
-
-    if (removes.length > 0) {
-      removeEntryCount += removes.length;
-      removeRows.push(
-        ...buildSheetRows({
-          candidateId,
-          displayName,
-          centreNumber,
-          candidateNumber,
-          entries: removes,
-          chunkSize: AMENDMENT_REMOVE_SLOTS,
-        }),
-      );
-    }
-  }
-
-  addRows.sort((a, b) =>
-    `${a.displayName}:${a.entries.map((entry) => entry.specification).join(",")}`.localeCompare(
-      `${b.displayName}:${b.entries.map((entry) => entry.specification).join(",")}`,
-    ),
-  );
-  removeRows.sort((a, b) =>
-    `${a.displayName}:${a.entries.map((entry) => entry.specification).join(",")}`.localeCompare(
-      `${b.displayName}:${b.entries.map((entry) => entry.specification).join(",")}`,
-    ),
-  );
-
+  const addRows = applyCentreNumbers(diff.addRows, centreNumbers);
+  const removeRows = applyCentreNumbers(diff.removeRows, centreNumbers);
   const allRows = [...addRows, ...removeRows];
   const blockingIssues = [...new Set(allRows.flatMap((row) => row.issues))];
-  const hasChanges = addEntryCount > 0 || removeEntryCount > 0;
+  const hasChanges = diff.addEntryCount > 0 || diff.removeEntryCount > 0;
   const ready =
-    hasChanges &&
-    allRows.length > 0 &&
-    allRows.every((row) => row.issues.length === 0);
+    hasChanges && allRows.length > 0 && allRows.every((row) => row.issues.length === 0);
 
   return {
     registrationWindowId: window.id,
@@ -202,14 +144,15 @@ export async function buildAmendmentPreview(
     baselineSubmittedAt: baseline.submittedAt.toISOString(),
     addRowCount: addRows.length,
     removeRowCount: removeRows.length,
-    addEntryCount,
-    removeEntryCount,
-    changedCandidateCount: changedCandidateIds.size,
+    addEntryCount: diff.addEntryCount,
+    removeEntryCount: diff.removeEntryCount,
+    changedCandidateCount: diff.changedCandidateCount,
     addRows,
     removeRows,
     blockingIssues,
     hasChanges,
     canExport: ready,
     canSubmit: ready,
+    submissionHistory,
   };
 }
