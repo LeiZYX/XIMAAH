@@ -194,7 +194,11 @@ export function BoardSubmissionsView({ basePath }: BoardSubmissionsViewProps) {
           </div>
 
           {activeTab === "bulk-entries" ? (
-            <BoardSubmissionsBulkEntriesTab summary={summary} basePath={basePath} />
+            <BoardSubmissionsBulkEntriesTab
+              summary={summary}
+              basePath={basePath}
+              onSubmitted={() => void loadSummary(selector.registrationWindowId)}
+            />
           ) : (
             <BoardSubmissionsAmendmentTab summary={summary} />
           )}

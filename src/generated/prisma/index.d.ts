@@ -22912,6 +22912,7 @@ export namespace Prisma {
     entryCount: number
     fileCount: number
     notes: number
+    entrySnapshot: number
     _all: number
   }
 
@@ -22967,6 +22968,7 @@ export namespace Prisma {
     entryCount?: true
     fileCount?: true
     notes?: true
+    entrySnapshot?: true
     _all?: true
   }
 
@@ -23067,6 +23069,7 @@ export namespace Prisma {
     entryCount: number
     fileCount: number
     notes: string | null
+    entrySnapshot: JsonValue | null
     _count: BoardSubmissionBaselineCountAggregateOutputType | null
     _avg: BoardSubmissionBaselineAvgAggregateOutputType | null
     _sum: BoardSubmissionBaselineSumAggregateOutputType | null
@@ -23099,6 +23102,7 @@ export namespace Prisma {
     entryCount?: boolean
     fileCount?: boolean
     notes?: boolean
+    entrySnapshot?: boolean
     registrationWindow?: boolean | RegistrationWindowDefaultArgs<ExtArgs>
     submittedBy?: boolean | BoardSubmissionBaseline$submittedByArgs<ExtArgs>
   }, ExtArgs["result"]["boardSubmissionBaseline"]>
@@ -23116,9 +23120,10 @@ export namespace Prisma {
     entryCount?: boolean
     fileCount?: boolean
     notes?: boolean
+    entrySnapshot?: boolean
   }
 
-  export type BoardSubmissionBaselineOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "registrationWindowId" | "version" | "kind" | "submittedAt" | "submittedByUserId" | "candidateCount" | "entryCount" | "fileCount" | "notes", ExtArgs["result"]["boardSubmissionBaseline"]>
+  export type BoardSubmissionBaselineOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "registrationWindowId" | "version" | "kind" | "submittedAt" | "submittedByUserId" | "candidateCount" | "entryCount" | "fileCount" | "notes" | "entrySnapshot", ExtArgs["result"]["boardSubmissionBaseline"]>
   export type BoardSubmissionBaselineInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     registrationWindow?: boolean | RegistrationWindowDefaultArgs<ExtArgs>
     submittedBy?: boolean | BoardSubmissionBaseline$submittedByArgs<ExtArgs>
@@ -23141,6 +23146,7 @@ export namespace Prisma {
       entryCount: number
       fileCount: number
       notes: string | null
+      entrySnapshot: Prisma.JsonValue | null
     }, ExtArgs["result"]["boardSubmissionBaseline"]>
     composites: {}
   }
@@ -23522,6 +23528,7 @@ export namespace Prisma {
     readonly entryCount: FieldRef<"BoardSubmissionBaseline", 'Int'>
     readonly fileCount: FieldRef<"BoardSubmissionBaseline", 'Int'>
     readonly notes: FieldRef<"BoardSubmissionBaseline", 'String'>
+    readonly entrySnapshot: FieldRef<"BoardSubmissionBaseline", 'Json'>
   }
     
 
@@ -66270,7 +66277,8 @@ export namespace Prisma {
     candidateCount: 'candidateCount',
     entryCount: 'entryCount',
     fileCount: 'fileCount',
-    notes: 'notes'
+    notes: 'notes',
+    entrySnapshot: 'entrySnapshot'
   };
 
   export type BoardSubmissionBaselineScalarFieldEnum = (typeof BoardSubmissionBaselineScalarFieldEnum)[keyof typeof BoardSubmissionBaselineScalarFieldEnum]
@@ -69597,6 +69605,7 @@ export namespace Prisma {
     entryCount?: IntFilter<"BoardSubmissionBaseline"> | number
     fileCount?: IntFilter<"BoardSubmissionBaseline"> | number
     notes?: StringNullableFilter<"BoardSubmissionBaseline"> | string | null
+    entrySnapshot?: JsonNullableFilter<"BoardSubmissionBaseline">
     registrationWindow?: XOR<RegistrationWindowScalarRelationFilter, RegistrationWindowWhereInput>
     submittedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
@@ -69612,6 +69621,7 @@ export namespace Prisma {
     entryCount?: SortOrder
     fileCount?: SortOrder
     notes?: SortOrderInput | SortOrder
+    entrySnapshot?: SortOrderInput | SortOrder
     registrationWindow?: RegistrationWindowOrderByWithRelationInput
     submittedBy?: UserOrderByWithRelationInput
     _relevance?: BoardSubmissionBaselineOrderByRelevanceInput
@@ -69632,6 +69642,7 @@ export namespace Prisma {
     entryCount?: IntFilter<"BoardSubmissionBaseline"> | number
     fileCount?: IntFilter<"BoardSubmissionBaseline"> | number
     notes?: StringNullableFilter<"BoardSubmissionBaseline"> | string | null
+    entrySnapshot?: JsonNullableFilter<"BoardSubmissionBaseline">
     registrationWindow?: XOR<RegistrationWindowScalarRelationFilter, RegistrationWindowWhereInput>
     submittedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id" | "registrationWindowId_version">
@@ -69647,6 +69658,7 @@ export namespace Prisma {
     entryCount?: SortOrder
     fileCount?: SortOrder
     notes?: SortOrderInput | SortOrder
+    entrySnapshot?: SortOrderInput | SortOrder
     _count?: BoardSubmissionBaselineCountOrderByAggregateInput
     _avg?: BoardSubmissionBaselineAvgOrderByAggregateInput
     _max?: BoardSubmissionBaselineMaxOrderByAggregateInput
@@ -69668,6 +69680,7 @@ export namespace Prisma {
     entryCount?: IntWithAggregatesFilter<"BoardSubmissionBaseline"> | number
     fileCount?: IntWithAggregatesFilter<"BoardSubmissionBaseline"> | number
     notes?: StringNullableWithAggregatesFilter<"BoardSubmissionBaseline"> | string | null
+    entrySnapshot?: JsonNullableWithAggregatesFilter<"BoardSubmissionBaseline">
   }
 
   export type RegistrationWindowIncludedSeriesWhereInput = {
@@ -75780,6 +75793,7 @@ export namespace Prisma {
     entryCount?: number
     fileCount?: number
     notes?: string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
     registrationWindow: RegistrationWindowCreateNestedOneWithoutBoardSubmissionBaselinesInput
     submittedBy?: UserCreateNestedOneWithoutBoardSubmissionBaselinesSubmittedInput
   }
@@ -75795,6 +75809,7 @@ export namespace Prisma {
     entryCount?: number
     fileCount?: number
     notes?: string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type BoardSubmissionBaselineUpdateInput = {
@@ -75806,6 +75821,7 @@ export namespace Prisma {
     entryCount?: IntFieldUpdateOperationsInput | number
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
     registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutBoardSubmissionBaselinesNestedInput
     submittedBy?: UserUpdateOneWithoutBoardSubmissionBaselinesSubmittedNestedInput
   }
@@ -75821,6 +75837,7 @@ export namespace Prisma {
     entryCount?: IntFieldUpdateOperationsInput | number
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type BoardSubmissionBaselineCreateManyInput = {
@@ -75834,6 +75851,7 @@ export namespace Prisma {
     entryCount?: number
     fileCount?: number
     notes?: string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type BoardSubmissionBaselineUpdateManyMutationInput = {
@@ -75845,6 +75863,7 @@ export namespace Prisma {
     entryCount?: IntFieldUpdateOperationsInput | number
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type BoardSubmissionBaselineUncheckedUpdateManyInput = {
@@ -75858,6 +75877,7 @@ export namespace Prisma {
     entryCount?: IntFieldUpdateOperationsInput | number
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type RegistrationWindowIncludedSeriesCreateInput = {
@@ -82305,6 +82325,7 @@ export namespace Prisma {
     entryCount?: SortOrder
     fileCount?: SortOrder
     notes?: SortOrder
+    entrySnapshot?: SortOrder
   }
 
   export type BoardSubmissionBaselineAvgOrderByAggregateInput = {
@@ -99600,6 +99621,7 @@ export namespace Prisma {
     entryCount?: number
     fileCount?: number
     notes?: string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
     registrationWindow: RegistrationWindowCreateNestedOneWithoutBoardSubmissionBaselinesInput
   }
 
@@ -99613,6 +99635,7 @@ export namespace Prisma {
     entryCount?: number
     fileCount?: number
     notes?: string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type BoardSubmissionBaselineCreateOrConnectWithoutSubmittedByInput = {
@@ -101107,6 +101130,7 @@ export namespace Prisma {
     entryCount?: IntFilter<"BoardSubmissionBaseline"> | number
     fileCount?: IntFilter<"BoardSubmissionBaseline"> | number
     notes?: StringNullableFilter<"BoardSubmissionBaseline"> | string | null
+    entrySnapshot?: JsonNullableFilter<"BoardSubmissionBaseline">
   }
 
   export type UserCreateWithoutPasswordResetTokensInput = {
@@ -107101,6 +107125,7 @@ export namespace Prisma {
     entryCount?: number
     fileCount?: number
     notes?: string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
     submittedBy?: UserCreateNestedOneWithoutBoardSubmissionBaselinesSubmittedInput
   }
 
@@ -107114,6 +107139,7 @@ export namespace Prisma {
     entryCount?: number
     fileCount?: number
     notes?: string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type BoardSubmissionBaselineCreateOrConnectWithoutRegistrationWindowInput = {
@@ -140120,6 +140146,7 @@ export namespace Prisma {
     entryCount?: number
     fileCount?: number
     notes?: string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type SourceDocumentUpdateWithoutUploadedByInput = {
@@ -142958,6 +142985,7 @@ export namespace Prisma {
     entryCount?: IntFieldUpdateOperationsInput | number
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
     registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutBoardSubmissionBaselinesNestedInput
   }
 
@@ -142971,6 +142999,7 @@ export namespace Prisma {
     entryCount?: IntFieldUpdateOperationsInput | number
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByInput = {
@@ -142983,6 +143012,7 @@ export namespace Prisma {
     entryCount?: IntFieldUpdateOperationsInput | number
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type CandidateExamIdentityCreateManyCandidateInput = {
@@ -144601,6 +144631,7 @@ export namespace Prisma {
     entryCount?: number
     fileCount?: number
     notes?: string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type StudentExamRegistrationUpdateWithoutRegistrationWindowInput = {
@@ -145528,6 +145559,7 @@ export namespace Prisma {
     entryCount?: IntFieldUpdateOperationsInput | number
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
     submittedBy?: UserUpdateOneWithoutBoardSubmissionBaselinesSubmittedNestedInput
   }
 
@@ -145541,6 +145573,7 @@ export namespace Prisma {
     entryCount?: IntFieldUpdateOperationsInput | number
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowInput = {
@@ -145553,6 +145586,7 @@ export namespace Prisma {
     entryCount?: IntFieldUpdateOperationsInput | number
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type RegistrationWorkspaceCreateManyFeeStageInput = {

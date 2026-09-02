@@ -815,6 +815,7 @@ model BoardSubmissionBaseline {
   entryCount           Int                 @default(0)
   fileCount            Int                 @default(1)
   notes                String?             @db.Text
+  entrySnapshot        Json?
 
   @@unique([registrationWindowId, version])
   @@index([registrationWindowId])

@@ -320,7 +320,8 @@ exports.Prisma.BoardSubmissionBaselineScalarFieldEnum = {
   candidateCount: 'candidateCount',
   entryCount: 'entryCount',
   fileCount: 'fileCount',
-  notes: 'notes'
+  notes: 'notes',
+  entrySnapshot: 'entrySnapshot'
 };
 
 exports.Prisma.RegistrationWindowIncludedSeriesScalarFieldEnum = {
