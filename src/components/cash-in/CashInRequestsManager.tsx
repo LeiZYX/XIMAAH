@@ -11,6 +11,7 @@ import {
 } from "@/lib/cash-in-requests/status";
 import { isCashInFeeStatementPayable } from "@/lib/cash-in-requests/billing-utils";
 import { formatMoney } from "@/lib/fees/money";
+import { CashInAuditLogPanel } from "@/components/cash-in/CashInAuditLogPanel";
 
 interface ExamBoardOption {
   id: string;
@@ -94,6 +95,7 @@ export function CashInRequestsManager({
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [auditRefreshKey, setAuditRefreshKey] = useState(0);
 
   const [filterBoardId, setFilterBoardId] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
@@ -319,6 +321,7 @@ export function CashInRequestsManager({
       return;
     }
     setMessage(`Updated to ${cashInRequestStatusLabel(status, data.feeStatement)}.`);
+    setAuditRefreshKey((value) => value + 1);
     await loadRows({ silent: true });
   }
 
@@ -352,6 +355,7 @@ export function CashInRequestsManager({
     setMessage(
       `Marked ${data.feeStatement?.statementNo ?? "fee statement"} as PAID offline.`,
     );
+    setAuditRefreshKey((value) => value + 1);
     await loadRows({ silent: true });
   }
 
@@ -792,6 +796,8 @@ export function CashInRequestsManager({
           </div>
         ) : null}
       </Card>
+
+      <CashInAuditLogPanel refreshKey={auditRefreshKey} />
     </div>
   );
 }
