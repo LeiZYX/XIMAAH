@@ -1,4 +1,6 @@
-import { ReviewWindowRequestList } from "@/components/review-windows/ReviewWindowRequestList";
+import Link from "next/link";
+import { ReviewWindowDetailShell } from "@/components/review-windows/ReviewWindowDetailShell";
+import { Card } from "@/components/ui/Card";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -10,13 +12,21 @@ export default async function AdminReviewWindowCashInPage({
 }) {
   const { id } = await params;
   return (
-    <ReviewWindowRequestList
+    <ReviewWindowDetailShell
       windowId={id}
       basePath="/admin/review-windows"
       feeStatementsBasePath="/admin/fee-statements"
-      apiPath="cash-in-requests"
-      title="Cash-in requests"
-      emptyMessage="No cash-in requests yet."
-    />
+    >
+      <Card className="space-y-3 text-sm text-slate-700">
+        <p className="font-medium text-slate-900">Cash-in is managed outside review windows.</p>
+        <p>
+          Create and track cash-in requests on the global Cash-in Requests page. Cancellation is
+          allowed only before a request is marked sent to the board.
+        </p>
+        <Link href="/admin/cash-in-requests" className="text-indigo-700 hover:underline">
+          Open Cash-in Requests
+        </Link>
+      </Card>
+    </ReviewWindowDetailShell>
   );
 }

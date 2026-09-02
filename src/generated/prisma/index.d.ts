@@ -726,6 +726,7 @@ export const PostResultsAuditAction: {
   REVIEW_REQUEST_UPDATED: 'REVIEW_REQUEST_UPDATED',
   REVIEW_REQUEST_SUBMITTED: 'REVIEW_REQUEST_SUBMITTED',
   CASH_IN_REQUEST_CREATED: 'CASH_IN_REQUEST_CREATED',
+  CASH_IN_REQUEST_UPDATED: 'CASH_IN_REQUEST_UPDATED',
   ACCESS_TO_SCRIPT_REQUEST_CREATED: 'ACCESS_TO_SCRIPT_REQUEST_CREATED',
   CERTIFICATE_REQUEST_CREATED: 'CERTIFICATE_REQUEST_CREATED',
   FEE_SCHEDULE_VERSION_CREATED: 'FEE_SCHEDULE_VERSION_CREATED',
@@ -7602,10 +7603,12 @@ export namespace Prisma {
 
   export type FeeScheduleCountOutputType = {
     feeStatementItems: number
+    cashInRequests: number
   }
 
   export type FeeScheduleCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     feeStatementItems?: boolean | FeeScheduleCountOutputTypeCountFeeStatementItemsArgs
+    cashInRequests?: boolean | FeeScheduleCountOutputTypeCountCashInRequestsArgs
   }
 
   // Custom InputTypes
@@ -7624,6 +7627,13 @@ export namespace Prisma {
    */
   export type FeeScheduleCountOutputTypeCountFeeStatementItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FeeStatementItemWhereInput
+  }
+
+  /**
+   * FeeScheduleCountOutputType without action
+   */
+  export type FeeScheduleCountOutputTypeCountCashInRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CashInRequestWhereInput
   }
 
 
@@ -59369,8 +59379,20 @@ export namespace Prisma {
 
   export type AggregateCashInRequest = {
     _count: CashInRequestCountAggregateOutputType | null
+    _avg: CashInRequestAvgAggregateOutputType | null
+    _sum: CashInRequestSumAggregateOutputType | null
     _min: CashInRequestMinAggregateOutputType | null
     _max: CashInRequestMaxAggregateOutputType | null
+  }
+
+  export type CashInRequestAvgAggregateOutputType = {
+    quotedCostAmount: Decimal | null
+    quotedSalesAmount: Decimal | null
+  }
+
+  export type CashInRequestSumAggregateOutputType = {
+    quotedCostAmount: Decimal | null
+    quotedSalesAmount: Decimal | null
   }
 
   export type CashInRequestMinAggregateOutputType = {
@@ -59381,6 +59403,13 @@ export namespace Prisma {
     examSeriesId: string | null
     qualificationId: string | null
     subjectId: string | null
+    cashInCode: string | null
+    feeScheduleId: string | null
+    quoteMatchLevel: string | null
+    quotedCostCurrency: $Enums.FeeCurrency | null
+    quotedCostAmount: Decimal | null
+    quotedSalesCurrency: $Enums.FeeCurrency | null
+    quotedSalesAmount: Decimal | null
     status: $Enums.PostResultRequestStatus | null
     requestedByUserId: string | null
     reason: string | null
@@ -59398,6 +59427,13 @@ export namespace Prisma {
     examSeriesId: string | null
     qualificationId: string | null
     subjectId: string | null
+    cashInCode: string | null
+    feeScheduleId: string | null
+    quoteMatchLevel: string | null
+    quotedCostCurrency: $Enums.FeeCurrency | null
+    quotedCostAmount: Decimal | null
+    quotedSalesCurrency: $Enums.FeeCurrency | null
+    quotedSalesAmount: Decimal | null
     status: $Enums.PostResultRequestStatus | null
     requestedByUserId: string | null
     reason: string | null
@@ -59415,6 +59451,13 @@ export namespace Prisma {
     examSeriesId: number
     qualificationId: number
     subjectId: number
+    cashInCode: number
+    feeScheduleId: number
+    quoteMatchLevel: number
+    quotedCostCurrency: number
+    quotedCostAmount: number
+    quotedSalesCurrency: number
+    quotedSalesAmount: number
     status: number
     requestedByUserId: number
     reason: number
@@ -59426,6 +59469,16 @@ export namespace Prisma {
   }
 
 
+  export type CashInRequestAvgAggregateInputType = {
+    quotedCostAmount?: true
+    quotedSalesAmount?: true
+  }
+
+  export type CashInRequestSumAggregateInputType = {
+    quotedCostAmount?: true
+    quotedSalesAmount?: true
+  }
+
   export type CashInRequestMinAggregateInputType = {
     id?: true
     reviewWindowId?: true
@@ -59434,6 +59487,13 @@ export namespace Prisma {
     examSeriesId?: true
     qualificationId?: true
     subjectId?: true
+    cashInCode?: true
+    feeScheduleId?: true
+    quoteMatchLevel?: true
+    quotedCostCurrency?: true
+    quotedCostAmount?: true
+    quotedSalesCurrency?: true
+    quotedSalesAmount?: true
     status?: true
     requestedByUserId?: true
     reason?: true
@@ -59451,6 +59511,13 @@ export namespace Prisma {
     examSeriesId?: true
     qualificationId?: true
     subjectId?: true
+    cashInCode?: true
+    feeScheduleId?: true
+    quoteMatchLevel?: true
+    quotedCostCurrency?: true
+    quotedCostAmount?: true
+    quotedSalesCurrency?: true
+    quotedSalesAmount?: true
     status?: true
     requestedByUserId?: true
     reason?: true
@@ -59468,6 +59535,13 @@ export namespace Prisma {
     examSeriesId?: true
     qualificationId?: true
     subjectId?: true
+    cashInCode?: true
+    feeScheduleId?: true
+    quoteMatchLevel?: true
+    quotedCostCurrency?: true
+    quotedCostAmount?: true
+    quotedSalesCurrency?: true
+    quotedSalesAmount?: true
     status?: true
     requestedByUserId?: true
     reason?: true
@@ -59516,6 +59590,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: CashInRequestAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CashInRequestSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: CashInRequestMinAggregateInputType
@@ -59546,18 +59632,27 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: CashInRequestCountAggregateInputType | true
+    _avg?: CashInRequestAvgAggregateInputType
+    _sum?: CashInRequestSumAggregateInputType
     _min?: CashInRequestMinAggregateInputType
     _max?: CashInRequestMaxAggregateInputType
   }
 
   export type CashInRequestGroupByOutputType = {
     id: string
-    reviewWindowId: string
+    reviewWindowId: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId: string | null
-    subjectId: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId: string | null
+    quoteMatchLevel: string | null
+    quotedCostCurrency: $Enums.FeeCurrency | null
+    quotedCostAmount: Decimal | null
+    quotedSalesCurrency: $Enums.FeeCurrency | null
+    quotedSalesAmount: Decimal | null
     status: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason: string | null
@@ -59566,6 +59661,8 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     _count: CashInRequestCountAggregateOutputType | null
+    _avg: CashInRequestAvgAggregateOutputType | null
+    _sum: CashInRequestSumAggregateOutputType | null
     _min: CashInRequestMinAggregateOutputType | null
     _max: CashInRequestMaxAggregateOutputType | null
   }
@@ -59592,6 +59689,13 @@ export namespace Prisma {
     examSeriesId?: boolean
     qualificationId?: boolean
     subjectId?: boolean
+    cashInCode?: boolean
+    feeScheduleId?: boolean
+    quoteMatchLevel?: boolean
+    quotedCostCurrency?: boolean
+    quotedCostAmount?: boolean
+    quotedSalesCurrency?: boolean
+    quotedSalesAmount?: boolean
     status?: boolean
     requestedByUserId?: boolean
     reason?: boolean
@@ -59599,12 +59703,13 @@ export namespace Prisma {
     feeStatementId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    reviewWindow?: boolean | ReviewWindowDefaultArgs<ExtArgs>
+    reviewWindow?: boolean | CashInRequest$reviewWindowArgs<ExtArgs>
     candidate?: boolean | CandidateDefaultArgs<ExtArgs>
     examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
     examSeries?: boolean | ExamSeriesDefaultArgs<ExtArgs>
-    qualification?: boolean | CashInRequest$qualificationArgs<ExtArgs>
-    subject?: boolean | CashInRequest$subjectArgs<ExtArgs>
+    qualification?: boolean | QualificationDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    feeSchedule?: boolean | CashInRequest$feeScheduleArgs<ExtArgs>
     requestedBy?: boolean | UserDefaultArgs<ExtArgs>
     feeStatement?: boolean | CashInRequest$feeStatementArgs<ExtArgs>
   }, ExtArgs["result"]["cashInRequest"]>
@@ -59619,6 +59724,13 @@ export namespace Prisma {
     examSeriesId?: boolean
     qualificationId?: boolean
     subjectId?: boolean
+    cashInCode?: boolean
+    feeScheduleId?: boolean
+    quoteMatchLevel?: boolean
+    quotedCostCurrency?: boolean
+    quotedCostAmount?: boolean
+    quotedSalesCurrency?: boolean
+    quotedSalesAmount?: boolean
     status?: boolean
     requestedByUserId?: boolean
     reason?: boolean
@@ -59628,14 +59740,15 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CashInRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reviewWindowId" | "candidateId" | "examBoardId" | "examSeriesId" | "qualificationId" | "subjectId" | "status" | "requestedByUserId" | "reason" | "notes" | "feeStatementId" | "createdAt" | "updatedAt", ExtArgs["result"]["cashInRequest"]>
+  export type CashInRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "reviewWindowId" | "candidateId" | "examBoardId" | "examSeriesId" | "qualificationId" | "subjectId" | "cashInCode" | "feeScheduleId" | "quoteMatchLevel" | "quotedCostCurrency" | "quotedCostAmount" | "quotedSalesCurrency" | "quotedSalesAmount" | "status" | "requestedByUserId" | "reason" | "notes" | "feeStatementId" | "createdAt" | "updatedAt", ExtArgs["result"]["cashInRequest"]>
   export type CashInRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    reviewWindow?: boolean | ReviewWindowDefaultArgs<ExtArgs>
+    reviewWindow?: boolean | CashInRequest$reviewWindowArgs<ExtArgs>
     candidate?: boolean | CandidateDefaultArgs<ExtArgs>
     examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
     examSeries?: boolean | ExamSeriesDefaultArgs<ExtArgs>
-    qualification?: boolean | CashInRequest$qualificationArgs<ExtArgs>
-    subject?: boolean | CashInRequest$subjectArgs<ExtArgs>
+    qualification?: boolean | QualificationDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+    feeSchedule?: boolean | CashInRequest$feeScheduleArgs<ExtArgs>
     requestedBy?: boolean | UserDefaultArgs<ExtArgs>
     feeStatement?: boolean | CashInRequest$feeStatementArgs<ExtArgs>
   }
@@ -59643,23 +59756,31 @@ export namespace Prisma {
   export type $CashInRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CashInRequest"
     objects: {
-      reviewWindow: Prisma.$ReviewWindowPayload<ExtArgs>
+      reviewWindow: Prisma.$ReviewWindowPayload<ExtArgs> | null
       candidate: Prisma.$CandidatePayload<ExtArgs>
       examBoard: Prisma.$ExamBoardPayload<ExtArgs>
       examSeries: Prisma.$ExamSeriesPayload<ExtArgs>
-      qualification: Prisma.$QualificationPayload<ExtArgs> | null
-      subject: Prisma.$SubjectPayload<ExtArgs> | null
+      qualification: Prisma.$QualificationPayload<ExtArgs>
+      subject: Prisma.$SubjectPayload<ExtArgs>
+      feeSchedule: Prisma.$FeeSchedulePayload<ExtArgs> | null
       requestedBy: Prisma.$UserPayload<ExtArgs>
       feeStatement: Prisma.$FeeStatementPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      reviewWindowId: string
+      reviewWindowId: string | null
       candidateId: string
       examBoardId: string
       examSeriesId: string
-      qualificationId: string | null
-      subjectId: string | null
+      qualificationId: string
+      subjectId: string
+      cashInCode: string
+      feeScheduleId: string | null
+      quoteMatchLevel: string | null
+      quotedCostCurrency: $Enums.FeeCurrency | null
+      quotedCostAmount: Prisma.Decimal | null
+      quotedSalesCurrency: $Enums.FeeCurrency | null
+      quotedSalesAmount: Prisma.Decimal | null
       status: $Enums.PostResultRequestStatus
       requestedByUserId: string
       reason: string | null
@@ -60007,12 +60128,13 @@ export namespace Prisma {
    */
   export interface Prisma__CashInRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    reviewWindow<T extends ReviewWindowDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ReviewWindowDefaultArgs<ExtArgs>>): Prisma__ReviewWindowClient<$Result.GetResult<Prisma.$ReviewWindowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    reviewWindow<T extends CashInRequest$reviewWindowArgs<ExtArgs> = {}>(args?: Subset<T, CashInRequest$reviewWindowArgs<ExtArgs>>): Prisma__ReviewWindowClient<$Result.GetResult<Prisma.$ReviewWindowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     candidate<T extends CandidateDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CandidateDefaultArgs<ExtArgs>>): Prisma__CandidateClient<$Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     examBoard<T extends ExamBoardDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoardDefaultArgs<ExtArgs>>): Prisma__ExamBoardClient<$Result.GetResult<Prisma.$ExamBoardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     examSeries<T extends ExamSeriesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamSeriesDefaultArgs<ExtArgs>>): Prisma__ExamSeriesClient<$Result.GetResult<Prisma.$ExamSeriesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    qualification<T extends CashInRequest$qualificationArgs<ExtArgs> = {}>(args?: Subset<T, CashInRequest$qualificationArgs<ExtArgs>>): Prisma__QualificationClient<$Result.GetResult<Prisma.$QualificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    subject<T extends CashInRequest$subjectArgs<ExtArgs> = {}>(args?: Subset<T, CashInRequest$subjectArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    qualification<T extends QualificationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, QualificationDefaultArgs<ExtArgs>>): Prisma__QualificationClient<$Result.GetResult<Prisma.$QualificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    feeSchedule<T extends CashInRequest$feeScheduleArgs<ExtArgs> = {}>(args?: Subset<T, CashInRequest$feeScheduleArgs<ExtArgs>>): Prisma__FeeScheduleClient<$Result.GetResult<Prisma.$FeeSchedulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     requestedBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     feeStatement<T extends CashInRequest$feeStatementArgs<ExtArgs> = {}>(args?: Subset<T, CashInRequest$feeStatementArgs<ExtArgs>>): Prisma__FeeStatementClient<$Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -60051,6 +60173,13 @@ export namespace Prisma {
     readonly examSeriesId: FieldRef<"CashInRequest", 'String'>
     readonly qualificationId: FieldRef<"CashInRequest", 'String'>
     readonly subjectId: FieldRef<"CashInRequest", 'String'>
+    readonly cashInCode: FieldRef<"CashInRequest", 'String'>
+    readonly feeScheduleId: FieldRef<"CashInRequest", 'String'>
+    readonly quoteMatchLevel: FieldRef<"CashInRequest", 'String'>
+    readonly quotedCostCurrency: FieldRef<"CashInRequest", 'FeeCurrency'>
+    readonly quotedCostAmount: FieldRef<"CashInRequest", 'Decimal'>
+    readonly quotedSalesCurrency: FieldRef<"CashInRequest", 'FeeCurrency'>
+    readonly quotedSalesAmount: FieldRef<"CashInRequest", 'Decimal'>
     readonly status: FieldRef<"CashInRequest", 'PostResultRequestStatus'>
     readonly requestedByUserId: FieldRef<"CashInRequest", 'String'>
     readonly reason: FieldRef<"CashInRequest", 'String'>
@@ -60401,41 +60530,41 @@ export namespace Prisma {
   }
 
   /**
-   * CashInRequest.qualification
+   * CashInRequest.reviewWindow
    */
-  export type CashInRequest$qualificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CashInRequest$reviewWindowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Qualification
+     * Select specific fields to fetch from the ReviewWindow
      */
-    select?: QualificationSelect<ExtArgs> | null
+    select?: ReviewWindowSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Qualification
+     * Omit specific fields from the ReviewWindow
      */
-    omit?: QualificationOmit<ExtArgs> | null
+    omit?: ReviewWindowOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: QualificationInclude<ExtArgs> | null
-    where?: QualificationWhereInput
+    include?: ReviewWindowInclude<ExtArgs> | null
+    where?: ReviewWindowWhereInput
   }
 
   /**
-   * CashInRequest.subject
+   * CashInRequest.feeSchedule
    */
-  export type CashInRequest$subjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type CashInRequest$feeScheduleArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Subject
+     * Select specific fields to fetch from the FeeSchedule
      */
-    select?: SubjectSelect<ExtArgs> | null
+    select?: FeeScheduleSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Subject
+     * Omit specific fields from the FeeSchedule
      */
-    omit?: SubjectOmit<ExtArgs> | null
+    omit?: FeeScheduleOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: SubjectInclude<ExtArgs> | null
-    where?: SubjectWhereInput
+    include?: FeeScheduleInclude<ExtArgs> | null
+    where?: FeeScheduleWhereInput
   }
 
   /**
@@ -63094,6 +63223,7 @@ export namespace Prisma {
     paper?: boolean | FeeSchedule$paperArgs<ExtArgs>
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
     feeStatementItems?: boolean | FeeSchedule$feeStatementItemsArgs<ExtArgs>
+    cashInRequests?: boolean | FeeSchedule$cashInRequestsArgs<ExtArgs>
     _count?: boolean | FeeScheduleCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feeSchedule"]>
 
@@ -63134,6 +63264,7 @@ export namespace Prisma {
     paper?: boolean | FeeSchedule$paperArgs<ExtArgs>
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
     feeStatementItems?: boolean | FeeSchedule$feeStatementItemsArgs<ExtArgs>
+    cashInRequests?: boolean | FeeSchedule$cashInRequestsArgs<ExtArgs>
     _count?: boolean | FeeScheduleCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -63147,6 +63278,7 @@ export namespace Prisma {
       paper: Prisma.$PaperPayload<ExtArgs> | null
       createdBy: Prisma.$UserPayload<ExtArgs>
       feeStatementItems: Prisma.$FeeStatementItemPayload<ExtArgs>[]
+      cashInRequests: Prisma.$CashInRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -63519,6 +63651,7 @@ export namespace Prisma {
     paper<T extends FeeSchedule$paperArgs<ExtArgs> = {}>(args?: Subset<T, FeeSchedule$paperArgs<ExtArgs>>): Prisma__PaperClient<$Result.GetResult<Prisma.$PaperPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     feeStatementItems<T extends FeeSchedule$feeStatementItemsArgs<ExtArgs> = {}>(args?: Subset<T, FeeSchedule$feeStatementItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cashInRequests<T extends FeeSchedule$cashInRequestsArgs<ExtArgs> = {}>(args?: Subset<T, FeeSchedule$cashInRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -64011,6 +64144,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeeStatementItemScalarFieldEnum | FeeStatementItemScalarFieldEnum[]
+  }
+
+  /**
+   * FeeSchedule.cashInRequests
+   */
+  export type FeeSchedule$cashInRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInRequest
+     */
+    select?: CashInRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInRequest
+     */
+    omit?: CashInRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInRequestInclude<ExtArgs> | null
+    where?: CashInRequestWhereInput
+    orderBy?: CashInRequestOrderByWithRelationInput | CashInRequestOrderByWithRelationInput[]
+    cursor?: CashInRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CashInRequestScalarFieldEnum | CashInRequestScalarFieldEnum[]
   }
 
   /**
@@ -68174,6 +68331,13 @@ export namespace Prisma {
     examSeriesId: 'examSeriesId',
     qualificationId: 'qualificationId',
     subjectId: 'subjectId',
+    cashInCode: 'cashInCode',
+    feeScheduleId: 'feeScheduleId',
+    quoteMatchLevel: 'quoteMatchLevel',
+    quotedCostCurrency: 'quotedCostCurrency',
+    quotedCostAmount: 'quotedCostAmount',
+    quotedSalesCurrency: 'quotedSalesCurrency',
+    quotedSalesAmount: 'quotedSalesAmount',
     status: 'status',
     requestedByUserId: 'requestedByUserId',
     reason: 'reason',
@@ -68953,6 +69117,9 @@ export namespace Prisma {
     examSeriesId: 'examSeriesId',
     qualificationId: 'qualificationId',
     subjectId: 'subjectId',
+    cashInCode: 'cashInCode',
+    feeScheduleId: 'feeScheduleId',
+    quoteMatchLevel: 'quoteMatchLevel',
     requestedByUserId: 'requestedByUserId',
     reason: 'reason',
     notes: 'notes',
@@ -74759,12 +74926,19 @@ export namespace Prisma {
     OR?: CashInRequestWhereInput[]
     NOT?: CashInRequestWhereInput | CashInRequestWhereInput[]
     id?: StringFilter<"CashInRequest"> | string
-    reviewWindowId?: StringFilter<"CashInRequest"> | string
+    reviewWindowId?: StringNullableFilter<"CashInRequest"> | string | null
     candidateId?: StringFilter<"CashInRequest"> | string
     examBoardId?: StringFilter<"CashInRequest"> | string
     examSeriesId?: StringFilter<"CashInRequest"> | string
-    qualificationId?: StringNullableFilter<"CashInRequest"> | string | null
-    subjectId?: StringNullableFilter<"CashInRequest"> | string | null
+    qualificationId?: StringFilter<"CashInRequest"> | string
+    subjectId?: StringFilter<"CashInRequest"> | string
+    cashInCode?: StringFilter<"CashInRequest"> | string
+    feeScheduleId?: StringNullableFilter<"CashInRequest"> | string | null
+    quoteMatchLevel?: StringNullableFilter<"CashInRequest"> | string | null
+    quotedCostCurrency?: EnumFeeCurrencyNullableFilter<"CashInRequest"> | $Enums.FeeCurrency | null
+    quotedCostAmount?: DecimalNullableFilter<"CashInRequest"> | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: EnumFeeCurrencyNullableFilter<"CashInRequest"> | $Enums.FeeCurrency | null
+    quotedSalesAmount?: DecimalNullableFilter<"CashInRequest"> | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFilter<"CashInRequest"> | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFilter<"CashInRequest"> | string
     reason?: StringNullableFilter<"CashInRequest"> | string | null
@@ -74772,24 +74946,32 @@ export namespace Prisma {
     feeStatementId?: StringNullableFilter<"CashInRequest"> | string | null
     createdAt?: DateTimeFilter<"CashInRequest"> | Date | string
     updatedAt?: DateTimeFilter<"CashInRequest"> | Date | string
-    reviewWindow?: XOR<ReviewWindowScalarRelationFilter, ReviewWindowWhereInput>
+    reviewWindow?: XOR<ReviewWindowNullableScalarRelationFilter, ReviewWindowWhereInput> | null
     candidate?: XOR<CandidateScalarRelationFilter, CandidateWhereInput>
     examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
     examSeries?: XOR<ExamSeriesScalarRelationFilter, ExamSeriesWhereInput>
-    qualification?: XOR<QualificationNullableScalarRelationFilter, QualificationWhereInput> | null
-    subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
+    qualification?: XOR<QualificationScalarRelationFilter, QualificationWhereInput>
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    feeSchedule?: XOR<FeeScheduleNullableScalarRelationFilter, FeeScheduleWhereInput> | null
     requestedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
     feeStatement?: XOR<FeeStatementNullableScalarRelationFilter, FeeStatementWhereInput> | null
   }
 
   export type CashInRequestOrderByWithRelationInput = {
     id?: SortOrder
-    reviewWindowId?: SortOrder
+    reviewWindowId?: SortOrderInput | SortOrder
     candidateId?: SortOrder
     examBoardId?: SortOrder
     examSeriesId?: SortOrder
-    qualificationId?: SortOrderInput | SortOrder
-    subjectId?: SortOrderInput | SortOrder
+    qualificationId?: SortOrder
+    subjectId?: SortOrder
+    cashInCode?: SortOrder
+    feeScheduleId?: SortOrderInput | SortOrder
+    quoteMatchLevel?: SortOrderInput | SortOrder
+    quotedCostCurrency?: SortOrderInput | SortOrder
+    quotedCostAmount?: SortOrderInput | SortOrder
+    quotedSalesCurrency?: SortOrderInput | SortOrder
+    quotedSalesAmount?: SortOrderInput | SortOrder
     status?: SortOrder
     requestedByUserId?: SortOrder
     reason?: SortOrderInput | SortOrder
@@ -74803,6 +74985,7 @@ export namespace Prisma {
     examSeries?: ExamSeriesOrderByWithRelationInput
     qualification?: QualificationOrderByWithRelationInput
     subject?: SubjectOrderByWithRelationInput
+    feeSchedule?: FeeScheduleOrderByWithRelationInput
     requestedBy?: UserOrderByWithRelationInput
     feeStatement?: FeeStatementOrderByWithRelationInput
     _relevance?: CashInRequestOrderByRelevanceInput
@@ -74813,12 +74996,19 @@ export namespace Prisma {
     AND?: CashInRequestWhereInput | CashInRequestWhereInput[]
     OR?: CashInRequestWhereInput[]
     NOT?: CashInRequestWhereInput | CashInRequestWhereInput[]
-    reviewWindowId?: StringFilter<"CashInRequest"> | string
+    reviewWindowId?: StringNullableFilter<"CashInRequest"> | string | null
     candidateId?: StringFilter<"CashInRequest"> | string
     examBoardId?: StringFilter<"CashInRequest"> | string
     examSeriesId?: StringFilter<"CashInRequest"> | string
-    qualificationId?: StringNullableFilter<"CashInRequest"> | string | null
-    subjectId?: StringNullableFilter<"CashInRequest"> | string | null
+    qualificationId?: StringFilter<"CashInRequest"> | string
+    subjectId?: StringFilter<"CashInRequest"> | string
+    cashInCode?: StringFilter<"CashInRequest"> | string
+    feeScheduleId?: StringNullableFilter<"CashInRequest"> | string | null
+    quoteMatchLevel?: StringNullableFilter<"CashInRequest"> | string | null
+    quotedCostCurrency?: EnumFeeCurrencyNullableFilter<"CashInRequest"> | $Enums.FeeCurrency | null
+    quotedCostAmount?: DecimalNullableFilter<"CashInRequest"> | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: EnumFeeCurrencyNullableFilter<"CashInRequest"> | $Enums.FeeCurrency | null
+    quotedSalesAmount?: DecimalNullableFilter<"CashInRequest"> | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFilter<"CashInRequest"> | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFilter<"CashInRequest"> | string
     reason?: StringNullableFilter<"CashInRequest"> | string | null
@@ -74826,24 +75016,32 @@ export namespace Prisma {
     feeStatementId?: StringNullableFilter<"CashInRequest"> | string | null
     createdAt?: DateTimeFilter<"CashInRequest"> | Date | string
     updatedAt?: DateTimeFilter<"CashInRequest"> | Date | string
-    reviewWindow?: XOR<ReviewWindowScalarRelationFilter, ReviewWindowWhereInput>
+    reviewWindow?: XOR<ReviewWindowNullableScalarRelationFilter, ReviewWindowWhereInput> | null
     candidate?: XOR<CandidateScalarRelationFilter, CandidateWhereInput>
     examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
     examSeries?: XOR<ExamSeriesScalarRelationFilter, ExamSeriesWhereInput>
-    qualification?: XOR<QualificationNullableScalarRelationFilter, QualificationWhereInput> | null
-    subject?: XOR<SubjectNullableScalarRelationFilter, SubjectWhereInput> | null
+    qualification?: XOR<QualificationScalarRelationFilter, QualificationWhereInput>
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+    feeSchedule?: XOR<FeeScheduleNullableScalarRelationFilter, FeeScheduleWhereInput> | null
     requestedBy?: XOR<UserScalarRelationFilter, UserWhereInput>
     feeStatement?: XOR<FeeStatementNullableScalarRelationFilter, FeeStatementWhereInput> | null
   }, "id">
 
   export type CashInRequestOrderByWithAggregationInput = {
     id?: SortOrder
-    reviewWindowId?: SortOrder
+    reviewWindowId?: SortOrderInput | SortOrder
     candidateId?: SortOrder
     examBoardId?: SortOrder
     examSeriesId?: SortOrder
-    qualificationId?: SortOrderInput | SortOrder
-    subjectId?: SortOrderInput | SortOrder
+    qualificationId?: SortOrder
+    subjectId?: SortOrder
+    cashInCode?: SortOrder
+    feeScheduleId?: SortOrderInput | SortOrder
+    quoteMatchLevel?: SortOrderInput | SortOrder
+    quotedCostCurrency?: SortOrderInput | SortOrder
+    quotedCostAmount?: SortOrderInput | SortOrder
+    quotedSalesCurrency?: SortOrderInput | SortOrder
+    quotedSalesAmount?: SortOrderInput | SortOrder
     status?: SortOrder
     requestedByUserId?: SortOrder
     reason?: SortOrderInput | SortOrder
@@ -74852,8 +75050,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CashInRequestCountOrderByAggregateInput
+    _avg?: CashInRequestAvgOrderByAggregateInput
     _max?: CashInRequestMaxOrderByAggregateInput
     _min?: CashInRequestMinOrderByAggregateInput
+    _sum?: CashInRequestSumOrderByAggregateInput
   }
 
   export type CashInRequestScalarWhereWithAggregatesInput = {
@@ -74861,12 +75061,19 @@ export namespace Prisma {
     OR?: CashInRequestScalarWhereWithAggregatesInput[]
     NOT?: CashInRequestScalarWhereWithAggregatesInput | CashInRequestScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"CashInRequest"> | string
-    reviewWindowId?: StringWithAggregatesFilter<"CashInRequest"> | string
+    reviewWindowId?: StringNullableWithAggregatesFilter<"CashInRequest"> | string | null
     candidateId?: StringWithAggregatesFilter<"CashInRequest"> | string
     examBoardId?: StringWithAggregatesFilter<"CashInRequest"> | string
     examSeriesId?: StringWithAggregatesFilter<"CashInRequest"> | string
-    qualificationId?: StringNullableWithAggregatesFilter<"CashInRequest"> | string | null
-    subjectId?: StringNullableWithAggregatesFilter<"CashInRequest"> | string | null
+    qualificationId?: StringWithAggregatesFilter<"CashInRequest"> | string
+    subjectId?: StringWithAggregatesFilter<"CashInRequest"> | string
+    cashInCode?: StringWithAggregatesFilter<"CashInRequest"> | string
+    feeScheduleId?: StringNullableWithAggregatesFilter<"CashInRequest"> | string | null
+    quoteMatchLevel?: StringNullableWithAggregatesFilter<"CashInRequest"> | string | null
+    quotedCostCurrency?: EnumFeeCurrencyNullableWithAggregatesFilter<"CashInRequest"> | $Enums.FeeCurrency | null
+    quotedCostAmount?: DecimalNullableWithAggregatesFilter<"CashInRequest"> | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: EnumFeeCurrencyNullableWithAggregatesFilter<"CashInRequest"> | $Enums.FeeCurrency | null
+    quotedSalesAmount?: DecimalNullableWithAggregatesFilter<"CashInRequest"> | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusWithAggregatesFilter<"CashInRequest"> | $Enums.PostResultRequestStatus
     requestedByUserId?: StringWithAggregatesFilter<"CashInRequest"> | string
     reason?: StringNullableWithAggregatesFilter<"CashInRequest"> | string | null
@@ -75149,6 +75356,7 @@ export namespace Prisma {
     paper?: XOR<PaperNullableScalarRelationFilter, PaperWhereInput> | null
     createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
     feeStatementItems?: FeeStatementItemListRelationFilter
+    cashInRequests?: CashInRequestListRelationFilter
   }
 
   export type FeeScheduleOrderByWithRelationInput = {
@@ -75182,6 +75390,7 @@ export namespace Prisma {
     paper?: PaperOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
     feeStatementItems?: FeeStatementItemOrderByRelationAggregateInput
+    cashInRequests?: CashInRequestOrderByRelationAggregateInput
     _relevance?: FeeScheduleOrderByRelevanceInput
   }
 
@@ -75219,6 +75428,7 @@ export namespace Prisma {
     paper?: XOR<PaperNullableScalarRelationFilter, PaperWhereInput> | null
     createdBy?: XOR<UserScalarRelationFilter, UserWhereInput>
     feeStatementItems?: FeeStatementItemListRelationFilter
+    cashInRequests?: CashInRequestListRelationFilter
   }, "id">
 
   export type FeeScheduleOrderByWithAggregationInput = {
@@ -81395,29 +81605,43 @@ export namespace Prisma {
 
   export type CashInRequestCreateInput = {
     id?: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviewWindow: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
     candidate: CandidateCreateNestedOneWithoutCashInRequestsInput
     examBoard: ExamBoardCreateNestedOneWithoutCashInRequestsInput
     examSeries: ExamSeriesCreateNestedOneWithoutCashInRequestsInput
-    qualification?: QualificationCreateNestedOneWithoutCashInRequestsInput
-    subject?: SubjectCreateNestedOneWithoutCashInRequestsInput
+    qualification: QualificationCreateNestedOneWithoutCashInRequestsInput
+    subject: SubjectCreateNestedOneWithoutCashInRequestsInput
+    feeSchedule?: FeeScheduleCreateNestedOneWithoutCashInRequestsInput
     requestedBy: UserCreateNestedOneWithoutCashInRequestsRequestedInput
     feeStatement?: FeeStatementCreateNestedOneWithoutCashInRequestsInput
   }
 
   export type CashInRequestUncheckedCreateInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -81429,29 +81653,43 @@ export namespace Prisma {
 
   export type CashInRequestUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewWindow?: ReviewWindowUpdateOneRequiredWithoutCashInRequestsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutCashInRequestsNestedInput
     candidate?: CandidateUpdateOneRequiredWithoutCashInRequestsNestedInput
     examBoard?: ExamBoardUpdateOneRequiredWithoutCashInRequestsNestedInput
     examSeries?: ExamSeriesUpdateOneRequiredWithoutCashInRequestsNestedInput
-    qualification?: QualificationUpdateOneWithoutCashInRequestsNestedInput
-    subject?: SubjectUpdateOneWithoutCashInRequestsNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInRequestsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInRequestsNestedInput
+    feeSchedule?: FeeScheduleUpdateOneWithoutCashInRequestsNestedInput
     requestedBy?: UserUpdateOneRequiredWithoutCashInRequestsRequestedNestedInput
     feeStatement?: FeeStatementUpdateOneWithoutCashInRequestsNestedInput
   }
 
   export type CashInRequestUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81463,12 +81701,19 @@ export namespace Prisma {
 
   export type CashInRequestCreateManyInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -81480,6 +81725,12 @@ export namespace Prisma {
 
   export type CashInRequestUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81489,12 +81740,19 @@ export namespace Prisma {
 
   export type CashInRequestUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81744,6 +82002,7 @@ export namespace Prisma {
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
     createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleUncheckedCreateInput = {
@@ -81771,6 +82030,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleUpdateInput = {
@@ -81798,6 +82058,7 @@ export namespace Prisma {
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
     createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateInput = {
@@ -81825,6 +82086,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleCreateManyInput = {
@@ -86763,6 +87025,13 @@ export namespace Prisma {
     examSeriesId?: SortOrder
     qualificationId?: SortOrder
     subjectId?: SortOrder
+    cashInCode?: SortOrder
+    feeScheduleId?: SortOrder
+    quoteMatchLevel?: SortOrder
+    quotedCostCurrency?: SortOrder
+    quotedCostAmount?: SortOrder
+    quotedSalesCurrency?: SortOrder
+    quotedSalesAmount?: SortOrder
     status?: SortOrder
     requestedByUserId?: SortOrder
     reason?: SortOrder
@@ -86770,6 +87039,11 @@ export namespace Prisma {
     feeStatementId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type CashInRequestAvgOrderByAggregateInput = {
+    quotedCostAmount?: SortOrder
+    quotedSalesAmount?: SortOrder
   }
 
   export type CashInRequestMaxOrderByAggregateInput = {
@@ -86780,6 +87054,13 @@ export namespace Prisma {
     examSeriesId?: SortOrder
     qualificationId?: SortOrder
     subjectId?: SortOrder
+    cashInCode?: SortOrder
+    feeScheduleId?: SortOrder
+    quoteMatchLevel?: SortOrder
+    quotedCostCurrency?: SortOrder
+    quotedCostAmount?: SortOrder
+    quotedSalesCurrency?: SortOrder
+    quotedSalesAmount?: SortOrder
     status?: SortOrder
     requestedByUserId?: SortOrder
     reason?: SortOrder
@@ -86797,6 +87078,13 @@ export namespace Prisma {
     examSeriesId?: SortOrder
     qualificationId?: SortOrder
     subjectId?: SortOrder
+    cashInCode?: SortOrder
+    feeScheduleId?: SortOrder
+    quoteMatchLevel?: SortOrder
+    quotedCostCurrency?: SortOrder
+    quotedCostAmount?: SortOrder
+    quotedSalesCurrency?: SortOrder
+    quotedSalesAmount?: SortOrder
     status?: SortOrder
     requestedByUserId?: SortOrder
     reason?: SortOrder
@@ -86804,6 +87092,11 @@ export namespace Prisma {
     feeStatementId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type CashInRequestSumOrderByAggregateInput = {
+    quotedCostAmount?: SortOrder
+    quotedSalesAmount?: SortOrder
   }
 
   export type EnumPostResultRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -96918,6 +97211,12 @@ export namespace Prisma {
     connect?: SubjectWhereUniqueInput
   }
 
+  export type FeeScheduleCreateNestedOneWithoutCashInRequestsInput = {
+    create?: XOR<FeeScheduleCreateWithoutCashInRequestsInput, FeeScheduleUncheckedCreateWithoutCashInRequestsInput>
+    connectOrCreate?: FeeScheduleCreateOrConnectWithoutCashInRequestsInput
+    connect?: FeeScheduleWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutCashInRequestsRequestedInput = {
     create?: XOR<UserCreateWithoutCashInRequestsRequestedInput, UserUncheckedCreateWithoutCashInRequestsRequestedInput>
     connectOrCreate?: UserCreateOrConnectWithoutCashInRequestsRequestedInput
@@ -96934,10 +97233,12 @@ export namespace Prisma {
     set?: $Enums.PostResultRequestStatus
   }
 
-  export type ReviewWindowUpdateOneRequiredWithoutCashInRequestsNestedInput = {
+  export type ReviewWindowUpdateOneWithoutCashInRequestsNestedInput = {
     create?: XOR<ReviewWindowCreateWithoutCashInRequestsInput, ReviewWindowUncheckedCreateWithoutCashInRequestsInput>
     connectOrCreate?: ReviewWindowCreateOrConnectWithoutCashInRequestsInput
     upsert?: ReviewWindowUpsertWithoutCashInRequestsInput
+    disconnect?: ReviewWindowWhereInput | boolean
+    delete?: ReviewWindowWhereInput | boolean
     connect?: ReviewWindowWhereUniqueInput
     update?: XOR<XOR<ReviewWindowUpdateToOneWithWhereWithoutCashInRequestsInput, ReviewWindowUpdateWithoutCashInRequestsInput>, ReviewWindowUncheckedUpdateWithoutCashInRequestsInput>
   }
@@ -96966,24 +97267,30 @@ export namespace Prisma {
     update?: XOR<XOR<ExamSeriesUpdateToOneWithWhereWithoutCashInRequestsInput, ExamSeriesUpdateWithoutCashInRequestsInput>, ExamSeriesUncheckedUpdateWithoutCashInRequestsInput>
   }
 
-  export type QualificationUpdateOneWithoutCashInRequestsNestedInput = {
+  export type QualificationUpdateOneRequiredWithoutCashInRequestsNestedInput = {
     create?: XOR<QualificationCreateWithoutCashInRequestsInput, QualificationUncheckedCreateWithoutCashInRequestsInput>
     connectOrCreate?: QualificationCreateOrConnectWithoutCashInRequestsInput
     upsert?: QualificationUpsertWithoutCashInRequestsInput
-    disconnect?: QualificationWhereInput | boolean
-    delete?: QualificationWhereInput | boolean
     connect?: QualificationWhereUniqueInput
     update?: XOR<XOR<QualificationUpdateToOneWithWhereWithoutCashInRequestsInput, QualificationUpdateWithoutCashInRequestsInput>, QualificationUncheckedUpdateWithoutCashInRequestsInput>
   }
 
-  export type SubjectUpdateOneWithoutCashInRequestsNestedInput = {
+  export type SubjectUpdateOneRequiredWithoutCashInRequestsNestedInput = {
     create?: XOR<SubjectCreateWithoutCashInRequestsInput, SubjectUncheckedCreateWithoutCashInRequestsInput>
     connectOrCreate?: SubjectCreateOrConnectWithoutCashInRequestsInput
     upsert?: SubjectUpsertWithoutCashInRequestsInput
-    disconnect?: SubjectWhereInput | boolean
-    delete?: SubjectWhereInput | boolean
     connect?: SubjectWhereUniqueInput
     update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutCashInRequestsInput, SubjectUpdateWithoutCashInRequestsInput>, SubjectUncheckedUpdateWithoutCashInRequestsInput>
+  }
+
+  export type FeeScheduleUpdateOneWithoutCashInRequestsNestedInput = {
+    create?: XOR<FeeScheduleCreateWithoutCashInRequestsInput, FeeScheduleUncheckedCreateWithoutCashInRequestsInput>
+    connectOrCreate?: FeeScheduleCreateOrConnectWithoutCashInRequestsInput
+    upsert?: FeeScheduleUpsertWithoutCashInRequestsInput
+    disconnect?: FeeScheduleWhereInput | boolean
+    delete?: FeeScheduleWhereInput | boolean
+    connect?: FeeScheduleWhereUniqueInput
+    update?: XOR<XOR<FeeScheduleUpdateToOneWithWhereWithoutCashInRequestsInput, FeeScheduleUpdateWithoutCashInRequestsInput>, FeeScheduleUncheckedUpdateWithoutCashInRequestsInput>
   }
 
   export type UserUpdateOneRequiredWithoutCashInRequestsRequestedNestedInput = {
@@ -97287,11 +97594,25 @@ export namespace Prisma {
     connect?: FeeStatementItemWhereUniqueInput | FeeStatementItemWhereUniqueInput[]
   }
 
+  export type CashInRequestCreateNestedManyWithoutFeeScheduleInput = {
+    create?: XOR<CashInRequestCreateWithoutFeeScheduleInput, CashInRequestUncheckedCreateWithoutFeeScheduleInput> | CashInRequestCreateWithoutFeeScheduleInput[] | CashInRequestUncheckedCreateWithoutFeeScheduleInput[]
+    connectOrCreate?: CashInRequestCreateOrConnectWithoutFeeScheduleInput | CashInRequestCreateOrConnectWithoutFeeScheduleInput[]
+    createMany?: CashInRequestCreateManyFeeScheduleInputEnvelope
+    connect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+  }
+
   export type FeeStatementItemUncheckedCreateNestedManyWithoutFeeScheduleInput = {
     create?: XOR<FeeStatementItemCreateWithoutFeeScheduleInput, FeeStatementItemUncheckedCreateWithoutFeeScheduleInput> | FeeStatementItemCreateWithoutFeeScheduleInput[] | FeeStatementItemUncheckedCreateWithoutFeeScheduleInput[]
     connectOrCreate?: FeeStatementItemCreateOrConnectWithoutFeeScheduleInput | FeeStatementItemCreateOrConnectWithoutFeeScheduleInput[]
     createMany?: FeeStatementItemCreateManyFeeScheduleInputEnvelope
     connect?: FeeStatementItemWhereUniqueInput | FeeStatementItemWhereUniqueInput[]
+  }
+
+  export type CashInRequestUncheckedCreateNestedManyWithoutFeeScheduleInput = {
+    create?: XOR<CashInRequestCreateWithoutFeeScheduleInput, CashInRequestUncheckedCreateWithoutFeeScheduleInput> | CashInRequestCreateWithoutFeeScheduleInput[] | CashInRequestUncheckedCreateWithoutFeeScheduleInput[]
+    connectOrCreate?: CashInRequestCreateOrConnectWithoutFeeScheduleInput | CashInRequestCreateOrConnectWithoutFeeScheduleInput[]
+    createMany?: CashInRequestCreateManyFeeScheduleInputEnvelope
+    connect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
   }
 
   export type EnumFeeScheduleServiceTypeFieldUpdateOperationsInput = {
@@ -97372,6 +97693,20 @@ export namespace Prisma {
     deleteMany?: FeeStatementItemScalarWhereInput | FeeStatementItemScalarWhereInput[]
   }
 
+  export type CashInRequestUpdateManyWithoutFeeScheduleNestedInput = {
+    create?: XOR<CashInRequestCreateWithoutFeeScheduleInput, CashInRequestUncheckedCreateWithoutFeeScheduleInput> | CashInRequestCreateWithoutFeeScheduleInput[] | CashInRequestUncheckedCreateWithoutFeeScheduleInput[]
+    connectOrCreate?: CashInRequestCreateOrConnectWithoutFeeScheduleInput | CashInRequestCreateOrConnectWithoutFeeScheduleInput[]
+    upsert?: CashInRequestUpsertWithWhereUniqueWithoutFeeScheduleInput | CashInRequestUpsertWithWhereUniqueWithoutFeeScheduleInput[]
+    createMany?: CashInRequestCreateManyFeeScheduleInputEnvelope
+    set?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+    disconnect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+    delete?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+    connect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+    update?: CashInRequestUpdateWithWhereUniqueWithoutFeeScheduleInput | CashInRequestUpdateWithWhereUniqueWithoutFeeScheduleInput[]
+    updateMany?: CashInRequestUpdateManyWithWhereWithoutFeeScheduleInput | CashInRequestUpdateManyWithWhereWithoutFeeScheduleInput[]
+    deleteMany?: CashInRequestScalarWhereInput | CashInRequestScalarWhereInput[]
+  }
+
   export type FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleNestedInput = {
     create?: XOR<FeeStatementItemCreateWithoutFeeScheduleInput, FeeStatementItemUncheckedCreateWithoutFeeScheduleInput> | FeeStatementItemCreateWithoutFeeScheduleInput[] | FeeStatementItemUncheckedCreateWithoutFeeScheduleInput[]
     connectOrCreate?: FeeStatementItemCreateOrConnectWithoutFeeScheduleInput | FeeStatementItemCreateOrConnectWithoutFeeScheduleInput[]
@@ -97384,6 +97719,20 @@ export namespace Prisma {
     update?: FeeStatementItemUpdateWithWhereUniqueWithoutFeeScheduleInput | FeeStatementItemUpdateWithWhereUniqueWithoutFeeScheduleInput[]
     updateMany?: FeeStatementItemUpdateManyWithWhereWithoutFeeScheduleInput | FeeStatementItemUpdateManyWithWhereWithoutFeeScheduleInput[]
     deleteMany?: FeeStatementItemScalarWhereInput | FeeStatementItemScalarWhereInput[]
+  }
+
+  export type CashInRequestUncheckedUpdateManyWithoutFeeScheduleNestedInput = {
+    create?: XOR<CashInRequestCreateWithoutFeeScheduleInput, CashInRequestUncheckedCreateWithoutFeeScheduleInput> | CashInRequestCreateWithoutFeeScheduleInput[] | CashInRequestUncheckedCreateWithoutFeeScheduleInput[]
+    connectOrCreate?: CashInRequestCreateOrConnectWithoutFeeScheduleInput | CashInRequestCreateOrConnectWithoutFeeScheduleInput[]
+    upsert?: CashInRequestUpsertWithWhereUniqueWithoutFeeScheduleInput | CashInRequestUpsertWithWhereUniqueWithoutFeeScheduleInput[]
+    createMany?: CashInRequestCreateManyFeeScheduleInputEnvelope
+    set?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+    disconnect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+    delete?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+    connect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+    update?: CashInRequestUpdateWithWhereUniqueWithoutFeeScheduleInput | CashInRequestUpdateWithWhereUniqueWithoutFeeScheduleInput[]
+    updateMany?: CashInRequestUpdateManyWithWhereWithoutFeeScheduleInput | CashInRequestUpdateManyWithWhereWithoutFeeScheduleInput[]
+    deleteMany?: CashInRequestScalarWhereInput | CashInRequestScalarWhereInput[]
   }
 
   export type CandidateCreateNestedOneWithoutPostResultsAuditLogsInput = {
@@ -100728,6 +101077,7 @@ export namespace Prisma {
     subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleUncheckedCreateWithoutCreatedByInput = {
@@ -100754,6 +101104,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleCreateOrConnectWithoutCreatedByInput = {
@@ -100880,28 +101231,42 @@ export namespace Prisma {
 
   export type CashInRequestCreateWithoutRequestedByInput = {
     id?: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviewWindow: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
     candidate: CandidateCreateNestedOneWithoutCashInRequestsInput
     examBoard: ExamBoardCreateNestedOneWithoutCashInRequestsInput
     examSeries: ExamSeriesCreateNestedOneWithoutCashInRequestsInput
-    qualification?: QualificationCreateNestedOneWithoutCashInRequestsInput
-    subject?: SubjectCreateNestedOneWithoutCashInRequestsInput
+    qualification: QualificationCreateNestedOneWithoutCashInRequestsInput
+    subject: SubjectCreateNestedOneWithoutCashInRequestsInput
+    feeSchedule?: FeeScheduleCreateNestedOneWithoutCashInRequestsInput
     feeStatement?: FeeStatementCreateNestedOneWithoutCashInRequestsInput
   }
 
   export type CashInRequestUncheckedCreateWithoutRequestedByInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
@@ -102530,12 +102895,19 @@ export namespace Prisma {
     OR?: CashInRequestScalarWhereInput[]
     NOT?: CashInRequestScalarWhereInput | CashInRequestScalarWhereInput[]
     id?: StringFilter<"CashInRequest"> | string
-    reviewWindowId?: StringFilter<"CashInRequest"> | string
+    reviewWindowId?: StringNullableFilter<"CashInRequest"> | string | null
     candidateId?: StringFilter<"CashInRequest"> | string
     examBoardId?: StringFilter<"CashInRequest"> | string
     examSeriesId?: StringFilter<"CashInRequest"> | string
-    qualificationId?: StringNullableFilter<"CashInRequest"> | string | null
-    subjectId?: StringNullableFilter<"CashInRequest"> | string | null
+    qualificationId?: StringFilter<"CashInRequest"> | string
+    subjectId?: StringFilter<"CashInRequest"> | string
+    cashInCode?: StringFilter<"CashInRequest"> | string
+    feeScheduleId?: StringNullableFilter<"CashInRequest"> | string | null
+    quoteMatchLevel?: StringNullableFilter<"CashInRequest"> | string | null
+    quotedCostCurrency?: EnumFeeCurrencyNullableFilter<"CashInRequest"> | $Enums.FeeCurrency | null
+    quotedCostAmount?: DecimalNullableFilter<"CashInRequest"> | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: EnumFeeCurrencyNullableFilter<"CashInRequest"> | $Enums.FeeCurrency | null
+    quotedSalesAmount?: DecimalNullableFilter<"CashInRequest"> | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFilter<"CashInRequest"> | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFilter<"CashInRequest"> | string
     reason?: StringNullableFilter<"CashInRequest"> | string | null
@@ -105591,27 +105963,41 @@ export namespace Prisma {
 
   export type CashInRequestCreateWithoutCandidateInput = {
     id?: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviewWindow: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
     examBoard: ExamBoardCreateNestedOneWithoutCashInRequestsInput
     examSeries: ExamSeriesCreateNestedOneWithoutCashInRequestsInput
-    qualification?: QualificationCreateNestedOneWithoutCashInRequestsInput
-    subject?: SubjectCreateNestedOneWithoutCashInRequestsInput
+    qualification: QualificationCreateNestedOneWithoutCashInRequestsInput
+    subject: SubjectCreateNestedOneWithoutCashInRequestsInput
+    feeSchedule?: FeeScheduleCreateNestedOneWithoutCashInRequestsInput
     requestedBy: UserCreateNestedOneWithoutCashInRequestsRequestedInput
     feeStatement?: FeeStatementCreateNestedOneWithoutCashInRequestsInput
   }
 
   export type CashInRequestUncheckedCreateWithoutCandidateInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -118377,6 +118763,7 @@ export namespace Prisma {
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
     createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleUncheckedCreateWithoutExamBoardInput = {
@@ -118403,6 +118790,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleCreateOrConnectWithoutExamBoardInput = {
@@ -118473,27 +118861,41 @@ export namespace Prisma {
 
   export type CashInRequestCreateWithoutExamBoardInput = {
     id?: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviewWindow: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
     candidate: CandidateCreateNestedOneWithoutCashInRequestsInput
     examSeries: ExamSeriesCreateNestedOneWithoutCashInRequestsInput
-    qualification?: QualificationCreateNestedOneWithoutCashInRequestsInput
-    subject?: SubjectCreateNestedOneWithoutCashInRequestsInput
+    qualification: QualificationCreateNestedOneWithoutCashInRequestsInput
+    subject: SubjectCreateNestedOneWithoutCashInRequestsInput
+    feeSchedule?: FeeScheduleCreateNestedOneWithoutCashInRequestsInput
     requestedBy: UserCreateNestedOneWithoutCashInRequestsRequestedInput
     feeStatement?: FeeStatementCreateNestedOneWithoutCashInRequestsInput
   }
 
   export type CashInRequestUncheckedCreateWithoutExamBoardInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -119562,6 +119964,7 @@ export namespace Prisma {
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
     createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleUncheckedCreateWithoutQualificationInput = {
@@ -119588,6 +119991,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleCreateOrConnectWithoutQualificationInput = {
@@ -119602,27 +120006,41 @@ export namespace Prisma {
 
   export type CashInRequestCreateWithoutQualificationInput = {
     id?: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviewWindow: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
     candidate: CandidateCreateNestedOneWithoutCashInRequestsInput
     examBoard: ExamBoardCreateNestedOneWithoutCashInRequestsInput
     examSeries: ExamSeriesCreateNestedOneWithoutCashInRequestsInput
-    subject?: SubjectCreateNestedOneWithoutCashInRequestsInput
+    subject: SubjectCreateNestedOneWithoutCashInRequestsInput
+    feeSchedule?: FeeScheduleCreateNestedOneWithoutCashInRequestsInput
     requestedBy: UserCreateNestedOneWithoutCashInRequestsRequestedInput
     feeStatement?: FeeStatementCreateNestedOneWithoutCashInRequestsInput
   }
 
   export type CashInRequestUncheckedCreateWithoutQualificationInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    subjectId?: string | null
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -120262,6 +120680,7 @@ export namespace Prisma {
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
     createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleUncheckedCreateWithoutSubjectInput = {
@@ -120288,6 +120707,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleCreateOrConnectWithoutSubjectInput = {
@@ -120358,27 +120778,41 @@ export namespace Prisma {
 
   export type CashInRequestCreateWithoutSubjectInput = {
     id?: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviewWindow: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
     candidate: CandidateCreateNestedOneWithoutCashInRequestsInput
     examBoard: ExamBoardCreateNestedOneWithoutCashInRequestsInput
     examSeries: ExamSeriesCreateNestedOneWithoutCashInRequestsInput
-    qualification?: QualificationCreateNestedOneWithoutCashInRequestsInput
+    qualification: QualificationCreateNestedOneWithoutCashInRequestsInput
+    feeSchedule?: FeeScheduleCreateNestedOneWithoutCashInRequestsInput
     requestedBy: UserCreateNestedOneWithoutCashInRequestsRequestedInput
     feeStatement?: FeeStatementCreateNestedOneWithoutCashInRequestsInput
   }
 
   export type CashInRequestUncheckedCreateWithoutSubjectInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
+    qualificationId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -121723,6 +122157,7 @@ export namespace Prisma {
     subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
     createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleUncheckedCreateWithoutPaperInput = {
@@ -121749,6 +122184,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleCreateOrConnectWithoutPaperInput = {
@@ -122731,27 +123167,41 @@ export namespace Prisma {
 
   export type CashInRequestCreateWithoutExamSeriesInput = {
     id?: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviewWindow: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
     candidate: CandidateCreateNestedOneWithoutCashInRequestsInput
     examBoard: ExamBoardCreateNestedOneWithoutCashInRequestsInput
-    qualification?: QualificationCreateNestedOneWithoutCashInRequestsInput
-    subject?: SubjectCreateNestedOneWithoutCashInRequestsInput
+    qualification: QualificationCreateNestedOneWithoutCashInRequestsInput
+    subject: SubjectCreateNestedOneWithoutCashInRequestsInput
+    feeSchedule?: FeeScheduleCreateNestedOneWithoutCashInRequestsInput
     requestedBy: UserCreateNestedOneWithoutCashInRequestsRequestedInput
     feeStatement?: FeeStatementCreateNestedOneWithoutCashInRequestsInput
   }
 
   export type CashInRequestUncheckedCreateWithoutExamSeriesInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -122917,6 +123367,7 @@ export namespace Prisma {
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
     createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleUncheckedCreateWithoutExamSeriesInput = {
@@ -122943,6 +123394,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeScheduleInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleCreateOrConnectWithoutExamSeriesInput = {
@@ -129071,28 +129523,42 @@ export namespace Prisma {
 
   export type CashInRequestCreateWithoutFeeStatementInput = {
     id?: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    reviewWindow: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
     candidate: CandidateCreateNestedOneWithoutCashInRequestsInput
     examBoard: ExamBoardCreateNestedOneWithoutCashInRequestsInput
     examSeries: ExamSeriesCreateNestedOneWithoutCashInRequestsInput
-    qualification?: QualificationCreateNestedOneWithoutCashInRequestsInput
-    subject?: SubjectCreateNestedOneWithoutCashInRequestsInput
+    qualification: QualificationCreateNestedOneWithoutCashInRequestsInput
+    subject: SubjectCreateNestedOneWithoutCashInRequestsInput
+    feeSchedule?: FeeScheduleCreateNestedOneWithoutCashInRequestsInput
     requestedBy: UserCreateNestedOneWithoutCashInRequestsRequestedInput
   }
 
   export type CashInRequestUncheckedCreateWithoutFeeStatementInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -130831,6 +131297,7 @@ export namespace Prisma {
     subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
     paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
     createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleUncheckedCreateWithoutFeeStatementItemsInput = {
@@ -130857,6 +131324,7 @@ export namespace Prisma {
     createdByUserId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeScheduleInput
   }
 
   export type FeeScheduleCreateOrConnectWithoutFeeStatementItemsInput = {
@@ -131059,6 +131527,7 @@ export namespace Prisma {
     subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
     createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateWithoutFeeStatementItemsInput = {
@@ -131085,6 +131554,7 @@ export namespace Prisma {
     createdByUserId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type ExamSessionUpsertWithoutFeeStatementItemsInput = {
@@ -133069,6 +133539,12 @@ export namespace Prisma {
 
   export type CashInRequestCreateWithoutReviewWindowInput = {
     id?: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
@@ -133077,8 +133553,9 @@ export namespace Prisma {
     candidate: CandidateCreateNestedOneWithoutCashInRequestsInput
     examBoard: ExamBoardCreateNestedOneWithoutCashInRequestsInput
     examSeries: ExamSeriesCreateNestedOneWithoutCashInRequestsInput
-    qualification?: QualificationCreateNestedOneWithoutCashInRequestsInput
-    subject?: SubjectCreateNestedOneWithoutCashInRequestsInput
+    qualification: QualificationCreateNestedOneWithoutCashInRequestsInput
+    subject: SubjectCreateNestedOneWithoutCashInRequestsInput
+    feeSchedule?: FeeScheduleCreateNestedOneWithoutCashInRequestsInput
     requestedBy: UserCreateNestedOneWithoutCashInRequestsRequestedInput
     feeStatement?: FeeStatementCreateNestedOneWithoutCashInRequestsInput
   }
@@ -133088,8 +133565,15 @@ export namespace Prisma {
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -136035,6 +136519,65 @@ export namespace Prisma {
     create: XOR<SubjectCreateWithoutCashInRequestsInput, SubjectUncheckedCreateWithoutCashInRequestsInput>
   }
 
+  export type FeeScheduleCreateWithoutCashInRequestsInput = {
+    id?: string
+    serviceType: $Enums.FeeScheduleServiceType
+    entryType?: $Enums.FeeEntryType | null
+    reviewType?: string | null
+    version: number
+    effectiveFrom: Date | string
+    effectiveTo?: Date | string | null
+    status?: $Enums.FeeScheduleStatus
+    costCurrency: $Enums.FeeCurrency
+    costAmount: Decimal | DecimalJsLike | number | string
+    salesCurrency: $Enums.FeeCurrency
+    salesAmount: Decimal | DecimalJsLike | number | string
+    markupType?: $Enums.FeeMarkupType | null
+    markupValue?: Decimal | DecimalJsLike | number | string | null
+    exchangeRateToCny?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutFeeSchedulesInput
+    examSeries?: ExamSeriesCreateNestedOneWithoutFeeSchedulesInput
+    qualification?: QualificationCreateNestedOneWithoutFeeSchedulesInput
+    subject?: SubjectCreateNestedOneWithoutFeeSchedulesInput
+    paper?: PaperCreateNestedOneWithoutFeeSchedulesInput
+    createdBy: UserCreateNestedOneWithoutFeeSchedulesCreatedInput
+    feeStatementItems?: FeeStatementItemCreateNestedManyWithoutFeeScheduleInput
+  }
+
+  export type FeeScheduleUncheckedCreateWithoutCashInRequestsInput = {
+    id?: string
+    examBoardId: string
+    serviceType: $Enums.FeeScheduleServiceType
+    examSeriesId?: string | null
+    qualificationId?: string | null
+    subjectId?: string | null
+    paperId?: string | null
+    entryType?: $Enums.FeeEntryType | null
+    reviewType?: string | null
+    version: number
+    effectiveFrom: Date | string
+    effectiveTo?: Date | string | null
+    status?: $Enums.FeeScheduleStatus
+    costCurrency: $Enums.FeeCurrency
+    costAmount: Decimal | DecimalJsLike | number | string
+    salesCurrency: $Enums.FeeCurrency
+    salesAmount: Decimal | DecimalJsLike | number | string
+    markupType?: $Enums.FeeMarkupType | null
+    markupValue?: Decimal | DecimalJsLike | number | string | null
+    exchangeRateToCny?: Decimal | DecimalJsLike | number | string | null
+    createdByUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeScheduleInput
+  }
+
+  export type FeeScheduleCreateOrConnectWithoutCashInRequestsInput = {
+    where: FeeScheduleWhereUniqueInput
+    create: XOR<FeeScheduleCreateWithoutCashInRequestsInput, FeeScheduleUncheckedCreateWithoutCashInRequestsInput>
+  }
+
   export type UserCreateWithoutCashInRequestsRequestedInput = {
     id?: string
     name: string
@@ -136667,6 +137210,71 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type FeeScheduleUpsertWithoutCashInRequestsInput = {
+    update: XOR<FeeScheduleUpdateWithoutCashInRequestsInput, FeeScheduleUncheckedUpdateWithoutCashInRequestsInput>
+    create: XOR<FeeScheduleCreateWithoutCashInRequestsInput, FeeScheduleUncheckedCreateWithoutCashInRequestsInput>
+    where?: FeeScheduleWhereInput
+  }
+
+  export type FeeScheduleUpdateToOneWithWhereWithoutCashInRequestsInput = {
+    where?: FeeScheduleWhereInput
+    data: XOR<FeeScheduleUpdateWithoutCashInRequestsInput, FeeScheduleUncheckedUpdateWithoutCashInRequestsInput>
+  }
+
+  export type FeeScheduleUpdateWithoutCashInRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
+    reviewType?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    effectiveTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumFeeScheduleStatusFieldUpdateOperationsInput | $Enums.FeeScheduleStatus
+    costCurrency?: EnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency
+    costAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesCurrency?: EnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency
+    salesAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    markupType?: NullableEnumFeeMarkupTypeFieldUpdateOperationsInput | $Enums.FeeMarkupType | null
+    markupValue?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    exchangeRateToCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutFeeSchedulesNestedInput
+    examSeries?: ExamSeriesUpdateOneWithoutFeeSchedulesNestedInput
+    qualification?: QualificationUpdateOneWithoutFeeSchedulesNestedInput
+    subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
+    paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
+    feeStatementItems?: FeeStatementItemUpdateManyWithoutFeeScheduleNestedInput
+  }
+
+  export type FeeScheduleUncheckedUpdateWithoutCashInRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    serviceType?: EnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType
+    examSeriesId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    paperId?: NullableStringFieldUpdateOperationsInput | string | null
+    entryType?: NullableEnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType | null
+    reviewType?: NullableStringFieldUpdateOperationsInput | string | null
+    version?: IntFieldUpdateOperationsInput | number
+    effectiveFrom?: DateTimeFieldUpdateOperationsInput | Date | string
+    effectiveTo?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: EnumFeeScheduleStatusFieldUpdateOperationsInput | $Enums.FeeScheduleStatus
+    costCurrency?: EnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency
+    costAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    salesCurrency?: EnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency
+    salesAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    markupType?: NullableEnumFeeMarkupTypeFieldUpdateOperationsInput | $Enums.FeeMarkupType | null
+    markupValue?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    exchangeRateToCny?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdByUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type UserUpsertWithoutCashInRequestsRequestedInput = {
@@ -139991,6 +140599,62 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CashInRequestCreateWithoutFeeScheduleInput = {
+    id?: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.PostResultRequestStatus
+    reason?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutCashInRequestsInput
+    candidate: CandidateCreateNestedOneWithoutCashInRequestsInput
+    examBoard: ExamBoardCreateNestedOneWithoutCashInRequestsInput
+    examSeries: ExamSeriesCreateNestedOneWithoutCashInRequestsInput
+    qualification: QualificationCreateNestedOneWithoutCashInRequestsInput
+    subject: SubjectCreateNestedOneWithoutCashInRequestsInput
+    requestedBy: UserCreateNestedOneWithoutCashInRequestsRequestedInput
+    feeStatement?: FeeStatementCreateNestedOneWithoutCashInRequestsInput
+  }
+
+  export type CashInRequestUncheckedCreateWithoutFeeScheduleInput = {
+    id?: string
+    reviewWindowId?: string | null
+    candidateId: string
+    examBoardId: string
+    examSeriesId: string
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.PostResultRequestStatus
+    requestedByUserId: string
+    reason?: string | null
+    notes?: string | null
+    feeStatementId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CashInRequestCreateOrConnectWithoutFeeScheduleInput = {
+    where: CashInRequestWhereUniqueInput
+    create: XOR<CashInRequestCreateWithoutFeeScheduleInput, CashInRequestUncheckedCreateWithoutFeeScheduleInput>
+  }
+
+  export type CashInRequestCreateManyFeeScheduleInputEnvelope = {
+    data: CashInRequestCreateManyFeeScheduleInput | CashInRequestCreateManyFeeScheduleInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ExamBoardUpsertWithoutFeeSchedulesInput = {
     update: XOR<ExamBoardUpdateWithoutFeeSchedulesInput, ExamBoardUncheckedUpdateWithoutFeeSchedulesInput>
     create: XOR<ExamBoardCreateWithoutFeeSchedulesInput, ExamBoardUncheckedCreateWithoutFeeSchedulesInput>
@@ -140423,6 +141087,22 @@ export namespace Prisma {
   export type FeeStatementItemUpdateManyWithWhereWithoutFeeScheduleInput = {
     where: FeeStatementItemScalarWhereInput
     data: XOR<FeeStatementItemUpdateManyMutationInput, FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleInput>
+  }
+
+  export type CashInRequestUpsertWithWhereUniqueWithoutFeeScheduleInput = {
+    where: CashInRequestWhereUniqueInput
+    update: XOR<CashInRequestUpdateWithoutFeeScheduleInput, CashInRequestUncheckedUpdateWithoutFeeScheduleInput>
+    create: XOR<CashInRequestCreateWithoutFeeScheduleInput, CashInRequestUncheckedCreateWithoutFeeScheduleInput>
+  }
+
+  export type CashInRequestUpdateWithWhereUniqueWithoutFeeScheduleInput = {
+    where: CashInRequestWhereUniqueInput
+    data: XOR<CashInRequestUpdateWithoutFeeScheduleInput, CashInRequestUncheckedUpdateWithoutFeeScheduleInput>
+  }
+
+  export type CashInRequestUpdateManyWithWhereWithoutFeeScheduleInput = {
+    where: CashInRequestScalarWhereInput
+    data: XOR<CashInRequestUpdateManyMutationInput, CashInRequestUncheckedUpdateManyWithoutFeeScheduleInput>
   }
 
   export type CandidateCreateWithoutPostResultsAuditLogsInput = {
@@ -142629,12 +143309,19 @@ export namespace Prisma {
 
   export type CashInRequestCreateManyRequestedByInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     reason?: string | null
     notes?: string | null
@@ -144879,6 +145566,7 @@ export namespace Prisma {
     subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateWithoutCreatedByInput = {
@@ -144905,6 +145593,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateManyWithoutCreatedByInput = {
@@ -145072,28 +145761,42 @@ export namespace Prisma {
 
   export type CashInRequestUpdateWithoutRequestedByInput = {
     id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewWindow?: ReviewWindowUpdateOneRequiredWithoutCashInRequestsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutCashInRequestsNestedInput
     candidate?: CandidateUpdateOneRequiredWithoutCashInRequestsNestedInput
     examBoard?: ExamBoardUpdateOneRequiredWithoutCashInRequestsNestedInput
     examSeries?: ExamSeriesUpdateOneRequiredWithoutCashInRequestsNestedInput
-    qualification?: QualificationUpdateOneWithoutCashInRequestsNestedInput
-    subject?: SubjectUpdateOneWithoutCashInRequestsNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInRequestsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInRequestsNestedInput
+    feeSchedule?: FeeScheduleUpdateOneWithoutCashInRequestsNestedInput
     feeStatement?: FeeStatementUpdateOneWithoutCashInRequestsNestedInput
   }
 
   export type CashInRequestUncheckedUpdateWithoutRequestedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -145104,12 +145807,19 @@ export namespace Prisma {
 
   export type CashInRequestUncheckedUpdateManyWithoutRequestedByInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -145940,11 +146650,18 @@ export namespace Prisma {
 
   export type CashInRequestCreateManyCandidateInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -146752,27 +147469,41 @@ export namespace Prisma {
 
   export type CashInRequestUpdateWithoutCandidateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewWindow?: ReviewWindowUpdateOneRequiredWithoutCashInRequestsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutCashInRequestsNestedInput
     examBoard?: ExamBoardUpdateOneRequiredWithoutCashInRequestsNestedInput
     examSeries?: ExamSeriesUpdateOneRequiredWithoutCashInRequestsNestedInput
-    qualification?: QualificationUpdateOneWithoutCashInRequestsNestedInput
-    subject?: SubjectUpdateOneWithoutCashInRequestsNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInRequestsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInRequestsNestedInput
+    feeSchedule?: FeeScheduleUpdateOneWithoutCashInRequestsNestedInput
     requestedBy?: UserUpdateOneRequiredWithoutCashInRequestsRequestedNestedInput
     feeStatement?: FeeStatementUpdateOneWithoutCashInRequestsNestedInput
   }
 
   export type CashInRequestUncheckedUpdateWithoutCandidateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -146784,11 +147515,18 @@ export namespace Prisma {
 
   export type CashInRequestUncheckedUpdateManyWithoutCandidateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -149942,11 +150680,18 @@ export namespace Prisma {
 
   export type CashInRequestCreateManyExamBoardInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -150690,6 +151435,7 @@ export namespace Prisma {
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
     createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateWithoutExamBoardInput = {
@@ -150716,6 +151462,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateManyWithoutExamBoardInput = {
@@ -150814,27 +151561,41 @@ export namespace Prisma {
 
   export type CashInRequestUpdateWithoutExamBoardInput = {
     id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewWindow?: ReviewWindowUpdateOneRequiredWithoutCashInRequestsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutCashInRequestsNestedInput
     candidate?: CandidateUpdateOneRequiredWithoutCashInRequestsNestedInput
     examSeries?: ExamSeriesUpdateOneRequiredWithoutCashInRequestsNestedInput
-    qualification?: QualificationUpdateOneWithoutCashInRequestsNestedInput
-    subject?: SubjectUpdateOneWithoutCashInRequestsNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInRequestsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInRequestsNestedInput
+    feeSchedule?: FeeScheduleUpdateOneWithoutCashInRequestsNestedInput
     requestedBy?: UserUpdateOneRequiredWithoutCashInRequestsRequestedNestedInput
     feeStatement?: FeeStatementUpdateOneWithoutCashInRequestsNestedInput
   }
 
   export type CashInRequestUncheckedUpdateWithoutExamBoardInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -150846,11 +151607,18 @@ export namespace Prisma {
 
   export type CashInRequestUncheckedUpdateManyWithoutExamBoardInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -151105,11 +151873,18 @@ export namespace Prisma {
 
   export type CashInRequestCreateManyQualificationInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    subjectId?: string | null
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -151319,6 +152094,7 @@ export namespace Prisma {
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
     createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateWithoutQualificationInput = {
@@ -151345,6 +152121,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateManyWithoutQualificationInput = {
@@ -151374,27 +152151,41 @@ export namespace Prisma {
 
   export type CashInRequestUpdateWithoutQualificationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewWindow?: ReviewWindowUpdateOneRequiredWithoutCashInRequestsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutCashInRequestsNestedInput
     candidate?: CandidateUpdateOneRequiredWithoutCashInRequestsNestedInput
     examBoard?: ExamBoardUpdateOneRequiredWithoutCashInRequestsNestedInput
     examSeries?: ExamSeriesUpdateOneRequiredWithoutCashInRequestsNestedInput
-    subject?: SubjectUpdateOneWithoutCashInRequestsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInRequestsNestedInput
+    feeSchedule?: FeeScheduleUpdateOneWithoutCashInRequestsNestedInput
     requestedBy?: UserUpdateOneRequiredWithoutCashInRequestsRequestedNestedInput
     feeStatement?: FeeStatementUpdateOneWithoutCashInRequestsNestedInput
   }
 
   export type CashInRequestUncheckedUpdateWithoutQualificationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -151406,11 +152197,18 @@ export namespace Prisma {
 
   export type CashInRequestUncheckedUpdateManyWithoutQualificationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -151622,11 +152420,18 @@ export namespace Prisma {
 
   export type CashInRequestCreateManySubjectInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
+    qualificationId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -152065,6 +152870,7 @@ export namespace Prisma {
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
     createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateWithoutSubjectInput = {
@@ -152091,6 +152897,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateManyWithoutSubjectInput = {
@@ -152189,27 +152996,41 @@ export namespace Prisma {
 
   export type CashInRequestUpdateWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewWindow?: ReviewWindowUpdateOneRequiredWithoutCashInRequestsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutCashInRequestsNestedInput
     candidate?: CandidateUpdateOneRequiredWithoutCashInRequestsNestedInput
     examBoard?: ExamBoardUpdateOneRequiredWithoutCashInRequestsNestedInput
     examSeries?: ExamSeriesUpdateOneRequiredWithoutCashInRequestsNestedInput
-    qualification?: QualificationUpdateOneWithoutCashInRequestsNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInRequestsNestedInput
+    feeSchedule?: FeeScheduleUpdateOneWithoutCashInRequestsNestedInput
     requestedBy?: UserUpdateOneRequiredWithoutCashInRequestsRequestedNestedInput
     feeStatement?: FeeStatementUpdateOneWithoutCashInRequestsNestedInput
   }
 
   export type CashInRequestUncheckedUpdateWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -152221,11 +153042,18 @@ export namespace Prisma {
 
   export type CashInRequestUncheckedUpdateManyWithoutSubjectInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -152820,6 +153648,7 @@ export namespace Prisma {
     subject?: SubjectUpdateOneWithoutFeeSchedulesNestedInput
     createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateWithoutPaperInput = {
@@ -152846,6 +153675,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateManyWithoutPaperInput = {
@@ -153167,11 +153997,18 @@ export namespace Prisma {
 
   export type CashInRequestCreateManyExamSeriesInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -153840,27 +154677,41 @@ export namespace Prisma {
 
   export type CashInRequestUpdateWithoutExamSeriesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewWindow?: ReviewWindowUpdateOneRequiredWithoutCashInRequestsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutCashInRequestsNestedInput
     candidate?: CandidateUpdateOneRequiredWithoutCashInRequestsNestedInput
     examBoard?: ExamBoardUpdateOneRequiredWithoutCashInRequestsNestedInput
-    qualification?: QualificationUpdateOneWithoutCashInRequestsNestedInput
-    subject?: SubjectUpdateOneWithoutCashInRequestsNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInRequestsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInRequestsNestedInput
+    feeSchedule?: FeeScheduleUpdateOneWithoutCashInRequestsNestedInput
     requestedBy?: UserUpdateOneRequiredWithoutCashInRequestsRequestedNestedInput
     feeStatement?: FeeStatementUpdateOneWithoutCashInRequestsNestedInput
   }
 
   export type CashInRequestUncheckedUpdateWithoutExamSeriesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -153872,11 +154723,18 @@ export namespace Prisma {
 
   export type CashInRequestUncheckedUpdateManyWithoutExamSeriesInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -154048,6 +154906,7 @@ export namespace Prisma {
     paper?: PaperUpdateOneWithoutFeeSchedulesNestedInput
     createdBy?: UserUpdateOneRequiredWithoutFeeSchedulesCreatedNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateWithoutExamSeriesInput = {
@@ -154074,6 +154933,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutFeeScheduleNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeScheduleNestedInput
   }
 
   export type FeeScheduleUncheckedUpdateManyWithoutExamSeriesInput = {
@@ -155598,12 +156458,19 @@ export namespace Prisma {
 
   export type CashInRequestCreateManyFeeStatementInput = {
     id?: string
-    reviewWindowId: string
+    reviewWindowId?: string | null
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -156136,28 +157003,42 @@ export namespace Prisma {
 
   export type CashInRequestUpdateWithoutFeeStatementInput = {
     id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    reviewWindow?: ReviewWindowUpdateOneRequiredWithoutCashInRequestsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutCashInRequestsNestedInput
     candidate?: CandidateUpdateOneRequiredWithoutCashInRequestsNestedInput
     examBoard?: ExamBoardUpdateOneRequiredWithoutCashInRequestsNestedInput
     examSeries?: ExamSeriesUpdateOneRequiredWithoutCashInRequestsNestedInput
-    qualification?: QualificationUpdateOneWithoutCashInRequestsNestedInput
-    subject?: SubjectUpdateOneWithoutCashInRequestsNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInRequestsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInRequestsNestedInput
+    feeSchedule?: FeeScheduleUpdateOneWithoutCashInRequestsNestedInput
     requestedBy?: UserUpdateOneRequiredWithoutCashInRequestsRequestedNestedInput
   }
 
   export type CashInRequestUncheckedUpdateWithoutFeeStatementInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -156168,12 +157049,19 @@ export namespace Prisma {
 
   export type CashInRequestUncheckedUpdateManyWithoutFeeStatementInput = {
     id?: StringFieldUpdateOperationsInput | string
-    reviewWindowId?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -156312,8 +157200,15 @@ export namespace Prisma {
     candidateId: string
     examBoardId: string
     examSeriesId: string
-    qualificationId?: string | null
-    subjectId?: string | null
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    feeScheduleId?: string | null
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
     status?: $Enums.PostResultRequestStatus
     requestedByUserId: string
     reason?: string | null
@@ -156506,6 +157401,12 @@ export namespace Prisma {
 
   export type CashInRequestUpdateWithoutReviewWindowInput = {
     id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
@@ -156514,8 +157415,9 @@ export namespace Prisma {
     candidate?: CandidateUpdateOneRequiredWithoutCashInRequestsNestedInput
     examBoard?: ExamBoardUpdateOneRequiredWithoutCashInRequestsNestedInput
     examSeries?: ExamSeriesUpdateOneRequiredWithoutCashInRequestsNestedInput
-    qualification?: QualificationUpdateOneWithoutCashInRequestsNestedInput
-    subject?: SubjectUpdateOneWithoutCashInRequestsNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInRequestsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInRequestsNestedInput
+    feeSchedule?: FeeScheduleUpdateOneWithoutCashInRequestsNestedInput
     requestedBy?: UserUpdateOneRequiredWithoutCashInRequestsRequestedNestedInput
     feeStatement?: FeeStatementUpdateOneWithoutCashInRequestsNestedInput
   }
@@ -156525,8 +157427,15 @@ export namespace Prisma {
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -156541,8 +157450,15 @@ export namespace Prisma {
     candidateId?: StringFieldUpdateOperationsInput | string
     examBoardId?: StringFieldUpdateOperationsInput | string
     examSeriesId?: StringFieldUpdateOperationsInput | string
-    qualificationId?: NullableStringFieldUpdateOperationsInput | string | null
-    subjectId?: NullableStringFieldUpdateOperationsInput | string | null
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    feeScheduleId?: NullableStringFieldUpdateOperationsInput | string | null
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
     requestedByUserId?: StringFieldUpdateOperationsInput | string
     reason?: NullableStringFieldUpdateOperationsInput | string | null
@@ -156852,6 +157768,29 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type CashInRequestCreateManyFeeScheduleInput = {
+    id?: string
+    reviewWindowId?: string | null
+    candidateId: string
+    examBoardId: string
+    examSeriesId: string
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    quoteMatchLevel?: string | null
+    quotedCostCurrency?: $Enums.FeeCurrency | null
+    quotedCostAmount?: Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: $Enums.FeeCurrency | null
+    quotedSalesAmount?: Decimal | DecimalJsLike | number | string | null
+    status?: $Enums.PostResultRequestStatus
+    requestedByUserId: string
+    reason?: string | null
+    notes?: string | null
+    feeStatementId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type FeeStatementItemUpdateWithoutFeeScheduleInput = {
     id?: StringFieldUpdateOperationsInput | string
     serviceType?: NullableEnumFeeScheduleServiceTypeFieldUpdateOperationsInput | $Enums.FeeScheduleServiceType | null
@@ -156937,6 +157876,75 @@ export namespace Prisma {
     lineTotalCny?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     quantity?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CashInRequestUpdateWithoutFeeScheduleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    reviewWindow?: ReviewWindowUpdateOneWithoutCashInRequestsNestedInput
+    candidate?: CandidateUpdateOneRequiredWithoutCashInRequestsNestedInput
+    examBoard?: ExamBoardUpdateOneRequiredWithoutCashInRequestsNestedInput
+    examSeries?: ExamSeriesUpdateOneRequiredWithoutCashInRequestsNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInRequestsNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInRequestsNestedInput
+    requestedBy?: UserUpdateOneRequiredWithoutCashInRequestsRequestedNestedInput
+    feeStatement?: FeeStatementUpdateOneWithoutCashInRequestsNestedInput
+  }
+
+  export type CashInRequestUncheckedUpdateWithoutFeeScheduleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateId?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    examSeriesId?: StringFieldUpdateOperationsInput | string
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
+    requestedByUserId?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    feeStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CashInRequestUncheckedUpdateManyWithoutFeeScheduleInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateId?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    examSeriesId?: StringFieldUpdateOperationsInput | string
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    quoteMatchLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    quotedCostCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedCostAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    quotedSalesCurrency?: NullableEnumFeeCurrencyFieldUpdateOperationsInput | $Enums.FeeCurrency | null
+    quotedSalesAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
+    requestedByUserId?: StringFieldUpdateOperationsInput | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    feeStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

@@ -361,6 +361,7 @@ enum PostResultsAuditAction {
   REVIEW_REQUEST_UPDATED
   REVIEW_REQUEST_SUBMITTED
   CASH_IN_REQUEST_CREATED
+  CASH_IN_REQUEST_UPDATED
   ACCESS_TO_SCRIPT_REQUEST_CREATED
   CERTIFICATE_REQUEST_CREATED
   FEE_SCHEDULE_VERSION_CREATED
@@ -1792,18 +1793,26 @@ model ReviewRequest {
 
 model CashInRequest {
   id                String                  @id @default(cuid())
-  reviewWindowId    String
-  reviewWindow      ReviewWindow            @relation(fields: [reviewWindowId], references: [id], onDelete: Cascade)
+  reviewWindowId    String?
+  reviewWindow      ReviewWindow?           @relation(fields: [reviewWindowId], references: [id], onDelete: SetNull)
   candidateId       String
   candidate         Candidate               @relation(fields: [candidateId], references: [id], onDelete: Cascade)
   examBoardId       String
   examBoard         ExamBoard               @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
   examSeriesId      String
   examSeries        ExamSeries              @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
-  qualificationId   String?
-  qualification     Qualification?          @relation(fields: [qualificationId], references: [id], onDelete: SetNull)
-  subjectId         String?
-  subject           Subject?                @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  qualificationId   String
+  qualification     Qualification           @relation(fields: [qualificationId], references: [id], onDelete: Cascade)
+  subjectId         String
+  subject           Subject                 @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  cashInCode        String
+  feeScheduleId     String?
+  feeSchedule       FeeSchedule?            @relation(fields: [feeScheduleId], references: [id], onDelete: SetNull)
+  quoteMatchLevel   String?
+  quotedCostCurrency  FeeCurrency?
+  quotedCostAmount    Decimal?              @db.Decimal(12, 2)
+  quotedSalesCurrency FeeCurrency?
+  quotedSalesAmount   Decimal?              @db.Decimal(12, 2)
   status            PostResultRequestStatus @default(DRAFT)
   requestedByUserId String
   requestedBy       User                    @relation("CashInRequestRequester", fields: [requestedByUserId], references: [id], onDelete: Cascade)
@@ -1817,7 +1826,12 @@ model CashInRequest {
   @@index([reviewWindowId])
   @@index([candidateId])
   @@index([examBoardId])
+  @@index([examSeriesId])
+  @@index([qualificationId])
+  @@index([subjectId])
   @@index([status])
+  @@index([cashInCode])
+  @@index([feeScheduleId])
 }
 
 model AccessToScriptRequest {
@@ -1911,6 +1925,7 @@ model FeeSchedule {
   updatedAt         DateTime               @updatedAt
 
   feeStatementItems FeeStatementItem[]
+  cashInRequests    CashInRequest[]
 
   @@index([examBoardId])
   @@index([serviceType])

@@ -46,6 +46,7 @@ export const POST_RESULTS_AUDIT_LABELS: Record<PostResultsAuditAction, string> =
   REVIEW_REQUEST_UPDATED: "Review request updated",
   REVIEW_REQUEST_SUBMITTED: "Review request submitted",
   CASH_IN_REQUEST_CREATED: "Cash-in request created",
+  CASH_IN_REQUEST_UPDATED: "Cash-in request updated",
   ACCESS_TO_SCRIPT_REQUEST_CREATED: "Access to script request created",
   CERTIFICATE_REQUEST_CREATED: "Certificate request created",
   FEE_SCHEDULE_VERSION_CREATED: "Fee schedule version created",
