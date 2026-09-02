@@ -6,7 +6,10 @@ This document records the operational model used while qualification data is nor
 
 1. **Subject is the operational identifier.** Users pick Subject in cash-in, fee rules, and (where applicable) calendar flows.
 2. **Qualification is derived, not chosen.** When a flow receives `subjectId`, the server resolves `qualificationId` from `subject.qualificationId` before persisting or matching fees.
-3. **Do not delete or merge qualifications until Phase 4.** Phase 1–3 are read-only or forward-looking (new imports / UX only).
+/**
+ * Do not delete or merge qualifications until Phase 4 tooling has been
+ * dry-run and applied deliberately. Phase 1–3 are read-only or forward-looking.
+ */
 
 ## Current data reality
 
@@ -82,3 +85,49 @@ Timetable importers (`edexcel`, `aqa`, `generic-timetable`) now:
 3. **Do not migrate** historical qualification rows automatically.
 
 After deploying Phase 2, re-run the audit script and compare `syllabusStyleQualificationCount` over time — it should stop growing for newly imported syllabi, while legacy rows remain until Phase 4.
+
+## Phase 4 — historical merge (destructive)
+
+Merges all qualifications that share the same **exam board + level** into one **level-based** qualification (`code = null`). **Subject IDs never change.**
+
+### What it updates
+
+| Table | Action |
+|-------|--------|
+| `Subject` | `qualificationId` → canonical |
+| `FeeRule` / `FeeSchedule` / `CashInCode` / `CashInRequest` / `Resource` | remap `qualificationId` |
+| Old qualifications | delete when empty |
+
+### Pre-checks (hard stop)
+
+- Inventory `fkMismatchCount` must be `0`
+- No duplicate `subject.code` across different subjects in the same board+level
+
+### Commands
+
+```bash
+# 1. Backup first (production)
+npm run backup:database
+# or your host backup script
+
+# 2. Gate
+npm run db:audit-qualifications -- --fail-on-mismatch
+
+# 3. Dry-run (default — no writes)
+npm run db:merge-qualifications -- --dry-run
+npm run db:merge-qualifications -- --dry-run --output=tmp/merge-plan.json
+
+# 4. Apply (maintenance window)
+npm run db:merge-qualifications -- --apply --output=tmp/merge-result.json
+
+# 5. Verify
+npm run db:audit-qualifications -- --output=tmp/post-merge-inventory.json
+```
+
+### Production notes
+
+- Prefer **staging full replay** before production
+- Keep a DB backup / snapshot you can restore
+- App can stay up for dry-run; for `--apply`, prefer a short maintenance window
+- No Prisma schema migration is required for this merge
+- After success, `syllabusStyleQualificationCount` should drop sharply
