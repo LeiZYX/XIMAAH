@@ -98,6 +98,7 @@ export function adminStaffSections(base: "/admin" | "/exam-office"): SidebarSect
       links: [
         { href: `${prefix}/review-windows`, label: "Review Windows" },
         { href: `${prefix}/review-requests`, label: "Review Requests" },
+        { href: `${prefix}/cash-in-codes`, label: "Cash-in Codes" },
         { href: `${prefix}/cash-in-requests`, label: "Cash-in Requests" },
         { href: `${prefix}/access-to-script`, label: "Access to Script" },
         { href: `${prefix}/certificate-requests`, label: "Certificate Requests" },

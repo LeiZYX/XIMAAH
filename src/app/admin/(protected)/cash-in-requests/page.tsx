@@ -9,11 +9,19 @@ export default function AdminCashInRequestsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Cash-in Requests"
-        description="Cash-in requests are managed within review windows."
+        description="Request workflow arrives in a later phase. Configure official cash-in codes first."
       />
-      <Link href="/admin/review-windows" className="text-sm text-indigo-600 hover:underline">
-        Go to review windows
-      </Link>
+      <div className="space-y-2 text-sm">
+        <p>
+          <Link href="/admin/cash-in-codes" className="text-indigo-600 hover:underline">
+            Go to Cash-in Codes
+          </Link>
+        </p>
+        <p className="text-slate-600">
+          Cash-in will not depend on review windows. Pricing and student billing come in later
+          phases.
+        </p>
+      </div>
     </div>
   );
 }

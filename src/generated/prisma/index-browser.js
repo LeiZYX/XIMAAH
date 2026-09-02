@@ -549,6 +549,18 @@ exports.Prisma.SubjectScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CashInCodeScalarFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  qualificationId: 'qualificationId',
+  subjectId: 'subjectId',
+  cashInCode: 'cashInCode',
+  active: 'active',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.CalendarSubjectSelectionScalarFieldEnum = {
   id: 'id',
   examBoardId: 'examBoardId',
@@ -1269,6 +1281,15 @@ exports.Prisma.SubjectOrderByRelevanceFieldEnum = {
   name: 'name',
   code: 'code',
   qualificationId: 'qualificationId'
+};
+
+exports.Prisma.CashInCodeOrderByRelevanceFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  qualificationId: 'qualificationId',
+  subjectId: 'subjectId',
+  cashInCode: 'cashInCode',
+  notes: 'notes'
 };
 
 exports.Prisma.CalendarSubjectSelectionOrderByRelevanceFieldEnum = {
@@ -2031,6 +2052,7 @@ exports.Prisma.ModelName = {
   ExamBoardWithdrawalPolicy: 'ExamBoardWithdrawalPolicy',
   Qualification: 'Qualification',
   Subject: 'Subject',
+  CashInCode: 'CashInCode',
   CalendarSubjectSelection: 'CalendarSubjectSelection',
   Paper: 'Paper',
   ExamSeries: 'ExamSeries',

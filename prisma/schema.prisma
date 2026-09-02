@@ -1152,6 +1152,7 @@ model ExamBoard {
   feeSchedules              FeeSchedule[]
   reviewRequests            ReviewRequest[]
   cashInRequests            CashInRequest[]
+  cashInCodes               CashInCode[]
   accessToScriptRequests    AccessToScriptRequest[]
   certificateRequests       CertificateRequest[]
   postResultsAuditLogs      PostResultsAuditLog[]
@@ -1193,6 +1194,7 @@ model Qualification {
   feeRules  FeeRule[]
   feeSchedules FeeSchedule[]
   cashInRequests CashInRequest[]
+  cashInCodes CashInCode[]
 
   @@index([examBoardId])
 }
@@ -1216,9 +1218,33 @@ model Subject {
   feeSchedules              FeeSchedule[]
   reviewRequests            ReviewRequest[]
   cashInRequests            CashInRequest[]
+  cashInCodes               CashInCode[]
   accessToScriptRequests    AccessToScriptRequest[]
 
   @@index([qualificationId])
+}
+
+/// Official cash-in entry codes per exam board + qualification + subject (e.g. Edexcel IAS/IAL).
+model CashInCode {
+  id              String        @id @default(cuid())
+  examBoardId     String
+  examBoard       ExamBoard     @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  qualificationId String
+  qualification   Qualification @relation(fields: [qualificationId], references: [id], onDelete: Cascade)
+  subjectId       String
+  subject         Subject       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  cashInCode      String
+  active          Boolean       @default(true)
+  notes           String?       @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([examBoardId, qualificationId, subjectId])
+  @@unique([examBoardId, cashInCode])
+  @@index([examBoardId])
+  @@index([qualificationId])
+  @@index([subjectId])
+  @@index([active])
 }
 
 model CalendarSubjectSelection {

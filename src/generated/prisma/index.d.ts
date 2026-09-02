@@ -140,6 +140,11 @@ export type Qualification = $Result.DefaultSelection<Prisma.$QualificationPayloa
  */
 export type Subject = $Result.DefaultSelection<Prisma.$SubjectPayload>
 /**
+ * Model CashInCode
+ * Official cash-in entry codes per exam board + qualification + subject (e.g. Edexcel IAS/IAL).
+ */
+export type CashInCode = $Result.DefaultSelection<Prisma.$CashInCodePayload>
+/**
  * Model CalendarSubjectSelection
  * 
  */
@@ -1436,6 +1441,16 @@ export class PrismaClient<
   get subject(): Prisma.SubjectDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.cashInCode`: Exposes CRUD operations for the **CashInCode** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CashInCodes
+    * const cashInCodes = await prisma.cashInCode.findMany()
+    * ```
+    */
+  get cashInCode(): Prisma.CashInCodeDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.calendarSubjectSelection`: Exposes CRUD operations for the **CalendarSubjectSelection** model.
     * Example usage:
     * ```ts
@@ -2140,6 +2155,7 @@ export namespace Prisma {
     ExamBoardWithdrawalPolicy: 'ExamBoardWithdrawalPolicy',
     Qualification: 'Qualification',
     Subject: 'Subject',
+    CashInCode: 'CashInCode',
     CalendarSubjectSelection: 'CalendarSubjectSelection',
     Paper: 'Paper',
     ExamSeries: 'ExamSeries',
@@ -2182,7 +2198,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
+      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3833,6 +3849,72 @@ export namespace Prisma {
           count: {
             args: Prisma.SubjectCountArgs<ExtArgs>
             result: $Utils.Optional<SubjectCountAggregateOutputType> | number
+          }
+        }
+      }
+      CashInCode: {
+        payload: Prisma.$CashInCodePayload<ExtArgs>
+        fields: Prisma.CashInCodeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CashInCodeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CashInCodePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CashInCodeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CashInCodePayload>
+          }
+          findFirst: {
+            args: Prisma.CashInCodeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CashInCodePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CashInCodeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CashInCodePayload>
+          }
+          findMany: {
+            args: Prisma.CashInCodeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CashInCodePayload>[]
+          }
+          create: {
+            args: Prisma.CashInCodeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CashInCodePayload>
+          }
+          createMany: {
+            args: Prisma.CashInCodeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.CashInCodeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CashInCodePayload>
+          }
+          update: {
+            args: Prisma.CashInCodeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CashInCodePayload>
+          }
+          deleteMany: {
+            args: Prisma.CashInCodeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CashInCodeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CashInCodeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CashInCodePayload>
+          }
+          aggregate: {
+            args: Prisma.CashInCodeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCashInCode>
+          }
+          groupBy: {
+            args: Prisma.CashInCodeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CashInCodeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CashInCodeCountArgs<ExtArgs>
+            result: $Utils.Optional<CashInCodeCountAggregateOutputType> | number
           }
         }
       }
@@ -5541,6 +5623,7 @@ export namespace Prisma {
     examBoardWithdrawalPolicy?: ExamBoardWithdrawalPolicyOmit
     qualification?: QualificationOmit
     subject?: SubjectOmit
+    cashInCode?: CashInCodeOmit
     calendarSubjectSelection?: CalendarSubjectSelectionOmit
     paper?: PaperOmit
     examSeries?: ExamSeriesOmit
@@ -6542,6 +6625,7 @@ export namespace Prisma {
     feeSchedules: number
     reviewRequests: number
     cashInRequests: number
+    cashInCodes: number
     accessToScriptRequests: number
     certificateRequests: number
     postResultsAuditLogs: number
@@ -6562,6 +6646,7 @@ export namespace Prisma {
     feeSchedules?: boolean | ExamBoardCountOutputTypeCountFeeSchedulesArgs
     reviewRequests?: boolean | ExamBoardCountOutputTypeCountReviewRequestsArgs
     cashInRequests?: boolean | ExamBoardCountOutputTypeCountCashInRequestsArgs
+    cashInCodes?: boolean | ExamBoardCountOutputTypeCountCashInCodesArgs
     accessToScriptRequests?: boolean | ExamBoardCountOutputTypeCountAccessToScriptRequestsArgs
     certificateRequests?: boolean | ExamBoardCountOutputTypeCountCertificateRequestsArgs
     postResultsAuditLogs?: boolean | ExamBoardCountOutputTypeCountPostResultsAuditLogsArgs
@@ -6679,6 +6764,13 @@ export namespace Prisma {
   /**
    * ExamBoardCountOutputType without action
    */
+  export type ExamBoardCountOutputTypeCountCashInCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CashInCodeWhereInput
+  }
+
+  /**
+   * ExamBoardCountOutputType without action
+   */
   export type ExamBoardCountOutputTypeCountAccessToScriptRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AccessToScriptRequestWhereInput
   }
@@ -6708,6 +6800,7 @@ export namespace Prisma {
     feeRules: number
     feeSchedules: number
     cashInRequests: number
+    cashInCodes: number
   }
 
   export type QualificationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6716,6 +6809,7 @@ export namespace Prisma {
     feeRules?: boolean | QualificationCountOutputTypeCountFeeRulesArgs
     feeSchedules?: boolean | QualificationCountOutputTypeCountFeeSchedulesArgs
     cashInRequests?: boolean | QualificationCountOutputTypeCountCashInRequestsArgs
+    cashInCodes?: boolean | QualificationCountOutputTypeCountCashInCodesArgs
   }
 
   // Custom InputTypes
@@ -6764,6 +6858,13 @@ export namespace Prisma {
     where?: CashInRequestWhereInput
   }
 
+  /**
+   * QualificationCountOutputType without action
+   */
+  export type QualificationCountOutputTypeCountCashInCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CashInCodeWhereInput
+  }
+
 
   /**
    * Count Type SubjectCountOutputType
@@ -6780,6 +6881,7 @@ export namespace Prisma {
     feeSchedules: number
     reviewRequests: number
     cashInRequests: number
+    cashInCodes: number
     accessToScriptRequests: number
   }
 
@@ -6794,6 +6896,7 @@ export namespace Prisma {
     feeSchedules?: boolean | SubjectCountOutputTypeCountFeeSchedulesArgs
     reviewRequests?: boolean | SubjectCountOutputTypeCountReviewRequestsArgs
     cashInRequests?: boolean | SubjectCountOutputTypeCountCashInRequestsArgs
+    cashInCodes?: boolean | SubjectCountOutputTypeCountCashInCodesArgs
     accessToScriptRequests?: boolean | SubjectCountOutputTypeCountAccessToScriptRequestsArgs
   }
 
@@ -6876,6 +6979,13 @@ export namespace Prisma {
    */
   export type SubjectCountOutputTypeCountCashInRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CashInRequestWhereInput
+  }
+
+  /**
+   * SubjectCountOutputType without action
+   */
+  export type SubjectCountOutputTypeCountCashInCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CashInCodeWhereInput
   }
 
   /**
@@ -32922,6 +33032,7 @@ export namespace Prisma {
     feeSchedules?: boolean | ExamBoard$feeSchedulesArgs<ExtArgs>
     reviewRequests?: boolean | ExamBoard$reviewRequestsArgs<ExtArgs>
     cashInRequests?: boolean | ExamBoard$cashInRequestsArgs<ExtArgs>
+    cashInCodes?: boolean | ExamBoard$cashInCodesArgs<ExtArgs>
     accessToScriptRequests?: boolean | ExamBoard$accessToScriptRequestsArgs<ExtArgs>
     certificateRequests?: boolean | ExamBoard$certificateRequestsArgs<ExtArgs>
     postResultsAuditLogs?: boolean | ExamBoard$postResultsAuditLogsArgs<ExtArgs>
@@ -32970,6 +33081,7 @@ export namespace Prisma {
     feeSchedules?: boolean | ExamBoard$feeSchedulesArgs<ExtArgs>
     reviewRequests?: boolean | ExamBoard$reviewRequestsArgs<ExtArgs>
     cashInRequests?: boolean | ExamBoard$cashInRequestsArgs<ExtArgs>
+    cashInCodes?: boolean | ExamBoard$cashInCodesArgs<ExtArgs>
     accessToScriptRequests?: boolean | ExamBoard$accessToScriptRequestsArgs<ExtArgs>
     certificateRequests?: boolean | ExamBoard$certificateRequestsArgs<ExtArgs>
     postResultsAuditLogs?: boolean | ExamBoard$postResultsAuditLogsArgs<ExtArgs>
@@ -32994,6 +33106,7 @@ export namespace Prisma {
       feeSchedules: Prisma.$FeeSchedulePayload<ExtArgs>[]
       reviewRequests: Prisma.$ReviewRequestPayload<ExtArgs>[]
       cashInRequests: Prisma.$CashInRequestPayload<ExtArgs>[]
+      cashInCodes: Prisma.$CashInCodePayload<ExtArgs>[]
       accessToScriptRequests: Prisma.$AccessToScriptRequestPayload<ExtArgs>[]
       certificateRequests: Prisma.$CertificateRequestPayload<ExtArgs>[]
       postResultsAuditLogs: Prisma.$PostResultsAuditLogPayload<ExtArgs>[]
@@ -33374,6 +33487,7 @@ export namespace Prisma {
     feeSchedules<T extends ExamBoard$feeSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$feeSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewRequests<T extends ExamBoard$reviewRequestsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$reviewRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cashInRequests<T extends ExamBoard$cashInRequestsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$cashInRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cashInCodes<T extends ExamBoard$cashInCodesArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$cashInCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessToScriptRequests<T extends ExamBoard$accessToScriptRequestsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$accessToScriptRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessToScriptRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     certificateRequests<T extends ExamBoard$certificateRequestsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$certificateRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CertificateRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     postResultsAuditLogs<T extends ExamBoard$postResultsAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoard$postResultsAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostResultsAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -34103,6 +34217,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CashInRequestScalarFieldEnum | CashInRequestScalarFieldEnum[]
+  }
+
+  /**
+   * ExamBoard.cashInCodes
+   */
+  export type ExamBoard$cashInCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    where?: CashInCodeWhereInput
+    orderBy?: CashInCodeOrderByWithRelationInput | CashInCodeOrderByWithRelationInput[]
+    cursor?: CashInCodeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CashInCodeScalarFieldEnum | CashInCodeScalarFieldEnum[]
   }
 
   /**
@@ -35464,6 +35602,7 @@ export namespace Prisma {
     feeRules?: boolean | Qualification$feeRulesArgs<ExtArgs>
     feeSchedules?: boolean | Qualification$feeSchedulesArgs<ExtArgs>
     cashInRequests?: boolean | Qualification$cashInRequestsArgs<ExtArgs>
+    cashInCodes?: boolean | Qualification$cashInCodesArgs<ExtArgs>
     _count?: boolean | QualificationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["qualification"]>
 
@@ -35487,6 +35626,7 @@ export namespace Prisma {
     feeRules?: boolean | Qualification$feeRulesArgs<ExtArgs>
     feeSchedules?: boolean | Qualification$feeSchedulesArgs<ExtArgs>
     cashInRequests?: boolean | Qualification$cashInRequestsArgs<ExtArgs>
+    cashInCodes?: boolean | Qualification$cashInCodesArgs<ExtArgs>
     _count?: boolean | QualificationCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -35499,6 +35639,7 @@ export namespace Prisma {
       feeRules: Prisma.$FeeRulePayload<ExtArgs>[]
       feeSchedules: Prisma.$FeeSchedulePayload<ExtArgs>[]
       cashInRequests: Prisma.$CashInRequestPayload<ExtArgs>[]
+      cashInCodes: Prisma.$CashInCodePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -35854,6 +35995,7 @@ export namespace Prisma {
     feeRules<T extends Qualification$feeRulesArgs<ExtArgs> = {}>(args?: Subset<T, Qualification$feeRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeSchedules<T extends Qualification$feeSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, Qualification$feeSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cashInRequests<T extends Qualification$cashInRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Qualification$cashInRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cashInCodes<T extends Qualification$cashInCodesArgs<ExtArgs> = {}>(args?: Subset<T, Qualification$cashInCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -36353,6 +36495,30 @@ export namespace Prisma {
   }
 
   /**
+   * Qualification.cashInCodes
+   */
+  export type Qualification$cashInCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    where?: CashInCodeWhereInput
+    orderBy?: CashInCodeOrderByWithRelationInput | CashInCodeOrderByWithRelationInput[]
+    cursor?: CashInCodeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CashInCodeScalarFieldEnum | CashInCodeScalarFieldEnum[]
+  }
+
+  /**
    * Qualification without action
    */
   export type QualificationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -36554,6 +36720,7 @@ export namespace Prisma {
     feeSchedules?: boolean | Subject$feeSchedulesArgs<ExtArgs>
     reviewRequests?: boolean | Subject$reviewRequestsArgs<ExtArgs>
     cashInRequests?: boolean | Subject$cashInRequestsArgs<ExtArgs>
+    cashInCodes?: boolean | Subject$cashInCodesArgs<ExtArgs>
     accessToScriptRequests?: boolean | Subject$accessToScriptRequestsArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["subject"]>
@@ -36582,6 +36749,7 @@ export namespace Prisma {
     feeSchedules?: boolean | Subject$feeSchedulesArgs<ExtArgs>
     reviewRequests?: boolean | Subject$reviewRequestsArgs<ExtArgs>
     cashInRequests?: boolean | Subject$cashInRequestsArgs<ExtArgs>
+    cashInCodes?: boolean | Subject$cashInCodesArgs<ExtArgs>
     accessToScriptRequests?: boolean | Subject$accessToScriptRequestsArgs<ExtArgs>
     _count?: boolean | SubjectCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -36600,6 +36768,7 @@ export namespace Prisma {
       feeSchedules: Prisma.$FeeSchedulePayload<ExtArgs>[]
       reviewRequests: Prisma.$ReviewRequestPayload<ExtArgs>[]
       cashInRequests: Prisma.$CashInRequestPayload<ExtArgs>[]
+      cashInCodes: Prisma.$CashInCodePayload<ExtArgs>[]
       accessToScriptRequests: Prisma.$AccessToScriptRequestPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -36960,6 +37129,7 @@ export namespace Prisma {
     feeSchedules<T extends Subject$feeSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$feeSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewRequests<T extends Subject$reviewRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$reviewRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cashInRequests<T extends Subject$cashInRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$cashInRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cashInCodes<T extends Subject$cashInCodesArgs<ExtArgs> = {}>(args?: Subset<T, Subject$cashInCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessToScriptRequests<T extends Subject$accessToScriptRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Subject$accessToScriptRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessToScriptRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -37579,6 +37749,30 @@ export namespace Prisma {
   }
 
   /**
+   * Subject.cashInCodes
+   */
+  export type Subject$cashInCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    where?: CashInCodeWhereInput
+    orderBy?: CashInCodeOrderByWithRelationInput | CashInCodeOrderByWithRelationInput[]
+    cursor?: CashInCodeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CashInCodeScalarFieldEnum | CashInCodeScalarFieldEnum[]
+  }
+
+  /**
    * Subject.accessToScriptRequests
    */
   export type Subject$accessToScriptRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -37618,6 +37812,987 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: SubjectInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CashInCode
+   */
+
+  export type AggregateCashInCode = {
+    _count: CashInCodeCountAggregateOutputType | null
+    _min: CashInCodeMinAggregateOutputType | null
+    _max: CashInCodeMaxAggregateOutputType | null
+  }
+
+  export type CashInCodeMinAggregateOutputType = {
+    id: string | null
+    examBoardId: string | null
+    qualificationId: string | null
+    subjectId: string | null
+    cashInCode: string | null
+    active: boolean | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CashInCodeMaxAggregateOutputType = {
+    id: string | null
+    examBoardId: string | null
+    qualificationId: string | null
+    subjectId: string | null
+    cashInCode: string | null
+    active: boolean | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CashInCodeCountAggregateOutputType = {
+    id: number
+    examBoardId: number
+    qualificationId: number
+    subjectId: number
+    cashInCode: number
+    active: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CashInCodeMinAggregateInputType = {
+    id?: true
+    examBoardId?: true
+    qualificationId?: true
+    subjectId?: true
+    cashInCode?: true
+    active?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CashInCodeMaxAggregateInputType = {
+    id?: true
+    examBoardId?: true
+    qualificationId?: true
+    subjectId?: true
+    cashInCode?: true
+    active?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CashInCodeCountAggregateInputType = {
+    id?: true
+    examBoardId?: true
+    qualificationId?: true
+    subjectId?: true
+    cashInCode?: true
+    active?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CashInCodeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CashInCode to aggregate.
+     */
+    where?: CashInCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CashInCodes to fetch.
+     */
+    orderBy?: CashInCodeOrderByWithRelationInput | CashInCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CashInCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CashInCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CashInCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CashInCodes
+    **/
+    _count?: true | CashInCodeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CashInCodeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CashInCodeMaxAggregateInputType
+  }
+
+  export type GetCashInCodeAggregateType<T extends CashInCodeAggregateArgs> = {
+        [P in keyof T & keyof AggregateCashInCode]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCashInCode[P]>
+      : GetScalarType<T[P], AggregateCashInCode[P]>
+  }
+
+
+
+
+  export type CashInCodeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CashInCodeWhereInput
+    orderBy?: CashInCodeOrderByWithAggregationInput | CashInCodeOrderByWithAggregationInput[]
+    by: CashInCodeScalarFieldEnum[] | CashInCodeScalarFieldEnum
+    having?: CashInCodeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CashInCodeCountAggregateInputType | true
+    _min?: CashInCodeMinAggregateInputType
+    _max?: CashInCodeMaxAggregateInputType
+  }
+
+  export type CashInCodeGroupByOutputType = {
+    id: string
+    examBoardId: string
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    active: boolean
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CashInCodeCountAggregateOutputType | null
+    _min: CashInCodeMinAggregateOutputType | null
+    _max: CashInCodeMaxAggregateOutputType | null
+  }
+
+  type GetCashInCodeGroupByPayload<T extends CashInCodeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CashInCodeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CashInCodeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CashInCodeGroupByOutputType[P]>
+            : GetScalarType<T[P], CashInCodeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CashInCodeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    examBoardId?: boolean
+    qualificationId?: boolean
+    subjectId?: boolean
+    cashInCode?: boolean
+    active?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
+    qualification?: boolean | QualificationDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["cashInCode"]>
+
+
+
+  export type CashInCodeSelectScalar = {
+    id?: boolean
+    examBoardId?: boolean
+    qualificationId?: boolean
+    subjectId?: boolean
+    cashInCode?: boolean
+    active?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CashInCodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "examBoardId" | "qualificationId" | "subjectId" | "cashInCode" | "active" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["cashInCode"]>
+  export type CashInCodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
+    qualification?: boolean | QualificationDefaultArgs<ExtArgs>
+    subject?: boolean | SubjectDefaultArgs<ExtArgs>
+  }
+
+  export type $CashInCodePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CashInCode"
+    objects: {
+      examBoard: Prisma.$ExamBoardPayload<ExtArgs>
+      qualification: Prisma.$QualificationPayload<ExtArgs>
+      subject: Prisma.$SubjectPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      examBoardId: string
+      qualificationId: string
+      subjectId: string
+      cashInCode: string
+      active: boolean
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["cashInCode"]>
+    composites: {}
+  }
+
+  type CashInCodeGetPayload<S extends boolean | null | undefined | CashInCodeDefaultArgs> = $Result.GetResult<Prisma.$CashInCodePayload, S>
+
+  type CashInCodeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CashInCodeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CashInCodeCountAggregateInputType | true
+    }
+
+  export interface CashInCodeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CashInCode'], meta: { name: 'CashInCode' } }
+    /**
+     * Find zero or one CashInCode that matches the filter.
+     * @param {CashInCodeFindUniqueArgs} args - Arguments to find a CashInCode
+     * @example
+     * // Get one CashInCode
+     * const cashInCode = await prisma.cashInCode.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CashInCodeFindUniqueArgs>(args: SelectSubset<T, CashInCodeFindUniqueArgs<ExtArgs>>): Prisma__CashInCodeClient<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CashInCode that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CashInCodeFindUniqueOrThrowArgs} args - Arguments to find a CashInCode
+     * @example
+     * // Get one CashInCode
+     * const cashInCode = await prisma.cashInCode.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CashInCodeFindUniqueOrThrowArgs>(args: SelectSubset<T, CashInCodeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CashInCodeClient<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CashInCode that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CashInCodeFindFirstArgs} args - Arguments to find a CashInCode
+     * @example
+     * // Get one CashInCode
+     * const cashInCode = await prisma.cashInCode.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CashInCodeFindFirstArgs>(args?: SelectSubset<T, CashInCodeFindFirstArgs<ExtArgs>>): Prisma__CashInCodeClient<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CashInCode that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CashInCodeFindFirstOrThrowArgs} args - Arguments to find a CashInCode
+     * @example
+     * // Get one CashInCode
+     * const cashInCode = await prisma.cashInCode.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CashInCodeFindFirstOrThrowArgs>(args?: SelectSubset<T, CashInCodeFindFirstOrThrowArgs<ExtArgs>>): Prisma__CashInCodeClient<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CashInCodes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CashInCodeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CashInCodes
+     * const cashInCodes = await prisma.cashInCode.findMany()
+     * 
+     * // Get first 10 CashInCodes
+     * const cashInCodes = await prisma.cashInCode.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cashInCodeWithIdOnly = await prisma.cashInCode.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CashInCodeFindManyArgs>(args?: SelectSubset<T, CashInCodeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CashInCode.
+     * @param {CashInCodeCreateArgs} args - Arguments to create a CashInCode.
+     * @example
+     * // Create one CashInCode
+     * const CashInCode = await prisma.cashInCode.create({
+     *   data: {
+     *     // ... data to create a CashInCode
+     *   }
+     * })
+     * 
+     */
+    create<T extends CashInCodeCreateArgs>(args: SelectSubset<T, CashInCodeCreateArgs<ExtArgs>>): Prisma__CashInCodeClient<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CashInCodes.
+     * @param {CashInCodeCreateManyArgs} args - Arguments to create many CashInCodes.
+     * @example
+     * // Create many CashInCodes
+     * const cashInCode = await prisma.cashInCode.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CashInCodeCreateManyArgs>(args?: SelectSubset<T, CashInCodeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CashInCode.
+     * @param {CashInCodeDeleteArgs} args - Arguments to delete one CashInCode.
+     * @example
+     * // Delete one CashInCode
+     * const CashInCode = await prisma.cashInCode.delete({
+     *   where: {
+     *     // ... filter to delete one CashInCode
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CashInCodeDeleteArgs>(args: SelectSubset<T, CashInCodeDeleteArgs<ExtArgs>>): Prisma__CashInCodeClient<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CashInCode.
+     * @param {CashInCodeUpdateArgs} args - Arguments to update one CashInCode.
+     * @example
+     * // Update one CashInCode
+     * const cashInCode = await prisma.cashInCode.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CashInCodeUpdateArgs>(args: SelectSubset<T, CashInCodeUpdateArgs<ExtArgs>>): Prisma__CashInCodeClient<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CashInCodes.
+     * @param {CashInCodeDeleteManyArgs} args - Arguments to filter CashInCodes to delete.
+     * @example
+     * // Delete a few CashInCodes
+     * const { count } = await prisma.cashInCode.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CashInCodeDeleteManyArgs>(args?: SelectSubset<T, CashInCodeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CashInCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CashInCodeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CashInCodes
+     * const cashInCode = await prisma.cashInCode.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CashInCodeUpdateManyArgs>(args: SelectSubset<T, CashInCodeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CashInCode.
+     * @param {CashInCodeUpsertArgs} args - Arguments to update or create a CashInCode.
+     * @example
+     * // Update or create a CashInCode
+     * const cashInCode = await prisma.cashInCode.upsert({
+     *   create: {
+     *     // ... data to create a CashInCode
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CashInCode we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CashInCodeUpsertArgs>(args: SelectSubset<T, CashInCodeUpsertArgs<ExtArgs>>): Prisma__CashInCodeClient<$Result.GetResult<Prisma.$CashInCodePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CashInCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CashInCodeCountArgs} args - Arguments to filter CashInCodes to count.
+     * @example
+     * // Count the number of CashInCodes
+     * const count = await prisma.cashInCode.count({
+     *   where: {
+     *     // ... the filter for the CashInCodes we want to count
+     *   }
+     * })
+    **/
+    count<T extends CashInCodeCountArgs>(
+      args?: Subset<T, CashInCodeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CashInCodeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CashInCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CashInCodeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CashInCodeAggregateArgs>(args: Subset<T, CashInCodeAggregateArgs>): Prisma.PrismaPromise<GetCashInCodeAggregateType<T>>
+
+    /**
+     * Group by CashInCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CashInCodeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CashInCodeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CashInCodeGroupByArgs['orderBy'] }
+        : { orderBy?: CashInCodeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CashInCodeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCashInCodeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CashInCode model
+   */
+  readonly fields: CashInCodeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CashInCode.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CashInCodeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    examBoard<T extends ExamBoardDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ExamBoardDefaultArgs<ExtArgs>>): Prisma__ExamBoardClient<$Result.GetResult<Prisma.$ExamBoardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    qualification<T extends QualificationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, QualificationDefaultArgs<ExtArgs>>): Prisma__QualificationClient<$Result.GetResult<Prisma.$QualificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    subject<T extends SubjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SubjectDefaultArgs<ExtArgs>>): Prisma__SubjectClient<$Result.GetResult<Prisma.$SubjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CashInCode model
+   */
+  interface CashInCodeFieldRefs {
+    readonly id: FieldRef<"CashInCode", 'String'>
+    readonly examBoardId: FieldRef<"CashInCode", 'String'>
+    readonly qualificationId: FieldRef<"CashInCode", 'String'>
+    readonly subjectId: FieldRef<"CashInCode", 'String'>
+    readonly cashInCode: FieldRef<"CashInCode", 'String'>
+    readonly active: FieldRef<"CashInCode", 'Boolean'>
+    readonly notes: FieldRef<"CashInCode", 'String'>
+    readonly createdAt: FieldRef<"CashInCode", 'DateTime'>
+    readonly updatedAt: FieldRef<"CashInCode", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CashInCode findUnique
+   */
+  export type CashInCodeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which CashInCode to fetch.
+     */
+    where: CashInCodeWhereUniqueInput
+  }
+
+  /**
+   * CashInCode findUniqueOrThrow
+   */
+  export type CashInCodeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which CashInCode to fetch.
+     */
+    where: CashInCodeWhereUniqueInput
+  }
+
+  /**
+   * CashInCode findFirst
+   */
+  export type CashInCodeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which CashInCode to fetch.
+     */
+    where?: CashInCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CashInCodes to fetch.
+     */
+    orderBy?: CashInCodeOrderByWithRelationInput | CashInCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CashInCodes.
+     */
+    cursor?: CashInCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CashInCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CashInCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CashInCodes.
+     */
+    distinct?: CashInCodeScalarFieldEnum | CashInCodeScalarFieldEnum[]
+  }
+
+  /**
+   * CashInCode findFirstOrThrow
+   */
+  export type CashInCodeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which CashInCode to fetch.
+     */
+    where?: CashInCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CashInCodes to fetch.
+     */
+    orderBy?: CashInCodeOrderByWithRelationInput | CashInCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CashInCodes.
+     */
+    cursor?: CashInCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CashInCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CashInCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CashInCodes.
+     */
+    distinct?: CashInCodeScalarFieldEnum | CashInCodeScalarFieldEnum[]
+  }
+
+  /**
+   * CashInCode findMany
+   */
+  export type CashInCodeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which CashInCodes to fetch.
+     */
+    where?: CashInCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CashInCodes to fetch.
+     */
+    orderBy?: CashInCodeOrderByWithRelationInput | CashInCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CashInCodes.
+     */
+    cursor?: CashInCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CashInCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CashInCodes.
+     */
+    skip?: number
+    distinct?: CashInCodeScalarFieldEnum | CashInCodeScalarFieldEnum[]
+  }
+
+  /**
+   * CashInCode create
+   */
+  export type CashInCodeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CashInCode.
+     */
+    data: XOR<CashInCodeCreateInput, CashInCodeUncheckedCreateInput>
+  }
+
+  /**
+   * CashInCode createMany
+   */
+  export type CashInCodeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CashInCodes.
+     */
+    data: CashInCodeCreateManyInput | CashInCodeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CashInCode update
+   */
+  export type CashInCodeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CashInCode.
+     */
+    data: XOR<CashInCodeUpdateInput, CashInCodeUncheckedUpdateInput>
+    /**
+     * Choose, which CashInCode to update.
+     */
+    where: CashInCodeWhereUniqueInput
+  }
+
+  /**
+   * CashInCode updateMany
+   */
+  export type CashInCodeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CashInCodes.
+     */
+    data: XOR<CashInCodeUpdateManyMutationInput, CashInCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which CashInCodes to update
+     */
+    where?: CashInCodeWhereInput
+    /**
+     * Limit how many CashInCodes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CashInCode upsert
+   */
+  export type CashInCodeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CashInCode to update in case it exists.
+     */
+    where: CashInCodeWhereUniqueInput
+    /**
+     * In case the CashInCode found by the `where` argument doesn't exist, create a new CashInCode with this data.
+     */
+    create: XOR<CashInCodeCreateInput, CashInCodeUncheckedCreateInput>
+    /**
+     * In case the CashInCode was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CashInCodeUpdateInput, CashInCodeUncheckedUpdateInput>
+  }
+
+  /**
+   * CashInCode delete
+   */
+  export type CashInCodeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
+    /**
+     * Filter which CashInCode to delete.
+     */
+    where: CashInCodeWhereUniqueInput
+  }
+
+  /**
+   * CashInCode deleteMany
+   */
+  export type CashInCodeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CashInCodes to delete
+     */
+    where?: CashInCodeWhereInput
+    /**
+     * Limit how many CashInCodes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CashInCode without action
+   */
+  export type CashInCodeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CashInCode
+     */
+    select?: CashInCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CashInCode
+     */
+    omit?: CashInCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CashInCodeInclude<ExtArgs> | null
   }
 
 
@@ -66542,6 +67717,21 @@ export namespace Prisma {
   export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
 
 
+  export const CashInCodeScalarFieldEnum: {
+    id: 'id',
+    examBoardId: 'examBoardId',
+    qualificationId: 'qualificationId',
+    subjectId: 'subjectId',
+    cashInCode: 'cashInCode',
+    active: 'active',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CashInCodeScalarFieldEnum = (typeof CashInCodeScalarFieldEnum)[keyof typeof CashInCodeScalarFieldEnum]
+
+
   export const CalendarSubjectSelectionScalarFieldEnum: {
     id: 'id',
     examBoardId: 'examBoardId',
@@ -67421,6 +68611,18 @@ export namespace Prisma {
   };
 
   export type SubjectOrderByRelevanceFieldEnum = (typeof SubjectOrderByRelevanceFieldEnum)[keyof typeof SubjectOrderByRelevanceFieldEnum]
+
+
+  export const CashInCodeOrderByRelevanceFieldEnum: {
+    id: 'id',
+    examBoardId: 'examBoardId',
+    qualificationId: 'qualificationId',
+    subjectId: 'subjectId',
+    cashInCode: 'cashInCode',
+    notes: 'notes'
+  };
+
+  export type CashInCodeOrderByRelevanceFieldEnum = (typeof CashInCodeOrderByRelevanceFieldEnum)[keyof typeof CashInCodeOrderByRelevanceFieldEnum]
 
 
   export const CalendarSubjectSelectionOrderByRelevanceFieldEnum: {
@@ -70809,6 +72011,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     cashInRequests?: CashInRequestListRelationFilter
+    cashInCodes?: CashInCodeListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
     certificateRequests?: CertificateRequestListRelationFilter
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
@@ -70850,6 +72053,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleOrderByRelationAggregateInput
     reviewRequests?: ReviewRequestOrderByRelationAggregateInput
     cashInRequests?: CashInRequestOrderByRelationAggregateInput
+    cashInCodes?: CashInCodeOrderByRelationAggregateInput
     accessToScriptRequests?: AccessToScriptRequestOrderByRelationAggregateInput
     certificateRequests?: CertificateRequestOrderByRelationAggregateInput
     postResultsAuditLogs?: PostResultsAuditLogOrderByRelationAggregateInput
@@ -70895,6 +72099,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     cashInRequests?: CashInRequestListRelationFilter
+    cashInCodes?: CashInCodeListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
     certificateRequests?: CertificateRequestListRelationFilter
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
@@ -71068,6 +72273,7 @@ export namespace Prisma {
     feeRules?: FeeRuleListRelationFilter
     feeSchedules?: FeeScheduleListRelationFilter
     cashInRequests?: CashInRequestListRelationFilter
+    cashInCodes?: CashInCodeListRelationFilter
   }
 
   export type QualificationOrderByWithRelationInput = {
@@ -71084,6 +72290,7 @@ export namespace Prisma {
     feeRules?: FeeRuleOrderByRelationAggregateInput
     feeSchedules?: FeeScheduleOrderByRelationAggregateInput
     cashInRequests?: CashInRequestOrderByRelationAggregateInput
+    cashInCodes?: CashInCodeOrderByRelationAggregateInput
     _relevance?: QualificationOrderByRelevanceInput
   }
 
@@ -71104,6 +72311,7 @@ export namespace Prisma {
     feeRules?: FeeRuleListRelationFilter
     feeSchedules?: FeeScheduleListRelationFilter
     cashInRequests?: CashInRequestListRelationFilter
+    cashInCodes?: CashInCodeListRelationFilter
   }, "id">
 
   export type QualificationOrderByWithAggregationInput = {
@@ -71153,6 +72361,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     cashInRequests?: CashInRequestListRelationFilter
+    cashInCodes?: CashInCodeListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
   }
 
@@ -71174,6 +72383,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleOrderByRelationAggregateInput
     reviewRequests?: ReviewRequestOrderByRelationAggregateInput
     cashInRequests?: CashInRequestOrderByRelationAggregateInput
+    cashInCodes?: CashInCodeOrderByRelationAggregateInput
     accessToScriptRequests?: AccessToScriptRequestOrderByRelationAggregateInput
     _relevance?: SubjectOrderByRelevanceInput
   }
@@ -71199,6 +72409,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     cashInRequests?: CashInRequestListRelationFilter
+    cashInCodes?: CashInCodeListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
   }, "id">
 
@@ -71224,6 +72435,90 @@ export namespace Prisma {
     qualificationId?: StringWithAggregatesFilter<"Subject"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Subject"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Subject"> | Date | string
+  }
+
+  export type CashInCodeWhereInput = {
+    AND?: CashInCodeWhereInput | CashInCodeWhereInput[]
+    OR?: CashInCodeWhereInput[]
+    NOT?: CashInCodeWhereInput | CashInCodeWhereInput[]
+    id?: StringFilter<"CashInCode"> | string
+    examBoardId?: StringFilter<"CashInCode"> | string
+    qualificationId?: StringFilter<"CashInCode"> | string
+    subjectId?: StringFilter<"CashInCode"> | string
+    cashInCode?: StringFilter<"CashInCode"> | string
+    active?: BoolFilter<"CashInCode"> | boolean
+    notes?: StringNullableFilter<"CashInCode"> | string | null
+    createdAt?: DateTimeFilter<"CashInCode"> | Date | string
+    updatedAt?: DateTimeFilter<"CashInCode"> | Date | string
+    examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
+    qualification?: XOR<QualificationScalarRelationFilter, QualificationWhereInput>
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+  }
+
+  export type CashInCodeOrderByWithRelationInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    qualificationId?: SortOrder
+    subjectId?: SortOrder
+    cashInCode?: SortOrder
+    active?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    examBoard?: ExamBoardOrderByWithRelationInput
+    qualification?: QualificationOrderByWithRelationInput
+    subject?: SubjectOrderByWithRelationInput
+    _relevance?: CashInCodeOrderByRelevanceInput
+  }
+
+  export type CashInCodeWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    examBoardId_qualificationId_subjectId?: CashInCodeExamBoardIdQualificationIdSubjectIdCompoundUniqueInput
+    examBoardId_cashInCode?: CashInCodeExamBoardIdCashInCodeCompoundUniqueInput
+    AND?: CashInCodeWhereInput | CashInCodeWhereInput[]
+    OR?: CashInCodeWhereInput[]
+    NOT?: CashInCodeWhereInput | CashInCodeWhereInput[]
+    examBoardId?: StringFilter<"CashInCode"> | string
+    qualificationId?: StringFilter<"CashInCode"> | string
+    subjectId?: StringFilter<"CashInCode"> | string
+    cashInCode?: StringFilter<"CashInCode"> | string
+    active?: BoolFilter<"CashInCode"> | boolean
+    notes?: StringNullableFilter<"CashInCode"> | string | null
+    createdAt?: DateTimeFilter<"CashInCode"> | Date | string
+    updatedAt?: DateTimeFilter<"CashInCode"> | Date | string
+    examBoard?: XOR<ExamBoardScalarRelationFilter, ExamBoardWhereInput>
+    qualification?: XOR<QualificationScalarRelationFilter, QualificationWhereInput>
+    subject?: XOR<SubjectScalarRelationFilter, SubjectWhereInput>
+  }, "id" | "examBoardId_qualificationId_subjectId" | "examBoardId_cashInCode">
+
+  export type CashInCodeOrderByWithAggregationInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    qualificationId?: SortOrder
+    subjectId?: SortOrder
+    cashInCode?: SortOrder
+    active?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CashInCodeCountOrderByAggregateInput
+    _max?: CashInCodeMaxOrderByAggregateInput
+    _min?: CashInCodeMinOrderByAggregateInput
+  }
+
+  export type CashInCodeScalarWhereWithAggregatesInput = {
+    AND?: CashInCodeScalarWhereWithAggregatesInput | CashInCodeScalarWhereWithAggregatesInput[]
+    OR?: CashInCodeScalarWhereWithAggregatesInput[]
+    NOT?: CashInCodeScalarWhereWithAggregatesInput | CashInCodeScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CashInCode"> | string
+    examBoardId?: StringWithAggregatesFilter<"CashInCode"> | string
+    qualificationId?: StringWithAggregatesFilter<"CashInCode"> | string
+    subjectId?: StringWithAggregatesFilter<"CashInCode"> | string
+    cashInCode?: StringWithAggregatesFilter<"CashInCode"> | string
+    active?: BoolWithAggregatesFilter<"CashInCode"> | boolean
+    notes?: StringNullableWithAggregatesFilter<"CashInCode"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CashInCode"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CashInCode"> | Date | string
   }
 
   export type CalendarSubjectSelectionWhereInput = {
@@ -77093,6 +78388,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -77134,6 +78430,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -77175,6 +78472,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -77216,6 +78514,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -77415,6 +78714,7 @@ export namespace Prisma {
     feeRules?: FeeRuleCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationUncheckedCreateInput = {
@@ -77430,6 +78730,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationUpdateInput = {
@@ -77445,6 +78746,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationUncheckedUpdateInput = {
@@ -77460,6 +78762,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationCreateManyInput = {
@@ -77508,6 +78811,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -77528,6 +78832,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -77548,6 +78853,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -77568,6 +78874,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -77593,6 +78900,87 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: StringFieldUpdateOperationsInput | string
     qualificationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CashInCodeCreateInput = {
+    id?: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutCashInCodesInput
+    qualification: QualificationCreateNestedOneWithoutCashInCodesInput
+    subject: SubjectCreateNestedOneWithoutCashInCodesInput
+  }
+
+  export type CashInCodeUncheckedCreateInput = {
+    id?: string
+    examBoardId: string
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CashInCodeUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutCashInCodesNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInCodesNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInCodesNestedInput
+  }
+
+  export type CashInCodeUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CashInCodeCreateManyInput = {
+    id?: string
+    examBoardId: string
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CashInCodeUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CashInCodeUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -83327,6 +84715,12 @@ export namespace Prisma {
     none?: CalendarSubjectSelectionWhereInput
   }
 
+  export type CashInCodeListRelationFilter = {
+    every?: CashInCodeWhereInput
+    some?: CashInCodeWhereInput
+    none?: CashInCodeWhereInput
+  }
+
   export type ExamBoardWithdrawalPolicyNullableScalarRelationFilter = {
     is?: ExamBoardWithdrawalPolicyWhereInput | null
     isNot?: ExamBoardWithdrawalPolicyWhereInput | null
@@ -83349,6 +84743,10 @@ export namespace Prisma {
   }
 
   export type CalendarSubjectSelectionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CashInCodeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -83585,6 +84983,59 @@ export namespace Prisma {
     name?: SortOrder
     code?: SortOrder
     qualificationId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CashInCodeOrderByRelevanceInput = {
+    fields: CashInCodeOrderByRelevanceFieldEnum | CashInCodeOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type CashInCodeExamBoardIdQualificationIdSubjectIdCompoundUniqueInput = {
+    examBoardId: string
+    qualificationId: string
+    subjectId: string
+  }
+
+  export type CashInCodeExamBoardIdCashInCodeCompoundUniqueInput = {
+    examBoardId: string
+    cashInCode: string
+  }
+
+  export type CashInCodeCountOrderByAggregateInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    qualificationId?: SortOrder
+    subjectId?: SortOrder
+    cashInCode?: SortOrder
+    active?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CashInCodeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    qualificationId?: SortOrder
+    subjectId?: SortOrder
+    cashInCode?: SortOrder
+    active?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CashInCodeMinOrderByAggregateInput = {
+    id?: SortOrder
+    examBoardId?: SortOrder
+    qualificationId?: SortOrder
+    subjectId?: SortOrder
+    cashInCode?: SortOrder
+    active?: SortOrder
+    notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -90502,6 +91953,13 @@ export namespace Prisma {
     connect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
   }
 
+  export type CashInCodeCreateNestedManyWithoutExamBoardInput = {
+    create?: XOR<CashInCodeCreateWithoutExamBoardInput, CashInCodeUncheckedCreateWithoutExamBoardInput> | CashInCodeCreateWithoutExamBoardInput[] | CashInCodeUncheckedCreateWithoutExamBoardInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutExamBoardInput | CashInCodeCreateOrConnectWithoutExamBoardInput[]
+    createMany?: CashInCodeCreateManyExamBoardInputEnvelope
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+  }
+
   export type AccessToScriptRequestCreateNestedManyWithoutExamBoardInput = {
     create?: XOR<AccessToScriptRequestCreateWithoutExamBoardInput, AccessToScriptRequestUncheckedCreateWithoutExamBoardInput> | AccessToScriptRequestCreateWithoutExamBoardInput[] | AccessToScriptRequestUncheckedCreateWithoutExamBoardInput[]
     connectOrCreate?: AccessToScriptRequestCreateOrConnectWithoutExamBoardInput | AccessToScriptRequestCreateOrConnectWithoutExamBoardInput[]
@@ -90625,6 +92083,13 @@ export namespace Prisma {
     connectOrCreate?: CashInRequestCreateOrConnectWithoutExamBoardInput | CashInRequestCreateOrConnectWithoutExamBoardInput[]
     createMany?: CashInRequestCreateManyExamBoardInputEnvelope
     connect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+  }
+
+  export type CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput = {
+    create?: XOR<CashInCodeCreateWithoutExamBoardInput, CashInCodeUncheckedCreateWithoutExamBoardInput> | CashInCodeCreateWithoutExamBoardInput[] | CashInCodeUncheckedCreateWithoutExamBoardInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutExamBoardInput | CashInCodeCreateOrConnectWithoutExamBoardInput[]
+    createMany?: CashInCodeCreateManyExamBoardInputEnvelope
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
   }
 
   export type AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput = {
@@ -90848,6 +92313,20 @@ export namespace Prisma {
     update?: CashInRequestUpdateWithWhereUniqueWithoutExamBoardInput | CashInRequestUpdateWithWhereUniqueWithoutExamBoardInput[]
     updateMany?: CashInRequestUpdateManyWithWhereWithoutExamBoardInput | CashInRequestUpdateManyWithWhereWithoutExamBoardInput[]
     deleteMany?: CashInRequestScalarWhereInput | CashInRequestScalarWhereInput[]
+  }
+
+  export type CashInCodeUpdateManyWithoutExamBoardNestedInput = {
+    create?: XOR<CashInCodeCreateWithoutExamBoardInput, CashInCodeUncheckedCreateWithoutExamBoardInput> | CashInCodeCreateWithoutExamBoardInput[] | CashInCodeUncheckedCreateWithoutExamBoardInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutExamBoardInput | CashInCodeCreateOrConnectWithoutExamBoardInput[]
+    upsert?: CashInCodeUpsertWithWhereUniqueWithoutExamBoardInput | CashInCodeUpsertWithWhereUniqueWithoutExamBoardInput[]
+    createMany?: CashInCodeCreateManyExamBoardInputEnvelope
+    set?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    disconnect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    delete?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    update?: CashInCodeUpdateWithWhereUniqueWithoutExamBoardInput | CashInCodeUpdateWithWhereUniqueWithoutExamBoardInput[]
+    updateMany?: CashInCodeUpdateManyWithWhereWithoutExamBoardInput | CashInCodeUpdateManyWithWhereWithoutExamBoardInput[]
+    deleteMany?: CashInCodeScalarWhereInput | CashInCodeScalarWhereInput[]
   }
 
   export type AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput = {
@@ -91098,6 +92577,20 @@ export namespace Prisma {
     deleteMany?: CashInRequestScalarWhereInput | CashInRequestScalarWhereInput[]
   }
 
+  export type CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput = {
+    create?: XOR<CashInCodeCreateWithoutExamBoardInput, CashInCodeUncheckedCreateWithoutExamBoardInput> | CashInCodeCreateWithoutExamBoardInput[] | CashInCodeUncheckedCreateWithoutExamBoardInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutExamBoardInput | CashInCodeCreateOrConnectWithoutExamBoardInput[]
+    upsert?: CashInCodeUpsertWithWhereUniqueWithoutExamBoardInput | CashInCodeUpsertWithWhereUniqueWithoutExamBoardInput[]
+    createMany?: CashInCodeCreateManyExamBoardInputEnvelope
+    set?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    disconnect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    delete?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    update?: CashInCodeUpdateWithWhereUniqueWithoutExamBoardInput | CashInCodeUpdateWithWhereUniqueWithoutExamBoardInput[]
+    updateMany?: CashInCodeUpdateManyWithWhereWithoutExamBoardInput | CashInCodeUpdateManyWithWhereWithoutExamBoardInput[]
+    deleteMany?: CashInCodeScalarWhereInput | CashInCodeScalarWhereInput[]
+  }
+
   export type AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput = {
     create?: XOR<AccessToScriptRequestCreateWithoutExamBoardInput, AccessToScriptRequestUncheckedCreateWithoutExamBoardInput> | AccessToScriptRequestCreateWithoutExamBoardInput[] | AccessToScriptRequestUncheckedCreateWithoutExamBoardInput[]
     connectOrCreate?: AccessToScriptRequestCreateOrConnectWithoutExamBoardInput | AccessToScriptRequestCreateOrConnectWithoutExamBoardInput[]
@@ -91205,6 +92698,13 @@ export namespace Prisma {
     connect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
   }
 
+  export type CashInCodeCreateNestedManyWithoutQualificationInput = {
+    create?: XOR<CashInCodeCreateWithoutQualificationInput, CashInCodeUncheckedCreateWithoutQualificationInput> | CashInCodeCreateWithoutQualificationInput[] | CashInCodeUncheckedCreateWithoutQualificationInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutQualificationInput | CashInCodeCreateOrConnectWithoutQualificationInput[]
+    createMany?: CashInCodeCreateManyQualificationInputEnvelope
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+  }
+
   export type SubjectUncheckedCreateNestedManyWithoutQualificationInput = {
     create?: XOR<SubjectCreateWithoutQualificationInput, SubjectUncheckedCreateWithoutQualificationInput> | SubjectCreateWithoutQualificationInput[] | SubjectUncheckedCreateWithoutQualificationInput[]
     connectOrCreate?: SubjectCreateOrConnectWithoutQualificationInput | SubjectCreateOrConnectWithoutQualificationInput[]
@@ -91238,6 +92738,13 @@ export namespace Prisma {
     connectOrCreate?: CashInRequestCreateOrConnectWithoutQualificationInput | CashInRequestCreateOrConnectWithoutQualificationInput[]
     createMany?: CashInRequestCreateManyQualificationInputEnvelope
     connect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+  }
+
+  export type CashInCodeUncheckedCreateNestedManyWithoutQualificationInput = {
+    create?: XOR<CashInCodeCreateWithoutQualificationInput, CashInCodeUncheckedCreateWithoutQualificationInput> | CashInCodeCreateWithoutQualificationInput[] | CashInCodeUncheckedCreateWithoutQualificationInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutQualificationInput | CashInCodeCreateOrConnectWithoutQualificationInput[]
+    createMany?: CashInCodeCreateManyQualificationInputEnvelope
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
   }
 
   export type ExamBoardUpdateOneRequiredWithoutQualificationsNestedInput = {
@@ -91318,6 +92825,20 @@ export namespace Prisma {
     deleteMany?: CashInRequestScalarWhereInput | CashInRequestScalarWhereInput[]
   }
 
+  export type CashInCodeUpdateManyWithoutQualificationNestedInput = {
+    create?: XOR<CashInCodeCreateWithoutQualificationInput, CashInCodeUncheckedCreateWithoutQualificationInput> | CashInCodeCreateWithoutQualificationInput[] | CashInCodeUncheckedCreateWithoutQualificationInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutQualificationInput | CashInCodeCreateOrConnectWithoutQualificationInput[]
+    upsert?: CashInCodeUpsertWithWhereUniqueWithoutQualificationInput | CashInCodeUpsertWithWhereUniqueWithoutQualificationInput[]
+    createMany?: CashInCodeCreateManyQualificationInputEnvelope
+    set?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    disconnect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    delete?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    update?: CashInCodeUpdateWithWhereUniqueWithoutQualificationInput | CashInCodeUpdateWithWhereUniqueWithoutQualificationInput[]
+    updateMany?: CashInCodeUpdateManyWithWhereWithoutQualificationInput | CashInCodeUpdateManyWithWhereWithoutQualificationInput[]
+    deleteMany?: CashInCodeScalarWhereInput | CashInCodeScalarWhereInput[]
+  }
+
   export type SubjectUncheckedUpdateManyWithoutQualificationNestedInput = {
     create?: XOR<SubjectCreateWithoutQualificationInput, SubjectUncheckedCreateWithoutQualificationInput> | SubjectCreateWithoutQualificationInput[] | SubjectUncheckedCreateWithoutQualificationInput[]
     connectOrCreate?: SubjectCreateOrConnectWithoutQualificationInput | SubjectCreateOrConnectWithoutQualificationInput[]
@@ -91386,6 +92907,20 @@ export namespace Prisma {
     update?: CashInRequestUpdateWithWhereUniqueWithoutQualificationInput | CashInRequestUpdateWithWhereUniqueWithoutQualificationInput[]
     updateMany?: CashInRequestUpdateManyWithWhereWithoutQualificationInput | CashInRequestUpdateManyWithWhereWithoutQualificationInput[]
     deleteMany?: CashInRequestScalarWhereInput | CashInRequestScalarWhereInput[]
+  }
+
+  export type CashInCodeUncheckedUpdateManyWithoutQualificationNestedInput = {
+    create?: XOR<CashInCodeCreateWithoutQualificationInput, CashInCodeUncheckedCreateWithoutQualificationInput> | CashInCodeCreateWithoutQualificationInput[] | CashInCodeUncheckedCreateWithoutQualificationInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutQualificationInput | CashInCodeCreateOrConnectWithoutQualificationInput[]
+    upsert?: CashInCodeUpsertWithWhereUniqueWithoutQualificationInput | CashInCodeUpsertWithWhereUniqueWithoutQualificationInput[]
+    createMany?: CashInCodeCreateManyQualificationInputEnvelope
+    set?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    disconnect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    delete?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    update?: CashInCodeUpdateWithWhereUniqueWithoutQualificationInput | CashInCodeUpdateWithWhereUniqueWithoutQualificationInput[]
+    updateMany?: CashInCodeUpdateManyWithWhereWithoutQualificationInput | CashInCodeUpdateManyWithWhereWithoutQualificationInput[]
+    deleteMany?: CashInCodeScalarWhereInput | CashInCodeScalarWhereInput[]
   }
 
   export type QualificationCreateNestedOneWithoutSubjectsInput = {
@@ -91464,6 +92999,13 @@ export namespace Prisma {
     connect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
   }
 
+  export type CashInCodeCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<CashInCodeCreateWithoutSubjectInput, CashInCodeUncheckedCreateWithoutSubjectInput> | CashInCodeCreateWithoutSubjectInput[] | CashInCodeUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutSubjectInput | CashInCodeCreateOrConnectWithoutSubjectInput[]
+    createMany?: CashInCodeCreateManySubjectInputEnvelope
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+  }
+
   export type AccessToScriptRequestCreateNestedManyWithoutSubjectInput = {
     create?: XOR<AccessToScriptRequestCreateWithoutSubjectInput, AccessToScriptRequestUncheckedCreateWithoutSubjectInput> | AccessToScriptRequestCreateWithoutSubjectInput[] | AccessToScriptRequestUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: AccessToScriptRequestCreateOrConnectWithoutSubjectInput | AccessToScriptRequestCreateOrConnectWithoutSubjectInput[]
@@ -91539,6 +93081,13 @@ export namespace Prisma {
     connectOrCreate?: CashInRequestCreateOrConnectWithoutSubjectInput | CashInRequestCreateOrConnectWithoutSubjectInput[]
     createMany?: CashInRequestCreateManySubjectInputEnvelope
     connect?: CashInRequestWhereUniqueInput | CashInRequestWhereUniqueInput[]
+  }
+
+  export type CashInCodeUncheckedCreateNestedManyWithoutSubjectInput = {
+    create?: XOR<CashInCodeCreateWithoutSubjectInput, CashInCodeUncheckedCreateWithoutSubjectInput> | CashInCodeCreateWithoutSubjectInput[] | CashInCodeUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutSubjectInput | CashInCodeCreateOrConnectWithoutSubjectInput[]
+    createMany?: CashInCodeCreateManySubjectInputEnvelope
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
   }
 
   export type AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput = {
@@ -91696,6 +93245,20 @@ export namespace Prisma {
     deleteMany?: CashInRequestScalarWhereInput | CashInRequestScalarWhereInput[]
   }
 
+  export type CashInCodeUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<CashInCodeCreateWithoutSubjectInput, CashInCodeUncheckedCreateWithoutSubjectInput> | CashInCodeCreateWithoutSubjectInput[] | CashInCodeUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutSubjectInput | CashInCodeCreateOrConnectWithoutSubjectInput[]
+    upsert?: CashInCodeUpsertWithWhereUniqueWithoutSubjectInput | CashInCodeUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: CashInCodeCreateManySubjectInputEnvelope
+    set?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    disconnect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    delete?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    update?: CashInCodeUpdateWithWhereUniqueWithoutSubjectInput | CashInCodeUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: CashInCodeUpdateManyWithWhereWithoutSubjectInput | CashInCodeUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: CashInCodeScalarWhereInput | CashInCodeScalarWhereInput[]
+  }
+
   export type AccessToScriptRequestUpdateManyWithoutSubjectNestedInput = {
     create?: XOR<AccessToScriptRequestCreateWithoutSubjectInput, AccessToScriptRequestUncheckedCreateWithoutSubjectInput> | AccessToScriptRequestCreateWithoutSubjectInput[] | AccessToScriptRequestUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: AccessToScriptRequestCreateOrConnectWithoutSubjectInput | AccessToScriptRequestCreateOrConnectWithoutSubjectInput[]
@@ -91850,6 +93413,20 @@ export namespace Prisma {
     deleteMany?: CashInRequestScalarWhereInput | CashInRequestScalarWhereInput[]
   }
 
+  export type CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput = {
+    create?: XOR<CashInCodeCreateWithoutSubjectInput, CashInCodeUncheckedCreateWithoutSubjectInput> | CashInCodeCreateWithoutSubjectInput[] | CashInCodeUncheckedCreateWithoutSubjectInput[]
+    connectOrCreate?: CashInCodeCreateOrConnectWithoutSubjectInput | CashInCodeCreateOrConnectWithoutSubjectInput[]
+    upsert?: CashInCodeUpsertWithWhereUniqueWithoutSubjectInput | CashInCodeUpsertWithWhereUniqueWithoutSubjectInput[]
+    createMany?: CashInCodeCreateManySubjectInputEnvelope
+    set?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    disconnect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    delete?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    connect?: CashInCodeWhereUniqueInput | CashInCodeWhereUniqueInput[]
+    update?: CashInCodeUpdateWithWhereUniqueWithoutSubjectInput | CashInCodeUpdateWithWhereUniqueWithoutSubjectInput[]
+    updateMany?: CashInCodeUpdateManyWithWhereWithoutSubjectInput | CashInCodeUpdateManyWithWhereWithoutSubjectInput[]
+    deleteMany?: CashInCodeScalarWhereInput | CashInCodeScalarWhereInput[]
+  }
+
   export type AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput = {
     create?: XOR<AccessToScriptRequestCreateWithoutSubjectInput, AccessToScriptRequestUncheckedCreateWithoutSubjectInput> | AccessToScriptRequestCreateWithoutSubjectInput[] | AccessToScriptRequestUncheckedCreateWithoutSubjectInput[]
     connectOrCreate?: AccessToScriptRequestCreateOrConnectWithoutSubjectInput | AccessToScriptRequestCreateOrConnectWithoutSubjectInput[]
@@ -91862,6 +93439,48 @@ export namespace Prisma {
     update?: AccessToScriptRequestUpdateWithWhereUniqueWithoutSubjectInput | AccessToScriptRequestUpdateWithWhereUniqueWithoutSubjectInput[]
     updateMany?: AccessToScriptRequestUpdateManyWithWhereWithoutSubjectInput | AccessToScriptRequestUpdateManyWithWhereWithoutSubjectInput[]
     deleteMany?: AccessToScriptRequestScalarWhereInput | AccessToScriptRequestScalarWhereInput[]
+  }
+
+  export type ExamBoardCreateNestedOneWithoutCashInCodesInput = {
+    create?: XOR<ExamBoardCreateWithoutCashInCodesInput, ExamBoardUncheckedCreateWithoutCashInCodesInput>
+    connectOrCreate?: ExamBoardCreateOrConnectWithoutCashInCodesInput
+    connect?: ExamBoardWhereUniqueInput
+  }
+
+  export type QualificationCreateNestedOneWithoutCashInCodesInput = {
+    create?: XOR<QualificationCreateWithoutCashInCodesInput, QualificationUncheckedCreateWithoutCashInCodesInput>
+    connectOrCreate?: QualificationCreateOrConnectWithoutCashInCodesInput
+    connect?: QualificationWhereUniqueInput
+  }
+
+  export type SubjectCreateNestedOneWithoutCashInCodesInput = {
+    create?: XOR<SubjectCreateWithoutCashInCodesInput, SubjectUncheckedCreateWithoutCashInCodesInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutCashInCodesInput
+    connect?: SubjectWhereUniqueInput
+  }
+
+  export type ExamBoardUpdateOneRequiredWithoutCashInCodesNestedInput = {
+    create?: XOR<ExamBoardCreateWithoutCashInCodesInput, ExamBoardUncheckedCreateWithoutCashInCodesInput>
+    connectOrCreate?: ExamBoardCreateOrConnectWithoutCashInCodesInput
+    upsert?: ExamBoardUpsertWithoutCashInCodesInput
+    connect?: ExamBoardWhereUniqueInput
+    update?: XOR<XOR<ExamBoardUpdateToOneWithWhereWithoutCashInCodesInput, ExamBoardUpdateWithoutCashInCodesInput>, ExamBoardUncheckedUpdateWithoutCashInCodesInput>
+  }
+
+  export type QualificationUpdateOneRequiredWithoutCashInCodesNestedInput = {
+    create?: XOR<QualificationCreateWithoutCashInCodesInput, QualificationUncheckedCreateWithoutCashInCodesInput>
+    connectOrCreate?: QualificationCreateOrConnectWithoutCashInCodesInput
+    upsert?: QualificationUpsertWithoutCashInCodesInput
+    connect?: QualificationWhereUniqueInput
+    update?: XOR<XOR<QualificationUpdateToOneWithWhereWithoutCashInCodesInput, QualificationUpdateWithoutCashInCodesInput>, QualificationUncheckedUpdateWithoutCashInCodesInput>
+  }
+
+  export type SubjectUpdateOneRequiredWithoutCashInCodesNestedInput = {
+    create?: XOR<SubjectCreateWithoutCashInCodesInput, SubjectUncheckedCreateWithoutCashInCodesInput>
+    connectOrCreate?: SubjectCreateOrConnectWithoutCashInCodesInput
+    upsert?: SubjectUpsertWithoutCashInCodesInput
+    connect?: SubjectWhereUniqueInput
+    update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutCashInCodesInput, SubjectUpdateWithoutCashInCodesInput>, SubjectUncheckedUpdateWithoutCashInCodesInput>
   }
 
   export type ExamBoardCreateNestedOneWithoutCalendarSubjectSelectionsInput = {
@@ -105010,6 +106629,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -105050,6 +106670,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -105463,6 +107084,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -105503,6 +107125,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -105900,6 +107523,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -105919,6 +107543,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -106081,6 +107706,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -106100,6 +107726,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -106137,6 +107764,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -106177,6 +107805,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -107197,6 +108826,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -107237,6 +108867,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -111221,6 +112852,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -111261,6 +112893,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -111341,6 +112974,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -111360,6 +112994,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -112265,6 +113900,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -112305,6 +113941,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -112397,6 +114034,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -112416,6 +114054,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -115978,6 +117617,7 @@ export namespace Prisma {
     feeRules?: FeeRuleCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationUncheckedCreateWithoutExamBoardInput = {
@@ -115992,6 +117632,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationCreateOrConnectWithoutExamBoardInput = {
@@ -116698,6 +118339,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CashInCodeCreateWithoutExamBoardInput = {
+    id?: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    qualification: QualificationCreateNestedOneWithoutCashInCodesInput
+    subject: SubjectCreateNestedOneWithoutCashInCodesInput
+  }
+
+  export type CashInCodeUncheckedCreateWithoutExamBoardInput = {
+    id?: string
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CashInCodeCreateOrConnectWithoutExamBoardInput = {
+    where: CashInCodeWhereUniqueInput
+    create: XOR<CashInCodeCreateWithoutExamBoardInput, CashInCodeUncheckedCreateWithoutExamBoardInput>
+  }
+
+  export type CashInCodeCreateManyExamBoardInputEnvelope = {
+    data: CashInCodeCreateManyExamBoardInput | CashInCodeCreateManyExamBoardInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccessToScriptRequestCreateWithoutExamBoardInput = {
     id?: string
     status?: $Enums.PostResultRequestStatus
@@ -117156,6 +118829,37 @@ export namespace Prisma {
     data: XOR<CashInRequestUpdateManyMutationInput, CashInRequestUncheckedUpdateManyWithoutExamBoardInput>
   }
 
+  export type CashInCodeUpsertWithWhereUniqueWithoutExamBoardInput = {
+    where: CashInCodeWhereUniqueInput
+    update: XOR<CashInCodeUpdateWithoutExamBoardInput, CashInCodeUncheckedUpdateWithoutExamBoardInput>
+    create: XOR<CashInCodeCreateWithoutExamBoardInput, CashInCodeUncheckedCreateWithoutExamBoardInput>
+  }
+
+  export type CashInCodeUpdateWithWhereUniqueWithoutExamBoardInput = {
+    where: CashInCodeWhereUniqueInput
+    data: XOR<CashInCodeUpdateWithoutExamBoardInput, CashInCodeUncheckedUpdateWithoutExamBoardInput>
+  }
+
+  export type CashInCodeUpdateManyWithWhereWithoutExamBoardInput = {
+    where: CashInCodeScalarWhereInput
+    data: XOR<CashInCodeUpdateManyMutationInput, CashInCodeUncheckedUpdateManyWithoutExamBoardInput>
+  }
+
+  export type CashInCodeScalarWhereInput = {
+    AND?: CashInCodeScalarWhereInput | CashInCodeScalarWhereInput[]
+    OR?: CashInCodeScalarWhereInput[]
+    NOT?: CashInCodeScalarWhereInput | CashInCodeScalarWhereInput[]
+    id?: StringFilter<"CashInCode"> | string
+    examBoardId?: StringFilter<"CashInCode"> | string
+    qualificationId?: StringFilter<"CashInCode"> | string
+    subjectId?: StringFilter<"CashInCode"> | string
+    cashInCode?: StringFilter<"CashInCode"> | string
+    active?: BoolFilter<"CashInCode"> | boolean
+    notes?: StringNullableFilter<"CashInCode"> | string | null
+    createdAt?: DateTimeFilter<"CashInCode"> | Date | string
+    updatedAt?: DateTimeFilter<"CashInCode"> | Date | string
+  }
+
   export type AccessToScriptRequestUpsertWithWhereUniqueWithoutExamBoardInput = {
     where: AccessToScriptRequestWhereUniqueInput
     update: XOR<AccessToScriptRequestUpdateWithoutExamBoardInput, AccessToScriptRequestUncheckedUpdateWithoutExamBoardInput>
@@ -117280,6 +118984,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -117320,6 +119025,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -117376,6 +119082,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -117416,6 +119123,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -117455,6 +119163,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -117495,6 +119204,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -117522,6 +119232,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -117541,6 +119252,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -117754,6 +119466,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CashInCodeCreateWithoutQualificationInput = {
+    id?: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutCashInCodesInput
+    subject: SubjectCreateNestedOneWithoutCashInCodesInput
+  }
+
+  export type CashInCodeUncheckedCreateWithoutQualificationInput = {
+    id?: string
+    examBoardId: string
+    subjectId: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CashInCodeCreateOrConnectWithoutQualificationInput = {
+    where: CashInCodeWhereUniqueInput
+    create: XOR<CashInCodeCreateWithoutQualificationInput, CashInCodeUncheckedCreateWithoutQualificationInput>
+  }
+
+  export type CashInCodeCreateManyQualificationInputEnvelope = {
+    data: CashInCodeCreateManyQualificationInput | CashInCodeCreateManyQualificationInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ExamBoardUpsertWithoutQualificationsInput = {
     update: XOR<ExamBoardUpdateWithoutQualificationsInput, ExamBoardUncheckedUpdateWithoutQualificationsInput>
     create: XOR<ExamBoardCreateWithoutQualificationsInput, ExamBoardUncheckedCreateWithoutQualificationsInput>
@@ -117799,6 +119543,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -117839,6 +119584,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -117937,6 +119683,22 @@ export namespace Prisma {
     data: XOR<CashInRequestUpdateManyMutationInput, CashInRequestUncheckedUpdateManyWithoutQualificationInput>
   }
 
+  export type CashInCodeUpsertWithWhereUniqueWithoutQualificationInput = {
+    where: CashInCodeWhereUniqueInput
+    update: XOR<CashInCodeUpdateWithoutQualificationInput, CashInCodeUncheckedUpdateWithoutQualificationInput>
+    create: XOR<CashInCodeCreateWithoutQualificationInput, CashInCodeUncheckedCreateWithoutQualificationInput>
+  }
+
+  export type CashInCodeUpdateWithWhereUniqueWithoutQualificationInput = {
+    where: CashInCodeWhereUniqueInput
+    data: XOR<CashInCodeUpdateWithoutQualificationInput, CashInCodeUncheckedUpdateWithoutQualificationInput>
+  }
+
+  export type CashInCodeUpdateManyWithWhereWithoutQualificationInput = {
+    where: CashInCodeScalarWhereInput
+    data: XOR<CashInCodeUpdateManyMutationInput, CashInCodeUncheckedUpdateManyWithoutQualificationInput>
+  }
+
   export type QualificationCreateWithoutSubjectsInput = {
     id?: string
     name: string
@@ -117949,6 +119711,7 @@ export namespace Prisma {
     feeRules?: FeeRuleCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationUncheckedCreateWithoutSubjectsInput = {
@@ -117963,6 +119726,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationCreateOrConnectWithoutSubjectsInput = {
@@ -118456,6 +120220,38 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CashInCodeCreateWithoutSubjectInput = {
+    id?: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutCashInCodesInput
+    qualification: QualificationCreateNestedOneWithoutCashInCodesInput
+  }
+
+  export type CashInCodeUncheckedCreateWithoutSubjectInput = {
+    id?: string
+    examBoardId: string
+    qualificationId: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CashInCodeCreateOrConnectWithoutSubjectInput = {
+    where: CashInCodeWhereUniqueInput
+    create: XOR<CashInCodeCreateWithoutSubjectInput, CashInCodeUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type CashInCodeCreateManySubjectInputEnvelope = {
+    data: CashInCodeCreateManySubjectInput | CashInCodeCreateManySubjectInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AccessToScriptRequestCreateWithoutSubjectInput = {
     id?: string
     status?: $Enums.PostResultRequestStatus
@@ -118523,6 +120319,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationUncheckedUpdateWithoutSubjectsInput = {
@@ -118537,6 +120334,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutQualificationNestedInput
   }
 
   export type PaperUpsertWithWhereUniqueWithoutSubjectInput = {
@@ -118713,6 +120511,22 @@ export namespace Prisma {
     data: XOR<CashInRequestUpdateManyMutationInput, CashInRequestUncheckedUpdateManyWithoutSubjectInput>
   }
 
+  export type CashInCodeUpsertWithWhereUniqueWithoutSubjectInput = {
+    where: CashInCodeWhereUniqueInput
+    update: XOR<CashInCodeUpdateWithoutSubjectInput, CashInCodeUncheckedUpdateWithoutSubjectInput>
+    create: XOR<CashInCodeCreateWithoutSubjectInput, CashInCodeUncheckedCreateWithoutSubjectInput>
+  }
+
+  export type CashInCodeUpdateWithWhereUniqueWithoutSubjectInput = {
+    where: CashInCodeWhereUniqueInput
+    data: XOR<CashInCodeUpdateWithoutSubjectInput, CashInCodeUncheckedUpdateWithoutSubjectInput>
+  }
+
+  export type CashInCodeUpdateManyWithWhereWithoutSubjectInput = {
+    where: CashInCodeScalarWhereInput
+    data: XOR<CashInCodeUpdateManyMutationInput, CashInCodeUncheckedUpdateManyWithoutSubjectInput>
+  }
+
   export type AccessToScriptRequestUpsertWithWhereUniqueWithoutSubjectInput = {
     where: AccessToScriptRequestWhereUniqueInput
     update: XOR<AccessToScriptRequestUpdateWithoutSubjectInput, AccessToScriptRequestUncheckedUpdateWithoutSubjectInput>
@@ -118727,6 +120541,358 @@ export namespace Prisma {
   export type AccessToScriptRequestUpdateManyWithWhereWithoutSubjectInput = {
     where: AccessToScriptRequestScalarWhereInput
     data: XOR<AccessToScriptRequestUpdateManyMutationInput, AccessToScriptRequestUncheckedUpdateManyWithoutSubjectInput>
+  }
+
+  export type ExamBoardCreateWithoutCashInCodesInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    country: string
+    region?: string | null
+    website?: string | null
+    timezone?: string | null
+    calendarSubjectFilterEnabled?: boolean
+    centreName?: string | null
+    centreNumber?: string | null
+    centreAddress?: string | null
+    centreEmail?: string | null
+    centrePhone?: string | null
+    centreCountry?: string | null
+    centreTimeZone?: string | null
+    defaultExamOfficerName?: string | null
+    defaultExamOfficerEmail?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    qualifications?: QualificationCreateNestedManyWithoutExamBoardInput
+    examSeries?: ExamSeriesCreateNestedManyWithoutExamBoardInput
+    keyDates?: KeyDateCreateNestedManyWithoutExamBoardInput
+    resources?: ResourceCreateNestedManyWithoutExamBoardInput
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutExamBoardInput
+    calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutExamBoardInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutExamBoardInput
+    studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamBoardInput
+    feeRules?: FeeRuleCreateNestedManyWithoutExamBoardInput
+    candidateExamIdentities?: CandidateExamIdentityCreateNestedManyWithoutExamBoardInput
+    reviewWindows?: ReviewWindowCreateNestedManyWithoutExamBoardInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
+    certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
+    postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
+  }
+
+  export type ExamBoardUncheckedCreateWithoutCashInCodesInput = {
+    id?: string
+    name: string
+    code: string
+    description?: string | null
+    country: string
+    region?: string | null
+    website?: string | null
+    timezone?: string | null
+    calendarSubjectFilterEnabled?: boolean
+    centreName?: string | null
+    centreNumber?: string | null
+    centreAddress?: string | null
+    centreEmail?: string | null
+    centrePhone?: string | null
+    centreCountry?: string | null
+    centreTimeZone?: string | null
+    defaultExamOfficerName?: string | null
+    defaultExamOfficerEmail?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    qualifications?: QualificationUncheckedCreateNestedManyWithoutExamBoardInput
+    examSeries?: ExamSeriesUncheckedCreateNestedManyWithoutExamBoardInput
+    keyDates?: KeyDateUncheckedCreateNestedManyWithoutExamBoardInput
+    resources?: ResourceUncheckedCreateNestedManyWithoutExamBoardInput
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutExamBoardInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutExamBoardInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutExamBoardInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamBoardInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamBoardInput
+    candidateExamIdentities?: CandidateExamIdentityUncheckedCreateNestedManyWithoutExamBoardInput
+    reviewWindows?: ReviewWindowUncheckedCreateNestedManyWithoutExamBoardInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
+  }
+
+  export type ExamBoardCreateOrConnectWithoutCashInCodesInput = {
+    where: ExamBoardWhereUniqueInput
+    create: XOR<ExamBoardCreateWithoutCashInCodesInput, ExamBoardUncheckedCreateWithoutCashInCodesInput>
+  }
+
+  export type QualificationCreateWithoutCashInCodesInput = {
+    id?: string
+    name: string
+    level: string
+    code?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutQualificationsInput
+    subjects?: SubjectCreateNestedManyWithoutQualificationInput
+    resources?: ResourceCreateNestedManyWithoutQualificationInput
+    feeRules?: FeeRuleCreateNestedManyWithoutQualificationInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutQualificationInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutQualificationInput
+  }
+
+  export type QualificationUncheckedCreateWithoutCashInCodesInput = {
+    id?: string
+    name: string
+    level: string
+    code?: string | null
+    examBoardId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subjects?: SubjectUncheckedCreateNestedManyWithoutQualificationInput
+    resources?: ResourceUncheckedCreateNestedManyWithoutQualificationInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutQualificationInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutQualificationInput
+  }
+
+  export type QualificationCreateOrConnectWithoutCashInCodesInput = {
+    where: QualificationWhereUniqueInput
+    create: XOR<QualificationCreateWithoutCashInCodesInput, QualificationUncheckedCreateWithoutCashInCodesInput>
+  }
+
+  export type SubjectCreateWithoutCashInCodesInput = {
+    id?: string
+    name: string
+    code: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    qualification: QualificationCreateNestedOneWithoutSubjectsInput
+    papers?: PaperCreateNestedManyWithoutSubjectInput
+    keyDates?: KeyDateCreateNestedManyWithoutSubjectInput
+    resources?: ResourceCreateNestedManyWithoutSubjectInput
+    calendarSubjectSelections?: CalendarSubjectSelectionCreateNestedManyWithoutSubjectInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutSubjectInput
+    studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutSubjectInput
+    feeRules?: FeeRuleCreateNestedManyWithoutSubjectInput
+    feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
+  }
+
+  export type SubjectUncheckedCreateWithoutCashInCodesInput = {
+    id?: string
+    name: string
+    code: string
+    qualificationId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    papers?: PaperUncheckedCreateNestedManyWithoutSubjectInput
+    keyDates?: KeyDateUncheckedCreateNestedManyWithoutSubjectInput
+    resources?: ResourceUncheckedCreateNestedManyWithoutSubjectInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUncheckedCreateNestedManyWithoutSubjectInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutSubjectInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutSubjectInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
+    feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
+  }
+
+  export type SubjectCreateOrConnectWithoutCashInCodesInput = {
+    where: SubjectWhereUniqueInput
+    create: XOR<SubjectCreateWithoutCashInCodesInput, SubjectUncheckedCreateWithoutCashInCodesInput>
+  }
+
+  export type ExamBoardUpsertWithoutCashInCodesInput = {
+    update: XOR<ExamBoardUpdateWithoutCashInCodesInput, ExamBoardUncheckedUpdateWithoutCashInCodesInput>
+    create: XOR<ExamBoardCreateWithoutCashInCodesInput, ExamBoardUncheckedCreateWithoutCashInCodesInput>
+    where?: ExamBoardWhereInput
+  }
+
+  export type ExamBoardUpdateToOneWithWhereWithoutCashInCodesInput = {
+    where?: ExamBoardWhereInput
+    data: XOR<ExamBoardUpdateWithoutCashInCodesInput, ExamBoardUncheckedUpdateWithoutCashInCodesInput>
+  }
+
+  export type ExamBoardUpdateWithoutCashInCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarSubjectFilterEnabled?: BoolFieldUpdateOperationsInput | boolean
+    centreName?: NullableStringFieldUpdateOperationsInput | string | null
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    centreAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    centreEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    centrePhone?: NullableStringFieldUpdateOperationsInput | string | null
+    centreCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    centreTimeZone?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerName?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    qualifications?: QualificationUpdateManyWithoutExamBoardNestedInput
+    examSeries?: ExamSeriesUpdateManyWithoutExamBoardNestedInput
+    keyDates?: KeyDateUpdateManyWithoutExamBoardNestedInput
+    resources?: ResourceUpdateManyWithoutExamBoardNestedInput
+    sourceDocuments?: SourceDocumentUpdateManyWithoutExamBoardNestedInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutExamBoardNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutExamBoardNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamBoardNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutExamBoardNestedInput
+    candidateExamIdentities?: CandidateExamIdentityUpdateManyWithoutExamBoardNestedInput
+    reviewWindows?: ReviewWindowUpdateManyWithoutExamBoardNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
+    certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
+  }
+
+  export type ExamBoardUncheckedUpdateWithoutCashInCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    region?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    calendarSubjectFilterEnabled?: BoolFieldUpdateOperationsInput | boolean
+    centreName?: NullableStringFieldUpdateOperationsInput | string | null
+    centreNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    centreAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    centreEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    centrePhone?: NullableStringFieldUpdateOperationsInput | string | null
+    centreCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    centreTimeZone?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerName?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultExamOfficerEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    qualifications?: QualificationUncheckedUpdateManyWithoutExamBoardNestedInput
+    examSeries?: ExamSeriesUncheckedUpdateManyWithoutExamBoardNestedInput
+    keyDates?: KeyDateUncheckedUpdateManyWithoutExamBoardNestedInput
+    resources?: ResourceUncheckedUpdateManyWithoutExamBoardNestedInput
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutExamBoardNestedInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutExamBoardNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutExamBoardNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamBoardNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutExamBoardNestedInput
+    candidateExamIdentities?: CandidateExamIdentityUncheckedUpdateManyWithoutExamBoardNestedInput
+    reviewWindows?: ReviewWindowUncheckedUpdateManyWithoutExamBoardNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
+    withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
+  }
+
+  export type QualificationUpsertWithoutCashInCodesInput = {
+    update: XOR<QualificationUpdateWithoutCashInCodesInput, QualificationUncheckedUpdateWithoutCashInCodesInput>
+    create: XOR<QualificationCreateWithoutCashInCodesInput, QualificationUncheckedCreateWithoutCashInCodesInput>
+    where?: QualificationWhereInput
+  }
+
+  export type QualificationUpdateToOneWithWhereWithoutCashInCodesInput = {
+    where?: QualificationWhereInput
+    data: XOR<QualificationUpdateWithoutCashInCodesInput, QualificationUncheckedUpdateWithoutCashInCodesInput>
+  }
+
+  export type QualificationUpdateWithoutCashInCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    level?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutQualificationsNestedInput
+    subjects?: SubjectUpdateManyWithoutQualificationNestedInput
+    resources?: ResourceUpdateManyWithoutQualificationNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutQualificationNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutQualificationNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutQualificationNestedInput
+  }
+
+  export type QualificationUncheckedUpdateWithoutCashInCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    level?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subjects?: SubjectUncheckedUpdateManyWithoutQualificationNestedInput
+    resources?: ResourceUncheckedUpdateManyWithoutQualificationNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutQualificationNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutQualificationNestedInput
+  }
+
+  export type SubjectUpsertWithoutCashInCodesInput = {
+    update: XOR<SubjectUpdateWithoutCashInCodesInput, SubjectUncheckedUpdateWithoutCashInCodesInput>
+    create: XOR<SubjectCreateWithoutCashInCodesInput, SubjectUncheckedCreateWithoutCashInCodesInput>
+    where?: SubjectWhereInput
+  }
+
+  export type SubjectUpdateToOneWithWhereWithoutCashInCodesInput = {
+    where?: SubjectWhereInput
+    data: XOR<SubjectUpdateWithoutCashInCodesInput, SubjectUncheckedUpdateWithoutCashInCodesInput>
+  }
+
+  export type SubjectUpdateWithoutCashInCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    qualification?: QualificationUpdateOneRequiredWithoutSubjectsNestedInput
+    papers?: PaperUpdateManyWithoutSubjectNestedInput
+    keyDates?: KeyDateUpdateManyWithoutSubjectNestedInput
+    resources?: ResourceUpdateManyWithoutSubjectNestedInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUpdateManyWithoutSubjectNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutSubjectNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutSubjectNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutSubjectNestedInput
+    feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type SubjectUncheckedUpdateWithoutCashInCodesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    papers?: PaperUncheckedUpdateManyWithoutSubjectNestedInput
+    keyDates?: KeyDateUncheckedUpdateManyWithoutSubjectNestedInput
+    resources?: ResourceUncheckedUpdateManyWithoutSubjectNestedInput
+    calendarSubjectSelections?: CalendarSubjectSelectionUncheckedUpdateManyWithoutSubjectNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutSubjectNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutSubjectNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
+    feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type ExamBoardCreateWithoutCalendarSubjectSelectionsInput = {
@@ -118763,6 +120929,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -118803,6 +120970,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -118830,6 +120998,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -118849,6 +121018,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -118902,6 +121072,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -118942,6 +121113,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -118975,6 +121147,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -118994,6 +121167,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -119013,6 +121187,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -119032,6 +121207,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -119532,6 +121708,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -119551,6 +121728,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -119769,6 +121947,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -119809,6 +121988,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -120578,6 +122758,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -120618,6 +122799,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -122040,6 +124222,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -122080,6 +124263,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -122107,6 +124291,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -122126,6 +124311,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -122277,6 +124463,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -122317,6 +124504,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -122350,6 +124538,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -122369,6 +124558,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -122516,6 +124706,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -122556,6 +124747,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -122579,6 +124771,7 @@ export namespace Prisma {
     feeRules?: FeeRuleCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationUncheckedCreateWithoutResourcesInput = {
@@ -122593,6 +124786,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationCreateOrConnectWithoutResourcesInput = {
@@ -122616,6 +124810,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -122635,6 +124830,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -122825,6 +125021,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -122865,6 +125062,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -122894,6 +125092,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationUncheckedUpdateWithoutResourcesInput = {
@@ -122908,6 +125107,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutQualificationNestedInput
   }
 
   export type SubjectUpsertWithoutResourcesInput = {
@@ -122937,6 +125137,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -122956,6 +125157,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -123148,6 +125350,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -123188,6 +125391,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -123609,6 +125813,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -123649,6 +125854,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -123967,6 +126173,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -124007,6 +126214,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -124083,6 +126291,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationUncheckedCreateWithoutFeeRulesInput = {
@@ -124097,6 +126306,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationCreateOrConnectWithoutFeeRulesInput = {
@@ -124120,6 +126330,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -124139,6 +126350,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -124484,6 +126696,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -124524,6 +126737,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -124612,6 +126826,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationUncheckedUpdateWithoutFeeRulesInput = {
@@ -124626,6 +126841,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutQualificationNestedInput
   }
 
   export type SubjectUpsertWithoutFeeRulesInput = {
@@ -124655,6 +126871,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -124674,6 +126891,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -130256,6 +132474,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -130296,6 +132515,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -130878,6 +133098,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -130918,6 +133139,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -131525,6 +133747,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowCreateNestedManyWithoutExamBoardInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -131565,6 +133788,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowUncheckedCreateNestedManyWithoutExamBoardInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -131797,6 +134021,7 @@ export namespace Prisma {
     feeRules?: FeeRuleCreateNestedManyWithoutSubjectInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -131816,6 +134041,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -132417,6 +134643,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowUpdateManyWithoutExamBoardNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -132457,6 +134684,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -132713,6 +134941,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUpdateManyWithoutSubjectNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -132732,6 +134961,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -133329,6 +135559,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowCreateNestedManyWithoutExamBoardInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -133369,6 +135600,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowUncheckedCreateNestedManyWithoutExamBoardInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -133445,6 +135677,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutQualificationInput
     feeRules?: FeeRuleCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationUncheckedCreateWithoutCashInRequestsInput = {
@@ -133459,6 +135692,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutQualificationInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationCreateOrConnectWithoutCashInRequestsInput = {
@@ -133482,6 +135716,7 @@ export namespace Prisma {
     feeRules?: FeeRuleCreateNestedManyWithoutSubjectInput
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -133501,6 +135736,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -133942,6 +136178,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowUpdateManyWithoutExamBoardNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -133982,6 +136219,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -134070,6 +136308,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutQualificationNestedInput
     feeRules?: FeeRuleUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationUncheckedUpdateWithoutCashInRequestsInput = {
@@ -134084,6 +136323,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutQualificationNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutQualificationNestedInput
   }
 
   export type SubjectUpsertWithoutCashInRequestsInput = {
@@ -134113,6 +136353,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUpdateManyWithoutSubjectNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -134132,6 +136373,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -134558,6 +136800,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
@@ -134598,6 +136841,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
@@ -134830,6 +137074,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectUncheckedCreateWithoutAccessToScriptRequestsInput = {
@@ -134849,6 +137094,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
   }
 
   export type SubjectCreateOrConnectWithoutAccessToScriptRequestsInput = {
@@ -135329,6 +137575,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
@@ -135369,6 +137616,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
@@ -135625,6 +137873,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
   }
 
   export type SubjectUncheckedUpdateWithoutAccessToScriptRequestsInput = {
@@ -135644,6 +137893,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
   export type PaperUpsertWithoutAccessToScriptRequestsInput = {
@@ -136114,6 +138364,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
@@ -136154,6 +138405,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
@@ -136651,6 +138903,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
@@ -136691,6 +138944,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
@@ -137021,6 +139275,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutExamBoardInput
@@ -137061,6 +139316,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutExamBoardInput
@@ -137084,6 +139340,7 @@ export namespace Prisma {
     resources?: ResourceCreateNestedManyWithoutQualificationInput
     feeRules?: FeeRuleCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationUncheckedCreateWithoutFeeSchedulesInput = {
@@ -137098,6 +139355,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedCreateNestedManyWithoutQualificationInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutQualificationInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutQualificationInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutQualificationInput
   }
 
   export type QualificationCreateOrConnectWithoutFeeSchedulesInput = {
@@ -137121,6 +139379,7 @@ export namespace Prisma {
     feeRules?: FeeRuleCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutSubjectInput
   }
 
@@ -137140,6 +139399,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutSubjectInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutSubjectInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutSubjectInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutSubjectInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutSubjectInput
   }
 
@@ -137421,6 +139681,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutExamBoardNestedInput
@@ -137461,6 +139722,7 @@ export namespace Prisma {
     reviewWindows?: ReviewWindowUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutExamBoardNestedInput
@@ -137490,6 +139752,7 @@ export namespace Prisma {
     resources?: ResourceUpdateManyWithoutQualificationNestedInput
     feeRules?: FeeRuleUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationUncheckedUpdateWithoutFeeSchedulesInput = {
@@ -137504,6 +139767,7 @@ export namespace Prisma {
     resources?: ResourceUncheckedUpdateManyWithoutQualificationNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutQualificationNestedInput
   }
 
   export type SubjectUpsertWithoutFeeSchedulesInput = {
@@ -137533,6 +139797,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -137552,6 +139817,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -137887,6 +140153,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutExamBoardInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyCreateNestedOneWithoutExamBoardInput
@@ -137927,6 +140194,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedCreateNestedManyWithoutExamBoardInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamBoardInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutExamBoardInput
+    cashInCodes?: CashInCodeUncheckedCreateNestedManyWithoutExamBoardInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamBoardInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutExamBoardInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedCreateNestedOneWithoutExamBoardInput
@@ -138390,6 +140658,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutExamBoardNestedInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyUpdateOneWithoutExamBoardNestedInput
@@ -138430,6 +140699,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutExamBoardNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutExamBoardNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutExamBoardNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutExamBoardNestedInput
     withdrawalPolicy?: ExamBoardWithdrawalPolicyUncheckedUpdateOneWithoutExamBoardNestedInput
@@ -147261,6 +149531,17 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CashInCodeCreateManyExamBoardInput = {
+    id?: string
+    qualificationId: string
+    subjectId: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type AccessToScriptRequestCreateManyExamBoardInput = {
     id?: string
     reviewWindowId: string
@@ -147319,6 +149600,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationUncheckedUpdateWithoutExamBoardInput = {
@@ -147333,6 +149615,7 @@ export namespace Prisma {
     feeRules?: FeeRuleUncheckedUpdateManyWithoutQualificationNestedInput
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutQualificationNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutQualificationNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutQualificationNestedInput
   }
 
   export type QualificationUncheckedUpdateManyWithoutExamBoardInput = {
@@ -148147,6 +150430,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CashInCodeUpdateWithoutExamBoardInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    qualification?: QualificationUpdateOneRequiredWithoutCashInCodesNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInCodesNestedInput
+  }
+
+  export type CashInCodeUncheckedUpdateWithoutExamBoardInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CashInCodeUncheckedUpdateManyWithoutExamBoardInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AccessToScriptRequestUpdateWithoutExamBoardInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumPostResultRequestStatusFieldUpdateOperationsInput | $Enums.PostResultRequestStatus
@@ -148372,6 +150688,17 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type CashInCodeCreateManyQualificationInput = {
+    id?: string
+    examBoardId: string
+    subjectId: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type SubjectUpdateWithoutQualificationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -148388,6 +150715,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutSubjectNestedInput
   }
 
@@ -148407,6 +150735,7 @@ export namespace Prisma {
     feeSchedules?: FeeScheduleUncheckedUpdateManyWithoutSubjectNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
+    cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
   }
 
@@ -148657,6 +150986,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CashInCodeUpdateWithoutQualificationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutCashInCodesNestedInput
+    subject?: SubjectUpdateOneRequiredWithoutCashInCodesNestedInput
+  }
+
+  export type CashInCodeUncheckedUpdateWithoutQualificationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CashInCodeUncheckedUpdateManyWithoutQualificationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    subjectId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PaperCreateManySubjectInput = {
     id?: string
     code: string
@@ -148835,6 +151197,17 @@ export namespace Prisma {
     reason?: string | null
     notes?: string | null
     feeStatementId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CashInCodeCreateManySubjectInput = {
+    id?: string
+    examBoardId: string
+    qualificationId: string
+    cashInCode: string
+    active?: boolean
+    notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -149420,6 +151793,39 @@ export namespace Prisma {
     reason?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     feeStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CashInCodeUpdateWithoutSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutCashInCodesNestedInput
+    qualification?: QualificationUpdateOneRequiredWithoutCashInCodesNestedInput
+  }
+
+  export type CashInCodeUncheckedUpdateWithoutSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CashInCodeUncheckedUpdateManyWithoutSubjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    qualificationId?: StringFieldUpdateOperationsInput | string
+    cashInCode?: StringFieldUpdateOperationsInput | string
+    active?: BoolFieldUpdateOperationsInput | boolean
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
