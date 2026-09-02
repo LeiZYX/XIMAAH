@@ -38,14 +38,9 @@ interface SubjectOption {
   id: string;
   name: string;
   code: string;
-}
-
-interface QualificationOption {
-  id: string;
-  name: string;
-  level: string;
-  code: string | null;
-  subjects: SubjectOption[];
+  qualificationId?: string;
+  level?: string;
+  qualificationCode?: string | null;
 }
 
 const SERVICE_TYPES: FeeScheduleServiceType[] = [
@@ -64,7 +59,8 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
   const [schedules, setSchedules] = useState<ScheduleRow[]>([]);
   const [boards, setBoards] = useState<ExamBoardOption[]>([]);
   const [series, setSeries] = useState<ExamSeriesOption[]>([]);
-  const [qualifications, setQualifications] = useState<QualificationOption[]>([]);
+  const [subjects, setSubjects] = useState<SubjectOption[]>([]);
+  const [subjectFilter, setSubjectFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +68,6 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
   const [examBoardId, setExamBoardId] = useState("");
   const [serviceType, setServiceType] = useState<FeeScheduleServiceType>("EXAM_ENTRY");
   const [examSeriesId, setExamSeriesId] = useState("");
-  const [qualificationId, setQualificationId] = useState("");
   const [subjectId, setSubjectId] = useState("");
   const [effectiveFrom, setEffectiveFrom] = useState("");
   const [costCurrency, setCostCurrency] = useState<"GBP" | "CNY">("GBP");
@@ -81,10 +76,24 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
   const [salesAmount, setSalesAmount] = useState("");
 
   const isCashIn = serviceType === "CASH_IN";
-  const selectedQualification = useMemo(
-    () => qualifications.find((item) => item.id === qualificationId) ?? null,
-    [qualifications, qualificationId],
-  );
+
+  const filteredSubjects = useMemo(() => {
+    const q = subjectFilter.trim().toLowerCase();
+    const list = !q
+      ? subjects
+      : subjects.filter(
+          (item) =>
+            item.code.toLowerCase().includes(q) ||
+            item.name.toLowerCase().includes(q) ||
+            (item.level ?? "").toLowerCase().includes(q) ||
+            (item.qualificationCode ?? "").toLowerCase().includes(q),
+        );
+    if (subjectId && !list.some((item) => item.id === subjectId)) {
+      const selected = subjects.find((item) => item.id === subjectId);
+      if (selected) return [selected, ...list];
+    }
+    return list;
+  }, [subjects, subjectFilter, subjectId]);
 
   async function loadSchedules() {
     setLoading(true);
@@ -102,10 +111,10 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
 
   useEffect(() => {
     setExamSeriesId("");
-    setQualificationId("");
     setSubjectId("");
+    setSubjectFilter("");
     setSeries([]);
-    setQualifications([]);
+    setSubjects([]);
     if (!examBoardId) return;
 
     void fetch(`/api/exam-series?examBoardId=${encodeURIComponent(examBoardId)}`)
@@ -114,15 +123,9 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
 
     if (isCashIn) {
       void fetch(`/api/cash-in-codes/options?examBoardId=${encodeURIComponent(examBoardId)}`)
-        .then((r) => (r.ok ? r.json() : { qualifications: [] }))
-        .then((data: { qualifications?: QualificationOption[] } | QualificationOption[]) => {
-          // Prefer { qualifications }; tolerate legacy bare array.
-          const list = Array.isArray(data)
-            ? data
-            : Array.isArray(data.qualifications)
-              ? data.qualifications
-              : [];
-          setQualifications(list);
+        .then((r) => (r.ok ? r.json() : { subjects: [] }))
+        .then((data: { subjects?: SubjectOption[] }) => {
+          setSubjects(Array.isArray(data.subjects) ? data.subjects : []);
         });
     }
   }, [examBoardId, isCashIn]);
@@ -130,8 +133,8 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
   useEffect(() => {
     if (!isCashIn) {
       setExamSeriesId("");
-      setQualificationId("");
       setSubjectId("");
+      setSubjectFilter("");
     }
   }, [isCashIn]);
 
@@ -148,7 +151,6 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
           examBoardId,
           serviceType,
           examSeriesId: isCashIn && examSeriesId ? examSeriesId : null,
-          qualificationId: isCashIn && qualificationId ? qualificationId : null,
           subjectId: isCashIn && subjectId ? subjectId : null,
           effectiveFrom: datetimeLocalValueToIso(effectiveFrom),
           costCurrency,
@@ -250,43 +252,33 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
                   ))}
                 </select>
               </label>
-              <label className="text-sm">
-                <span className="mb-1 block font-medium text-slate-700">
-                  Qualification (optional)
-                </span>
-                <select
-                  value={qualificationId}
-                  onChange={(e) => {
-                    setQualificationId(e.target.value);
-                    setSubjectId("");
-                  }}
-                  className="w-full border border-slate-300 px-3 py-2"
-                  disabled={!examBoardId}
-                >
-                  <option value="">Any qualification</option>
-                  {qualifications.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.level}
-                      {item.code ? ` · ${item.code}` : ""} — {item.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
               <label className="text-sm md:col-span-2">
                 <span className="mb-1 block font-medium text-slate-700">Subject (optional)</span>
+                <input
+                  type="search"
+                  value={subjectFilter}
+                  onChange={(e) => setSubjectFilter(e.target.value)}
+                  placeholder="Filter by code, name, or level…"
+                  className="mb-2 w-full border border-slate-300 px-3 py-2"
+                  disabled={!examBoardId}
+                />
                 <select
                   value={subjectId}
                   onChange={(e) => setSubjectId(e.target.value)}
                   className="w-full border border-slate-300 px-3 py-2"
-                  disabled={!selectedQualification}
+                  disabled={!examBoardId}
                 >
                   <option value="">Any subject (series/board default)</option>
-                  {(selectedQualification?.subjects ?? []).map((item) => (
+                  {filteredSubjects.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.code} — {item.name}
+                      {item.level ? ` · ${item.level}` : ""}
                     </option>
                   ))}
                 </select>
+                <p className="mt-1 text-xs text-slate-500">
+                  Qualification is derived from the subject when set.
+                </p>
               </label>
             </>
           ) : null}

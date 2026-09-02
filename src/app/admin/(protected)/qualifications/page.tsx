@@ -110,7 +110,7 @@ export default function QualificationsPage() {
     <div>
       <PageHeader
         title="Qualifications"
-        description="GCSE, A-Level, and other qualification types linked to exam boards."
+        description="Metadata for exam levels (GCSE, A Level, IAL, etc.). Day-to-day operations use Subjects; qualification is derived from the subject. Prefer Subjects admin and timetable import over creating per-syllabus qualifications here."
       />
       <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
         <Card>

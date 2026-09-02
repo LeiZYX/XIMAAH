@@ -113,14 +113,6 @@ export function parseCashInCodeImportWorkbook(buffer: ArrayBuffer | Buffer): {
       return;
     }
 
-    if (!qualificationLevel && !qualificationCode) {
-      errors.push({
-        rowNumber,
-        message: "Provide Qualification Level and/or Qualification Code",
-      });
-      return;
-    }
-
     try {
       rows.push({
         rowNumber,

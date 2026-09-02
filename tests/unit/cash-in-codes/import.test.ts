@@ -45,7 +45,7 @@ describe("cash-in code template and parse", () => {
     });
   });
 
-  it("requires qualification level or code", () => {
+  it("accepts rows without qualification columns (subject-first)", () => {
     const buffer = buildCashInCodeImportTemplateBuffer([
       {
         "Exam Board Code": "EDEXCEL",
@@ -60,7 +60,14 @@ describe("cash-in code template and parse", () => {
     ]);
 
     const parsed = parseCashInCodeImportWorkbook(buffer);
-    expect(parsed.rows).toHaveLength(0);
-    expect(parsed.errors[0]?.message).toContain("Qualification");
+    expect(parsed.errors).toEqual([]);
+    expect(parsed.rows).toHaveLength(1);
+    expect(parsed.rows[0]).toMatchObject({
+      examBoardCode: "EDEXCEL",
+      subjectCode: "WMA",
+      cashInCode: "XMA01",
+      qualificationLevel: "",
+      qualificationCode: "",
+    });
   });
 });

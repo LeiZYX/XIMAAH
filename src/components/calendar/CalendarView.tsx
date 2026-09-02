@@ -316,16 +316,20 @@ export function CalendarView() {
 
   useEffect(() => {
     const params = new URLSearchParams();
-    if (filters.qualificationId) params.set("qualificationId", filters.qualificationId);
+    if (filters.qualificationId) {
+      params.set("qualificationId", filters.qualificationId);
+    } else if (filters.examBoardIds.length === 1) {
+      params.set("examBoardId", filters.examBoardIds[0]!);
+    }
 
     fetch(`/api/subjects?${params.toString()}`)
       .then(async (response) => {
         if (!response.ok) throw new Error("Failed to load subjects");
         return response.json();
       })
-      .then((data: SubjectOption[]) => setSubjects(data))
+      .then((data: SubjectOption[]) => setSubjects(Array.isArray(data) ? data : []))
       .catch(() => setSubjects([]));
-  }, [filters.qualificationId]);
+  }, [filters.qualificationId, filters.examBoardIds]);
 
   useEffect(() => {
     fetch("/api/exam-series")

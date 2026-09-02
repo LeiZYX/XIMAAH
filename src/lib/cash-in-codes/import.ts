@@ -28,6 +28,7 @@ function qualificationMatches(
 ): boolean {
   const code = row.qualificationCode.trim().toUpperCase();
   const level = row.qualificationLevel.trim().toUpperCase();
+  if (!code && !level) return true;
   if (code) {
     return (qualification.code ?? "").trim().toUpperCase() === code;
   }
@@ -80,47 +81,38 @@ export async function resolveCashInCodeImportRows(rows: CashInCodeImportRow[]): 
       continue;
     }
 
-    const matchedQualifications = board.qualifications.filter((qualification) =>
-      qualificationMatches(qualification, row),
-    );
-    if (matchedQualifications.length === 0) {
+    const subjectCodeUpper = row.subjectCode.toUpperCase();
+    const candidates = board.qualifications.flatMap((qualification) => {
+      if (!qualificationMatches(qualification, row)) return [];
+      return qualification.subjects
+        .filter((subject) => subject.code.trim().toUpperCase() === subjectCodeUpper)
+        .map((subject) => ({ qualification, subject }));
+    });
+
+    if (candidates.length === 0) {
+      const hasQualHint = Boolean(row.qualificationLevel || row.qualificationCode);
       errors.push({
         rowNumber: row.rowNumber,
-        message: row.qualificationCode
-          ? `Qualification code "${row.qualificationCode}" not found for ${row.examBoardCode}`
-          : `Qualification level "${row.qualificationLevel}" not found for ${row.examBoardCode}`,
-      });
-      continue;
-    }
-    if (matchedQualifications.length > 1 && !row.qualificationCode) {
-      errors.push({
-        rowNumber: row.rowNumber,
-        message: `Multiple qualifications match level "${row.qualificationLevel}". Provide Qualification Code.`,
+        message: hasQualHint
+          ? `Subject code "${row.subjectCode}" not found for ${row.examBoardCode} with the given qualification filter`
+          : `Subject code "${row.subjectCode}" not found for ${row.examBoardCode}`,
       });
       continue;
     }
 
-    const qualification = matchedQualifications[0]!;
-    const subject = qualification.subjects.find(
-      (item) => item.code.trim().toUpperCase() === row.subjectCode.toUpperCase(),
-    );
-    if (!subject) {
+    if (candidates.length > 1) {
       errors.push({
         rowNumber: row.rowNumber,
-        message: `Subject code "${row.subjectCode}" not found under ${qualification.level}${
-          qualification.code ? ` (${qualification.code})` : ""
-        }`,
+        message: `Multiple subjects match code "${row.subjectCode}" on ${row.examBoardCode}. Provide Qualification Level or Qualification Code to disambiguate.`,
       });
       continue;
     }
 
-    const subjectKey = `${board.id}::${qualification.id}::${subject.id}`;
+    const { qualification, subject } = candidates[0]!;
+    const subjectKey = `${board.id}::${subject.id}`;
     const codeKey = `${board.id}::${row.cashInCode.toUpperCase()}`;
 
-    const existingBySubject = board.cashInCodes.find(
-      (item) =>
-        item.qualificationId === qualification.id && item.subjectId === subject.id,
-    );
+    const existingBySubject = board.cashInCodes.find((item) => item.subjectId === subject.id);
     const existingByCode = board.cashInCodes.find(
       (item) => item.cashInCode.toUpperCase() === row.cashInCode.toUpperCase(),
     );
@@ -194,6 +186,8 @@ export async function commitCashInCodeImportRows(
             cashInCode: row.cashInCode,
             active: row.active,
             notes: row.notes,
+            qualificationId: row.qualificationId,
+            subjectId: row.subjectId,
           },
         });
         updated += 1;

@@ -35,12 +35,20 @@ These entities store both `qualificationId` and `subjectId`. They must stay alig
 - Cash-in Requests create (POST `/api/cash-in-requests`)
 - Cash-in Codes create (POST `/api/cash-in-codes`)
 - Registration fee rules create (POST `/api/registration-windows/[id]/fee-rules`)
+- Fee Schedule CASH_IN create (subject optional; qualification derived)
+- Cash-in Excel import (board + subject code; qualification columns optional)
+- Calendar filter UX unchanged (level pills + board + qualification/subject/series)
 
-## Flows that still expose Qualification in UI
+## Admin Qualifications page
 
-- Fee Schedule (CASH_IN) — optional qualification filter (Phase 3)
-- Calendar filters (Phase 3)
-- Cash-in Excel import columns (Phase 3)
+Read/write still available for metadata and rare fixes. Prefer Subjects + timetable import for operational data.
+
+## Phase 3 — UX alignment
+
+- Fee Schedule CASH_IN: no qualification dropdown (subject-first)
+- Cash-in import: subject-first resolution
+- Calendar: **keeps** Qualification level pills, Exam board, Qualification / Subject / Series dropdowns (unchanged filter UX)
+- Admin qualifications: description clarifies metadata role
 
 ## Audit tooling
 
