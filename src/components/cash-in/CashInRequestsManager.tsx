@@ -21,7 +21,12 @@ interface ExamBoardOption {
 interface CandidateOption {
   id: string;
   englishName: string;
+  chineseName?: string | null;
+  preferredEnglishName?: string | null;
   assessmentHubCandidateNumber: string;
+  studentId?: string | null;
+  studentNumber?: string | null;
+  email?: string | null;
 }
 
 interface SeriesOption {
@@ -78,7 +83,10 @@ export function CashInRequestsManager({
   basePath: "/admin" | "/exam-office";
 }) {
   const [boards, setBoards] = useState<ExamBoardOption[]>([]);
-  const [candidates, setCandidates] = useState<CandidateOption[]>([]);
+  const [candidateQuery, setCandidateQuery] = useState("");
+  const [candidateResults, setCandidateResults] = useState<CandidateOption[]>([]);
+  const [candidatesLoading, setCandidatesLoading] = useState(false);
+  const [selectedCandidate, setSelectedCandidate] = useState<CandidateOption | null>(null);
   const [rows, setRows] = useState<CashInRequestRow[]>([]);
   const [series, setSeries] = useState<SeriesOption[]>([]);
   const [qualifications, setQualifications] = useState<QualificationOption[]>([]);
@@ -93,7 +101,6 @@ export function CashInRequestsManager({
 
   const [examBoardId, setExamBoardId] = useState("");
   const [examSeriesId, setExamSeriesId] = useState("");
-  const [candidateId, setCandidateId] = useState("");
   const [qualificationId, setQualificationId] = useState("");
   const [subjectId, setSubjectId] = useState("");
   const [notes, setNotes] = useState("");
@@ -164,10 +171,23 @@ export function CashInRequestsManager({
           setExamBoardId((current) => current || data[0]!.id);
         }
       });
-    void fetch("/api/candidates/search")
-      .then((r) => (r.ok ? r.json() : []))
-      .then((data) => setCandidates(Array.isArray(data) ? data : []));
   }, []);
+
+  useEffect(() => {
+    if (candidateQuery.trim().length < 2) {
+      setCandidateResults([]);
+      return;
+    }
+    const handle = window.setTimeout(() => {
+      setCandidatesLoading(true);
+      void fetch(`/api/candidates/search?q=${encodeURIComponent(candidateQuery.trim())}`)
+        .then((r) => (r.ok ? r.json() : []))
+        .then((data) => setCandidateResults(Array.isArray(data) ? data : []))
+        .catch(() => setCandidateResults([]))
+        .finally(() => setCandidatesLoading(false));
+    }, 250);
+    return () => window.clearTimeout(handle);
+  }, [candidateQuery]);
 
   // Quietly refresh while any submitted request still awaits payment, so Bill/Status
   // update after the student pays without a manual page reload.
@@ -235,6 +255,10 @@ export function CashInRequestsManager({
 
   async function handleCreate(event: FormEvent) {
     event.preventDefault();
+    if (!selectedCandidate) {
+      setError("Please search and select a candidate.");
+      return;
+    }
     setCreating(true);
     setError(null);
     setMessage(null);
@@ -243,7 +267,7 @@ export function CashInRequestsManager({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          candidateId,
+          candidateId: selectedCandidate.id,
           examBoardId,
           examSeriesId,
           qualificationId,
@@ -257,6 +281,9 @@ export function CashInRequestsManager({
       setMessage(`Created cash-in request ${data.cashInCode}.`);
       setNotes("");
       setSubjectId("");
+      setSelectedCandidate(null);
+      setCandidateQuery("");
+      setCandidateResults([]);
       await loadRows();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to create");
@@ -367,22 +394,87 @@ export function CashInRequestsManager({
       <Card className="space-y-4">
         <h2 className="text-sm font-semibold text-slate-900">New cash-in request</h2>
         <form onSubmit={(event) => void handleCreate(event)} className="grid gap-4 md:grid-cols-2">
-          <label className="text-sm">
+          <div className="text-sm md:col-span-2">
             <span className="mb-1 block font-medium text-slate-700">Candidate</span>
-            <select
-              required
-              value={candidateId}
-              onChange={(event) => setCandidateId(event.target.value)}
+            <input
+              value={candidateQuery}
+              onChange={(event) => {
+                setCandidateQuery(event.target.value);
+                if (selectedCandidate) setSelectedCandidate(null);
+              }}
+              placeholder="Search English/Chinese name, student ID, AH number, or email"
               className="w-full rounded-lg border border-slate-300 px-3 py-2"
-            >
-              <option value="">Select candidate</option>
-              {candidates.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.englishName} ({item.assessmentHubCandidateNumber})
-                </option>
-              ))}
-            </select>
-          </label>
+              autoComplete="off"
+            />
+            {selectedCandidate ? (
+              <div className="mt-2 flex flex-wrap items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900">
+                <span>
+                  Selected:{" "}
+                  <span className="font-medium">
+                    {selectedCandidate.preferredEnglishName || selectedCandidate.englishName}
+                  </span>
+                  {selectedCandidate.chineseName ? ` · ${selectedCandidate.chineseName}` : ""}
+                  {` · ${selectedCandidate.assessmentHubCandidateNumber}`}
+                  {selectedCandidate.studentId ? ` · ${selectedCandidate.studentId}` : ""}
+                  {selectedCandidate.studentNumber
+                    ? ` · No. ${selectedCandidate.studentNumber}`
+                    : ""}
+                  {selectedCandidate.email ? ` · ${selectedCandidate.email}` : ""}
+                </span>
+                <button
+                  type="button"
+                  className="text-emerald-800 underline hover:text-emerald-950"
+                  onClick={() => {
+                    setSelectedCandidate(null);
+                    setCandidateQuery("");
+                    setCandidateResults([]);
+                  }}
+                >
+                  Clear
+                </button>
+              </div>
+            ) : (
+              <div className="mt-2 max-h-40 overflow-y-auto rounded-lg border border-slate-200 bg-white">
+                {candidatesLoading ? (
+                  <p className="px-3 py-2 text-sm text-slate-500">Searching…</p>
+                ) : candidateResults.length === 0 ? (
+                  <p className="px-3 py-2 text-sm text-slate-500">
+                    {candidateQuery.trim().length >= 2
+                      ? "No candidates found."
+                      : "Type at least 2 characters to search."}
+                  </p>
+                ) : (
+                  candidateResults.map((candidate) => (
+                    <button
+                      key={candidate.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedCandidate(candidate);
+                        setCandidateQuery(
+                          candidate.preferredEnglishName || candidate.englishName,
+                        );
+                        setCandidateResults([]);
+                      }}
+                      className="block w-full border-b border-slate-100 px-3 py-2 text-left text-sm last:border-b-0 hover:bg-indigo-50"
+                    >
+                      <span className="font-medium text-slate-900">
+                        {candidate.preferredEnglishName || candidate.englishName}
+                      </span>
+                      {candidate.chineseName ? (
+                        <span className="text-slate-600"> · {candidate.chineseName}</span>
+                      ) : null}
+                      <span className="mt-0.5 block text-xs text-slate-500">
+                        {candidate.assessmentHubCandidateNumber}
+                        {candidate.studentId ? ` · ${candidate.studentId}` : ""}
+                        {candidate.studentNumber ? ` · No. ${candidate.studentNumber}` : ""}
+                        {candidate.email ? ` · ${candidate.email}` : ""}
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
           <label className="text-sm">
             <span className="mb-1 block font-medium text-slate-700">Exam board</span>
             <select
