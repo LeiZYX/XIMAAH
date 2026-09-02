@@ -1,62 +1,22 @@
-import type { FeeCurrency, FeeStatementDisplayCurrency } from "@/generated/prisma/enums";
+import type { FeeStatementDisplayCurrency } from "@/generated/prisma/enums";
+import {
+  CASH_IN_SERVICE_NAME,
+  dualCurrencyFromQuotedSales,
+  isCashInFeeStatementPayable,
+} from "@/lib/cash-in-requests/billing-utils";
 import { createFeeAuditLog } from "@/lib/fees/audit";
 import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-currency";
-import { roundMoney, toNumber } from "@/lib/fees/money";
+import { toNumber } from "@/lib/fees/money";
 import { computeStatementPaymentSplit } from "@/lib/fees/payment-due";
 import { prisma } from "@/lib/prisma";
 import { logPostResultsAudit } from "@/lib/post-results/audit";
 import { generatePostResultsFeeStatementNumber } from "@/lib/registrations/numbering";
 
-export const CASH_IN_SERVICE_NAME = "Cash-in";
-
-export function dualCurrencyFromQuotedSales(params: {
-  salesAmount: number;
-  salesCurrency: FeeCurrency | string;
-  exchangeRateGbpToCny: number | null;
-}): {
-  salesGbp: number;
-  salesCny: number;
-  exchangeRateGbpToCny: number | null;
-} {
-  const salesAmount = roundMoney(params.salesAmount);
-  const currency = params.salesCurrency;
-  const rate =
-    params.exchangeRateGbpToCny != null && params.exchangeRateGbpToCny > 0
-      ? params.exchangeRateGbpToCny
-      : null;
-
-  if (currency === "GBP") {
-    return {
-      salesGbp: salesAmount,
-      salesCny: rate ? roundMoney(salesAmount * rate) : salesAmount,
-      exchangeRateGbpToCny: rate,
-    };
-  }
-
-  if (currency === "CNY") {
-    return {
-      salesCny: salesAmount,
-      salesGbp: rate ? roundMoney(salesAmount / rate) : salesAmount,
-      exchangeRateGbpToCny: rate,
-    };
-  }
-
-  throw new Error(`Unsupported sales currency: ${currency}`);
-}
-
-export function isCashInFeeStatementPayable(statement: {
-  status: string;
-  amountDueGbpAmount?: { toString(): string } | number | string | null;
-  totalGbpAmount: { toString(): string } | number | string;
-}): boolean {
-  if (statement.status === "PAID") return true;
-  if (statement.status !== "ISSUED") return false;
-  const due =
-    statement.amountDueGbpAmount != null && statement.amountDueGbpAmount !== ""
-      ? toNumber(statement.amountDueGbpAmount)
-      : toNumber(statement.totalGbpAmount);
-  return due <= 0;
-}
+export {
+  CASH_IN_SERVICE_NAME,
+  dualCurrencyFromQuotedSales,
+  isCashInFeeStatementPayable,
+} from "@/lib/cash-in-requests/billing-utils";
 
 /**
  * Create and issue a student-visible POST_RESULTS fee statement for a submitted cash-in request.

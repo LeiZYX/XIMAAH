@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   dualCurrencyFromQuotedSales,
   isCashInFeeStatementPayable,
-} from "@/lib/cash-in-requests/billing";
+} from "@/lib/cash-in-requests/billing-utils";
 import {
   formatPostResultsFeeStatementNumber,
   postResultsFeeStatementNumberPattern,

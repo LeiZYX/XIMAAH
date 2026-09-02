@@ -9,7 +9,7 @@ import {
   canCancelCashInRequest,
   cashInRequestStatusLabel,
 } from "@/lib/cash-in-requests/status";
-import { isCashInFeeStatementPayable } from "@/lib/cash-in-requests/billing";
+import { isCashInFeeStatementPayable } from "@/lib/cash-in-requests/billing-utils";
 import { formatMoney } from "@/lib/fees/money";
 
 interface ExamBoardOption {
