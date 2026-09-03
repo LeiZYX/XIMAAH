@@ -32,6 +32,8 @@ export interface CandidateRegistrationFeeSectionProps {
   examBoardId: string | null;
   examBoardName: string | null;
   registrationWindowId: string | null;
+  /** When set, loads board identity and hides Add if a UCI already exists. */
+  candidateId?: string | null;
   savedIncluded: boolean;
   pendingIncluded: boolean;
   onPendingIncludedChange: (value: boolean) => void;
@@ -57,6 +59,7 @@ export function CandidateRegistrationFeeSection({
   examBoardId,
   examBoardName,
   registrationWindowId,
+  candidateId = null,
   savedIncluded,
   pendingIncluded,
   onPendingIncludedChange,
@@ -74,19 +77,60 @@ export function CandidateRegistrationFeeSection({
   const [preview, setPreview] = useState<FeePreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
+  const [existingUciNumber, setExistingUciNumber] = useState<string | null>(null);
+  const [uciLoading, setUciLoading] = useState(false);
 
   const pendingChange = pendingIncluded !== savedIncluded;
-  const pendingBadge = pendingIncluded && !savedIncluded
-    ? ("Pending Add" as const)
-    : !pendingIncluded && savedIncluded
-      ? ("Pending Remove" as const)
-      : null;
+  const pendingBadge =
+    pendingIncluded && !savedIncluded
+      ? ("Pending Add" as const)
+      : !pendingIncluded && savedIncluded
+        ? ("Pending Remove" as const)
+        : null;
 
+  const hasExistingUci = Boolean(existingUciNumber?.trim());
+  /** Add is blocked when board identity already has a UCI (unless fee is already on this registration). */
+  const blockAddBecauseUci = hasExistingUci && !savedIncluded && !pendingIncluded;
   const showAddedCard = pendingIncluded;
   const reasonRequired = pendingChange;
   const reasonLabel = pendingIncluded
     ? "Reason for adding Candidate Registration Fee"
     : "Reason for removing Candidate Registration Fee";
+
+  useEffect(() => {
+    if (!candidateId || !examBoardId) {
+      setExistingUciNumber(null);
+      setUciLoading(false);
+      return;
+    }
+
+    let cancelled = false;
+    setUciLoading(true);
+
+    fetch(
+      `/api/candidates/${encodeURIComponent(candidateId)}/board-identity?examBoardId=${encodeURIComponent(examBoardId)}`,
+    )
+      .then((response) =>
+        readJsonResponse<{
+          identity?: { uciNumber?: string | null } | null;
+          error?: string;
+        }>(response),
+      )
+      .then((data) => {
+        if (cancelled) return;
+        setExistingUciNumber(data.identity?.uciNumber?.trim() || null);
+      })
+      .catch(() => {
+        if (!cancelled) setExistingUciNumber(null);
+      })
+      .finally(() => {
+        if (!cancelled) setUciLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [candidateId, examBoardId]);
 
   useEffect(() => {
     if (!examBoardId || !registrationWindowId) {
@@ -167,19 +211,38 @@ export function CandidateRegistrationFeeSection({
         ) : null}
       </div>
 
-      {!showAddedCard ? (
+      {blockAddBecauseUci ? (
+        <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <p className="text-sm font-semibold text-slate-900">
+            {CANDIDATE_REGISTRATION_FEE_SERVICE_NAME}
+          </p>
+          <p className="mt-1 text-sm text-slate-600">
+            This student already has a UCI for{" "}
+            <span className="font-medium">{examBoardName ?? "this exam board"}</span>. Add Candidate
+            Registration Fee is not available.
+          </p>
+          <div className="mt-3 rounded-lg border border-slate-200 bg-white px-3 py-2">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">UCI Number</p>
+            <p className="mt-0.5 font-mono text-sm font-semibold text-slate-900">
+              {existingUciNumber}
+            </p>
+          </div>
+        </div>
+      ) : !showAddedCard ? (
         <div className="rounded-lg border border-dashed border-slate-300 bg-slate-50/60 p-4">
-          <p className="text-sm font-semibold text-slate-900">{CANDIDATE_REGISTRATION_FEE_SERVICE_NAME}</p>
+          <p className="text-sm font-semibold text-slate-900">
+            {CANDIDATE_REGISTRATION_FEE_SERVICE_NAME}
+          </p>
           <p className="mt-1 text-sm text-slate-600">
             This fee has not been added to this registration.
           </p>
           <button
             type="button"
-            disabled={disabled || previewLoading || Boolean(previewError)}
+            disabled={disabled || previewLoading || uciLoading || Boolean(previewError)}
             onClick={() => onPendingIncludedChange(true)}
             className="mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
           >
-            Add Candidate Registration Fee
+            {uciLoading ? "Checking UCI..." : "Add Candidate Registration Fee"}
           </button>
           {previewError ? <p className="mt-3 text-sm text-amber-800">{previewError}</p> : null}
         </div>
@@ -208,6 +271,9 @@ export function CandidateRegistrationFeeSection({
               label="Fee schedule"
               value={preview ? `v${preview.version}` : previewLoading ? "Loading…" : "—"}
             />
+            {hasExistingUci ? (
+              <RegistrationItemMeta label="UCI Number" value={existingUciNumber ?? "—"} />
+            ) : null}
             <SalesAmountDisplay
               amounts={amounts}
               displayCurrency={displayCurrency}
@@ -224,10 +290,7 @@ export function CandidateRegistrationFeeSection({
                   value={new Date(savedAuditInfo.performedAt).toLocaleString()}
                 />
                 {savedAuditInfo.reason ? (
-                  <RegistrationItemMeta
-                    label="Reason"
-                    value={savedAuditInfo.reason}
-                  />
+                  <RegistrationItemMeta label="Reason" value={savedAuditInfo.reason} />
                 ) : null}
               </>
             ) : null}

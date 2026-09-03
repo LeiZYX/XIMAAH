@@ -146,6 +146,7 @@ interface WorkspaceData {
   registrationType: string;
   lockedAt: string | null;
   includeCandidateRegistrationFee: boolean;
+  candidateId?: string | null;
   hasPostLockAdjustment: boolean;
   lastAdjustedAt: string | null;
   lastAdjustmentReason: string | null;
@@ -158,6 +159,7 @@ interface WorkspaceData {
     studentProfile: { studentNo: string; currentGrade: string; currentClassName: string; email: string | null } | null;
   } | null;
   candidate?: {
+    id?: string;
     englishName: string;
     studentId: string | null;
     studentNumber: string | null;
@@ -908,6 +910,7 @@ export function RegistrationWorkspaceDetail({
             examBoardId={workspace.registrationWindow.examBoard.id}
             examBoardName={workspace.registrationWindow.examBoard.name}
             registrationWindowId={workspace.registrationWindow.id}
+            candidateId={workspace.candidateId ?? workspace.candidate?.id ?? null}
             savedIncluded={workspace.includeCandidateRegistrationFee}
             pendingIncluded={includeCandidateRegistrationFee}
             onPendingIncludedChange={setIncludeCandidateRegistrationFee}

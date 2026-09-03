@@ -339,6 +339,7 @@ export function ExternalCandidateRegistrationModal({
             examBoardId={selectedWindow?.examBoard?.id ?? null}
             examBoardName={selectedWindow?.examBoard?.name ?? null}
             registrationWindowId={registrationWindowId || null}
+            candidateId={useExisting ? selectedCandidate?.id ?? null : null}
             savedIncluded={false}
             pendingIncluded={includeCandidateRegistrationFee}
             onPendingIncludedChange={setIncludeCandidateRegistrationFee}

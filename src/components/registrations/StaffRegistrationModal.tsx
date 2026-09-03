@@ -358,6 +358,7 @@ export function StaffRegistrationModal({
             examBoardId={selectedWindow?.examBoard.id ?? null}
             examBoardName={selectedWindow?.examBoard.name ?? null}
             registrationWindowId={registrationWindowId || null}
+            candidateId={selectedCandidate?.id ?? null}
             savedIncluded={false}
             pendingIncluded={includeCandidateRegistrationFee}
             onPendingIncludedChange={setIncludeCandidateRegistrationFee}
