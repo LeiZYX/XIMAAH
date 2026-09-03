@@ -15,3 +15,11 @@ export function datetimeLocalValueToIso(local: string): string {
   if (Number.isNaN(date.getTime())) return local;
   return date.toISOString();
 }
+
+/** Parse a `date` input (`yyyy-mm-dd`) as local midnight (00:00:00) and return ISO for the API. */
+export function dateInputValueToIso(dateOnly: string): string {
+  if (!dateOnly) return "";
+  const date = new Date(`${dateOnly}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return dateOnly;
+  return date.toISOString();
+}

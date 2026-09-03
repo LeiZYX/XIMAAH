@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { datetimeLocalValueToIso } from "@/lib/datetime-local";
+import { dateInputValueToIso } from "@/lib/datetime-local";
 import type { FeeScheduleServiceType } from "@/generated/prisma";
 
 interface ScheduleRow {
@@ -152,7 +152,7 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
           serviceType,
           examSeriesId: isCashIn && examSeriesId ? examSeriesId : null,
           subjectId: isCashIn && subjectId ? subjectId : null,
-          effectiveFrom: datetimeLocalValueToIso(effectiveFrom),
+          effectiveFrom: dateInputValueToIso(effectiveFrom),
           costCurrency,
           costAmount: Number(costAmount),
           salesCurrency,
@@ -287,7 +287,7 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
             <span className="mb-1 block font-medium text-slate-700">Effective from</span>
             <input
               required
-              type="datetime-local"
+              type="date"
               value={effectiveFrom}
               onChange={(e) => setEffectiveFrom(e.target.value)}
               className="w-full border border-slate-300 px-3 py-2"
@@ -388,7 +388,7 @@ export function FeeScheduleManager({ basePath = "/admin" }: { basePath?: "/admin
                     <td className="px-4 py-3">v{row.version}</td>
                     <td className="px-4 py-3">{row.status}</td>
                     <td className="px-4 py-3">
-                      {new Date(row.effectiveFrom).toLocaleString()}
+                      {new Date(row.effectiveFrom).toLocaleDateString()}
                     </td>
                     <td className="px-4 py-3">
                       {row.costCurrency} {row.costAmount}
