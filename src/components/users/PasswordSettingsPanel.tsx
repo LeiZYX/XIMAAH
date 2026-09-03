@@ -24,6 +24,8 @@ interface PasswordSettings {
   studentNotificationsEnabled: boolean;
   notifyRegistrationLocked: boolean;
   notifyFeeStatementIssued: boolean;
+  notifyRegistrationUpdated: boolean;
+  notifyFeeStatementPaid: boolean;
 }
 
 interface SettingsFormState {
@@ -38,6 +40,8 @@ interface SettingsFormState {
   studentNotificationsEnabled: boolean;
   notifyRegistrationLocked: boolean;
   notifyFeeStatementIssued: boolean;
+  notifyRegistrationUpdated: boolean;
+  notifyFeeStatementPaid: boolean;
 }
 
 const inputClass = "w-full rounded border border-slate-300 px-3 py-2 text-sm";
@@ -63,6 +67,8 @@ function settingsToForm(settings: PasswordSettings): SettingsFormState {
     studentNotificationsEnabled: settings.studentNotificationsEnabled ?? false,
     notifyRegistrationLocked: settings.notifyRegistrationLocked ?? true,
     notifyFeeStatementIssued: settings.notifyFeeStatementIssued ?? true,
+    notifyRegistrationUpdated: settings.notifyRegistrationUpdated ?? true,
+    notifyFeeStatementPaid: settings.notifyFeeStatementPaid ?? true,
   };
 }
 
@@ -154,6 +160,8 @@ export function PasswordSettingsPanel() {
           studentNotificationsEnabled: form.studentNotificationsEnabled,
           notifyRegistrationLocked: form.notifyRegistrationLocked,
           notifyFeeStatementIssued: form.notifyFeeStatementIssued,
+          notifyRegistrationUpdated: form.notifyRegistrationUpdated,
+          notifyFeeStatementPaid: form.notifyFeeStatementPaid,
         }),
       });
       const text = await response.text();
@@ -242,7 +250,7 @@ export function PasswordSettingsPanel() {
               <span>
                 <span className="font-medium">Enable student email notifications</span>
                 <span className="mt-0.5 block text-xs text-slate-500">
-                  Master switch. When off, lock and fee-statement emails are not sent.
+                  Master switch. When off, registration and fee notification emails are not sent.
                 </span>
               </span>
             </label>
@@ -296,19 +304,47 @@ export function PasswordSettingsPanel() {
                 </span>
               </label>
 
-              <label className="flex items-start gap-2 text-sm text-slate-500">
-                <input type="checkbox" className="mt-0.5" checked={false} disabled />
+              <label className="flex items-start gap-2 text-sm text-slate-800">
+                <input
+                  type="checkbox"
+                  className="mt-0.5"
+                  checked={form.notifyRegistrationUpdated}
+                  disabled={!form.studentNotificationsEnabled}
+                  onChange={(e) =>
+                    setForm((prev) =>
+                      prev
+                        ? { ...prev, notifyRegistrationUpdated: e.target.checked }
+                        : prev,
+                    )
+                  }
+                />
                 <span>
                   <span className="font-medium">Registration updated</span>
-                  <span className="ml-2 text-xs">Coming soon</span>
+                  <span className="mt-0.5 block text-xs text-slate-500">
+                    After post-lock add/remove/replace: change summary + My Exam Registrations.
+                  </span>
                 </span>
               </label>
 
-              <label className="flex items-start gap-2 text-sm text-slate-500">
-                <input type="checkbox" className="mt-0.5" checked={false} disabled />
+              <label className="flex items-start gap-2 text-sm text-slate-800">
+                <input
+                  type="checkbox"
+                  className="mt-0.5"
+                  checked={form.notifyFeeStatementPaid}
+                  disabled={!form.studentNotificationsEnabled}
+                  onChange={(e) =>
+                    setForm((prev) =>
+                      prev
+                        ? { ...prev, notifyFeeStatementPaid: e.target.checked }
+                        : prev,
+                    )
+                  }
+                />
                 <span>
                   <span className="font-medium">Fee statement paid</span>
-                  <span className="ml-2 text-xs">Coming soon</span>
+                  <span className="mt-0.5 block text-xs text-slate-500">
+                    After online payment succeeds: confirmation + My Fee Statements.
+                  </span>
                 </span>
               </label>
             </div>

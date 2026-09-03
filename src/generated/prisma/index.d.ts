@@ -751,7 +751,9 @@ export type PostResultsAuditAction = (typeof PostResultsAuditAction)[keyof typeo
 
 export const StudentNotificationType: {
   REG_LOCKED: 'REG_LOCKED',
-  FEE_ISSUED: 'FEE_ISSUED'
+  FEE_ISSUED: 'FEE_ISSUED',
+  REG_UPDATED: 'REG_UPDATED',
+  FEE_PAID: 'FEE_PAID'
 };
 
 export type StudentNotificationType = (typeof StudentNotificationType)[keyof typeof StudentNotificationType]
@@ -14054,6 +14056,8 @@ export namespace Prisma {
     studentNotificationsEnabled: boolean | null
     notifyRegistrationLocked: boolean | null
     notifyFeeStatementIssued: boolean | null
+    notifyRegistrationUpdated: boolean | null
+    notifyFeeStatementPaid: boolean | null
     updatedAt: Date | null
   }
 
@@ -14070,6 +14074,8 @@ export namespace Prisma {
     studentNotificationsEnabled: boolean | null
     notifyRegistrationLocked: boolean | null
     notifyFeeStatementIssued: boolean | null
+    notifyRegistrationUpdated: boolean | null
+    notifyFeeStatementPaid: boolean | null
     updatedAt: Date | null
   }
 
@@ -14086,6 +14092,8 @@ export namespace Prisma {
     studentNotificationsEnabled: number
     notifyRegistrationLocked: number
     notifyFeeStatementIssued: number
+    notifyRegistrationUpdated: number
+    notifyFeeStatementPaid: number
     updatedAt: number
     _all: number
   }
@@ -14114,6 +14122,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: true
     notifyRegistrationLocked?: true
     notifyFeeStatementIssued?: true
+    notifyRegistrationUpdated?: true
+    notifyFeeStatementPaid?: true
     updatedAt?: true
   }
 
@@ -14130,6 +14140,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: true
     notifyRegistrationLocked?: true
     notifyFeeStatementIssued?: true
+    notifyRegistrationUpdated?: true
+    notifyFeeStatementPaid?: true
     updatedAt?: true
   }
 
@@ -14146,6 +14158,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: true
     notifyRegistrationLocked?: true
     notifyFeeStatementIssued?: true
+    notifyRegistrationUpdated?: true
+    notifyFeeStatementPaid?: true
     updatedAt?: true
     _all?: true
   }
@@ -14249,6 +14263,8 @@ export namespace Prisma {
     studentNotificationsEnabled: boolean
     notifyRegistrationLocked: boolean
     notifyFeeStatementIssued: boolean
+    notifyRegistrationUpdated: boolean
+    notifyFeeStatementPaid: boolean
     updatedAt: Date
     _count: SystemEmailSettingsCountAggregateOutputType | null
     _avg: SystemEmailSettingsAvgAggregateOutputType | null
@@ -14284,6 +14300,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: boolean
     notifyRegistrationLocked?: boolean
     notifyFeeStatementIssued?: boolean
+    notifyRegistrationUpdated?: boolean
+    notifyFeeStatementPaid?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["systemEmailSettings"]>
 
@@ -14302,10 +14320,12 @@ export namespace Prisma {
     studentNotificationsEnabled?: boolean
     notifyRegistrationLocked?: boolean
     notifyFeeStatementIssued?: boolean
+    notifyRegistrationUpdated?: boolean
+    notifyFeeStatementPaid?: boolean
     updatedAt?: boolean
   }
 
-  export type SystemEmailSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "smtpHost" | "smtpPort" | "smtpSecure" | "smtpUser" | "smtpPassword" | "mailFrom" | "passwordResetExpiresMinutes" | "appUrl" | "studentNotificationsEnabled" | "notifyRegistrationLocked" | "notifyFeeStatementIssued" | "updatedAt", ExtArgs["result"]["systemEmailSettings"]>
+  export type SystemEmailSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "smtpHost" | "smtpPort" | "smtpSecure" | "smtpUser" | "smtpPassword" | "mailFrom" | "passwordResetExpiresMinutes" | "appUrl" | "studentNotificationsEnabled" | "notifyRegistrationLocked" | "notifyFeeStatementIssued" | "notifyRegistrationUpdated" | "notifyFeeStatementPaid" | "updatedAt", ExtArgs["result"]["systemEmailSettings"]>
 
   export type $SystemEmailSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SystemEmailSettings"
@@ -14326,6 +14346,8 @@ export namespace Prisma {
       studentNotificationsEnabled: boolean
       notifyRegistrationLocked: boolean
       notifyFeeStatementIssued: boolean
+      notifyRegistrationUpdated: boolean
+      notifyFeeStatementPaid: boolean
       updatedAt: Date
     }, ExtArgs["result"]["systemEmailSettings"]>
     composites: {}
@@ -14708,6 +14730,8 @@ export namespace Prisma {
     readonly studentNotificationsEnabled: FieldRef<"SystemEmailSettings", 'Boolean'>
     readonly notifyRegistrationLocked: FieldRef<"SystemEmailSettings", 'Boolean'>
     readonly notifyFeeStatementIssued: FieldRef<"SystemEmailSettings", 'Boolean'>
+    readonly notifyRegistrationUpdated: FieldRef<"SystemEmailSettings", 'Boolean'>
+    readonly notifyFeeStatementPaid: FieldRef<"SystemEmailSettings", 'Boolean'>
     readonly updatedAt: FieldRef<"SystemEmailSettings", 'DateTime'>
   }
     
@@ -69948,6 +69972,8 @@ export namespace Prisma {
     studentNotificationsEnabled: 'studentNotificationsEnabled',
     notifyRegistrationLocked: 'notifyRegistrationLocked',
     notifyFeeStatementIssued: 'notifyFeeStatementIssued',
+    notifyRegistrationUpdated: 'notifyRegistrationUpdated',
+    notifyFeeStatementPaid: 'notifyFeeStatementPaid',
     updatedAt: 'updatedAt'
   };
 
@@ -72646,6 +72672,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: BoolFilter<"SystemEmailSettings"> | boolean
     notifyRegistrationLocked?: BoolFilter<"SystemEmailSettings"> | boolean
     notifyFeeStatementIssued?: BoolFilter<"SystemEmailSettings"> | boolean
+    notifyRegistrationUpdated?: BoolFilter<"SystemEmailSettings"> | boolean
+    notifyFeeStatementPaid?: BoolFilter<"SystemEmailSettings"> | boolean
     updatedAt?: DateTimeFilter<"SystemEmailSettings"> | Date | string
   }
 
@@ -72662,6 +72690,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: SortOrder
     notifyRegistrationLocked?: SortOrder
     notifyFeeStatementIssued?: SortOrder
+    notifyRegistrationUpdated?: SortOrder
+    notifyFeeStatementPaid?: SortOrder
     updatedAt?: SortOrder
     _relevance?: SystemEmailSettingsOrderByRelevanceInput
   }
@@ -72682,6 +72712,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: BoolFilter<"SystemEmailSettings"> | boolean
     notifyRegistrationLocked?: BoolFilter<"SystemEmailSettings"> | boolean
     notifyFeeStatementIssued?: BoolFilter<"SystemEmailSettings"> | boolean
+    notifyRegistrationUpdated?: BoolFilter<"SystemEmailSettings"> | boolean
+    notifyFeeStatementPaid?: BoolFilter<"SystemEmailSettings"> | boolean
     updatedAt?: DateTimeFilter<"SystemEmailSettings"> | Date | string
   }, "id">
 
@@ -72698,6 +72730,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: SortOrder
     notifyRegistrationLocked?: SortOrder
     notifyFeeStatementIssued?: SortOrder
+    notifyRegistrationUpdated?: SortOrder
+    notifyFeeStatementPaid?: SortOrder
     updatedAt?: SortOrder
     _count?: SystemEmailSettingsCountOrderByAggregateInput
     _avg?: SystemEmailSettingsAvgOrderByAggregateInput
@@ -72722,6 +72756,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
     notifyRegistrationLocked?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
     notifyFeeStatementIssued?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
+    notifyRegistrationUpdated?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
+    notifyFeeStatementPaid?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
     updatedAt?: DateTimeWithAggregatesFilter<"SystemEmailSettings"> | Date | string
   }
 
@@ -79073,6 +79109,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: boolean
     notifyRegistrationLocked?: boolean
     notifyFeeStatementIssued?: boolean
+    notifyRegistrationUpdated?: boolean
+    notifyFeeStatementPaid?: boolean
     updatedAt?: Date | string
   }
 
@@ -79089,6 +79127,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: boolean
     notifyRegistrationLocked?: boolean
     notifyFeeStatementIssued?: boolean
+    notifyRegistrationUpdated?: boolean
+    notifyFeeStatementPaid?: boolean
     updatedAt?: Date | string
   }
 
@@ -79105,6 +79145,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     notifyRegistrationLocked?: BoolFieldUpdateOperationsInput | boolean
     notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
+    notifyRegistrationUpdated?: BoolFieldUpdateOperationsInput | boolean
+    notifyFeeStatementPaid?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79121,6 +79163,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     notifyRegistrationLocked?: BoolFieldUpdateOperationsInput | boolean
     notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
+    notifyRegistrationUpdated?: BoolFieldUpdateOperationsInput | boolean
+    notifyFeeStatementPaid?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79137,6 +79181,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: boolean
     notifyRegistrationLocked?: boolean
     notifyFeeStatementIssued?: boolean
+    notifyRegistrationUpdated?: boolean
+    notifyFeeStatementPaid?: boolean
     updatedAt?: Date | string
   }
 
@@ -79153,6 +79199,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     notifyRegistrationLocked?: BoolFieldUpdateOperationsInput | boolean
     notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
+    notifyRegistrationUpdated?: BoolFieldUpdateOperationsInput | boolean
+    notifyFeeStatementPaid?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79169,6 +79217,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
     notifyRegistrationLocked?: BoolFieldUpdateOperationsInput | boolean
     notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
+    notifyRegistrationUpdated?: BoolFieldUpdateOperationsInput | boolean
+    notifyFeeStatementPaid?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -86212,6 +86262,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: SortOrder
     notifyRegistrationLocked?: SortOrder
     notifyFeeStatementIssued?: SortOrder
+    notifyRegistrationUpdated?: SortOrder
+    notifyFeeStatementPaid?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -86233,6 +86285,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: SortOrder
     notifyRegistrationLocked?: SortOrder
     notifyFeeStatementIssued?: SortOrder
+    notifyRegistrationUpdated?: SortOrder
+    notifyFeeStatementPaid?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -86249,6 +86303,8 @@ export namespace Prisma {
     studentNotificationsEnabled?: SortOrder
     notifyRegistrationLocked?: SortOrder
     notifyFeeStatementIssued?: SortOrder
+    notifyRegistrationUpdated?: SortOrder
+    notifyFeeStatementPaid?: SortOrder
     updatedAt?: SortOrder
   }
 

@@ -9,9 +9,24 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.2.5";
+export const CURRENT_VERSION = "1.2.6";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.2.6",
+    releaseDate: "2026-09-03",
+    summary:
+      "Email students when locked registrations change and when fee statements are paid.",
+    changes: [
+      "After post-lock add/remove/replace, internal students receive a Registration updated email with change summary, current exam list, and a link to My Exam Registrations",
+      "After a successful online payment marks a normal fee statement Paid, students receive a Fee statement paid email with a link to My Fee Statements",
+      "Password & Email Settings: Registration updated and Fee statement paid toggles are now active (still behind the master student-notifications switch)",
+      "Issue-as-paid fee statements still send only the issued email; a separate paid email is not duplicated",
+    ],
+    knownIssues: [
+      "Run Prisma migration 20260903080000_student_notification_updated_paid after pulling this release.",
+    ],
+  },
   {
     version: "1.2.5",
     releaseDate: "2026-09-03",

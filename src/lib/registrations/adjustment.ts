@@ -570,6 +570,18 @@ export async function applyPostLockAdjustment(
     });
   }
 
+  if (hasExamChanges) {
+    const { queueRegistrationUpdatedNotification } = await import(
+      "@/lib/notifications/registration-updated"
+    );
+    queueRegistrationUpdatedNotification({
+      workspaceId,
+      summary,
+      reason,
+      adjustedAtIso: now.toISOString(),
+    });
+  }
+
   const { getRegistrationWorkspaceById } = await import("@/lib/registrations/workspace");
   const updated = await getRegistrationWorkspaceById(workspaceId);
   if (

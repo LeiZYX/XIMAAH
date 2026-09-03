@@ -374,6 +374,8 @@ enum PostResultsAuditAction {
 enum StudentNotificationType {
   REG_LOCKED
   FEE_ISSUED
+  REG_UPDATED
+  FEE_PAID
 }
 
 enum StudentNotificationStatus {
@@ -596,6 +598,8 @@ model SystemEmailSettings {
   studentNotificationsEnabled Boolean  @default(false)
   notifyRegistrationLocked    Boolean  @default(true)
   notifyFeeStatementIssued    Boolean  @default(true)
+  notifyRegistrationUpdated   Boolean  @default(true)
+  notifyFeeStatementPaid      Boolean  @default(true)
   updatedAt                   DateTime @updatedAt
 }
 

@@ -27,6 +27,8 @@ function serializeSettings(
     studentNotificationsEnabled: settings.studentNotificationsEnabled,
     notifyRegistrationLocked: settings.notifyRegistrationLocked,
     notifyFeeStatementIssued: settings.notifyFeeStatementIssued,
+    notifyRegistrationUpdated: settings.notifyRegistrationUpdated,
+    notifyFeeStatementPaid: settings.notifyFeeStatementPaid,
   };
 }
 
@@ -65,6 +67,8 @@ export async function PUT(request: NextRequest) {
     studentNotificationsEnabled?: boolean;
     notifyRegistrationLocked?: boolean;
     notifyFeeStatementIssued?: boolean;
+    notifyRegistrationUpdated?: boolean;
+    notifyFeeStatementPaid?: boolean;
   }>(body, []);
 
   if (!data) return jsonError("Invalid request body");

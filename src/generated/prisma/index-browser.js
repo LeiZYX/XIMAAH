@@ -195,6 +195,8 @@ exports.Prisma.SystemEmailSettingsScalarFieldEnum = {
   studentNotificationsEnabled: 'studentNotificationsEnabled',
   notifyRegistrationLocked: 'notifyRegistrationLocked',
   notifyFeeStatementIssued: 'notifyFeeStatementIssued',
+  notifyRegistrationUpdated: 'notifyRegistrationUpdated',
+  notifyFeeStatementPaid: 'notifyFeeStatementPaid',
   updatedAt: 'updatedAt'
 };
 
@@ -1658,7 +1660,9 @@ exports.TeacherProfileStatus = exports.$Enums.TeacherProfileStatus = {
 
 exports.StudentNotificationType = exports.$Enums.StudentNotificationType = {
   REG_LOCKED: 'REG_LOCKED',
-  FEE_ISSUED: 'FEE_ISSUED'
+  FEE_ISSUED: 'FEE_ISSUED',
+  REG_UPDATED: 'REG_UPDATED',
+  FEE_PAID: 'FEE_PAID'
 };
 
 exports.StudentNotificationStatus = exports.$Enums.StudentNotificationStatus = {

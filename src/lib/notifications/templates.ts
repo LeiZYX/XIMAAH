@@ -204,3 +204,190 @@ ${params.paymentNotes ? `<p style="color:#475569;">${escapeHtml(params.paymentNo
     }),
   };
 }
+
+function formatChangeLine(item: { subject: string; paperCode: string; paperTitle: string }): string {
+  return `${item.subject} — ${item.paperCode} ${item.paperTitle}`;
+}
+
+export function renderRegistrationUpdatedEmail(params: {
+  appUrl: string;
+  studentName: string;
+  boardSeries: string;
+  confirmationNumber?: string | null;
+  reason?: string | null;
+  added: Array<{ subject: string; paperCode: string; paperTitle: string }>;
+  removed: Array<{ subject: string; paperCode: string; paperTitle: string }>;
+  replaced: Array<{
+    from: { subject: string; paperCode: string; paperTitle: string };
+    to: { subject: string; paperCode: string; paperTitle: string };
+  }>;
+  currentExams: ExamRowForEmail[];
+}): { subject: string; text: string; html: string } {
+  const link = studentRegistrationsUrl(params.appUrl);
+  const subject = `${params.boardSeries} — Exam registration updated`;
+
+  const changeBlocks: string[] = [];
+  if (params.added.length > 0) {
+    changeBlocks.push("Added:", ...params.added.map((row) => `• ${formatChangeLine(row)}`));
+  }
+  if (params.removed.length > 0) {
+    changeBlocks.push("Removed:", ...params.removed.map((row) => `• ${formatChangeLine(row)}`));
+  }
+  if (params.replaced.length > 0) {
+    changeBlocks.push(
+      "Replaced:",
+      ...params.replaced.map(
+        (row) => `• ${formatChangeLine(row.from)} → ${formatChangeLine(row.to)}`,
+      ),
+    );
+  }
+
+  const currentLines = params.currentExams.map((exam) => {
+    const when = `${formatExamDate(exam.examDate)} ${formatExamTime(exam.startTime, exam.endTime)}`;
+    return `• ${exam.subjectCode} ${exam.subjectName} — ${exam.paperCode} ${exam.paperTitle} — ${when}`;
+  });
+
+  const text = [
+    `Hello ${params.studentName},`,
+    "",
+    `Your exam registrations for ${params.boardSeries} have been updated.`,
+    params.reason ? `Reason: ${params.reason}` : null,
+    params.confirmationNumber ? `Registration number: ${params.confirmationNumber}` : null,
+    "",
+    ...changeBlocks,
+    "",
+    "Current registered exams:",
+    ...(currentLines.length > 0 ? currentLines : ["• No exams currently registered."]),
+    "",
+    "Your fee statement may need to be re-issued after this change.",
+    "",
+    `View your registrations: ${link}`,
+    "",
+    "This is an automated message from XIMA Assessment Hub.",
+  ]
+    .filter((line) => line !== null)
+    .join("\n");
+
+  const changeHtmlParts: string[] = [];
+  if (params.added.length > 0) {
+    changeHtmlParts.push(
+      `<p><strong>Added</strong></p><ul>${params.added
+        .map((row) => `<li>${escapeHtml(formatChangeLine(row))}</li>`)
+        .join("")}</ul>`,
+    );
+  }
+  if (params.removed.length > 0) {
+    changeHtmlParts.push(
+      `<p><strong>Removed</strong></p><ul>${params.removed
+        .map((row) => `<li>${escapeHtml(formatChangeLine(row))}</li>`)
+        .join("")}</ul>`,
+    );
+  }
+  if (params.replaced.length > 0) {
+    changeHtmlParts.push(
+      `<p><strong>Replaced</strong></p><ul>${params.replaced
+        .map(
+          (row) =>
+            `<li>${escapeHtml(formatChangeLine(row.from))} → ${escapeHtml(formatChangeLine(row.to))}</li>`,
+        )
+        .join("")}</ul>`,
+    );
+  }
+
+  const rowsHtml = params.currentExams
+    .map((exam) => {
+      const when = `${formatExamDate(exam.examDate)} ${formatExamTime(exam.startTime, exam.endTime)}`;
+      return `<tr>
+  <td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;">${escapeHtml(exam.subjectCode)} · ${escapeHtml(exam.subjectName)}</td>
+  <td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;">${escapeHtml(exam.paperCode)} · ${escapeHtml(exam.paperTitle)}</td>
+  <td style="padding:8px 10px;border-bottom:1px solid #e2e8f0;">${escapeHtml(when)}</td>
+</tr>`;
+    })
+    .join("");
+
+  const bodyHtml = `
+<p>Hello ${escapeHtml(params.studentName)},</p>
+<p>Your exam registrations for <strong>${escapeHtml(params.boardSeries)}</strong> have been updated.</p>
+${params.reason ? `<p><strong>Reason:</strong> ${escapeHtml(params.reason)}</p>` : ""}
+${
+  params.confirmationNumber
+    ? `<p><strong>Registration number:</strong> ${escapeHtml(params.confirmationNumber)}</p>`
+    : ""
+}
+${changeHtmlParts.join("")}
+<p><strong>Current registered exams</strong></p>
+<table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:14px;">
+  <thead>
+    <tr style="background:#f8fafc;text-align:left;">
+      <th style="padding:8px 10px;border-bottom:2px solid #cbd5e1;">Subject</th>
+      <th style="padding:8px 10px;border-bottom:2px solid #cbd5e1;">Paper</th>
+      <th style="padding:8px 10px;border-bottom:2px solid #cbd5e1;">Date &amp; time</th>
+    </tr>
+  </thead>
+  <tbody>${rowsHtml || `<tr><td colspan="3" style="padding:8px 10px;">No exams currently registered.</td></tr>`}</tbody>
+</table>
+<p style="color:#475569;">Your fee statement may need to be re-issued after this change.</p>
+<p><a href="${escapeHtml(link)}" style="display:inline-block;background:#4f46e5;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:600;">Open My Exam Registrations</a></p>
+<p style="color:#64748b;font-size:13px;">Or visit: ${escapeHtml(link)}</p>
+`;
+
+  return {
+    subject,
+    text,
+    html: renderEmailLayout({
+      title: subject,
+      bodyHtml,
+    }),
+  };
+}
+
+export function renderFeeStatementPaidEmail(params: {
+  appUrl: string;
+  studentName: string;
+  boardSeries: string;
+  statementNo: string;
+  amountPaidLabel: string;
+  paidAtLabel?: string | null;
+}): { subject: string; text: string; html: string } {
+  const link = studentFeeStatementsUrl(params.appUrl);
+  const subject = `${params.boardSeries} — Fee statement paid`;
+
+  const text = [
+    `Hello ${params.studentName},`,
+    "",
+    `Payment for your exam fee statement has been received.`,
+    "",
+    `Statement: ${params.statementNo}`,
+    `Board / series: ${params.boardSeries}`,
+    `Amount: ${params.amountPaidLabel}`,
+    params.paidAtLabel ? `Paid at: ${params.paidAtLabel}` : null,
+    "",
+    `View your fee statements: ${link}`,
+    "",
+    "This is an automated message from XIMA Assessment Hub.",
+  ]
+    .filter((line) => line !== null)
+    .join("\n");
+
+  const bodyHtml = `
+<p>Hello ${escapeHtml(params.studentName)},</p>
+<p>Payment for your exam fee statement has been received.</p>
+<p>
+  <strong>Statement:</strong> ${escapeHtml(params.statementNo)}<br/>
+  <strong>Board / series:</strong> ${escapeHtml(params.boardSeries)}<br/>
+  <strong>Amount:</strong> ${escapeHtml(params.amountPaidLabel)}
+  ${params.paidAtLabel ? `<br/><strong>Paid at:</strong> ${escapeHtml(params.paidAtLabel)}` : ""}
+</p>
+<p><a href="${escapeHtml(link)}" style="display:inline-block;background:#4f46e5;color:#ffffff;text-decoration:none;padding:10px 16px;border-radius:8px;font-weight:600;">Open My Fee Statements</a></p>
+<p style="color:#64748b;font-size:13px;">Or visit: ${escapeHtml(link)}</p>
+`;
+
+  return {
+    subject,
+    text,
+    html: renderEmailLayout({
+      title: subject,
+      bodyHtml,
+    }),
+  };
+}

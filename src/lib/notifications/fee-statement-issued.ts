@@ -162,7 +162,7 @@ export async function notifyFeeStatementIssued(statementId: string): Promise<{
     })),
   });
 
-  return deliverStudentNotification({
+  const result = await deliverStudentNotification({
     type: "FEE_ISSUED",
     dedupeKey,
     to: recipient.email,
@@ -178,6 +178,24 @@ export async function notifyFeeStatementIssued(statementId: string): Promise<{
       amountDueGbp: dueGbp,
     },
   });
+
+  // Issue-as-paid is covered by FEE_ISSUED; suppress a separate FEE_PAID email.
+  if (statement.status === "PAID") {
+    await recordNotification({
+      type: "FEE_PAID",
+      status: "SKIPPED",
+      dedupeKey: `FEE_PAID:${statement.id}`,
+      studentUserId: recipient.studentUserId,
+      recipientEmail: recipient.email,
+      registrationWindowId: statement.registrationWindowId,
+      feeStatementId: statement.id,
+      subject: `${boardSeries} — Fee statement paid`,
+      error: "Covered by FEE_ISSUED (issued with no amount due)",
+      metadata: { statementNo: statement.statementNo },
+    });
+  }
+
+  return result;
 }
 
 export function queueFeeStatementIssuedNotification(statementId: string): void {

@@ -248,7 +248,7 @@ export async function markPaymentOrderPaid(params: {
   notifyPayload?: Prisma.InputJsonValue;
   payTime?: string | null;
 }) {
-  return prisma.$transaction(async (tx) => {
+  const result = await prisma.$transaction(async (tx) => {
     const order = await tx.paymentOrder.findUnique({
       where: { partnerOrderId: params.partnerOrderId },
       include: { feeStatement: true },
@@ -259,7 +259,7 @@ export async function markPaymentOrderPaid(params: {
     }
 
     if (order.status === "PAID" && order.feeStatement.status === "PAID") {
-      return { order, alreadyPaid: true as const };
+      return { order, alreadyPaid: true as const, feeStatementId: order.feeStatementId };
     }
 
     if (order.status === "CLOSED" || order.status === "CANCELLED") {
@@ -301,8 +301,21 @@ export async function markPaymentOrderPaid(params: {
       });
     }
 
-    return { order: updatedOrder, alreadyPaid: false as const };
+    return {
+      order: updatedOrder,
+      alreadyPaid: false as const,
+      feeStatementId: order.feeStatementId,
+    };
   });
+
+  if (!result.alreadyPaid) {
+    const { queueFeeStatementPaidNotification } = await import(
+      "@/lib/notifications/fee-statement-paid"
+    );
+    queueFeeStatementPaidNotification(result.feeStatementId);
+  }
+
+  return result;
 }
 
 export async function syncPaymentOrderFromGlobePay(params: {

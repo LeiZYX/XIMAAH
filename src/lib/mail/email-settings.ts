@@ -16,6 +16,8 @@ export interface ResolvedEmailSettings {
   studentNotificationsEnabled: boolean;
   notifyRegistrationLocked: boolean;
   notifyFeeStatementIssued: boolean;
+  notifyRegistrationUpdated: boolean;
+  notifyFeeStatementPaid: boolean;
 }
 
 const SETTINGS_ID = "default";
@@ -82,6 +84,8 @@ export async function getResolvedEmailSettings(): Promise<ResolvedEmailSettings>
     studentNotificationsEnabled: stored?.studentNotificationsEnabled ?? false,
     notifyRegistrationLocked: stored?.notifyRegistrationLocked ?? true,
     notifyFeeStatementIssued: stored?.notifyFeeStatementIssued ?? true,
+    notifyRegistrationUpdated: stored?.notifyRegistrationUpdated ?? true,
+    notifyFeeStatementPaid: stored?.notifyFeeStatementPaid ?? true,
   };
 }
 
@@ -97,6 +101,8 @@ export interface EmailSettingsInput {
   studentNotificationsEnabled?: boolean;
   notifyRegistrationLocked?: boolean;
   notifyFeeStatementIssued?: boolean;
+  notifyRegistrationUpdated?: boolean;
+  notifyFeeStatementPaid?: boolean;
 }
 
 export async function saveEmailSettings(input: EmailSettingsInput) {
@@ -130,6 +136,12 @@ export async function saveEmailSettings(input: EmailSettingsInput) {
     ...(typeof input.notifyFeeStatementIssued === "boolean"
       ? { notifyFeeStatementIssued: input.notifyFeeStatementIssued }
       : {}),
+    ...(typeof input.notifyRegistrationUpdated === "boolean"
+      ? { notifyRegistrationUpdated: input.notifyRegistrationUpdated }
+      : {}),
+    ...(typeof input.notifyFeeStatementPaid === "boolean"
+      ? { notifyFeeStatementPaid: input.notifyFeeStatementPaid }
+      : {}),
     ...(input.smtpPassword?.trim()
       ? { smtpPassword: input.smtpPassword }
       : existing
@@ -144,6 +156,8 @@ export async function saveEmailSettings(input: EmailSettingsInput) {
       studentNotificationsEnabled: input.studentNotificationsEnabled ?? false,
       notifyRegistrationLocked: input.notifyRegistrationLocked ?? true,
       notifyFeeStatementIssued: input.notifyFeeStatementIssued ?? true,
+      notifyRegistrationUpdated: input.notifyRegistrationUpdated ?? true,
+      notifyFeeStatementPaid: input.notifyFeeStatementPaid ?? true,
       ...data,
     },
     update: data,
