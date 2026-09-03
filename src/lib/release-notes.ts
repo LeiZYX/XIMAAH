@@ -9,9 +9,26 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.2.3";
+export const CURRENT_VERSION = "1.2.4";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.2.4",
+    releaseDate: "2026-09-03",
+    summary:
+      "Email internal students when registrations lock and when fee statements are issued.",
+    changes: [
+      "When a registration window locks, internal students receive a noreply email listing their confirmed exams (subject, paper, date/time) with a link to My Exam Registrations",
+      "When Exam Office or Admin issues a normal fee statement, the student receives a noreply email with fee line items and a link to My Fee Statements",
+      "Uses the existing Aliyun Mail / SMTP settings (Password & Email Settings); restricted and external registrations are not emailed",
+      "Delivery is logged for idempotency so lock and issue emails are not re-sent repeatedly",
+    ],
+    knownIssues: [
+      "Run Prisma migration 20260903060000_student_notification_log after pulling this release.",
+      "SMTP must be configured (host, from, user, password) or emails are skipped and recorded as SKIPPED.",
+      "Post-lock add/remove emails and payment-received emails are planned for a later release.",
+    ],
+  },
   {
     version: "1.2.3",
     releaseDate: "2026-08-30",

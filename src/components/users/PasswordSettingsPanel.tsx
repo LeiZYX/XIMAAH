@@ -186,12 +186,12 @@ export function PasswordSettingsPanel() {
       <UsersSubnav />
       <PageHeader
         title="Password & Email Settings"
-        description={`${USERS_MODULE_DESCRIPTION} Configure Aliyun Mail (阿里邮箱) SMTP for password reset emails. Settings are stored in the database; leave password blank to keep the current value.`}
+        description={`${USERS_MODULE_DESCRIPTION} Configure Aliyun Mail (阿里邮箱) SMTP for system notification emails (registration lock, fee statements) and password reset. Settings are stored in the database; leave password blank to keep the current value.`}
       />
 
       <div className="space-y-6 border border-slate-200 p-4">
         <div className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-950">
-          <p className="font-medium">Aliyun Mail SMTP (password reset)</p>
+          <p className="font-medium">Aliyun Mail SMTP (system notifications &amp; password reset)</p>
           <ul className="mt-2 list-disc space-y-1 pl-5 text-sky-900">
             <li>
               Host: <code className="rounded bg-white px-1">{ALIYUN_MAIL_SMTP_HOST}</code>{" "}

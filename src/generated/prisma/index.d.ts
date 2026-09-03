@@ -44,6 +44,11 @@ export type TeacherProfile = $Result.DefaultSelection<Prisma.$TeacherProfilePayl
  */
 export type SystemEmailSettings = $Result.DefaultSelection<Prisma.$SystemEmailSettingsPayload>
 /**
+ * Model StudentNotificationLog
+ * Delivery log for internal-student notification emails (lock / fee statement, etc.).
+ */
+export type StudentNotificationLog = $Result.DefaultSelection<Prisma.$StudentNotificationLogPayload>
+/**
  * Model UserAuditLog
  * 
  */
@@ -744,6 +749,23 @@ export const PostResultsAuditAction: {
 export type PostResultsAuditAction = (typeof PostResultsAuditAction)[keyof typeof PostResultsAuditAction]
 
 
+export const StudentNotificationType: {
+  REG_LOCKED: 'REG_LOCKED',
+  FEE_ISSUED: 'FEE_ISSUED'
+};
+
+export type StudentNotificationType = (typeof StudentNotificationType)[keyof typeof StudentNotificationType]
+
+
+export const StudentNotificationStatus: {
+  SENT: 'SENT',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+};
+
+export type StudentNotificationStatus = (typeof StudentNotificationStatus)[keyof typeof StudentNotificationStatus]
+
+
 export const StudentProfileStatus: {
   ACTIVE: 'ACTIVE',
   GRADUATED: 'GRADUATED',
@@ -1028,6 +1050,14 @@ export type PostResultsAuditAction = $Enums.PostResultsAuditAction
 
 export const PostResultsAuditAction: typeof $Enums.PostResultsAuditAction
 
+export type StudentNotificationType = $Enums.StudentNotificationType
+
+export const StudentNotificationType: typeof $Enums.StudentNotificationType
+
+export type StudentNotificationStatus = $Enums.StudentNotificationStatus
+
+export const StudentNotificationStatus: typeof $Enums.StudentNotificationStatus
+
 export type StudentProfileStatus = $Enums.StudentProfileStatus
 
 export const StudentProfileStatus: typeof $Enums.StudentProfileStatus
@@ -1257,6 +1287,16 @@ export class PrismaClient<
     * ```
     */
   get systemEmailSettings(): Prisma.SystemEmailSettingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.studentNotificationLog`: Exposes CRUD operations for the **StudentNotificationLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StudentNotificationLogs
+    * const studentNotificationLogs = await prisma.studentNotificationLog.findMany()
+    * ```
+    */
+  get studentNotificationLog(): Prisma.StudentNotificationLogDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.userAuditLog`: Exposes CRUD operations for the **UserAuditLog** model.
@@ -2154,6 +2194,7 @@ export namespace Prisma {
     StudentIdSequence: 'StudentIdSequence',
     TeacherProfile: 'TeacherProfile',
     SystemEmailSettings: 'SystemEmailSettings',
+    StudentNotificationLog: 'StudentNotificationLog',
     UserAuditLog: 'UserAuditLog',
     ExamDocumentAuditLog: 'ExamDocumentAuditLog',
     Candidate: 'Candidate',
@@ -2217,7 +2258,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
+      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "studentNotificationLog" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2614,6 +2655,72 @@ export namespace Prisma {
           count: {
             args: Prisma.SystemEmailSettingsCountArgs<ExtArgs>
             result: $Utils.Optional<SystemEmailSettingsCountAggregateOutputType> | number
+          }
+        }
+      }
+      StudentNotificationLog: {
+        payload: Prisma.$StudentNotificationLogPayload<ExtArgs>
+        fields: Prisma.StudentNotificationLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StudentNotificationLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentNotificationLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StudentNotificationLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentNotificationLogPayload>
+          }
+          findFirst: {
+            args: Prisma.StudentNotificationLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentNotificationLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StudentNotificationLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentNotificationLogPayload>
+          }
+          findMany: {
+            args: Prisma.StudentNotificationLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentNotificationLogPayload>[]
+          }
+          create: {
+            args: Prisma.StudentNotificationLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentNotificationLogPayload>
+          }
+          createMany: {
+            args: Prisma.StudentNotificationLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.StudentNotificationLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentNotificationLogPayload>
+          }
+          update: {
+            args: Prisma.StudentNotificationLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentNotificationLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.StudentNotificationLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StudentNotificationLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.StudentNotificationLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentNotificationLogPayload>
+          }
+          aggregate: {
+            args: Prisma.StudentNotificationLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStudentNotificationLog>
+          }
+          groupBy: {
+            args: Prisma.StudentNotificationLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StudentNotificationLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StudentNotificationLogCountArgs<ExtArgs>
+            result: $Utils.Optional<StudentNotificationLogCountAggregateOutputType> | number
           }
         }
       }
@@ -5689,6 +5796,7 @@ export namespace Prisma {
     studentIdSequence?: StudentIdSequenceOmit
     teacherProfile?: TeacherProfileOmit
     systemEmailSettings?: SystemEmailSettingsOmit
+    studentNotificationLog?: StudentNotificationLogOmit
     userAuditLog?: UserAuditLogOmit
     examDocumentAuditLog?: ExamDocumentAuditLogOmit
     candidate?: CandidateOmit
@@ -5855,6 +5963,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated: number
     offlineWithdrawalRefundsCompleted: number
     boardSubmissionBaselinesSubmitted: number
+    studentNotificationLogs: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5899,6 +6008,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: boolean | UserCountOutputTypeCountOfflineWithdrawalRefundsCreatedArgs
     offlineWithdrawalRefundsCompleted?: boolean | UserCountOutputTypeCountOfflineWithdrawalRefundsCompletedArgs
     boardSubmissionBaselinesSubmitted?: boolean | UserCountOutputTypeCountBoardSubmissionBaselinesSubmittedArgs
+    studentNotificationLogs?: boolean | UserCountOutputTypeCountStudentNotificationLogsArgs
   }
 
   // Custom InputTypes
@@ -6199,6 +6309,13 @@ export namespace Prisma {
     where?: BoardSubmissionBaselineWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountStudentNotificationLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentNotificationLogWhereInput
+  }
+
 
   /**
    * Count Type CandidateCountOutputType
@@ -6367,6 +6484,7 @@ export namespace Prisma {
     postResultsAuditLogs: number
     offlineWithdrawalRefunds: number
     boardSubmissionBaselines: number
+    studentNotificationLogs: number
   }
 
   export type RegistrationWindowCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6384,6 +6502,7 @@ export namespace Prisma {
     postResultsAuditLogs?: boolean | RegistrationWindowCountOutputTypeCountPostResultsAuditLogsArgs
     offlineWithdrawalRefunds?: boolean | RegistrationWindowCountOutputTypeCountOfflineWithdrawalRefundsArgs
     boardSubmissionBaselines?: boolean | RegistrationWindowCountOutputTypeCountBoardSubmissionBaselinesArgs
+    studentNotificationLogs?: boolean | RegistrationWindowCountOutputTypeCountStudentNotificationLogsArgs
   }
 
   // Custom InputTypes
@@ -6493,6 +6612,13 @@ export namespace Prisma {
    */
   export type RegistrationWindowCountOutputTypeCountBoardSubmissionBaselinesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BoardSubmissionBaselineWhereInput
+  }
+
+  /**
+   * RegistrationWindowCountOutputType without action
+   */
+  export type RegistrationWindowCountOutputTypeCountStudentNotificationLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentNotificationLogWhereInput
   }
 
 
@@ -7534,6 +7660,7 @@ export namespace Prisma {
     cashInRequests: number
     accessToScriptRequests: number
     certificateRequests: number
+    studentNotificationLogs: number
   }
 
   export type FeeStatementCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7545,6 +7672,7 @@ export namespace Prisma {
     cashInRequests?: boolean | FeeStatementCountOutputTypeCountCashInRequestsArgs
     accessToScriptRequests?: boolean | FeeStatementCountOutputTypeCountAccessToScriptRequestsArgs
     certificateRequests?: boolean | FeeStatementCountOutputTypeCountCertificateRequestsArgs
+    studentNotificationLogs?: boolean | FeeStatementCountOutputTypeCountStudentNotificationLogsArgs
   }
 
   // Custom InputTypes
@@ -7612,6 +7740,13 @@ export namespace Prisma {
    */
   export type FeeStatementCountOutputTypeCountCertificateRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CertificateRequestWhereInput
+  }
+
+  /**
+   * FeeStatementCountOutputType without action
+   */
+  export type FeeStatementCountOutputTypeCountStudentNotificationLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentNotificationLogWhereInput
   }
 
 
@@ -8008,6 +8143,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: boolean | User$offlineWithdrawalRefundsCreatedArgs<ExtArgs>
     offlineWithdrawalRefundsCompleted?: boolean | User$offlineWithdrawalRefundsCompletedArgs<ExtArgs>
     boardSubmissionBaselinesSubmitted?: boolean | User$boardSubmissionBaselinesSubmittedArgs<ExtArgs>
+    studentNotificationLogs?: boolean | User$studentNotificationLogsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -8074,6 +8210,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: boolean | User$offlineWithdrawalRefundsCreatedArgs<ExtArgs>
     offlineWithdrawalRefundsCompleted?: boolean | User$offlineWithdrawalRefundsCompletedArgs<ExtArgs>
     boardSubmissionBaselinesSubmitted?: boolean | User$boardSubmissionBaselinesSubmittedArgs<ExtArgs>
+    studentNotificationLogs?: boolean | User$studentNotificationLogsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -8124,6 +8261,7 @@ export namespace Prisma {
       offlineWithdrawalRefundsCreated: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
       offlineWithdrawalRefundsCompleted: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
       boardSubmissionBaselinesSubmitted: Prisma.$BoardSubmissionBaselinePayload<ExtArgs>[]
+      studentNotificationLogs: Prisma.$StudentNotificationLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8522,6 +8660,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated<T extends User$offlineWithdrawalRefundsCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$offlineWithdrawalRefundsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     offlineWithdrawalRefundsCompleted<T extends User$offlineWithdrawalRefundsCompletedArgs<ExtArgs> = {}>(args?: Subset<T, User$offlineWithdrawalRefundsCompletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     boardSubmissionBaselinesSubmitted<T extends User$boardSubmissionBaselinesSubmittedArgs<ExtArgs> = {}>(args?: Subset<T, User$boardSubmissionBaselinesSubmittedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BoardSubmissionBaselinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentNotificationLogs<T extends User$studentNotificationLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$studentNotificationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9944,6 +10083,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BoardSubmissionBaselineScalarFieldEnum | BoardSubmissionBaselineScalarFieldEnum[]
+  }
+
+  /**
+   * User.studentNotificationLogs
+   */
+  export type User$studentNotificationLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    where?: StudentNotificationLogWhereInput
+    orderBy?: StudentNotificationLogOrderByWithRelationInput | StudentNotificationLogOrderByWithRelationInput[]
+    cursor?: StudentNotificationLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentNotificationLogScalarFieldEnum | StudentNotificationLogScalarFieldEnum[]
   }
 
   /**
@@ -14828,6 +14991,1087 @@ export namespace Prisma {
      * Omit specific fields from the SystemEmailSettings
      */
     omit?: SystemEmailSettingsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StudentNotificationLog
+   */
+
+  export type AggregateStudentNotificationLog = {
+    _count: StudentNotificationLogCountAggregateOutputType | null
+    _min: StudentNotificationLogMinAggregateOutputType | null
+    _max: StudentNotificationLogMaxAggregateOutputType | null
+  }
+
+  export type StudentNotificationLogMinAggregateOutputType = {
+    id: string | null
+    type: $Enums.StudentNotificationType | null
+    status: $Enums.StudentNotificationStatus | null
+    dedupeKey: string | null
+    studentUserId: string | null
+    recipientEmail: string | null
+    registrationWindowId: string | null
+    feeStatementId: string | null
+    subject: string | null
+    error: string | null
+    createdAt: Date | null
+    sentAt: Date | null
+  }
+
+  export type StudentNotificationLogMaxAggregateOutputType = {
+    id: string | null
+    type: $Enums.StudentNotificationType | null
+    status: $Enums.StudentNotificationStatus | null
+    dedupeKey: string | null
+    studentUserId: string | null
+    recipientEmail: string | null
+    registrationWindowId: string | null
+    feeStatementId: string | null
+    subject: string | null
+    error: string | null
+    createdAt: Date | null
+    sentAt: Date | null
+  }
+
+  export type StudentNotificationLogCountAggregateOutputType = {
+    id: number
+    type: number
+    status: number
+    dedupeKey: number
+    studentUserId: number
+    recipientEmail: number
+    registrationWindowId: number
+    feeStatementId: number
+    subject: number
+    error: number
+    metadata: number
+    createdAt: number
+    sentAt: number
+    _all: number
+  }
+
+
+  export type StudentNotificationLogMinAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    dedupeKey?: true
+    studentUserId?: true
+    recipientEmail?: true
+    registrationWindowId?: true
+    feeStatementId?: true
+    subject?: true
+    error?: true
+    createdAt?: true
+    sentAt?: true
+  }
+
+  export type StudentNotificationLogMaxAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    dedupeKey?: true
+    studentUserId?: true
+    recipientEmail?: true
+    registrationWindowId?: true
+    feeStatementId?: true
+    subject?: true
+    error?: true
+    createdAt?: true
+    sentAt?: true
+  }
+
+  export type StudentNotificationLogCountAggregateInputType = {
+    id?: true
+    type?: true
+    status?: true
+    dedupeKey?: true
+    studentUserId?: true
+    recipientEmail?: true
+    registrationWindowId?: true
+    feeStatementId?: true
+    subject?: true
+    error?: true
+    metadata?: true
+    createdAt?: true
+    sentAt?: true
+    _all?: true
+  }
+
+  export type StudentNotificationLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudentNotificationLog to aggregate.
+     */
+    where?: StudentNotificationLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentNotificationLogs to fetch.
+     */
+    orderBy?: StudentNotificationLogOrderByWithRelationInput | StudentNotificationLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StudentNotificationLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentNotificationLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentNotificationLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StudentNotificationLogs
+    **/
+    _count?: true | StudentNotificationLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StudentNotificationLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StudentNotificationLogMaxAggregateInputType
+  }
+
+  export type GetStudentNotificationLogAggregateType<T extends StudentNotificationLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateStudentNotificationLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStudentNotificationLog[P]>
+      : GetScalarType<T[P], AggregateStudentNotificationLog[P]>
+  }
+
+
+
+
+  export type StudentNotificationLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentNotificationLogWhereInput
+    orderBy?: StudentNotificationLogOrderByWithAggregationInput | StudentNotificationLogOrderByWithAggregationInput[]
+    by: StudentNotificationLogScalarFieldEnum[] | StudentNotificationLogScalarFieldEnum
+    having?: StudentNotificationLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StudentNotificationLogCountAggregateInputType | true
+    _min?: StudentNotificationLogMinAggregateInputType
+    _max?: StudentNotificationLogMaxAggregateInputType
+  }
+
+  export type StudentNotificationLogGroupByOutputType = {
+    id: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    studentUserId: string | null
+    recipientEmail: string | null
+    registrationWindowId: string | null
+    feeStatementId: string | null
+    subject: string | null
+    error: string | null
+    metadata: JsonValue | null
+    createdAt: Date
+    sentAt: Date | null
+    _count: StudentNotificationLogCountAggregateOutputType | null
+    _min: StudentNotificationLogMinAggregateOutputType | null
+    _max: StudentNotificationLogMaxAggregateOutputType | null
+  }
+
+  type GetStudentNotificationLogGroupByPayload<T extends StudentNotificationLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StudentNotificationLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StudentNotificationLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StudentNotificationLogGroupByOutputType[P]>
+            : GetScalarType<T[P], StudentNotificationLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StudentNotificationLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    dedupeKey?: boolean
+    studentUserId?: boolean
+    recipientEmail?: boolean
+    registrationWindowId?: boolean
+    feeStatementId?: boolean
+    subject?: boolean
+    error?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    sentAt?: boolean
+    student?: boolean | StudentNotificationLog$studentArgs<ExtArgs>
+    registrationWindow?: boolean | StudentNotificationLog$registrationWindowArgs<ExtArgs>
+    feeStatement?: boolean | StudentNotificationLog$feeStatementArgs<ExtArgs>
+  }, ExtArgs["result"]["studentNotificationLog"]>
+
+
+
+  export type StudentNotificationLogSelectScalar = {
+    id?: boolean
+    type?: boolean
+    status?: boolean
+    dedupeKey?: boolean
+    studentUserId?: boolean
+    recipientEmail?: boolean
+    registrationWindowId?: boolean
+    feeStatementId?: boolean
+    subject?: boolean
+    error?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    sentAt?: boolean
+  }
+
+  export type StudentNotificationLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "status" | "dedupeKey" | "studentUserId" | "recipientEmail" | "registrationWindowId" | "feeStatementId" | "subject" | "error" | "metadata" | "createdAt" | "sentAt", ExtArgs["result"]["studentNotificationLog"]>
+  export type StudentNotificationLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentNotificationLog$studentArgs<ExtArgs>
+    registrationWindow?: boolean | StudentNotificationLog$registrationWindowArgs<ExtArgs>
+    feeStatement?: boolean | StudentNotificationLog$feeStatementArgs<ExtArgs>
+  }
+
+  export type $StudentNotificationLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StudentNotificationLog"
+    objects: {
+      student: Prisma.$UserPayload<ExtArgs> | null
+      registrationWindow: Prisma.$RegistrationWindowPayload<ExtArgs> | null
+      feeStatement: Prisma.$FeeStatementPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      type: $Enums.StudentNotificationType
+      status: $Enums.StudentNotificationStatus
+      /**
+       * Stable unique key used for idempotent delivery (e.g. REG_LOCKED:windowId:studentId).
+       */
+      dedupeKey: string
+      studentUserId: string | null
+      recipientEmail: string | null
+      registrationWindowId: string | null
+      feeStatementId: string | null
+      subject: string | null
+      error: string | null
+      metadata: Prisma.JsonValue | null
+      createdAt: Date
+      sentAt: Date | null
+    }, ExtArgs["result"]["studentNotificationLog"]>
+    composites: {}
+  }
+
+  type StudentNotificationLogGetPayload<S extends boolean | null | undefined | StudentNotificationLogDefaultArgs> = $Result.GetResult<Prisma.$StudentNotificationLogPayload, S>
+
+  type StudentNotificationLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StudentNotificationLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StudentNotificationLogCountAggregateInputType | true
+    }
+
+  export interface StudentNotificationLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StudentNotificationLog'], meta: { name: 'StudentNotificationLog' } }
+    /**
+     * Find zero or one StudentNotificationLog that matches the filter.
+     * @param {StudentNotificationLogFindUniqueArgs} args - Arguments to find a StudentNotificationLog
+     * @example
+     * // Get one StudentNotificationLog
+     * const studentNotificationLog = await prisma.studentNotificationLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StudentNotificationLogFindUniqueArgs>(args: SelectSubset<T, StudentNotificationLogFindUniqueArgs<ExtArgs>>): Prisma__StudentNotificationLogClient<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StudentNotificationLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StudentNotificationLogFindUniqueOrThrowArgs} args - Arguments to find a StudentNotificationLog
+     * @example
+     * // Get one StudentNotificationLog
+     * const studentNotificationLog = await prisma.studentNotificationLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StudentNotificationLogFindUniqueOrThrowArgs>(args: SelectSubset<T, StudentNotificationLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StudentNotificationLogClient<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudentNotificationLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentNotificationLogFindFirstArgs} args - Arguments to find a StudentNotificationLog
+     * @example
+     * // Get one StudentNotificationLog
+     * const studentNotificationLog = await prisma.studentNotificationLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StudentNotificationLogFindFirstArgs>(args?: SelectSubset<T, StudentNotificationLogFindFirstArgs<ExtArgs>>): Prisma__StudentNotificationLogClient<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudentNotificationLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentNotificationLogFindFirstOrThrowArgs} args - Arguments to find a StudentNotificationLog
+     * @example
+     * // Get one StudentNotificationLog
+     * const studentNotificationLog = await prisma.studentNotificationLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StudentNotificationLogFindFirstOrThrowArgs>(args?: SelectSubset<T, StudentNotificationLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__StudentNotificationLogClient<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StudentNotificationLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentNotificationLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StudentNotificationLogs
+     * const studentNotificationLogs = await prisma.studentNotificationLog.findMany()
+     * 
+     * // Get first 10 StudentNotificationLogs
+     * const studentNotificationLogs = await prisma.studentNotificationLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const studentNotificationLogWithIdOnly = await prisma.studentNotificationLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StudentNotificationLogFindManyArgs>(args?: SelectSubset<T, StudentNotificationLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StudentNotificationLog.
+     * @param {StudentNotificationLogCreateArgs} args - Arguments to create a StudentNotificationLog.
+     * @example
+     * // Create one StudentNotificationLog
+     * const StudentNotificationLog = await prisma.studentNotificationLog.create({
+     *   data: {
+     *     // ... data to create a StudentNotificationLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends StudentNotificationLogCreateArgs>(args: SelectSubset<T, StudentNotificationLogCreateArgs<ExtArgs>>): Prisma__StudentNotificationLogClient<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StudentNotificationLogs.
+     * @param {StudentNotificationLogCreateManyArgs} args - Arguments to create many StudentNotificationLogs.
+     * @example
+     * // Create many StudentNotificationLogs
+     * const studentNotificationLog = await prisma.studentNotificationLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StudentNotificationLogCreateManyArgs>(args?: SelectSubset<T, StudentNotificationLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a StudentNotificationLog.
+     * @param {StudentNotificationLogDeleteArgs} args - Arguments to delete one StudentNotificationLog.
+     * @example
+     * // Delete one StudentNotificationLog
+     * const StudentNotificationLog = await prisma.studentNotificationLog.delete({
+     *   where: {
+     *     // ... filter to delete one StudentNotificationLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StudentNotificationLogDeleteArgs>(args: SelectSubset<T, StudentNotificationLogDeleteArgs<ExtArgs>>): Prisma__StudentNotificationLogClient<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StudentNotificationLog.
+     * @param {StudentNotificationLogUpdateArgs} args - Arguments to update one StudentNotificationLog.
+     * @example
+     * // Update one StudentNotificationLog
+     * const studentNotificationLog = await prisma.studentNotificationLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StudentNotificationLogUpdateArgs>(args: SelectSubset<T, StudentNotificationLogUpdateArgs<ExtArgs>>): Prisma__StudentNotificationLogClient<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StudentNotificationLogs.
+     * @param {StudentNotificationLogDeleteManyArgs} args - Arguments to filter StudentNotificationLogs to delete.
+     * @example
+     * // Delete a few StudentNotificationLogs
+     * const { count } = await prisma.studentNotificationLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StudentNotificationLogDeleteManyArgs>(args?: SelectSubset<T, StudentNotificationLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StudentNotificationLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentNotificationLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StudentNotificationLogs
+     * const studentNotificationLog = await prisma.studentNotificationLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StudentNotificationLogUpdateManyArgs>(args: SelectSubset<T, StudentNotificationLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one StudentNotificationLog.
+     * @param {StudentNotificationLogUpsertArgs} args - Arguments to update or create a StudentNotificationLog.
+     * @example
+     * // Update or create a StudentNotificationLog
+     * const studentNotificationLog = await prisma.studentNotificationLog.upsert({
+     *   create: {
+     *     // ... data to create a StudentNotificationLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StudentNotificationLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StudentNotificationLogUpsertArgs>(args: SelectSubset<T, StudentNotificationLogUpsertArgs<ExtArgs>>): Prisma__StudentNotificationLogClient<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StudentNotificationLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentNotificationLogCountArgs} args - Arguments to filter StudentNotificationLogs to count.
+     * @example
+     * // Count the number of StudentNotificationLogs
+     * const count = await prisma.studentNotificationLog.count({
+     *   where: {
+     *     // ... the filter for the StudentNotificationLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends StudentNotificationLogCountArgs>(
+      args?: Subset<T, StudentNotificationLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StudentNotificationLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StudentNotificationLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentNotificationLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StudentNotificationLogAggregateArgs>(args: Subset<T, StudentNotificationLogAggregateArgs>): Prisma.PrismaPromise<GetStudentNotificationLogAggregateType<T>>
+
+    /**
+     * Group by StudentNotificationLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentNotificationLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StudentNotificationLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StudentNotificationLogGroupByArgs['orderBy'] }
+        : { orderBy?: StudentNotificationLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StudentNotificationLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStudentNotificationLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StudentNotificationLog model
+   */
+  readonly fields: StudentNotificationLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StudentNotificationLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StudentNotificationLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    student<T extends StudentNotificationLog$studentArgs<ExtArgs> = {}>(args?: Subset<T, StudentNotificationLog$studentArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    registrationWindow<T extends StudentNotificationLog$registrationWindowArgs<ExtArgs> = {}>(args?: Subset<T, StudentNotificationLog$registrationWindowArgs<ExtArgs>>): Prisma__RegistrationWindowClient<$Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    feeStatement<T extends StudentNotificationLog$feeStatementArgs<ExtArgs> = {}>(args?: Subset<T, StudentNotificationLog$feeStatementArgs<ExtArgs>>): Prisma__FeeStatementClient<$Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StudentNotificationLog model
+   */
+  interface StudentNotificationLogFieldRefs {
+    readonly id: FieldRef<"StudentNotificationLog", 'String'>
+    readonly type: FieldRef<"StudentNotificationLog", 'StudentNotificationType'>
+    readonly status: FieldRef<"StudentNotificationLog", 'StudentNotificationStatus'>
+    readonly dedupeKey: FieldRef<"StudentNotificationLog", 'String'>
+    readonly studentUserId: FieldRef<"StudentNotificationLog", 'String'>
+    readonly recipientEmail: FieldRef<"StudentNotificationLog", 'String'>
+    readonly registrationWindowId: FieldRef<"StudentNotificationLog", 'String'>
+    readonly feeStatementId: FieldRef<"StudentNotificationLog", 'String'>
+    readonly subject: FieldRef<"StudentNotificationLog", 'String'>
+    readonly error: FieldRef<"StudentNotificationLog", 'String'>
+    readonly metadata: FieldRef<"StudentNotificationLog", 'Json'>
+    readonly createdAt: FieldRef<"StudentNotificationLog", 'DateTime'>
+    readonly sentAt: FieldRef<"StudentNotificationLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StudentNotificationLog findUnique
+   */
+  export type StudentNotificationLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentNotificationLog to fetch.
+     */
+    where: StudentNotificationLogWhereUniqueInput
+  }
+
+  /**
+   * StudentNotificationLog findUniqueOrThrow
+   */
+  export type StudentNotificationLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentNotificationLog to fetch.
+     */
+    where: StudentNotificationLogWhereUniqueInput
+  }
+
+  /**
+   * StudentNotificationLog findFirst
+   */
+  export type StudentNotificationLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentNotificationLog to fetch.
+     */
+    where?: StudentNotificationLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentNotificationLogs to fetch.
+     */
+    orderBy?: StudentNotificationLogOrderByWithRelationInput | StudentNotificationLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudentNotificationLogs.
+     */
+    cursor?: StudentNotificationLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentNotificationLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentNotificationLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudentNotificationLogs.
+     */
+    distinct?: StudentNotificationLogScalarFieldEnum | StudentNotificationLogScalarFieldEnum[]
+  }
+
+  /**
+   * StudentNotificationLog findFirstOrThrow
+   */
+  export type StudentNotificationLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentNotificationLog to fetch.
+     */
+    where?: StudentNotificationLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentNotificationLogs to fetch.
+     */
+    orderBy?: StudentNotificationLogOrderByWithRelationInput | StudentNotificationLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudentNotificationLogs.
+     */
+    cursor?: StudentNotificationLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentNotificationLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentNotificationLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudentNotificationLogs.
+     */
+    distinct?: StudentNotificationLogScalarFieldEnum | StudentNotificationLogScalarFieldEnum[]
+  }
+
+  /**
+   * StudentNotificationLog findMany
+   */
+  export type StudentNotificationLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentNotificationLogs to fetch.
+     */
+    where?: StudentNotificationLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentNotificationLogs to fetch.
+     */
+    orderBy?: StudentNotificationLogOrderByWithRelationInput | StudentNotificationLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StudentNotificationLogs.
+     */
+    cursor?: StudentNotificationLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentNotificationLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentNotificationLogs.
+     */
+    skip?: number
+    distinct?: StudentNotificationLogScalarFieldEnum | StudentNotificationLogScalarFieldEnum[]
+  }
+
+  /**
+   * StudentNotificationLog create
+   */
+  export type StudentNotificationLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StudentNotificationLog.
+     */
+    data: XOR<StudentNotificationLogCreateInput, StudentNotificationLogUncheckedCreateInput>
+  }
+
+  /**
+   * StudentNotificationLog createMany
+   */
+  export type StudentNotificationLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StudentNotificationLogs.
+     */
+    data: StudentNotificationLogCreateManyInput | StudentNotificationLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StudentNotificationLog update
+   */
+  export type StudentNotificationLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StudentNotificationLog.
+     */
+    data: XOR<StudentNotificationLogUpdateInput, StudentNotificationLogUncheckedUpdateInput>
+    /**
+     * Choose, which StudentNotificationLog to update.
+     */
+    where: StudentNotificationLogWhereUniqueInput
+  }
+
+  /**
+   * StudentNotificationLog updateMany
+   */
+  export type StudentNotificationLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StudentNotificationLogs.
+     */
+    data: XOR<StudentNotificationLogUpdateManyMutationInput, StudentNotificationLogUncheckedUpdateManyInput>
+    /**
+     * Filter which StudentNotificationLogs to update
+     */
+    where?: StudentNotificationLogWhereInput
+    /**
+     * Limit how many StudentNotificationLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudentNotificationLog upsert
+   */
+  export type StudentNotificationLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StudentNotificationLog to update in case it exists.
+     */
+    where: StudentNotificationLogWhereUniqueInput
+    /**
+     * In case the StudentNotificationLog found by the `where` argument doesn't exist, create a new StudentNotificationLog with this data.
+     */
+    create: XOR<StudentNotificationLogCreateInput, StudentNotificationLogUncheckedCreateInput>
+    /**
+     * In case the StudentNotificationLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StudentNotificationLogUpdateInput, StudentNotificationLogUncheckedUpdateInput>
+  }
+
+  /**
+   * StudentNotificationLog delete
+   */
+  export type StudentNotificationLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    /**
+     * Filter which StudentNotificationLog to delete.
+     */
+    where: StudentNotificationLogWhereUniqueInput
+  }
+
+  /**
+   * StudentNotificationLog deleteMany
+   */
+  export type StudentNotificationLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudentNotificationLogs to delete
+     */
+    where?: StudentNotificationLogWhereInput
+    /**
+     * Limit how many StudentNotificationLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudentNotificationLog.student
+   */
+  export type StudentNotificationLog$studentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * StudentNotificationLog.registrationWindow
+   */
+  export type StudentNotificationLog$registrationWindowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RegistrationWindow
+     */
+    select?: RegistrationWindowSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RegistrationWindow
+     */
+    omit?: RegistrationWindowOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RegistrationWindowInclude<ExtArgs> | null
+    where?: RegistrationWindowWhereInput
+  }
+
+  /**
+   * StudentNotificationLog.feeStatement
+   */
+  export type StudentNotificationLog$feeStatementArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatement
+     */
+    select?: FeeStatementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatement
+     */
+    omit?: FeeStatementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementInclude<ExtArgs> | null
+    where?: FeeStatementWhereInput
+  }
+
+  /**
+   * StudentNotificationLog without action
+   */
+  export type StudentNotificationLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
   }
 
 
@@ -21870,6 +23114,7 @@ export namespace Prisma {
     postResultsAuditLogs?: boolean | RegistrationWindow$postResultsAuditLogsArgs<ExtArgs>
     offlineWithdrawalRefunds?: boolean | RegistrationWindow$offlineWithdrawalRefundsArgs<ExtArgs>
     boardSubmissionBaselines?: boolean | RegistrationWindow$boardSubmissionBaselinesArgs<ExtArgs>
+    studentNotificationLogs?: boolean | RegistrationWindow$studentNotificationLogsArgs<ExtArgs>
     _count?: boolean | RegistrationWindowCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["registrationWindow"]>
 
@@ -21914,6 +23159,7 @@ export namespace Prisma {
     postResultsAuditLogs?: boolean | RegistrationWindow$postResultsAuditLogsArgs<ExtArgs>
     offlineWithdrawalRefunds?: boolean | RegistrationWindow$offlineWithdrawalRefundsArgs<ExtArgs>
     boardSubmissionBaselines?: boolean | RegistrationWindow$boardSubmissionBaselinesArgs<ExtArgs>
+    studentNotificationLogs?: boolean | RegistrationWindow$studentNotificationLogsArgs<ExtArgs>
     _count?: boolean | RegistrationWindowCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -21937,6 +23183,7 @@ export namespace Prisma {
       postResultsAuditLogs: Prisma.$PostResultsAuditLogPayload<ExtArgs>[]
       offlineWithdrawalRefunds: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
       boardSubmissionBaselines: Prisma.$BoardSubmissionBaselinePayload<ExtArgs>[]
+      studentNotificationLogs: Prisma.$StudentNotificationLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -22319,6 +23566,7 @@ export namespace Prisma {
     postResultsAuditLogs<T extends RegistrationWindow$postResultsAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$postResultsAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostResultsAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     offlineWithdrawalRefunds<T extends RegistrationWindow$offlineWithdrawalRefundsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$offlineWithdrawalRefundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     boardSubmissionBaselines<T extends RegistrationWindow$boardSubmissionBaselinesArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$boardSubmissionBaselinesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BoardSubmissionBaselinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentNotificationLogs<T extends RegistrationWindow$studentNotificationLogsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$studentNotificationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -23060,6 +24308,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BoardSubmissionBaselineScalarFieldEnum | BoardSubmissionBaselineScalarFieldEnum[]
+  }
+
+  /**
+   * RegistrationWindow.studentNotificationLogs
+   */
+  export type RegistrationWindow$studentNotificationLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    where?: StudentNotificationLogWhereInput
+    orderBy?: StudentNotificationLogOrderByWithRelationInput | StudentNotificationLogOrderByWithRelationInput[]
+    cursor?: StudentNotificationLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentNotificationLogScalarFieldEnum | StudentNotificationLogScalarFieldEnum[]
   }
 
   /**
@@ -51039,6 +52311,7 @@ export namespace Prisma {
     cashInRequests?: boolean | FeeStatement$cashInRequestsArgs<ExtArgs>
     accessToScriptRequests?: boolean | FeeStatement$accessToScriptRequestsArgs<ExtArgs>
     certificateRequests?: boolean | FeeStatement$certificateRequestsArgs<ExtArgs>
+    studentNotificationLogs?: boolean | FeeStatement$studentNotificationLogsArgs<ExtArgs>
     _count?: boolean | FeeStatementCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["feeStatement"]>
 
@@ -51103,6 +52376,7 @@ export namespace Prisma {
     cashInRequests?: boolean | FeeStatement$cashInRequestsArgs<ExtArgs>
     accessToScriptRequests?: boolean | FeeStatement$accessToScriptRequestsArgs<ExtArgs>
     certificateRequests?: boolean | FeeStatement$certificateRequestsArgs<ExtArgs>
+    studentNotificationLogs?: boolean | FeeStatement$studentNotificationLogsArgs<ExtArgs>
     _count?: boolean | FeeStatementCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -51126,6 +52400,7 @@ export namespace Prisma {
       cashInRequests: Prisma.$CashInRequestPayload<ExtArgs>[]
       accessToScriptRequests: Prisma.$AccessToScriptRequestPayload<ExtArgs>[]
       certificateRequests: Prisma.$CertificateRequestPayload<ExtArgs>[]
+      studentNotificationLogs: Prisma.$StudentNotificationLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -51528,6 +52803,7 @@ export namespace Prisma {
     cashInRequests<T extends FeeStatement$cashInRequestsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$cashInRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessToScriptRequests<T extends FeeStatement$accessToScriptRequestsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$accessToScriptRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessToScriptRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     certificateRequests<T extends FeeStatement$certificateRequestsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$certificateRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CertificateRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentNotificationLogs<T extends FeeStatement$studentNotificationLogsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$studentNotificationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -52278,6 +53554,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CertificateRequestScalarFieldEnum | CertificateRequestScalarFieldEnum[]
+  }
+
+  /**
+   * FeeStatement.studentNotificationLogs
+   */
+  export type FeeStatement$studentNotificationLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentNotificationLog
+     */
+    select?: StudentNotificationLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentNotificationLog
+     */
+    omit?: StudentNotificationLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentNotificationLogInclude<ExtArgs> | null
+    where?: StudentNotificationLogWhereInput
+    orderBy?: StudentNotificationLogOrderByWithRelationInput | StudentNotificationLogOrderByWithRelationInput[]
+    cursor?: StudentNotificationLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentNotificationLogScalarFieldEnum | StudentNotificationLogScalarFieldEnum[]
   }
 
   /**
@@ -68615,6 +69915,25 @@ export namespace Prisma {
   export type SystemEmailSettingsScalarFieldEnum = (typeof SystemEmailSettingsScalarFieldEnum)[keyof typeof SystemEmailSettingsScalarFieldEnum]
 
 
+  export const StudentNotificationLogScalarFieldEnum: {
+    id: 'id',
+    type: 'type',
+    status: 'status',
+    dedupeKey: 'dedupeKey',
+    studentUserId: 'studentUserId',
+    recipientEmail: 'recipientEmail',
+    registrationWindowId: 'registrationWindowId',
+    feeStatementId: 'feeStatementId',
+    subject: 'subject',
+    error: 'error',
+    metadata: 'metadata',
+    createdAt: 'createdAt',
+    sentAt: 'sentAt'
+  };
+
+  export type StudentNotificationLogScalarFieldEnum = (typeof StudentNotificationLogScalarFieldEnum)[keyof typeof StudentNotificationLogScalarFieldEnum]
+
+
   export const UserAuditLogScalarFieldEnum: {
     id: 'id',
     action: 'action',
@@ -69661,6 +70980,20 @@ export namespace Prisma {
   export type SystemEmailSettingsOrderByRelevanceFieldEnum = (typeof SystemEmailSettingsOrderByRelevanceFieldEnum)[keyof typeof SystemEmailSettingsOrderByRelevanceFieldEnum]
 
 
+  export const StudentNotificationLogOrderByRelevanceFieldEnum: {
+    id: 'id',
+    dedupeKey: 'dedupeKey',
+    studentUserId: 'studentUserId',
+    recipientEmail: 'recipientEmail',
+    registrationWindowId: 'registrationWindowId',
+    feeStatementId: 'feeStatementId',
+    subject: 'subject',
+    error: 'error'
+  };
+
+  export type StudentNotificationLogOrderByRelevanceFieldEnum = (typeof StudentNotificationLogOrderByRelevanceFieldEnum)[keyof typeof StudentNotificationLogOrderByRelevanceFieldEnum]
+
+
   export const UserAuditLogOrderByRelevanceFieldEnum: {
     id: 'id',
     targetUserId: 'targetUserId',
@@ -70396,6 +71729,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'StudentNotificationType'
+   */
+  export type EnumStudentNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentNotificationType'>
+    
+
+
+  /**
+   * Reference to a field of type 'StudentNotificationStatus'
+   */
+  export type EnumStudentNotificationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentNotificationStatus'>
+    
+
+
+  /**
    * Reference to a field of type 'UserAuditAction'
    */
   export type EnumUserAuditActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserAuditAction'>
@@ -70787,6 +72134,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundListRelationFilter
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundListRelationFilter
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineListRelationFilter
+    studentNotificationLogs?: StudentNotificationLogListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -70846,6 +72194,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundOrderByRelationAggregateInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundOrderByRelationAggregateInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineOrderByRelationAggregateInput
+    studentNotificationLogs?: StudentNotificationLogOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -70909,6 +72258,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundListRelationFilter
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundListRelationFilter
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineListRelationFilter
+    studentNotificationLogs?: StudentNotificationLogListRelationFilter
   }, "id" | "username" | "email" | "phone" | "studentNo">
 
   export type UserOrderByWithAggregationInput = {
@@ -71319,6 +72669,108 @@ export namespace Prisma {
     passwordResetExpiresMinutes?: IntWithAggregatesFilter<"SystemEmailSettings"> | number
     appUrl?: StringNullableWithAggregatesFilter<"SystemEmailSettings"> | string | null
     updatedAt?: DateTimeWithAggregatesFilter<"SystemEmailSettings"> | Date | string
+  }
+
+  export type StudentNotificationLogWhereInput = {
+    AND?: StudentNotificationLogWhereInput | StudentNotificationLogWhereInput[]
+    OR?: StudentNotificationLogWhereInput[]
+    NOT?: StudentNotificationLogWhereInput | StudentNotificationLogWhereInput[]
+    id?: StringFilter<"StudentNotificationLog"> | string
+    type?: EnumStudentNotificationTypeFilter<"StudentNotificationLog"> | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFilter<"StudentNotificationLog"> | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFilter<"StudentNotificationLog"> | string
+    studentUserId?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    recipientEmail?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    registrationWindowId?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    feeStatementId?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    subject?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    error?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    metadata?: JsonNullableFilter<"StudentNotificationLog">
+    createdAt?: DateTimeFilter<"StudentNotificationLog"> | Date | string
+    sentAt?: DateTimeNullableFilter<"StudentNotificationLog"> | Date | string | null
+    student?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    registrationWindow?: XOR<RegistrationWindowNullableScalarRelationFilter, RegistrationWindowWhereInput> | null
+    feeStatement?: XOR<FeeStatementNullableScalarRelationFilter, FeeStatementWhereInput> | null
+  }
+
+  export type StudentNotificationLogOrderByWithRelationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    dedupeKey?: SortOrder
+    studentUserId?: SortOrderInput | SortOrder
+    recipientEmail?: SortOrderInput | SortOrder
+    registrationWindowId?: SortOrderInput | SortOrder
+    feeStatementId?: SortOrderInput | SortOrder
+    subject?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    student?: UserOrderByWithRelationInput
+    registrationWindow?: RegistrationWindowOrderByWithRelationInput
+    feeStatement?: FeeStatementOrderByWithRelationInput
+    _relevance?: StudentNotificationLogOrderByRelevanceInput
+  }
+
+  export type StudentNotificationLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    dedupeKey?: string
+    AND?: StudentNotificationLogWhereInput | StudentNotificationLogWhereInput[]
+    OR?: StudentNotificationLogWhereInput[]
+    NOT?: StudentNotificationLogWhereInput | StudentNotificationLogWhereInput[]
+    type?: EnumStudentNotificationTypeFilter<"StudentNotificationLog"> | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFilter<"StudentNotificationLog"> | $Enums.StudentNotificationStatus
+    studentUserId?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    recipientEmail?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    registrationWindowId?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    feeStatementId?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    subject?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    error?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    metadata?: JsonNullableFilter<"StudentNotificationLog">
+    createdAt?: DateTimeFilter<"StudentNotificationLog"> | Date | string
+    sentAt?: DateTimeNullableFilter<"StudentNotificationLog"> | Date | string | null
+    student?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    registrationWindow?: XOR<RegistrationWindowNullableScalarRelationFilter, RegistrationWindowWhereInput> | null
+    feeStatement?: XOR<FeeStatementNullableScalarRelationFilter, FeeStatementWhereInput> | null
+  }, "id" | "dedupeKey">
+
+  export type StudentNotificationLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    dedupeKey?: SortOrder
+    studentUserId?: SortOrderInput | SortOrder
+    recipientEmail?: SortOrderInput | SortOrder
+    registrationWindowId?: SortOrderInput | SortOrder
+    feeStatementId?: SortOrderInput | SortOrder
+    subject?: SortOrderInput | SortOrder
+    error?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    sentAt?: SortOrderInput | SortOrder
+    _count?: StudentNotificationLogCountOrderByAggregateInput
+    _max?: StudentNotificationLogMaxOrderByAggregateInput
+    _min?: StudentNotificationLogMinOrderByAggregateInput
+  }
+
+  export type StudentNotificationLogScalarWhereWithAggregatesInput = {
+    AND?: StudentNotificationLogScalarWhereWithAggregatesInput | StudentNotificationLogScalarWhereWithAggregatesInput[]
+    OR?: StudentNotificationLogScalarWhereWithAggregatesInput[]
+    NOT?: StudentNotificationLogScalarWhereWithAggregatesInput | StudentNotificationLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StudentNotificationLog"> | string
+    type?: EnumStudentNotificationTypeWithAggregatesFilter<"StudentNotificationLog"> | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusWithAggregatesFilter<"StudentNotificationLog"> | $Enums.StudentNotificationStatus
+    dedupeKey?: StringWithAggregatesFilter<"StudentNotificationLog"> | string
+    studentUserId?: StringNullableWithAggregatesFilter<"StudentNotificationLog"> | string | null
+    recipientEmail?: StringNullableWithAggregatesFilter<"StudentNotificationLog"> | string | null
+    registrationWindowId?: StringNullableWithAggregatesFilter<"StudentNotificationLog"> | string | null
+    feeStatementId?: StringNullableWithAggregatesFilter<"StudentNotificationLog"> | string | null
+    subject?: StringNullableWithAggregatesFilter<"StudentNotificationLog"> | string | null
+    error?: StringNullableWithAggregatesFilter<"StudentNotificationLog"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"StudentNotificationLog">
+    createdAt?: DateTimeWithAggregatesFilter<"StudentNotificationLog"> | Date | string
+    sentAt?: DateTimeNullableWithAggregatesFilter<"StudentNotificationLog"> | Date | string | null
   }
 
   export type UserAuditLogWhereInput = {
@@ -72005,6 +73457,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
     boardSubmissionBaselines?: BoardSubmissionBaselineListRelationFilter
+    studentNotificationLogs?: StudentNotificationLogListRelationFilter
   }
 
   export type RegistrationWindowOrderByWithRelationInput = {
@@ -72042,6 +73495,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogOrderByRelationAggregateInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundOrderByRelationAggregateInput
     boardSubmissionBaselines?: BoardSubmissionBaselineOrderByRelationAggregateInput
+    studentNotificationLogs?: StudentNotificationLogOrderByRelationAggregateInput
     _relevance?: RegistrationWindowOrderByRelevanceInput
   }
 
@@ -72083,6 +73537,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogListRelationFilter
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
     boardSubmissionBaselines?: BoardSubmissionBaselineListRelationFilter
+    studentNotificationLogs?: StudentNotificationLogListRelationFilter
   }, "id">
 
   export type RegistrationWindowOrderByWithAggregationInput = {
@@ -74955,6 +76410,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
     certificateRequests?: CertificateRequestListRelationFilter
+    studentNotificationLogs?: StudentNotificationLogListRelationFilter
   }
 
   export type FeeStatementOrderByWithRelationInput = {
@@ -75012,6 +76468,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestOrderByRelationAggregateInput
     accessToScriptRequests?: AccessToScriptRequestOrderByRelationAggregateInput
     certificateRequests?: CertificateRequestOrderByRelationAggregateInput
+    studentNotificationLogs?: StudentNotificationLogOrderByRelationAggregateInput
     _relevance?: FeeStatementOrderByRelevanceInput
   }
 
@@ -75073,6 +76530,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
     certificateRequests?: CertificateRequestListRelationFilter
+    studentNotificationLogs?: StudentNotificationLogListRelationFilter
   }, "id" | "statementNo">
 
   export type FeeStatementOrderByWithAggregationInput = {
@@ -77001,6 +78459,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -77060,6 +78519,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserUpdateInput = {
@@ -77119,6 +78579,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -77178,6 +78639,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -77633,6 +79095,115 @@ export namespace Prisma {
     passwordResetExpiresMinutes?: IntFieldUpdateOperationsInput | number
     appUrl?: NullableStringFieldUpdateOperationsInput | string | null
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentNotificationLogCreateInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    recipientEmail?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+    student?: UserCreateNestedOneWithoutStudentNotificationLogsInput
+    registrationWindow?: RegistrationWindowCreateNestedOneWithoutStudentNotificationLogsInput
+    feeStatement?: FeeStatementCreateNestedOneWithoutStudentNotificationLogsInput
+  }
+
+  export type StudentNotificationLogUncheckedCreateInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    studentUserId?: string | null
+    recipientEmail?: string | null
+    registrationWindowId?: string | null
+    feeStatementId?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type StudentNotificationLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    student?: UserUpdateOneWithoutStudentNotificationLogsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneWithoutStudentNotificationLogsNestedInput
+    feeStatement?: FeeStatementUpdateOneWithoutStudentNotificationLogsNestedInput
+  }
+
+  export type StudentNotificationLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    studentUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    feeStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type StudentNotificationLogCreateManyInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    studentUserId?: string | null
+    recipientEmail?: string | null
+    registrationWindowId?: string | null
+    feeStatementId?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type StudentNotificationLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type StudentNotificationLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    studentUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    feeStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type UserAuditLogCreateInput = {
@@ -78373,6 +79944,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateInput = {
@@ -78407,6 +79979,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUpdateInput = {
@@ -78441,6 +80014,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateInput = {
@@ -78475,6 +80049,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowCreateManyInput = {
@@ -81561,6 +83136,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateInput = {
@@ -81609,6 +83185,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUpdateInput = {
@@ -81657,6 +83234,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateInput = {
@@ -81705,6 +83283,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementCreateManyInput = {
@@ -83920,6 +85499,12 @@ export namespace Prisma {
     none?: BoardSubmissionBaselineWhereInput
   }
 
+  export type StudentNotificationLogListRelationFilter = {
+    every?: StudentNotificationLogWhereInput
+    some?: StudentNotificationLogWhereInput
+    none?: StudentNotificationLogWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -84034,6 +85619,10 @@ export namespace Prisma {
   }
 
   export type BoardSubmissionBaselineOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StudentNotificationLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -84584,16 +86173,112 @@ export namespace Prisma {
     passwordResetExpiresMinutes?: SortOrder
   }
 
-  export type EnumUserAuditActionFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserAuditAction | EnumUserAuditActionFieldRefInput<$PrismaModel>
-    in?: $Enums.UserAuditAction[]
-    notIn?: $Enums.UserAuditAction[]
-    not?: NestedEnumUserAuditActionFilter<$PrismaModel> | $Enums.UserAuditAction
+  export type EnumStudentNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentNotificationType | EnumStudentNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentNotificationType[]
+    notIn?: $Enums.StudentNotificationType[]
+    not?: NestedEnumStudentNotificationTypeFilter<$PrismaModel> | $Enums.StudentNotificationType
+  }
+
+  export type EnumStudentNotificationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentNotificationStatus | EnumStudentNotificationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentNotificationStatus[]
+    notIn?: $Enums.StudentNotificationStatus[]
+    not?: NestedEnumStudentNotificationStatusFilter<$PrismaModel> | $Enums.StudentNotificationStatus
   }
 
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
+  }
+
+  export type RegistrationWindowNullableScalarRelationFilter = {
+    is?: RegistrationWindowWhereInput | null
+    isNot?: RegistrationWindowWhereInput | null
+  }
+
+  export type FeeStatementNullableScalarRelationFilter = {
+    is?: FeeStatementWhereInput | null
+    isNot?: FeeStatementWhereInput | null
+  }
+
+  export type StudentNotificationLogOrderByRelevanceInput = {
+    fields: StudentNotificationLogOrderByRelevanceFieldEnum | StudentNotificationLogOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type StudentNotificationLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    dedupeKey?: SortOrder
+    studentUserId?: SortOrder
+    recipientEmail?: SortOrder
+    registrationWindowId?: SortOrder
+    feeStatementId?: SortOrder
+    subject?: SortOrder
+    error?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    sentAt?: SortOrder
+  }
+
+  export type StudentNotificationLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    dedupeKey?: SortOrder
+    studentUserId?: SortOrder
+    recipientEmail?: SortOrder
+    registrationWindowId?: SortOrder
+    feeStatementId?: SortOrder
+    subject?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+    sentAt?: SortOrder
+  }
+
+  export type StudentNotificationLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    dedupeKey?: SortOrder
+    studentUserId?: SortOrder
+    recipientEmail?: SortOrder
+    registrationWindowId?: SortOrder
+    feeStatementId?: SortOrder
+    subject?: SortOrder
+    error?: SortOrder
+    createdAt?: SortOrder
+    sentAt?: SortOrder
+  }
+
+  export type EnumStudentNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentNotificationType | EnumStudentNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentNotificationType[]
+    notIn?: $Enums.StudentNotificationType[]
+    not?: NestedEnumStudentNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.StudentNotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStudentNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumStudentNotificationTypeFilter<$PrismaModel>
+  }
+
+  export type EnumStudentNotificationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentNotificationStatus | EnumStudentNotificationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentNotificationStatus[]
+    notIn?: $Enums.StudentNotificationStatus[]
+    not?: NestedEnumStudentNotificationStatusWithAggregatesFilter<$PrismaModel> | $Enums.StudentNotificationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStudentNotificationStatusFilter<$PrismaModel>
+    _max?: NestedEnumStudentNotificationStatusFilter<$PrismaModel>
+  }
+
+  export type EnumUserAuditActionFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserAuditAction | EnumUserAuditActionFieldRefInput<$PrismaModel>
+    in?: $Enums.UserAuditAction[]
+    notIn?: $Enums.UserAuditAction[]
+    not?: NestedEnumUserAuditActionFilter<$PrismaModel> | $Enums.UserAuditAction
   }
 
   export type UserAuditLogOrderByRelevanceInput = {
@@ -84649,11 +86334,6 @@ export namespace Prisma {
     in?: $Enums.ExamDocumentType[] | null
     notIn?: $Enums.ExamDocumentType[] | null
     not?: NestedEnumExamDocumentTypeNullableFilter<$PrismaModel> | $Enums.ExamDocumentType | null
-  }
-
-  export type RegistrationWindowNullableScalarRelationFilter = {
-    is?: RegistrationWindowWhereInput | null
-    isNot?: RegistrationWindowWhereInput | null
   }
 
   export type ExamSessionNullableScalarRelationFilter = {
@@ -87333,11 +89013,6 @@ export namespace Prisma {
     isNot?: ReviewWindowWhereInput | null
   }
 
-  export type FeeStatementNullableScalarRelationFilter = {
-    is?: FeeStatementWhereInput | null
-    isNot?: FeeStatementWhereInput | null
-  }
-
   export type FeeStatementOrderByRelevanceInput = {
     fields: FeeStatementOrderByRelevanceFieldEnum | FeeStatementOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -89198,6 +90873,13 @@ export namespace Prisma {
     connect?: BoardSubmissionBaselineWhereUniqueInput | BoardSubmissionBaselineWhereUniqueInput[]
   }
 
+  export type StudentNotificationLogCreateNestedManyWithoutStudentInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutStudentInput, StudentNotificationLogUncheckedCreateWithoutStudentInput> | StudentNotificationLogCreateWithoutStudentInput[] | StudentNotificationLogUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutStudentInput | StudentNotificationLogCreateOrConnectWithoutStudentInput[]
+    createMany?: StudentNotificationLogCreateManyStudentInputEnvelope
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+  }
+
   export type SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -89501,6 +91183,13 @@ export namespace Prisma {
     connectOrCreate?: BoardSubmissionBaselineCreateOrConnectWithoutSubmittedByInput | BoardSubmissionBaselineCreateOrConnectWithoutSubmittedByInput[]
     createMany?: BoardSubmissionBaselineCreateManySubmittedByInputEnvelope
     connect?: BoardSubmissionBaselineWhereUniqueInput | BoardSubmissionBaselineWhereUniqueInput[]
+  }
+
+  export type StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutStudentInput, StudentNotificationLogUncheckedCreateWithoutStudentInput> | StudentNotificationLogCreateWithoutStudentInput[] | StudentNotificationLogUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutStudentInput | StudentNotificationLogCreateOrConnectWithoutStudentInput[]
+    createMany?: StudentNotificationLogCreateManyStudentInputEnvelope
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -90127,6 +91816,20 @@ export namespace Prisma {
     deleteMany?: BoardSubmissionBaselineScalarWhereInput | BoardSubmissionBaselineScalarWhereInput[]
   }
 
+  export type StudentNotificationLogUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutStudentInput, StudentNotificationLogUncheckedCreateWithoutStudentInput> | StudentNotificationLogCreateWithoutStudentInput[] | StudentNotificationLogUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutStudentInput | StudentNotificationLogCreateOrConnectWithoutStudentInput[]
+    upsert?: StudentNotificationLogUpsertWithWhereUniqueWithoutStudentInput | StudentNotificationLogUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: StudentNotificationLogCreateManyStudentInputEnvelope
+    set?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    disconnect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    delete?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    update?: StudentNotificationLogUpdateWithWhereUniqueWithoutStudentInput | StudentNotificationLogUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: StudentNotificationLogUpdateManyWithWhereWithoutStudentInput | StudentNotificationLogUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: StudentNotificationLogScalarWhereInput | StudentNotificationLogScalarWhereInput[]
+  }
+
   export type SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -90731,6 +92434,20 @@ export namespace Prisma {
     deleteMany?: BoardSubmissionBaselineScalarWhereInput | BoardSubmissionBaselineScalarWhereInput[]
   }
 
+  export type StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutStudentInput, StudentNotificationLogUncheckedCreateWithoutStudentInput> | StudentNotificationLogCreateWithoutStudentInput[] | StudentNotificationLogUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutStudentInput | StudentNotificationLogCreateOrConnectWithoutStudentInput[]
+    upsert?: StudentNotificationLogUpsertWithWhereUniqueWithoutStudentInput | StudentNotificationLogUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: StudentNotificationLogCreateManyStudentInputEnvelope
+    set?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    disconnect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    delete?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    update?: StudentNotificationLogUpdateWithWhereUniqueWithoutStudentInput | StudentNotificationLogUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: StudentNotificationLogUpdateManyWithWhereWithoutStudentInput | StudentNotificationLogUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: StudentNotificationLogScalarWhereInput | StudentNotificationLogScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
     create?: XOR<UserCreateWithoutPasswordResetTokensInput, UserUncheckedCreateWithoutPasswordResetTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutPasswordResetTokensInput
@@ -90807,6 +92524,62 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutTeacherProfileInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTeacherProfileInput, UserUpdateWithoutTeacherProfileInput>, UserUncheckedUpdateWithoutTeacherProfileInput>
+  }
+
+  export type UserCreateNestedOneWithoutStudentNotificationLogsInput = {
+    create?: XOR<UserCreateWithoutStudentNotificationLogsInput, UserUncheckedCreateWithoutStudentNotificationLogsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStudentNotificationLogsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type RegistrationWindowCreateNestedOneWithoutStudentNotificationLogsInput = {
+    create?: XOR<RegistrationWindowCreateWithoutStudentNotificationLogsInput, RegistrationWindowUncheckedCreateWithoutStudentNotificationLogsInput>
+    connectOrCreate?: RegistrationWindowCreateOrConnectWithoutStudentNotificationLogsInput
+    connect?: RegistrationWindowWhereUniqueInput
+  }
+
+  export type FeeStatementCreateNestedOneWithoutStudentNotificationLogsInput = {
+    create?: XOR<FeeStatementCreateWithoutStudentNotificationLogsInput, FeeStatementUncheckedCreateWithoutStudentNotificationLogsInput>
+    connectOrCreate?: FeeStatementCreateOrConnectWithoutStudentNotificationLogsInput
+    connect?: FeeStatementWhereUniqueInput
+  }
+
+  export type EnumStudentNotificationTypeFieldUpdateOperationsInput = {
+    set?: $Enums.StudentNotificationType
+  }
+
+  export type EnumStudentNotificationStatusFieldUpdateOperationsInput = {
+    set?: $Enums.StudentNotificationStatus
+  }
+
+  export type UserUpdateOneWithoutStudentNotificationLogsNestedInput = {
+    create?: XOR<UserCreateWithoutStudentNotificationLogsInput, UserUncheckedCreateWithoutStudentNotificationLogsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStudentNotificationLogsInput
+    upsert?: UserUpsertWithoutStudentNotificationLogsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStudentNotificationLogsInput, UserUpdateWithoutStudentNotificationLogsInput>, UserUncheckedUpdateWithoutStudentNotificationLogsInput>
+  }
+
+  export type RegistrationWindowUpdateOneWithoutStudentNotificationLogsNestedInput = {
+    create?: XOR<RegistrationWindowCreateWithoutStudentNotificationLogsInput, RegistrationWindowUncheckedCreateWithoutStudentNotificationLogsInput>
+    connectOrCreate?: RegistrationWindowCreateOrConnectWithoutStudentNotificationLogsInput
+    upsert?: RegistrationWindowUpsertWithoutStudentNotificationLogsInput
+    disconnect?: RegistrationWindowWhereInput | boolean
+    delete?: RegistrationWindowWhereInput | boolean
+    connect?: RegistrationWindowWhereUniqueInput
+    update?: XOR<XOR<RegistrationWindowUpdateToOneWithWhereWithoutStudentNotificationLogsInput, RegistrationWindowUpdateWithoutStudentNotificationLogsInput>, RegistrationWindowUncheckedUpdateWithoutStudentNotificationLogsInput>
+  }
+
+  export type FeeStatementUpdateOneWithoutStudentNotificationLogsNestedInput = {
+    create?: XOR<FeeStatementCreateWithoutStudentNotificationLogsInput, FeeStatementUncheckedCreateWithoutStudentNotificationLogsInput>
+    connectOrCreate?: FeeStatementCreateOrConnectWithoutStudentNotificationLogsInput
+    upsert?: FeeStatementUpsertWithoutStudentNotificationLogsInput
+    disconnect?: FeeStatementWhereInput | boolean
+    delete?: FeeStatementWhereInput | boolean
+    connect?: FeeStatementWhereUniqueInput
+    update?: XOR<XOR<FeeStatementUpdateToOneWithWhereWithoutStudentNotificationLogsInput, FeeStatementUpdateWithoutStudentNotificationLogsInput>, FeeStatementUncheckedUpdateWithoutStudentNotificationLogsInput>
   }
 
   export type UserCreateNestedOneWithoutUserAuditLogsTargetInput = {
@@ -91773,6 +93546,13 @@ export namespace Prisma {
     connect?: BoardSubmissionBaselineWhereUniqueInput | BoardSubmissionBaselineWhereUniqueInput[]
   }
 
+  export type StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutRegistrationWindowInput, StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput> | StudentNotificationLogCreateWithoutRegistrationWindowInput[] | StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutRegistrationWindowInput | StudentNotificationLogCreateOrConnectWithoutRegistrationWindowInput[]
+    createMany?: StudentNotificationLogCreateManyRegistrationWindowInputEnvelope
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+  }
+
   export type StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput = {
     create?: XOR<StudentExamRegistrationCreateWithoutRegistrationWindowInput, StudentExamRegistrationUncheckedCreateWithoutRegistrationWindowInput> | StudentExamRegistrationCreateWithoutRegistrationWindowInput[] | StudentExamRegistrationUncheckedCreateWithoutRegistrationWindowInput[]
     connectOrCreate?: StudentExamRegistrationCreateOrConnectWithoutRegistrationWindowInput | StudentExamRegistrationCreateOrConnectWithoutRegistrationWindowInput[]
@@ -91869,6 +93649,13 @@ export namespace Prisma {
     connectOrCreate?: BoardSubmissionBaselineCreateOrConnectWithoutRegistrationWindowInput | BoardSubmissionBaselineCreateOrConnectWithoutRegistrationWindowInput[]
     createMany?: BoardSubmissionBaselineCreateManyRegistrationWindowInputEnvelope
     connect?: BoardSubmissionBaselineWhereUniqueInput | BoardSubmissionBaselineWhereUniqueInput[]
+  }
+
+  export type StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutRegistrationWindowInput, StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput> | StudentNotificationLogCreateWithoutRegistrationWindowInput[] | StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutRegistrationWindowInput | StudentNotificationLogCreateOrConnectWithoutRegistrationWindowInput[]
+    createMany?: StudentNotificationLogCreateManyRegistrationWindowInputEnvelope
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
   }
 
   export type EnumRegistrationWindowStatusFieldUpdateOperationsInput = {
@@ -92105,6 +93892,20 @@ export namespace Prisma {
     deleteMany?: BoardSubmissionBaselineScalarWhereInput | BoardSubmissionBaselineScalarWhereInput[]
   }
 
+  export type StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutRegistrationWindowInput, StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput> | StudentNotificationLogCreateWithoutRegistrationWindowInput[] | StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutRegistrationWindowInput | StudentNotificationLogCreateOrConnectWithoutRegistrationWindowInput[]
+    upsert?: StudentNotificationLogUpsertWithWhereUniqueWithoutRegistrationWindowInput | StudentNotificationLogUpsertWithWhereUniqueWithoutRegistrationWindowInput[]
+    createMany?: StudentNotificationLogCreateManyRegistrationWindowInputEnvelope
+    set?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    disconnect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    delete?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    update?: StudentNotificationLogUpdateWithWhereUniqueWithoutRegistrationWindowInput | StudentNotificationLogUpdateWithWhereUniqueWithoutRegistrationWindowInput[]
+    updateMany?: StudentNotificationLogUpdateManyWithWhereWithoutRegistrationWindowInput | StudentNotificationLogUpdateManyWithWhereWithoutRegistrationWindowInput[]
+    deleteMany?: StudentNotificationLogScalarWhereInput | StudentNotificationLogScalarWhereInput[]
+  }
+
   export type StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput = {
     create?: XOR<StudentExamRegistrationCreateWithoutRegistrationWindowInput, StudentExamRegistrationUncheckedCreateWithoutRegistrationWindowInput> | StudentExamRegistrationCreateWithoutRegistrationWindowInput[] | StudentExamRegistrationUncheckedCreateWithoutRegistrationWindowInput[]
     connectOrCreate?: StudentExamRegistrationCreateOrConnectWithoutRegistrationWindowInput | StudentExamRegistrationCreateOrConnectWithoutRegistrationWindowInput[]
@@ -92299,6 +94100,20 @@ export namespace Prisma {
     update?: BoardSubmissionBaselineUpdateWithWhereUniqueWithoutRegistrationWindowInput | BoardSubmissionBaselineUpdateWithWhereUniqueWithoutRegistrationWindowInput[]
     updateMany?: BoardSubmissionBaselineUpdateManyWithWhereWithoutRegistrationWindowInput | BoardSubmissionBaselineUpdateManyWithWhereWithoutRegistrationWindowInput[]
     deleteMany?: BoardSubmissionBaselineScalarWhereInput | BoardSubmissionBaselineScalarWhereInput[]
+  }
+
+  export type StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutRegistrationWindowInput, StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput> | StudentNotificationLogCreateWithoutRegistrationWindowInput[] | StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutRegistrationWindowInput | StudentNotificationLogCreateOrConnectWithoutRegistrationWindowInput[]
+    upsert?: StudentNotificationLogUpsertWithWhereUniqueWithoutRegistrationWindowInput | StudentNotificationLogUpsertWithWhereUniqueWithoutRegistrationWindowInput[]
+    createMany?: StudentNotificationLogCreateManyRegistrationWindowInputEnvelope
+    set?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    disconnect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    delete?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    update?: StudentNotificationLogUpdateWithWhereUniqueWithoutRegistrationWindowInput | StudentNotificationLogUpdateWithWhereUniqueWithoutRegistrationWindowInput[]
+    updateMany?: StudentNotificationLogUpdateManyWithWhereWithoutRegistrationWindowInput | StudentNotificationLogUpdateManyWithWhereWithoutRegistrationWindowInput[]
+    deleteMany?: StudentNotificationLogScalarWhereInput | StudentNotificationLogScalarWhereInput[]
   }
 
   export type RegistrationWindowCreateNestedOneWithoutBoardSubmissionBaselinesInput = {
@@ -97409,6 +99224,13 @@ export namespace Prisma {
     connect?: CertificateRequestWhereUniqueInput | CertificateRequestWhereUniqueInput[]
   }
 
+  export type StudentNotificationLogCreateNestedManyWithoutFeeStatementInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutFeeStatementInput, StudentNotificationLogUncheckedCreateWithoutFeeStatementInput> | StudentNotificationLogCreateWithoutFeeStatementInput[] | StudentNotificationLogUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutFeeStatementInput | StudentNotificationLogCreateOrConnectWithoutFeeStatementInput[]
+    createMany?: StudentNotificationLogCreateManyFeeStatementInputEnvelope
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+  }
+
   export type FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput = {
     create?: XOR<FeeStatementCreateWithoutRevisedFromStatementInput, FeeStatementUncheckedCreateWithoutRevisedFromStatementInput> | FeeStatementCreateWithoutRevisedFromStatementInput[] | FeeStatementUncheckedCreateWithoutRevisedFromStatementInput[]
     connectOrCreate?: FeeStatementCreateOrConnectWithoutRevisedFromStatementInput | FeeStatementCreateOrConnectWithoutRevisedFromStatementInput[]
@@ -97463,6 +99285,13 @@ export namespace Prisma {
     connectOrCreate?: CertificateRequestCreateOrConnectWithoutFeeStatementInput | CertificateRequestCreateOrConnectWithoutFeeStatementInput[]
     createMany?: CertificateRequestCreateManyFeeStatementInputEnvelope
     connect?: CertificateRequestWhereUniqueInput | CertificateRequestWhereUniqueInput[]
+  }
+
+  export type StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutFeeStatementInput, StudentNotificationLogUncheckedCreateWithoutFeeStatementInput> | StudentNotificationLogCreateWithoutFeeStatementInput[] | StudentNotificationLogUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutFeeStatementInput | StudentNotificationLogCreateOrConnectWithoutFeeStatementInput[]
+    createMany?: StudentNotificationLogCreateManyFeeStatementInputEnvelope
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
   }
 
   export type EnumFeeStatementBusinessTypeFieldUpdateOperationsInput = {
@@ -97681,6 +99510,20 @@ export namespace Prisma {
     deleteMany?: CertificateRequestScalarWhereInput | CertificateRequestScalarWhereInput[]
   }
 
+  export type StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutFeeStatementInput, StudentNotificationLogUncheckedCreateWithoutFeeStatementInput> | StudentNotificationLogCreateWithoutFeeStatementInput[] | StudentNotificationLogUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutFeeStatementInput | StudentNotificationLogCreateOrConnectWithoutFeeStatementInput[]
+    upsert?: StudentNotificationLogUpsertWithWhereUniqueWithoutFeeStatementInput | StudentNotificationLogUpsertWithWhereUniqueWithoutFeeStatementInput[]
+    createMany?: StudentNotificationLogCreateManyFeeStatementInputEnvelope
+    set?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    disconnect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    delete?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    update?: StudentNotificationLogUpdateWithWhereUniqueWithoutFeeStatementInput | StudentNotificationLogUpdateWithWhereUniqueWithoutFeeStatementInput[]
+    updateMany?: StudentNotificationLogUpdateManyWithWhereWithoutFeeStatementInput | StudentNotificationLogUpdateManyWithWhereWithoutFeeStatementInput[]
+    deleteMany?: StudentNotificationLogScalarWhereInput | StudentNotificationLogScalarWhereInput[]
+  }
+
   export type FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput = {
     create?: XOR<FeeStatementCreateWithoutRevisedFromStatementInput, FeeStatementUncheckedCreateWithoutRevisedFromStatementInput> | FeeStatementCreateWithoutRevisedFromStatementInput[] | FeeStatementUncheckedCreateWithoutRevisedFromStatementInput[]
     connectOrCreate?: FeeStatementCreateOrConnectWithoutRevisedFromStatementInput | FeeStatementCreateOrConnectWithoutRevisedFromStatementInput[]
@@ -97791,6 +99634,20 @@ export namespace Prisma {
     update?: CertificateRequestUpdateWithWhereUniqueWithoutFeeStatementInput | CertificateRequestUpdateWithWhereUniqueWithoutFeeStatementInput[]
     updateMany?: CertificateRequestUpdateManyWithWhereWithoutFeeStatementInput | CertificateRequestUpdateManyWithWhereWithoutFeeStatementInput[]
     deleteMany?: CertificateRequestScalarWhereInput | CertificateRequestScalarWhereInput[]
+  }
+
+  export type StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput = {
+    create?: XOR<StudentNotificationLogCreateWithoutFeeStatementInput, StudentNotificationLogUncheckedCreateWithoutFeeStatementInput> | StudentNotificationLogCreateWithoutFeeStatementInput[] | StudentNotificationLogUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutFeeStatementInput | StudentNotificationLogCreateOrConnectWithoutFeeStatementInput[]
+    upsert?: StudentNotificationLogUpsertWithWhereUniqueWithoutFeeStatementInput | StudentNotificationLogUpsertWithWhereUniqueWithoutFeeStatementInput[]
+    createMany?: StudentNotificationLogCreateManyFeeStatementInputEnvelope
+    set?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    disconnect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    delete?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+    update?: StudentNotificationLogUpdateWithWhereUniqueWithoutFeeStatementInput | StudentNotificationLogUpdateWithWhereUniqueWithoutFeeStatementInput[]
+    updateMany?: StudentNotificationLogUpdateManyWithWhereWithoutFeeStatementInput | StudentNotificationLogUpdateManyWithWhereWithoutFeeStatementInput[]
+    deleteMany?: StudentNotificationLogScalarWhereInput | StudentNotificationLogScalarWhereInput[]
   }
 
   export type FeeStatementCreateNestedOneWithoutPaymentOrdersInput = {
@@ -99572,6 +101429,40 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
+  export type NestedEnumStudentNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentNotificationType | EnumStudentNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentNotificationType[]
+    notIn?: $Enums.StudentNotificationType[]
+    not?: NestedEnumStudentNotificationTypeFilter<$PrismaModel> | $Enums.StudentNotificationType
+  }
+
+  export type NestedEnumStudentNotificationStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentNotificationStatus | EnumStudentNotificationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentNotificationStatus[]
+    notIn?: $Enums.StudentNotificationStatus[]
+    not?: NestedEnumStudentNotificationStatusFilter<$PrismaModel> | $Enums.StudentNotificationStatus
+  }
+
+  export type NestedEnumStudentNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentNotificationType | EnumStudentNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentNotificationType[]
+    notIn?: $Enums.StudentNotificationType[]
+    not?: NestedEnumStudentNotificationTypeWithAggregatesFilter<$PrismaModel> | $Enums.StudentNotificationType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStudentNotificationTypeFilter<$PrismaModel>
+    _max?: NestedEnumStudentNotificationTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumStudentNotificationStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentNotificationStatus | EnumStudentNotificationStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentNotificationStatus[]
+    notIn?: $Enums.StudentNotificationStatus[]
+    not?: NestedEnumStudentNotificationStatusWithAggregatesFilter<$PrismaModel> | $Enums.StudentNotificationStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStudentNotificationStatusFilter<$PrismaModel>
+    _max?: NestedEnumStudentNotificationStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumUserAuditActionFilter<$PrismaModel = never> = {
     equals?: $Enums.UserAuditAction | EnumUserAuditActionFieldRefInput<$PrismaModel>
     in?: $Enums.UserAuditAction[]
@@ -100736,6 +102627,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutCreatedByInput = {
@@ -100769,6 +102661,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutCreatedByInput = {
@@ -101528,6 +103421,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutGeneratedByInput = {
@@ -101575,6 +103469,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutGeneratedByInput = {
@@ -101632,6 +103527,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutStudentInput = {
@@ -101679,6 +103575,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutStudentInput = {
@@ -101736,6 +103633,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutRegenerationChangedByInput = {
@@ -101783,6 +103681,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutRegenerationChangedByInput = {
@@ -103156,6 +105055,46 @@ export namespace Prisma {
 
   export type BoardSubmissionBaselineCreateManySubmittedByInputEnvelope = {
     data: BoardSubmissionBaselineCreateManySubmittedByInput | BoardSubmissionBaselineCreateManySubmittedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudentNotificationLogCreateWithoutStudentInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    recipientEmail?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+    registrationWindow?: RegistrationWindowCreateNestedOneWithoutStudentNotificationLogsInput
+    feeStatement?: FeeStatementCreateNestedOneWithoutStudentNotificationLogsInput
+  }
+
+  export type StudentNotificationLogUncheckedCreateWithoutStudentInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    recipientEmail?: string | null
+    registrationWindowId?: string | null
+    feeStatementId?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type StudentNotificationLogCreateOrConnectWithoutStudentInput = {
+    where: StudentNotificationLogWhereUniqueInput
+    create: XOR<StudentNotificationLogCreateWithoutStudentInput, StudentNotificationLogUncheckedCreateWithoutStudentInput>
+  }
+
+  export type StudentNotificationLogCreateManyStudentInputEnvelope = {
+    data: StudentNotificationLogCreateManyStudentInput | StudentNotificationLogCreateManyStudentInput[]
     skipDuplicates?: boolean
   }
 
@@ -104652,6 +106591,41 @@ export namespace Prisma {
     entrySnapshot?: JsonNullableFilter<"BoardSubmissionBaseline">
   }
 
+  export type StudentNotificationLogUpsertWithWhereUniqueWithoutStudentInput = {
+    where: StudentNotificationLogWhereUniqueInput
+    update: XOR<StudentNotificationLogUpdateWithoutStudentInput, StudentNotificationLogUncheckedUpdateWithoutStudentInput>
+    create: XOR<StudentNotificationLogCreateWithoutStudentInput, StudentNotificationLogUncheckedCreateWithoutStudentInput>
+  }
+
+  export type StudentNotificationLogUpdateWithWhereUniqueWithoutStudentInput = {
+    where: StudentNotificationLogWhereUniqueInput
+    data: XOR<StudentNotificationLogUpdateWithoutStudentInput, StudentNotificationLogUncheckedUpdateWithoutStudentInput>
+  }
+
+  export type StudentNotificationLogUpdateManyWithWhereWithoutStudentInput = {
+    where: StudentNotificationLogScalarWhereInput
+    data: XOR<StudentNotificationLogUpdateManyMutationInput, StudentNotificationLogUncheckedUpdateManyWithoutStudentInput>
+  }
+
+  export type StudentNotificationLogScalarWhereInput = {
+    AND?: StudentNotificationLogScalarWhereInput | StudentNotificationLogScalarWhereInput[]
+    OR?: StudentNotificationLogScalarWhereInput[]
+    NOT?: StudentNotificationLogScalarWhereInput | StudentNotificationLogScalarWhereInput[]
+    id?: StringFilter<"StudentNotificationLog"> | string
+    type?: EnumStudentNotificationTypeFilter<"StudentNotificationLog"> | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFilter<"StudentNotificationLog"> | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFilter<"StudentNotificationLog"> | string
+    studentUserId?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    recipientEmail?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    registrationWindowId?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    feeStatementId?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    subject?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    error?: StringNullableFilter<"StudentNotificationLog"> | string | null
+    metadata?: JsonNullableFilter<"StudentNotificationLog">
+    createdAt?: DateTimeFilter<"StudentNotificationLog"> | Date | string
+    sentAt?: DateTimeNullableFilter<"StudentNotificationLog"> | Date | string | null
+  }
+
   export type UserCreateWithoutPasswordResetTokensInput = {
     id?: string
     name: string
@@ -104708,6 +106682,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -104766,6 +106741,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -104840,6 +106816,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -104898,6 +106875,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserCreateWithoutStudentProfileInput = {
@@ -104956,6 +106934,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutStudentProfileInput = {
@@ -105014,6 +106993,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -105088,6 +107068,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentProfileInput = {
@@ -105146,6 +107127,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserCreateWithoutTeacherProfileInput = {
@@ -105204,6 +107186,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutTeacherProfileInput = {
@@ -105262,6 +107245,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutTeacherProfileInput = {
@@ -105336,6 +107320,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherProfileInput = {
@@ -105394,6 +107379,619 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+  }
+
+  export type UserCreateWithoutStudentNotificationLogsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+  }
+
+  export type UserUncheckedCreateWithoutStudentNotificationLogsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+  }
+
+  export type UserCreateOrConnectWithoutStudentNotificationLogsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutStudentNotificationLogsInput, UserUncheckedCreateWithoutStudentNotificationLogsInput>
+  }
+
+  export type RegistrationWindowCreateWithoutStudentNotificationLogsInput = {
+    id?: string
+    title: string
+    academicYear: string
+    studentRegistrationOpenAt: Date | string
+    studentRegistrationCloseAt: Date | string
+    registrationCloseAt: Date | string
+    status?: $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: boolean
+    eoAssistedRegistrationEnabled?: boolean
+    officeOnlyRegistrationEnabled?: boolean
+    postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
+    examSeries: ExamSeriesCreateNestedOneWithoutRegistrationWindowsInput
+    createdBy?: UserCreateNestedOneWithoutRegistrationWindowsInput
+    registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
+    workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
+    changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
+    registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+    feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+    feeAuditLogs?: FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
+    boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+  }
+
+  export type RegistrationWindowUncheckedCreateWithoutStudentNotificationLogsInput = {
+    id?: string
+    examBoardId: string
+    examSeriesId: string
+    title: string
+    academicYear: string
+    studentRegistrationOpenAt: Date | string
+    studentRegistrationCloseAt: Date | string
+    registrationCloseAt: Date | string
+    status?: $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: boolean
+    eoAssistedRegistrationEnabled?: boolean
+    officeOnlyRegistrationEnabled?: boolean
+    postLockAdjustmentEnabled?: boolean
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeAuditLogs?: FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  }
+
+  export type RegistrationWindowCreateOrConnectWithoutStudentNotificationLogsInput = {
+    where: RegistrationWindowWhereUniqueInput
+    create: XOR<RegistrationWindowCreateWithoutStudentNotificationLogsInput, RegistrationWindowUncheckedCreateWithoutStudentNotificationLogsInput>
+  }
+
+  export type FeeStatementCreateWithoutStudentNotificationLogsInput = {
+    id?: string
+    businessType?: $Enums.FeeStatementBusinessType
+    statementNo: string
+    statementKind?: $Enums.FeeStatementKind
+    displayCurrency?: $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot: string
+    studentNoSnapshot: string
+    gradeSnapshot: string
+    classNameSnapshot: string
+    emailSnapshot?: string | null
+    assessmentHubCandidateNumberSnapshot?: string | null
+    candidateTypeSnapshot?: $Enums.CandidateType | null
+    status?: $Enums.FeeStatementStatus
+    studentVisible?: boolean
+    totalGbpAmount: Decimal | DecimalJsLike | number | string
+    totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    paymentNotes?: string | null
+    generatedAt?: Date | string
+    issuedAt?: Date | string | null
+    regenerationReason?: string | null
+    regenerationChangedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
+    student?: UserCreateNestedOneWithoutFeeStatementsAsStudentInput
+    registrationWorkspace?: RegistrationWorkspaceCreateNestedOneWithoutFeeStatementsInput
+    registrationWindow?: RegistrationWindowCreateNestedOneWithoutFeeStatementsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutFeeStatementsInput
+    generatedBy: UserCreateNestedOneWithoutFeeStatementsGeneratedInput
+    revisedFromStatement?: FeeStatementCreateNestedOneWithoutSuccessorStatementsInput
+    successorStatements?: FeeStatementCreateNestedManyWithoutRevisedFromStatementInput
+    revisedToStatement?: FeeStatementCreateNestedOneWithoutPredecessorStatementsInput
+    predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
+    regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
+    items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
+    certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+  }
+
+  export type FeeStatementUncheckedCreateWithoutStudentNotificationLogsInput = {
+    id?: string
+    businessType?: $Enums.FeeStatementBusinessType
+    candidateId?: string | null
+    studentId?: string | null
+    registrationWorkspaceId?: string | null
+    registrationWindowId?: string | null
+    reviewWindowId?: string | null
+    statementNo: string
+    statementKind?: $Enums.FeeStatementKind
+    displayCurrency?: $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot: string
+    studentNoSnapshot: string
+    gradeSnapshot: string
+    classNameSnapshot: string
+    emailSnapshot?: string | null
+    assessmentHubCandidateNumberSnapshot?: string | null
+    candidateTypeSnapshot?: $Enums.CandidateType | null
+    status?: $Enums.FeeStatementStatus
+    studentVisible?: boolean
+    totalGbpAmount: Decimal | DecimalJsLike | number | string
+    totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    paymentNotes?: string | null
+    generatedByUserId: string
+    generatedAt?: Date | string
+    issuedAt?: Date | string | null
+    revisedFromStatementId?: string | null
+    revisedToStatementId?: string | null
+    regenerationReason?: string | null
+    regenerationChangedByUserId?: string | null
+    regenerationChangedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
+    predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
+    items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+  }
+
+  export type FeeStatementCreateOrConnectWithoutStudentNotificationLogsInput = {
+    where: FeeStatementWhereUniqueInput
+    create: XOR<FeeStatementCreateWithoutStudentNotificationLogsInput, FeeStatementUncheckedCreateWithoutStudentNotificationLogsInput>
+  }
+
+  export type UserUpsertWithoutStudentNotificationLogsInput = {
+    update: XOR<UserUpdateWithoutStudentNotificationLogsInput, UserUncheckedUpdateWithoutStudentNotificationLogsInput>
+    create: XOR<UserCreateWithoutStudentNotificationLogsInput, UserUncheckedCreateWithoutStudentNotificationLogsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutStudentNotificationLogsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutStudentNotificationLogsInput, UserUncheckedUpdateWithoutStudentNotificationLogsInput>
+  }
+
+  export type UserUpdateWithoutStudentNotificationLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutStudentNotificationLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+  }
+
+  export type RegistrationWindowUpsertWithoutStudentNotificationLogsInput = {
+    update: XOR<RegistrationWindowUpdateWithoutStudentNotificationLogsInput, RegistrationWindowUncheckedUpdateWithoutStudentNotificationLogsInput>
+    create: XOR<RegistrationWindowCreateWithoutStudentNotificationLogsInput, RegistrationWindowUncheckedCreateWithoutStudentNotificationLogsInput>
+    where?: RegistrationWindowWhereInput
+  }
+
+  export type RegistrationWindowUpdateToOneWithWhereWithoutStudentNotificationLogsInput = {
+    where?: RegistrationWindowWhereInput
+    data: XOR<RegistrationWindowUpdateWithoutStudentNotificationLogsInput, RegistrationWindowUncheckedUpdateWithoutStudentNotificationLogsInput>
+  }
+
+  export type RegistrationWindowUpdateWithoutStudentNotificationLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    academicYear?: StringFieldUpdateOperationsInput | string
+    studentRegistrationOpenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentRegistrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+    examSeries?: ExamSeriesUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+    createdBy?: UserUpdateOneWithoutRegistrationWindowsNestedInput
+    registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
+    workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
+    changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
+    registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+    feeStatements?: FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+    feeAuditLogs?: FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
+    boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+  }
+
+  export type RegistrationWindowUncheckedUpdateWithoutStudentNotificationLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    examSeriesId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    academicYear?: StringFieldUpdateOperationsInput | string
+    studentRegistrationOpenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentRegistrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeAuditLogs?: FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  }
+
+  export type FeeStatementUpsertWithoutStudentNotificationLogsInput = {
+    update: XOR<FeeStatementUpdateWithoutStudentNotificationLogsInput, FeeStatementUncheckedUpdateWithoutStudentNotificationLogsInput>
+    create: XOR<FeeStatementCreateWithoutStudentNotificationLogsInput, FeeStatementUncheckedCreateWithoutStudentNotificationLogsInput>
+    where?: FeeStatementWhereInput
+  }
+
+  export type FeeStatementUpdateToOneWithWhereWithoutStudentNotificationLogsInput = {
+    where?: FeeStatementWhereInput
+    data: XOR<FeeStatementUpdateWithoutStudentNotificationLogsInput, FeeStatementUncheckedUpdateWithoutStudentNotificationLogsInput>
+  }
+
+  export type FeeStatementUpdateWithoutStudentNotificationLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessType?: EnumFeeStatementBusinessTypeFieldUpdateOperationsInput | $Enums.FeeStatementBusinessType
+    statementNo?: StringFieldUpdateOperationsInput | string
+    statementKind?: EnumFeeStatementKindFieldUpdateOperationsInput | $Enums.FeeStatementKind
+    displayCurrency?: EnumFeeStatementDisplayCurrencyFieldUpdateOperationsInput | $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot?: StringFieldUpdateOperationsInput | string
+    studentNoSnapshot?: StringFieldUpdateOperationsInput | string
+    gradeSnapshot?: StringFieldUpdateOperationsInput | string
+    classNameSnapshot?: StringFieldUpdateOperationsInput | string
+    emailSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+    status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    studentVisible?: BoolFieldUpdateOperationsInput | boolean
+    totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
+    student?: UserUpdateOneWithoutFeeStatementsAsStudentNestedInput
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneWithoutFeeStatementsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneWithoutFeeStatementsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutFeeStatementsNestedInput
+    generatedBy?: UserUpdateOneRequiredWithoutFeeStatementsGeneratedNestedInput
+    revisedFromStatement?: FeeStatementUpdateOneWithoutSuccessorStatementsNestedInput
+    successorStatements?: FeeStatementUpdateManyWithoutRevisedFromStatementNestedInput
+    revisedToStatement?: FeeStatementUpdateOneWithoutPredecessorStatementsNestedInput
+    predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
+    regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
+    items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
+    certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+  }
+
+  export type FeeStatementUncheckedUpdateWithoutStudentNotificationLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessType?: EnumFeeStatementBusinessTypeFieldUpdateOperationsInput | $Enums.FeeStatementBusinessType
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWorkspaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    statementNo?: StringFieldUpdateOperationsInput | string
+    statementKind?: EnumFeeStatementKindFieldUpdateOperationsInput | $Enums.FeeStatementKind
+    displayCurrency?: EnumFeeStatementDisplayCurrencyFieldUpdateOperationsInput | $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot?: StringFieldUpdateOperationsInput | string
+    studentNoSnapshot?: StringFieldUpdateOperationsInput | string
+    gradeSnapshot?: StringFieldUpdateOperationsInput | string
+    classNameSnapshot?: StringFieldUpdateOperationsInput | string
+    emailSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+    status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    studentVisible?: BoolFieldUpdateOperationsInput | boolean
+    totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedByUserId?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedFromStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    revisedToStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
+    predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
+    items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type UserCreateWithoutUserAuditLogsTargetInput = {
@@ -105452,6 +108050,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsTargetInput = {
@@ -105510,6 +108109,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsTargetInput = {
@@ -105573,6 +108173,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsPerformedInput = {
@@ -105631,6 +108232,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsPerformedInput = {
@@ -105705,6 +108307,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsTargetInput = {
@@ -105763,6 +108366,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUpsertWithoutUserAuditLogsPerformedInput = {
@@ -105832,6 +108436,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsPerformedInput = {
@@ -105890,6 +108495,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExamDocumentAuditLogsInput = {
@@ -105923,6 +108529,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutExamDocumentAuditLogsInput = {
@@ -105956,6 +108563,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutExamDocumentAuditLogsInput = {
@@ -106183,6 +108791,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -106241,6 +108850,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutExamDocumentAuditLogsPerformedInput = {
@@ -106290,6 +108900,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutExamDocumentAuditLogsInput = {
@@ -106323,6 +108934,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ExamSessionUpsertWithoutExamDocumentAuditLogsInput = {
@@ -106568,6 +109180,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -106626,6 +109239,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserCreateWithoutCandidateInput = {
@@ -106684,6 +109298,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutCandidateInput = {
@@ -106742,6 +109357,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutCandidateInput = {
@@ -107154,6 +109770,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutCandidateInput = {
@@ -107201,6 +109818,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutCandidateInput = {
@@ -107644,6 +110262,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateInput = {
@@ -107702,6 +110321,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type CandidateExamIdentityUpsertWithWhereUniqueWithoutCandidateInput = {
@@ -108093,6 +110713,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutCandidateAuditLogsPerformedInput = {
@@ -108151,6 +110772,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutCandidateAuditLogsPerformedInput = {
@@ -108340,6 +110962,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateAuditLogsPerformedInput = {
@@ -108398,6 +111021,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type CandidateCreateWithoutExamIdentitiesInput = {
@@ -108654,6 +111278,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutCandidateExamIdentitiesCreatedInput = {
@@ -108712,6 +111337,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutCandidateExamIdentitiesCreatedInput = {
@@ -108775,6 +111401,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -108833,6 +111460,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -109117,6 +111745,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateExamIdentitiesCreatedInput = {
@@ -109175,6 +111804,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUpsertWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -109244,6 +111874,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -109302,6 +111933,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserCreateWithoutTeacherAssignmentsInput = {
@@ -109360,6 +111992,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutTeacherAssignmentsInput = {
@@ -109418,6 +112051,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutTeacherAssignmentsInput = {
@@ -109537,6 +112171,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherAssignmentsInput = {
@@ -109595,6 +112230,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type SubjectUpsertWithoutTeacherAssignmentsInput = {
@@ -109848,6 +112484,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWindowsInput = {
@@ -109906,6 +112543,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWindowsInput = {
@@ -110414,6 +113052,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutRegistrationWindowInput = {
@@ -110461,6 +113100,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutRegistrationWindowInput = {
@@ -110703,6 +113343,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StudentNotificationLogCreateWithoutRegistrationWindowInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    recipientEmail?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+    student?: UserCreateNestedOneWithoutStudentNotificationLogsInput
+    feeStatement?: FeeStatementCreateNestedOneWithoutStudentNotificationLogsInput
+  }
+
+  export type StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    studentUserId?: string | null
+    recipientEmail?: string | null
+    feeStatementId?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type StudentNotificationLogCreateOrConnectWithoutRegistrationWindowInput = {
+    where: StudentNotificationLogWhereUniqueInput
+    create: XOR<StudentNotificationLogCreateWithoutRegistrationWindowInput, StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput>
+  }
+
+  export type StudentNotificationLogCreateManyRegistrationWindowInputEnvelope = {
+    data: StudentNotificationLogCreateManyRegistrationWindowInput | StudentNotificationLogCreateManyRegistrationWindowInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ExamBoardUpsertWithoutRegistrationWindowsInput = {
     update: XOR<ExamBoardUpdateWithoutRegistrationWindowsInput, ExamBoardUncheckedUpdateWithoutRegistrationWindowsInput>
     create: XOR<ExamBoardCreateWithoutRegistrationWindowsInput, ExamBoardUncheckedCreateWithoutRegistrationWindowsInput>
@@ -110926,6 +113606,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWindowsInput = {
@@ -110984,6 +113665,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWindowInput = {
@@ -111241,6 +113923,22 @@ export namespace Prisma {
     data: XOR<BoardSubmissionBaselineUpdateManyMutationInput, BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowInput>
   }
 
+  export type StudentNotificationLogUpsertWithWhereUniqueWithoutRegistrationWindowInput = {
+    where: StudentNotificationLogWhereUniqueInput
+    update: XOR<StudentNotificationLogUpdateWithoutRegistrationWindowInput, StudentNotificationLogUncheckedUpdateWithoutRegistrationWindowInput>
+    create: XOR<StudentNotificationLogCreateWithoutRegistrationWindowInput, StudentNotificationLogUncheckedCreateWithoutRegistrationWindowInput>
+  }
+
+  export type StudentNotificationLogUpdateWithWhereUniqueWithoutRegistrationWindowInput = {
+    where: StudentNotificationLogWhereUniqueInput
+    data: XOR<StudentNotificationLogUpdateWithoutRegistrationWindowInput, StudentNotificationLogUncheckedUpdateWithoutRegistrationWindowInput>
+  }
+
+  export type StudentNotificationLogUpdateManyWithWhereWithoutRegistrationWindowInput = {
+    where: StudentNotificationLogScalarWhereInput
+    data: XOR<StudentNotificationLogUpdateManyMutationInput, StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowInput>
+  }
+
   export type RegistrationWindowCreateWithoutBoardSubmissionBaselinesInput = {
     id?: string
     title: string
@@ -111272,6 +113970,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutBoardSubmissionBaselinesInput = {
@@ -111305,6 +114004,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutBoardSubmissionBaselinesInput = {
@@ -111368,6 +114068,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutBoardSubmissionBaselinesSubmittedInput = {
@@ -111426,6 +114127,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutBoardSubmissionBaselinesSubmittedInput = {
@@ -111475,6 +114177,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutBoardSubmissionBaselinesInput = {
@@ -111508,6 +114211,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type UserUpsertWithoutBoardSubmissionBaselinesSubmittedInput = {
@@ -111577,6 +114281,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBoardSubmissionBaselinesSubmittedInput = {
@@ -111635,6 +114340,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationWindowCreateWithoutIncludedSeriesInput = {
@@ -111668,6 +114374,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutIncludedSeriesInput = {
@@ -111701,6 +114408,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutIncludedSeriesInput = {
@@ -111805,6 +114513,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutIncludedSeriesInput = {
@@ -111838,6 +114547,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ExamSeriesUpsertWithoutIncludedInWindowsInput = {
@@ -111932,6 +114642,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutFeeStagesInput = {
@@ -111965,6 +114676,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutFeeStagesInput = {
@@ -112282,6 +114994,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutFeeStagesInput = {
@@ -112315,6 +115028,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithWhereUniqueWithoutFeeStageInput = {
@@ -112530,6 +115244,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWorkspacesInput = {
@@ -112588,6 +115303,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWorkspacesInput = {
@@ -112626,6 +115342,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutWorkspacesInput = {
@@ -112659,6 +115376,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutWorkspacesInput = {
@@ -112722,6 +115440,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutWorkspacesLastAdjustedInput = {
@@ -112780,6 +115499,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutWorkspacesLastAdjustedInput = {
@@ -112888,6 +115608,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsCreatedInput = {
@@ -112946,6 +115667,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsCreatedInput = {
@@ -113009,6 +115731,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -113067,6 +115790,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsUpdatedInput = {
@@ -113341,6 +116065,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutRegistrationWorkspaceInput = {
@@ -113388,6 +116113,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutRegistrationWorkspaceInput = {
@@ -113650,6 +116376,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWorkspacesInput = {
@@ -113708,6 +116435,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutWorkspacesInput = {
@@ -113752,6 +116480,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutWorkspacesInput = {
@@ -113785,6 +116514,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type UserUpsertWithoutWorkspacesLastAdjustedInput = {
@@ -113854,6 +116584,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkspacesLastAdjustedInput = {
@@ -113912,6 +116643,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutWorkspacesInput = {
@@ -114032,6 +116764,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsCreatedInput = {
@@ -114090,6 +116823,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUpsertWithoutRestrictedRegistrationsUpdatedInput = {
@@ -114159,6 +116893,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -114217,6 +116952,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput = {
@@ -114464,6 +117200,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutStudentRegistrationsInput = {
@@ -114522,6 +117259,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutStudentRegistrationsInput = {
@@ -114708,6 +117446,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutRegistrationsInput = {
@@ -114741,6 +117480,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutRegistrationsInput = {
@@ -115034,6 +117774,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationsAddedInput = {
@@ -115092,6 +117833,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationsAddedInput = {
@@ -115494,6 +118236,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentRegistrationsInput = {
@@ -115552,6 +118295,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutRegistrationsInput = {
@@ -115756,6 +118500,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutRegistrationsInput = {
@@ -115789,6 +118534,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ExamBoardUpsertWithoutStudentExamRegistrationsInput = {
@@ -116112,6 +118858,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationsAddedInput = {
@@ -116170,6 +118917,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutRegistrationsInput = {
@@ -116395,6 +119143,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutRegistrationAuditLogsInput = {
@@ -116428,6 +119177,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutRegistrationAuditLogsInput = {
@@ -116600,6 +119350,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -116658,6 +119409,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsAsStudentInput = {
@@ -116918,6 +119670,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput = {
@@ -116976,6 +119729,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsPerformedInput = {
@@ -117124,6 +119878,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutRegistrationAuditLogsInput = {
@@ -117157,6 +119912,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type CandidateUpsertWithoutAuditLogsInput = {
@@ -117341,6 +120097,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -117399,6 +120156,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithoutAuditLogsInput = {
@@ -117683,6 +120441,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsPerformedInput = {
@@ -117741,6 +120500,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationWorkspaceCreateWithoutChangeRequestsInput = {
@@ -117867,6 +120627,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutChangeRequestsInput = {
@@ -117900,6 +120661,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutChangeRequestsInput = {
@@ -117963,6 +120725,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutStudentChangeRequestsInput = {
@@ -118021,6 +120784,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutStudentChangeRequestsInput = {
@@ -118193,6 +120957,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationChangeRequestsInput = {
@@ -118251,6 +121016,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationChangeRequestsInput = {
@@ -118424,6 +121190,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutReviewedChangeRequestsInput = {
@@ -118482,6 +121249,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutReviewedChangeRequestsInput = {
@@ -118652,6 +121420,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutChangeRequestsInput = {
@@ -118685,6 +121454,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type UserUpsertWithoutStudentChangeRequestsInput = {
@@ -118754,6 +121524,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentChangeRequestsInput = {
@@ -118812,6 +121583,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type CandidateUpsertWithoutChangeRequestsInput = {
@@ -118996,6 +121768,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationChangeRequestsInput = {
@@ -119054,6 +121827,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type ExamSessionUpsertWithoutChangeRequestTargetsInput = {
@@ -119245,6 +122019,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewedChangeRequestsInput = {
@@ -119303,6 +122078,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationChangeRequestExamSessionUpsertWithWhereUniqueWithoutChangeRequestInput = {
@@ -119854,6 +122630,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutExamBoardInput = {
@@ -119887,6 +122664,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutExamBoardInput = {
@@ -124598,6 +127376,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutExamSeriesInput = {
@@ -124631,6 +127410,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutExamSeriesInput = {
@@ -127965,6 +130745,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutSourceDocumentsInput = {
@@ -128023,6 +130804,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutSourceDocumentsInput = {
@@ -128440,6 +131222,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSourceDocumentsInput = {
@@ -128498,6 +131281,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type PaperUpsertWithWhereUniqueWithoutSourceDocumentInput = {
@@ -128611,6 +131395,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutFeeRulesInput = {
@@ -128644,6 +131429,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutFeeRulesInput = {
@@ -129027,6 +131813,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutFeeRulesCreatedInput = {
@@ -129085,6 +131872,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutFeeRulesCreatedInput = {
@@ -129134,6 +131922,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutFeeRulesInput = {
@@ -129167,6 +131956,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ExamBoardUpsertWithoutFeeRulesInput = {
@@ -129592,6 +132382,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeRulesCreatedInput = {
@@ -129650,6 +132441,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExchangeRatesInput = {
@@ -129683,6 +132475,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutExchangeRatesInput = {
@@ -129716,6 +132509,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutExchangeRatesInput = {
@@ -129779,6 +132573,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutExchangeRatesCreatedInput = {
@@ -129837,6 +132632,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutExchangeRatesCreatedInput = {
@@ -129886,6 +132682,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutExchangeRatesInput = {
@@ -129919,6 +132716,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type UserUpsertWithoutExchangeRatesCreatedInput = {
@@ -129988,6 +132786,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExchangeRatesCreatedInput = {
@@ -130046,6 +132845,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type CandidateCreateWithoutFeeStatementsInput = {
@@ -130213,6 +133013,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsAsStudentInput = {
@@ -130271,6 +133072,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsAsStudentInput = {
@@ -130402,6 +133204,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutFeeStatementsInput = {
@@ -130435,6 +133238,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutFeeStatementsInput = {
@@ -130545,6 +133349,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsGeneratedInput = {
@@ -130603,6 +133408,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsGeneratedInput = {
@@ -130655,6 +133461,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutSuccessorStatementsInput = {
@@ -130702,6 +133509,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutSuccessorStatementsInput = {
@@ -130754,6 +133562,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutRevisedFromStatementInput = {
@@ -130801,6 +133610,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutRevisedFromStatementInput = {
@@ -130858,6 +133668,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutPredecessorStatementsInput = {
@@ -130905,6 +133716,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutPredecessorStatementsInput = {
@@ -130957,6 +133769,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutRevisedToStatementInput = {
@@ -131004,6 +133817,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutRevisedToStatementInput = {
@@ -131072,6 +133886,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsRegenerationChangedInput = {
@@ -131130,6 +133945,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsRegenerationChangedInput = {
@@ -131455,6 +134271,46 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StudentNotificationLogCreateWithoutFeeStatementInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    recipientEmail?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+    student?: UserCreateNestedOneWithoutStudentNotificationLogsInput
+    registrationWindow?: RegistrationWindowCreateNestedOneWithoutStudentNotificationLogsInput
+  }
+
+  export type StudentNotificationLogUncheckedCreateWithoutFeeStatementInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    studentUserId?: string | null
+    recipientEmail?: string | null
+    registrationWindowId?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+  }
+
+  export type StudentNotificationLogCreateOrConnectWithoutFeeStatementInput = {
+    where: StudentNotificationLogWhereUniqueInput
+    create: XOR<StudentNotificationLogCreateWithoutFeeStatementInput, StudentNotificationLogUncheckedCreateWithoutFeeStatementInput>
+  }
+
+  export type StudentNotificationLogCreateManyFeeStatementInputEnvelope = {
+    data: StudentNotificationLogCreateManyFeeStatementInput | StudentNotificationLogCreateManyFeeStatementInput[]
+    skipDuplicates?: boolean
+  }
+
   export type CandidateUpsertWithoutFeeStatementsInput = {
     update: XOR<CandidateUpdateWithoutFeeStatementsInput, CandidateUncheckedUpdateWithoutFeeStatementsInput>
     create: XOR<CandidateCreateWithoutFeeStatementsInput, CandidateUncheckedCreateWithoutFeeStatementsInput>
@@ -131637,6 +134493,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsAsStudentInput = {
@@ -131695,6 +134552,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutFeeStatementsInput = {
@@ -131838,6 +134696,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutFeeStatementsInput = {
@@ -131871,6 +134730,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ReviewWindowUpsertWithoutFeeStatementsInput = {
@@ -131993,6 +134853,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsGeneratedInput = {
@@ -132051,6 +134912,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type FeeStatementUpsertWithoutSuccessorStatementsInput = {
@@ -132109,6 +134971,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutSuccessorStatementsInput = {
@@ -132156,6 +135019,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUpsertWithWhereUniqueWithoutRevisedFromStatementInput = {
@@ -132230,6 +135094,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutPredecessorStatementsInput = {
@@ -132277,6 +135142,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUpsertWithWhereUniqueWithoutRevisedToStatementInput = {
@@ -132362,6 +135228,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsRegenerationChangedInput = {
@@ -132420,6 +135287,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeStatementInput = {
@@ -132518,6 +135386,22 @@ export namespace Prisma {
     data: XOR<CertificateRequestUpdateManyMutationInput, CertificateRequestUncheckedUpdateManyWithoutFeeStatementInput>
   }
 
+  export type StudentNotificationLogUpsertWithWhereUniqueWithoutFeeStatementInput = {
+    where: StudentNotificationLogWhereUniqueInput
+    update: XOR<StudentNotificationLogUpdateWithoutFeeStatementInput, StudentNotificationLogUncheckedUpdateWithoutFeeStatementInput>
+    create: XOR<StudentNotificationLogCreateWithoutFeeStatementInput, StudentNotificationLogUncheckedCreateWithoutFeeStatementInput>
+  }
+
+  export type StudentNotificationLogUpdateWithWhereUniqueWithoutFeeStatementInput = {
+    where: StudentNotificationLogWhereUniqueInput
+    data: XOR<StudentNotificationLogUpdateWithoutFeeStatementInput, StudentNotificationLogUncheckedUpdateWithoutFeeStatementInput>
+  }
+
+  export type StudentNotificationLogUpdateManyWithWhereWithoutFeeStatementInput = {
+    where: StudentNotificationLogScalarWhereInput
+    data: XOR<StudentNotificationLogUpdateManyMutationInput, StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementInput>
+  }
+
   export type FeeStatementCreateWithoutPaymentOrdersInput = {
     id?: string
     businessType?: $Enums.FeeStatementBusinessType
@@ -132563,6 +135447,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutPaymentOrdersInput = {
@@ -132610,6 +135495,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutPaymentOrdersInput = {
@@ -132673,6 +135559,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutPaymentOrdersCancelledInput = {
@@ -132731,6 +135618,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutPaymentOrdersCancelledInput = {
@@ -132794,6 +135682,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutPaymentOrdersInput = {
@@ -132841,6 +135730,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type UserUpsertWithoutPaymentOrdersCancelledInput = {
@@ -132910,6 +135800,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPaymentOrdersCancelledInput = {
@@ -132968,6 +135859,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type FeeStatementCreateWithoutItemsInput = {
@@ -133015,6 +135907,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutItemsInput = {
@@ -133062,6 +135955,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutItemsInput = {
@@ -133239,6 +136133,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutItemsInput = {
@@ -133286,6 +136181,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeScheduleUpsertWithoutFeeStatementItemsInput = {
@@ -133538,6 +136434,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutOfflineWithdrawalRefundsInput = {
@@ -133571,6 +136468,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutOfflineWithdrawalRefundsInput = {
@@ -133798,6 +136696,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutOfflineWithdrawalRefundsCreatedInput = {
@@ -133856,6 +136755,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutOfflineWithdrawalRefundsCreatedInput = {
@@ -133919,6 +136819,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -133977,6 +136878,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -134125,6 +137027,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutOfflineWithdrawalRefundsInput = {
@@ -134158,6 +137061,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type CandidateUpsertWithoutOfflineWithdrawalRefundsInput = {
@@ -134403,6 +137307,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCreatedInput = {
@@ -134461,6 +137366,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUpsertWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -134530,6 +137436,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -134588,6 +137495,7 @@ export namespace Prisma {
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type RegistrationWindowCreateWithoutFeeAuditLogsInput = {
@@ -134621,6 +137529,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutFeeAuditLogsInput = {
@@ -134654,6 +137563,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutFeeAuditLogsInput = {
@@ -134717,6 +137627,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutFeeAuditLogsPerformedInput = {
@@ -134775,6 +137686,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutFeeAuditLogsPerformedInput = {
@@ -134824,6 +137736,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutFeeAuditLogsInput = {
@@ -134857,6 +137770,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type UserUpsertWithoutFeeAuditLogsPerformedInput = {
@@ -134926,6 +137840,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeAuditLogsPerformedInput = {
@@ -134984,6 +137899,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type ExamBoardCreateWithoutReviewWindowsInput = {
@@ -135186,6 +138102,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutReviewWindowsCreatedInput = {
@@ -135244,6 +138161,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutReviewWindowsCreatedInput = {
@@ -135518,6 +138436,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutReviewWindowInput = {
@@ -135565,6 +138484,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutReviewWindowInput = {
@@ -135840,6 +138760,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewWindowsCreatedInput = {
@@ -135898,6 +138819,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type ReviewWindowServiceUpsertWithWhereUniqueWithoutReviewWindowInput = {
@@ -136719,6 +139641,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsRequestedInput = {
@@ -136777,6 +139700,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsRequestedInput = {
@@ -136840,6 +139764,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsReviewedInput = {
@@ -136898,6 +139823,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsReviewedInput = {
@@ -136950,6 +139876,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutReviewRequestsInput = {
@@ -136997,6 +139924,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutReviewRequestsInput = {
@@ -137657,6 +140585,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsRequestedInput = {
@@ -137715,6 +140644,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUpsertWithoutReviewRequestsReviewedInput = {
@@ -137784,6 +140714,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsReviewedInput = {
@@ -137842,6 +140773,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type FeeStatementUpsertWithoutReviewRequestsInput = {
@@ -137900,6 +140832,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutReviewRequestsInput = {
@@ -137947,6 +140880,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type ReviewWindowCreateWithoutCashInRequestsInput = {
@@ -138444,6 +141378,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutCashInRequestsRequestedInput = {
@@ -138502,6 +141437,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutCashInRequestsRequestedInput = {
@@ -138554,6 +141490,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutCashInRequestsInput = {
@@ -138601,6 +141538,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutCashInRequestsInput = {
@@ -139156,6 +142094,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCashInRequestsRequestedInput = {
@@ -139214,6 +142153,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type FeeStatementUpsertWithoutCashInRequestsInput = {
@@ -139272,6 +142212,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutCashInRequestsInput = {
@@ -139319,6 +142260,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type ReviewWindowCreateWithoutAccessToScriptRequestsInput = {
@@ -139915,6 +142857,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutAccessToScriptRequestsRequestedInput = {
@@ -139973,6 +142916,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutAccessToScriptRequestsRequestedInput = {
@@ -140025,6 +142969,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutAccessToScriptRequestsInput = {
@@ -140072,6 +143017,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutAccessToScriptRequestsInput = {
@@ -140732,6 +143678,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccessToScriptRequestsRequestedInput = {
@@ -140790,6 +143737,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type FeeStatementUpsertWithoutAccessToScriptRequestsInput = {
@@ -140848,6 +143796,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutAccessToScriptRequestsInput = {
@@ -140895,6 +143844,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type ReviewWindowCreateWithoutCertificateRequestsInput = {
@@ -141253,6 +144203,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutCertificateRequestsRequestedInput = {
@@ -141311,6 +144262,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutCertificateRequestsRequestedInput = {
@@ -141363,6 +144315,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementUncheckedCreateWithoutCertificateRequestsInput = {
@@ -141410,6 +144363,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
   }
 
   export type FeeStatementCreateOrConnectWithoutCertificateRequestsInput = {
@@ -141808,6 +144762,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCertificateRequestsRequestedInput = {
@@ -141866,6 +144821,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type FeeStatementUpsertWithoutCertificateRequestsInput = {
@@ -141924,6 +144880,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutCertificateRequestsInput = {
@@ -141971,6 +144928,7 @@ export namespace Prisma {
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type ExamBoardCreateWithoutFeeSchedulesInput = {
@@ -142294,6 +145252,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutFeeSchedulesCreatedInput = {
@@ -142352,6 +145311,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutFeeSchedulesCreatedInput = {
@@ -142845,6 +145805,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeSchedulesCreatedInput = {
@@ -142903,6 +145864,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeScheduleInput = {
@@ -143221,6 +146183,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowUncheckedCreateWithoutPostResultsAuditLogsInput = {
@@ -143254,6 +146217,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
   }
 
   export type RegistrationWindowCreateOrConnectWithoutPostResultsAuditLogsInput = {
@@ -143364,6 +146328,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutPostResultsAuditLogsPerformedInput = {
@@ -143422,6 +146387,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutPostResultsAuditLogsPerformedInput = {
@@ -143742,6 +146708,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutPostResultsAuditLogsInput = {
@@ -143775,6 +146742,7 @@ export namespace Prisma {
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type ReviewWindowUpsertWithoutPostResultsAuditLogsInput = {
@@ -143897,6 +146865,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostResultsAuditLogsPerformedInput = {
@@ -143955,6 +146924,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserCreateWithoutBackupSettingsUpdatedInput = {
@@ -144013,6 +146983,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutBackupSettingsUpdatedInput = {
@@ -144071,6 +147042,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutBackupSettingsUpdatedInput = {
@@ -144145,6 +147117,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupSettingsUpdatedInput = {
@@ -144203,6 +147176,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type UserCreateWithoutBackupJobsTriggeredInput = {
@@ -144261,6 +147235,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
   }
 
   export type UserUncheckedCreateWithoutBackupJobsTriggeredInput = {
@@ -144319,6 +147294,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type UserCreateOrConnectWithoutBackupJobsTriggeredInput = {
@@ -144393,6 +147369,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupJobsTriggeredInput = {
@@ -144451,6 +147428,7 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type SourceDocumentCreateManyUploadedByInput = {
@@ -145363,6 +148341,21 @@ export namespace Prisma {
     entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type StudentNotificationLogCreateManyStudentInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    recipientEmail?: string | null
+    registrationWindowId?: string | null
+    feeStatementId?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+  }
+
   export type SourceDocumentUpdateWithoutUploadedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -145470,6 +148463,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutCreatedByInput = {
@@ -145503,6 +148497,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateManyWithoutCreatedByInput = {
@@ -146441,6 +149436,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutGeneratedByInput = {
@@ -146488,6 +149484,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutGeneratedByInput = {
@@ -146574,6 +149571,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutStudentInput = {
@@ -146621,6 +149619,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutStudentInput = {
@@ -146707,6 +149706,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutRegenerationChangedByInput = {
@@ -146754,6 +149754,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByInput = {
@@ -148255,6 +151256,51 @@ export namespace Prisma {
     entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type StudentNotificationLogUpdateWithoutStudentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    registrationWindow?: RegistrationWindowUpdateOneWithoutStudentNotificationLogsNestedInput
+    feeStatement?: FeeStatementUpdateOneWithoutStudentNotificationLogsNestedInput
+  }
+
+  export type StudentNotificationLogUncheckedUpdateWithoutStudentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    feeStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type StudentNotificationLogUncheckedUpdateManyWithoutStudentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    feeStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type CandidateExamIdentityCreateManyCandidateInput = {
     id?: string
     examBoardId: string
@@ -149083,6 +152129,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutCandidateInput = {
@@ -149130,6 +152177,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutCandidateInput = {
@@ -149902,6 +152950,21 @@ export namespace Prisma {
     entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
   }
 
+  export type StudentNotificationLogCreateManyRegistrationWindowInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    studentUserId?: string | null
+    recipientEmail?: string | null
+    feeStatementId?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+  }
+
   export type StudentExamRegistrationUpdateWithoutRegistrationWindowInput = {
     id?: StringFieldUpdateOperationsInput | string
     studentNameSnapshot?: StringFieldUpdateOperationsInput | string
@@ -150514,6 +153577,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutRegistrationWindowInput = {
@@ -150561,6 +153625,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutRegistrationWindowInput = {
@@ -150855,6 +153920,51 @@ export namespace Prisma {
     fileCount?: IntFieldUpdateOperationsInput | number
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     entrySnapshot?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type StudentNotificationLogUpdateWithoutRegistrationWindowInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    student?: UserUpdateOneWithoutStudentNotificationLogsNestedInput
+    feeStatement?: FeeStatementUpdateOneWithoutStudentNotificationLogsNestedInput
+  }
+
+  export type StudentNotificationLogUncheckedUpdateWithoutRegistrationWindowInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    studentUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    feeStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    studentUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    feeStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type RegistrationWorkspaceCreateManyFeeStageInput = {
@@ -151806,6 +154916,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutRegistrationWorkspaceInput = {
@@ -151853,6 +154964,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceInput = {
@@ -152915,6 +156027,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutExamBoardInput = {
@@ -152948,6 +156061,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateManyWithoutExamBoardInput = {
@@ -156163,6 +159277,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateWithoutExamSeriesInput = {
@@ -156196,6 +159311,7 @@ export namespace Prisma {
     postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
   }
 
   export type RegistrationWindowUncheckedUpdateManyWithoutExamSeriesInput = {
@@ -158398,6 +161514,21 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type StudentNotificationLogCreateManyFeeStatementInput = {
+    id?: string
+    type: $Enums.StudentNotificationType
+    status: $Enums.StudentNotificationStatus
+    dedupeKey: string
+    studentUserId?: string | null
+    recipientEmail?: string | null
+    registrationWindowId?: string | null
+    subject?: string | null
+    error?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    sentAt?: Date | string | null
+  }
+
   export type FeeStatementUpdateWithoutRevisedFromStatementInput = {
     id?: StringFieldUpdateOperationsInput | string
     businessType?: EnumFeeStatementBusinessTypeFieldUpdateOperationsInput | $Enums.FeeStatementBusinessType
@@ -158443,6 +161574,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutRevisedFromStatementInput = {
@@ -158490,6 +161622,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementInput = {
@@ -158576,6 +161709,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutRevisedToStatementInput = {
@@ -158623,6 +161757,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutRevisedToStatementInput = {
@@ -159049,6 +162184,51 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentNotificationLogUpdateWithoutFeeStatementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    student?: UserUpdateOneWithoutStudentNotificationLogsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneWithoutStudentNotificationLogsNestedInput
+  }
+
+  export type StudentNotificationLogUncheckedUpdateWithoutFeeStatementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    studentUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStudentNotificationTypeFieldUpdateOperationsInput | $Enums.StudentNotificationType
+    status?: EnumStudentNotificationStatusFieldUpdateOperationsInput | $Enums.StudentNotificationStatus
+    dedupeKey?: StringFieldUpdateOperationsInput | string
+    studentUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    recipientEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    subject?: NullableStringFieldUpdateOperationsInput | string | null
+    error?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type ReviewWindowServiceCreateManyReviewWindowInput = {
@@ -159494,6 +162674,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateWithoutReviewWindowInput = {
@@ -159541,6 +162722,7 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutReviewWindowInput = {

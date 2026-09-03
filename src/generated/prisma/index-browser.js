@@ -195,6 +195,22 @@ exports.Prisma.SystemEmailSettingsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.StudentNotificationLogScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  status: 'status',
+  dedupeKey: 'dedupeKey',
+  studentUserId: 'studentUserId',
+  recipientEmail: 'recipientEmail',
+  registrationWindowId: 'registrationWindowId',
+  feeStatementId: 'feeStatementId',
+  subject: 'subject',
+  error: 'error',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  sentAt: 'sentAt'
+};
+
 exports.Prisma.UserAuditLogScalarFieldEnum = {
   id: 'id',
   action: 'action',
@@ -1076,6 +1092,17 @@ exports.Prisma.SystemEmailSettingsOrderByRelevanceFieldEnum = {
   appUrl: 'appUrl'
 };
 
+exports.Prisma.StudentNotificationLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  dedupeKey: 'dedupeKey',
+  studentUserId: 'studentUserId',
+  recipientEmail: 'recipientEmail',
+  registrationWindowId: 'registrationWindowId',
+  feeStatementId: 'feeStatementId',
+  subject: 'subject',
+  error: 'error'
+};
+
 exports.Prisma.UserAuditLogOrderByRelevanceFieldEnum = {
   id: 'id',
   targetUserId: 'targetUserId',
@@ -1626,6 +1653,17 @@ exports.TeacherProfileStatus = exports.$Enums.TeacherProfileStatus = {
   INACTIVE: 'INACTIVE'
 };
 
+exports.StudentNotificationType = exports.$Enums.StudentNotificationType = {
+  REG_LOCKED: 'REG_LOCKED',
+  FEE_ISSUED: 'FEE_ISSUED'
+};
+
+exports.StudentNotificationStatus = exports.$Enums.StudentNotificationStatus = {
+  SENT: 'SENT',
+  FAILED: 'FAILED',
+  SKIPPED: 'SKIPPED'
+};
+
 exports.UserAuditAction = exports.$Enums.UserAuditAction = {
   USER_CREATED: 'USER_CREATED',
   USER_UPDATED: 'USER_UPDATED',
@@ -2061,6 +2099,7 @@ exports.Prisma.ModelName = {
   StudentIdSequence: 'StudentIdSequence',
   TeacherProfile: 'TeacherProfile',
   SystemEmailSettings: 'SystemEmailSettings',
+  StudentNotificationLog: 'StudentNotificationLog',
   UserAuditLog: 'UserAuditLog',
   ExamDocumentAuditLog: 'ExamDocumentAuditLog',
   Candidate: 'Candidate',

@@ -15,6 +15,7 @@ import { hasWorkspaceSchema } from "@/lib/registrations/schema-capabilities";
 import { RegistrationError } from "@/lib/registrations/errors";
 import { ensureRegistrationWorkspaceForCandidate } from "@/lib/registrations/workspace";
 import { generateConfirmationNumber } from "@/lib/registrations/numbering";
+import { queueRegistrationLockedNotifications } from "@/lib/notifications/registration-locked";
 
 async function resolveLockPerformer(windowId: string): Promise<string> {
   const window = await prisma.registrationWindow.findUnique({
@@ -49,8 +50,13 @@ export async function lockRegistrationsForWindow(
   if (actives.length === 0) return 0;
 
   const now = new Date();
+  const lockedStudentUserIds = new Set<string>();
+  const lockedCandidateIds = new Set<string>();
 
   for (const registration of actives) {
+    if (registration.studentId) lockedStudentUserIds.add(registration.studentId);
+    if (registration.candidateId) lockedCandidateIds.add(registration.candidateId);
+
     await prisma.$transaction(async (tx) => {
       const workspaceReady = await hasWorkspaceSchema();
       let workspaceId: string | null = null;
@@ -107,6 +113,13 @@ export async function lockRegistrationsForWindow(
         },
         tx,
       );
+    });
+  }
+
+  if (actives.length > 0) {
+    queueRegistrationLockedNotifications(windowId, {
+      studentUserIds: [...lockedStudentUserIds],
+      candidateIds: [...lockedCandidateIds],
     });
   }
 

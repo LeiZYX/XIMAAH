@@ -35,6 +35,7 @@ import {
   statementAmountDueGbp,
 } from "@/lib/fees/payment-due";
 import { finalizeRevisedFeeStatement } from "@/lib/fees/statement-lifecycle";
+import { queueFeeStatementIssuedNotification } from "@/lib/notifications/fee-statement-issued";
 
 export class FeeError extends Error {
   constructor(message: string) {
@@ -583,6 +584,8 @@ export async function generateFeeStatement(params: {
     }).catch((error) => {
       console.error("Fee audit log failed:", error);
     });
+
+    queueFeeStatementIssuedNotification(statement.id);
   }
 
   return statement;
@@ -673,7 +676,7 @@ export async function issueFeeStatement(statementId: string) {
 
   const nextStatus = statementAmountDueGbp(statement) <= 0 ? "PAID" : "ISSUED";
 
-  return prisma.feeStatement.update({
+  const issued = await prisma.feeStatement.update({
     where: { id: statementId },
     data: { status: nextStatus, issuedAt: new Date() },
     include: {
@@ -686,6 +689,10 @@ export async function issueFeeStatement(statementId: string) {
       },
     },
   });
+
+  queueFeeStatementIssuedNotification(issued.id);
+
+  return issued;
 }
 
 export { loadQualificationId };

@@ -371,6 +371,17 @@ enum PostResultsAuditAction {
   CASH_IN_FEE_MARKED_PAID_OFFLINE
 }
 
+enum StudentNotificationType {
+  REG_LOCKED
+  FEE_ISSUED
+}
+
+enum StudentNotificationStatus {
+  SENT
+  FAILED
+  SKIPPED
+}
+
 enum StudentProfileStatus {
   ACTIVE
   GRADUATED
@@ -506,6 +517,7 @@ model User {
   offlineWithdrawalRefundsCreated   OfflineWithdrawalRefund[]   @relation("OfflineWithdrawalRefundCreatedBy")
   offlineWithdrawalRefundsCompleted OfflineWithdrawalRefund[]   @relation("OfflineWithdrawalRefundCompletedBy")
   boardSubmissionBaselinesSubmitted BoardSubmissionBaseline[]   @relation("BoardSubmissionSubmitter")
+  studentNotificationLogs           StudentNotificationLog[]
 
   @@index([role])
   @@index([isActive])
@@ -581,6 +593,34 @@ model SystemEmailSettings {
   passwordResetExpiresMinutes Int      @default(60)
   appUrl                      String?
   updatedAt                   DateTime @updatedAt
+}
+
+/// Delivery log for internal-student notification emails (lock / fee statement, etc.).
+model StudentNotificationLog {
+  id                   String                    @id @default(cuid())
+  type                 StudentNotificationType
+  status               StudentNotificationStatus
+  /// Stable unique key used for idempotent delivery (e.g. REG_LOCKED:windowId:studentId).
+  dedupeKey            String                    @unique
+  studentUserId        String?
+  student              User?                     @relation(fields: [studentUserId], references: [id], onDelete: SetNull)
+  recipientEmail       String?
+  registrationWindowId String?
+  registrationWindow   RegistrationWindow?       @relation(fields: [registrationWindowId], references: [id], onDelete: SetNull)
+  feeStatementId       String?
+  feeStatement         FeeStatement?             @relation(fields: [feeStatementId], references: [id], onDelete: SetNull)
+  subject              String?
+  error                String?                   @db.Text
+  metadata             Json?
+  createdAt            DateTime                  @default(now())
+  sentAt               DateTime?
+
+  @@index([type])
+  @@index([status])
+  @@index([studentUserId])
+  @@index([registrationWindowId])
+  @@index([feeStatementId])
+  @@index([createdAt])
 }
 
 model UserAuditLog {
@@ -797,6 +837,7 @@ model RegistrationWindow {
   postResultsAuditLogs     PostResultsAuditLog[]
   offlineWithdrawalRefunds OfflineWithdrawalRefund[]
   boardSubmissionBaselines BoardSubmissionBaseline[]
+  studentNotificationLogs  StudentNotificationLog[]
 
   @@index([examBoardId])
   @@index([examSeriesId])
@@ -1571,12 +1612,13 @@ model FeeStatement {
   createdAt                            DateTime                    @default(now())
   updatedAt                            DateTime                    @updatedAt
 
-  items                  FeeStatementItem[]
-  paymentOrders          PaymentOrder[]
-  reviewRequests         ReviewRequest[]
-  cashInRequests         CashInRequest[]
-  accessToScriptRequests AccessToScriptRequest[]
-  certificateRequests    CertificateRequest[]
+  items                   FeeStatementItem[]
+  paymentOrders           PaymentOrder[]
+  reviewRequests          ReviewRequest[]
+  cashInRequests          CashInRequest[]
+  accessToScriptRequests  AccessToScriptRequest[]
+  certificateRequests     CertificateRequest[]
+  studentNotificationLogs StudentNotificationLog[]
 
   @@index([candidateId])
   @@index([studentId])
