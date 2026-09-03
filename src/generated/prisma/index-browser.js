@@ -192,6 +192,9 @@ exports.Prisma.SystemEmailSettingsScalarFieldEnum = {
   mailFrom: 'mailFrom',
   passwordResetExpiresMinutes: 'passwordResetExpiresMinutes',
   appUrl: 'appUrl',
+  studentNotificationsEnabled: 'studentNotificationsEnabled',
+  notifyRegistrationLocked: 'notifyRegistrationLocked',
+  notifyFeeStatementIssued: 'notifyFeeStatementIssued',
   updatedAt: 'updatedAt'
 };
 

@@ -12,6 +12,10 @@ export interface ResolvedEmailSettings {
   appUrl: string;
   smtpConfigured: boolean;
   hasStoredPassword: boolean;
+  /** Master switch for student business emails (not password reset). */
+  studentNotificationsEnabled: boolean;
+  notifyRegistrationLocked: boolean;
+  notifyFeeStatementIssued: boolean;
 }
 
 const SETTINGS_ID = "default";
@@ -75,6 +79,9 @@ export async function getResolvedEmailSettings(): Promise<ResolvedEmailSettings>
     // Aliyun Mail requires authenticated SMTP (full mailbox + password/security password).
     smtpConfigured: Boolean(smtpHost && mailFrom && smtpUser && smtpPassword),
     hasStoredPassword: Boolean(stored?.smtpPassword),
+    studentNotificationsEnabled: stored?.studentNotificationsEnabled ?? false,
+    notifyRegistrationLocked: stored?.notifyRegistrationLocked ?? true,
+    notifyFeeStatementIssued: stored?.notifyFeeStatementIssued ?? true,
   };
 }
 
@@ -87,6 +94,9 @@ export interface EmailSettingsInput {
   mailFrom?: string | null;
   passwordResetExpiresMinutes?: number;
   appUrl?: string | null;
+  studentNotificationsEnabled?: boolean;
+  notifyRegistrationLocked?: boolean;
+  notifyFeeStatementIssued?: boolean;
 }
 
 export async function saveEmailSettings(input: EmailSettingsInput) {
@@ -111,6 +121,15 @@ export async function saveEmailSettings(input: EmailSettingsInput) {
         ? input.passwordResetExpiresMinutes
         : 60,
     appUrl: input.appUrl?.trim() || null,
+    ...(typeof input.studentNotificationsEnabled === "boolean"
+      ? { studentNotificationsEnabled: input.studentNotificationsEnabled }
+      : {}),
+    ...(typeof input.notifyRegistrationLocked === "boolean"
+      ? { notifyRegistrationLocked: input.notifyRegistrationLocked }
+      : {}),
+    ...(typeof input.notifyFeeStatementIssued === "boolean"
+      ? { notifyFeeStatementIssued: input.notifyFeeStatementIssued }
+      : {}),
     ...(input.smtpPassword?.trim()
       ? { smtpPassword: input.smtpPassword }
       : existing
@@ -120,7 +139,13 @@ export async function saveEmailSettings(input: EmailSettingsInput) {
 
   await prisma.systemEmailSettings.upsert({
     where: { id: SETTINGS_ID },
-    create: { id: SETTINGS_ID, ...data },
+    create: {
+      id: SETTINGS_ID,
+      studentNotificationsEnabled: input.studentNotificationsEnabled ?? false,
+      notifyRegistrationLocked: input.notifyRegistrationLocked ?? true,
+      notifyFeeStatementIssued: input.notifyFeeStatementIssued ?? true,
+      ...data,
+    },
     update: data,
   });
 

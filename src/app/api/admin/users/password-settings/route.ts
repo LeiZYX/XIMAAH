@@ -11,6 +11,25 @@ import { isSmtpConfigured, sendMail } from "@/lib/mail/smtp";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
+function serializeSettings(
+  settings: Awaited<ReturnType<typeof getResolvedEmailSettings>>,
+) {
+  return {
+    smtpConfigured: settings.smtpConfigured,
+    smtpHost: settings.smtpHost || null,
+    smtpPort: settings.smtpPort,
+    smtpSecure: settings.smtpSecure,
+    smtpUser: settings.smtpUser || null,
+    mailFrom: settings.mailFrom || null,
+    hasStoredPassword: settings.hasStoredPassword,
+    passwordResetExpiresMinutes: settings.passwordResetExpiresMinutes,
+    appUrl: settings.appUrl || null,
+    studentNotificationsEnabled: settings.studentNotificationsEnabled,
+    notifyRegistrationLocked: settings.notifyRegistrationLocked,
+    notifyFeeStatementIssued: settings.notifyFeeStatementIssued,
+  };
+}
+
 export async function GET() {
   const auth = await requireAuth(["ADMIN"]);
   if (auth.error) return auth.error;
@@ -18,17 +37,7 @@ export async function GET() {
 
   try {
     const settings = await getResolvedEmailSettings();
-    return NextResponse.json({
-      smtpConfigured: settings.smtpConfigured,
-      smtpHost: settings.smtpHost || null,
-      smtpPort: settings.smtpPort,
-      smtpSecure: settings.smtpSecure,
-      smtpUser: settings.smtpUser || null,
-      mailFrom: settings.mailFrom || null,
-      hasStoredPassword: settings.hasStoredPassword,
-      passwordResetExpiresMinutes: settings.passwordResetExpiresMinutes,
-      appUrl: settings.appUrl || null,
-    });
+    return NextResponse.json(serializeSettings(settings));
   } catch (error) {
     console.error("GET /api/admin/users/password-settings failed:", error);
     return jsonError(
@@ -53,22 +62,15 @@ export async function PUT(request: NextRequest) {
     mailFrom?: string | null;
     passwordResetExpiresMinutes?: number;
     appUrl?: string | null;
+    studentNotificationsEnabled?: boolean;
+    notifyRegistrationLocked?: boolean;
+    notifyFeeStatementIssued?: boolean;
   }>(body, []);
 
   if (!data) return jsonError("Invalid request body");
 
   const settings = await saveEmailSettings(data);
-  return NextResponse.json({
-    smtpConfigured: settings.smtpConfigured,
-    smtpHost: settings.smtpHost || null,
-    smtpPort: settings.smtpPort,
-    smtpSecure: settings.smtpSecure,
-    smtpUser: settings.smtpUser || null,
-    mailFrom: settings.mailFrom || null,
-    hasStoredPassword: settings.hasStoredPassword,
-    passwordResetExpiresMinutes: settings.passwordResetExpiresMinutes,
-    appUrl: settings.appUrl || null,
-  });
+  return NextResponse.json(serializeSettings(settings));
 }
 
 export async function POST(request: NextRequest) {

@@ -12,6 +12,7 @@ import {
   recordNotification,
   resolveStudentRecipient,
 } from "@/lib/notifications/send";
+import { isStudentNotificationEnabled } from "@/lib/notifications/policy";
 
 function groupKey(params: {
   studentId: string | null;
@@ -40,6 +41,11 @@ export async function notifyRegistrationLockedForWindow(
   delivered: number;
   skipped: number;
 }> {
+  const policy = await isStudentNotificationEnabled("REG_LOCKED");
+  if (!policy.enabled) {
+    return { attempted: 0, delivered: 0, skipped: 0 };
+  }
+
   const window = await prisma.registrationWindow.findUnique({
     where: { id: windowId },
     select: {

@@ -9,9 +9,23 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.2.4";
+export const CURRENT_VERSION = "1.2.5";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.2.5",
+    releaseDate: "2026-09-03",
+    summary:
+      "Admin can enable or disable internal-student email notifications without affecting password reset.",
+    changes: [
+      "Password & Email Settings: new Student email notifications section with master switch plus Registration locked / Fee statement issued toggles",
+      "Student notification emails only send when the master switch and the matching type toggle are on; password reset and SMTP test email are unchanged",
+      "Default master switch is off so production must explicitly enable notifications after SMTP is configured",
+    ],
+    knownIssues: [
+      "Run Prisma migration 20260903070000_student_notification_toggles after pulling this release.",
+    ],
+  },
   {
     version: "1.2.4",
     releaseDate: "2026-09-03",

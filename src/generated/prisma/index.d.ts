@@ -14051,6 +14051,9 @@ export namespace Prisma {
     mailFrom: string | null
     passwordResetExpiresMinutes: number | null
     appUrl: string | null
+    studentNotificationsEnabled: boolean | null
+    notifyRegistrationLocked: boolean | null
+    notifyFeeStatementIssued: boolean | null
     updatedAt: Date | null
   }
 
@@ -14064,6 +14067,9 @@ export namespace Prisma {
     mailFrom: string | null
     passwordResetExpiresMinutes: number | null
     appUrl: string | null
+    studentNotificationsEnabled: boolean | null
+    notifyRegistrationLocked: boolean | null
+    notifyFeeStatementIssued: boolean | null
     updatedAt: Date | null
   }
 
@@ -14077,6 +14083,9 @@ export namespace Prisma {
     mailFrom: number
     passwordResetExpiresMinutes: number
     appUrl: number
+    studentNotificationsEnabled: number
+    notifyRegistrationLocked: number
+    notifyFeeStatementIssued: number
     updatedAt: number
     _all: number
   }
@@ -14102,6 +14111,9 @@ export namespace Prisma {
     mailFrom?: true
     passwordResetExpiresMinutes?: true
     appUrl?: true
+    studentNotificationsEnabled?: true
+    notifyRegistrationLocked?: true
+    notifyFeeStatementIssued?: true
     updatedAt?: true
   }
 
@@ -14115,6 +14127,9 @@ export namespace Prisma {
     mailFrom?: true
     passwordResetExpiresMinutes?: true
     appUrl?: true
+    studentNotificationsEnabled?: true
+    notifyRegistrationLocked?: true
+    notifyFeeStatementIssued?: true
     updatedAt?: true
   }
 
@@ -14128,6 +14143,9 @@ export namespace Prisma {
     mailFrom?: true
     passwordResetExpiresMinutes?: true
     appUrl?: true
+    studentNotificationsEnabled?: true
+    notifyRegistrationLocked?: true
+    notifyFeeStatementIssued?: true
     updatedAt?: true
     _all?: true
   }
@@ -14228,6 +14246,9 @@ export namespace Prisma {
     mailFrom: string | null
     passwordResetExpiresMinutes: number
     appUrl: string | null
+    studentNotificationsEnabled: boolean
+    notifyRegistrationLocked: boolean
+    notifyFeeStatementIssued: boolean
     updatedAt: Date
     _count: SystemEmailSettingsCountAggregateOutputType | null
     _avg: SystemEmailSettingsAvgAggregateOutputType | null
@@ -14260,6 +14281,9 @@ export namespace Prisma {
     mailFrom?: boolean
     passwordResetExpiresMinutes?: boolean
     appUrl?: boolean
+    studentNotificationsEnabled?: boolean
+    notifyRegistrationLocked?: boolean
+    notifyFeeStatementIssued?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["systemEmailSettings"]>
 
@@ -14275,10 +14299,13 @@ export namespace Prisma {
     mailFrom?: boolean
     passwordResetExpiresMinutes?: boolean
     appUrl?: boolean
+    studentNotificationsEnabled?: boolean
+    notifyRegistrationLocked?: boolean
+    notifyFeeStatementIssued?: boolean
     updatedAt?: boolean
   }
 
-  export type SystemEmailSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "smtpHost" | "smtpPort" | "smtpSecure" | "smtpUser" | "smtpPassword" | "mailFrom" | "passwordResetExpiresMinutes" | "appUrl" | "updatedAt", ExtArgs["result"]["systemEmailSettings"]>
+  export type SystemEmailSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "smtpHost" | "smtpPort" | "smtpSecure" | "smtpUser" | "smtpPassword" | "mailFrom" | "passwordResetExpiresMinutes" | "appUrl" | "studentNotificationsEnabled" | "notifyRegistrationLocked" | "notifyFeeStatementIssued" | "updatedAt", ExtArgs["result"]["systemEmailSettings"]>
 
   export type $SystemEmailSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SystemEmailSettings"
@@ -14293,6 +14320,12 @@ export namespace Prisma {
       mailFrom: string | null
       passwordResetExpiresMinutes: number
       appUrl: string | null
+      /**
+       * Master switch for internal-student business emails (does not affect password reset).
+       */
+      studentNotificationsEnabled: boolean
+      notifyRegistrationLocked: boolean
+      notifyFeeStatementIssued: boolean
       updatedAt: Date
     }, ExtArgs["result"]["systemEmailSettings"]>
     composites: {}
@@ -14672,6 +14705,9 @@ export namespace Prisma {
     readonly mailFrom: FieldRef<"SystemEmailSettings", 'String'>
     readonly passwordResetExpiresMinutes: FieldRef<"SystemEmailSettings", 'Int'>
     readonly appUrl: FieldRef<"SystemEmailSettings", 'String'>
+    readonly studentNotificationsEnabled: FieldRef<"SystemEmailSettings", 'Boolean'>
+    readonly notifyRegistrationLocked: FieldRef<"SystemEmailSettings", 'Boolean'>
+    readonly notifyFeeStatementIssued: FieldRef<"SystemEmailSettings", 'Boolean'>
     readonly updatedAt: FieldRef<"SystemEmailSettings", 'DateTime'>
   }
     
@@ -69909,6 +69945,9 @@ export namespace Prisma {
     mailFrom: 'mailFrom',
     passwordResetExpiresMinutes: 'passwordResetExpiresMinutes',
     appUrl: 'appUrl',
+    studentNotificationsEnabled: 'studentNotificationsEnabled',
+    notifyRegistrationLocked: 'notifyRegistrationLocked',
+    notifyFeeStatementIssued: 'notifyFeeStatementIssued',
     updatedAt: 'updatedAt'
   };
 
@@ -72604,6 +72643,9 @@ export namespace Prisma {
     mailFrom?: StringNullableFilter<"SystemEmailSettings"> | string | null
     passwordResetExpiresMinutes?: IntFilter<"SystemEmailSettings"> | number
     appUrl?: StringNullableFilter<"SystemEmailSettings"> | string | null
+    studentNotificationsEnabled?: BoolFilter<"SystemEmailSettings"> | boolean
+    notifyRegistrationLocked?: BoolFilter<"SystemEmailSettings"> | boolean
+    notifyFeeStatementIssued?: BoolFilter<"SystemEmailSettings"> | boolean
     updatedAt?: DateTimeFilter<"SystemEmailSettings"> | Date | string
   }
 
@@ -72617,6 +72659,9 @@ export namespace Prisma {
     mailFrom?: SortOrderInput | SortOrder
     passwordResetExpiresMinutes?: SortOrder
     appUrl?: SortOrderInput | SortOrder
+    studentNotificationsEnabled?: SortOrder
+    notifyRegistrationLocked?: SortOrder
+    notifyFeeStatementIssued?: SortOrder
     updatedAt?: SortOrder
     _relevance?: SystemEmailSettingsOrderByRelevanceInput
   }
@@ -72634,6 +72679,9 @@ export namespace Prisma {
     mailFrom?: StringNullableFilter<"SystemEmailSettings"> | string | null
     passwordResetExpiresMinutes?: IntFilter<"SystemEmailSettings"> | number
     appUrl?: StringNullableFilter<"SystemEmailSettings"> | string | null
+    studentNotificationsEnabled?: BoolFilter<"SystemEmailSettings"> | boolean
+    notifyRegistrationLocked?: BoolFilter<"SystemEmailSettings"> | boolean
+    notifyFeeStatementIssued?: BoolFilter<"SystemEmailSettings"> | boolean
     updatedAt?: DateTimeFilter<"SystemEmailSettings"> | Date | string
   }, "id">
 
@@ -72647,6 +72695,9 @@ export namespace Prisma {
     mailFrom?: SortOrderInput | SortOrder
     passwordResetExpiresMinutes?: SortOrder
     appUrl?: SortOrderInput | SortOrder
+    studentNotificationsEnabled?: SortOrder
+    notifyRegistrationLocked?: SortOrder
+    notifyFeeStatementIssued?: SortOrder
     updatedAt?: SortOrder
     _count?: SystemEmailSettingsCountOrderByAggregateInput
     _avg?: SystemEmailSettingsAvgOrderByAggregateInput
@@ -72668,6 +72719,9 @@ export namespace Prisma {
     mailFrom?: StringNullableWithAggregatesFilter<"SystemEmailSettings"> | string | null
     passwordResetExpiresMinutes?: IntWithAggregatesFilter<"SystemEmailSettings"> | number
     appUrl?: StringNullableWithAggregatesFilter<"SystemEmailSettings"> | string | null
+    studentNotificationsEnabled?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
+    notifyRegistrationLocked?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
+    notifyFeeStatementIssued?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
     updatedAt?: DateTimeWithAggregatesFilter<"SystemEmailSettings"> | Date | string
   }
 
@@ -79016,6 +79070,9 @@ export namespace Prisma {
     mailFrom?: string | null
     passwordResetExpiresMinutes?: number
     appUrl?: string | null
+    studentNotificationsEnabled?: boolean
+    notifyRegistrationLocked?: boolean
+    notifyFeeStatementIssued?: boolean
     updatedAt?: Date | string
   }
 
@@ -79029,6 +79086,9 @@ export namespace Prisma {
     mailFrom?: string | null
     passwordResetExpiresMinutes?: number
     appUrl?: string | null
+    studentNotificationsEnabled?: boolean
+    notifyRegistrationLocked?: boolean
+    notifyFeeStatementIssued?: boolean
     updatedAt?: Date | string
   }
 
@@ -79042,6 +79102,9 @@ export namespace Prisma {
     mailFrom?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetExpiresMinutes?: IntFieldUpdateOperationsInput | number
     appUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyRegistrationLocked?: BoolFieldUpdateOperationsInput | boolean
+    notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79055,6 +79118,9 @@ export namespace Prisma {
     mailFrom?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetExpiresMinutes?: IntFieldUpdateOperationsInput | number
     appUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyRegistrationLocked?: BoolFieldUpdateOperationsInput | boolean
+    notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79068,6 +79134,9 @@ export namespace Prisma {
     mailFrom?: string | null
     passwordResetExpiresMinutes?: number
     appUrl?: string | null
+    studentNotificationsEnabled?: boolean
+    notifyRegistrationLocked?: boolean
+    notifyFeeStatementIssued?: boolean
     updatedAt?: Date | string
   }
 
@@ -79081,6 +79150,9 @@ export namespace Prisma {
     mailFrom?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetExpiresMinutes?: IntFieldUpdateOperationsInput | number
     appUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyRegistrationLocked?: BoolFieldUpdateOperationsInput | boolean
+    notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79094,6 +79166,9 @@ export namespace Prisma {
     mailFrom?: NullableStringFieldUpdateOperationsInput | string | null
     passwordResetExpiresMinutes?: IntFieldUpdateOperationsInput | number
     appUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNotificationsEnabled?: BoolFieldUpdateOperationsInput | boolean
+    notifyRegistrationLocked?: BoolFieldUpdateOperationsInput | boolean
+    notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -86134,6 +86209,9 @@ export namespace Prisma {
     mailFrom?: SortOrder
     passwordResetExpiresMinutes?: SortOrder
     appUrl?: SortOrder
+    studentNotificationsEnabled?: SortOrder
+    notifyRegistrationLocked?: SortOrder
+    notifyFeeStatementIssued?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -86152,6 +86230,9 @@ export namespace Prisma {
     mailFrom?: SortOrder
     passwordResetExpiresMinutes?: SortOrder
     appUrl?: SortOrder
+    studentNotificationsEnabled?: SortOrder
+    notifyRegistrationLocked?: SortOrder
+    notifyFeeStatementIssued?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -86165,6 +86246,9 @@ export namespace Prisma {
     mailFrom?: SortOrder
     passwordResetExpiresMinutes?: SortOrder
     appUrl?: SortOrder
+    studentNotificationsEnabled?: SortOrder
+    notifyRegistrationLocked?: SortOrder
+    notifyFeeStatementIssued?: SortOrder
     updatedAt?: SortOrder
   }
 

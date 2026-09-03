@@ -21,6 +21,9 @@ interface PasswordSettings {
   hasStoredPassword: boolean;
   passwordResetExpiresMinutes: number;
   appUrl: string | null;
+  studentNotificationsEnabled: boolean;
+  notifyRegistrationLocked: boolean;
+  notifyFeeStatementIssued: boolean;
 }
 
 interface SettingsFormState {
@@ -32,6 +35,9 @@ interface SettingsFormState {
   mailFrom: string;
   passwordResetExpiresMinutes: string;
   appUrl: string;
+  studentNotificationsEnabled: boolean;
+  notifyRegistrationLocked: boolean;
+  notifyFeeStatementIssued: boolean;
 }
 
 const inputClass = "w-full rounded border border-slate-300 px-3 py-2 text-sm";
@@ -54,6 +60,9 @@ function settingsToForm(settings: PasswordSettings): SettingsFormState {
     mailFrom: settings.mailFrom ?? "",
     passwordResetExpiresMinutes: String(settings.passwordResetExpiresMinutes),
     appUrl: settings.appUrl ?? "",
+    studentNotificationsEnabled: settings.studentNotificationsEnabled ?? false,
+    notifyRegistrationLocked: settings.notifyRegistrationLocked ?? true,
+    notifyFeeStatementIssued: settings.notifyFeeStatementIssued ?? true,
   };
 }
 
@@ -64,6 +73,12 @@ function applyAliyunMailPreset(prev: SettingsFormState): SettingsFormState {
     smtpPort: "465",
     smtpSecure: true,
   };
+}
+
+function notificationStatusLabel(settings: PasswordSettings | null, form: SettingsFormState) {
+  if (!form.studentNotificationsEnabled) return { label: "Disabled", className: "text-slate-600" };
+  if (!settings?.smtpConfigured) return { label: "SMTP required", className: "text-amber-700" };
+  return { label: "Ready", className: "text-green-700" };
 }
 
 export function PasswordSettingsPanel() {
@@ -136,6 +151,9 @@ export function PasswordSettingsPanel() {
           mailFrom: form.mailFrom.trim() || null,
           passwordResetExpiresMinutes: Number(form.passwordResetExpiresMinutes),
           appUrl: form.appUrl.trim() || null,
+          studentNotificationsEnabled: form.studentNotificationsEnabled,
+          notifyRegistrationLocked: form.notifyRegistrationLocked,
+          notifyFeeStatementIssued: form.notifyFeeStatementIssued,
         }),
       });
       const text = await response.text();
@@ -146,7 +164,7 @@ export function PasswordSettingsPanel() {
       const next = data as unknown as PasswordSettings;
       setSettings(next);
       setForm(settingsToForm(next));
-      setMessage("SMTP settings saved.");
+      setMessage("Email settings saved.");
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : "Save failed");
     } finally {
@@ -180,62 +198,172 @@ export function PasswordSettingsPanel() {
   }
 
   const selectedPort = form ? Number(form.smtpPort) : NaN;
+  const notificationStatus = form ? notificationStatusLabel(settings, form) : null;
 
   return (
     <div className="space-y-4">
       <UsersSubnav />
       <PageHeader
         title="Password & Email Settings"
-        description={`${USERS_MODULE_DESCRIPTION} Configure Aliyun Mail (阿里邮箱) SMTP for system notification emails (registration lock, fee statements) and password reset. Settings are stored in the database; leave password blank to keep the current value.`}
+        description={`${USERS_MODULE_DESCRIPTION} Configure Aliyun Mail (阿里邮箱) SMTP and student email notifications. Password reset is separate from student notification switches. Leave SMTP password blank to keep the current value.`}
       />
 
-      <div className="space-y-6 border border-slate-200 p-4">
-        <div className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-950">
-          <p className="font-medium">Aliyun Mail SMTP (system notifications &amp; password reset)</p>
-          <ul className="mt-2 list-disc space-y-1 pl-5 text-sky-900">
-            <li>
-              Host: <code className="rounded bg-white px-1">{ALIYUN_MAIL_SMTP_HOST}</code>{" "}
-              (or <code className="rounded bg-white px-1">smtp.your-domain.com</code> after CNAME)
-            </li>
-            <li>
-              Ports: <strong>465 + SSL</strong> (recommended), or <strong>80</strong> / <strong>25</strong>{" "}
-              without SSL. Cloud ECS often blocks port 25 — prefer 465 or 80.
-            </li>
-            <li>
-              SMTP user: full mailbox address (e.g. <code className="rounded bg-white px-1">noreply@school.edu.cn</code>)
-            </li>
-            <li>
-              SMTP password: mailbox login password, or the client security password if that feature is enabled
-            </li>
-            <li>Enable SMTP for the mailbox in Aliyun Mail before testing</li>
-            <li>From address should be the same mailbox (or an allowed alias)</li>
-          </ul>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button
-              type="button"
-              className={buttonClass}
-              onClick={() => setForm((prev) => (prev ? applyAliyunMailPreset(prev) : prev))}
-            >
-              Fill Aliyun Mail defaults (465 + SSL)
-            </button>
-            <a
-              href={ALIYUN_DOC_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center rounded border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-slate-50"
-            >
-              Aliyun Mail SMTP docs
-            </a>
-          </div>
-        </div>
-
-        {loading ? (
-          <p className="text-sm text-slate-500">Loading SMTP settings...</p>
-        ) : form ? (
-          <form onSubmit={(e) => void handleSave(e)} className="space-y-4">
-            <div className="flex items-center justify-between gap-3">
+      {loading ? (
+        <p className="text-sm text-slate-500">Loading email settings...</p>
+      ) : form ? (
+        <form onSubmit={(e) => void handleSave(e)} className="space-y-6">
+          <div className="space-y-4 border border-slate-200 p-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <h2 className="text-sm font-semibold text-slate-900">Student email notifications</h2>
+                <p className="mt-1 text-sm text-slate-600">
+                  Controls business emails to internal students. Does not affect password reset.
+                </p>
+              </div>
               <p className="text-sm text-slate-700">
                 Status:{" "}
+                <span className={notificationStatus?.className}>{notificationStatus?.label}</span>
+              </p>
+            </div>
+
+            <label className="flex items-start gap-2 text-sm text-slate-800">
+              <input
+                type="checkbox"
+                className="mt-0.5"
+                checked={form.studentNotificationsEnabled}
+                onChange={(e) =>
+                  setForm((prev) =>
+                    prev
+                      ? { ...prev, studentNotificationsEnabled: e.target.checked }
+                      : prev,
+                  )
+                }
+              />
+              <span>
+                <span className="font-medium">Enable student email notifications</span>
+                <span className="mt-0.5 block text-xs text-slate-500">
+                  Master switch. When off, lock and fee-statement emails are not sent.
+                </span>
+              </span>
+            </label>
+
+            <div
+              className={`space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-3 ${
+                form.studentNotificationsEnabled ? "" : "opacity-60"
+              }`}
+            >
+              <label className="flex items-start gap-2 text-sm text-slate-800">
+                <input
+                  type="checkbox"
+                  className="mt-0.5"
+                  checked={form.notifyRegistrationLocked}
+                  disabled={!form.studentNotificationsEnabled}
+                  onChange={(e) =>
+                    setForm((prev) =>
+                      prev
+                        ? { ...prev, notifyRegistrationLocked: e.target.checked }
+                        : prev,
+                    )
+                  }
+                />
+                <span>
+                  <span className="font-medium">Registration locked</span>
+                  <span className="mt-0.5 block text-xs text-slate-500">
+                    After lock: exam list with link to My Exam Registrations.
+                  </span>
+                </span>
+              </label>
+
+              <label className="flex items-start gap-2 text-sm text-slate-800">
+                <input
+                  type="checkbox"
+                  className="mt-0.5"
+                  checked={form.notifyFeeStatementIssued}
+                  disabled={!form.studentNotificationsEnabled}
+                  onChange={(e) =>
+                    setForm((prev) =>
+                      prev
+                        ? { ...prev, notifyFeeStatementIssued: e.target.checked }
+                        : prev,
+                    )
+                  }
+                />
+                <span>
+                  <span className="font-medium">Fee statement issued</span>
+                  <span className="mt-0.5 block text-xs text-slate-500">
+                    After issue: fee lines with link to My Fee Statements.
+                  </span>
+                </span>
+              </label>
+
+              <label className="flex items-start gap-2 text-sm text-slate-500">
+                <input type="checkbox" className="mt-0.5" checked={false} disabled />
+                <span>
+                  <span className="font-medium">Registration updated</span>
+                  <span className="ml-2 text-xs">Coming soon</span>
+                </span>
+              </label>
+
+              <label className="flex items-start gap-2 text-sm text-slate-500">
+                <input type="checkbox" className="mt-0.5" checked={false} disabled />
+                <span>
+                  <span className="font-medium">Fee statement paid</span>
+                  <span className="ml-2 text-xs">Coming soon</span>
+                </span>
+              </label>
+            </div>
+
+            <p className="text-xs text-slate-500">
+              Restricted and external registrations are never emailed. Configure SMTP below before
+              enabling notifications in production.
+            </p>
+          </div>
+
+          <div className="space-y-6 border border-slate-200 p-4">
+            <div className="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-950">
+              <p className="font-medium">Aliyun Mail SMTP (password reset &amp; student notifications)</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-sky-900">
+                <li>
+                  Host: <code className="rounded bg-white px-1">{ALIYUN_MAIL_SMTP_HOST}</code>{" "}
+                  (or <code className="rounded bg-white px-1">smtp.your-domain.com</code> after CNAME)
+                </li>
+                <li>
+                  Ports: <strong>465 + SSL</strong> (recommended), or <strong>80</strong> / <strong>25</strong>{" "}
+                  without SSL. Cloud ECS often blocks port 25 — prefer 465 or 80.
+                </li>
+                <li>
+                  SMTP user: full mailbox address (e.g.{" "}
+                  <code className="rounded bg-white px-1">noreply@school.edu.cn</code>)
+                </li>
+                <li>
+                  SMTP password: mailbox login password, or the client security password if that
+                  feature is enabled
+                </li>
+                <li>Enable SMTP for the mailbox in Aliyun Mail before testing</li>
+                <li>From address should be the same mailbox (or an allowed alias)</li>
+              </ul>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  className={buttonClass}
+                  onClick={() => setForm((prev) => (prev ? applyAliyunMailPreset(prev) : prev))}
+                >
+                  Fill Aliyun Mail defaults (465 + SSL)
+                </button>
+                <a
+                  href={ALIYUN_DOC_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center rounded border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-slate-50"
+                >
+                  Aliyun Mail SMTP docs
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm text-slate-700">
+                SMTP status:{" "}
                 {settings?.smtpConfigured ? (
                   <span className="text-green-700">Configured</span>
                 ) : (
@@ -344,6 +472,9 @@ export function PasswordSettingsPanel() {
                   className={`mt-1 ${inputClass}`}
                   placeholder="https://exam.shssip-iedu.cn"
                 />
+                <span className="mt-1 block text-xs text-slate-500">
+                  Used for password-reset links and student notification deep links.
+                </span>
               </label>
               <label className="flex items-center gap-2 text-sm text-slate-700 sm:col-span-2">
                 <input
@@ -361,14 +492,19 @@ export function PasswordSettingsPanel() {
             <button type="submit" disabled={saving} className={primaryButtonClass}>
               {saving ? "Saving..." : "Save settings"}
             </button>
-          </form>
-        ) : null}
+          </div>
+        </form>
+      ) : null}
 
-        {error ? <p className="text-sm text-red-700">{error}</p> : null}
-        {message ? <p className="text-sm text-green-700">{message}</p> : null}
+      {error ? <p className="text-sm text-red-700">{error}</p> : null}
+      {message ? <p className="text-sm text-green-700">{message}</p> : null}
 
-        <form onSubmit={(e) => void sendTestEmail(e)} className="space-y-3 border-t border-slate-200 pt-4">
+      <div className="space-y-3 border border-slate-200 p-4">
+        <form onSubmit={(e) => void sendTestEmail(e)} className="space-y-3">
           <h2 className="text-sm font-semibold text-slate-900">Send test email</h2>
+          <p className="text-xs text-slate-500">
+            Tests SMTP only. Independent of student notification switches.
+          </p>
           <div className="flex flex-wrap items-end gap-3">
             <label className="flex flex-col gap-1 text-sm text-slate-700">
               Recipient

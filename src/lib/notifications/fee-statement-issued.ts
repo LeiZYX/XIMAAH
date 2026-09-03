@@ -12,6 +12,7 @@ import {
   recordNotification,
   resolveStudentRecipient,
 } from "@/lib/notifications/send";
+import { isStudentNotificationEnabled } from "@/lib/notifications/policy";
 
 function feeLineLabel(item: {
   subjectSnapshot: string | null;
@@ -52,6 +53,11 @@ export async function notifyFeeStatementIssued(statementId: string): Promise<{
   skipped?: boolean;
   reason?: string;
 }> {
+  const policy = await isStudentNotificationEnabled("FEE_ISSUED");
+  if (!policy.enabled) {
+    return { delivered: false, skipped: true, reason: policy.reason };
+  }
+
   const statement = await prisma.feeStatement.findUnique({
     where: { id: statementId },
     include: {

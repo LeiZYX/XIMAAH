@@ -592,6 +592,10 @@ model SystemEmailSettings {
   mailFrom                    String?
   passwordResetExpiresMinutes Int      @default(60)
   appUrl                      String?
+  /// Master switch for internal-student business emails (does not affect password reset).
+  studentNotificationsEnabled Boolean  @default(false)
+  notifyRegistrationLocked    Boolean  @default(true)
+  notifyFeeStatementIssued    Boolean  @default(true)
   updatedAt                   DateTime @updatedAt
 }
 
