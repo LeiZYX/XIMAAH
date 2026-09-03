@@ -208,38 +208,61 @@ function highlightCalendarEventElement(root: HTMLElement | null, el: HTMLElement
   host?.setAttribute("data-xima-selected", "true");
 }
 
+function calendarMonthKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
+}
+
 function EventMonthSummary({
   eventCount,
   events,
   onMonthClick,
   searchActive,
+  activeMonthKey,
 }: {
   eventCount: number;
   events: CalendarEvent[];
   onMonthClick: (monthKey: string) => void;
   searchActive: boolean;
+  activeMonthKey: string | null;
 }) {
   const months = groupEventsByMonth(events);
   if (months.length === 0) return null;
 
   return (
-    <p className="text-sm font-medium text-slate-700">
-      {searchActive
-        ? `${eventCount} matching event${eventCount === 1 ? "" : "s"} · `
-        : `${eventCount} event${eventCount === 1 ? "" : "s"} · `}
-      {months.map((month, index) => (
-        <span key={month.monthKey}>
-          {index > 0 ? ", " : null}
-          <button
-            type="button"
-            onClick={() => onMonthClick(month.monthKey)}
-            className="font-semibold text-indigo-600 underline decoration-indigo-300 underline-offset-2 hover:text-indigo-700"
-          >
-            {month.label} ({month.count})
-          </button>
-        </span>
-      ))}
-    </p>
+    <div className="space-y-1.5">
+      <p className="text-sm font-medium text-slate-700">
+        {searchActive
+          ? `${eventCount} matching event${eventCount === 1 ? "" : "s"} · `
+          : `${eventCount} event${eventCount === 1 ? "" : "s"} · `}
+        {months.map((month, index) => {
+          const selected = activeMonthKey === month.monthKey;
+          return (
+            <span key={month.monthKey}>
+              {index > 0 ? ", " : null}
+              <button
+                type="button"
+                onClick={() => onMonthClick(month.monthKey)}
+                aria-current={selected ? "true" : undefined}
+                title={`Jump to ${month.label} on the calendar`}
+                className={
+                  selected
+                    ? "rounded-full bg-indigo-600 px-2.5 py-0.5 font-semibold text-white"
+                    : "font-semibold text-indigo-600 underline decoration-indigo-300 underline-offset-2 hover:bg-indigo-50 hover:text-indigo-800"
+                }
+              >
+                {month.label} ({month.count})
+              </button>
+            </span>
+          );
+        })}
+      </p>
+      <p className="text-xs text-slate-500">
+        Click a month to jump to the calendar, then click a subject to review details and decide
+        whether to register.
+      </p>
+    </div>
   );
 }
 
@@ -269,8 +292,10 @@ export function CalendarView() {
   const hasLoadedEventsRef = useRef(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [activeMonthKey, setActiveMonthKey] = useState<string | null>(null);
   const calendarRef = useRef<FullCalendar>(null);
   const calendarRootRef = useRef<HTMLDivElement>(null);
+  const calendarSectionRef = useRef<HTMLDivElement>(null);
   const visibleEventsRef = useRef<CalendarEvent[]>([]);
   const lastNavigatedLevels = useRef<string>("");
   const [isMobileCalendar, setIsMobileCalendar] = useState(false);
@@ -526,6 +551,14 @@ export function CalendarView() {
 
   const navigateToMonth = useCallback((monthKey: string) => {
     calendarRef.current?.getApi()?.gotoDate(`${monthKey}-01`);
+    setActiveMonthKey(monthKey);
+    // Wait a tick so FullCalendar can re-render the target month before scrolling.
+    window.requestAnimationFrame(() => {
+      calendarSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
   }, []);
 
   const searchActive = searchQuery.trim().length > 0;
@@ -727,6 +760,7 @@ export function CalendarView() {
                 events={visibleEvents}
                 onMonthClick={navigateToMonth}
                 searchActive={searchActive}
+                activeMonthKey={activeMonthKey}
               />
             ) : (
               <p className="text-sm text-slate-600">
@@ -847,7 +881,7 @@ export function CalendarView() {
         </div>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
+      <div ref={calendarSectionRef} className="grid scroll-mt-4 gap-6 lg:grid-cols-[1fr_300px]">
         <Card className="order-2 p-3 sm:p-4 lg:order-1">
           {error ? (
             <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -886,6 +920,9 @@ export function CalendarView() {
               dayMaxEvents={2}
               moreLinkClick="popover"
               events={visibleEvents}
+              datesSet={(arg) => {
+                setActiveMonthKey(calendarMonthKey(arg.view.currentStart));
+              }}
               dayCellClassNames={(arg) => {
                 if (!selectedDateKey) return [];
                 const year = arg.date.getFullYear();
