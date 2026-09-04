@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { ListPagination } from "@/components/ui/ListPagination";
 import { RegistrationWindowFeeToolbar } from "@/components/fees/RegistrationWindowFeeToolbar";
@@ -63,6 +63,13 @@ interface FormulaSettings {
   salesMarkupPercent: string;
 }
 
+type FeedbackTone = "ok" | "error";
+
+interface Feedback {
+  tone: FeedbackTone;
+  text: string;
+}
+
 interface RegistrationWindowFeeRulesProps {
   windowId: string;
   basePath: "/admin/registration-windows" | "/exam-office/registration-windows";
@@ -108,6 +115,21 @@ function applyFormulaToStages(
   };
 }
 
+function withFormulaApplied(row: SubjectRowDraft, settings: FormulaSettings): SubjectRowDraft {
+  const normalCost = toNumber(row.stages.NORMAL?.costAmount);
+  const filled = applyFormulaToStages(normalCost, settings);
+  const stages = { ...row.stages };
+  for (const stage of STAGE_CODE_OPTIONS) {
+    const values = filled[stage.value]!;
+    stages[stage.value] = {
+      ...stages[stage.value]!,
+      costAmount: values.costAmount,
+      salesAmount: values.salesAmount,
+    };
+  }
+  return { ...row, stages, dirty: true };
+}
+
 function buildRowsFromRules(rules: FeeRuleRow[]): SubjectRowDraft[] {
   const groups = new Map<string, SubjectRowDraft>();
 
@@ -142,6 +164,38 @@ function buildRowsFromRules(rules: FeeRuleRow[]): SubjectRowDraft[] {
   return [...groups.values()].sort((a, b) => a.subjectCode.localeCompare(b.subjectCode));
 }
 
+function FeedbackBanner({
+  feedback,
+  onDismiss,
+  sticky = false,
+}: {
+  feedback: Feedback | null;
+  onDismiss?: () => void;
+  sticky?: boolean;
+}) {
+  if (!feedback) return null;
+  const ok = feedback.tone === "ok";
+  return (
+    <div
+      role="status"
+      className={`flex items-start justify-between gap-3 rounded-lg px-3 py-2 text-sm ${
+        ok ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"
+      } ${sticky ? "sticky top-0 z-20 shadow-sm ring-1 ring-black/5" : ""}`}
+    >
+      <p className="min-w-0 flex-1">{feedback.text}</p>
+      {onDismiss ? (
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="shrink-0 text-xs font-medium opacity-70 hover:opacity-100"
+        >
+          Dismiss
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
 export function RegistrationWindowFeeRules({
   windowId,
   basePath,
@@ -159,15 +213,25 @@ export function RegistrationWindowFeeRules({
   });
   const [copySourceId, setCopySourceId] = useState("");
   const [showCopyPanel, setShowCopyPanel] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [rulesFeedback, setRulesFeedback] = useState<Feedback | null>(null);
+  const [rateFeedback, setRateFeedback] = useState<Feedback | null>(null);
   const [syncing, setSyncing] = useState(false);
+  const [applyingAll, setApplyingAll] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState<number>(FEE_RULES_PAGE_SIZES[0]);
   const [initialSyncDone, setInitialSyncDone] = useState(false);
+  const rulesFeedbackRef = useRef<HTMLDivElement | null>(null);
 
   const apiBase = `/api/registration-windows/${windowId}`;
+
+  const showRulesFeedback = useCallback((tone: FeedbackTone, text: string) => {
+    setRulesFeedback({ tone, text });
+    // Keep the banner in view near the fee-rules actions.
+    requestAnimationFrame(() => {
+      rulesFeedbackRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }, []);
 
   const loadRulesOnly = useCallback(async () => {
     const rulesRes = await fetch(`${apiBase}/fee-rules`);
@@ -210,10 +274,7 @@ export function RegistrationWindowFeeRules({
     async (quiet = false) => {
       if (!canConfigure) return;
       setSyncing(true);
-      if (!quiet) {
-        setError(null);
-        setMessage(null);
-      }
+      if (!quiet) setRulesFeedback(null);
       try {
         const response = await fetch(`${apiBase}/fee-rules/sync-series-subjects`, {
           method: "POST",
@@ -222,19 +283,23 @@ export function RegistrationWindowFeeRules({
         if (!response.ok) throw new Error(data.error ?? "Sync failed");
         await loadRulesOnly();
         if (!quiet || data.created > 0) {
-          setMessage(
+          showRulesFeedback(
+            "ok",
             data.created > 0
               ? `Synced series subjects: added ${data.created} fee rule(s) across ${data.subjects} subject(s) (cost/sales default £0).`
               : `Series subjects already synced (${data.subjects} subject(s)).`,
           );
         }
       } catch (syncError) {
-        setError(syncError instanceof Error ? syncError.message : "Sync failed");
+        showRulesFeedback(
+          "error",
+          syncError instanceof Error ? syncError.message : "Sync failed",
+        );
       } finally {
         setSyncing(false);
       }
     },
-    [apiBase, canConfigure, loadRulesOnly],
+    [apiBase, canConfigure, loadRulesOnly, showRulesFeedback],
   );
 
   useEffect(() => {
@@ -272,11 +337,7 @@ export function RegistrationWindowFeeRules({
     if (totalPages > 0 && page > totalPages) setPage(totalPages);
   }, [page, totalPages]);
 
-  function updateStage(
-    rowKey: string,
-    entryType: string,
-    patch: Partial<StageDraft>,
-  ) {
+  function updateStage(rowKey: string, entryType: string, patch: Partial<StageDraft>) {
     setRows((current) =>
       current.map((row) => {
         if (row.key !== rowKey) return row;
@@ -292,44 +353,44 @@ export function RegistrationWindowFeeRules({
     );
   }
 
-  function applyFormulaToRow(rowKey: string) {
-    setRows((current) =>
-      current.map((row) => {
-        if (row.key !== rowKey) return row;
-        const normalCost = toNumber(row.stages.NORMAL?.costAmount);
-        const filled = applyFormulaToStages(normalCost, formula);
-        const stages = { ...row.stages };
-        for (const stage of STAGE_CODE_OPTIONS) {
-          const values = filled[stage.value]!;
-          stages[stage.value] = {
-            ...stages[stage.value]!,
-            costAmount: values.costAmount,
-            salesAmount: values.salesAmount,
-          };
-        }
-        return { ...row, stages, dirty: true };
-      }),
-    );
+  async function persistRow(row: SubjectRowDraft) {
+    for (const stage of STAGE_CODE_OPTIONS) {
+      const draft = row.stages[stage.value];
+      if (!draft?.ruleId) continue;
+
+      const response = await fetch(`${apiBase}/fee-rules/${draft.ruleId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          costCurrency: "GBP",
+          costAmount: draft.costAmount || "0",
+          markupType: "MANUAL",
+          markupValue: null,
+          salesCurrency: "GBP",
+          salesAmount: draft.salesAmount || "0",
+          isActive: draft.isActive,
+          exchangeRateToCny: null,
+        }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error ?? `Failed to save ${stage.label}`);
+      }
+    }
   }
 
-  function applyFormulaToAllRows() {
+  function markRowSaving(rowKey: string, saving: boolean, dirty?: boolean) {
     setRows((current) =>
-      current.map((row) => {
-        const normalCost = toNumber(row.stages.NORMAL?.costAmount);
-        const filled = applyFormulaToStages(normalCost, formula);
-        const stages = { ...row.stages };
-        for (const stage of STAGE_CODE_OPTIONS) {
-          const values = filled[stage.value]!;
-          stages[stage.value] = {
-            ...stages[stage.value]!,
-            costAmount: values.costAmount,
-            salesAmount: values.salesAmount,
-          };
-        }
-        return { ...row, stages, dirty: true };
-      }),
+      current.map((item) =>
+        item.key === rowKey
+          ? {
+              ...item,
+              saving,
+              ...(typeof dirty === "boolean" ? { dirty } : {}),
+            }
+          : item,
+      ),
     );
-    setMessage("Applied formula to all rows from each subject’s Normal cost. Save rows to persist.");
   }
 
   async function saveRow(rowKey: string) {
@@ -337,53 +398,107 @@ export function RegistrationWindowFeeRules({
     const row = rows.find((item) => item.key === rowKey);
     if (!row) return;
 
-    setRows((current) =>
-      current.map((item) => (item.key === rowKey ? { ...item, saving: true } : item)),
+    markRowSaving(rowKey, true);
+    try {
+      await persistRow(row);
+      markRowSaving(rowKey, false, false);
+      showRulesFeedback("ok", `Saved fees for ${row.subjectCode}.`);
+    } catch (saveError) {
+      markRowSaving(rowKey, false);
+      showRulesFeedback(
+        "error",
+        saveError instanceof Error ? saveError.message : "Save failed",
+      );
+    }
+  }
+
+  async function applyFormulaAndSaveRow(rowKey: string) {
+    if (!canConfigure || !windowInfo) return;
+    const current = rows.find((item) => item.key === rowKey);
+    if (!current) return;
+
+    const applied = withFormulaApplied(current, formula);
+    setRows((list) =>
+      list.map((item) => (item.key === rowKey ? { ...applied, saving: true } : item)),
     );
-    setError(null);
 
     try {
-      for (const stage of STAGE_CODE_OPTIONS) {
-        const draft = row.stages[stage.value];
-        if (!draft?.ruleId) continue;
-
-        const response = await fetch(`${apiBase}/fee-rules/${draft.ruleId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            costCurrency: "GBP",
-            costAmount: draft.costAmount || "0",
-            markupType: "MANUAL",
-            markupValue: null,
-            salesCurrency: "GBP",
-            salesAmount: draft.salesAmount || "0",
-            isActive: draft.isActive,
-            exchangeRateToCny: null,
-          }),
-        });
-        if (!response.ok) {
-          const data = await response.json().catch(() => ({}));
-          throw new Error(data.error ?? `Failed to save ${stage.label}`);
-        }
-      }
-
-      setRows((current) =>
-        current.map((item) =>
+      await persistRow(applied);
+      setRows((list) =>
+        list.map((item) =>
           item.key === rowKey ? { ...item, dirty: false, saving: false } : item,
         ),
       );
-      setMessage(`Saved fees for ${row.subjectCode}.`);
+      showRulesFeedback("ok", `Applied formula and saved ${applied.subjectCode}.`);
     } catch (saveError) {
-      setRows((current) =>
-        current.map((item) => (item.key === rowKey ? { ...item, saving: false } : item)),
+      setRows((list) =>
+        list.map((item) =>
+          item.key === rowKey ? { ...applied, dirty: true, saving: false } : item,
+        ),
       );
-      setError(saveError instanceof Error ? saveError.message : "Save failed");
+      showRulesFeedback(
+        "error",
+        saveError instanceof Error
+          ? `Formula applied on screen but save failed: ${saveError.message}`
+          : "Formula applied on screen but save failed",
+      );
+    }
+  }
+
+  async function applyFormulaAndSaveAll() {
+    if (!canConfigure || !windowInfo || rows.length === 0) return;
+
+    const appliedRows = rows.map((row) => withFormulaApplied(row, formula));
+    setApplyingAll(true);
+    setRows(appliedRows.map((row) => ({ ...row, saving: true })));
+    showRulesFeedback("ok", `Applying formula and saving ${appliedRows.length} subject(s)…`);
+
+    let saved = 0;
+    const failures: string[] = [];
+
+    for (const row of appliedRows) {
+      try {
+        await persistRow(row);
+        saved += 1;
+        setRows((list) =>
+          list.map((item) =>
+            item.key === row.key ? { ...item, dirty: false, saving: false } : item,
+          ),
+        );
+      } catch (saveError) {
+        failures.push(
+          `${row.subjectCode}: ${
+            saveError instanceof Error ? saveError.message : "save failed"
+          }`,
+        );
+        setRows((list) =>
+          list.map((item) =>
+            item.key === row.key ? { ...item, dirty: true, saving: false } : item,
+          ),
+        );
+      }
+    }
+
+    setApplyingAll(false);
+    if (failures.length === 0) {
+      showRulesFeedback(
+        "ok",
+        `Applied formula and saved all ${saved} subject(s).`,
+      );
+    } else {
+      showRulesFeedback(
+        "error",
+        `Saved ${saved}/${appliedRows.length}. Failed: ${failures.slice(0, 3).join("; ")}${
+          failures.length > 3 ? "…" : ""
+        }`,
+      );
     }
   }
 
   async function handleAddRate(event: FormEvent) {
     event.preventDefault();
     if (!canConfigure) return;
+    setRateFeedback(null);
     const response = await fetch(`${apiBase}/exchange-rates`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -395,11 +510,11 @@ export function RegistrationWindowFeeRules({
       }),
     });
     if (!response.ok) {
-      setError("Failed to save exchange rate");
+      setRateFeedback({ tone: "error", text: "Failed to save exchange rate" });
       return;
     }
-    setMessage("Exchange rate saved.");
-    load();
+    setRateFeedback({ tone: "ok", text: "Exchange rate saved." });
+    void load();
   }
 
   async function handleCopyRules() {
@@ -411,10 +526,13 @@ export function RegistrationWindowFeeRules({
     });
     const data = await response.json();
     if (!response.ok) {
-      setError(data.error ?? "Copy failed");
+      showRulesFeedback("error", data.error ?? "Copy failed");
       return;
     }
-    setMessage(`Copied ${data.copiedRules} fee rules and ${data.copiedRates} exchange rates.`);
+    showRulesFeedback(
+      "ok",
+      `Copied ${data.copiedRules} fee rules and ${data.copiedRates} exchange rates.`,
+    );
     setShowCopyPanel(false);
     await load();
     await syncSeriesSubjects(true);
@@ -422,18 +540,22 @@ export function RegistrationWindowFeeRules({
 
   async function handleImport(file: File) {
     if (!canConfigure) return;
+    showRulesFeedback("ok", `Importing ${file.name}…`);
     const formData = new FormData();
     formData.append("file", file);
     const response = await fetch(`${apiBase}/fee-rules/import`, { method: "POST", body: formData });
     const data = await response.json();
     if (!response.ok) {
-      setError(data.error ?? "Import failed");
+      showRulesFeedback("error", data.error ?? "Import failed");
       return;
     }
-    setMessage(
-      `Imported ${data.imported} rules (${data.created ?? 0} created, ${data.updated ?? 0} updated).`,
+    const detail = data.errors?.length
+      ? ` Warnings: ${data.errors.slice(0, 3).join("; ")}`
+      : "";
+    showRulesFeedback(
+      data.errors?.length ? "error" : "ok",
+      `Imported ${data.imported} rules (${data.created ?? 0} created, ${data.updated ?? 0} updated).${detail}`,
     );
-    if (data.errors?.length) setError(data.errors.slice(0, 3).join("; "));
     await load();
     await syncSeriesSubjects(true);
   }
@@ -446,14 +568,7 @@ export function RegistrationWindowFeeRules({
         feeRulesHref={`${basePath}/${windowId}/fees`}
       />
 
-      {message ? (
-        <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{message}</p>
-      ) : null}
-      {error ? (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p>
-      ) : null}
-
-      <Card>
+      <Card className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">Exchange rate (GBP → CNY)</h2>
@@ -496,85 +611,23 @@ export function RegistrationWindowFeeRules({
             </form>
           ) : null}
         </div>
+        <FeedbackBanner feedback={rateFeedback} onDismiss={() => setRateFeedback(null)} />
       </Card>
-
-      {canConfigure ? (
-        <Card className="space-y-3">
-          <div>
-            <h2 className="text-lg font-semibold text-slate-900">Pricing formula defaults</h2>
-            <p className="mt-1 text-sm text-slate-600">
-              Used when you click <span className="font-medium">Apply formula</span>. Each row can
-              still be edited freely afterwards. New series subjects sync with cost/sales = £0.
-            </p>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <label className="text-sm">
-              <span className="mb-1 block text-slate-600">Late = Normal ×</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={formula.lateMultiplier}
-                onChange={(e) => setFormula({ ...formula, lateMultiplier: e.target.value })}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              />
-            </label>
-            <label className="text-sm">
-              <span className="mb-1 block text-slate-600">High Late = Normal ×</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={formula.highLateMultiplier}
-                onChange={(e) => setFormula({ ...formula, highLateMultiplier: e.target.value })}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              />
-            </label>
-            <label className="text-sm">
-              <span className="mb-1 block text-slate-600">Sales = Cost + %</span>
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                value={formula.salesMarkupPercent}
-                onChange={(e) => setFormula({ ...formula, salesMarkupPercent: e.target.value })}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              />
-            </label>
-            <div className="flex items-end">
-              <button
-                type="button"
-                onClick={applyFormulaToAllRows}
-                className="w-full rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100"
-              >
-                Apply formula to all rows
-              </button>
-            </div>
-          </div>
-          <p className="text-xs text-slate-500">
-            Example with Normal cost £10: Late cost = £
-            {(10 * (Number(formula.lateMultiplier) || 0)).toFixed(2)}, High Late cost = £
-            {(10 * (Number(formula.highLateMultiplier) || 0)).toFixed(2)}, each stage’s sales = cost +{" "}
-            {formula.salesMarkupPercent}%.
-          </p>
-        </Card>
-      ) : null}
 
       <Card className="space-y-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">Fee rules</h2>
             <p className="mt-1 max-w-2xl text-sm text-slate-600">
-              One row per subject from this window’s exam series sessions. Edit Normal / Late / High
-              Late cost and sales directly; save each row when done. Excel export/import uses the same
-              one-subject-per-row layout (Normal/Late/High Late cost &amp; sales).
+              One row per subject from this window’s exam series. Edit values freely, then Save row —
+              or use Apply &amp; save to fill Late / High Late from Normal and persist immediately.
             </p>
           </div>
           {canConfigure ? (
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
-                disabled={syncing}
+                disabled={syncing || applyingAll}
                 onClick={() => void syncSeriesSubjects(false)}
                 className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
               >
@@ -609,6 +662,77 @@ export function RegistrationWindowFeeRules({
             </div>
           ) : null}
         </div>
+
+        <div ref={rulesFeedbackRef}>
+          <FeedbackBanner
+            feedback={rulesFeedback}
+            onDismiss={() => setRulesFeedback(null)}
+            sticky
+          />
+        </div>
+
+        {canConfigure ? (
+          <div className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-900">Pricing formula</h3>
+              <p className="mt-0.5 text-xs text-slate-600">
+                Late / High Late cost from Normal × multipliers; each stage’s sales = cost + %.
+                Apply &amp; save writes to the database in one step.
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <label className="text-sm">
+                <span className="mb-1 block text-slate-600">Late = Normal ×</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formula.lateMultiplier}
+                  onChange={(e) => setFormula({ ...formula, lateMultiplier: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                />
+              </label>
+              <label className="text-sm">
+                <span className="mb-1 block text-slate-600">High Late = Normal ×</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formula.highLateMultiplier}
+                  onChange={(e) => setFormula({ ...formula, highLateMultiplier: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                />
+              </label>
+              <label className="text-sm">
+                <span className="mb-1 block text-slate-600">Sales = Cost + %</span>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formula.salesMarkupPercent}
+                  onChange={(e) => setFormula({ ...formula, salesMarkupPercent: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                />
+              </label>
+              <div className="flex items-end">
+                <button
+                  type="button"
+                  disabled={applyingAll || syncing || rows.length === 0}
+                  onClick={() => void applyFormulaAndSaveAll()}
+                  className="w-full rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+                >
+                  {applyingAll ? "Saving…" : "Apply & save all"}
+                </button>
+              </div>
+            </div>
+            <p className="text-xs text-slate-500">
+              Example with Normal cost £10: Late cost = £
+              {(10 * (Number(formula.lateMultiplier) || 0)).toFixed(2)}, High Late cost = £
+              {(10 * (Number(formula.highLateMultiplier) || 0)).toFixed(2)}, sales = cost +{" "}
+              {formula.salesMarkupPercent}%.
+            </p>
+          </div>
+        ) : null}
 
         {showCopyPanel && canConfigure ? (
           <div className="flex flex-wrap items-end gap-2 rounded-lg border border-slate-200 bg-slate-50 p-4">
@@ -745,14 +869,15 @@ export function RegistrationWindowFeeRules({
                         <div className="flex flex-col gap-2">
                           <button
                             type="button"
-                            onClick={() => applyFormulaToRow(row.key)}
-                            className="text-left text-indigo-600 hover:underline"
+                            disabled={row.saving || applyingAll}
+                            onClick={() => void applyFormulaAndSaveRow(row.key)}
+                            className="text-left text-sm text-indigo-600 hover:underline disabled:opacity-40"
                           >
-                            Apply formula
+                            {row.saving ? "Saving…" : "Apply & save"}
                           </button>
                           <button
                             type="button"
-                            disabled={!row.dirty || row.saving}
+                            disabled={!row.dirty || row.saving || applyingAll}
                             onClick={() => void saveRow(row.key)}
                             className="rounded bg-indigo-600 px-2 py-1 text-left text-xs font-medium text-white disabled:opacity-40"
                           >
@@ -784,6 +909,29 @@ export function RegistrationWindowFeeRules({
           />
         ) : null}
       </Card>
+
+      {rulesFeedback ? (
+        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4">
+          <div
+            className={`pointer-events-auto max-w-xl rounded-lg px-4 py-3 text-sm shadow-lg ring-1 ring-black/10 ${
+              rulesFeedback.tone === "ok"
+                ? "bg-green-700 text-white"
+                : "bg-red-700 text-white"
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <p className="min-w-0 flex-1">{rulesFeedback.text}</p>
+              <button
+                type="button"
+                onClick={() => setRulesFeedback(null)}
+                className="shrink-0 text-xs font-medium text-white/80 hover:text-white"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
