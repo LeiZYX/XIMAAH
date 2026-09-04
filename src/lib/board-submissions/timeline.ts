@@ -1,7 +1,6 @@
 import type { RegistrationFeeStageRecord } from "@/lib/registrations/fee-stages";
 import {
   feeStageLabel,
-  resolveActiveFeeStage,
   resolveCurrentFeeStageDisplay,
 } from "@/lib/registrations/fee-stages";
 import {
@@ -20,6 +19,31 @@ const SEGMENT_COLORS: Record<TimelineSegmentKind, string> = {
   EO_ADJUSTMENT: "bg-violet-400",
   WINDOW_CLOSED: "bg-slate-500",
 };
+
+/** Who may register / adjust — orthogonal to fee pricing stages. */
+export const PERMISSION_TIMELINE_KINDS: ReadonlySet<TimelineSegmentKind> = new Set([
+  "NOT_STARTED",
+  "STUDENT_OPEN",
+  "EO_ADJUSTMENT",
+  "WINDOW_CLOSED",
+]);
+
+/** Fee entry pricing stages. */
+export const FEE_TIMELINE_KINDS: ReadonlySet<TimelineSegmentKind> = new Set([
+  "NORMAL",
+  "LATE",
+  "HIGH_LATE",
+]);
+
+export function splitTimelineTracks(segments: TimelineSegment[]): {
+  permission: TimelineSegment[];
+  fee: TimelineSegment[];
+} {
+  return {
+    permission: segments.filter((segment) => PERMISSION_TIMELINE_KINDS.has(segment.kind)),
+    fee: segments.filter((segment) => FEE_TIMELINE_KINDS.has(segment.kind)),
+  };
+}
 
 function segmentState(startAt: Date, endAt: Date, now: Date) {
   return {
@@ -63,16 +87,13 @@ export function buildBoardSubmissionTimeline(
   const segments: TimelineSegment[] = [];
 
   if (now < window.studentRegistrationOpenAt) {
-    const preStart = new Date(window.studentRegistrationOpenAt.getTime() - 1);
-    const { isActive, isPast } = segmentState(
-      new Date(0),
-      preStart,
-      now,
-    );
+    // Keep a short pre-open marker (not epoch) so absolute timelines stay sane.
+    const preStart = new Date(window.studentRegistrationOpenAt.getTime() - 24 * 60 * 60 * 1000);
+    const { isActive, isPast } = segmentState(preStart, window.studentRegistrationOpenAt, now);
     segments.push({
       kind: "NOT_STARTED",
       label: "Not started",
-      startAt: new Date(0).toISOString(),
+      startAt: preStart.toISOString(),
       endAt: window.studentRegistrationOpenAt.toISOString(),
       colorClass: SEGMENT_COLORS.NOT_STARTED,
       isActive,
@@ -120,7 +141,6 @@ export function buildBoardSubmissionTimeline(
 
   const closeStart = window.registrationCloseAt;
   const closeEnd = new Date(window.registrationCloseAt.getTime() + 24 * 60 * 60 * 1000);
-  const closeState = segmentState(closeStart, closeEnd, now);
   segments.push({
     kind: "WINDOW_CLOSED",
     label: "Window closed",
@@ -141,10 +161,6 @@ export function resolveBoardSubmissionPhaseLabel(
 ): { label: string; detail: string; studentState: string; currentFeeStage: string | null } {
   const studentState = resolveStudentRegistrationState(window, now);
   const studentLabel = studentRegistrationStateLabel(studentState);
-  const activeFeeStage = resolveActiveFeeStage(
-    feeStages.filter((stage) => stage.enabled),
-    now,
-  );
   const currentFeeStage =
     studentState === "NOT_STARTED" || studentState === "WINDOW_CLOSED"
       ? null

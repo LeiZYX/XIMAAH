@@ -1,6 +1,7 @@
 "use client";
 
-import type { BoardSubmissionWindowSummary } from "@/lib/board-submissions/types";
+import type { BoardSubmissionWindowSummary, TimelineSegment } from "@/lib/board-submissions/types";
+import { splitTimelineTracks } from "@/lib/board-submissions/timeline";
 import { Card } from "@/components/ui/Card";
 
 function formatDateTime(value: string): string {
@@ -37,14 +38,103 @@ function formatLegendRange(startAt: string, endAt: string): string {
   return `${startDate} ${startTime} – ${endDate} ${endTime}`;
 }
 
-function segmentWidth(startAt: string, endAt: string, windowStart: string, windowEnd: string): number {
-  const start = new Date(startAt).getTime();
-  const end = new Date(endAt).getTime();
-  const totalStart = new Date(windowStart).getTime();
-  const totalEnd = new Date(windowEnd).getTime();
-  const total = Math.max(totalEnd - totalStart, 1);
+function timelineRange(summary: BoardSubmissionWindowSummary): { startMs: number; endMs: number } {
+  const openMs = new Date(summary.window.studentRegistrationOpenAt).getTime();
+  const closeMs =
+    new Date(summary.window.registrationCloseAt).getTime() + 24 * 60 * 60 * 1000;
+  let startMs = openMs;
+  let endMs = closeMs;
+  for (const segment of summary.timeline) {
+    startMs = Math.min(startMs, new Date(segment.startAt).getTime());
+    endMs = Math.max(endMs, new Date(segment.endAt).getTime());
+  }
+  if (endMs <= startMs) endMs = startMs + 1;
+  return { startMs, endMs };
+}
+
+function segmentLayout(
+  segment: TimelineSegment,
+  rangeStartMs: number,
+  rangeEndMs: number,
+): { left: number; width: number } | null {
+  const start = Math.max(new Date(segment.startAt).getTime(), rangeStartMs);
+  const end = Math.min(new Date(segment.endAt).getTime(), rangeEndMs);
+  if (end <= start) return null;
+  const total = rangeEndMs - rangeStartMs;
+  const left = ((start - rangeStartMs) / total) * 100;
   const width = ((end - start) / total) * 100;
-  return Math.max(width, 4);
+  return { left, width: Math.max(width, 0.8) };
+}
+
+function TrackBar({
+  segments,
+  rangeStartMs,
+  rangeEndMs,
+}: {
+  segments: TimelineSegment[];
+  rangeStartMs: number;
+  rangeEndMs: number;
+}) {
+  return (
+    <div className="relative h-3 overflow-hidden rounded-full bg-slate-100">
+      {segments.map((segment) => {
+        const layout = segmentLayout(segment, rangeStartMs, rangeEndMs);
+        if (!layout) return null;
+        return (
+          <div
+            key={`${segment.kind}-${segment.startAt}`}
+            className={`absolute top-0 h-full rounded-sm ${segment.colorClass} ${
+              segment.isActive ? "ring-2 ring-indigo-600 ring-offset-1" : ""
+            } ${segment.isPast ? "opacity-70" : ""}`}
+            style={{ left: `${layout.left}%`, width: `${layout.width}%` }}
+            title={`${segment.label}: ${formatDateTime(segment.startAt)} – ${formatDateTime(segment.endAt)}`}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function LegendColumn({
+  title,
+  segments,
+  emptyMessage,
+}: {
+  title: string;
+  segments: TimelineSegment[];
+  emptyMessage?: string;
+}) {
+  return (
+    <div>
+      <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        {title}
+      </p>
+      <div className="space-y-2">
+        {segments.length === 0 ? (
+          <p className="text-xs text-slate-500">{emptyMessage ?? "None"}</p>
+        ) : (
+          segments.map((segment) => (
+            <div
+              key={`legend-${segment.kind}-${segment.startAt}`}
+              className="flex items-start gap-2 text-xs text-slate-600"
+            >
+              <span
+                className={`mt-0.5 inline-block h-2.5 w-2.5 shrink-0 rounded-sm ${segment.colorClass} ${
+                  segment.isActive ? "ring-1 ring-indigo-600" : ""
+                }`}
+              />
+              <span>
+                <span className="font-medium text-slate-800">{segment.label}</span>
+                <span className="mt-0.5 block text-slate-500">
+                  {formatLegendRange(segment.startAt, segment.endAt)}
+                </span>
+              </span>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
 }
 
 interface BoardSubmissionsStatusBarProps {
@@ -60,15 +150,13 @@ export function BoardSubmissionsStatusBar({
   showBaseline = true,
   variant = "card",
 }: BoardSubmissionsStatusBarProps) {
-  const windowStart = summary.window.studentRegistrationOpenAt;
-  const windowEnd = summary.window.registrationCloseAt;
+  const { startMs, endMs } = timelineRange(summary);
+  const { permission, fee } = splitTimelineTracks(summary.timeline);
   const nowPercent = (() => {
     const now = new Date(summary.nowAt).getTime();
-    const start = new Date(windowStart).getTime();
-    const end = new Date(windowEnd).getTime();
-    if (now <= start) return 0;
-    if (now >= end) return 100;
-    return ((now - start) / Math.max(end - start, 1)) * 100;
+    if (now <= startMs) return 0;
+    if (now >= endMs) return 100;
+    return ((now - startMs) / (endMs - startMs)) * 100;
   })();
 
   const baselineLabel =
@@ -106,48 +194,37 @@ export function BoardSubmissionsStatusBar({
         ) : null}
       </div>
 
-      <div>
-        <div className="relative pt-2">
-          <div
-            className="pointer-events-none absolute top-0 z-10 -translate-x-1/2"
-            style={{ left: `${Math.min(Math.max(nowPercent, 0), 100)}%` }}
-            aria-hidden
-            title={`Now: ${formatDateTime(summary.nowAt)}`}
-          >
-            <div className="h-0 w-0 border-x-[5px] border-t-[7px] border-x-transparent border-t-red-500" />
+      <div className="space-y-3">
+        <p className="text-xs text-slate-500">
+          Two tracks on the same calendar: registration access and fee stages may overlap.
+        </p>
+        <div className="flex gap-3">
+          <div className="flex w-28 shrink-0 flex-col justify-around gap-2 py-2">
+            <p className="text-xs font-medium leading-3 text-slate-600">Who can register</p>
+            <p className="text-xs font-medium leading-3 text-slate-600">Fee stage</p>
           </div>
-          <div className="relative h-3 overflow-hidden rounded-full bg-slate-100">
-            <div className="flex h-full w-full">
-              {summary.timeline.map((segment) => (
-                <div
-                  key={`${segment.kind}-${segment.startAt}`}
-                  className={`h-full ${segment.colorClass} ${segment.isActive ? "ring-2 ring-indigo-600 ring-offset-1" : ""} ${segment.isPast ? "opacity-70" : ""}`}
-                  style={{
-                    width: `${segmentWidth(segment.startAt, segment.endAt, windowStart, windowEnd)}%`,
-                  }}
-                  title={`${segment.label}: ${formatDateTime(segment.startAt)} – ${formatDateTime(segment.endAt)}`}
-                />
-              ))}
+          <div className="relative min-w-0 flex-1 space-y-2 pt-2">
+            <div
+              className="pointer-events-none absolute bottom-0 top-0 z-10 -translate-x-1/2"
+              style={{ left: `${Math.min(Math.max(nowPercent, 0), 100)}%` }}
+              aria-hidden
+              title={`Now: ${formatDateTime(summary.nowAt)}`}
+            >
+              <div className="mx-auto h-0 w-0 border-x-[5px] border-t-[7px] border-x-transparent border-t-red-500" />
+              <div className="mx-auto h-[calc(100%-7px)] w-px bg-red-400/70" />
             </div>
+            <TrackBar segments={permission} rangeStartMs={startMs} rangeEndMs={endMs} />
+            <TrackBar segments={fee} rangeStartMs={startMs} rangeEndMs={endMs} />
           </div>
         </div>
-        <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {summary.timeline.map((segment) => (
-            <div
-              key={`legend-${segment.kind}-${segment.startAt}`}
-              className="flex items-start gap-2 text-xs text-slate-600"
-            >
-              <span
-                className={`mt-0.5 inline-block h-2.5 w-2.5 shrink-0 rounded-sm ${segment.colorClass} ${segment.isActive ? "ring-1 ring-indigo-600" : ""}`}
-              />
-              <span>
-                <span className="font-medium text-slate-800">{segment.label}</span>
-                <span className="mt-0.5 block text-slate-500">
-                  {formatLegendRange(segment.startAt, segment.endAt)}
-                </span>
-              </span>
-            </div>
-          ))}
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <LegendColumn title="Who can register" segments={permission} />
+          <LegendColumn
+            title="Fee stage"
+            segments={fee}
+            emptyMessage="No fee stages configured."
+          />
         </div>
       </div>
     </div>
