@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { BoardSubmissionsStatusBar } from "@/components/board-submissions/BoardSubmissionsStatusBar";
 import { ApplicableExamSessionsPicker } from "@/components/registrations/ApplicableExamSessionsPicker";
 import { ExamBoardRadioList } from "@/components/registrations/ExamBoardRadioList";
@@ -76,11 +76,20 @@ export function RegistrationWindowGeneral({
   const [sessionsLoading, setSessionsLoading] = useState(false);
   const [examSeriesIds, setExamSeriesIds] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{ tone: "ok" | "error"; text: string } | null>(
+    null,
+  );
+  const feedbackRef = useRef<HTMLDivElement | null>(null);
   const [academicYearOptions, setAcademicYearOptions] = useState<string[]>([
     getCurrentAcademicYear(),
   ]);
+
+  const showFeedback = useCallback((tone: "ok" | "error", text: string) => {
+    setFeedback({ tone, text });
+    requestAnimationFrame(() => {
+      feedbackRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }, []);
 
   const loadSessions = useCallback(async (examBoardId: string) => {
     if (!examBoardId) {
@@ -164,13 +173,12 @@ export function RegistrationWindowGeneral({
     event.preventDefault();
     if (!window || !canEdit) return;
     if (examSeriesIds.length === 0) {
-      setError("Select at least one applicable exam session.");
+      showFeedback("error", "Select at least one applicable exam session.");
       return;
     }
 
     setSaving(true);
-    setMessage(null);
-    setError(null);
+    setFeedback(null);
 
     const res = await fetch(`/api/registration-windows/${windowId}`, {
       method: "PUT",
@@ -194,10 +202,10 @@ export function RegistrationWindowGeneral({
     setSaving(false);
     if (res.ok) {
       await load();
-      setMessage("Settings saved.");
+      showFeedback("ok", "Settings saved.");
     } else {
       const body = await res.json().catch(() => null);
-      setError(body?.error ?? "Failed to save settings.");
+      showFeedback("error", body?.error ?? "Failed to save settings.");
     }
   }
 
@@ -211,9 +219,6 @@ export function RegistrationWindowGeneral({
 
   return (
     <div className="space-y-4">
-      {message ? <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{message}</p> : null}
-      {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p> : null}
-
       <Card>
         <h2 className="mb-4 text-lg font-semibold text-slate-900">Overview</h2>
         <dl className="grid gap-4 sm:grid-cols-2">
@@ -404,13 +409,34 @@ export function RegistrationWindowGeneral({
               ))}
             </fieldset>
 
-            <button
-              type="submit"
-              disabled={saving || examSeriesIds.length === 0}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-            >
-              {saving ? "Saving…" : "Save settings"}
-            </button>
+            <div ref={feedbackRef} className="space-y-3 border-t border-slate-100 pt-4">
+              {feedback ? (
+                <div
+                  role="status"
+                  className={`flex items-start justify-between gap-3 rounded-lg px-3 py-2 text-sm ${
+                    feedback.tone === "ok"
+                      ? "bg-green-50 text-green-800"
+                      : "bg-red-50 text-red-800"
+                  }`}
+                >
+                  <p className="min-w-0 flex-1">{feedback.text}</p>
+                  <button
+                    type="button"
+                    onClick={() => setFeedback(null)}
+                    className="shrink-0 text-xs font-medium opacity-70 hover:opacity-100"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              ) : null}
+              <button
+                type="submit"
+                disabled={saving || examSeriesIds.length === 0}
+                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+              >
+                {saving ? "Saving…" : "Save settings"}
+              </button>
+            </div>
           </form>
         </Card>
       ) : (
@@ -424,6 +450,27 @@ export function RegistrationWindowGeneral({
           </ul>
         </Card>
       )}
+
+      {feedback ? (
+        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4">
+          <div
+            className={`pointer-events-auto max-w-xl rounded-lg px-4 py-3 text-sm shadow-lg ring-1 ring-black/10 ${
+              feedback.tone === "ok" ? "bg-green-700 text-white" : "bg-red-700 text-white"
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <p className="min-w-0 flex-1">{feedback.text}</p>
+              <button
+                type="button"
+                onClick={() => setFeedback(null)}
+                className="shrink-0 text-xs font-medium text-white/80 hover:text-white"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
