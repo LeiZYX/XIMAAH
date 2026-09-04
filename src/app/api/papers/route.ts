@@ -14,8 +14,10 @@ const paperInclude = {
       code: true,
       qualification: {
         select: {
+          id: true,
           name: true,
           level: true,
+          examBoardId: true,
           examBoard: { select: { id: true, name: true, code: true } },
         },
       },
@@ -24,10 +26,18 @@ const paperInclude = {
   _count: { select: { examSessions: true } },
 } as const;
 
-function buildPaperWhere(subjectId: string | null, examBoardId: string | null) {
+function buildPaperWhere(
+  subjectId: string | null,
+  examBoardId: string | null,
+  qualificationId: string | null,
+) {
   return {
     ...(subjectId ? { subjectId } : {}),
-    ...(examBoardId ? { subject: { qualification: { examBoardId } } } : {}),
+    ...(qualificationId
+      ? { subject: { qualificationId } }
+      : examBoardId
+        ? { subject: { qualification: { examBoardId } } }
+        : {}),
   };
 }
 
@@ -35,8 +45,22 @@ export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   const subjectId = params.get("subjectId");
   const examBoardId = params.get("examBoardId");
+  const qualificationId = params.get("qualificationId");
+  const q = params.get("q")?.trim() || "";
   const paginated = params.has("page") || params.has("pageSize");
-  const where = buildPaperWhere(subjectId, examBoardId);
+  const where = {
+    ...buildPaperWhere(subjectId, examBoardId, qualificationId),
+    ...(q
+      ? {
+          OR: [
+            { code: { contains: q } },
+            { title: { contains: q } },
+            { subject: { name: { contains: q } } },
+            { subject: { code: { contains: q } } },
+          ],
+        }
+      : {}),
+  };
   const orderBy = [{ subject: { name: "asc" as const } }, { code: "asc" as const }];
 
   if (paginated) {
