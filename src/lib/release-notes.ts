@@ -9,9 +9,23 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.2.6";
+export const CURRENT_VERSION = "1.2.7";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.2.7",
+    releaseDate: "2026-09-04",
+    summary:
+      "Clearer fee-rule setup by series subject, setup guide, and searchable paper picker.",
+    changes: [
+      "Registration window Fees: one row per series subject with editable Normal / Late / High Late cost and sales; defaults sync from exam sessions (cost/sales £0)",
+      "Pricing formula defaults (Late = Normal × 2, High Late × 3, sales = cost + 20%) with Apply formula per row or all rows; each row remains freely editable",
+      "Fee rules Excel export/import uses the same one-subject-per-row layout (Normal/Late/High Late cost & sales); legacy entryType sheets still import",
+      "Setup guide page (Admin and Exam Office): Structure Board → Qualification → Subject → Paper; Time Series → Sessions; Operations Calendar Subjects → Registration Window → Fees",
+      "Admin Dashboard links to the setup guide; Exam Sessions Add/Edit Paper field supports fuzzy search by code, title, or subject",
+      "IAL bulk-entries UCI import script writes Pearson Edexcel board identities as REGISTERED with registeredAt = now",
+    ],
+  },
   {
     version: "1.2.6",
     releaseDate: "2026-09-03",

@@ -2,7 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { DeleteButton } from "@/components/admin/DeleteButton";
-import { FormField, SelectField, TextAreaField } from "@/components/admin/FormFields";
+import { FormField, SearchableSelectField, SelectField, TextAreaField } from "@/components/admin/FormFields";
 import { AdminStatus, fetchJsonList } from "@/components/admin/useAdminList";
 import { ExcelFileDropzone } from "@/components/ui/ExcelFileDropzone";
 import { Card } from "@/components/ui/Card";
@@ -313,15 +313,23 @@ export default function ExamSessionsPage() {
               }))}
               required
             />
-            <SelectField
+            <SearchableSelectField
               label="Paper"
               name="paperId"
               value={form.paperId}
               onChange={(value) => setForm((current) => ({ ...current, paperId: value }))}
               options={availablePapers.map((paper) => ({
                 value: paper.id,
-                label: `${paper.code} — ${paper.title}`,
+                label: `${paper.code} — ${paper.title} · ${paper.subject.name}`,
               }))}
+              placeholder={
+                form.examBoardId ? "Search paper code or title…" : "Select exam board first"
+              }
+              searchHint="Fuzzy match on paper code / title"
+              disabled={!form.examBoardId}
+              emptyMessage={
+                form.examBoardId ? "No papers match your search" : "Select an exam board first"
+              }
               required
             />
             <SelectField

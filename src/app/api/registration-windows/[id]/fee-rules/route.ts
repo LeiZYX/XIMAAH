@@ -101,13 +101,38 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   });
 
   if (!subject) {
-    return jsonError("Invalid calendar subject for this exam board", 400);
+    return jsonError("Invalid subject for this exam board", 400);
   }
 
-  const calendarSubjects = await getCalendarSubjectsForExamBoard(data.examBoardId);
-  if (!calendarSubjects.some((item) => item.id === subject.id)) {
+  const window = await prisma.registrationWindow.findUnique({
+    where: { id: registrationWindowId },
+    select: {
+      examSeriesId: true,
+      includedSeries: { select: { examSeriesId: true } },
+    },
+  });
+  if (!window) return jsonError("Registration window not found", 404);
+
+  const seriesIds = [
+    window.examSeriesId,
+    ...window.includedSeries.map((row) => row.examSeriesId),
+  ];
+
+  const [calendarSubjects, sessionForSubject] = await Promise.all([
+    getCalendarSubjectsForExamBoard(data.examBoardId),
+    prisma.examSession.findFirst({
+      where: {
+        examSeriesId: { in: seriesIds },
+        paper: { subjectId: subject.id },
+      },
+      select: { id: true },
+    }),
+  ]);
+
+  const onCalendar = calendarSubjects.some((item) => item.id === subject.id);
+  if (!onCalendar && !sessionForSubject) {
     return jsonError(
-      "Subject is not configured as a calendar subject for this exam board",
+      "Subject is not on the calendar and has no exam sessions in this window's series",
       400,
     );
   }

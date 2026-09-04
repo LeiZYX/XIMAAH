@@ -83,6 +83,24 @@ export default async function AdminDashboardPage() {
         description="Manage exam data and keep the assessment calendar up to date."
       />
 
+      <Card className="mb-6 border-indigo-100 bg-indigo-50/40">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-slate-900">Setup guide</p>
+            <p className="mt-1 text-sm text-slate-600">
+              Structure: Board → Qualification → Subject → Paper · Time: Series → Sessions ·
+              Operations: Calendar Subjects → Registration Window → Fees
+            </p>
+          </div>
+          <Link
+            href="/admin/setup-guide"
+            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+          >
+            Open guide
+          </Link>
+        </div>
+      </Card>
+
       {dbError ? (
         <Card className="mb-6 border-amber-200 bg-amber-50">
           <h2 className="text-sm font-semibold text-amber-900">Database not connected</h2>

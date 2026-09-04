@@ -10,6 +10,7 @@ import {
 
 const setupLinks = [
   { href: "/admin", label: "Dashboard", exact: true },
+  { href: "/admin/setup-guide", label: "Setup guide" },
   { href: "/admin/users", label: "Users" },
   { href: "/admin/candidates", label: "Candidates" },
   { href: "/admin/exam-boards", label: "Exam Boards" },

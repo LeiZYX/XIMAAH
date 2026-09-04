@@ -4,27 +4,23 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { ListPagination } from "@/components/ui/ListPagination";
 import { RegistrationWindowFeeToolbar } from "@/components/fees/RegistrationWindowFeeToolbar";
-import { formatMoney } from "@/lib/fees/money";
+import { formatMoney, roundMoney, toNumber } from "@/lib/fees/money";
 import { FEE_RULES_PAGE_SIZES } from "@/lib/pagination";
-import { STAGE_CODE_OPTIONS, entryTypeLabel } from "@/lib/registrations/stage-labels";
+import { STAGE_CODE_OPTIONS } from "@/lib/registrations/stage-labels";
 
 interface FeeRuleRow {
   id: string;
   entryType: string;
   costCurrency?: string;
   costAmount?: number | string;
-  exchangeRateToCny?: number | string | null;
   markupType?: string;
   markupValue?: number | string | null;
   salesCurrency?: string;
   salesAmount?: number | string | null;
   isActive: boolean;
-  examBoard: { code: string; name: string };
-  examSeries: { name: string; year: number };
-  qualification: { name: string; level: string };
-  subject: { code: string; name: string } | null;
+  qualification: { id?: string; name: string; level: string };
+  subject: { id?: string; code: string; name: string } | null;
   paper: { code: string; title: string } | null;
-  examSession: { id: string; date: string } | null;
 }
 
 interface ExchangeRateRow {
@@ -43,11 +39,28 @@ interface WindowInfo {
   examSeries: { id: string; name: string; year: number };
 }
 
-interface CalendarSubjectOption {
-  id: string;
-  name: string;
-  code: string;
-  qualification: { id: string; name: string; level: string };
+interface StageDraft {
+  ruleId: string | null;
+  costAmount: string;
+  salesAmount: string;
+  isActive: boolean;
+}
+
+interface SubjectRowDraft {
+  key: string;
+  subjectId: string;
+  subjectCode: string;
+  subjectName: string;
+  qualification: string;
+  stages: Record<string, StageDraft>;
+  dirty: boolean;
+  saving: boolean;
+}
+
+interface FormulaSettings {
+  lateMultiplier: string;
+  highLateMultiplier: string;
+  salesMarkupPercent: string;
 }
 
 interface RegistrationWindowFeeRulesProps {
@@ -57,33 +70,77 @@ interface RegistrationWindowFeeRulesProps {
   showCosts?: boolean;
 }
 
-const bulkTemplateDefaults = {
-  entryType: "NORMAL",
-  costCurrency: "GBP",
-  costAmount: "",
-  exchangeRateToCny: "",
-  markupType: "PERCENTAGE",
-  markupValue: "10",
-  salesCurrency: "GBP",
-  salesAmount: "",
-  isActive: true,
+const DEFAULT_FORMULA: FormulaSettings = {
+  lateMultiplier: "2",
+  highLateMultiplier: "3",
+  salesMarkupPercent: "20",
 };
 
-const emptyForm = {
-  subjectId: "",
-  ...bulkTemplateDefaults,
-};
+function salesFromCost(cost: number, markupPercent: number): number {
+  return roundMoney(cost * (1 + markupPercent / 100));
+}
 
-const emptyEditForm = {
-  costCurrency: "GBP",
-  costAmount: "",
-  exchangeRateToCny: "",
-  markupType: "PERCENTAGE",
-  markupValue: "",
-  salesCurrency: "GBP",
-  salesAmount: "",
-  isActive: true,
-};
+function applyFormulaToStages(
+  normalCost: number,
+  settings: FormulaSettings,
+): Record<string, { costAmount: string; salesAmount: string }> {
+  const lateMult = Number(settings.lateMultiplier) || 0;
+  const highMult = Number(settings.highLateMultiplier) || 0;
+  const markup = Number(settings.salesMarkupPercent) || 0;
+
+  const normal = roundMoney(normalCost);
+  const late = roundMoney(normal * lateMult);
+  const high = roundMoney(normal * highMult);
+
+  return {
+    NORMAL: {
+      costAmount: String(normal),
+      salesAmount: String(salesFromCost(normal, markup)),
+    },
+    LATE: {
+      costAmount: String(late),
+      salesAmount: String(salesFromCost(late, markup)),
+    },
+    HIGH_LATE: {
+      costAmount: String(high),
+      salesAmount: String(salesFromCost(high, markup)),
+    },
+  };
+}
+
+function buildRowsFromRules(rules: FeeRuleRow[]): SubjectRowDraft[] {
+  const groups = new Map<string, SubjectRowDraft>();
+
+  for (const rule of rules) {
+    if (!rule.subject?.id || rule.paper) continue;
+    const key = rule.subject.id;
+    const existing = groups.get(key) ?? {
+      key,
+      subjectId: rule.subject.id,
+      subjectCode: rule.subject.code,
+      subjectName: rule.subject.name,
+      qualification: `${rule.qualification.level} · ${rule.qualification.name}`,
+      stages: Object.fromEntries(
+        STAGE_CODE_OPTIONS.map((stage) => [
+          stage.value,
+          { ruleId: null, costAmount: "0", salesAmount: "0", isActive: true },
+        ]),
+      ),
+      dirty: false,
+      saving: false,
+    };
+
+    existing.stages[rule.entryType] = {
+      ruleId: rule.id,
+      costAmount: String(toNumber(rule.costAmount)),
+      salesAmount: String(toNumber(rule.salesAmount)),
+      isActive: rule.isActive,
+    };
+    groups.set(key, existing);
+  }
+
+  return [...groups.values()].sort((a, b) => a.subjectCode.localeCompare(b.subjectCode));
+}
 
 export function RegistrationWindowFeeRules({
   windowId,
@@ -92,33 +149,38 @@ export function RegistrationWindowFeeRules({
   showCosts = true,
 }: RegistrationWindowFeeRulesProps) {
   const [windowInfo, setWindowInfo] = useState<WindowInfo | null>(null);
-  const [rules, setRules] = useState<FeeRuleRow[]>([]);
   const [rates, setRates] = useState<ExchangeRateRow[]>([]);
-  const [calendarSubjects, setCalendarSubjects] = useState<CalendarSubjectOption[]>([]);
-  const [calendarFilterEnabled, setCalendarFilterEnabled] = useState(false);
   const [windows, setWindows] = useState<WindowInfo[]>([]);
-  const [form, setForm] = useState(emptyForm);
-  const [rateForm, setRateForm] = useState({ rate: "9.25", effectiveDate: new Date().toISOString().slice(0, 10) });
+  const [rows, setRows] = useState<SubjectRowDraft[]>([]);
+  const [formula, setFormula] = useState<FormulaSettings>(DEFAULT_FORMULA);
+  const [rateForm, setRateForm] = useState({
+    rate: "9.25",
+    effectiveDate: new Date().toISOString().slice(0, 10),
+  });
   const [copySourceId, setCopySourceId] = useState("");
+  const [showCopyPanel, setShowCopyPanel] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [showBulkForm, setShowBulkForm] = useState(false);
-  const [editingRule, setEditingRule] = useState<FeeRuleRow | null>(null);
-  const [editForm, setEditForm] = useState(emptyEditForm);
-  const [bulkTemplate, setBulkTemplate] = useState(bulkTemplateDefaults);
-  const [bulkSaving, setBulkSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState<number>(FEE_RULES_PAGE_SIZES[0]);
+  const [initialSyncDone, setInitialSyncDone] = useState(false);
 
   const apiBase = `/api/registration-windows/${windowId}`;
 
+  const loadRulesOnly = useCallback(async () => {
+    const rulesRes = await fetch(`${apiBase}/fee-rules`);
+    if (!rulesRes.ok) return;
+    const rules = (await rulesRes.json()) as FeeRuleRow[];
+    setRows(buildRowsFromRules(rules));
+  }, [apiBase]);
+
   const load = useCallback(async () => {
-    const [windowRes, rulesRes, ratesRes, calendarRes] = await Promise.all([
+    const [windowRes, rulesRes, ratesRes] = await Promise.all([
       fetch(`/api/registration-windows/${windowId}`),
       fetch(`${apiBase}/fee-rules`),
       fetch(`${apiBase}/exchange-rates`),
-      fetch(`${apiBase}/calendar-subjects`),
     ]);
 
     if (windowRes.ok) {
@@ -138,233 +200,190 @@ export function RegistrationWindowFeeRules({
         }
       }
     }
-    if (rulesRes.ok) setRules(await rulesRes.json());
-    if (ratesRes.ok) setRates(await ratesRes.json());
-    if (calendarRes.ok) {
-      const calendarData = await calendarRes.json();
-      setCalendarSubjects(Array.isArray(calendarData.subjects) ? calendarData.subjects : []);
-      setCalendarFilterEnabled(Boolean(calendarData.filterEnabled));
+    if (rulesRes.ok) {
+      setRows(buildRowsFromRules(await rulesRes.json()));
     }
+    if (ratesRes.ok) setRates(await ratesRes.json());
   }, [apiBase, windowId]);
 
+  const syncSeriesSubjects = useCallback(
+    async (quiet = false) => {
+      if (!canConfigure) return;
+      setSyncing(true);
+      if (!quiet) {
+        setError(null);
+        setMessage(null);
+      }
+      try {
+        const response = await fetch(`${apiBase}/fee-rules/sync-series-subjects`, {
+          method: "POST",
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error ?? "Sync failed");
+        await loadRulesOnly();
+        if (!quiet || data.created > 0) {
+          setMessage(
+            data.created > 0
+              ? `Synced series subjects: added ${data.created} fee rule(s) across ${data.subjects} subject(s) (cost/sales default £0).`
+              : `Series subjects already synced (${data.subjects} subject(s)).`,
+          );
+        }
+      } catch (syncError) {
+        setError(syncError instanceof Error ? syncError.message : "Sync failed");
+      } finally {
+        setSyncing(false);
+      }
+    },
+    [apiBase, canConfigure, loadRulesOnly],
+  );
+
   useEffect(() => {
-    load();
+    void load();
   }, [load]);
 
-  const calendarSubjectsHref = basePath.startsWith("/admin")
-    ? "/admin/calendar-subjects"
-    : null;
+  useEffect(() => {
+    if (!canConfigure || initialSyncDone) return;
+    setInitialSyncDone(true);
+    void syncSeriesSubjects(true);
+  }, [canConfigure, initialSyncDone, syncSeriesSubjects]);
 
   const latestGbpToCny = rates.find((r) => r.baseCurrency === "GBP" && r.targetCurrency === "CNY");
 
-  const missingBulkCount = useMemo(
-    () =>
-      calendarSubjects.filter(
-        (subject) =>
-          !rules.some(
-            (rule) =>
-              rule.subject?.code === subject.code &&
-              !rule.paper &&
-              rule.entryType === bulkTemplate.entryType,
-          ),
-      ).length,
-    [calendarSubjects, rules, bulkTemplate.entryType],
-  );
+  const filteredRows = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return rows;
+    return rows.filter((row) =>
+      `${row.subjectCode} ${row.subjectName} ${row.qualification}`.toLowerCase().includes(q),
+    );
+  }, [rows, searchQuery]);
 
-  const groupedRules = useMemo(() => {
-    const groups = new Map<
-      string,
-      {
-        subjectCode: string;
-        subjectName: string;
-        paperCode: string | null;
-        paperTitle: string | null;
-        qualification: string;
-        byEntryType: Record<string, FeeRuleRow | undefined>;
-      }
-    >();
-
-    for (const rule of rules) {
-      const subjectCode = rule.subject?.code ?? "—";
-      const paperCode = rule.paper?.code ?? null;
-      const key = `${subjectCode}|${paperCode ?? ""}`;
-      const existing = groups.get(key) ?? {
-        subjectCode,
-        subjectName: rule.subject?.name ?? "—",
-        paperCode,
-        paperTitle: rule.paper?.title ?? null,
-        qualification: rule.qualification.name,
-        byEntryType: {},
-      };
-      existing.byEntryType[rule.entryType] = rule;
-      groups.set(key, existing);
-    }
-
-    return [...groups.values()].sort((a, b) => {
-      const subjectCmp = a.subjectCode.localeCompare(b.subjectCode);
-      if (subjectCmp !== 0) return subjectCmp;
-      return (a.paperCode ?? "").localeCompare(b.paperCode ?? "");
-    });
-  }, [rules]);
-
-  const totalSubjects = groupedRules.length;
+  const totalSubjects = filteredRows.length;
   const totalPages = totalSubjects === 0 ? 0 : Math.ceil(totalSubjects / pageSize);
-
-  const paginatedGroups = useMemo(() => {
+  const paginatedRows = useMemo(() => {
     const start = (page - 1) * pageSize;
-    return groupedRules.slice(start, start + pageSize);
-  }, [groupedRules, page, pageSize]);
+    return filteredRows.slice(start, start + pageSize);
+  }, [filteredRows, page, pageSize]);
 
   useEffect(() => {
-    if (totalPages > 0 && page > totalPages) {
-      setPage(totalPages);
-    }
+    setPage(1);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (totalPages > 0 && page > totalPages) setPage(totalPages);
   }, [page, totalPages]);
 
-  async function handleCreateRule(event: FormEvent) {
-    event.preventDefault();
-    if (!windowInfo || !canConfigure) return;
-    setError(null);
-    setMessage(null);
-
-    const response = await fetch(`${apiBase}/fee-rules`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        examBoardId: windowInfo.examBoard.id,
-        examSeriesId: windowInfo.examSeries.id,
-        subjectId: form.subjectId,
-        entryType: form.entryType,
-        costCurrency: form.costCurrency,
-        costAmount: form.costAmount,
-        exchangeRateToCny: form.exchangeRateToCny || undefined,
-        markupType: form.markupType,
-        markupValue: form.markupValue || undefined,
-        salesCurrency: form.salesCurrency,
-        salesAmount: form.salesAmount || undefined,
-        isActive: form.isActive,
+  function updateStage(
+    rowKey: string,
+    entryType: string,
+    patch: Partial<StageDraft>,
+  ) {
+    setRows((current) =>
+      current.map((row) => {
+        if (row.key !== rowKey) return row;
+        return {
+          ...row,
+          dirty: true,
+          stages: {
+            ...row.stages,
+            [entryType]: { ...row.stages[entryType]!, ...patch },
+          },
+        };
       }),
-    });
-
-    if (!response.ok) {
-      const data = await response.json().catch(() => ({}));
-      setError(data.error ?? "Failed to create fee rule");
-      return;
-    }
-
-    setForm(emptyForm);
-    setShowForm(false);
-    setMessage("Fee rule created.");
-    setPage(1);
-    load();
+    );
   }
 
-  function renderSalesCell(rule: FeeRuleRow | undefined) {
-    if (!rule) return "—";
-    return rule.salesAmount !== undefined && rule.salesAmount !== null
-      ? formatMoney(Number(rule.salesAmount), (rule.salesCurrency ?? "GBP") as "GBP" | "CNY")
-      : "Calculated";
-  }
-
-  function openEdit(rule: FeeRuleRow) {
-    setEditingRule(rule);
-    setEditForm({
-      costCurrency: rule.costCurrency ?? "GBP",
-      costAmount: rule.costAmount !== undefined ? String(rule.costAmount) : "",
-      exchangeRateToCny:
-        rule.exchangeRateToCny !== undefined && rule.exchangeRateToCny !== null
-          ? String(rule.exchangeRateToCny)
-          : "",
-      markupType: rule.markupType ?? "PERCENTAGE",
-      markupValue:
-        rule.markupValue !== undefined && rule.markupValue !== null ? String(rule.markupValue) : "",
-      salesCurrency: rule.salesCurrency ?? "GBP",
-      salesAmount:
-        rule.salesAmount !== undefined && rule.salesAmount !== null ? String(rule.salesAmount) : "",
-      isActive: rule.isActive,
-    });
-    setShowForm(false);
-    setShowBulkForm(false);
-  }
-
-  function openConfigure(subjectCode: string, entryType: string) {
-    const subject = calendarSubjects.find((item) => item.code === subjectCode);
-    setForm({
-      ...bulkTemplateDefaults,
-      subjectId: subject?.id ?? "",
-      entryType,
-    });
-    setEditingRule(null);
-    setShowBulkForm(false);
-    setShowForm(true);
-  }
-
-  async function handleUpdateRule(event: FormEvent) {
-    event.preventDefault();
-    if (!editingRule || !canConfigure) return;
-    setError(null);
-    setMessage(null);
-
-    const response = await fetch(`${apiBase}/fee-rules/${editingRule.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        costCurrency: editForm.costCurrency,
-        costAmount: editForm.costAmount,
-        exchangeRateToCny: editForm.exchangeRateToCny || null,
-        markupType: editForm.markupType,
-        markupValue: editForm.markupValue || null,
-        salesCurrency: editForm.salesCurrency,
-        salesAmount: editForm.salesAmount || null,
-        isActive: editForm.isActive,
+  function applyFormulaToRow(rowKey: string) {
+    setRows((current) =>
+      current.map((row) => {
+        if (row.key !== rowKey) return row;
+        const normalCost = toNumber(row.stages.NORMAL?.costAmount);
+        const filled = applyFormulaToStages(normalCost, formula);
+        const stages = { ...row.stages };
+        for (const stage of STAGE_CODE_OPTIONS) {
+          const values = filled[stage.value]!;
+          stages[stage.value] = {
+            ...stages[stage.value]!,
+            costAmount: values.costAmount,
+            salesAmount: values.salesAmount,
+          };
+        }
+        return { ...row, stages, dirty: true };
       }),
-    });
-
-    if (!response.ok) {
-      const data = await response.json().catch(() => ({}));
-      setError(data.error ?? "Failed to update fee rule");
-      return;
-    }
-
-    setEditingRule(null);
-    setMessage("Fee rule updated.");
-    load();
+    );
   }
 
-  async function handleBulkCreate(event: FormEvent) {
-    event.preventDefault();
-    if (!canConfigure || missingBulkCount === 0) return;
+  function applyFormulaToAllRows() {
+    setRows((current) =>
+      current.map((row) => {
+        const normalCost = toNumber(row.stages.NORMAL?.costAmount);
+        const filled = applyFormulaToStages(normalCost, formula);
+        const stages = { ...row.stages };
+        for (const stage of STAGE_CODE_OPTIONS) {
+          const values = filled[stage.value]!;
+          stages[stage.value] = {
+            ...stages[stage.value]!,
+            costAmount: values.costAmount,
+            salesAmount: values.salesAmount,
+          };
+        }
+        return { ...row, stages, dirty: true };
+      }),
+    );
+    setMessage("Applied formula to all rows from each subject’s Normal cost. Save rows to persist.");
+  }
+
+  async function saveRow(rowKey: string) {
+    if (!canConfigure || !windowInfo) return;
+    const row = rows.find((item) => item.key === rowKey);
+    if (!row) return;
+
+    setRows((current) =>
+      current.map((item) => (item.key === rowKey ? { ...item, saving: true } : item)),
+    );
     setError(null);
-    setMessage(null);
-    setBulkSaving(true);
 
     try {
-      const response = await fetch(`${apiBase}/fee-rules/bulk-calendar-subjects`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bulkTemplate),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error ?? "Bulk create failed");
+      for (const stage of STAGE_CODE_OPTIONS) {
+        const draft = row.stages[stage.value];
+        if (!draft?.ruleId) continue;
+
+        const response = await fetch(`${apiBase}/fee-rules/${draft.ruleId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            costCurrency: "GBP",
+            costAmount: draft.costAmount || "0",
+            markupType: "MANUAL",
+            markupValue: null,
+            salesCurrency: "GBP",
+            salesAmount: draft.salesAmount || "0",
+            isActive: draft.isActive,
+            exchangeRateToCny: null,
+          }),
+        });
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          throw new Error(data.error ?? `Failed to save ${stage.label}`);
+        }
       }
-      setShowBulkForm(false);
-      setMessage(
-        `Created ${data.created} fee rules for calendar subjects${data.skipped ? ` (${data.skipped} already existed)` : ""}.`,
+
+      setRows((current) =>
+        current.map((item) =>
+          item.key === rowKey ? { ...item, dirty: false, saving: false } : item,
+        ),
       );
-      setPage(1);
-      load();
-    } catch (bulkError) {
-      setError(bulkError instanceof Error ? bulkError.message : "Bulk create failed");
-    } finally {
-      setBulkSaving(false);
+      setMessage(`Saved fees for ${row.subjectCode}.`);
+    } catch (saveError) {
+      setRows((current) =>
+        current.map((item) => (item.key === rowKey ? { ...item, saving: false } : item)),
+      );
+      setError(saveError instanceof Error ? saveError.message : "Save failed");
     }
   }
 
   async function handleAddRate(event: FormEvent) {
     event.preventDefault();
     if (!canConfigure) return;
-
     const response = await fetch(`${apiBase}/exchange-rates`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -375,12 +394,10 @@ export function RegistrationWindowFeeRules({
         effectiveDate: rateForm.effectiveDate,
       }),
     });
-
     if (!response.ok) {
       setError("Failed to save exchange rate");
       return;
     }
-
     setMessage("Exchange rate saved.");
     load();
   }
@@ -398,8 +415,9 @@ export function RegistrationWindowFeeRules({
       return;
     }
     setMessage(`Copied ${data.copiedRules} fee rules and ${data.copiedRates} exchange rates.`);
-    setPage(1);
-    load();
+    setShowCopyPanel(false);
+    await load();
+    await syncSeriesSubjects(true);
   }
 
   async function handleImport(file: File) {
@@ -413,23 +431,11 @@ export function RegistrationWindowFeeRules({
       return;
     }
     setMessage(
-      `Imported ${data.imported} rules (${data.created ?? 0} created, ${data.updated ?? 0} updated).${
-        data.skipped ? ` ${data.skipped} blank rows skipped.` : ""
-      }${data.errors?.length ? ` ${data.errors.length} errors.` : ""}`,
+      `Imported ${data.imported} rules (${data.created ?? 0} created, ${data.updated ?? 0} updated).`,
     );
     if (data.errors?.length) setError(data.errors.slice(0, 3).join("; "));
-    setPage(1);
-    load();
-  }
-
-  async function toggleActive(rule: FeeRuleRow) {
-    if (!canConfigure) return;
-    await fetch(`${apiBase}/fee-rules/${rule.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isActive: !rule.isActive }),
-    });
-    load();
+    await load();
+    await syncSeriesSubjects(true);
   }
 
   return (
@@ -440,15 +446,22 @@ export function RegistrationWindowFeeRules({
         feeRulesHref={`${basePath}/${windowId}/fees`}
       />
 
-      {message ? <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{message}</p> : null}
-      {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p> : null}
+      {message ? (
+        <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{message}</p>
+      ) : null}
+      {error ? (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p>
+      ) : null}
 
       <Card>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">Exchange rate (GBP → CNY)</h2>
             <p className="text-sm text-slate-600">
-              Current: {latestGbpToCny ? `${latestGbpToCny.rate} (from ${latestGbpToCny.effectiveDate.slice(0, 10)})` : "Not configured"}
+              Current:{" "}
+              {latestGbpToCny
+                ? `${latestGbpToCny.rate} (from ${latestGbpToCny.effectiveDate.slice(0, 10)})`
+                : "Not configured"}
             </p>
           </div>
           {canConfigure ? (
@@ -474,7 +487,10 @@ export function RegistrationWindowFeeRules({
                   className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
                 />
               </label>
-              <button type="submit" className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white">
+              <button
+                type="submit"
+                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white"
+              >
                 Save rate
               </button>
             </form>
@@ -482,38 +498,87 @@ export function RegistrationWindowFeeRules({
         </div>
       </Card>
 
+      {canConfigure ? (
+        <Card className="space-y-3">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">Pricing formula defaults</h2>
+            <p className="mt-1 text-sm text-slate-600">
+              Used when you click <span className="font-medium">Apply formula</span>. Each row can
+              still be edited freely afterwards. New series subjects sync with cost/sales = £0.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <label className="text-sm">
+              <span className="mb-1 block text-slate-600">Late = Normal ×</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={formula.lateMultiplier}
+                onChange={(e) => setFormula({ ...formula, lateMultiplier: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              />
+            </label>
+            <label className="text-sm">
+              <span className="mb-1 block text-slate-600">High Late = Normal ×</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={formula.highLateMultiplier}
+                onChange={(e) => setFormula({ ...formula, highLateMultiplier: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              />
+            </label>
+            <label className="text-sm">
+              <span className="mb-1 block text-slate-600">Sales = Cost + %</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={formula.salesMarkupPercent}
+                onChange={(e) => setFormula({ ...formula, salesMarkupPercent: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              />
+            </label>
+            <div className="flex items-end">
+              <button
+                type="button"
+                onClick={applyFormulaToAllRows}
+                className="w-full rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100"
+              >
+                Apply formula to all rows
+              </button>
+            </div>
+          </div>
+          <p className="text-xs text-slate-500">
+            Example with Normal cost £10: Late cost = £
+            {(10 * (Number(formula.lateMultiplier) || 0)).toFixed(2)}, High Late cost = £
+            {(10 * (Number(formula.highLateMultiplier) || 0)).toFixed(2)}, each stage’s sales = cost +{" "}
+            {formula.salesMarkupPercent}%.
+          </p>
+        </Card>
+      ) : null}
+
       <Card className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-slate-900">Fee rules</h2>
-            <p className="mt-1 text-sm text-slate-600">
-              Configure fees per subject and entry stage (Normal Entry, Late Entry, High Late Entry).
-              Bulk add calendar subjects, export to Excel, edit fees, then import to update all rules at once.
+            <p className="mt-1 max-w-2xl text-sm text-slate-600">
+              One row per subject from this window’s exam series sessions. Edit Normal / Late / High
+              Late cost and sales directly; save each row when done. Excel export/import uses the same
+              one-subject-per-row layout (Normal/Late/High Late cost &amp; sales).
             </p>
           </div>
           {canConfigure ? (
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => {
-                  setShowBulkForm((value) => !value);
-                  setShowForm(false);
-                  setEditingRule(null);
-                }}
-                className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+                disabled={syncing}
+                onClick={() => void syncSeriesSubjects(false)}
+                className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
               >
-                Bulk add calendar subjects
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowForm((value) => !value);
-                  setShowBulkForm(false);
-                  setEditingRule(null);
-                }}
-                className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700"
-              >
-                Add one subject
+                {syncing ? "Syncing…" : "Sync series subjects"}
               </button>
               <label className="cursor-pointer rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
                 Import Excel
@@ -534,440 +599,176 @@ export function RegistrationWindowFeeRules({
               >
                 Export Excel
               </a>
+              <button
+                type="button"
+                onClick={() => setShowCopyPanel((value) => !value)}
+                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              >
+                Copy from window
+              </button>
+            </div>
+          ) : null}
+        </div>
+
+        {showCopyPanel && canConfigure ? (
+          <div className="flex flex-wrap items-end gap-2 rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <label className="text-sm">
+              <span className="mb-1 block text-slate-600">Source window</span>
               <select
                 value={copySourceId}
                 onChange={(e) => setCopySourceId(e.target.value)}
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="min-w-[16rem] rounded-lg border border-slate-300 px-3 py-2 text-sm"
               >
-                <option value="">Copy from window…</option>
+                <option value="">Select window…</option>
                 {windows.map((w) => (
                   <option key={w.id} value={w.id}>
                     {w.title}
                   </option>
                 ))}
               </select>
-              <button
-                type="button"
-                disabled={!copySourceId}
-                onClick={() => void handleCopyRules()}
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
-              >
-                Copy rules
-              </button>
-            </div>
-          ) : null}
+            </label>
+            <button
+              type="button"
+              disabled={!copySourceId}
+              onClick={() => void handleCopyRules()}
+              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            >
+              Copy rules & rates
+            </button>
+          </div>
+        ) : null}
+
+        <div className="flex flex-wrap items-center gap-3">
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search subject…"
+            className="w-full max-w-md rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          />
+          <p className="text-sm text-slate-500">
+            {totalSubjects} subject{totalSubjects === 1 ? "" : "s"}
+          </p>
         </div>
 
-        {showBulkForm && canConfigure ? (
-          <form onSubmit={handleBulkCreate} className="space-y-3 rounded-lg border border-indigo-200 bg-indigo-50/40 p-4">
-            <p className="text-sm text-slate-700">
-              Create fee rules for all calendar subjects that do not already have a{" "}
-              <span className="font-medium">{entryTypeLabel(bulkTemplate.entryType)}</span> rule.
-              {missingBulkCount > 0
-                ? ` ${missingBulkCount} subject${missingBulkCount === 1 ? "" : "s"} will be added.`
-                : " All calendar subjects already have a matching rule."}
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              <select
-                value={bulkTemplate.entryType}
-                onChange={(e) => setBulkTemplate({ ...bulkTemplate, entryType: e.target.value })}
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              >
-                {STAGE_CODE_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-              {showCosts ? (
-                <>
-                  <select
-                    value={bulkTemplate.costCurrency}
-                    onChange={(e) => setBulkTemplate({ ...bulkTemplate, costCurrency: e.target.value })}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  >
-                    <option value="GBP">Cost GBP</option>
-                    <option value="CNY">Cost CNY</option>
-                  </select>
-                  <input
-                    required
-                    type="number"
-                    step="0.01"
-                    placeholder="Cost amount"
-                    value={bulkTemplate.costAmount}
-                    onChange={(e) => setBulkTemplate({ ...bulkTemplate, costAmount: e.target.value })}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  />
-                  <input
-                    type="number"
-                    step="0.0001"
-                    placeholder="Exchange rate override"
-                    value={bulkTemplate.exchangeRateToCny}
-                    onChange={(e) =>
-                      setBulkTemplate({ ...bulkTemplate, exchangeRateToCny: e.target.value })
-                    }
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  />
-                  <select
-                    value={bulkTemplate.markupType}
-                    onChange={(e) => setBulkTemplate({ ...bulkTemplate, markupType: e.target.value })}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  >
-                    <option value="PERCENTAGE">Markup %</option>
-                    <option value="FIXED_AMOUNT">Markup fixed</option>
-                    <option value="MANUAL">Manual sales price</option>
-                  </select>
-                  <input
-                    type="number"
-                    step="0.01"
-                    placeholder="Markup value"
-                    value={bulkTemplate.markupValue}
-                    onChange={(e) => setBulkTemplate({ ...bulkTemplate, markupValue: e.target.value })}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  />
-                </>
-              ) : null}
-              <select
-                value={bulkTemplate.salesCurrency}
-                onChange={(e) => setBulkTemplate({ ...bulkTemplate, salesCurrency: e.target.value })}
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              >
-                <option value="GBP">Sales GBP</option>
-                <option value="CNY">Sales CNY</option>
-              </select>
-              {bulkTemplate.markupType === "MANUAL" ? (
-                <input
-                  required
-                  type="number"
-                  step="0.01"
-                  placeholder="Sales amount"
-                  value={bulkTemplate.salesAmount}
-                  onChange={(e) => setBulkTemplate({ ...bulkTemplate, salesAmount: e.target.value })}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                />
-              ) : null}
-              <button
-                type="submit"
-                disabled={bulkSaving || missingBulkCount === 0 || !bulkTemplate.costAmount}
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50 sm:col-span-2 lg:col-span-3"
-              >
-                {bulkSaving
-                  ? "Creating..."
-                  : `Create ${missingBulkCount} calendar subject rule${missingBulkCount === 1 ? "" : "s"}`}
-              </button>
-            </div>
-          </form>
-        ) : null}
-
-        {showForm && canConfigure ? (
-          <form onSubmit={handleCreateRule} className="space-y-3 rounded-lg border border-slate-200 bg-slate-50 p-4">
-            <p className="text-sm text-slate-600">
-              New fee rules apply to one calendar subject at a time.
-              {calendarFilterEnabled
-                ? " Only subjects selected under Calendar Subjects are listed."
-                : " All subjects for this exam board are listed until calendar filtering is enabled."}
-              {calendarSubjectsHref ? (
-                <>
-                  {" "}
-                  <a href={calendarSubjectsHref} className="font-medium text-indigo-600 hover:underline">
-                    Manage calendar subjects
-                  </a>
-                </>
-              ) : null}
-            </p>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <select
-              required
-              value={form.subjectId}
-              onChange={(e) => setForm({ ...form, subjectId: e.target.value })}
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm sm:col-span-2 lg:col-span-3"
-            >
-              <option value="">Calendar subject</option>
-              {calendarSubjects.map((subject) => (
-                <option key={subject.id} value={subject.id}>
-                  {subject.code} — {subject.name} ({subject.qualification.level} · {subject.qualification.name})
-                </option>
-              ))}
-            </select>
-            {calendarSubjects.length === 0 ? (
-              <p className="text-sm text-amber-700 sm:col-span-2 lg:col-span-3">
-                No calendar subjects available for this exam board. Configure subjects first.
+        <div className="overflow-x-auto rounded-lg border border-slate-200">
+          {rows.length === 0 ? (
+            <div className="space-y-2 px-4 py-10 text-center text-sm text-slate-600">
+              <p>No fee rules yet.</p>
+              <p className="text-slate-500">
+                Add exam sessions for this series, then click Sync series subjects.
               </p>
-            ) : null}
-            <select
-              value={form.entryType}
-              onChange={(e) => setForm({ ...form, entryType: e.target.value })}
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-            >
-              {STAGE_CODE_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-            {showCosts ? (
-              <>
-                <select
-                  value={form.costCurrency}
-                  onChange={(e) => setForm({ ...form, costCurrency: e.target.value })}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                >
-                  <option value="GBP">Cost GBP</option>
-                  <option value="CNY">Cost CNY</option>
-                </select>
-                <input
-                  required
-                  type="number"
-                  step="0.01"
-                  placeholder="Cost amount"
-                  value={form.costAmount}
-                  onChange={(e) => setForm({ ...form, costAmount: e.target.value })}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                />
-                <input
-                  type="number"
-                  step="0.0001"
-                  placeholder="Exchange rate override"
-                  value={form.exchangeRateToCny}
-                  onChange={(e) => setForm({ ...form, exchangeRateToCny: e.target.value })}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                />
-                <select
-                  value={form.markupType}
-                  onChange={(e) => setForm({ ...form, markupType: e.target.value })}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                >
-                  <option value="PERCENTAGE">Markup %</option>
-                  <option value="FIXED_AMOUNT">Markup fixed</option>
-                  <option value="MANUAL">Manual sales price</option>
-                </select>
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="Markup value"
-                  value={form.markupValue}
-                  onChange={(e) => setForm({ ...form, markupValue: e.target.value })}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                />
-              </>
-            ) : null}
-            <select
-              value={form.salesCurrency}
-              onChange={(e) => setForm({ ...form, salesCurrency: e.target.value })}
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-            >
-              <option value="GBP">Sales GBP</option>
-              <option value="CNY">Sales CNY</option>
-            </select>
-            {form.markupType === "MANUAL" ? (
-              <input
-                required
-                type="number"
-                step="0.01"
-                placeholder="Sales amount"
-                value={form.salesAmount}
-                onChange={(e) => setForm({ ...form, salesAmount: e.target.value })}
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              />
-            ) : null}
-            <button type="submit" className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white sm:col-span-2 lg:col-span-3">
-              Save fee rule
-            </button>
             </div>
-          </form>
-        ) : null}
-
-        {editingRule && canConfigure ? (
-          <form onSubmit={handleUpdateRule} className="space-y-3 rounded-lg border border-amber-200 bg-amber-50/40 p-4">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-sm font-medium text-slate-900">
-                Edit fee rule — {editingRule.subject?.code ?? "—"} · {entryTypeLabel(editingRule.entryType)}
-              </p>
-              <button
-                type="button"
-                onClick={() => setEditingRule(null)}
-                className="text-sm text-slate-600 hover:text-slate-900"
-              >
-                Cancel
-              </button>
-            </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {showCosts ? (
-                <>
-                  <select
-                    value={editForm.costCurrency}
-                    onChange={(e) => setEditForm({ ...editForm, costCurrency: e.target.value })}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  >
-                    <option value="GBP">Cost GBP</option>
-                    <option value="CNY">Cost CNY</option>
-                  </select>
-                  <input
-                    required
-                    type="number"
-                    step="0.01"
-                    placeholder="Cost amount"
-                    value={editForm.costAmount}
-                    onChange={(e) => setEditForm({ ...editForm, costAmount: e.target.value })}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  />
-                  <input
-                    type="number"
-                    step="0.0001"
-                    placeholder="Exchange rate override"
-                    value={editForm.exchangeRateToCny}
-                    onChange={(e) => setEditForm({ ...editForm, exchangeRateToCny: e.target.value })}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  />
-                  <select
-                    value={editForm.markupType}
-                    onChange={(e) => setEditForm({ ...editForm, markupType: e.target.value })}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  >
-                    <option value="PERCENTAGE">Markup %</option>
-                    <option value="FIXED_AMOUNT">Markup fixed</option>
-                    <option value="MANUAL">Manual sales price</option>
-                  </select>
-                  <input
-                    type="number"
-                    step="0.01"
-                    placeholder="Markup value"
-                    value={editForm.markupValue}
-                    onChange={(e) => setEditForm({ ...editForm, markupValue: e.target.value })}
-                    className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                  />
-                </>
-              ) : null}
-              <select
-                value={editForm.salesCurrency}
-                onChange={(e) => setEditForm({ ...editForm, salesCurrency: e.target.value })}
-                className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-              >
-                <option value="GBP">Sales GBP</option>
-                <option value="CNY">Sales CNY</option>
-              </select>
-              {editForm.markupType === "MANUAL" ? (
-                <input
-                  required
-                  type="number"
-                  step="0.01"
-                  placeholder="Sales amount"
-                  value={editForm.salesAmount}
-                  onChange={(e) => setEditForm({ ...editForm, salesAmount: e.target.value })}
-                  className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-                />
-              ) : null}
-              <label className="flex items-center gap-2 text-sm text-slate-700 sm:col-span-2 lg:col-span-3">
-                <input
-                  type="checkbox"
-                  checked={editForm.isActive}
-                  onChange={(e) => setEditForm({ ...editForm, isActive: e.target.checked })}
-                />
-                Active
-              </label>
-              <button
-                type="submit"
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white sm:col-span-2 lg:col-span-3"
-              >
-                Save changes
-              </button>
-            </div>
-          </form>
-        ) : null}
-
-        <div className="overflow-x-auto">
-          {groupedRules.length === 0 ? (
-            <p className="py-6 text-center text-sm text-slate-500">No fee rules configured yet.</p>
+          ) : filteredRows.length === 0 ? (
+            <p className="px-4 py-10 text-center text-sm text-slate-500">No subjects match.</p>
           ) : (
-            paginatedGroups.map((group) => (
-              <div key={`${group.subjectCode}|${group.paperCode ?? ""}`} className="mb-6 last:mb-0">
-                <h3 className="mb-2 text-sm font-semibold text-slate-900">
-                  {group.subjectCode} — {group.subjectName}
-                  {group.paperCode ? ` · Paper ${group.paperCode}` : ""}
-                  <span className="ml-2 font-normal text-slate-500">({group.qualification})</span>
-                </h3>
-                <table className="min-w-full text-sm">
-                  <thead>
-                    <tr className="border-b text-left text-xs uppercase text-slate-500">
-                      <th className="py-2 pr-3">Entry stage</th>
-                      {showCosts ? (
-                        <>
-                          <th className="py-2 pr-3">Cost</th>
-                          <th className="py-2 pr-3">Rate</th>
-                          <th className="py-2 pr-3">Markup</th>
-                        </>
-                      ) : null}
-                      <th className="py-2 pr-3">Sales</th>
-                      <th className="py-2 pr-3">Active</th>
-                      {canConfigure ? <th className="py-2 pr-3">Actions</th> : null}
-                    </tr>
-                  </thead>
-                  <tbody>
+            <table className="min-w-full text-sm">
+              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+                <tr>
+                  <th className="px-3 py-3">Subject</th>
+                  {STAGE_CODE_OPTIONS.map((stage) => (
+                    <th key={stage.value} className="px-3 py-3">
+                      {stage.label.replace(" Entry", "")}
+                      {showCosts ? " cost / sales" : " sales"}
+                    </th>
+                  ))}
+                  {canConfigure ? <th className="px-3 py-3">Actions</th> : null}
+                </tr>
+              </thead>
+              <tbody>
+                {paginatedRows.map((row) => (
+                  <tr
+                    key={row.key}
+                    className={`border-t border-slate-100 ${row.dirty ? "bg-amber-50/40" : ""}`}
+                  >
+                    <td className="px-3 py-3 align-top">
+                      <p className="font-semibold text-slate-900">{row.subjectCode}</p>
+                      <p className="text-slate-700">{row.subjectName}</p>
+                      <p className="text-xs text-slate-500">{row.qualification}</p>
+                    </td>
                     {STAGE_CODE_OPTIONS.map((stage) => {
-                      const rule = group.byEntryType[stage.value];
+                      const draft = row.stages[stage.value]!;
                       return (
-                        <tr key={stage.value} className="border-b border-slate-100">
-                          <td className="py-2 pr-3">{stage.label}</td>
-                          {showCosts ? (
-                            <>
-                              <td className="py-2 pr-3">
-                                {rule?.costCurrency && rule.costAmount !== undefined
-                                  ? formatMoney(Number(rule.costAmount), rule.costCurrency as "GBP" | "CNY")
-                                  : "—"}
-                              </td>
-                              <td className="py-2 pr-3">{rule?.exchangeRateToCny ?? latestGbpToCny?.rate ?? "—"}</td>
-                              <td className="py-2 pr-3">
-                                {rule
-                                  ? rule.markupType === "MANUAL"
-                                    ? "Manual"
-                                    : `${rule.markupType} ${rule.markupValue ?? ""}`
-                                  : "—"}
-                              </td>
-                            </>
-                          ) : null}
-                          <td className="py-2 pr-3">{renderSalesCell(rule)}</td>
-                          <td className="py-2 pr-3">{rule ? (rule.isActive ? "Yes" : "No") : "—"}</td>
+                        <td key={stage.value} className="px-3 py-3 align-top">
                           {canConfigure ? (
-                            <td className="py-2 pr-3">
-                              {rule ? (
-                                <div className="flex flex-wrap gap-3">
-                                  <button
-                                    type="button"
-                                    onClick={() => openEdit(rule)}
-                                    className="text-indigo-600"
-                                  >
-                                    Edit
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => void toggleActive(rule)}
-                                    className="text-indigo-600"
-                                  >
-                                    {rule.isActive ? "Deactivate" : "Activate"}
-                                  </button>
-                                </div>
-                              ) : (
-                                <button
-                                  type="button"
-                                  onClick={() => openConfigure(group.subjectCode, stage.value)}
-                                  className="text-indigo-600"
-                                >
-                                  Configure
-                                </button>
-                              )}
-                            </td>
-                          ) : null}
-                        </tr>
+                            <div className="space-y-1">
+                              {showCosts ? (
+                                <label className="block">
+                                  <span className="text-[11px] uppercase text-slate-400">Cost</span>
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={draft.costAmount}
+                                    onChange={(e) =>
+                                      updateStage(row.key, stage.value, {
+                                        costAmount: e.target.value,
+                                      })
+                                    }
+                                    className="mt-0.5 w-24 rounded border border-slate-300 px-2 py-1 text-sm"
+                                  />
+                                </label>
+                              ) : null}
+                              <label className="block">
+                                <span className="text-[11px] uppercase text-slate-400">Sales</span>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  value={draft.salesAmount}
+                                  onChange={(e) =>
+                                    updateStage(row.key, stage.value, {
+                                      salesAmount: e.target.value,
+                                    })
+                                  }
+                                  className="mt-0.5 w-24 rounded border border-slate-300 px-2 py-1 text-sm font-medium"
+                                />
+                              </label>
+                            </div>
+                          ) : (
+                            <div className="space-y-0.5">
+                              {showCosts ? (
+                                <p className="text-xs text-slate-500">
+                                  Cost {formatMoney(toNumber(draft.costAmount), "GBP")}
+                                </p>
+                              ) : null}
+                              <p className="font-semibold text-slate-900">
+                                {formatMoney(toNumber(draft.salesAmount), "GBP")}
+                              </p>
+                            </div>
+                          )}
+                        </td>
                       );
                     })}
-                  </tbody>
-                </table>
-              </div>
-            ))
+                    {canConfigure ? (
+                      <td className="px-3 py-3 align-top">
+                        <div className="flex flex-col gap-2">
+                          <button
+                            type="button"
+                            onClick={() => applyFormulaToRow(row.key)}
+                            className="text-left text-indigo-600 hover:underline"
+                          >
+                            Apply formula
+                          </button>
+                          <button
+                            type="button"
+                            disabled={!row.dirty || row.saving}
+                            onClick={() => void saveRow(row.key)}
+                            className="rounded bg-indigo-600 px-2 py-1 text-left text-xs font-medium text-white disabled:opacity-40"
+                          >
+                            {row.saving ? "Saving…" : row.dirty ? "Save row" : "Saved"}
+                          </button>
+                        </div>
+                      </td>
+                    ) : null}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </div>
 
-        {groupedRules.length > 0 ? (
+        {filteredRows.length > 0 ? (
           <ListPagination
             page={page}
             pageSize={pageSize}

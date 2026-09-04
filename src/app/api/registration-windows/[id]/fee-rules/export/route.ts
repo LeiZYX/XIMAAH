@@ -3,7 +3,7 @@ import { jsonError } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { canConfigureFeeRules } from "@/lib/auth/permissions";
 import {
-  buildCalendarSubjectFeeRuleExportRows,
+  buildSubjectFeeRuleWideExportRows,
   feeRuleSpreadsheetToBuffer,
 } from "@/lib/fees/fee-rules-spreadsheet";
 
@@ -20,13 +20,13 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
   }
 
   const { id } = await params;
-  const rows = await buildCalendarSubjectFeeRuleExportRows(id);
+  const rows = await buildSubjectFeeRuleWideExportRows(id);
   const buffer = feeRuleSpreadsheetToBuffer(rows);
 
   return new NextResponse(new Uint8Array(buffer), {
     headers: {
       "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "Content-Disposition": `attachment; filename="calendar-subject-fee-rules-${id}.xlsx"`,
+      "Content-Disposition": `attachment; filename="subject-fee-rules-${id}.xlsx"`,
     },
   });
 }

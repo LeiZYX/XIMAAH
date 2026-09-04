@@ -1,6 +1,8 @@
-import { getCalendarSubjectsForExamBoard } from "@/lib/calendar-subject-selections";
 import type { FeeCurrency, FeeEntryType, FeeMarkupType } from "@/generated/prisma/enums";
+import { getCalendarSubjectsForExamBoard } from "@/lib/calendar-subject-selections";
+import { getSubjectsForRegistrationWindowSeries } from "@/lib/fees/fee-rules-series-sync";
 import { prisma } from "@/lib/prisma";
+import { STAGE_CODE_OPTIONS } from "@/lib/registrations/stage-labels";
 import * as XLSX from "xlsx";
 
 export interface FeeRuleTemplateInput {
@@ -15,6 +17,22 @@ export interface FeeRuleTemplateInput {
   isActive?: boolean;
 }
 
+/** Wide export: one subject per row (matches Fees UI). */
+export interface SubjectFeeRuleWideExportRow {
+  subjectCode: string;
+  subjectName: string;
+  qualification: string;
+  normalCost: number;
+  normalSales: number;
+  lateCost: number;
+  lateSales: number;
+  highLateCost: number;
+  highLateSales: number;
+  currency: string;
+  isActive: boolean;
+}
+
+/** Legacy long export (one row per entry stage). Still accepted on import. */
 export interface CalendarSubjectFeeRuleExportRow {
   subjectCode: string;
   subjectName: string;
@@ -59,54 +77,73 @@ function isSubjectLevelRule(rule: SubjectLevelRule) {
   return Boolean(rule.subjectId) && !rule.paperId && !rule.examSessionId;
 }
 
-function ruleToExportRow(rule: SubjectLevelRule): CalendarSubjectFeeRuleExportRow {
-  return {
-    subjectCode: rule.subject?.code ?? "",
-    subjectName: rule.subject?.name ?? "",
-    qualification: `${rule.qualification.name} (${rule.qualification.level})`,
-    entryType: rule.entryType,
-    costCurrency: rule.costCurrency,
-    costAmount: Number(rule.costAmount),
-    exchangeRateToCny: rule.exchangeRateToCny ? Number(rule.exchangeRateToCny) : "",
-    markupType: rule.markupType,
-    markupValue: rule.markupValue ? Number(rule.markupValue) : "",
-    salesCurrency: rule.salesCurrency,
-    salesAmount: rule.salesAmount ? Number(rule.salesAmount) : "",
-    isActive: rule.isActive,
-  };
+function toMoneyNumber(value: unknown): number {
+  if (value === "" || value === null || value === undefined) return 0;
+  const num = Number(value);
+  return Number.isFinite(num) ? num : 0;
 }
 
-function emptyExportRow(
-  subject: Awaited<ReturnType<typeof getCalendarSubjectsForExamBoard>>[number],
-  entryType: FeeEntryType,
-): CalendarSubjectFeeRuleExportRow {
-  return {
-    subjectCode: subject.code,
-    subjectName: subject.name,
-    qualification: `${subject.qualification.name} (${subject.qualification.level})`,
-    entryType,
-    costCurrency: "GBP",
-    costAmount: "",
-    exchangeRateToCny: "",
-    markupType: "PERCENTAGE",
-    markupValue: "",
-    salesCurrency: "GBP",
-    salesAmount: "",
-    isActive: true,
-  };
+function normalizeHeaderKey(key: string): string {
+  return key.trim().toLowerCase().replace(/[\s_]+/g, "");
 }
 
-export async function buildCalendarSubjectFeeRuleExportRows(
+/** Map spreadsheet headers to canonical field names. */
+export function normalizeFeeRuleImportRow(row: Record<string, unknown>): Record<string, unknown> {
+  const aliases: Record<string, string> = {
+    subjectcode: "subjectCode",
+    code: "subjectCode",
+    subject: "subjectCode",
+    subjectname: "subjectName",
+    name: "subjectName",
+    qualification: "qualification",
+    entrytype: "entryType",
+    stage: "entryType",
+    costcurrency: "costCurrency",
+    costamount: "costAmount",
+    cost: "costAmount",
+    exchangeratetocny: "exchangeRateToCny",
+    markuptype: "markupType",
+    markupvalue: "markupValue",
+    salescurrency: "salesCurrency",
+    salesamount: "salesAmount",
+    sales: "salesAmount",
+    isactive: "isActive",
+    active: "isActive",
+    currency: "currency",
+    normalcost: "normalCost",
+    normalsales: "normalSales",
+    latecost: "lateCost",
+    latesales: "lateSales",
+    highlatecost: "highLateCost",
+    highlatesales: "highLateSales",
+    high_late_cost: "highLateCost",
+    high_late_sales: "highLateSales",
+  };
+
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(row)) {
+    const canonical = aliases[normalizeHeaderKey(key)] ?? key;
+    out[canonical] = value;
+  }
+  return out;
+}
+
+function isWideImportRow(row: Record<string, unknown>): boolean {
+  return (
+    row.normalCost !== undefined ||
+    row.normalSales !== undefined ||
+    row.lateCost !== undefined ||
+    row.lateSales !== undefined ||
+    row.highLateCost !== undefined ||
+    row.highLateSales !== undefined
+  );
+}
+
+export async function buildSubjectFeeRuleWideExportRows(
   registrationWindowId: string,
-): Promise<CalendarSubjectFeeRuleExportRow[]> {
-  const window = await prisma.registrationWindow.findUnique({
-    where: { id: registrationWindowId },
-    select: { examBoardId: true },
-  });
-  if (!window) return [];
-
-  const [subjects, rules] = await Promise.all([
-    getCalendarSubjectsForExamBoard(window.examBoardId),
+): Promise<SubjectFeeRuleWideExportRow[]> {
+  const [{ subjects }, rules] = await Promise.all([
+    getSubjectsForRegistrationWindowSeries(registrationWindowId),
     prisma.feeRule.findMany({
       where: { registrationWindowId },
       include: {
@@ -118,26 +155,105 @@ export async function buildCalendarSubjectFeeRuleExportRows(
   ]);
 
   const subjectLevelRules = rules.filter(isSubjectLevelRule) as SubjectLevelRule[];
-  const rulesBySubjectId = new Map<string, SubjectLevelRule[]>();
+  const bySubject = new Map<string, SubjectLevelRule[]>();
   for (const rule of subjectLevelRules) {
     if (!rule.subjectId) continue;
-    const existing = rulesBySubjectId.get(rule.subjectId) ?? [];
-    existing.push(rule);
-    rulesBySubjectId.set(rule.subjectId, existing);
+    const list = bySubject.get(rule.subjectId) ?? [];
+    list.push(rule);
+    bySubject.set(rule.subjectId, list);
   }
 
+  type ExportSubject = {
+    id: string;
+    code: string;
+    name: string;
+    qualificationLabel: string;
+  };
+
+  const exportSubjects: ExportSubject[] = subjects.map((subject) => ({
+    id: subject.id,
+    code: subject.code,
+    name: subject.name,
+    qualificationLabel: `${subject.qualification.name} (${subject.qualification.level})`,
+  }));
+
+  const seen = new Set(exportSubjects.map((subject) => subject.id));
+  for (const rule of subjectLevelRules) {
+    if (!rule.subjectId || seen.has(rule.subjectId) || !rule.subject) continue;
+    exportSubjects.push({
+      id: rule.subjectId,
+      code: rule.subject.code,
+      name: rule.subject.name,
+      qualificationLabel: `${rule.qualification.name} (${rule.qualification.level})`,
+    });
+    seen.add(rule.subjectId);
+  }
+
+  exportSubjects.sort((a, b) => a.code.localeCompare(b.code));
+
+  return exportSubjects.map((subject) => {
+    const subjectRules = bySubject.get(subject.id) ?? [];
+    const byStage = Object.fromEntries(
+      subjectRules.map((rule) => [rule.entryType, rule]),
+    ) as Record<string, SubjectLevelRule | undefined>;
+
+    const normal = byStage.NORMAL;
+    const late = byStage.LATE;
+    const high = byStage.HIGH_LATE;
+    const any = normal ?? late ?? high;
+
+    return {
+      subjectCode: subject.code,
+      subjectName: subject.name,
+      qualification: subject.qualificationLabel,
+      normalCost: toMoneyNumber(normal?.costAmount),
+      normalSales: toMoneyNumber(normal?.salesAmount),
+      lateCost: toMoneyNumber(late?.costAmount),
+      lateSales: toMoneyNumber(late?.salesAmount),
+      highLateCost: toMoneyNumber(high?.costAmount),
+      highLateSales: toMoneyNumber(high?.salesAmount),
+      currency: any?.costCurrency ?? any?.salesCurrency ?? "GBP",
+      isActive: any?.isActive ?? true,
+    };
+  });
+}
+
+/** @deprecated Prefer buildSubjectFeeRuleWideExportRows */
+export async function buildCalendarSubjectFeeRuleExportRows(
+  registrationWindowId: string,
+): Promise<CalendarSubjectFeeRuleExportRow[]> {
+  const wide = await buildSubjectFeeRuleWideExportRows(registrationWindowId);
   const rows: CalendarSubjectFeeRuleExportRow[] = [];
-  for (const subject of subjects) {
-    const subjectRules = rulesBySubjectId.get(subject.id) ?? [];
-    if (subjectRules.length === 0) {
-      rows.push(emptyExportRow(subject, "NORMAL"));
-      continue;
-    }
-    for (const rule of subjectRules) {
-      rows.push(ruleToExportRow(rule));
+  for (const item of wide) {
+    for (const stage of STAGE_CODE_OPTIONS) {
+      const cost =
+        stage.value === "NORMAL"
+          ? item.normalCost
+          : stage.value === "LATE"
+            ? item.lateCost
+            : item.highLateCost;
+      const sales =
+        stage.value === "NORMAL"
+          ? item.normalSales
+          : stage.value === "LATE"
+            ? item.lateSales
+            : item.highLateSales;
+      rows.push({
+        subjectCode: item.subjectCode,
+        subjectName: item.subjectName,
+        qualification: item.qualification,
+        entryType: stage.value,
+        costCurrency: item.currency,
+        costAmount: cost,
+        exchangeRateToCny: "",
+        markupType: "MANUAL",
+        markupValue: "",
+        salesCurrency: item.currency,
+        salesAmount: sales,
+        isActive: item.isActive,
+      });
     }
   }
-
   return rows;
 }
 
@@ -192,6 +308,11 @@ function parseRequiredNumber(value: unknown, field: string): number {
   return num;
 }
 
+function parseMoneyOrZero(value: unknown): number {
+  if (value === "" || value === null || value === undefined) return 0;
+  return parseRequiredNumber(value, "amount");
+}
+
 export interface NormalizedFeeRuleTemplate {
   entryType: FeeEntryType;
   costCurrency: FeeCurrency;
@@ -220,49 +341,193 @@ export function normalizeFeeRuleTemplateInput(
     salesCurrency: template.salesCurrency ?? "GBP",
     salesAmount:
       markupType === "MANUAL"
-        ? parseRequiredNumber(template.salesAmount, "salesAmount")
+        ? parseRequiredNumber(template.salesAmount ?? 0, "salesAmount")
         : parseOptionalNumber(template.salesAmount),
     isActive: template.isActive ?? true,
   };
 }
 
-function templateFromRow(row: Record<string, unknown>): FeeRuleTemplateInput {
+function templateFromLegacyRow(row: Record<string, unknown>): FeeRuleTemplateInput {
   const entryType = parseEntryType(row.entryType);
-  const markupType = parseMarkupType(row.markupType);
-  const costAmount = parseRequiredNumber(row.costAmount, "costAmount");
+  const markupType = parseMarkupType(row.markupType ?? "MANUAL");
+  const costAmount = parseMoneyOrZero(row.costAmount);
 
   return {
     entryType,
-    costCurrency: parseCurrency(row.costCurrency, "GBP"),
+    costCurrency: parseCurrency(row.costCurrency ?? row.currency, "GBP"),
     costAmount,
     exchangeRateToCny: parseOptionalNumber(row.exchangeRateToCny),
     markupType,
     markupValue: parseOptionalNumber(row.markupValue),
-    salesCurrency: parseCurrency(row.salesCurrency, "GBP"),
+    salesCurrency: parseCurrency(row.salesCurrency ?? row.currency, "GBP"),
     salesAmount:
       markupType === "MANUAL"
-        ? parseRequiredNumber(row.salesAmount, "salesAmount")
+        ? parseMoneyOrZero(row.salesAmount)
         : parseOptionalNumber(row.salesAmount),
     isActive: parseBoolean(row.isActive, true),
   };
 }
 
-async function resolveCalendarSubjectForImport(
+function templatesFromWideRow(row: Record<string, unknown>): FeeRuleTemplateInput[] {
+  const currency = parseCurrency(row.currency ?? row.costCurrency ?? row.salesCurrency, "GBP");
+  const isActive = parseBoolean(row.isActive, true);
+
+  return [
+    {
+      entryType: "NORMAL",
+      costCurrency: currency,
+      costAmount: parseMoneyOrZero(row.normalCost),
+      markupType: "MANUAL",
+      markupValue: null,
+      salesCurrency: currency,
+      salesAmount: parseMoneyOrZero(row.normalSales),
+      isActive,
+    },
+    {
+      entryType: "LATE",
+      costCurrency: currency,
+      costAmount: parseMoneyOrZero(row.lateCost),
+      markupType: "MANUAL",
+      markupValue: null,
+      salesCurrency: currency,
+      salesAmount: parseMoneyOrZero(row.lateSales),
+      isActive,
+    },
+    {
+      entryType: "HIGH_LATE",
+      costCurrency: currency,
+      costAmount: parseMoneyOrZero(row.highLateCost),
+      markupType: "MANUAL",
+      markupValue: null,
+      salesCurrency: currency,
+      salesAmount: parseMoneyOrZero(row.highLateSales),
+      isActive,
+    },
+  ];
+}
+
+async function resolveSubjectForImport(
+  registrationWindowId: string,
   examBoardId: string,
-  row: Record<string, unknown>,
+  subjectCode: string,
 ) {
-  const subjectCode = String(row.subjectCode ?? "").trim();
-  if (!subjectCode) {
-    throw new Error("subjectCode is required");
+  const { subjects: seriesSubjects } =
+    await getSubjectsForRegistrationWindowSeries(registrationWindowId);
+  const seriesHit = seriesSubjects.find((item) => item.code === subjectCode);
+  if (seriesHit) {
+    return {
+      id: seriesHit.id,
+      code: seriesHit.code,
+      name: seriesHit.name,
+      qualification: seriesHit.qualification,
+    };
   }
 
   const calendarSubjects = await getCalendarSubjectsForExamBoard(examBoardId);
-  const subject = calendarSubjects.find((item) => item.code === subjectCode);
-  if (!subject) {
-    throw new Error(`Subject ${subjectCode} is not a calendar subject for this exam board`);
+  const calendarHit = calendarSubjects.find((item) => item.code === subjectCode);
+  if (calendarHit) {
+    return {
+      id: calendarHit.id,
+      code: calendarHit.code,
+      name: calendarHit.name,
+      qualification: calendarHit.qualification,
+    };
   }
 
-  return subject;
+  const dbSubject = await prisma.subject.findFirst({
+    where: {
+      code: subjectCode,
+      qualification: { examBoardId },
+    },
+    select: {
+      id: true,
+      code: true,
+      name: true,
+      qualification: { select: { id: true, name: true, level: true } },
+    },
+  });
+  if (dbSubject) {
+    return {
+      id: dbSubject.id,
+      code: dbSubject.code,
+      name: dbSubject.name,
+      qualification: dbSubject.qualification,
+    };
+  }
+
+  throw new Error(
+    `Subject ${subjectCode} not found for this exam board / window series`,
+  );
+}
+
+async function upsertStageRule(params: {
+  registrationWindowId: string;
+  examBoardId: string;
+  examSeriesId: string;
+  subject: {
+    id: string;
+    qualification: { id: string };
+  };
+  template: NormalizedFeeRuleTemplate;
+  createdByUserId: string;
+  existingRules: Array<{
+    id: string;
+    subjectId: string | null;
+    entryType: FeeEntryType;
+    paperId: string | null;
+    examSessionId: string | null;
+  }>;
+}): Promise<"created" | "updated"> {
+  const existing = params.existingRules.find(
+    (rule) =>
+      rule.subjectId === params.subject.id &&
+      rule.entryType === params.template.entryType &&
+      !rule.paperId &&
+      !rule.examSessionId,
+  );
+
+  const data = {
+    costCurrency: params.template.costCurrency,
+    costAmount: params.template.costAmount,
+    exchangeRateToCny: params.template.exchangeRateToCny,
+    markupType: params.template.markupType,
+    markupValue: params.template.markupValue,
+    salesCurrency: params.template.salesCurrency,
+    salesAmount: params.template.salesAmount,
+    isActive: params.template.isActive,
+  };
+
+  if (existing) {
+    await prisma.feeRule.update({
+      where: { id: existing.id },
+      data,
+    });
+    return "updated";
+  }
+
+  const created = await prisma.feeRule.create({
+    data: {
+      registrationWindowId: params.registrationWindowId,
+      examBoardId: params.examBoardId,
+      examSeriesId: params.examSeriesId,
+      qualificationId: params.subject.qualification.id,
+      subjectId: params.subject.id,
+      paperId: null,
+      examSessionId: null,
+      entryType: params.template.entryType,
+      createdByUserId: params.createdByUserId,
+      ...data,
+    },
+    select: {
+      id: true,
+      subjectId: true,
+      entryType: true,
+      paperId: true,
+      examSessionId: true,
+    },
+  });
+  params.existingRules.push(created);
+  return "created";
 }
 
 export async function upsertCalendarSubjectFeeRulesFromRows(
@@ -296,7 +561,8 @@ export async function upsertCalendarSubjectFeeRulesFromRows(
     errors: [],
   };
 
-  for (const [index, row] of rows.entries()) {
+  for (const [index, rawRow] of rows.entries()) {
+    const row = normalizeFeeRuleImportRow(rawRow);
     const subjectCode = String(row.subjectCode ?? "").trim();
     if (!subjectCode) {
       result.skipped += 1;
@@ -304,57 +570,32 @@ export async function upsertCalendarSubjectFeeRulesFromRows(
     }
 
     try {
-      const subject = await resolveCalendarSubjectForImport(window.examBoardId, row);
-      const template = normalizeFeeRuleTemplateInput(templateFromRow(row));
-      const existing = existingRules.find(
-        (rule) =>
-          rule.subjectId === subject.id &&
-          rule.entryType === template.entryType &&
-          !rule.paperId &&
-          !rule.examSessionId,
+      const subject = await resolveSubjectForImport(
+        registrationWindowId,
+        window.examBoardId,
+        subjectCode,
       );
 
-      const data = {
-        costCurrency: template.costCurrency,
-        costAmount: template.costAmount,
-        exchangeRateToCny: template.exchangeRateToCny,
-        markupType: template.markupType,
-        markupValue: template.markupValue,
-        salesCurrency: template.salesCurrency,
-        salesAmount: template.salesAmount,
-        isActive: template.isActive,
-      };
+      const templates = isWideImportRow(row)
+        ? templatesFromWideRow(row)
+        : [templateFromLegacyRow(row)];
 
-      if (existing) {
-        await prisma.feeRule.update({
-          where: { id: existing.id },
-          data,
-        });
-        result.updated += 1;
-      } else {
-        const created = await prisma.feeRule.create({
-          data: {
-            registrationWindowId,
-            examBoardId: window.examBoardId,
-            examSeriesId: window.examSeriesId,
-            qualificationId: subject.qualification.id,
-            subjectId: subject.id,
-            paperId: null,
-            examSessionId: null,
-            entryType: template.entryType,
-            createdByUserId,
-            ...data,
+      for (const templateInput of templates) {
+        const template = normalizeFeeRuleTemplateInput(templateInput);
+        const outcome = await upsertStageRule({
+          registrationWindowId,
+          examBoardId: window.examBoardId,
+          examSeriesId: window.examSeriesId,
+          subject: {
+            id: subject.id,
+            qualification: { id: subject.qualification.id },
           },
-          select: {
-            id: true,
-            subjectId: true,
-            entryType: true,
-            paperId: true,
-            examSessionId: true,
-          },
+          template,
+          createdByUserId,
+          existingRules,
         });
-        existingRules.push(created);
-        result.created += 1;
+        if (outcome === "created") result.created += 1;
+        else result.updated += 1;
       }
     } catch (error) {
       result.errors.push(
@@ -429,9 +670,11 @@ export async function bulkCreateCalendarSubjectFeeRules(
   return { created: toCreate.length, skipped: subjects.length - toCreate.length };
 }
 
-export function feeRuleSpreadsheetToBuffer(rows: CalendarSubjectFeeRuleExportRow[]): Buffer {
+export function feeRuleSpreadsheetToBuffer(
+  rows: SubjectFeeRuleWideExportRow[] | CalendarSubjectFeeRuleExportRow[],
+): Buffer {
   const sheet = XLSX.utils.json_to_sheet(rows);
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, sheet, "Calendar Subject Fees");
+  XLSX.utils.book_append_sheet(workbook, sheet, "Subject Fees");
   return XLSX.write(workbook, { type: "buffer", bookType: "xlsx" }) as Buffer;
 }

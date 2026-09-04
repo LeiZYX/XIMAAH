@@ -4,6 +4,7 @@
  *
  * Matching: Excel Firstname + Lastname + DOB(dd/mm/yyyy) → Candidate
  * Fixed centre number: 96834
+ * On write: status = REGISTERED, registeredAt = now
  *
  * Usage (dry-run by default):
  *   npx tsx scripts/import-edexcel-uci-from-bulk-entries.ts "/path/to/IALBulkEntriesTemplate1.xlsx"
@@ -282,6 +283,7 @@ async function main() {
         candidateNumber: true,
         uciNumber: true,
         status: true,
+        registeredAt: true,
       },
     });
 
@@ -289,11 +291,12 @@ async function main() {
       centreNumber: FIXED_CENTRE_NUMBER,
       candidateNumber: row.candidateNumber,
       uciNumber: row.uciNumber,
-      status: existing?.status ?? ("PENDING" as const),
+      status: "REGISTERED" as const,
     };
 
     const same =
       existing &&
+      existing.status === "REGISTERED" &&
       (existing.centreNumber ?? "") === next.centreNumber &&
       (existing.candidateNumber ?? "") === next.candidateNumber &&
       (existing.uciNumber ?? "") === next.uciNumber;
@@ -301,7 +304,7 @@ async function main() {
     if (same) {
       summary.unchanged += 1;
       console.log(
-        `OK (unchanged) row ${row.rowNumber}: ${candidate.englishName} ← UCI ${row.uciNumber}`,
+        `OK (unchanged) row ${row.rowNumber}: ${candidate.englishName} ← UCI ${row.uciNumber} [REGISTERED]`,
       );
       continue;
     }
@@ -309,17 +312,28 @@ async function main() {
     console.log(
       `${existing ? "UPDATE" : "CREATE"} row ${row.rowNumber}: ${candidate.englishName} (${candidate.assessmentHubCandidateNumber}` +
         `${candidate.studentNumber ? ` / ${candidate.studentNumber}` : ""})` +
-        ` ← centre ${FIXED_CENTRE_NUMBER}, cand ${row.candidateNumber}, UCI ${row.uciNumber}` +
-        (existing?.uciNumber ? ` (was UCI ${existing.uciNumber})` : ""),
+        ` ← centre ${FIXED_CENTRE_NUMBER}, cand ${row.candidateNumber}, UCI ${row.uciNumber}, status REGISTERED` +
+        (existing?.uciNumber ? ` (was UCI ${existing.uciNumber} / ${existing.status})` : ""),
     );
 
     if (!apply) continue;
 
+    const registeredAt = new Date();
     await upsertCandidateExamIdentity(candidate.id, board.id, {
       centreNumber: next.centreNumber,
       candidateNumber: next.candidateNumber,
       uciNumber: next.uciNumber,
       status: next.status,
+    });
+    // upsertCandidateExamIdentity keeps an existing registeredAt; force "now" for this import.
+    await prisma.candidateExamIdentity.update({
+      where: {
+        candidateId_examBoardId: {
+          candidateId: candidate.id,
+          examBoardId: board.id,
+        },
+      },
+      data: { registeredAt },
     });
 
     if (existing) summary.updated += 1;

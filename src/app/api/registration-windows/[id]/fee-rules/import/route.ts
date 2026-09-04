@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jsonError } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { canConfigureFeeRules } from "@/lib/auth/permissions";
-import { upsertCalendarSubjectFeeRulesFromRows } from "@/lib/fees/fee-rules-spreadsheet";
+import { upsertCalendarSubjectFeeRulesFromRows, normalizeFeeRuleImportRow } from "@/lib/fees/fee-rules-spreadsheet";
 import * as XLSX from "xlsx";
 
 export const dynamic = "force-dynamic";
@@ -30,10 +30,12 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
   const sheet = workbook.Sheets[workbook.SheetNames[0]];
   const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet);
 
+  const importRows = rows.map((row) => normalizeFeeRuleImportRow(row));
+
   try {
     const result = await upsertCalendarSubjectFeeRulesFromRows(
       registrationWindowId,
-      rows,
+      importRows,
       auth.user.id,
     );
 
