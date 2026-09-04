@@ -71,6 +71,16 @@ services:
       - "127.0.0.1:3000:3000"
     networks:
       - xima_internal
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'node -e "require(\"http\").get(\"http://127.0.0.1:3000/\",(r)=>process.exit(0)).on(\"error\",()=>process.exit(1))"',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 45s
 
   # Polls the app every 15 minutes; the API decides whether a backup is due
   # based on Backup Settings (enabled / frequency / time).
@@ -79,12 +89,14 @@ services:
     container_name: xima-backup-cron
     restart: unless-stopped
     depends_on:
-      - app
+      app:
+        condition: service_healthy
     env_file:
       - .env
     environment:
       BACKUP_CRON_SECRET: ${BACKUP_CRON_SECRET:-}
       BACKUP_CRON_INTERVAL_SECONDS: ${BACKUP_CRON_INTERVAL_SECONDS:-900}
+      BACKUP_CRON_RETRY_SECONDS: ${BACKUP_CRON_RETRY_SECONDS:-30}
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
@@ -93,18 +105,23 @@ services:
           echo "backup-cron: BACKUP_CRON_SECRET is empty; sleeping without calling the API."
           while true; do sleep 3600; done
         fi
-        echo "backup-cron: polling every $${BACKUP_CRON_INTERVAL_SECONDS}s"
+        echo "backup-cron: waiting for app:3000…"
+        until curl -sS --connect-timeout 3 -o /dev/null "http://app:3000/"; do
+          sleep 5
+        done
+        echo "backup-cron: app is up; polling every $${BACKUP_CRON_INTERVAL_SECONDS}s"
         while true; do
           code=0
           body="$$(curl -sS -w '\n%{http_code}' -X POST \
             -H "x-backup-cron-secret: $${BACKUP_CRON_SECRET}" \
             "http://app:3000/api/admin/settings/backup/run-scheduled")" || code=$$?
           if [ "$$code" -ne 0 ]; then
-            echo "backup-cron: request failed (curl exit $$code)"
+            echo "backup-cron: request failed (curl exit $$code); retry in $${BACKUP_CRON_RETRY_SECONDS}s"
+            sleep "$${BACKUP_CRON_RETRY_SECONDS}"
           else
             echo "backup-cron: $$body"
+            sleep "$${BACKUP_CRON_INTERVAL_SECONDS}"
           fi
-          sleep "$${BACKUP_CRON_INTERVAL_SECONDS}"
         done
     networks:
       - xima_internal

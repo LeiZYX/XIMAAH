@@ -15,7 +15,11 @@ const PUBLIC_AUTH_PATHS = [
   "/api/auth/reset-password",
 ];
 
-const PUBLIC_POST_APIS = ["/api/payments/globepay/notify"];
+const PUBLIC_POST_APIS = [
+  "/api/payments/globepay/notify",
+  // Cron sidecar authenticates via x-backup-cron-secret inside the route.
+  "/api/admin/settings/backup/run-scheduled",
+];
 
 const PUBLIC_GET_APIS = [
   "/api/calendar",
