@@ -272,6 +272,83 @@ export function RegistrationWindowManager({
       />
 
       <section className="border border-slate-200 bg-white">
+        <div className="flex flex-wrap items-end justify-between gap-3 border-b border-slate-200 px-4 py-3">
+          <h2 className="text-base font-semibold text-slate-900">Registration windows</h2>
+          <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
+            Academic Year
+            <select
+              value={listAcademicYear}
+              onChange={(e) => setListAcademicYear(e.target.value)}
+              className="min-w-[10rem] rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-normal"
+            >
+              {academicYearOptions.map((year) => (
+                <option key={year} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+              <tr>
+                <th className="px-3 py-2">Window name</th>
+                <th className="px-3 py-2">Exam board</th>
+                <th className="px-3 py-2">Included sessions</th>
+                <th className="px-3 py-2">Status</th>
+                <th className="px-3 py-2">Open date</th>
+                <th className="px-3 py-2">Close date</th>
+                <th className="px-3 py-2" />
+              </tr>
+            </thead>
+            <tbody>
+              {windows.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-3 py-8 text-center text-sm text-slate-500">
+                    No registration windows for {listAcademicYear}.
+                  </td>
+                </tr>
+              ) : (
+                windows.map((window) => (
+                  <tr key={window.id} className="border-t border-slate-100 align-top">
+                    <td className="px-3 py-2 font-medium text-slate-900">{window.title}</td>
+                    <td className="px-3 py-2 text-slate-700">{window.examBoard?.name ?? "—"}</td>
+                    <td className="px-3 py-2 text-xs text-slate-600">
+                      {(window.includedExamSessions ?? []).length > 0 ? (
+                        <ul className="list-inside list-disc space-y-0.5">
+                          {window.includedExamSessions!.map((session) => (
+                            <li key={session.id}>{formatIncludedSessionShortLabel(session)}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                    <td className="px-3 py-2">{statusLabel(window.status)}</td>
+                    <td className="px-3 py-2 text-xs text-slate-600">
+                      {formatListDate(window.studentRegistrationOpenAt)}
+                    </td>
+                    <td className="px-3 py-2 text-xs text-slate-600">
+                      {formatListDate(window.registrationCloseAt)}
+                    </td>
+                    <td className="px-3 py-2">
+                      <Link
+                        href={`${basePath}/${window.id}`}
+                        className="text-indigo-700 hover:underline"
+                      >
+                        Manage
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section className="border border-slate-200 bg-white">
         <div className="border-b border-slate-200 px-4 py-3">
           <h2 className="text-base font-semibold text-slate-900">Create registration window</h2>
         </div>
@@ -456,82 +533,6 @@ export function RegistrationWindowManager({
         </form>
       </section>
 
-      <section className="border border-slate-200 bg-white">
-        <div className="flex flex-wrap items-end justify-between gap-3 border-b border-slate-200 px-4 py-3">
-          <h2 className="text-base font-semibold text-slate-900">Registration windows</h2>
-          <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
-            Academic Year
-            <select
-              value={listAcademicYear}
-              onChange={(e) => setListAcademicYear(e.target.value)}
-              className="min-w-[10rem] rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-normal"
-            >
-              {academicYearOptions.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
-              <tr>
-                <th className="px-3 py-2">Window name</th>
-                <th className="px-3 py-2">Exam board</th>
-                <th className="px-3 py-2">Included sessions</th>
-                <th className="px-3 py-2">Status</th>
-                <th className="px-3 py-2">Open date</th>
-                <th className="px-3 py-2">Close date</th>
-                <th className="px-3 py-2" />
-              </tr>
-            </thead>
-            <tbody>
-              {windows.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-3 py-8 text-center text-sm text-slate-500">
-                    No registration windows for {listAcademicYear}.
-                  </td>
-                </tr>
-              ) : (
-                windows.map((window) => (
-                  <tr key={window.id} className="border-t border-slate-100 align-top">
-                    <td className="px-3 py-2 font-medium text-slate-900">{window.title}</td>
-                    <td className="px-3 py-2 text-slate-700">{window.examBoard?.name ?? "—"}</td>
-                    <td className="px-3 py-2 text-xs text-slate-600">
-                      {(window.includedExamSessions ?? []).length > 0 ? (
-                        <ul className="list-inside list-disc space-y-0.5">
-                          {window.includedExamSessions!.map((session) => (
-                            <li key={session.id}>{formatIncludedSessionShortLabel(session)}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        "—"
-                      )}
-                    </td>
-                    <td className="px-3 py-2">{statusLabel(window.status)}</td>
-                    <td className="px-3 py-2 text-xs text-slate-600">
-                      {formatListDate(window.studentRegistrationOpenAt)}
-                    </td>
-                    <td className="px-3 py-2 text-xs text-slate-600">
-                      {formatListDate(window.registrationCloseAt)}
-                    </td>
-                    <td className="px-3 py-2">
-                      <Link
-                        href={`${basePath}/${window.id}`}
-                        className="text-indigo-700 hover:underline"
-                      >
-                        Manage
-                      </Link>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
     </div>
   );
 }

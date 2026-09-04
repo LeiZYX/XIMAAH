@@ -1,11 +1,13 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useState } from "react";
+import { BoardSubmissionsStatusBar } from "@/components/board-submissions/BoardSubmissionsStatusBar";
 import { ApplicableExamSessionsPicker } from "@/components/registrations/ApplicableExamSessionsPicker";
 import { ExamBoardRadioList } from "@/components/registrations/ExamBoardRadioList";
 import { IncludedExamSessionsList } from "@/components/registrations/IncludedExamSessionsList";
 import { Card } from "@/components/ui/Card";
 import { datetimeLocalValueToIso, isoToDatetimeLocalValue } from "@/lib/datetime-local";
+import type { BoardSubmissionWindowSummary } from "@/lib/board-submissions/types";
 import {
   getCurrentAcademicYear,
   mergeAcademicYearOptions,
@@ -66,6 +68,9 @@ export function RegistrationWindowGeneral({
   canEdit = true,
 }: RegistrationWindowGeneralProps) {
   const [window, setWindow] = useState<WindowDetail | null>(null);
+  const [timelineSummary, setTimelineSummary] = useState<BoardSubmissionWindowSummary | null>(
+    null,
+  );
   const [examBoards, setExamBoards] = useState<ExamBoardOption[]>([]);
   const [sessions, setSessions] = useState<SelectableSession[]>([]);
   const [sessionsLoading, setSessionsLoading] = useState(false);
@@ -103,6 +108,21 @@ export function RegistrationWindowGeneral({
     }
   }, []);
 
+  const loadTimeline = useCallback(async () => {
+    try {
+      const res = await fetch(
+        `/api/board-submissions/summary?registrationWindowId=${encodeURIComponent(windowId)}`,
+      );
+      if (!res.ok) {
+        setTimelineSummary(null);
+        return;
+      }
+      setTimelineSummary((await res.json()) as BoardSubmissionWindowSummary);
+    } catch {
+      setTimelineSummary(null);
+    }
+  }, [windowId]);
+
   const load = useCallback(async () => {
     const res = await fetch(`/api/registration-windows/${windowId}`);
     if (!res.ok) return;
@@ -114,8 +134,8 @@ export function RegistrationWindowGeneral({
       registrationCloseAt: isoToDatetimeLocalValue(data.registrationCloseAt),
     });
     setExamSeriesIds((data.includedExamSessions ?? []).map((session) => session.examSeriesId));
-    await loadSessions(data.examBoard.id);
-  }, [loadSessions, windowId]);
+    await Promise.all([loadSessions(data.examBoard.id), loadTimeline()]);
+  }, [loadSessions, loadTimeline, windowId]);
 
   useEffect(() => {
     void load();
@@ -228,6 +248,17 @@ export function RegistrationWindowGeneral({
             <dd className="text-sm font-medium text-slate-900">{window.currentFeeStage ?? "Not Configured"}</dd>
           </div>
         </dl>
+
+        {timelineSummary ? (
+          <div className="mt-6 border-t border-slate-100 pt-5">
+            <h3 className="mb-3 text-sm font-semibold text-slate-900">Registration timeline</h3>
+            <BoardSubmissionsStatusBar
+              summary={timelineSummary}
+              showBaseline={false}
+              variant="plain"
+            />
+          </div>
+        ) : null}
       </Card>
 
       {canEdit ? (

@@ -47,7 +47,19 @@ function segmentWidth(startAt: string, endAt: string, windowStart: string, windo
   return Math.max(width, 4);
 }
 
-export function BoardSubmissionsStatusBar({ summary }: { summary: BoardSubmissionWindowSummary }) {
+interface BoardSubmissionsStatusBarProps {
+  summary: BoardSubmissionWindowSummary;
+  /** Board Submissions shows baseline; Overview omits it. */
+  showBaseline?: boolean;
+  /** Use plain layout when nested inside another card. */
+  variant?: "card" | "plain";
+}
+
+export function BoardSubmissionsStatusBar({
+  summary,
+  showBaseline = true,
+  variant = "card",
+}: BoardSubmissionsStatusBarProps) {
   const windowStart = summary.window.studentRegistrationOpenAt;
   const windowEnd = summary.window.registrationCloseAt;
   const nowPercent = (() => {
@@ -64,8 +76,8 @@ export function BoardSubmissionsStatusBar({ summary }: { summary: BoardSubmissio
       ? "No baseline yet"
       : `Baseline v${summary.baseline.latest?.version ?? summary.baseline.versionCount}`;
 
-  return (
-    <Card className="space-y-4">
+  const body = (
+    <div className="space-y-4">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-sm font-semibold text-slate-900">{summary.currentPhaseLabel}</p>
@@ -75,19 +87,23 @@ export function BoardSubmissionsStatusBar({ summary }: { summary: BoardSubmissio
             {summary.currentFeeStage ? ` · Fee stage: ${summary.currentFeeStage}` : ""}
           </p>
         </div>
-        <div className="text-right text-sm">
-          <p className="font-medium text-slate-900">{baselineLabel}</p>
-          {summary.baseline.latest ? (
-            <p className="mt-1 text-slate-600">
-              Last submitted {formatDateTime(summary.baseline.latest.submittedAt)}
-              {summary.baseline.latest.submittedByName
-                ? ` · ${summary.baseline.latest.submittedByName}`
-                : ""}
-            </p>
-          ) : (
-            <p className="mt-1 text-slate-500">Mark a Bulk Entries export as submitted to create baseline.</p>
-          )}
-        </div>
+        {showBaseline ? (
+          <div className="text-right text-sm">
+            <p className="font-medium text-slate-900">{baselineLabel}</p>
+            {summary.baseline.latest ? (
+              <p className="mt-1 text-slate-600">
+                Last submitted {formatDateTime(summary.baseline.latest.submittedAt)}
+                {summary.baseline.latest.submittedByName
+                  ? ` · ${summary.baseline.latest.submittedByName}`
+                  : ""}
+              </p>
+            ) : (
+              <p className="mt-1 text-slate-500">
+                Mark a Bulk Entries export as submitted to create baseline.
+              </p>
+            )}
+          </div>
+        ) : null}
       </div>
 
       <div>
@@ -134,6 +150,12 @@ export function BoardSubmissionsStatusBar({ summary }: { summary: BoardSubmissio
           ))}
         </div>
       </div>
-    </Card>
+    </div>
   );
+
+  if (variant === "plain") {
+    return body;
+  }
+
+  return <Card className="space-y-4">{body}</Card>;
 }
