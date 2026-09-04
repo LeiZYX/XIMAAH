@@ -9,9 +9,21 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.2.7";
+export const CURRENT_VERSION = "1.2.8";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.2.8",
+    releaseDate: "2026-09-04",
+    summary:
+      "Student Overview by type and grade, safer Active registration windows, and editable Normal fee-stage end.",
+    changes: [
+      "Candidates → Student Overview (Admin and Exam Office): Internal/External switch, total and per-grade counts, drill-down list with school number, name, DOB, gender, UCI, and school",
+      "Calendar prefers an Active registration window when the same board/series also appears on a Closed window; staff alert when two Active windows share a series",
+      "Fee Stages: Normal Entry end date is editable and must be on or after Student registration close (start still follows Student registration open)",
+      "Exam series delete is blocked when sessions, registration windows, or other linked records still use the series",
+    ],
+  },
   {
     version: "1.2.7",
     releaseDate: "2026-09-04",
