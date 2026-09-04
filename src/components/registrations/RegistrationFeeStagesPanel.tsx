@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { datetimeLocalValueToIso, isoToDatetimeLocalValue } from "@/lib/datetime-local";
 import { STAGE_CODE_OPTIONS, entryTypeLabel } from "@/lib/registrations/stage-labels";
@@ -108,8 +108,17 @@ export function RegistrationFeeStagesPanel({
   const [boardPolicy, setBoardPolicy] = useState<Parameters<typeof defaultStageWithdrawal>[1]>();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{ tone: "ok" | "error"; text: string } | null>(
+    null,
+  );
+  const feedbackRef = useRef<HTMLDivElement | null>(null);
+
+  const showFeedback = useCallback((tone: "ok" | "error", text: string) => {
+    setFeedback({ tone, text });
+    requestAnimationFrame(() => {
+      feedbackRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -206,8 +215,7 @@ export function RegistrationFeeStagesPanel({
     event.preventDefault();
     if (!canEdit || !windowTiming) return;
     setSaving(true);
-    setMessage(null);
-    setError(null);
+    setFeedback(null);
 
     const payloadStages = stages.map((stage) =>
       bindStageRowToWindow(stage, windowTiming),
@@ -267,14 +275,15 @@ export function RegistrationFeeStagesPanel({
             ),
         ),
       );
-      setMessage(
+      showFeedback(
+        "ok",
         stages.length === 0
           ? "Fee stages cleared. Normal fee rules will apply."
           : "Fee stages saved.",
       );
     } else {
       const body = await res.json().catch(() => null);
-      setError(body?.error ?? "Failed to save fee stages.");
+      showFeedback("error", body?.error ?? "Failed to save fee stages.");
     }
   }
 
@@ -288,9 +297,6 @@ export function RegistrationFeeStagesPanel({
 
   return (
     <div className="space-y-4">
-      {message ? <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{message}</p> : null}
-      {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p> : null}
-
       <Card>
         <h2 className="mb-2 text-lg font-semibold text-slate-900">Fee stages</h2>
         <p className="mb-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
@@ -447,28 +453,71 @@ export function RegistrationFeeStagesPanel({
             );
           })}
 
-          {canEdit ? (
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="submit"
-                disabled={saving || stages.length === 0}
-                className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+          <div ref={feedbackRef} className="space-y-3 border-t border-slate-100 pt-4">
+            {feedback ? (
+              <div
+                role="status"
+                className={`flex items-start justify-between gap-3 rounded-lg px-3 py-2 text-sm ${
+                  feedback.tone === "ok"
+                    ? "bg-green-50 text-green-800"
+                    : "bg-red-50 text-red-800"
+                }`}
               >
-                {saving ? "Saving…" : "Save fee stages"}
-              </button>
-              {stages.length > 0 ? (
+                <p className="min-w-0 flex-1">{feedback.text}</p>
                 <button
                   type="button"
-                  onClick={() => setStages([])}
-                  className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
+                  onClick={() => setFeedback(null)}
+                  className="shrink-0 text-xs font-medium opacity-70 hover:opacity-100"
                 >
-                  Clear all fee stages
+                  Dismiss
                 </button>
-              ) : null}
-            </div>
-          ) : null}
+              </div>
+            ) : null}
+
+            {canEdit ? (
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="submit"
+                  disabled={saving || stages.length === 0}
+                  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+                >
+                  {saving ? "Saving…" : "Save fee stages"}
+                </button>
+                {stages.length > 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => setStages([])}
+                    className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700"
+                  >
+                    Clear all fee stages
+                  </button>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
         </form>
       </Card>
+
+      {feedback ? (
+        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4">
+          <div
+            className={`pointer-events-auto max-w-xl rounded-lg px-4 py-3 text-sm shadow-lg ring-1 ring-black/10 ${
+              feedback.tone === "ok" ? "bg-green-700 text-white" : "bg-red-700 text-white"
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <p className="min-w-0 flex-1">{feedback.text}</p>
+              <button
+                type="button"
+                onClick={() => setFeedback(null)}
+                className="shrink-0 text-xs font-medium text-white/80 hover:text-white"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

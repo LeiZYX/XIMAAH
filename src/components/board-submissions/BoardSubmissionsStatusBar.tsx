@@ -38,6 +38,26 @@ function formatLegendRange(startAt: string, endAt: string): string {
   return `${startDate} ${startTime} – ${endDate} ${endTime}`;
 }
 
+function formatLegendStartOnward(startAt: string): string {
+  const start = new Date(startAt);
+  const dateFmt = new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+  });
+  const timeFmt = new Intl.DateTimeFormat(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  return `from ${dateFmt.format(start)} ${timeFmt.format(start)} onward`;
+}
+
+function formatSegmentLegend(segment: TimelineSegment): string {
+  if (segment.kind === "WINDOW_CLOSED") {
+    return formatLegendStartOnward(segment.startAt);
+  }
+  return formatLegendRange(segment.startAt, segment.endAt);
+}
+
 function timelineRange(summary: BoardSubmissionWindowSummary): { startMs: number; endMs: number } {
   const openMs = new Date(summary.window.studentRegistrationOpenAt).getTime();
   const closeMs =
@@ -126,7 +146,7 @@ function LegendColumn({
               <span>
                 <span className="font-medium text-slate-800">{segment.label}</span>
                 <span className="mt-0.5 block text-slate-500">
-                  {formatLegendRange(segment.startAt, segment.endAt)}
+                  {formatSegmentLegend(segment)}
                 </span>
               </span>
             </div>
