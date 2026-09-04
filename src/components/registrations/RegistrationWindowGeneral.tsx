@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BoardSubmissionsStatusBar } from "@/components/board-submissions/BoardSubmissionsStatusBar";
 import { ApplicableExamSessionsPicker } from "@/components/registrations/ApplicableExamSessionsPicker";
 import { ExamBoardRadioList } from "@/components/registrations/ExamBoardRadioList";
@@ -13,6 +15,10 @@ import {
   mergeAcademicYearOptions,
 } from "@/lib/registrations/academic-year";
 import type { IncludedExamSession } from "@/lib/registrations/included-series";
+import {
+  conflictsForWindow,
+  type OpenWindowSeriesConflict,
+} from "@/lib/registrations/open-window-series-conflicts";
 
 interface WindowDetail {
   id: string;
@@ -67,6 +73,8 @@ export function RegistrationWindowGeneral({
   windowId,
   canEdit = true,
 }: RegistrationWindowGeneralProps) {
+  const pathname = usePathname();
+  const windowsBasePath = pathname.replace(/\/[^/]+\/?$/, "") || pathname;
   const [window, setWindow] = useState<WindowDetail | null>(null);
   const [timelineSummary, setTimelineSummary] = useState<BoardSubmissionWindowSummary | null>(
     null,
@@ -79,6 +87,7 @@ export function RegistrationWindowGeneral({
   const [feedback, setFeedback] = useState<{ tone: "ok" | "error"; text: string } | null>(
     null,
   );
+  const [seriesConflicts, setSeriesConflicts] = useState<OpenWindowSeriesConflict[]>([]);
   const feedbackRef = useRef<HTMLDivElement | null>(null);
   const [academicYearOptions, setAcademicYearOptions] = useState<string[]>([
     getCurrentAcademicYear(),
@@ -132,6 +141,19 @@ export function RegistrationWindowGeneral({
     }
   }, [windowId]);
 
+  const loadSeriesConflicts = useCallback(async () => {
+    try {
+      const res = await fetch("/api/registration-windows?seriesConflicts=true");
+      const data = res.ok ? await res.json() : { conflicts: [] };
+      const all = Array.isArray(data?.conflicts)
+        ? (data.conflicts as OpenWindowSeriesConflict[])
+        : [];
+      setSeriesConflicts(conflictsForWindow(all, windowId));
+    } catch {
+      setSeriesConflicts([]);
+    }
+  }, [windowId]);
+
   const load = useCallback(async () => {
     const res = await fetch(`/api/registration-windows/${windowId}`);
     if (!res.ok) return;
@@ -143,8 +165,8 @@ export function RegistrationWindowGeneral({
       registrationCloseAt: isoToDatetimeLocalValue(data.registrationCloseAt),
     });
     setExamSeriesIds((data.includedExamSessions ?? []).map((session) => session.examSeriesId));
-    await Promise.all([loadSessions(data.examBoard.id), loadTimeline()]);
-  }, [loadSessions, loadTimeline, windowId]);
+    await Promise.all([loadSessions(data.examBoard.id), loadTimeline(), loadSeriesConflicts()]);
+  }, [loadSessions, loadSeriesConflicts, loadTimeline, windowId]);
 
   useEffect(() => {
     void load();
@@ -219,6 +241,47 @@ export function RegistrationWindowGeneral({
 
   return (
     <div className="space-y-4">
+      {seriesConflicts.length > 0 ? (
+        <div
+          role="alert"
+          className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+        >
+          <p className="font-semibold">
+            This Active window shares exam sessions with other Active windows
+          </p>
+          <p className="mt-1 text-amber-900">
+            Students and the calendar only keep one Active window per board + session. Close or
+            change status on the extras listed below.
+          </p>
+          <ul className="mt-3 space-y-2">
+            {seriesConflicts.map((conflict) => (
+              <li key={`${conflict.examBoardId}:${conflict.examSeriesId}`}>
+                <span className="font-medium">
+                  {conflict.examBoardCode} · {conflict.examSeriesLabel}
+                </span>
+                <ul className="mt-1 list-inside list-disc text-amber-900">
+                  {conflict.windows.map((row) => (
+                    <li key={row.id}>
+                      {row.id === windowId ? (
+                        <span className="font-medium">{row.title}</span>
+                      ) : (
+                        <Link
+                          href={`${windowsBasePath}/${row.id}`}
+                          className="font-medium text-amber-950 underline hover:text-amber-800"
+                        >
+                          {row.title}
+                        </Link>
+                      )}
+                      <span className="text-amber-800"> ({row.academicYear})</span>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       <Card>
         <h2 className="mb-4 text-lg font-semibold text-slate-900">Overview</h2>
         <dl className="grid gap-4 sm:grid-cols-2">

@@ -20,6 +20,7 @@ import {
   parseRegistrationWindowListScope,
   registrationWindowScopeWhere,
 } from "@/lib/registrations/window-list-scope";
+import { findOpenWindowSeriesConflicts } from "@/lib/registrations/open-window-series-conflicts";
 import { summarizeRegistrationWindow } from "@/lib/registrations/window-summary";
 import { prisma } from "@/lib/prisma";
 
@@ -83,6 +84,20 @@ export async function GET(request: NextRequest) {
         return jsonError("Registration window not found", 404);
       }
       return NextResponse.json({ academicYear: resolved.academicYear });
+    }
+
+    if (searchParams.get("seriesConflicts") === "true") {
+      const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
+      if (auth.error) return auth.error;
+
+      const openWindows = await prisma.registrationWindow.findMany({
+        where: { status: "OPEN" },
+        include: registrationWindowSeriesInclude,
+        orderBy: [{ title: "asc" }],
+      });
+      return NextResponse.json({
+        conflicts: findOpenWindowSeriesConflicts(openWindows),
+      });
     }
 
     const where: Record<string, unknown> = {

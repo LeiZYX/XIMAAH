@@ -139,10 +139,27 @@ export function windowIncludesSeries(
   return true;
 }
 
+/**
+ * Rule: series listed on an Active (OPEN) window are available through that
+ * window, even if the same series also appears on Closed/Draft windows.
+ * Only another Active window for the same board+series is a real conflict.
+ */
+function preferWindowForBoardSeriesIndex<
+  T extends { status?: string },
+>(existing: T | undefined, next: T): T {
+  if (!existing) return next;
+  const existingOpen = existing.status === "OPEN";
+  const nextOpen = next.status === "OPEN";
+  if (nextOpen && !existingOpen) return next;
+  if (!nextOpen && existingOpen) return existing;
+  return next;
+}
+
 export function indexWindowsByBoardSeries<
   T extends {
     examBoardId: string;
     examSeriesId: string;
+    status?: string;
     includedSeries?: Array<{
       examSeriesId: string;
       examSeries?: { examBoardId: string };
@@ -152,16 +169,21 @@ export function indexWindowsByBoardSeries<
   const map = new Map<string, T>();
   const key = (boardId: string, seriesId: string) => `${boardId}:${seriesId}`;
 
+  const assign = (boardId: string, seriesId: string, window: T) => {
+    const mapKey = key(boardId, seriesId);
+    map.set(mapKey, preferWindowForBoardSeriesIndex(map.get(mapKey), window));
+  };
+
   for (const window of windows) {
     if (window.includedSeries && window.includedSeries.length > 0) {
       for (const row of window.includedSeries) {
         const boardId = row.examSeries?.examBoardId ?? window.examBoardId;
-        map.set(key(boardId, row.examSeriesId), window);
+        assign(boardId, row.examSeriesId, window);
       }
       continue;
     }
 
-    map.set(key(window.examBoardId, window.examSeriesId), window);
+    assign(window.examBoardId, window.examSeriesId, window);
   }
 
   return map;

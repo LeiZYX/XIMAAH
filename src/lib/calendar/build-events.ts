@@ -239,11 +239,14 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
       const matchedWindow = anyWindowByBoardSeries.get(
         openWindowKey(qualification.examBoard.id, session.examSeries.id),
       );
+      // Active window series win: use eligible OPEN window first, else the
+      // preferred matched window (OPEN preferred over CLOSED in the index).
+      const availabilityWindow = window ?? matchedWindow;
       const availability =
-        studentId && matchedWindow
+        studentId && availabilityWindow
           ? describeStudentRegistrationAvailability(
-              matchedWindow,
-              (matchedWindow.feeStages ?? []) as RegistrationFeeStageRecord[],
+              availabilityWindow,
+              (availabilityWindow.feeStages ?? []) as RegistrationFeeStageRecord[],
               now,
             )
           : null;
@@ -292,8 +295,8 @@ export async function buildCalendarEvents(params: CalendarQueryParams): Promise<
           registrationCurrentStage: availability?.currentFeeStage ?? null,
           showStaffContactHint: availability?.showStaffContactHint ?? false,
           studentListLocked: availability?.studentListLocked ?? false,
-          registrationWindowId: window?.id ?? matchedWindow?.id,
-          registrationWindowTitle: window?.title ?? matchedWindow?.title,
+          registrationWindowId: availabilityWindow?.id,
+          registrationWindowTitle: availabilityWindow?.title,
           isRegistered: Boolean(registration),
           isActive,
           isLocked,

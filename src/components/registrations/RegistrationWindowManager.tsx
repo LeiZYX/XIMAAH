@@ -14,6 +14,7 @@ import {
   formatIncludedSessionShortLabel,
   type IncludedExamSession,
 } from "@/lib/registrations/included-series";
+import type { OpenWindowSeriesConflict } from "@/lib/registrations/open-window-series-conflicts";
 
 interface WindowRow {
   id: string;
@@ -78,6 +79,7 @@ export function RegistrationWindowManager({
   const [academicYearOptions, setAcademicYearOptions] = useState<string[]>([
     getCurrentAcademicYear(),
   ]);
+  const [seriesConflicts, setSeriesConflicts] = useState<OpenWindowSeriesConflict[]>([]);
   const [formError, setFormError] = useState<string | null>(null);
   const [form, setForm] = useState({
     title: "",
@@ -100,6 +102,16 @@ export function RegistrationWindowManager({
       setWindows(Array.isArray(data) ? data : []);
     } catch {
       setWindows([]);
+    }
+  }
+
+  async function loadSeriesConflicts() {
+    try {
+      const res = await fetch("/api/registration-windows?seriesConflicts=true");
+      const data = res.ok ? await res.json() : { conflicts: [] };
+      setSeriesConflicts(Array.isArray(data?.conflicts) ? data.conflicts : []);
+    } catch {
+      setSeriesConflicts([]);
     }
   }
 
@@ -161,6 +173,7 @@ export function RegistrationWindowManager({
   useEffect(() => {
     void loadAcademicYears();
     void loadExamBoards();
+    void loadSeriesConflicts();
   }, []);
 
   useEffect(() => {
@@ -259,6 +272,7 @@ export function RegistrationWindowManager({
       }
       await loadWindows(listAcademicYear);
       await loadAcademicYears();
+      await loadSeriesConflicts();
     } finally {
       setCreating(false);
     }
@@ -270,6 +284,43 @@ export function RegistrationWindowManager({
         title="Registration windows"
         description="Create board-scoped registration periods for exam office operations."
       />
+
+      {seriesConflicts.length > 0 ? (
+        <div
+          role="alert"
+          className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+        >
+          <p className="font-semibold">
+            Duplicate Active windows for the same exam board and session
+          </p>
+          <p className="mt-1 text-amber-900">
+            Students and the calendar only keep one Active window per board + session. Close or
+            change status on the extras so each session has a single Active window.
+          </p>
+          <ul className="mt-3 space-y-2">
+            {seriesConflicts.map((conflict) => (
+              <li key={`${conflict.examBoardId}:${conflict.examSeriesId}`}>
+                <span className="font-medium">
+                  {conflict.examBoardCode} · {conflict.examSeriesLabel}
+                </span>
+                <ul className="mt-1 list-inside list-disc text-amber-900">
+                  {conflict.windows.map((window) => (
+                    <li key={window.id}>
+                      <Link
+                        href={`${basePath}/${window.id}`}
+                        className="font-medium text-amber-950 underline hover:text-amber-800"
+                      >
+                        {window.title}
+                      </Link>
+                      <span className="text-amber-800"> ({window.academicYear})</span>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <section className="border border-slate-200 bg-white">
         <div className="flex flex-wrap items-end justify-between gap-3 border-b border-slate-200 px-4 py-3">
