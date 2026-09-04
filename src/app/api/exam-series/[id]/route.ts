@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseDate, parseJsonBody, parseOptionalInt } from "@/lib/api";
+import {
+  formatExamSeriesDeleteBlockedMessage,
+  getExamSeriesDeleteBlockers,
+} from "@/lib/exam-series/delete-guard";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -47,10 +51,23 @@ export async function PUT(request: NextRequest, context: RouteContext) {
 export async function DELETE(_request: NextRequest, context: RouteContext) {
   const { id } = await context.params;
 
+  const existing = await prisma.examSeries.findUnique({
+    where: { id },
+    select: { id: true },
+  });
+  if (!existing) {
+    return jsonError("Exam series not found", 404);
+  }
+
+  const blockers = await getExamSeriesDeleteBlockers(id);
+  if (blockers.length > 0) {
+    return jsonError(formatExamSeriesDeleteBlockedMessage(blockers), 409);
+  }
+
   try {
     await prisma.examSeries.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch {
-    return jsonError("Could not delete exam series", 404);
+    return jsonError("Could not delete exam series", 400);
   }
 }

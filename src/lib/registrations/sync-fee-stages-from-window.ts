@@ -12,15 +12,28 @@ type FeeStageTimingInput = {
   endAt: Date | string;
 };
 
+function asDate(value: Date | string): Date | null {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return date;
+}
+
+/**
+ * Window-bound fee stage fields:
+ * - Normal start → Student registration open (always)
+ * - Normal end → editable; defaults to Student registration close when empty
+ * - High Late end → Registration close (always)
+ */
 export function applyWindowTimingToFeeStage<T extends FeeStageTimingInput>(
   stage: T,
   window: RegistrationWindowTimingSource,
 ): T {
   if (stage.stageCode === "NORMAL") {
+    const existingEnd = asDate(stage.endAt);
     return {
       ...stage,
       startAt: window.studentRegistrationOpenAt,
-      endAt: window.studentRegistrationCloseAt,
+      endAt: existingEnd ?? window.studentRegistrationCloseAt,
     };
   }
 
@@ -45,7 +58,7 @@ export function isFeeStageFieldBoundByWindow(
   stageCode: FeeEntryType,
   field: "startAt" | "endAt",
 ): boolean {
-  if (stageCode === "NORMAL") return true;
+  if (stageCode === "NORMAL" && field === "startAt") return true;
   if (stageCode === "HIGH_LATE" && field === "endAt") return true;
   return false;
 }

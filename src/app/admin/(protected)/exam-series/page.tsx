@@ -38,6 +38,7 @@ export default function ExamSeriesPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -140,13 +141,16 @@ export default function ExamSeriesPage() {
           </form>
         </Card>
         <Card className="overflow-x-auto p-0">
-          <div className="p-4">
+          <div className="space-y-2 p-4">
             <AdminStatus
               loading={loading}
               error={loadError}
               empty={!loading && !loadError && items.length === 0}
               entityName="exam series"
             />
+            {actionError ? (
+              <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{actionError}</p>
+            ) : null}
           </div>
           <table className="min-w-full divide-y divide-slate-200 text-sm">
             <thead className="bg-slate-50">
@@ -170,6 +174,7 @@ export default function ExamSeriesPage() {
                       type="button"
                       onClick={() => {
                         setEditingId(item.id);
+                        setActionError(null);
                         setForm({
                           name: item.name,
                           year: String(item.year),
@@ -186,7 +191,19 @@ export default function ExamSeriesPage() {
                     </button>
                     <DeleteButton
                       onDelete={async () => {
-                        await fetch(`/api/exam-series/${item.id}`, { method: "DELETE" });
+                        setActionError(null);
+                        const response = await fetch(`/api/exam-series/${item.id}`, {
+                          method: "DELETE",
+                        });
+                        const data = (await response.json().catch(() => null)) as {
+                          error?: string;
+                        } | null;
+                        if (!response.ok) {
+                          setActionError(
+                            data?.error ?? "Could not delete exam series.",
+                          );
+                          return;
+                        }
                         await load();
                       }}
                     />

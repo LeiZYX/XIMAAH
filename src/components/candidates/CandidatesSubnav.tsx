@@ -7,6 +7,7 @@ export function CandidatesSubnav({ basePath }: { basePath: string }) {
   const pathname = usePathname();
 
   const links = [
+    { href: `${basePath}/overview`, label: "Student Overview" },
     { href: basePath, label: "All Candidates", exact: true },
     { href: `${basePath}/internal`, label: "Internal Candidates" },
     { href: `${basePath}/external`, label: "External Candidates" },

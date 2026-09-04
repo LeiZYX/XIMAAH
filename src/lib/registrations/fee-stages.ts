@@ -86,7 +86,11 @@ export function resolveCurrentFeeStageDisplay(
 
 export function assertFeeStageDatesValid(
   feeStages: Array<Pick<RegistrationFeeStageRecord, "stageCode" | "startAt" | "endAt" | "enabled">>,
-  window?: { studentRegistrationOpenAt: Date; registrationCloseAt: Date },
+  window?: {
+    studentRegistrationOpenAt: Date;
+    studentRegistrationCloseAt?: Date;
+    registrationCloseAt: Date;
+  },
 ): void {
   for (const stage of feeStages) {
     if (stage.startAt >= stage.endAt) {
@@ -106,6 +110,16 @@ export function assertFeeStageDatesValid(
       if (stage.endAt > window.registrationCloseAt) {
         throw new RegistrationError(
           `${feeStageLabel(stage.stageCode)}: end date should fall within the registration window`,
+          400,
+        );
+      }
+      if (
+        stage.stageCode === "NORMAL" &&
+        window.studentRegistrationCloseAt &&
+        stage.endAt < window.studentRegistrationCloseAt
+      ) {
+        throw new RegistrationError(
+          "Normal Entry: end date must be on or after Student registration close",
           400,
         );
       }

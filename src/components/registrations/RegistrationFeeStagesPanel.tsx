@@ -90,7 +90,7 @@ function boundFieldHint(stageCode: StageRow["stageCode"], field: "startAt" | "en
     return "Set on Registration Window → Student registration open";
   }
   if (stageCode === "NORMAL" && field === "endAt") {
-    return "Set on Registration Window → Student registration close";
+    return "Must be on or after Registration Window → Student registration close";
   }
   if (stageCode === "HIGH_LATE" && field === "endAt") {
     return "Set on Registration Window → Registration close";
@@ -221,6 +221,20 @@ export function RegistrationFeeStagesPanel({
       bindStageRowToWindow(stage, windowTiming),
     );
 
+    const studentCloseMs = new Date(windowTiming.studentRegistrationCloseAt).getTime();
+    for (const stage of payloadStages) {
+      if (stage.stageCode !== "NORMAL" || !stage.enabled) continue;
+      const endMs = new Date(datetimeLocalValueToIso(stage.endAt)).getTime();
+      if (Number.isNaN(endMs) || endMs < studentCloseMs) {
+        setSaving(false);
+        showFeedback(
+          "error",
+          "Normal Entry: end date must be on or after Student registration close",
+        );
+        return;
+      }
+    }
+
     const res = await fetch(`/api/registration-windows/${windowId}/fee-stages`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -300,9 +314,10 @@ export function RegistrationFeeStagesPanel({
       <Card>
         <h2 className="mb-2 text-lg font-semibold text-slate-900">Fee stages</h2>
         <p className="mb-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-          Fee stages are optional. Normal Entry start/end and High Late Entry end follow the
-          Registration Window timing on the General tab. Withdrawal refund defaults come from the
-          exam board policy and can be overridden here.
+          Fee stages are optional. Normal Entry start and High Late Entry end follow the Registration
+          Window timing on the General tab. Normal Entry end is editable but must be on or after
+          Student registration close. Withdrawal refund defaults come from the exam board policy and
+          can be overridden here.
         </p>
 
         <label className="mb-4 block max-w-xs text-sm">
@@ -375,6 +390,13 @@ export function RegistrationFeeStagesPanel({
                   {(["startAt", "endAt"] as const).map((field) => {
                     const bound = isFeeStageFieldBoundByWindow(stage.stageCode, field);
                     const hint = boundFieldHint(stage.stageCode, field);
+                    const minValue =
+                      !bound &&
+                      field === "endAt" &&
+                      stage.stageCode === "NORMAL" &&
+                      windowTiming
+                        ? isoToDatetimeLocalValue(windowTiming.studentRegistrationCloseAt)
+                        : undefined;
                     return (
                       <label key={field} className="text-sm">
                         <span className="mb-1 block text-slate-600">
@@ -387,6 +409,7 @@ export function RegistrationFeeStagesPanel({
                           required
                           type="datetime-local"
                           disabled={!canEdit || bound}
+                          min={minValue}
                           value={stage[field]}
                           onChange={(e) => updateStage(index, { [field]: e.target.value })}
                           className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm disabled:bg-slate-100 disabled:text-slate-500"
