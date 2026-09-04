@@ -19,6 +19,12 @@ export type StudentOverviewGradeBucket = {
   count: number;
 };
 
+export type StudentOverviewClassBucket = {
+  className: string | "UNASSIGNED";
+  label: string;
+  count: number;
+};
+
 export type StudentOverviewSummary = {
   candidateType: CandidateType;
   status: CandidateStatus | "ALL";
@@ -51,6 +57,7 @@ export type StudentOverviewFilters = {
   candidateType?: CandidateType;
   status?: CandidateStatus | "ALL";
   grade?: Grade | "UNASSIGNED" | string;
+  className?: string | "UNASSIGNED";
   q?: string;
 };
 
@@ -73,9 +80,15 @@ function buildOverviewWhere(filters: StudentOverviewFilters): Prisma.CandidateWh
     if (grade) where.grade = grade;
   }
 
+  if (filters.className === "UNASSIGNED") {
+    where.OR = [{ className: null }, { className: "" }];
+  } else if (filters.className?.trim()) {
+    where.className = filters.className.trim();
+  }
+
   if (filters.q?.trim()) {
     const q = containsFilter(filters.q.trim());
-    where.OR = [
+    const searchOr = [
       { englishName: q },
       { chineseName: q },
       { studentNumber: q },
@@ -88,6 +101,13 @@ function buildOverviewWhere(filters: StudentOverviewFilters): Prisma.CandidateWh
         },
       },
     ];
+    // className UNASSIGNED already set where.OR — combine with AND
+    if (where.OR) {
+      where.AND = [{ OR: where.OR }, { OR: searchOr }];
+      delete where.OR;
+    } else {
+      where.OR = searchOr;
+    }
   }
 
   return where;
@@ -213,6 +233,54 @@ export async function getStudentOverviewSummary(
   };
 }
 
+export async function getStudentOverviewClassBuckets(
+  filters: Omit<StudentOverviewFilters, "className" | "q"> = {},
+): Promise<StudentOverviewClassBucket[]> {
+  await ensureInternalCandidatesSynced();
+  await backfillMissingStudentIds().catch(() => undefined);
+
+  const where = buildOverviewWhere({
+    candidateType: filters.candidateType ?? "INTERNAL",
+    status: filters.status ?? "ACTIVE",
+    grade: filters.grade,
+  });
+
+  const grouped = await prisma.candidate.groupBy({
+    by: ["className"],
+    where,
+    _count: { _all: true },
+    orderBy: { className: "asc" },
+  });
+
+  const buckets: StudentOverviewClassBucket[] = [];
+  let unassigned = 0;
+
+  for (const row of grouped) {
+    const name = row.className?.trim() ?? "";
+    if (!name) {
+      unassigned += row._count._all;
+      continue;
+    }
+    buckets.push({
+      className: name,
+      label: name,
+      count: row._count._all,
+    });
+  }
+
+  buckets.sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
+
+  if (unassigned > 0) {
+    buckets.push({
+      className: "UNASSIGNED",
+      label: "Unassigned class",
+      count: unassigned,
+    });
+  }
+
+  return buckets;
+}
+
 export async function listStudentOverviewRows(
   filters: StudentOverviewFilters,
   page = 1,
@@ -293,10 +361,21 @@ export function parseStudentOverviewFilters(
     grade = gradeRaw;
   }
 
+  const classRaw = searchParams.get("className")?.trim();
+  let className: StudentOverviewFilters["className"];
+  if (!classRaw || classRaw.toUpperCase() === "ALL") {
+    className = undefined;
+  } else if (classRaw.toUpperCase() === "UNASSIGNED") {
+    className = "UNASSIGNED";
+  } else {
+    className = classRaw;
+  }
+
   return {
     candidateType: type === "EXTERNAL" ? "EXTERNAL" : "INTERNAL",
     status,
     grade,
+    className,
     q: searchParams.get("q")?.trim() || undefined,
   };
 }

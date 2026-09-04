@@ -4,6 +4,7 @@ import { requireAuth } from "@/lib/auth/require-auth";
 import { canViewAllRegistrations } from "@/lib/auth/permissions";
 import { parseListPagination } from "@/lib/pagination";
 import {
+  getStudentOverviewClassBuckets,
   getStudentOverviewSummary,
   listStudentOverviewRows,
   parseStudentOverviewFilters,
@@ -22,18 +23,25 @@ export async function GET(request: NextRequest) {
   try {
     const filters = parseStudentOverviewFilters(request.nextUrl.searchParams);
     const summaryOnly = request.nextUrl.searchParams.get("summaryOnly") === "true";
-    const summary = await getStudentOverviewSummary({
-      candidateType: filters.candidateType,
-      status: filters.status,
-    });
+    const [summary, byClass] = await Promise.all([
+      getStudentOverviewSummary({
+        candidateType: filters.candidateType,
+        status: filters.status,
+      }),
+      getStudentOverviewClassBuckets({
+        candidateType: filters.candidateType,
+        status: filters.status,
+        grade: filters.grade,
+      }),
+    ]);
 
     if (summaryOnly) {
-      return NextResponse.json({ summary });
+      return NextResponse.json({ summary, byClass });
     }
 
     const { page, pageSize } = parseListPagination(request.nextUrl.searchParams);
     const list = await listStudentOverviewRows(filters, page, pageSize);
-    return NextResponse.json({ summary, ...list });
+    return NextResponse.json({ summary, byClass, ...list });
   } catch (error) {
     console.error("GET /api/admin/students/overview failed:", error);
     return jsonError(

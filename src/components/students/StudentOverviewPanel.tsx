@@ -8,12 +8,14 @@ import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { LIST_PAGE_SIZES } from "@/lib/pagination";
 import type {
+  StudentOverviewClassBucket,
   StudentOverviewGradeBucket,
   StudentOverviewRow,
   StudentOverviewSummary,
 } from "@/lib/students/overview";
 
 type GradeSelection = "ALL" | StudentOverviewGradeBucket["grade"];
+type ClassSelection = "ALL" | StudentOverviewClassBucket["className"];
 type CandidateTypeSelection = "INTERNAL" | "EXTERNAL";
 
 interface StudentOverviewPanelProps {
@@ -28,9 +30,11 @@ export function StudentOverviewPanel({
   moduleBasePath,
 }: StudentOverviewPanelProps) {
   const [summary, setSummary] = useState<StudentOverviewSummary | null>(null);
+  const [byClass, setByClass] = useState<StudentOverviewClassBucket[]>([]);
   const [students, setStudents] = useState<StudentOverviewRow[]>([]);
   const [candidateType, setCandidateType] = useState<CandidateTypeSelection>("INTERNAL");
   const [selectedGrade, setSelectedGrade] = useState<GradeSelection>("ALL");
+  const [selectedClass, setSelectedClass] = useState<ClassSelection>("ALL");
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("ACTIVE");
   const [page, setPage] = useState(1);
@@ -51,6 +55,7 @@ export function StudentOverviewPanel({
         pageSize: String(pageSize),
       });
       if (selectedGrade !== "ALL") params.set("grade", selectedGrade);
+      if (selectedClass !== "ALL") params.set("className", selectedClass);
       if (q.trim()) params.set("q", q.trim());
 
       const res = await fetch(`${apiPath}?${params.toString()}`);
@@ -60,11 +65,13 @@ export function StudentOverviewPanel({
       }
 
       setSummary(data.summary ?? null);
+      setByClass(Array.isArray(data.byClass) ? data.byClass : []);
       setStudents(Array.isArray(data.students) ? data.students : []);
       setTotal(typeof data.total === "number" ? data.total : 0);
       setTotalPages(typeof data.totalPages === "number" ? data.totalPages : 0);
     } catch (err) {
       setSummary(null);
+      setByClass([]);
       setStudents([]);
       setTotal(0);
       setTotalPages(0);
@@ -72,7 +79,7 @@ export function StudentOverviewPanel({
     } finally {
       setLoading(false);
     }
-  }, [apiPath, candidateType, page, pageSize, q, selectedGrade, status]);
+  }, [apiPath, candidateType, page, pageSize, q, selectedClass, selectedGrade, status]);
 
   useEffect(() => {
     void load();
@@ -81,27 +88,44 @@ export function StudentOverviewPanel({
   function selectCandidateType(next: CandidateTypeSelection) {
     setCandidateType(next);
     setSelectedGrade("ALL");
+    setSelectedClass("ALL");
     setPage(1);
   }
 
   function selectGrade(grade: GradeSelection) {
     setSelectedGrade(grade);
+    setSelectedClass("ALL");
+    setPage(1);
+  }
+
+  function selectClass(className: ClassSelection) {
+    setSelectedClass(className);
     setPage(1);
   }
 
   const typeLabel = candidateType === "INTERNAL" ? "Internal" : "External";
-  const listTitle =
+  const gradePart =
     selectedGrade === "ALL"
-      ? `All ${typeLabel.toLowerCase()} candidates`
+      ? null
       : selectedGrade === "UNASSIGNED"
-        ? `${typeLabel} · Unassigned grade`
-        : `${typeLabel} · ${summary?.byGrade.find((row) => row.grade === selectedGrade)?.label ?? selectedGrade}`;
+        ? "Unassigned grade"
+        : (summary?.byGrade.find((row) => row.grade === selectedGrade)?.label ?? selectedGrade);
+  const classPart =
+    selectedClass === "ALL"
+      ? null
+      : selectedClass === "UNASSIGNED"
+        ? "Unassigned class"
+        : selectedClass;
+  const listTitle = [typeLabel, gradePart, classPart].filter(Boolean).join(" · ")
+    || `All ${typeLabel.toLowerCase()} candidates`;
+
+  const classScopeTotal = byClass.reduce((sum, row) => sum + row.count, 0);
 
   return (
     <div className="space-y-4">
       <PageHeader
         title="Student Overview"
-        description="Census by candidate type and grade. Switch Internal / External, then select a grade to list school numbers, names, date of birth, gender, and UCI."
+        description="Census by candidate type, grade, and class. Switch Internal / External, then select grade and class to list school numbers, names, date of birth, gender, and UCI."
       />
       <CandidatesSubnav basePath={moduleBasePath} />
 
@@ -135,6 +159,7 @@ export function StudentOverviewPanel({
               value={status}
               onChange={(e) => {
                 setStatus(e.target.value);
+                setSelectedClass("ALL");
                 setPage(1);
               }}
               className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-normal"
@@ -180,36 +205,85 @@ export function StudentOverviewPanel({
         </div>
       ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <button
-          type="button"
-          onClick={() => selectGrade("ALL")}
-          className={`rounded-lg border px-4 py-3 text-left transition ${
-            selectedGrade === "ALL"
-              ? "border-slate-900 bg-slate-900 text-white"
-              : "border-slate-200 bg-white text-slate-900 hover:border-slate-400"
-          }`}
-        >
-          <p className="text-xs font-medium uppercase tracking-wide opacity-80">Total</p>
-          <p className="mt-1 text-2xl font-semibold">{summary?.total ?? "—"}</p>
-          <p className="mt-1 text-xs opacity-80">{typeLabel} candidates</p>
-        </button>
-        {(summary?.byGrade ?? []).map((bucket) => (
+      <div>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Grade</p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           <button
-            key={bucket.grade}
             type="button"
-            onClick={() => selectGrade(bucket.grade)}
+            onClick={() => selectGrade("ALL")}
             className={`rounded-lg border px-4 py-3 text-left transition ${
-              selectedGrade === bucket.grade
-                ? "border-indigo-700 bg-indigo-700 text-white"
-                : "border-slate-200 bg-white text-slate-900 hover:border-indigo-300"
+              selectedGrade === "ALL"
+                ? "border-slate-900 bg-slate-900 text-white"
+                : "border-slate-200 bg-white text-slate-900 hover:border-slate-400"
             }`}
           >
-            <p className="text-xs font-medium uppercase tracking-wide opacity-80">{bucket.label}</p>
-            <p className="mt-1 text-2xl font-semibold">{bucket.count}</p>
-            <p className="mt-1 text-xs opacity-80">students</p>
+            <p className="text-xs font-medium uppercase tracking-wide opacity-80">Total</p>
+            <p className="mt-1 text-2xl font-semibold">{summary?.total ?? "—"}</p>
+            <p className="mt-1 text-xs opacity-80">{typeLabel} candidates</p>
           </button>
-        ))}
+          {(summary?.byGrade ?? []).map((bucket) => (
+            <button
+              key={bucket.grade}
+              type="button"
+              onClick={() => selectGrade(bucket.grade)}
+              className={`rounded-lg border px-4 py-3 text-left transition ${
+                selectedGrade === bucket.grade
+                  ? "border-indigo-700 bg-indigo-700 text-white"
+                  : "border-slate-200 bg-white text-slate-900 hover:border-indigo-300"
+              }`}
+            >
+              <p className="text-xs font-medium uppercase tracking-wide opacity-80">{bucket.label}</p>
+              <p className="mt-1 text-2xl font-semibold">{bucket.count}</p>
+              <p className="mt-1 text-xs opacity-80">students</p>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Class
+          {selectedGrade === "ALL"
+            ? " (all grades)"
+            : selectedGrade === "UNASSIGNED"
+              ? " (unassigned grade)"
+              : ` (${summary?.byGrade.find((row) => row.grade === selectedGrade)?.label ?? selectedGrade})`}
+        </p>
+        {byClass.length === 0 ? (
+          <p className="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-500">
+            No classes in this selection.
+          </p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => selectClass("ALL")}
+              className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
+                selectedClass === "ALL"
+                  ? "border-slate-900 bg-slate-900 text-white"
+                  : "border-slate-200 bg-white text-slate-800 hover:border-slate-400"
+              }`}
+            >
+              <span className="font-medium">All classes</span>
+              <span className="ml-2 opacity-80">{classScopeTotal}</span>
+            </button>
+            {byClass.map((bucket) => (
+              <button
+                key={bucket.className}
+                type="button"
+                onClick={() => selectClass(bucket.className)}
+                className={`rounded-lg border px-3 py-2 text-left text-sm transition ${
+                  selectedClass === bucket.className
+                    ? "border-teal-700 bg-teal-700 text-white"
+                    : "border-slate-200 bg-white text-slate-800 hover:border-teal-300"
+                }`}
+              >
+                <span className="font-medium">{bucket.label}</span>
+                <span className="ml-2 opacity-80">{bucket.count}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <Card>

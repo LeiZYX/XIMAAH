@@ -509,7 +509,7 @@ export function RegistrationWindowManager({
               </label>
               <label className="block text-sm">
                 <span className="mb-1 block text-slate-700">
-                  Student registration close (normal deadline)
+                  Student registration close
                 </span>
                 <input
                   required

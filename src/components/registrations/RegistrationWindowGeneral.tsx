@@ -425,7 +425,7 @@ export function RegistrationWindowGeneral({
                 </label>
                 <label className="text-sm">
                   <span className="mb-1 block text-slate-600">
-                    Student registration close (normal deadline)
+                    Student registration close
                   </span>
                   <input
                     required
