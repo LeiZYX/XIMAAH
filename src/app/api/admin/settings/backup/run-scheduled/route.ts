@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { jsonError } from "@/lib/api";
 import { BACKUP_CRON_SECRET_ENV } from "@/lib/backup/constants";
 import { getBackupJobById, serializeBackupJob } from "@/lib/backup/jobs";
+import { evaluateScheduledBackupDue } from "@/lib/backup/schedule";
 import { getResolvedBackupSettings } from "@/lib/backup/settings";
 import { runDatabaseBackup } from "@/lib/backup/run-backup";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -17,11 +19,26 @@ export async function POST(request: NextRequest) {
   }
 
   const settings = await getResolvedBackupSettings();
-  if (!settings.enabled) {
+  const lastSuccess = await prisma.backupJob.findFirst({
+    where: {
+      triggeredBy: "SCHEDULED",
+      status: "SUCCESS",
+    },
+    orderBy: { completedAt: "desc" },
+    select: { completedAt: true },
+  });
+
+  const due = evaluateScheduledBackupDue({
+    settings,
+    lastScheduledSuccessAt: lastSuccess?.completedAt ?? null,
+  });
+
+  if (!due.due) {
     return NextResponse.json({
       ok: true,
       skipped: true,
-      reason: "Scheduled backup is disabled in settings.",
+      reason: due.reason,
+      periodStart: due.periodStart?.toISOString() ?? null,
     });
   }
 
@@ -43,6 +60,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       job: job ? serializeBackupJob(job) : null,
+      periodStart: due.periodStart?.toISOString() ?? null,
     });
   } catch (error) {
     return jsonError(error instanceof Error ? error.message : "Scheduled backup failed", 500);

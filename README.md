@@ -169,6 +169,8 @@ The app container listens on `127.0.0.1:3000` only. MySQL and the data-processor
 
 ### Database backup & restore
 
+**In-app scheduled backups (production Docker):** the `backup-cron` service polls the app every 15 minutes. Set `BACKUP_CRON_SECRET` in `.env`, enable Backup in Admin → Backup Settings, and choose frequency/time (default timezone `Asia/Shanghai`; Weekly = Monday, Monthly = 1st). Manual host scripts:
+
 ```bash
 chmod +x scripts/backup-mysql.sh scripts/restore-mysql.sh
 ./scripts/backup-mysql.sh

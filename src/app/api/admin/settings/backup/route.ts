@@ -39,7 +39,7 @@ export async function GET() {
       },
       jobs,
       scheduledBackupNote:
-        "Scheduled backups require a server cron job calling POST /api/admin/settings/backup/run-scheduled with header x-backup-cron-secret, or running: npm run backup:database",
+        "The backup-cron container polls every 15 minutes. With Backup enabled and BACKUP_CRON_SECRET set, runs follow frequency/time in Asia/Shanghai (Weekly = Monday, Monthly = 1st). Run Backup NOW works anytime.",
       restoreNote:
         "For safety, database restore must be performed by server administrator from command line.",
     });

@@ -64,10 +64,48 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-xima_assessment_hub}
       BACKUP_DIRECTORY: ${BACKUP_DIRECTORY:-/var/backups/xima-assessment-hub}
+      BACKUP_SCHEDULE_TIMEZONE: ${BACKUP_SCHEDULE_TIMEZONE:-Asia/Shanghai}
     volumes:
       - backup_data:/var/backups/xima-assessment-hub
     ports:
       - "127.0.0.1:3000:3000"
+    networks:
+      - xima_internal
+
+  # Polls the app every 15 minutes; the API decides whether a backup is due
+  # based on Backup Settings (enabled / frequency / time).
+  backup-cron:
+    image: curlimages/curl:8.12.1
+    container_name: xima-backup-cron
+    restart: unless-stopped
+    depends_on:
+      - app
+    env_file:
+      - .env
+    environment:
+      BACKUP_CRON_SECRET: ${BACKUP_CRON_SECRET:-}
+      BACKUP_CRON_INTERVAL_SECONDS: ${BACKUP_CRON_INTERVAL_SECONDS:-900}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -eu
+        if [ -z "$${BACKUP_CRON_SECRET}" ]; then
+          echo "backup-cron: BACKUP_CRON_SECRET is empty; sleeping without calling the API."
+          while true; do sleep 3600; done
+        fi
+        echo "backup-cron: polling every $${BACKUP_CRON_INTERVAL_SECONDS}s"
+        while true; do
+          code=0
+          body="$$(curl -sS -w '\n%{http_code}' -X POST \
+            -H "x-backup-cron-secret: $${BACKUP_CRON_SECRET}" \
+            "http://app:3000/api/admin/settings/backup/run-scheduled")" || code=$$?
+          if [ "$$code" -ne 0 ]; then
+            echo "backup-cron: request failed (curl exit $$code)"
+          else
+            echo "backup-cron: $$body"
+          fi
+          sleep "$${BACKUP_CRON_INTERVAL_SECONDS}"
+        done
     networks:
       - xima_internal
 
