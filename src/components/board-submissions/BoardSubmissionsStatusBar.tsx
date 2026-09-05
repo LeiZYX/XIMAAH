@@ -1,6 +1,10 @@
 "use client";
 
-import type { BoardSubmissionWindowSummary, TimelineSegment } from "@/lib/board-submissions/types";
+import type {
+  BoardSubmissionWindowSummary,
+  TimelineMilestone,
+  TimelineSegment,
+} from "@/lib/board-submissions/types";
 import { splitTimelineTracks } from "@/lib/board-submissions/timeline";
 import { Card } from "@/components/ui/Card";
 
@@ -68,8 +72,20 @@ function timelineRange(summary: BoardSubmissionWindowSummary): { startMs: number
     startMs = Math.min(startMs, new Date(segment.startAt).getTime());
     endMs = Math.max(endMs, new Date(segment.endAt).getTime());
   }
+  for (const milestone of summary.milestones ?? []) {
+    const at = new Date(milestone.at).getTime();
+    startMs = Math.min(startMs, at);
+    endMs = Math.max(endMs, at);
+  }
   if (endMs <= startMs) endMs = startMs + 1;
   return { startMs, endMs };
+}
+
+function pointPercent(atIso: string, rangeStartMs: number, rangeEndMs: number): number {
+  const at = new Date(atIso).getTime();
+  if (at <= rangeStartMs) return 0;
+  if (at >= rangeEndMs) return 100;
+  return ((at - rangeStartMs) / (rangeEndMs - rangeStartMs)) * 100;
 }
 
 function segmentLayout(
@@ -115,42 +131,104 @@ function TrackBar({
   );
 }
 
+function MilestoneMarkers({
+  milestones,
+  rangeStartMs,
+  rangeEndMs,
+}: {
+  milestones: TimelineMilestone[];
+  rangeStartMs: number;
+  rangeEndMs: number;
+}) {
+  if (milestones.length === 0) return null;
+  return (
+    <>
+      {milestones.map((milestone) => {
+        const left = pointPercent(milestone.at, rangeStartMs, rangeEndMs);
+        return (
+          <div
+            key={`${milestone.kind}-${milestone.at}`}
+            className="pointer-events-none absolute bottom-0 top-0 z-[9] -translate-x-1/2"
+            style={{ left: `${left}%` }}
+            title={`${milestone.label}: ${formatDateTime(milestone.at)}`}
+            aria-hidden
+          >
+            <div
+              className={`mx-auto h-2.5 w-2.5 rotate-45 border-2 ${milestone.markerClass} ${
+                milestone.isPast ? "opacity-60" : ""
+              }`}
+            />
+            <div
+              className={`mx-auto h-[calc(100%-10px)] w-px ${
+                milestone.isPast ? "bg-fuchsia-300/70" : "bg-fuchsia-500/80"
+              }`}
+            />
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
 function LegendColumn({
   title,
   segments,
+  milestones,
   emptyMessage,
 }: {
   title: string;
   segments: TimelineSegment[];
+  milestones?: TimelineMilestone[];
   emptyMessage?: string;
 }) {
+  const milestoneRows = milestones ?? [];
   return (
     <div>
       <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
         {title}
       </p>
       <div className="space-y-2">
-        {segments.length === 0 ? (
+        {segments.length === 0 && milestoneRows.length === 0 ? (
           <p className="text-xs text-slate-500">{emptyMessage ?? "None"}</p>
         ) : (
-          segments.map((segment) => (
-            <div
-              key={`legend-${segment.kind}-${segment.startAt}`}
-              className="flex items-start gap-2 text-xs text-slate-600"
-            >
-              <span
-                className={`mt-0.5 inline-block h-2.5 w-2.5 shrink-0 rounded-sm ${segment.colorClass} ${
-                  segment.isActive ? "ring-1 ring-indigo-600" : ""
-                }`}
-              />
-              <span>
-                <span className="font-medium text-slate-800">{segment.label}</span>
-                <span className="mt-0.5 block text-slate-500">
-                  {formatSegmentLegend(segment)}
+          <>
+            {segments.map((segment) => (
+              <div
+                key={`legend-${segment.kind}-${segment.startAt}`}
+                className="flex items-start gap-2 text-xs text-slate-600"
+              >
+                <span
+                  className={`mt-0.5 inline-block h-2.5 w-2.5 shrink-0 rounded-sm ${segment.colorClass} ${
+                    segment.isActive ? "ring-1 ring-indigo-600" : ""
+                  }`}
+                />
+                <span>
+                  <span className="font-medium text-slate-800">{segment.label}</span>
+                  <span className="mt-0.5 block text-slate-500">
+                    {formatSegmentLegend(segment)}
+                  </span>
                 </span>
-              </span>
-            </div>
-          ))
+              </div>
+            ))}
+            {milestoneRows.map((milestone) => (
+              <div
+                key={`legend-ms-${milestone.kind}-${milestone.at}`}
+                className="flex items-start gap-2 text-xs text-slate-600"
+              >
+                <span
+                  className={`mt-0.5 inline-block h-2.5 w-2.5 shrink-0 rotate-45 border ${milestone.markerClass} ${
+                    milestone.isPast ? "opacity-60" : ""
+                  }`}
+                />
+                <span>
+                  <span className="font-medium text-slate-800">{milestone.label}</span>
+                  <span className="mt-0.5 block text-slate-500">
+                    Milestone · {formatDateTime(milestone.at)}
+                  </span>
+                </span>
+              </div>
+            ))}
+          </>
         )}
       </div>
     </div>
@@ -172,12 +250,8 @@ export function BoardSubmissionsStatusBar({
 }: BoardSubmissionsStatusBarProps) {
   const { startMs, endMs } = timelineRange(summary);
   const { permission, fee } = splitTimelineTracks(summary.timeline);
-  const nowPercent = (() => {
-    const now = new Date(summary.nowAt).getTime();
-    if (now <= startMs) return 0;
-    if (now >= endMs) return 100;
-    return ((now - startMs) / (endMs - startMs)) * 100;
-  })();
+  const milestones = summary.milestones ?? [];
+  const nowPercent = pointPercent(summary.nowAt, startMs, endMs);
 
   const baselineLabel =
     summary.baseline.status === "NONE"
@@ -217,6 +291,9 @@ export function BoardSubmissionsStatusBar({
       <div className="space-y-3">
         <p className="text-xs text-slate-500">
           Two tracks on the same calendar: registration access and fee stages may overlap.
+          {milestones.length > 0
+            ? " Diamonds mark milestones (e.g. student late-adjustment request deadline)."
+            : ""}
         </p>
         <div className="flex gap-3">
           <div className="flex w-28 shrink-0 flex-col justify-around gap-2 py-2">
@@ -224,6 +301,11 @@ export function BoardSubmissionsStatusBar({
             <p className="text-xs font-medium leading-3 text-slate-600">Fee stage</p>
           </div>
           <div className="relative min-w-0 flex-1 space-y-2 pt-2">
+            <MilestoneMarkers
+              milestones={milestones}
+              rangeStartMs={startMs}
+              rangeEndMs={endMs}
+            />
             <div
               className="pointer-events-none absolute bottom-0 top-0 z-10 -translate-x-1/2"
               style={{ left: `${Math.min(Math.max(nowPercent, 0), 100)}%` }}
@@ -239,7 +321,11 @@ export function BoardSubmissionsStatusBar({
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <LegendColumn title="Who can register" segments={permission} />
+          <LegendColumn
+            title="Who can register"
+            segments={permission}
+            milestones={milestones}
+          />
           <LegendColumn
             title="Fee stage"
             segments={fee}

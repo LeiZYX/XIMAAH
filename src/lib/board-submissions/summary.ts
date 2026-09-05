@@ -2,6 +2,7 @@ import { roundMoney, toNumber } from "@/lib/fees/money";
 import type { RegistrationFeeStageRecord } from "@/lib/registrations/fee-stages";
 import { prisma } from "@/lib/prisma";
 import {
+  buildBoardSubmissionMilestones,
   buildBoardSubmissionTimeline,
   recommendBoardSubmissionsTab,
   resolveBoardSubmissionPhaseLabel,
@@ -35,6 +36,7 @@ export async function buildBoardSubmissionWindowSummary(
   const feeStages = window.feeStages as RegistrationFeeStageRecord[];
   const phase = resolveBoardSubmissionPhaseLabel(window, feeStages, now);
   const timeline = buildBoardSubmissionTimeline(window, feeStages, now);
+  const milestones = buildBoardSubmissionMilestones(window, now);
 
   const [baselineCount, lockedWorkspaces, statements, offlineRefunds] = await Promise.all([
     prisma.boardSubmissionBaseline.count({ where: { registrationWindowId } }),
@@ -173,6 +175,7 @@ export async function buildBoardSubmissionWindowSummary(
     studentState: phase.studentState,
     currentFeeStage: phase.currentFeeStage,
     timeline,
+    milestones,
     nowAt: now.toISOString(),
     baseline: {
       status: hasBaseline ? "ESTABLISHED" : "NONE",

@@ -9,6 +9,8 @@ export type TimelineSegmentKind =
   | "EO_ADJUSTMENT"
   | "WINDOW_CLOSED";
 
+export type TimelineMilestoneKind = "STUDENT_ADJUSTMENT_REQUEST_CLOSE";
+
 export interface TimelineSegment {
   kind: TimelineSegmentKind;
   label: string;
@@ -16,6 +18,15 @@ export interface TimelineSegment {
   endAt: string;
   colorClass: string;
   isActive: boolean;
+  isPast: boolean;
+}
+
+export interface TimelineMilestone {
+  kind: TimelineMilestoneKind;
+  label: string;
+  at: string;
+  /** Tailwind classes for the marker accent (e.g. border/bg). */
+  markerClass: string;
   isPast: boolean;
 }
 
@@ -65,6 +76,7 @@ export interface BoardSubmissionWindowSummary {
   studentState: string;
   currentFeeStage: string | null;
   timeline: TimelineSegment[];
+  milestones: TimelineMilestone[];
   nowAt: string;
   baseline: {
     status: "NONE" | "ESTABLISHED";

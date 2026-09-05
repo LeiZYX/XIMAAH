@@ -4,11 +4,17 @@ import {
   resolveCurrentFeeStageDisplay,
 } from "@/lib/registrations/fee-stages";
 import {
+  resolveStudentAdjustmentRequestCloseAt,
   resolveStudentRegistrationState,
   studentRegistrationStateLabel,
   type RegistrationWindowTiming,
+  type StudentAdjustmentWindowTiming,
 } from "@/lib/registrations/window";
-import type { TimelineSegment, TimelineSegmentKind } from "@/lib/board-submissions/types";
+import type {
+  TimelineMilestone,
+  TimelineSegment,
+  TimelineSegmentKind,
+} from "@/lib/board-submissions/types";
 
 const SEGMENT_COLORS: Record<TimelineSegmentKind, string> = {
   NOT_STARTED: "bg-slate-200",
@@ -152,6 +158,30 @@ export function buildBoardSubmissionTimeline(
   });
 
   return segments;
+}
+
+export function buildBoardSubmissionMilestones(
+  window: StudentAdjustmentWindowTiming & {
+    studentRegistrationOpenAt: Date;
+    studentRegistrationCloseAt: Date;
+    registrationCloseAt: Date;
+  },
+  now = new Date(),
+): TimelineMilestone[] {
+  if (!window.studentAdjustmentRequestEnabled) {
+    return [];
+  }
+
+  const closeAt = resolveStudentAdjustmentRequestCloseAt(window);
+  return [
+    {
+      kind: "STUDENT_ADJUSTMENT_REQUEST_CLOSE",
+      label: "Student adjustment request close",
+      at: closeAt.toISOString(),
+      markerClass: "border-fuchsia-600 bg-fuchsia-500",
+      isPast: now > closeAt,
+    },
+  ];
 }
 
 export function resolveBoardSubmissionPhaseLabel(
