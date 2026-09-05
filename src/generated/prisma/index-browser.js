@@ -416,6 +416,9 @@ exports.Prisma.RegistrationWorkspaceScalarFieldEnum = {
   restrictedUpdatedById: 'restrictedUpdatedById',
   restrictedUpdatedAt: 'restrictedUpdatedAt',
   includeCandidateRegistrationFee: 'includeCandidateRegistrationFee',
+  uciAtEntry: 'uciAtEntry',
+  uciEntrySnapshotCaptured: 'uciEntrySnapshotCaptured',
+  uciAllocatedBySystem: 'uciAllocatedBySystem',
   registrationNumber: 'registrationNumber',
   confirmationNumber: 'confirmationNumber',
   createdAt: 'createdAt',
@@ -1270,6 +1273,7 @@ exports.Prisma.RegistrationWorkspaceOrderByRelevanceFieldEnum = {
   restrictedReason: 'restrictedReason',
   restrictedCreatedById: 'restrictedCreatedById',
   restrictedUpdatedById: 'restrictedUpdatedById',
+  uciAtEntry: 'uciAtEntry',
   registrationNumber: 'registrationNumber',
   confirmationNumber: 'confirmationNumber'
 };

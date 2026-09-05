@@ -24,6 +24,10 @@ import type { FeeStatementChangeReasonCode } from "@/lib/fees/statement-lifecycl
 import { applyCandidateRegistrationFeeSelection } from "@/lib/fees/candidate-registration-fee";
 import { assertStudentCanRegister } from "@/lib/students/archive";
 import {
+  ensureEdexcelUciAndRegistrationFeeOnSubjectAdd,
+  maybeClearEdexcelRegistrationFeeAndUciAfterSubjectRemoval,
+} from "@/lib/registrations/edexcel-uci-registration";
+import {
   resolveActiveFeeStage,
   resolveEntryTypeForRegistration,
   type RegistrationFeeStageRecord,
@@ -523,6 +527,24 @@ export async function applyPostLockAdjustment(
         includeCandidateRegistrationFee: input.includeCandidateRegistrationFee!,
         performedBy,
         reason: input.candidateRegistrationFeeReason?.trim() || reason,
+        tx,
+      });
+    }
+
+    if (addIds.length > 0) {
+      await ensureEdexcelUciAndRegistrationFeeOnSubjectAdd({
+        workspaceId,
+        performedBy,
+        reason,
+        tx,
+      });
+    }
+
+    if (removeIds.length > 0 || replacements.length > 0) {
+      await maybeClearEdexcelRegistrationFeeAndUciAfterSubjectRemoval({
+        workspaceId,
+        performedBy,
+        reason,
         tx,
       });
     }

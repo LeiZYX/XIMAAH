@@ -2,6 +2,16 @@ import type { BulkEntriesSnapshotRow } from "@/lib/board-submissions/bulk-entrie
 import { normalizeBoardEntrySlot } from "@/lib/board-submissions/entry-utils";
 import { prisma } from "@/lib/prisma";
 
+export async function hasBulkEntriesBaseline(registrationWindowId: string): Promise<boolean> {
+  const count = await prisma.boardSubmissionBaseline.count({
+    where: {
+      registrationWindowId,
+      kind: "BULK_ENTRIES",
+    },
+  });
+  return count > 0;
+}
+
 export async function hasAmendmentBaseline(registrationWindowId: string): Promise<boolean> {
   const count = await prisma.boardSubmissionBaseline.count({
     where: {

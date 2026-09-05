@@ -136,6 +136,10 @@ export async function applyCandidateRegistrationFeeSelection(params: {
   performedBy: { id: string; role: UserRole };
   reason?: string | null;
   tx?: Parameters<typeof createRegistrationAuditLog>[1];
+  /** When true, skip Edexcel removal gate (caller already evaluated). */
+  skipRemovalGate?: boolean;
+  /** When removing fee under Edexcel rules, also clear system-allocated UCI. */
+  clearUciOnRemove?: boolean;
 }) {
   const workspace = await prisma.registrationWorkspace.findUnique({
     where: { id: params.workspaceId },
@@ -161,6 +165,19 @@ export async function applyCandidateRegistrationFeeSelection(params: {
   if (previous === next) {
     return workspace;
   }
+
+  if (previous && !next && !params.skipRemovalGate) {
+    const { evaluateRegistrationFeeRemovalGate } = await import(
+      "@/lib/registrations/edexcel-uci-registration"
+    );
+    const gate = await evaluateRegistrationFeeRemovalGate(params.workspaceId, params.tx ?? prisma);
+    if (!gate.allowed) {
+      throw new Error(gate.reason ?? "Candidate Registration Fee cannot be removed");
+    }
+    params = { ...params, clearUciOnRemove: gate.clearUci };
+  }
+
+  const clearUciOnRemove = Boolean(previous && !next && params.clearUciOnRemove);
 
   const feePreview = next
     ? await previewCandidateRegistrationFee(
@@ -209,6 +226,17 @@ export async function applyCandidateRegistrationFeeSelection(params: {
       },
       tx,
     );
+
+    if (clearUciOnRemove) {
+      const { clearSystemAllocatedUciIfNeeded } = await import(
+        "@/lib/registrations/edexcel-uci-registration"
+      );
+      await clearSystemAllocatedUciIfNeeded({
+        workspaceId: workspace.id,
+        performedByUserId: params.performedBy.id,
+        tx,
+      });
+    }
 
     return updated;
   };

@@ -16,7 +16,11 @@ export interface StudentRegistrationRow {
   assessmentHubCandidateNumberSnapshot?: string | null;
   candidateTypeSnapshot?: string | null;
   registrationSource?: string;
-  examBoard: { name: string; code: string };
+  examBoardId?: string;
+  candidate?: {
+    examIdentities?: Array<{ examBoardId: string; uciNumber: string | null }>;
+  } | null;
+  examBoard: { id?: string; name: string; code: string };
   examSeries: { name: string; year: number };
   subject: { name: string; code: string };
   paper: { code: string; title: string; duration?: number | null };
@@ -151,6 +155,7 @@ export interface RegistrationWindowGroup {
     serviceName: string;
     boardName: string;
   } | null;
+  uciNumber?: string | null;
 }
 
 export function groupRegistrationsByWindow(
@@ -188,6 +193,16 @@ export function groupRegistrationsByWindow(
           }
         : null;
 
+    const examBoardId = row.examBoardId ?? row.examBoard?.id ?? null;
+    const uciNumber =
+      (examBoardId
+        ? row.candidate?.examIdentities?.find((identity) => identity.examBoardId === examBoardId)
+            ?.uciNumber
+        : null
+      )?.trim() ||
+      row.candidate?.examIdentities?.find((identity) => identity.uciNumber?.trim())?.uciNumber?.trim() ||
+      null;
+
     if (existing) {
       existing.registrations.push(row);
       if (new Date(row.updatedAt) > new Date(existing.lastUpdatedAt)) {
@@ -195,6 +210,9 @@ export function groupRegistrationsByWindow(
       }
       if (!existing.candidateRegistrationFee && candidateRegistrationFee) {
         existing.candidateRegistrationFee = candidateRegistrationFee;
+      }
+      if (!existing.uciNumber && uciNumber) {
+        existing.uciNumber = uciNumber;
       }
     } else {
       map.set(key, {
@@ -218,6 +236,7 @@ export function groupRegistrationsByWindow(
         lastAdjustmentSummary: workspace?.lastAdjustmentSummary ?? null,
         postLockAdjustments: workspace?.postLockAdjustments ?? [],
         candidateRegistrationFee,
+        uciNumber,
       });
     }
   }

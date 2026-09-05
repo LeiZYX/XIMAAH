@@ -9,9 +9,21 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.2.9";
+export const CURRENT_VERSION = "1.3.0";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.0",
+    releaseDate: "2026-09-05",
+    summary:
+      "Edexcel Internal: auto provisional UCI on registration, Candidate Registration Fee rules, and UCI on My Exam Registrations cards.",
+    changes: [
+      "Internal Edexcel registration: if UCI is empty, allocate Centre + B + school student number last 6 digits",
+      "Candidate Registration Fee is required when UCI is empty or does not end with a letter (imported provisional numbers keep their UCI and still incur the fee)",
+      "Fee (and system-allocated UCI) can be cleared only after all subjects are removed, UCI started empty, and Bulk Entries baseline has not been submitted",
+      "My Exam Registrations cards show UCI Number and Registration item when the fee applies",
+    ],
+  },
   {
     version: "1.2.9",
     releaseDate: "2026-09-05",

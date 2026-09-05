@@ -45,6 +45,9 @@ import { markFeeStatementsNeedsRegeneration } from "@/lib/fees/statement";
 import { applyCandidateRegistrationFeeSelection } from "@/lib/fees/candidate-registration-fee";
 import { assertStudentCanRegister } from "@/lib/students/archive";
 import { generateConfirmationNumber } from "@/lib/registrations/numbering";
+import {
+  ensureEdexcelUciAndRegistrationFeeOnSubjectAdd,
+} from "@/lib/registrations/edexcel-uci-registration";
 
 export interface StaffRegistrationInput {
   candidateId?: string;
@@ -503,6 +506,18 @@ async function applyCandidateRegistrationWorkflow(
           feeError,
         );
       }
+    }
+
+    try {
+      await ensureEdexcelUciAndRegistrationFeeOnSubjectAdd({
+        workspaceId: workspace!.id,
+        performedBy,
+        reason,
+        tx,
+      });
+    } catch (uciError) {
+      if (uciError instanceof RegistrationError) throw uciError;
+      throw uciError;
     }
   });
 

@@ -28,6 +28,10 @@ import {
 import { RegistrationError } from "@/lib/registrations/errors";
 import { windowIncludesSeries } from "@/lib/registrations/included-series";
 import { registrationInclude } from "@/lib/registrations/include";
+import {
+  ensureEdexcelUciAndRegistrationFeeOnSubjectAdd,
+  maybeClearEdexcelRegistrationFeeAndUciAfterSubjectRemoval,
+} from "@/lib/registrations/edexcel-uci-registration";
 
 export { registrationInclude } from "@/lib/registrations/include";
 
@@ -232,12 +236,12 @@ export async function createStudentRegistration(studentId: string, examSessionId
   );
 
   if (existing?.status === RegistrationStatus.CANCELLED) {
-    return prisma.$transaction(async (tx) => {
+    const updated = await prisma.$transaction(async (tx) => {
       const workspaceReady = await hasWorkspaceSchema();
       const workspace = workspaceReady
         ? await ensureRegistrationWorkspace(studentId, registrationWindow.id)
         : null;
-      const updated = await tx.studentExamRegistration.update({
+      const row = await tx.studentExamRegistration.update({
         where: { id: existing.id },
         data: workspace
           ? { ...data, registrationWorkspaceId: workspace.id }
@@ -250,7 +254,7 @@ export async function createStudentRegistration(studentId: string, examSessionId
           registrationWorkspaceId: workspace?.id,
           candidateId: candidate.id,
           studentId,
-          registrationId: updated.id,
+          registrationId: row.id,
           examSessionId,
           action: workspaceReady
             ? RegistrationAuditAction.STUDENT_ADD
@@ -264,14 +268,23 @@ export async function createStudentRegistration(studentId: string, examSessionId
           assessmentHubCandidateNumberSnapshot: candidate.assessmentHubCandidateNumber,
           candidateTypeSnapshot: candidate.candidateType,
           beforeValue: registrationAuditSnapshot(existing),
-          afterValue: registrationAuditSnapshot(updated),
+          afterValue: registrationAuditSnapshot(row),
           note: "Re-added to registration list",
         },
         tx,
       );
 
-      return updated;
+      if (workspace) {
+        await ensureEdexcelUciAndRegistrationFeeOnSubjectAdd({
+          workspaceId: workspace.id,
+          performedBy: { id: studentId, role: "STUDENT" },
+          tx,
+        });
+      }
+
+      return row;
     });
+    return updated;
   }
 
   return prisma.$transaction(async (tx) => {
@@ -306,6 +319,14 @@ export async function createStudentRegistration(studentId: string, examSessionId
       },
       tx,
     );
+
+    if (workspace) {
+      await ensureEdexcelUciAndRegistrationFeeOnSubjectAdd({
+        workspaceId: workspace.id,
+        performedBy: { id: studentId, role: "STUDENT" },
+        tx,
+      });
+    }
 
     return created;
   });
@@ -377,6 +398,14 @@ export async function cancelStudentRegistration(studentId: string, registrationI
       },
       tx,
     );
+
+    if (registration.registrationWorkspaceId) {
+      await maybeClearEdexcelRegistrationFeeAndUciAfterSubjectRemoval({
+        workspaceId: registration.registrationWorkspaceId,
+        performedBy: { id: studentId, role: "STUDENT" },
+        tx,
+      });
+    }
 
     return updated;
   });

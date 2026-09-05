@@ -29186,6 +29186,9 @@ export namespace Prisma {
     restrictedUpdatedById: string | null
     restrictedUpdatedAt: Date | null
     includeCandidateRegistrationFee: boolean | null
+    uciAtEntry: string | null
+    uciEntrySnapshotCaptured: boolean | null
+    uciAllocatedBySystem: boolean | null
     registrationNumber: string | null
     confirmationNumber: string | null
     createdAt: Date | null
@@ -29226,6 +29229,9 @@ export namespace Prisma {
     restrictedUpdatedById: string | null
     restrictedUpdatedAt: Date | null
     includeCandidateRegistrationFee: boolean | null
+    uciAtEntry: string | null
+    uciEntrySnapshotCaptured: boolean | null
+    uciAllocatedBySystem: boolean | null
     registrationNumber: string | null
     confirmationNumber: string | null
     createdAt: Date | null
@@ -29266,6 +29272,9 @@ export namespace Prisma {
     restrictedUpdatedById: number
     restrictedUpdatedAt: number
     includeCandidateRegistrationFee: number
+    uciAtEntry: number
+    uciEntrySnapshotCaptured: number
+    uciAllocatedBySystem: number
     registrationNumber: number
     confirmationNumber: number
     createdAt: number
@@ -29308,6 +29317,9 @@ export namespace Prisma {
     restrictedUpdatedById?: true
     restrictedUpdatedAt?: true
     includeCandidateRegistrationFee?: true
+    uciAtEntry?: true
+    uciEntrySnapshotCaptured?: true
+    uciAllocatedBySystem?: true
     registrationNumber?: true
     confirmationNumber?: true
     createdAt?: true
@@ -29348,6 +29360,9 @@ export namespace Prisma {
     restrictedUpdatedById?: true
     restrictedUpdatedAt?: true
     includeCandidateRegistrationFee?: true
+    uciAtEntry?: true
+    uciEntrySnapshotCaptured?: true
+    uciAllocatedBySystem?: true
     registrationNumber?: true
     confirmationNumber?: true
     createdAt?: true
@@ -29388,6 +29403,9 @@ export namespace Prisma {
     restrictedUpdatedById?: true
     restrictedUpdatedAt?: true
     includeCandidateRegistrationFee?: true
+    uciAtEntry?: true
+    uciEntrySnapshotCaptured?: true
+    uciAllocatedBySystem?: true
     registrationNumber?: true
     confirmationNumber?: true
     createdAt?: true
@@ -29501,6 +29519,9 @@ export namespace Prisma {
     restrictedUpdatedById: string | null
     restrictedUpdatedAt: Date | null
     includeCandidateRegistrationFee: boolean
+    uciAtEntry: string | null
+    uciEntrySnapshotCaptured: boolean
+    uciAllocatedBySystem: boolean
     registrationNumber: string | null
     confirmationNumber: string | null
     createdAt: Date
@@ -29558,6 +29579,9 @@ export namespace Prisma {
     restrictedUpdatedById?: boolean
     restrictedUpdatedAt?: boolean
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: boolean
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: boolean
     confirmationNumber?: boolean
     createdAt?: boolean
@@ -29614,13 +29638,16 @@ export namespace Prisma {
     restrictedUpdatedById?: boolean
     restrictedUpdatedAt?: boolean
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: boolean
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: boolean
     confirmationNumber?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RegistrationWorkspaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "candidateId" | "studentId" | "registrationWindowId" | "lockedAt" | "lastAdjustedByUserId" | "lastAdjustedByRole" | "lastAdjustedAt" | "lastAdjustmentReason" | "lastAdjustmentSummary" | "hasPostLockAdjustment" | "isLateRegistration" | "entryType" | "feeStageId" | "entryTypeOverridden" | "entryTypeOverrideReason" | "registrationSource" | "visibility" | "billingScope" | "registrationType" | "reason" | "visibleToStudent" | "visibleToTeacher" | "visibleInStudentPortal" | "visibleInTeacherPortal" | "visibleInStudentDocuments" | "visibleInStudentBilling" | "restrictedReason" | "restrictedCreatedById" | "restrictedCreatedAt" | "restrictedUpdatedById" | "restrictedUpdatedAt" | "includeCandidateRegistrationFee" | "registrationNumber" | "confirmationNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationWorkspace"]>
+  export type RegistrationWorkspaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "candidateId" | "studentId" | "registrationWindowId" | "lockedAt" | "lastAdjustedByUserId" | "lastAdjustedByRole" | "lastAdjustedAt" | "lastAdjustmentReason" | "lastAdjustmentSummary" | "hasPostLockAdjustment" | "isLateRegistration" | "entryType" | "feeStageId" | "entryTypeOverridden" | "entryTypeOverrideReason" | "registrationSource" | "visibility" | "billingScope" | "registrationType" | "reason" | "visibleToStudent" | "visibleToTeacher" | "visibleInStudentPortal" | "visibleInTeacherPortal" | "visibleInStudentDocuments" | "visibleInStudentBilling" | "restrictedReason" | "restrictedCreatedById" | "restrictedCreatedAt" | "restrictedUpdatedById" | "restrictedUpdatedAt" | "includeCandidateRegistrationFee" | "uciAtEntry" | "uciEntrySnapshotCaptured" | "uciAllocatedBySystem" | "registrationNumber" | "confirmationNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationWorkspace"]>
   export type RegistrationWorkspaceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     candidate?: boolean | RegistrationWorkspace$candidateArgs<ExtArgs>
     student?: boolean | RegistrationWorkspace$studentArgs<ExtArgs>
@@ -29689,6 +29716,19 @@ export namespace Prisma {
       restrictedUpdatedById: string | null
       restrictedUpdatedAt: Date | null
       includeCandidateRegistrationFee: boolean
+      /**
+       * UCI on the candidate×board identity when this workspace first gained a subject (Edexcel rules).
+       * null = snapshot not captured yet; empty string is not used — use uciEntrySnapshotCaptured.
+       */
+      uciAtEntry: string | null
+      /**
+       * True once uciAtEntry has been recorded for this workspace.
+       */
+      uciEntrySnapshotCaptured: boolean
+      /**
+       * True when this workspace allocated a provisional UCI because uciAtEntry was empty.
+       */
+      uciAllocatedBySystem: boolean
       registrationNumber: string | null
       confirmationNumber: string | null
       createdAt: Date
@@ -30108,6 +30148,9 @@ export namespace Prisma {
     readonly restrictedUpdatedById: FieldRef<"RegistrationWorkspace", 'String'>
     readonly restrictedUpdatedAt: FieldRef<"RegistrationWorkspace", 'DateTime'>
     readonly includeCandidateRegistrationFee: FieldRef<"RegistrationWorkspace", 'Boolean'>
+    readonly uciAtEntry: FieldRef<"RegistrationWorkspace", 'String'>
+    readonly uciEntrySnapshotCaptured: FieldRef<"RegistrationWorkspace", 'Boolean'>
+    readonly uciAllocatedBySystem: FieldRef<"RegistrationWorkspace", 'Boolean'>
     readonly registrationNumber: FieldRef<"RegistrationWorkspace", 'String'>
     readonly confirmationNumber: FieldRef<"RegistrationWorkspace", 'String'>
     readonly createdAt: FieldRef<"RegistrationWorkspace", 'DateTime'>
@@ -74056,6 +74099,9 @@ export namespace Prisma {
     restrictedUpdatedById: 'restrictedUpdatedById',
     restrictedUpdatedAt: 'restrictedUpdatedAt',
     includeCandidateRegistrationFee: 'includeCandidateRegistrationFee',
+    uciAtEntry: 'uciAtEntry',
+    uciEntrySnapshotCaptured: 'uciEntrySnapshotCaptured',
+    uciAllocatedBySystem: 'uciAllocatedBySystem',
     registrationNumber: 'registrationNumber',
     confirmationNumber: 'confirmationNumber',
     createdAt: 'createdAt',
@@ -75087,6 +75133,7 @@ export namespace Prisma {
     restrictedReason: 'restrictedReason',
     restrictedCreatedById: 'restrictedCreatedById',
     restrictedUpdatedById: 'restrictedUpdatedById',
+    uciAtEntry: 'uciAtEntry',
     registrationNumber: 'registrationNumber',
     confirmationNumber: 'confirmationNumber'
   };
@@ -78013,6 +78060,9 @@ export namespace Prisma {
     restrictedUpdatedById?: StringNullableFilter<"RegistrationWorkspace"> | string | null
     restrictedUpdatedAt?: DateTimeNullableFilter<"RegistrationWorkspace"> | Date | string | null
     includeCandidateRegistrationFee?: BoolFilter<"RegistrationWorkspace"> | boolean
+    uciAtEntry?: StringNullableFilter<"RegistrationWorkspace"> | string | null
+    uciEntrySnapshotCaptured?: BoolFilter<"RegistrationWorkspace"> | boolean
+    uciAllocatedBySystem?: BoolFilter<"RegistrationWorkspace"> | boolean
     registrationNumber?: StringNullableFilter<"RegistrationWorkspace"> | string | null
     confirmationNumber?: StringNullableFilter<"RegistrationWorkspace"> | string | null
     createdAt?: DateTimeFilter<"RegistrationWorkspace"> | Date | string
@@ -78066,6 +78116,9 @@ export namespace Prisma {
     restrictedUpdatedById?: SortOrderInput | SortOrder
     restrictedUpdatedAt?: SortOrderInput | SortOrder
     includeCandidateRegistrationFee?: SortOrder
+    uciAtEntry?: SortOrderInput | SortOrder
+    uciEntrySnapshotCaptured?: SortOrder
+    uciAllocatedBySystem?: SortOrder
     registrationNumber?: SortOrderInput | SortOrder
     confirmationNumber?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -78127,6 +78180,9 @@ export namespace Prisma {
     restrictedUpdatedById?: StringNullableFilter<"RegistrationWorkspace"> | string | null
     restrictedUpdatedAt?: DateTimeNullableFilter<"RegistrationWorkspace"> | Date | string | null
     includeCandidateRegistrationFee?: BoolFilter<"RegistrationWorkspace"> | boolean
+    uciAtEntry?: StringNullableFilter<"RegistrationWorkspace"> | string | null
+    uciEntrySnapshotCaptured?: BoolFilter<"RegistrationWorkspace"> | boolean
+    uciAllocatedBySystem?: BoolFilter<"RegistrationWorkspace"> | boolean
     createdAt?: DateTimeFilter<"RegistrationWorkspace"> | Date | string
     updatedAt?: DateTimeFilter<"RegistrationWorkspace"> | Date | string
     candidate?: XOR<CandidateNullableScalarRelationFilter, CandidateWhereInput> | null
@@ -78178,6 +78234,9 @@ export namespace Prisma {
     restrictedUpdatedById?: SortOrderInput | SortOrder
     restrictedUpdatedAt?: SortOrderInput | SortOrder
     includeCandidateRegistrationFee?: SortOrder
+    uciAtEntry?: SortOrderInput | SortOrder
+    uciEntrySnapshotCaptured?: SortOrder
+    uciAllocatedBySystem?: SortOrder
     registrationNumber?: SortOrderInput | SortOrder
     confirmationNumber?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -78224,6 +78283,9 @@ export namespace Prisma {
     restrictedUpdatedById?: StringNullableWithAggregatesFilter<"RegistrationWorkspace"> | string | null
     restrictedUpdatedAt?: DateTimeNullableWithAggregatesFilter<"RegistrationWorkspace"> | Date | string | null
     includeCandidateRegistrationFee?: BoolWithAggregatesFilter<"RegistrationWorkspace"> | boolean
+    uciAtEntry?: StringNullableWithAggregatesFilter<"RegistrationWorkspace"> | string | null
+    uciEntrySnapshotCaptured?: BoolWithAggregatesFilter<"RegistrationWorkspace"> | boolean
+    uciAllocatedBySystem?: BoolWithAggregatesFilter<"RegistrationWorkspace"> | boolean
     registrationNumber?: StringNullableWithAggregatesFilter<"RegistrationWorkspace"> | string | null
     confirmationNumber?: StringNullableWithAggregatesFilter<"RegistrationWorkspace"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"RegistrationWorkspace"> | Date | string
@@ -84907,6 +84969,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -84960,6 +85025,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -84999,6 +85067,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85052,6 +85123,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85098,6 +85172,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -85131,6 +85208,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -85171,6 +85251,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -92051,6 +92134,9 @@ export namespace Prisma {
     restrictedUpdatedById?: SortOrder
     restrictedUpdatedAt?: SortOrder
     includeCandidateRegistrationFee?: SortOrder
+    uciAtEntry?: SortOrder
+    uciEntrySnapshotCaptured?: SortOrder
+    uciAllocatedBySystem?: SortOrder
     registrationNumber?: SortOrder
     confirmationNumber?: SortOrder
     createdAt?: SortOrder
@@ -92091,6 +92177,9 @@ export namespace Prisma {
     restrictedUpdatedById?: SortOrder
     restrictedUpdatedAt?: SortOrder
     includeCandidateRegistrationFee?: SortOrder
+    uciAtEntry?: SortOrder
+    uciEntrySnapshotCaptured?: SortOrder
+    uciAllocatedBySystem?: SortOrder
     registrationNumber?: SortOrder
     confirmationNumber?: SortOrder
     createdAt?: SortOrder
@@ -92131,6 +92220,9 @@ export namespace Prisma {
     restrictedUpdatedById?: SortOrder
     restrictedUpdatedAt?: SortOrder
     includeCandidateRegistrationFee?: SortOrder
+    uciAtEntry?: SortOrder
+    uciEntrySnapshotCaptured?: SortOrder
+    uciAllocatedBySystem?: SortOrder
     registrationNumber?: SortOrder
     confirmationNumber?: SortOrder
     createdAt?: SortOrder
@@ -108578,6 +108670,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -108629,6 +108724,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -108678,6 +108776,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -108729,6 +108830,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -109658,6 +109762,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -109709,6 +109816,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -109758,6 +109868,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -109809,6 +109922,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -111324,6 +111440,9 @@ export namespace Prisma {
     restrictedUpdatedById?: StringNullableFilter<"RegistrationWorkspace"> | string | null
     restrictedUpdatedAt?: DateTimeNullableFilter<"RegistrationWorkspace"> | Date | string | null
     includeCandidateRegistrationFee?: BoolFilter<"RegistrationWorkspace"> | boolean
+    uciAtEntry?: StringNullableFilter<"RegistrationWorkspace"> | string | null
+    uciEntrySnapshotCaptured?: BoolFilter<"RegistrationWorkspace"> | boolean
+    uciAllocatedBySystem?: BoolFilter<"RegistrationWorkspace"> | boolean
     registrationNumber?: StringNullableFilter<"RegistrationWorkspace"> | string | null
     confirmationNumber?: StringNullableFilter<"RegistrationWorkspace"> | string | null
     createdAt?: DateTimeFilter<"RegistrationWorkspace"> | Date | string
@@ -115600,6 +115719,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -115651,6 +115773,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -119300,6 +119425,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -119351,6 +119479,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -121463,6 +121594,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -121514,6 +121648,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -124232,6 +124369,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -124284,6 +124424,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -125306,6 +125449,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -125358,6 +125504,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -126036,6 +126185,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -126088,6 +126240,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -126797,6 +126952,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -126849,6 +127007,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -127584,6 +127745,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -127636,6 +127800,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -128415,6 +128582,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -128467,6 +128637,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -129496,6 +129669,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -129548,6 +129724,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -130352,6 +130531,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -130404,6 +130586,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -142372,6 +142557,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -142424,6 +142612,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -143898,6 +144089,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -143950,6 +144144,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -145694,6 +145891,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -145746,6 +145946,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -146313,6 +146516,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146365,6 +146571,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -157309,6 +157518,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -157348,6 +157560,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -157665,6 +157880,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -157704,6 +157922,9 @@ export namespace Prisma {
     restrictedCreatedAt?: Date | string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -158674,6 +158895,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -158725,6 +158949,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -158770,6 +158997,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -158803,6 +159033,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -158854,6 +159087,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -158899,6 +159135,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -159832,6 +160071,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -159883,6 +160125,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -159928,6 +160173,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -159961,6 +160209,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -160012,6 +160263,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -160057,6 +160311,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -161436,6 +161693,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -161808,6 +162068,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -161859,6 +162122,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -161904,6 +162170,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -162896,6 +163165,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -163323,6 +163595,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -163374,6 +163649,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -163419,6 +163697,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -164263,6 +164544,9 @@ export namespace Prisma {
     restrictedUpdatedById?: string | null
     restrictedUpdatedAt?: Date | string | null
     includeCandidateRegistrationFee?: boolean
+    uciAtEntry?: string | null
+    uciEntrySnapshotCaptured?: boolean
+    uciAllocatedBySystem?: boolean
     registrationNumber?: string | null
     confirmationNumber?: string | null
     createdAt?: Date | string
@@ -164368,6 +164652,9 @@ export namespace Prisma {
     restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -164419,6 +164706,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -164464,6 +164754,9 @@ export namespace Prisma {
     restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
     restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    uciAtEntry?: NullableStringFieldUpdateOperationsInput | string | null
+    uciEntrySnapshotCaptured?: BoolFieldUpdateOperationsInput | boolean
+    uciAllocatedBySystem?: BoolFieldUpdateOperationsInput | boolean
     registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

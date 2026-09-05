@@ -1008,6 +1008,14 @@ model RegistrationWorkspace {
 
   includeCandidateRegistrationFee Boolean @default(false)
 
+  /// UCI on the candidate×board identity when this workspace first gained a subject (Edexcel rules).
+  /// null = snapshot not captured yet; empty string is not used — use uciEntrySnapshotCaptured.
+  uciAtEntry               String?
+  /// True once uciAtEntry has been recorded for this workspace.
+  uciEntrySnapshotCaptured Boolean @default(false)
+  /// True when this workspace allocated a provisional UCI because uciAtEntry was empty.
+  uciAllocatedBySystem     Boolean @default(false)
+
   registrationNumber String? @unique
   confirmationNumber String? @unique
 

@@ -129,12 +129,29 @@ function WindowCard({
             <dt className="text-slate-500">Selected exams</dt>
             <dd className="font-medium text-slate-800">{group.registrations.length}</dd>
           </div>
+          <div>
+            <dt className="text-slate-500">UCI Number</dt>
+            <dd className="font-medium font-mono text-xs text-slate-800 sm:text-sm">
+              {group.uciNumber?.trim() || "—"}
+            </dd>
+          </div>
           <div className="sm:col-span-2">
             <dt className="text-slate-500">Last updated</dt>
             <dd className="font-medium text-slate-800">
               {new Date(group.lastUpdatedAt).toLocaleString()}
             </dd>
           </div>
+          {group.candidateRegistrationFee ? (
+            <div className="sm:col-span-2 rounded-lg border border-slate-200 bg-white px-3 py-2">
+              <dt className="text-slate-500">Registration item</dt>
+              <dd className="font-medium text-slate-800">
+                {group.candidateRegistrationFee.serviceName}
+                {group.candidateRegistrationFee.boardName
+                  ? ` · ${group.candidateRegistrationFee.boardName}`
+                  : ""}
+              </dd>
+            </div>
+          ) : null}
         </dl>
 
         <div className="mt-4 flex flex-wrap gap-2">
