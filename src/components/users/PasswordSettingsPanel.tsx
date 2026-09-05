@@ -138,8 +138,7 @@ export function PasswordSettingsPanel() {
     });
   }
 
-  async function handleSave(event: FormEvent) {
-    event.preventDefault();
+  async function persistSettings(source: "notifications" | "smtp" = "smtp") {
     if (!form) return;
 
     setSaving(true);
@@ -176,12 +175,21 @@ export function PasswordSettingsPanel() {
       const next = data as unknown as PasswordSettings;
       setSettings(next);
       setForm(settingsToForm(next));
-      setMessage("Email settings saved.");
+      setMessage(
+        source === "notifications"
+          ? "Notification settings saved."
+          : "Email settings saved.",
+      );
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : "Save failed");
     } finally {
       setSaving(false);
     }
+  }
+
+  async function handleSave(event: FormEvent) {
+    event.preventDefault();
+    await persistSettings("smtp");
   }
 
   async function sendTestEmail(event: FormEvent) {
@@ -387,6 +395,14 @@ export function PasswordSettingsPanel() {
                 </span>
               </span>
             </label>
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() => void persistSettings("notifications")}
+              className={primaryButtonClass}
+            >
+              {saving ? "Saving..." : "Save notification settings"}
+            </button>
           </div>
 
           <div className="space-y-6 border border-slate-200 p-4">
@@ -560,7 +576,7 @@ export function PasswordSettingsPanel() {
             </div>
 
             <button type="submit" disabled={saving} className={primaryButtonClass}>
-              {saving ? "Saving..." : "Save settings"}
+              {saving ? "Saving..." : "Save SMTP settings"}
             </button>
           </div>
         </form>
