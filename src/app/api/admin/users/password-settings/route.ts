@@ -29,6 +29,7 @@ function serializeSettings(
     notifyFeeStatementIssued: settings.notifyFeeStatementIssued,
     notifyRegistrationUpdated: settings.notifyRegistrationUpdated,
     notifyFeeStatementPaid: settings.notifyFeeStatementPaid,
+    notifyStaffStudentAdjustment: settings.notifyStaffStudentAdjustment,
   };
 }
 
@@ -69,6 +70,7 @@ export async function PUT(request: NextRequest) {
     notifyFeeStatementIssued?: boolean;
     notifyRegistrationUpdated?: boolean;
     notifyFeeStatementPaid?: boolean;
+    notifyStaffStudentAdjustment?: boolean;
   }>(body, []);
 
   if (!data) return jsonError("Invalid request body");

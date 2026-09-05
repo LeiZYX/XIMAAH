@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { RegistrationList } from "@/components/registrations/RegistrationList";
 import { PendingTeacherChangeRequests } from "@/components/registrations/PendingTeacherChangeRequests";
+import { PendingStudentAdjustmentRequests } from "@/components/registrations/PendingStudentAdjustmentRequests";
 import { AddRegistrationDropdown } from "@/components/registrations/AddRegistrationDropdown";
 import { RegistrationWorkspaceList } from "@/components/registrations/RegistrationWorkspaceList";
 import { RegistrationsRefreshProvider, RegistrationWindowFilterBar } from "@/components/registrations/registrations-refresh";
@@ -25,6 +26,14 @@ export default function ExamOfficeRegistrationsPage() {
         apiPath="/api/exam-office/change-requests"
         detailBasePath="/exam-office/registrations"
         approveApiBase="/api/exam-office/change-requests"
+      />
+      <PendingStudentAdjustmentRequests
+        apiPath="/api/exam-office/student-adjustment-requests"
+        approveApiBase="/api/exam-office/student-adjustment-requests"
+        status="PENDING_EO"
+        title="Pending student adjustment requests"
+        description="Second-step approval for student late adjustments. Approving applies the changes and may require regenerating the fee statement."
+        detailBasePath="/exam-office/registrations"
       />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div />

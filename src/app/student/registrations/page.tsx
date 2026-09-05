@@ -74,6 +74,7 @@ export default function StudentRegistrationsPage() {
           registrations={registrations}
           actionId={actionId}
           onRemove={handleRemove}
+          onRefresh={load}
         />
       )}
     </div>

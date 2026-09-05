@@ -14,6 +14,7 @@ const topLinks = [
   { href: "/exam-office/board-submissions", label: "Board Submissions" },
   { href: "/exam-office/exam-documents", label: "Exam Documents" },
   { href: "/exam-office/candidates", label: "Candidates" },
+  { href: "/exam-office/class-homeroom", label: "Class form teachers" },
   { href: "/exam-office/exam-boards", label: "Exam Boards" },
 ];
 

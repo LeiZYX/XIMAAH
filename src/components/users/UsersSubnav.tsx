@@ -7,6 +7,7 @@ const userLinks = [
   { href: "/admin/users", label: "All Users", exact: true },
   { href: "/admin/users/students", label: "Students" },
   { href: "/admin/users/teachers", label: "Teachers" },
+  { href: "/admin/users/class-homeroom", label: "Class form teachers" },
   { href: "/admin/users/import", label: "Import / Export" },
   { href: "/admin/users/promotion", label: "Class Promotion" },
   { href: "/admin/users/password-settings", label: "Password & Email Settings" },

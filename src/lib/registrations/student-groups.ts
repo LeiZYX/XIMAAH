@@ -33,6 +33,8 @@ export interface StudentRegistrationRow {
     studentRegistrationOpenAt: string;
     studentRegistrationCloseAt: string;
     registrationCloseAt: string;
+    studentAdjustmentRequestEnabled?: boolean;
+    studentAdjustmentRequestCloseAt?: string | null;
   };
   registrationWorkspace?: {
     id: string;

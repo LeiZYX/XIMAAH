@@ -32,6 +32,8 @@ interface WindowDetail {
   eoAssistedRegistrationEnabled: boolean;
   officeOnlyRegistrationEnabled: boolean;
   postLockAdjustmentEnabled: boolean;
+  studentAdjustmentRequestEnabled: boolean;
+  studentAdjustmentRequestCloseAt: string;
   examBoard: { id: string; code: string; name: string };
   examSeries: { id: string; name: string; year: number };
   includedExamSessions?: IncludedExamSession[];
@@ -163,6 +165,10 @@ export function RegistrationWindowGeneral({
       studentRegistrationOpenAt: isoToDatetimeLocalValue(data.studentRegistrationOpenAt),
       studentRegistrationCloseAt: isoToDatetimeLocalValue(data.studentRegistrationCloseAt),
       registrationCloseAt: isoToDatetimeLocalValue(data.registrationCloseAt),
+      studentAdjustmentRequestEnabled: Boolean(data.studentAdjustmentRequestEnabled),
+      studentAdjustmentRequestCloseAt: data.studentAdjustmentRequestCloseAt
+        ? isoToDatetimeLocalValue(data.studentAdjustmentRequestCloseAt)
+        : "",
     });
     setExamSeriesIds((data.includedExamSessions ?? []).map((session) => session.examSeriesId));
     await Promise.all([loadSessions(data.examBoard.id), loadTimeline(), loadSeriesConflicts()]);
@@ -218,6 +224,10 @@ export function RegistrationWindowGeneral({
         eoAssistedRegistrationEnabled: window.eoAssistedRegistrationEnabled,
         officeOnlyRegistrationEnabled: window.officeOnlyRegistrationEnabled,
         postLockAdjustmentEnabled: window.postLockAdjustmentEnabled,
+        studentAdjustmentRequestEnabled: window.studentAdjustmentRequestEnabled,
+        studentAdjustmentRequestCloseAt: window.studentAdjustmentRequestEnabled
+          ? datetimeLocalValueToIso(window.studentAdjustmentRequestCloseAt)
+          : null,
       }),
     });
 
@@ -470,6 +480,53 @@ export function RegistrationWindowGeneral({
                   {label}
                 </label>
               ))}
+              <label className="flex items-center gap-2 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={window.studentAdjustmentRequestEnabled}
+                  onChange={(e) => {
+                    const enabled = e.target.checked;
+                    let closeAt = window.studentAdjustmentRequestCloseAt;
+                    if (enabled && !closeAt) {
+                      const studentClose = new Date(
+                        datetimeLocalValueToIso(window.studentRegistrationCloseAt),
+                      );
+                      const finalClose = new Date(datetimeLocalValueToIso(window.registrationCloseAt));
+                      const mid = new Date(
+                        studentClose.getTime() + (finalClose.getTime() - studentClose.getTime()) / 2,
+                      );
+                      closeAt = isoToDatetimeLocalValue(mid.toISOString());
+                    }
+                    setWindow({
+                      ...window,
+                      studentAdjustmentRequestEnabled: enabled,
+                      studentAdjustmentRequestCloseAt: enabled ? closeAt : "",
+                    });
+                  }}
+                  className="rounded border-slate-300"
+                />
+                Allow student late adjustment requests
+              </label>
+              {window.studentAdjustmentRequestEnabled ? (
+                <label className="block text-sm">
+                  <span className="mb-1 block text-slate-600">
+                    Student adjustment request close
+                  </span>
+                  <input
+                    required
+                    type="datetime-local"
+                    value={window.studentAdjustmentRequestCloseAt}
+                    onChange={(e) =>
+                      setWindow({ ...window, studentAdjustmentRequestCloseAt: e.target.value })
+                    }
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                  />
+                  <span className="mt-1 block text-xs text-slate-500">
+                    Latest time students may submit (or resubmit after reject). Must be after student
+                    registration close and on or before the final registration close.
+                  </span>
+                </label>
+              ) : null}
             </fieldset>
 
             <div ref={feedbackRef} className="space-y-3 border-t border-slate-100 pt-4">
@@ -510,6 +567,13 @@ export function RegistrationWindowGeneral({
             <li>EO assisted registration: {window.eoAssistedRegistrationEnabled ? "Enabled" : "Disabled"}</li>
             <li>Restricted registration: {window.officeOnlyRegistrationEnabled ? "Enabled" : "Disabled"}</li>
             <li>Post-lock adjustment: {window.postLockAdjustmentEnabled ? "Enabled" : "Disabled"}</li>
+            <li>
+              Student late adjustment requests:{" "}
+              {window.studentAdjustmentRequestEnabled ? "Enabled" : "Disabled"}
+              {window.studentAdjustmentRequestEnabled && window.studentAdjustmentRequestCloseAt
+                ? ` (close ${new Date(datetimeLocalValueToIso(window.studentAdjustmentRequestCloseAt)).toLocaleString()})`
+                : ""}
+            </li>
           </ul>
         </Card>
       )}

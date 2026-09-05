@@ -99,6 +99,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     eoAssistedRegistrationEnabled?: boolean;
     officeOnlyRegistrationEnabled?: boolean;
     postLockAdjustmentEnabled?: boolean;
+    studentAdjustmentRequestEnabled?: boolean;
+    studentAdjustmentRequestCloseAt?: string | null;
   }>(body, []);
 
   if (!data) return jsonError("Invalid body");
@@ -121,6 +123,41 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     studentRegistrationCloseAt,
     registrationCloseAt,
   });
+
+  const studentAdjustmentRequestEnabled =
+    data.studentAdjustmentRequestEnabled !== undefined
+      ? Boolean(data.studentAdjustmentRequestEnabled)
+      : previous.studentAdjustmentRequestEnabled;
+
+  let studentAdjustmentRequestCloseAt =
+    data.studentAdjustmentRequestCloseAt !== undefined
+      ? data.studentAdjustmentRequestCloseAt
+        ? new Date(data.studentAdjustmentRequestCloseAt)
+        : null
+      : previous.studentAdjustmentRequestCloseAt;
+
+  if (studentAdjustmentRequestEnabled) {
+    if (!studentAdjustmentRequestCloseAt) {
+      return jsonError(
+        "Student adjustment request close time is required when student late adjustment requests are enabled",
+        400,
+      );
+    }
+    if (studentAdjustmentRequestCloseAt <= studentRegistrationCloseAt) {
+      return jsonError(
+        "Student adjustment request close must be after student registration close",
+        400,
+      );
+    }
+    if (studentAdjustmentRequestCloseAt > registrationCloseAt) {
+      return jsonError(
+        "Student adjustment request close cannot be after the final registration close",
+        400,
+      );
+    }
+  } else if (data.studentAdjustmentRequestEnabled === false) {
+    studentAdjustmentRequestCloseAt = null;
+  }
 
   const examBoardId =
     data.examBoardId !== undefined ? String(data.examBoardId).trim() : previous.examBoardId;
@@ -193,6 +230,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
           : {}),
         ...(data.postLockAdjustmentEnabled !== undefined
           ? { postLockAdjustmentEnabled: data.postLockAdjustmentEnabled }
+          : {}),
+        ...(data.studentAdjustmentRequestEnabled !== undefined ||
+        data.studentAdjustmentRequestCloseAt !== undefined
+          ? {
+              studentAdjustmentRequestEnabled,
+              studentAdjustmentRequestCloseAt,
+            }
           : {}),
       },
       include: {

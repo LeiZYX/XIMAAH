@@ -18,6 +18,7 @@ export interface ResolvedEmailSettings {
   notifyFeeStatementIssued: boolean;
   notifyRegistrationUpdated: boolean;
   notifyFeeStatementPaid: boolean;
+  notifyStaffStudentAdjustment: boolean;
 }
 
 const SETTINGS_ID = "default";
@@ -86,6 +87,7 @@ export async function getResolvedEmailSettings(): Promise<ResolvedEmailSettings>
     notifyFeeStatementIssued: stored?.notifyFeeStatementIssued ?? true,
     notifyRegistrationUpdated: stored?.notifyRegistrationUpdated ?? true,
     notifyFeeStatementPaid: stored?.notifyFeeStatementPaid ?? true,
+    notifyStaffStudentAdjustment: stored?.notifyStaffStudentAdjustment ?? false,
   };
 }
 
@@ -103,6 +105,7 @@ export interface EmailSettingsInput {
   notifyFeeStatementIssued?: boolean;
   notifyRegistrationUpdated?: boolean;
   notifyFeeStatementPaid?: boolean;
+  notifyStaffStudentAdjustment?: boolean;
 }
 
 export async function saveEmailSettings(input: EmailSettingsInput) {
@@ -142,6 +145,9 @@ export async function saveEmailSettings(input: EmailSettingsInput) {
     ...(typeof input.notifyFeeStatementPaid === "boolean"
       ? { notifyFeeStatementPaid: input.notifyFeeStatementPaid }
       : {}),
+    ...(typeof input.notifyStaffStudentAdjustment === "boolean"
+      ? { notifyStaffStudentAdjustment: input.notifyStaffStudentAdjustment }
+      : {}),
     ...(input.smtpPassword?.trim()
       ? { smtpPassword: input.smtpPassword }
       : existing
@@ -158,6 +164,7 @@ export async function saveEmailSettings(input: EmailSettingsInput) {
       notifyFeeStatementIssued: input.notifyFeeStatementIssued ?? true,
       notifyRegistrationUpdated: input.notifyRegistrationUpdated ?? true,
       notifyFeeStatementPaid: input.notifyFeeStatementPaid ?? true,
+      notifyStaffStudentAdjustment: input.notifyStaffStudentAdjustment ?? false,
       ...data,
     },
     update: data,

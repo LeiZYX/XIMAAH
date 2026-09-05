@@ -8,6 +8,7 @@ import {
   RegistrationConfirmationPrintModal,
   buildConfirmationPrintData,
 } from "@/components/registrations/RegistrationConfirmationPrintModal";
+import { StudentAdjustmentRequestPanel } from "@/components/registrations/StudentAdjustmentRequestPanel";
 import {
   formatWindowRange,
   groupExamsByBoardAndSubject,
@@ -22,16 +23,19 @@ interface StudentRegistrationGroupsProps {
   registrations: StudentRegistrationRow[];
   actionId: string | null;
   onRemove: (id: string) => void;
+  onRefresh?: () => void;
 }
 
 function WindowCard({
   group,
   actionId,
   onRemove,
+  onRefresh,
 }: {
   group: ReturnType<typeof groupRegistrationsByWindow>[number];
   actionId: string | null;
   onRemove: (id: string) => void;
+  onRefresh?: () => void;
 }) {
   const [expanded, setExpanded] = useState(group.cardStatus === "Open");
   const [printOpen, setPrintOpen] = useState(false);
@@ -157,6 +161,16 @@ function WindowCard({
             View My Calendar
           </Link>
         </div>
+        {isLocked && group.workspaceId ? (
+          <div className="mt-4">
+            <StudentAdjustmentRequestPanel
+              workspaceId={group.workspaceId}
+              registrations={group.registrations}
+              window={group.window}
+              onSubmitted={() => onRefresh?.()}
+            />
+          </div>
+        ) : null}
       </div>
 
       {expanded ? (
@@ -245,6 +259,7 @@ export function StudentRegistrationGroups({
   registrations,
   actionId,
   onRemove,
+  onRefresh,
 }: StudentRegistrationGroupsProps) {
   const groups = useMemo(() => groupRegistrationsByWindow(registrations), [registrations]);
 
@@ -270,6 +285,7 @@ export function StudentRegistrationGroups({
           group={group}
           actionId={actionId}
           onRemove={onRemove}
+          onRefresh={onRefresh}
         />
       ))}
     </div>

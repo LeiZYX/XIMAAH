@@ -26,6 +26,7 @@ interface PasswordSettings {
   notifyFeeStatementIssued: boolean;
   notifyRegistrationUpdated: boolean;
   notifyFeeStatementPaid: boolean;
+  notifyStaffStudentAdjustment: boolean;
 }
 
 interface SettingsFormState {
@@ -42,6 +43,7 @@ interface SettingsFormState {
   notifyFeeStatementIssued: boolean;
   notifyRegistrationUpdated: boolean;
   notifyFeeStatementPaid: boolean;
+  notifyStaffStudentAdjustment: boolean;
 }
 
 const inputClass = "w-full rounded border border-slate-300 px-3 py-2 text-sm";
@@ -69,6 +71,7 @@ function settingsToForm(settings: PasswordSettings): SettingsFormState {
     notifyFeeStatementIssued: settings.notifyFeeStatementIssued ?? true,
     notifyRegistrationUpdated: settings.notifyRegistrationUpdated ?? true,
     notifyFeeStatementPaid: settings.notifyFeeStatementPaid ?? true,
+    notifyStaffStudentAdjustment: settings.notifyStaffStudentAdjustment ?? false,
   };
 }
 
@@ -162,6 +165,7 @@ export function PasswordSettingsPanel() {
           notifyFeeStatementIssued: form.notifyFeeStatementIssued,
           notifyRegistrationUpdated: form.notifyRegistrationUpdated,
           notifyFeeStatementPaid: form.notifyFeeStatementPaid,
+          notifyStaffStudentAdjustment: form.notifyStaffStudentAdjustment,
         }),
       });
       const text = await response.text();
@@ -353,6 +357,36 @@ export function PasswordSettingsPanel() {
               Restricted and external registrations are never emailed. Configure SMTP below before
               enabling notifications in production.
             </p>
+          </div>
+
+          <div className="space-y-4 border border-slate-200 p-4">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-900">Staff notifications</h2>
+              <p className="mt-1 text-sm text-slate-600">
+                Independent of the student notification master switch. Uses the same SMTP settings.
+              </p>
+            </div>
+            <label className="flex items-start gap-2 text-sm text-slate-800">
+              <input
+                type="checkbox"
+                className="mt-0.5"
+                checked={form.notifyStaffStudentAdjustment}
+                onChange={(e) =>
+                  setForm((prev) =>
+                    prev
+                      ? { ...prev, notifyStaffStudentAdjustment: e.target.checked }
+                      : prev,
+                  )
+                }
+              />
+              <span>
+                <span className="font-medium">Student late adjustment (teacher review)</span>
+                <span className="mt-0.5 block text-xs text-slate-500">
+                  After a form teacher approves or rejects: email the student, CC Exams Office and
+                  other form teachers in the same grade.
+                </span>
+              </span>
+            </label>
           </div>
 
           <div className="space-y-6 border border-slate-200 p-4">

@@ -167,6 +167,23 @@ enum RegistrationChangeRequestStatus {
   REJECTED
 }
 
+enum StudentAdjustmentRequestStatus {
+  PENDING_TEACHER
+  PENDING_EO
+  APPROVED
+  REJECTED
+}
+
+enum StudentAdjustmentRequestItemType {
+  ADD
+  REMOVE
+}
+
+enum StudentAdjustmentRejectedAtStage {
+  TEACHER
+  EO
+}
+
 enum FeeEntryType {
   NORMAL
   LATE
@@ -376,6 +393,7 @@ enum StudentNotificationType {
   FEE_ISSUED
   REG_UPDATED
   FEE_PAID
+  STUDENT_ADJUSTMENT_TEACHER_REVIEWED
 }
 
 enum StudentNotificationStatus {
@@ -520,6 +538,11 @@ model User {
   offlineWithdrawalRefundsCompleted OfflineWithdrawalRefund[]   @relation("OfflineWithdrawalRefundCompletedBy")
   boardSubmissionBaselinesSubmitted BoardSubmissionBaseline[]   @relation("BoardSubmissionSubmitter")
   studentNotificationLogs           StudentNotificationLog[]
+  studentAdjustmentRequests         StudentAdjustmentRequest[]  @relation("StudentAdjustmentRequestStudent")
+  teacherReviewedStudentAdjustments StudentAdjustmentRequest[]  @relation("StudentAdjustmentTeacherReviewer")
+  eoReviewedStudentAdjustments      StudentAdjustmentRequest[]  @relation("StudentAdjustmentEoReviewer")
+  primaryHomeroomAdjustmentRequests StudentAdjustmentRequest[]  @relation("StudentAdjustmentPrimaryHomeroom")
+  classHomeroomAssignments          ClassHomeroomTeacher[]      @relation("ClassHomeroomTeacher")
 
   @@index([role])
   @@index([isActive])
@@ -585,22 +608,24 @@ model TeacherProfile {
 }
 
 model SystemEmailSettings {
-  id                          String   @id @default("default")
-  smtpHost                    String?
-  smtpPort                    Int      @default(587)
-  smtpSecure                  Boolean  @default(false)
-  smtpUser                    String?
-  smtpPassword                String?
-  mailFrom                    String?
-  passwordResetExpiresMinutes Int      @default(60)
-  appUrl                      String?
+  id                           String   @id @default("default")
+  smtpHost                     String?
+  smtpPort                     Int      @default(587)
+  smtpSecure                   Boolean  @default(false)
+  smtpUser                     String?
+  smtpPassword                 String?
+  mailFrom                     String?
+  passwordResetExpiresMinutes  Int      @default(60)
+  appUrl                       String?
   /// Master switch for internal-student business emails (does not affect password reset).
-  studentNotificationsEnabled Boolean  @default(false)
-  notifyRegistrationLocked    Boolean  @default(true)
-  notifyFeeStatementIssued    Boolean  @default(true)
-  notifyRegistrationUpdated   Boolean  @default(true)
-  notifyFeeStatementPaid      Boolean  @default(true)
-  updatedAt                   DateTime @updatedAt
+  studentNotificationsEnabled  Boolean  @default(false)
+  notifyRegistrationLocked     Boolean  @default(true)
+  notifyFeeStatementIssued     Boolean  @default(true)
+  notifyRegistrationUpdated    Boolean  @default(true)
+  notifyFeeStatementPaid       Boolean  @default(true)
+  /// Staff/student hybrid: teacher-step outcome for late adjustment (To student, Cc EO + grade form teachers).
+  notifyStaffStudentAdjustment Boolean  @default(false)
+  updatedAt                    DateTime @updatedAt
 }
 
 /// Delivery log for internal-student notification emails (lock / fee statement, etc.).
@@ -717,20 +742,21 @@ model Candidate {
   createdAt                    DateTime        @default(now())
   updatedAt                    DateTime        @updatedAt
 
-  examIdentities           CandidateExamIdentity[]
-  registrationWorkspaces   RegistrationWorkspace[]
-  examRegistrations        StudentExamRegistration[]
-  auditLogs                RegistrationAuditLog[]
-  changeRequests           RegistrationChangeRequest[]
-  feeStatements            FeeStatement[]
-  examDocumentAuditLogs    ExamDocumentAuditLog[]
-  candidateAuditLogs       CandidateAuditLog[]
-  reviewRequests           ReviewRequest[]
-  cashInRequests           CashInRequest[]
-  accessToScriptRequests   AccessToScriptRequest[]
-  certificateRequests      CertificateRequest[]
-  postResultsAuditLogs     PostResultsAuditLog[]
-  offlineWithdrawalRefunds OfflineWithdrawalRefund[]
+  examIdentities            CandidateExamIdentity[]
+  registrationWorkspaces    RegistrationWorkspace[]
+  examRegistrations         StudentExamRegistration[]
+  auditLogs                 RegistrationAuditLog[]
+  changeRequests            RegistrationChangeRequest[]
+  studentAdjustmentRequests StudentAdjustmentRequest[]
+  feeStatements             FeeStatement[]
+  examDocumentAuditLogs     ExamDocumentAuditLog[]
+  candidateAuditLogs        CandidateAuditLog[]
+  reviewRequests            ReviewRequest[]
+  cashInRequests            CashInRequest[]
+  accessToScriptRequests    AccessToScriptRequest[]
+  certificateRequests       CertificateRequest[]
+  postResultsAuditLogs      PostResultsAuditLog[]
+  offlineWithdrawalRefunds  OfflineWithdrawalRefund[]
 
   @@index([candidateType])
   @@index([status])
@@ -807,45 +833,65 @@ model TeacherAssignment {
   @@index([subjectId])
 }
 
-model RegistrationWindow {
-  id                             String                   @id @default(cuid())
-  examBoardId                    String
-  examBoard                      ExamBoard                @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
-  examSeriesId                   String
-  examSeries                     ExamSeries               @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
-  title                          String
-  /// UK-style label, e.g. "2026/27" (September–August).
-  academicYear                   String
-  studentRegistrationOpenAt      DateTime
-  studentRegistrationCloseAt     DateTime
-  registrationCloseAt            DateTime
-  status                         RegistrationWindowStatus @default(DRAFT)
-  studentSelfRegistrationEnabled Boolean                  @default(true)
-  eoAssistedRegistrationEnabled  Boolean                  @default(true)
-  officeOnlyRegistrationEnabled  Boolean                  @default(true)
-  postLockAdjustmentEnabled      Boolean                  @default(true)
-  /// Payment platform fee retained on withdrawal refunds (copied from exam-board policy).
-  paymentFeePercent              Decimal                  @default(2) @db.Decimal(5, 2)
-  createdById                    String?
-  createdBy                      User?                    @relation("RegistrationWindowCreator", fields: [createdById], references: [id], onDelete: SetNull)
-  createdAt                      DateTime                 @default(now())
-  updatedAt                      DateTime                 @updatedAt
+/// One form teacher (班主任) per grade + class. Used to route student late adjustment requests.
+model ClassHomeroomTeacher {
+  id            String   @id @default(cuid())
+  grade         Grade
+  className     String
+  teacherUserId String
+  teacher       User     @relation("ClassHomeroomTeacher", fields: [teacherUserId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  registrations            StudentExamRegistration[]
-  workspaces               RegistrationWorkspace[]
-  changeRequests           RegistrationChangeRequest[]
-  feeStages                RegistrationFeeStage[]
-  registrationAuditLogs    RegistrationAuditLog[]
-  feeRules                 FeeRule[]
-  exchangeRates            ExchangeRate[]
-  feeStatements            FeeStatement[]
-  feeAuditLogs             FeeAuditLog[]
-  includedSeries           RegistrationWindowIncludedSeries[]
-  examDocumentAuditLogs    ExamDocumentAuditLog[]
-  postResultsAuditLogs     PostResultsAuditLog[]
-  offlineWithdrawalRefunds OfflineWithdrawalRefund[]
-  boardSubmissionBaselines BoardSubmissionBaseline[]
-  studentNotificationLogs  StudentNotificationLog[]
+  @@unique([grade, className])
+  @@index([teacherUserId])
+  @@index([grade])
+}
+
+model RegistrationWindow {
+  id                              String                   @id @default(cuid())
+  examBoardId                     String
+  examBoard                       ExamBoard                @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  examSeriesId                    String
+  examSeries                      ExamSeries               @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
+  title                           String
+  /// UK-style label, e.g. "2026/27" (September–August).
+  academicYear                    String
+  studentRegistrationOpenAt       DateTime
+  studentRegistrationCloseAt      DateTime
+  registrationCloseAt             DateTime
+  status                          RegistrationWindowStatus @default(DRAFT)
+  studentSelfRegistrationEnabled  Boolean                  @default(true)
+  eoAssistedRegistrationEnabled   Boolean                  @default(true)
+  officeOnlyRegistrationEnabled   Boolean                  @default(true)
+  postLockAdjustmentEnabled       Boolean                  @default(true)
+  /// When true, students may submit a late adjustment request after student registration close.
+  studentAdjustmentRequestEnabled Boolean                  @default(false)
+  /// Latest time a student may submit (or resubmit after reject) a late adjustment request.
+  studentAdjustmentRequestCloseAt DateTime?
+  /// Payment platform fee retained on withdrawal refunds (copied from exam-board policy).
+  paymentFeePercent               Decimal                  @default(2) @db.Decimal(5, 2)
+  createdById                     String?
+  createdBy                       User?                    @relation("RegistrationWindowCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt                       DateTime                 @default(now())
+  updatedAt                       DateTime                 @updatedAt
+
+  registrations             StudentExamRegistration[]
+  workspaces                RegistrationWorkspace[]
+  changeRequests            RegistrationChangeRequest[]
+  studentAdjustmentRequests StudentAdjustmentRequest[]
+  feeStages                 RegistrationFeeStage[]
+  registrationAuditLogs     RegistrationAuditLog[]
+  feeRules                  FeeRule[]
+  exchangeRates             ExchangeRate[]
+  feeStatements             FeeStatement[]
+  feeAuditLogs              FeeAuditLog[]
+  includedSeries            RegistrationWindowIncludedSeries[]
+  examDocumentAuditLogs     ExamDocumentAuditLog[]
+  postResultsAuditLogs      PostResultsAuditLog[]
+  offlineWithdrawalRefunds  OfflineWithdrawalRefund[]
+  boardSubmissionBaselines  BoardSubmissionBaseline[]
+  studentNotificationLogs   StudentNotificationLog[]
 
   @@index([examBoardId])
   @@index([examSeriesId])
@@ -968,11 +1014,12 @@ model RegistrationWorkspace {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  registrations            StudentExamRegistration[]
-  auditLogs                RegistrationAuditLog[]
-  changeRequests           RegistrationChangeRequest[]
-  feeStatements            FeeStatement[]
-  offlineWithdrawalRefunds OfflineWithdrawalRefund[]
+  registrations             StudentExamRegistration[]
+  auditLogs                 RegistrationAuditLog[]
+  changeRequests            RegistrationChangeRequest[]
+  studentAdjustmentRequests StudentAdjustmentRequest[]
+  feeStatements             FeeStatement[]
+  offlineWithdrawalRefunds  OfflineWithdrawalRefund[]
 
   @@unique([candidateId, registrationWindowId, registrationType], map: "rw_candidate_window_type_uq")
   @@unique([studentId, registrationWindowId, registrationType], map: "rw_student_window_type_uq")
@@ -1166,6 +1213,70 @@ model RegistrationChangeRequestExamSession {
   @@unique([changeRequestId, examSessionId])
   @@index([changeRequestId])
   @@index([examSessionId])
+}
+
+/// Student-initiated batch add/remove request after student registration close.
+model StudentAdjustmentRequest {
+  id                      String                         @id @default(cuid())
+  registrationWorkspaceId String
+  registrationWorkspace   RegistrationWorkspace          @relation(fields: [registrationWorkspaceId], references: [id], onDelete: Cascade)
+  registrationWindowId    String
+  registrationWindow      RegistrationWindow             @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  studentId               String
+  student                 User                           @relation("StudentAdjustmentRequestStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  candidateId             String?
+  candidate               Candidate?                     @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  status                  StudentAdjustmentRequestStatus
+  submittedAt             DateTime                       @default(now())
+
+  /// Form teacher for the student's class at submit time (required for routing).
+  primaryHomeroomTeacherId String?
+  primaryHomeroomTeacher   User?   @relation("StudentAdjustmentPrimaryHomeroom", fields: [primaryHomeroomTeacherId], references: [id], onDelete: SetNull)
+  studentGradeSnapshot     Grade?
+  studentClassNameSnapshot String?
+
+  teacherReviewedByUserId String?
+  teacherReviewedBy       User?     @relation("StudentAdjustmentTeacherReviewer", fields: [teacherReviewedByUserId], references: [id], onDelete: SetNull)
+  teacherReviewedAt       DateTime?
+  teacherReviewReason     String?   @db.Text
+
+  eoReviewedByUserId String?
+  eoReviewedBy       User?     @relation("StudentAdjustmentEoReviewer", fields: [eoReviewedByUserId], references: [id], onDelete: SetNull)
+  eoReviewedAt       DateTime?
+  eoReviewReason     String?   @db.Text
+
+  rejectedAtStage StudentAdjustmentRejectedAtStage?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items StudentAdjustmentRequestItem[]
+
+  @@index([registrationWorkspaceId])
+  @@index([registrationWindowId])
+  @@index([studentId])
+  @@index([candidateId])
+  @@index([primaryHomeroomTeacherId])
+  @@index([studentGradeSnapshot])
+  @@index([status])
+  @@index([submittedAt])
+}
+
+model StudentAdjustmentRequestItem {
+  id                   String                           @id @default(cuid())
+  requestId            String
+  request              StudentAdjustmentRequest         @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  itemType             StudentAdjustmentRequestItemType
+  targetExamSessionId  String?
+  targetExamSession    ExamSession?                     @relation(fields: [targetExamSessionId], references: [id], onDelete: SetNull)
+  targetRegistrationId String?
+  studentReason        String                           @db.Text
+  createdAt            DateTime                         @default(now())
+
+  @@index([requestId])
+  @@index([targetExamSessionId])
+  @@index([targetRegistrationId])
+  @@index([itemType])
 }
 
 model ExamBoard {
@@ -1401,17 +1512,18 @@ model ExamSession {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 
-  studentExamRegistrations  StudentExamRegistration[]
-  registrationAuditLogs     RegistrationAuditLog[]
-  changeRequestTargets      RegistrationChangeRequest[]            @relation("ChangeRequestTargetSession")
-  changeRequestReplacements RegistrationChangeRequest[]            @relation("ChangeRequestReplacementSession")
-  changeRequestExamSessions RegistrationChangeRequestExamSession[]
-  feeRules                  FeeRule[]
-  feeStatementItems         FeeStatementItem[]
-  examDocumentAuditLogs     ExamDocumentAuditLog[]
-  reviewRequests            ReviewRequest[]
-  accessToScriptRequests    AccessToScriptRequest[]
-  offlineWithdrawalRefunds  OfflineWithdrawalRefund[]
+  studentExamRegistrations      StudentExamRegistration[]
+  registrationAuditLogs         RegistrationAuditLog[]
+  changeRequestTargets          RegistrationChangeRequest[]            @relation("ChangeRequestTargetSession")
+  changeRequestReplacements     RegistrationChangeRequest[]            @relation("ChangeRequestReplacementSession")
+  changeRequestExamSessions     RegistrationChangeRequestExamSession[]
+  studentAdjustmentRequestItems StudentAdjustmentRequestItem[]
+  feeRules                      FeeRule[]
+  feeStatementItems             FeeStatementItem[]
+  examDocumentAuditLogs         ExamDocumentAuditLog[]
+  reviewRequests                ReviewRequest[]
+  accessToScriptRequests        AccessToScriptRequest[]
+  offlineWithdrawalRefunds      OfflineWithdrawalRefund[]
 
   @@index([paperId])
   @@index([examSeriesId])

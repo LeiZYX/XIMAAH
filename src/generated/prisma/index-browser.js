@@ -197,6 +197,7 @@ exports.Prisma.SystemEmailSettingsScalarFieldEnum = {
   notifyFeeStatementIssued: 'notifyFeeStatementIssued',
   notifyRegistrationUpdated: 'notifyRegistrationUpdated',
   notifyFeeStatementPaid: 'notifyFeeStatementPaid',
+  notifyStaffStudentAdjustment: 'notifyStaffStudentAdjustment',
   updatedAt: 'updatedAt'
 };
 
@@ -311,6 +312,15 @@ exports.Prisma.TeacherAssignmentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ClassHomeroomTeacherScalarFieldEnum = {
+  id: 'id',
+  grade: 'grade',
+  className: 'className',
+  teacherUserId: 'teacherUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.RegistrationWindowScalarFieldEnum = {
   id: 'id',
   examBoardId: 'examBoardId',
@@ -325,6 +335,8 @@ exports.Prisma.RegistrationWindowScalarFieldEnum = {
   eoAssistedRegistrationEnabled: 'eoAssistedRegistrationEnabled',
   officeOnlyRegistrationEnabled: 'officeOnlyRegistrationEnabled',
   postLockAdjustmentEnabled: 'postLockAdjustmentEnabled',
+  studentAdjustmentRequestEnabled: 'studentAdjustmentRequestEnabled',
+  studentAdjustmentRequestCloseAt: 'studentAdjustmentRequestCloseAt',
   paymentFeePercent: 'paymentFeePercent',
   createdById: 'createdById',
   createdAt: 'createdAt',
@@ -509,6 +521,38 @@ exports.Prisma.RegistrationChangeRequestExamSessionScalarFieldEnum = {
   id: 'id',
   changeRequestId: 'changeRequestId',
   examSessionId: 'examSessionId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.StudentAdjustmentRequestScalarFieldEnum = {
+  id: 'id',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
+  studentId: 'studentId',
+  candidateId: 'candidateId',
+  status: 'status',
+  submittedAt: 'submittedAt',
+  primaryHomeroomTeacherId: 'primaryHomeroomTeacherId',
+  studentGradeSnapshot: 'studentGradeSnapshot',
+  studentClassNameSnapshot: 'studentClassNameSnapshot',
+  teacherReviewedByUserId: 'teacherReviewedByUserId',
+  teacherReviewedAt: 'teacherReviewedAt',
+  teacherReviewReason: 'teacherReviewReason',
+  eoReviewedByUserId: 'eoReviewedByUserId',
+  eoReviewedAt: 'eoReviewedAt',
+  eoReviewReason: 'eoReviewReason',
+  rejectedAtStage: 'rejectedAtStage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StudentAdjustmentRequestItemScalarFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  itemType: 'itemType',
+  targetExamSessionId: 'targetExamSessionId',
+  targetRegistrationId: 'targetRegistrationId',
+  studentReason: 'studentReason',
   createdAt: 'createdAt'
 };
 
@@ -1176,6 +1220,12 @@ exports.Prisma.TeacherAssignmentOrderByRelevanceFieldEnum = {
   subjectId: 'subjectId'
 };
 
+exports.Prisma.ClassHomeroomTeacherOrderByRelevanceFieldEnum = {
+  id: 'id',
+  className: 'className',
+  teacherUserId: 'teacherUserId'
+};
+
 exports.Prisma.RegistrationWindowOrderByRelevanceFieldEnum = {
   id: 'id',
   examBoardId: 'examBoardId',
@@ -1287,6 +1337,28 @@ exports.Prisma.RegistrationChangeRequestExamSessionOrderByRelevanceFieldEnum = {
   id: 'id',
   changeRequestId: 'changeRequestId',
   examSessionId: 'examSessionId'
+};
+
+exports.Prisma.StudentAdjustmentRequestOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
+  studentId: 'studentId',
+  candidateId: 'candidateId',
+  primaryHomeroomTeacherId: 'primaryHomeroomTeacherId',
+  studentClassNameSnapshot: 'studentClassNameSnapshot',
+  teacherReviewedByUserId: 'teacherReviewedByUserId',
+  teacherReviewReason: 'teacherReviewReason',
+  eoReviewedByUserId: 'eoReviewedByUserId',
+  eoReviewReason: 'eoReviewReason'
+};
+
+exports.Prisma.StudentAdjustmentRequestItemOrderByRelevanceFieldEnum = {
+  id: 'id',
+  requestId: 'requestId',
+  targetExamSessionId: 'targetExamSessionId',
+  targetRegistrationId: 'targetRegistrationId',
+  studentReason: 'studentReason'
 };
 
 exports.Prisma.ExamBoardOrderByRelevanceFieldEnum = {
@@ -1662,7 +1734,8 @@ exports.StudentNotificationType = exports.$Enums.StudentNotificationType = {
   REG_LOCKED: 'REG_LOCKED',
   FEE_ISSUED: 'FEE_ISSUED',
   REG_UPDATED: 'REG_UPDATED',
-  FEE_PAID: 'FEE_PAID'
+  FEE_PAID: 'FEE_PAID',
+  STUDENT_ADJUSTMENT_TEACHER_REVIEWED: 'STUDENT_ADJUSTMENT_TEACHER_REVIEWED'
 };
 
 exports.StudentNotificationStatus = exports.$Enums.StudentNotificationStatus = {
@@ -1894,6 +1967,23 @@ exports.RegistrationChangeRequestStatus = exports.$Enums.RegistrationChangeReque
   REJECTED: 'REJECTED'
 };
 
+exports.StudentAdjustmentRequestStatus = exports.$Enums.StudentAdjustmentRequestStatus = {
+  PENDING_TEACHER: 'PENDING_TEACHER',
+  PENDING_EO: 'PENDING_EO',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+exports.StudentAdjustmentRejectedAtStage = exports.$Enums.StudentAdjustmentRejectedAtStage = {
+  TEACHER: 'TEACHER',
+  EO: 'EO'
+};
+
+exports.StudentAdjustmentRequestItemType = exports.$Enums.StudentAdjustmentRequestItemType = {
+  ADD: 'ADD',
+  REMOVE: 'REMOVE'
+};
+
 exports.KeyDateType = exports.$Enums.KeyDateType = {
   DEADLINE: 'DEADLINE',
   RESULTS: 'RESULTS',
@@ -2113,6 +2203,7 @@ exports.Prisma.ModelName = {
   CandidateAuditLog: 'CandidateAuditLog',
   CandidateExamIdentity: 'CandidateExamIdentity',
   TeacherAssignment: 'TeacherAssignment',
+  ClassHomeroomTeacher: 'ClassHomeroomTeacher',
   RegistrationWindow: 'RegistrationWindow',
   BoardSubmissionBaseline: 'BoardSubmissionBaseline',
   RegistrationWindowIncludedSeries: 'RegistrationWindowIncludedSeries',
@@ -2122,6 +2213,8 @@ exports.Prisma.ModelName = {
   RegistrationAuditLog: 'RegistrationAuditLog',
   RegistrationChangeRequest: 'RegistrationChangeRequest',
   RegistrationChangeRequestExamSession: 'RegistrationChangeRequestExamSession',
+  StudentAdjustmentRequest: 'StudentAdjustmentRequest',
+  StudentAdjustmentRequestItem: 'StudentAdjustmentRequestItem',
   ExamBoard: 'ExamBoard',
   ExamBoardWithdrawalPolicy: 'ExamBoardWithdrawalPolicy',
   Qualification: 'Qualification',

@@ -9,9 +9,23 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.2.8";
+export const CURRENT_VERSION = "1.2.9";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.2.9",
+    releaseDate: "2026-09-05",
+    summary:
+      "Student late exam adjustments with form-teacher routing, same-grade assist review, and staff email notifications.",
+    changes: [
+      "Registration window General: enable student late adjustment requests and set a request deadline between student close and final close",
+      "My Exam Registrations: locked cards offer Request adjustment (fee warning, draft add/remove with reasons, one-time submit). Submit requires a configured class form teacher (班主任)",
+      "Class form teachers (Admin Users / Exam Office): assign one form teacher per grade+class; same-grade form teachers may assist review",
+      "Teacher Class Registrations and EO/Admin Registrations: approve or reject with a required reason (form teacher → EO; EO apply reuses post-lock adjustment and fee statement regeneration)",
+      "After teacher review: optional email To student, Cc EO and other same-grade form teachers (Password & Email Settings → Staff notifications)",
+      "Locked registration confirmation print includes student and parent/guardian signature lines",
+    ],
+  },
   {
     version: "1.2.8",
     releaseDate: "2026-09-04",

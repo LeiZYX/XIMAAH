@@ -309,17 +309,39 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
           </section>
         ) : null}
 
-        {data.hasPostLockAdjustment || data.isLateRegistration ? (
+        {data.hasPostLockAdjustment || data.isLateRegistration || data.group.cardStatus === "Locked" ? (
           <section className="registration-print-keep-together border-t border-slate-200 pt-4">
-            <p className="text-sm text-slate-800">I have checked the above registration details and confirm that they are correct.</p>
-            <div className="mt-6 grid gap-6 sm:grid-cols-2 text-sm">
-              <div>
-                <p className="text-slate-600">Student Signature:</p>
-                <div className="mt-8 border-b border-slate-400" />
+            <p className="text-sm text-slate-800">
+              I confirm that the exams listed above are correct after lock / any approved adjustments.
+            </p>
+            <div className="mt-6 grid gap-8 sm:grid-cols-2 text-sm">
+              <div className="space-y-5">
+                <div>
+                  <p className="text-slate-600">Student name:</p>
+                  <div className="mt-6 border-b border-slate-400" />
+                </div>
+                <div>
+                  <p className="text-slate-600">Student signature:</p>
+                  <div className="mt-8 border-b border-slate-400" />
+                </div>
+                <div>
+                  <p className="text-slate-600">Date:</p>
+                  <div className="mt-8 border-b border-slate-400" />
+                </div>
               </div>
-              <div>
-                <p className="text-slate-600">Date:</p>
-                <div className="mt-8 border-b border-slate-400" />
+              <div className="space-y-5">
+                <div>
+                  <p className="text-slate-600">Parent / guardian name:</p>
+                  <div className="mt-6 border-b border-slate-400" />
+                </div>
+                <div>
+                  <p className="text-slate-600">Parent / guardian signature:</p>
+                  <div className="mt-8 border-b border-slate-400" />
+                </div>
+                <div>
+                  <p className="text-slate-600">Date:</p>
+                  <div className="mt-8 border-b border-slate-400" />
+                </div>
               </div>
             </div>
           </section>

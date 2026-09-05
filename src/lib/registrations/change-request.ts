@@ -100,6 +100,11 @@ async function assertTeacherCanRequestChange(_teacherId: string, registrationWor
     throw new RegistrationError("Change requests are only allowed after student registration closes", 400);
   }
 
+  const { assertNoPendingStudentAdjustmentForWorkspace } = await import(
+    "@/lib/registrations/student-adjustment-request"
+  );
+  await assertNoPendingStudentAdjustmentForWorkspace(registrationWorkspaceId);
+
   return workspace;
 }
 

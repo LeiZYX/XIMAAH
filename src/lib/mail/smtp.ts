@@ -42,6 +42,7 @@ export async function sendMail(options: {
   subject: string;
   text: string;
   html?: string;
+  cc?: string | string[];
 }) {
   const config = await getSmtpConfig();
   if (!config.host || !config.from || !config.user || !config.password) {
@@ -65,10 +66,17 @@ export async function sendMail(options: {
     },
   });
 
+  const ccList = Array.isArray(options.cc)
+    ? options.cc.filter(Boolean)
+    : options.cc
+      ? [options.cc]
+      : [];
+
   try {
     await transport.sendMail({
       from: config.from,
       to: options.to,
+      ...(ccList.length > 0 ? { cc: ccList.join(", ") } : {}),
       subject: options.subject,
       text: options.text,
       html: options.html ?? options.text,

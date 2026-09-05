@@ -79,6 +79,11 @@ export type CandidateExamIdentity = $Result.DefaultSelection<Prisma.$CandidateEx
  */
 export type TeacherAssignment = $Result.DefaultSelection<Prisma.$TeacherAssignmentPayload>
 /**
+ * Model ClassHomeroomTeacher
+ * One form teacher (班主任) per grade + class. Used to route student late adjustment requests.
+ */
+export type ClassHomeroomTeacher = $Result.DefaultSelection<Prisma.$ClassHomeroomTeacherPayload>
+/**
  * Model RegistrationWindow
  * 
  */
@@ -124,6 +129,16 @@ export type RegistrationChangeRequest = $Result.DefaultSelection<Prisma.$Registr
  * 
  */
 export type RegistrationChangeRequestExamSession = $Result.DefaultSelection<Prisma.$RegistrationChangeRequestExamSessionPayload>
+/**
+ * Model StudentAdjustmentRequest
+ * Student-initiated batch add/remove request after student registration close.
+ */
+export type StudentAdjustmentRequest = $Result.DefaultSelection<Prisma.$StudentAdjustmentRequestPayload>
+/**
+ * Model StudentAdjustmentRequestItem
+ * 
+ */
+export type StudentAdjustmentRequestItem = $Result.DefaultSelection<Prisma.$StudentAdjustmentRequestItemPayload>
 /**
  * Model ExamBoard
  * 
@@ -480,6 +495,32 @@ export const RegistrationChangeRequestStatus: {
 export type RegistrationChangeRequestStatus = (typeof RegistrationChangeRequestStatus)[keyof typeof RegistrationChangeRequestStatus]
 
 
+export const StudentAdjustmentRequestStatus: {
+  PENDING_TEACHER: 'PENDING_TEACHER',
+  PENDING_EO: 'PENDING_EO',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+export type StudentAdjustmentRequestStatus = (typeof StudentAdjustmentRequestStatus)[keyof typeof StudentAdjustmentRequestStatus]
+
+
+export const StudentAdjustmentRequestItemType: {
+  ADD: 'ADD',
+  REMOVE: 'REMOVE'
+};
+
+export type StudentAdjustmentRequestItemType = (typeof StudentAdjustmentRequestItemType)[keyof typeof StudentAdjustmentRequestItemType]
+
+
+export const StudentAdjustmentRejectedAtStage: {
+  TEACHER: 'TEACHER',
+  EO: 'EO'
+};
+
+export type StudentAdjustmentRejectedAtStage = (typeof StudentAdjustmentRejectedAtStage)[keyof typeof StudentAdjustmentRejectedAtStage]
+
+
 export const FeeEntryType: {
   NORMAL: 'NORMAL',
   LATE: 'LATE',
@@ -753,7 +794,8 @@ export const StudentNotificationType: {
   REG_LOCKED: 'REG_LOCKED',
   FEE_ISSUED: 'FEE_ISSUED',
   REG_UPDATED: 'REG_UPDATED',
-  FEE_PAID: 'FEE_PAID'
+  FEE_PAID: 'FEE_PAID',
+  STUDENT_ADJUSTMENT_TEACHER_REVIEWED: 'STUDENT_ADJUSTMENT_TEACHER_REVIEWED'
 };
 
 export type StudentNotificationType = (typeof StudentNotificationType)[keyof typeof StudentNotificationType]
@@ -963,6 +1005,18 @@ export const RegistrationChangeRequestType: typeof $Enums.RegistrationChangeRequ
 export type RegistrationChangeRequestStatus = $Enums.RegistrationChangeRequestStatus
 
 export const RegistrationChangeRequestStatus: typeof $Enums.RegistrationChangeRequestStatus
+
+export type StudentAdjustmentRequestStatus = $Enums.StudentAdjustmentRequestStatus
+
+export const StudentAdjustmentRequestStatus: typeof $Enums.StudentAdjustmentRequestStatus
+
+export type StudentAdjustmentRequestItemType = $Enums.StudentAdjustmentRequestItemType
+
+export const StudentAdjustmentRequestItemType: typeof $Enums.StudentAdjustmentRequestItemType
+
+export type StudentAdjustmentRejectedAtStage = $Enums.StudentAdjustmentRejectedAtStage
+
+export const StudentAdjustmentRejectedAtStage: typeof $Enums.StudentAdjustmentRejectedAtStage
 
 export type FeeEntryType = $Enums.FeeEntryType
 
@@ -1361,6 +1415,16 @@ export class PrismaClient<
   get teacherAssignment(): Prisma.TeacherAssignmentDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.classHomeroomTeacher`: Exposes CRUD operations for the **ClassHomeroomTeacher** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ClassHomeroomTeachers
+    * const classHomeroomTeachers = await prisma.classHomeroomTeacher.findMany()
+    * ```
+    */
+  get classHomeroomTeacher(): Prisma.ClassHomeroomTeacherDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.registrationWindow`: Exposes CRUD operations for the **RegistrationWindow** model.
     * Example usage:
     * ```ts
@@ -1449,6 +1513,26 @@ export class PrismaClient<
     * ```
     */
   get registrationChangeRequestExamSession(): Prisma.RegistrationChangeRequestExamSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.studentAdjustmentRequest`: Exposes CRUD operations for the **StudentAdjustmentRequest** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StudentAdjustmentRequests
+    * const studentAdjustmentRequests = await prisma.studentAdjustmentRequest.findMany()
+    * ```
+    */
+  get studentAdjustmentRequest(): Prisma.StudentAdjustmentRequestDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.studentAdjustmentRequestItem`: Exposes CRUD operations for the **StudentAdjustmentRequestItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StudentAdjustmentRequestItems
+    * const studentAdjustmentRequestItems = await prisma.studentAdjustmentRequestItem.findMany()
+    * ```
+    */
+  get studentAdjustmentRequestItem(): Prisma.StudentAdjustmentRequestItemDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.examBoard`: Exposes CRUD operations for the **ExamBoard** model.
@@ -2203,6 +2287,7 @@ export namespace Prisma {
     CandidateAuditLog: 'CandidateAuditLog',
     CandidateExamIdentity: 'CandidateExamIdentity',
     TeacherAssignment: 'TeacherAssignment',
+    ClassHomeroomTeacher: 'ClassHomeroomTeacher',
     RegistrationWindow: 'RegistrationWindow',
     BoardSubmissionBaseline: 'BoardSubmissionBaseline',
     RegistrationWindowIncludedSeries: 'RegistrationWindowIncludedSeries',
@@ -2212,6 +2297,8 @@ export namespace Prisma {
     RegistrationAuditLog: 'RegistrationAuditLog',
     RegistrationChangeRequest: 'RegistrationChangeRequest',
     RegistrationChangeRequestExamSession: 'RegistrationChangeRequestExamSession',
+    StudentAdjustmentRequest: 'StudentAdjustmentRequest',
+    StudentAdjustmentRequestItem: 'StudentAdjustmentRequestItem',
     ExamBoard: 'ExamBoard',
     ExamBoardWithdrawalPolicy: 'ExamBoardWithdrawalPolicy',
     Qualification: 'Qualification',
@@ -2260,7 +2347,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "studentNotificationLog" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
+      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "studentNotificationLog" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "classHomeroomTeacher" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "studentAdjustmentRequest" | "studentAdjustmentRequestItem" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3122,6 +3209,72 @@ export namespace Prisma {
           }
         }
       }
+      ClassHomeroomTeacher: {
+        payload: Prisma.$ClassHomeroomTeacherPayload<ExtArgs>
+        fields: Prisma.ClassHomeroomTeacherFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ClassHomeroomTeacherFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassHomeroomTeacherPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ClassHomeroomTeacherFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassHomeroomTeacherPayload>
+          }
+          findFirst: {
+            args: Prisma.ClassHomeroomTeacherFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassHomeroomTeacherPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ClassHomeroomTeacherFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassHomeroomTeacherPayload>
+          }
+          findMany: {
+            args: Prisma.ClassHomeroomTeacherFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassHomeroomTeacherPayload>[]
+          }
+          create: {
+            args: Prisma.ClassHomeroomTeacherCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassHomeroomTeacherPayload>
+          }
+          createMany: {
+            args: Prisma.ClassHomeroomTeacherCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.ClassHomeroomTeacherDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassHomeroomTeacherPayload>
+          }
+          update: {
+            args: Prisma.ClassHomeroomTeacherUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassHomeroomTeacherPayload>
+          }
+          deleteMany: {
+            args: Prisma.ClassHomeroomTeacherDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ClassHomeroomTeacherUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.ClassHomeroomTeacherUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ClassHomeroomTeacherPayload>
+          }
+          aggregate: {
+            args: Prisma.ClassHomeroomTeacherAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateClassHomeroomTeacher>
+          }
+          groupBy: {
+            args: Prisma.ClassHomeroomTeacherGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ClassHomeroomTeacherGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ClassHomeroomTeacherCountArgs<ExtArgs>
+            result: $Utils.Optional<ClassHomeroomTeacherCountAggregateOutputType> | number
+          }
+        }
+      }
       RegistrationWindow: {
         payload: Prisma.$RegistrationWindowPayload<ExtArgs>
         fields: Prisma.RegistrationWindowFieldRefs
@@ -3713,6 +3866,138 @@ export namespace Prisma {
           count: {
             args: Prisma.RegistrationChangeRequestExamSessionCountArgs<ExtArgs>
             result: $Utils.Optional<RegistrationChangeRequestExamSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      StudentAdjustmentRequest: {
+        payload: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>
+        fields: Prisma.StudentAdjustmentRequestFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StudentAdjustmentRequestFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StudentAdjustmentRequestFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestPayload>
+          }
+          findFirst: {
+            args: Prisma.StudentAdjustmentRequestFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StudentAdjustmentRequestFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestPayload>
+          }
+          findMany: {
+            args: Prisma.StudentAdjustmentRequestFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestPayload>[]
+          }
+          create: {
+            args: Prisma.StudentAdjustmentRequestCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestPayload>
+          }
+          createMany: {
+            args: Prisma.StudentAdjustmentRequestCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.StudentAdjustmentRequestDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestPayload>
+          }
+          update: {
+            args: Prisma.StudentAdjustmentRequestUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestPayload>
+          }
+          deleteMany: {
+            args: Prisma.StudentAdjustmentRequestDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StudentAdjustmentRequestUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.StudentAdjustmentRequestUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestPayload>
+          }
+          aggregate: {
+            args: Prisma.StudentAdjustmentRequestAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStudentAdjustmentRequest>
+          }
+          groupBy: {
+            args: Prisma.StudentAdjustmentRequestGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StudentAdjustmentRequestGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StudentAdjustmentRequestCountArgs<ExtArgs>
+            result: $Utils.Optional<StudentAdjustmentRequestCountAggregateOutputType> | number
+          }
+        }
+      }
+      StudentAdjustmentRequestItem: {
+        payload: Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>
+        fields: Prisma.StudentAdjustmentRequestItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StudentAdjustmentRequestItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StudentAdjustmentRequestItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestItemPayload>
+          }
+          findFirst: {
+            args: Prisma.StudentAdjustmentRequestItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StudentAdjustmentRequestItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestItemPayload>
+          }
+          findMany: {
+            args: Prisma.StudentAdjustmentRequestItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestItemPayload>[]
+          }
+          create: {
+            args: Prisma.StudentAdjustmentRequestItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestItemPayload>
+          }
+          createMany: {
+            args: Prisma.StudentAdjustmentRequestItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.StudentAdjustmentRequestItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestItemPayload>
+          }
+          update: {
+            args: Prisma.StudentAdjustmentRequestItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.StudentAdjustmentRequestItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StudentAdjustmentRequestItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.StudentAdjustmentRequestItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StudentAdjustmentRequestItemPayload>
+          }
+          aggregate: {
+            args: Prisma.StudentAdjustmentRequestItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStudentAdjustmentRequestItem>
+          }
+          groupBy: {
+            args: Prisma.StudentAdjustmentRequestItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StudentAdjustmentRequestItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StudentAdjustmentRequestItemCountArgs<ExtArgs>
+            result: $Utils.Optional<StudentAdjustmentRequestItemCountAggregateOutputType> | number
           }
         }
       }
@@ -5805,6 +6090,7 @@ export namespace Prisma {
     candidateAuditLog?: CandidateAuditLogOmit
     candidateExamIdentity?: CandidateExamIdentityOmit
     teacherAssignment?: TeacherAssignmentOmit
+    classHomeroomTeacher?: ClassHomeroomTeacherOmit
     registrationWindow?: RegistrationWindowOmit
     boardSubmissionBaseline?: BoardSubmissionBaselineOmit
     registrationWindowIncludedSeries?: RegistrationWindowIncludedSeriesOmit
@@ -5814,6 +6100,8 @@ export namespace Prisma {
     registrationAuditLog?: RegistrationAuditLogOmit
     registrationChangeRequest?: RegistrationChangeRequestOmit
     registrationChangeRequestExamSession?: RegistrationChangeRequestExamSessionOmit
+    studentAdjustmentRequest?: StudentAdjustmentRequestOmit
+    studentAdjustmentRequestItem?: StudentAdjustmentRequestItemOmit
     examBoard?: ExamBoardOmit
     examBoardWithdrawalPolicy?: ExamBoardWithdrawalPolicyOmit
     qualification?: QualificationOmit
@@ -5966,6 +6254,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted: number
     boardSubmissionBaselinesSubmitted: number
     studentNotificationLogs: number
+    studentAdjustmentRequests: number
+    teacherReviewedStudentAdjustments: number
+    eoReviewedStudentAdjustments: number
+    primaryHomeroomAdjustmentRequests: number
+    classHomeroomAssignments: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6011,6 +6304,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: boolean | UserCountOutputTypeCountOfflineWithdrawalRefundsCompletedArgs
     boardSubmissionBaselinesSubmitted?: boolean | UserCountOutputTypeCountBoardSubmissionBaselinesSubmittedArgs
     studentNotificationLogs?: boolean | UserCountOutputTypeCountStudentNotificationLogsArgs
+    studentAdjustmentRequests?: boolean | UserCountOutputTypeCountStudentAdjustmentRequestsArgs
+    teacherReviewedStudentAdjustments?: boolean | UserCountOutputTypeCountTeacherReviewedStudentAdjustmentsArgs
+    eoReviewedStudentAdjustments?: boolean | UserCountOutputTypeCountEoReviewedStudentAdjustmentsArgs
+    primaryHomeroomAdjustmentRequests?: boolean | UserCountOutputTypeCountPrimaryHomeroomAdjustmentRequestsArgs
+    classHomeroomAssignments?: boolean | UserCountOutputTypeCountClassHomeroomAssignmentsArgs
   }
 
   // Custom InputTypes
@@ -6318,6 +6616,41 @@ export namespace Prisma {
     where?: StudentNotificationLogWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountStudentAdjustmentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTeacherReviewedStudentAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountEoReviewedStudentAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPrimaryHomeroomAdjustmentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountClassHomeroomAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ClassHomeroomTeacherWhereInput
+  }
+
 
   /**
    * Count Type CandidateCountOutputType
@@ -6329,6 +6662,7 @@ export namespace Prisma {
     examRegistrations: number
     auditLogs: number
     changeRequests: number
+    studentAdjustmentRequests: number
     feeStatements: number
     examDocumentAuditLogs: number
     candidateAuditLogs: number
@@ -6346,6 +6680,7 @@ export namespace Prisma {
     examRegistrations?: boolean | CandidateCountOutputTypeCountExamRegistrationsArgs
     auditLogs?: boolean | CandidateCountOutputTypeCountAuditLogsArgs
     changeRequests?: boolean | CandidateCountOutputTypeCountChangeRequestsArgs
+    studentAdjustmentRequests?: boolean | CandidateCountOutputTypeCountStudentAdjustmentRequestsArgs
     feeStatements?: boolean | CandidateCountOutputTypeCountFeeStatementsArgs
     examDocumentAuditLogs?: boolean | CandidateCountOutputTypeCountExamDocumentAuditLogsArgs
     candidateAuditLogs?: boolean | CandidateCountOutputTypeCountCandidateAuditLogsArgs
@@ -6401,6 +6736,13 @@ export namespace Prisma {
    */
   export type CandidateCountOutputTypeCountChangeRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RegistrationChangeRequestWhereInput
+  }
+
+  /**
+   * CandidateCountOutputType without action
+   */
+  export type CandidateCountOutputTypeCountStudentAdjustmentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestWhereInput
   }
 
   /**
@@ -6475,6 +6817,7 @@ export namespace Prisma {
     registrations: number
     workspaces: number
     changeRequests: number
+    studentAdjustmentRequests: number
     feeStages: number
     registrationAuditLogs: number
     feeRules: number
@@ -6493,6 +6836,7 @@ export namespace Prisma {
     registrations?: boolean | RegistrationWindowCountOutputTypeCountRegistrationsArgs
     workspaces?: boolean | RegistrationWindowCountOutputTypeCountWorkspacesArgs
     changeRequests?: boolean | RegistrationWindowCountOutputTypeCountChangeRequestsArgs
+    studentAdjustmentRequests?: boolean | RegistrationWindowCountOutputTypeCountStudentAdjustmentRequestsArgs
     feeStages?: boolean | RegistrationWindowCountOutputTypeCountFeeStagesArgs
     registrationAuditLogs?: boolean | RegistrationWindowCountOutputTypeCountRegistrationAuditLogsArgs
     feeRules?: boolean | RegistrationWindowCountOutputTypeCountFeeRulesArgs
@@ -6537,6 +6881,13 @@ export namespace Prisma {
    */
   export type RegistrationWindowCountOutputTypeCountChangeRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RegistrationChangeRequestWhereInput
+  }
+
+  /**
+   * RegistrationWindowCountOutputType without action
+   */
+  export type RegistrationWindowCountOutputTypeCountStudentAdjustmentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestWhereInput
   }
 
   /**
@@ -6681,6 +7032,7 @@ export namespace Prisma {
     registrations: number
     auditLogs: number
     changeRequests: number
+    studentAdjustmentRequests: number
     feeStatements: number
     offlineWithdrawalRefunds: number
   }
@@ -6689,6 +7041,7 @@ export namespace Prisma {
     registrations?: boolean | RegistrationWorkspaceCountOutputTypeCountRegistrationsArgs
     auditLogs?: boolean | RegistrationWorkspaceCountOutputTypeCountAuditLogsArgs
     changeRequests?: boolean | RegistrationWorkspaceCountOutputTypeCountChangeRequestsArgs
+    studentAdjustmentRequests?: boolean | RegistrationWorkspaceCountOutputTypeCountStudentAdjustmentRequestsArgs
     feeStatements?: boolean | RegistrationWorkspaceCountOutputTypeCountFeeStatementsArgs
     offlineWithdrawalRefunds?: boolean | RegistrationWorkspaceCountOutputTypeCountOfflineWithdrawalRefundsArgs
   }
@@ -6723,6 +7076,13 @@ export namespace Prisma {
    */
   export type RegistrationWorkspaceCountOutputTypeCountChangeRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RegistrationChangeRequestWhereInput
+  }
+
+  /**
+   * RegistrationWorkspaceCountOutputType without action
+   */
+  export type RegistrationWorkspaceCountOutputTypeCountStudentAdjustmentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestWhereInput
   }
 
   /**
@@ -6817,6 +7177,37 @@ export namespace Prisma {
    */
   export type RegistrationChangeRequestCountOutputTypeCountExamSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RegistrationChangeRequestExamSessionWhereInput
+  }
+
+
+  /**
+   * Count Type StudentAdjustmentRequestCountOutputType
+   */
+
+  export type StudentAdjustmentRequestCountOutputType = {
+    items: number
+  }
+
+  export type StudentAdjustmentRequestCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | StudentAdjustmentRequestCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * StudentAdjustmentRequestCountOutputType without action
+   */
+  export type StudentAdjustmentRequestCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestCountOutputType
+     */
+    select?: StudentAdjustmentRequestCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * StudentAdjustmentRequestCountOutputType without action
+   */
+  export type StudentAdjustmentRequestCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestItemWhereInput
   }
 
 
@@ -7471,6 +7862,7 @@ export namespace Prisma {
     changeRequestTargets: number
     changeRequestReplacements: number
     changeRequestExamSessions: number
+    studentAdjustmentRequestItems: number
     feeRules: number
     feeStatementItems: number
     examDocumentAuditLogs: number
@@ -7485,6 +7877,7 @@ export namespace Prisma {
     changeRequestTargets?: boolean | ExamSessionCountOutputTypeCountChangeRequestTargetsArgs
     changeRequestReplacements?: boolean | ExamSessionCountOutputTypeCountChangeRequestReplacementsArgs
     changeRequestExamSessions?: boolean | ExamSessionCountOutputTypeCountChangeRequestExamSessionsArgs
+    studentAdjustmentRequestItems?: boolean | ExamSessionCountOutputTypeCountStudentAdjustmentRequestItemsArgs
     feeRules?: boolean | ExamSessionCountOutputTypeCountFeeRulesArgs
     feeStatementItems?: boolean | ExamSessionCountOutputTypeCountFeeStatementItemsArgs
     examDocumentAuditLogs?: boolean | ExamSessionCountOutputTypeCountExamDocumentAuditLogsArgs
@@ -7537,6 +7930,13 @@ export namespace Prisma {
    */
   export type ExamSessionCountOutputTypeCountChangeRequestExamSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RegistrationChangeRequestExamSessionWhereInput
+  }
+
+  /**
+   * ExamSessionCountOutputType without action
+   */
+  export type ExamSessionCountOutputTypeCountStudentAdjustmentRequestItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestItemWhereInput
   }
 
   /**
@@ -8146,6 +8546,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: boolean | User$offlineWithdrawalRefundsCompletedArgs<ExtArgs>
     boardSubmissionBaselinesSubmitted?: boolean | User$boardSubmissionBaselinesSubmittedArgs<ExtArgs>
     studentNotificationLogs?: boolean | User$studentNotificationLogsArgs<ExtArgs>
+    studentAdjustmentRequests?: boolean | User$studentAdjustmentRequestsArgs<ExtArgs>
+    teacherReviewedStudentAdjustments?: boolean | User$teacherReviewedStudentAdjustmentsArgs<ExtArgs>
+    eoReviewedStudentAdjustments?: boolean | User$eoReviewedStudentAdjustmentsArgs<ExtArgs>
+    primaryHomeroomAdjustmentRequests?: boolean | User$primaryHomeroomAdjustmentRequestsArgs<ExtArgs>
+    classHomeroomAssignments?: boolean | User$classHomeroomAssignmentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -8213,6 +8618,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: boolean | User$offlineWithdrawalRefundsCompletedArgs<ExtArgs>
     boardSubmissionBaselinesSubmitted?: boolean | User$boardSubmissionBaselinesSubmittedArgs<ExtArgs>
     studentNotificationLogs?: boolean | User$studentNotificationLogsArgs<ExtArgs>
+    studentAdjustmentRequests?: boolean | User$studentAdjustmentRequestsArgs<ExtArgs>
+    teacherReviewedStudentAdjustments?: boolean | User$teacherReviewedStudentAdjustmentsArgs<ExtArgs>
+    eoReviewedStudentAdjustments?: boolean | User$eoReviewedStudentAdjustmentsArgs<ExtArgs>
+    primaryHomeroomAdjustmentRequests?: boolean | User$primaryHomeroomAdjustmentRequestsArgs<ExtArgs>
+    classHomeroomAssignments?: boolean | User$classHomeroomAssignmentsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -8264,6 +8674,11 @@ export namespace Prisma {
       offlineWithdrawalRefundsCompleted: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
       boardSubmissionBaselinesSubmitted: Prisma.$BoardSubmissionBaselinePayload<ExtArgs>[]
       studentNotificationLogs: Prisma.$StudentNotificationLogPayload<ExtArgs>[]
+      studentAdjustmentRequests: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>[]
+      teacherReviewedStudentAdjustments: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>[]
+      eoReviewedStudentAdjustments: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>[]
+      primaryHomeroomAdjustmentRequests: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>[]
+      classHomeroomAssignments: Prisma.$ClassHomeroomTeacherPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8663,6 +9078,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted<T extends User$offlineWithdrawalRefundsCompletedArgs<ExtArgs> = {}>(args?: Subset<T, User$offlineWithdrawalRefundsCompletedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     boardSubmissionBaselinesSubmitted<T extends User$boardSubmissionBaselinesSubmittedArgs<ExtArgs> = {}>(args?: Subset<T, User$boardSubmissionBaselinesSubmittedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BoardSubmissionBaselinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     studentNotificationLogs<T extends User$studentNotificationLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$studentNotificationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentNotificationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentAdjustmentRequests<T extends User$studentAdjustmentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$studentAdjustmentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    teacherReviewedStudentAdjustments<T extends User$teacherReviewedStudentAdjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$teacherReviewedStudentAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    eoReviewedStudentAdjustments<T extends User$eoReviewedStudentAdjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$eoReviewedStudentAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    primaryHomeroomAdjustmentRequests<T extends User$primaryHomeroomAdjustmentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$primaryHomeroomAdjustmentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    classHomeroomAssignments<T extends User$classHomeroomAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$classHomeroomAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10109,6 +10529,126 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: StudentNotificationLogScalarFieldEnum | StudentNotificationLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.studentAdjustmentRequests
+   */
+  export type User$studentAdjustmentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    where?: StudentAdjustmentRequestWhereInput
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentAdjustmentRequestScalarFieldEnum | StudentAdjustmentRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.teacherReviewedStudentAdjustments
+   */
+  export type User$teacherReviewedStudentAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    where?: StudentAdjustmentRequestWhereInput
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentAdjustmentRequestScalarFieldEnum | StudentAdjustmentRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.eoReviewedStudentAdjustments
+   */
+  export type User$eoReviewedStudentAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    where?: StudentAdjustmentRequestWhereInput
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentAdjustmentRequestScalarFieldEnum | StudentAdjustmentRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.primaryHomeroomAdjustmentRequests
+   */
+  export type User$primaryHomeroomAdjustmentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    where?: StudentAdjustmentRequestWhereInput
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentAdjustmentRequestScalarFieldEnum | StudentAdjustmentRequestScalarFieldEnum[]
+  }
+
+  /**
+   * User.classHomeroomAssignments
+   */
+  export type User$classHomeroomAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+    where?: ClassHomeroomTeacherWhereInput
+    orderBy?: ClassHomeroomTeacherOrderByWithRelationInput | ClassHomeroomTeacherOrderByWithRelationInput[]
+    cursor?: ClassHomeroomTeacherWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ClassHomeroomTeacherScalarFieldEnum | ClassHomeroomTeacherScalarFieldEnum[]
   }
 
   /**
@@ -14058,6 +14598,7 @@ export namespace Prisma {
     notifyFeeStatementIssued: boolean | null
     notifyRegistrationUpdated: boolean | null
     notifyFeeStatementPaid: boolean | null
+    notifyStaffStudentAdjustment: boolean | null
     updatedAt: Date | null
   }
 
@@ -14076,6 +14617,7 @@ export namespace Prisma {
     notifyFeeStatementIssued: boolean | null
     notifyRegistrationUpdated: boolean | null
     notifyFeeStatementPaid: boolean | null
+    notifyStaffStudentAdjustment: boolean | null
     updatedAt: Date | null
   }
 
@@ -14094,6 +14636,7 @@ export namespace Prisma {
     notifyFeeStatementIssued: number
     notifyRegistrationUpdated: number
     notifyFeeStatementPaid: number
+    notifyStaffStudentAdjustment: number
     updatedAt: number
     _all: number
   }
@@ -14124,6 +14667,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: true
     notifyRegistrationUpdated?: true
     notifyFeeStatementPaid?: true
+    notifyStaffStudentAdjustment?: true
     updatedAt?: true
   }
 
@@ -14142,6 +14686,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: true
     notifyRegistrationUpdated?: true
     notifyFeeStatementPaid?: true
+    notifyStaffStudentAdjustment?: true
     updatedAt?: true
   }
 
@@ -14160,6 +14705,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: true
     notifyRegistrationUpdated?: true
     notifyFeeStatementPaid?: true
+    notifyStaffStudentAdjustment?: true
     updatedAt?: true
     _all?: true
   }
@@ -14265,6 +14811,7 @@ export namespace Prisma {
     notifyFeeStatementIssued: boolean
     notifyRegistrationUpdated: boolean
     notifyFeeStatementPaid: boolean
+    notifyStaffStudentAdjustment: boolean
     updatedAt: Date
     _count: SystemEmailSettingsCountAggregateOutputType | null
     _avg: SystemEmailSettingsAvgAggregateOutputType | null
@@ -14302,6 +14849,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: boolean
     notifyRegistrationUpdated?: boolean
     notifyFeeStatementPaid?: boolean
+    notifyStaffStudentAdjustment?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["systemEmailSettings"]>
 
@@ -14322,10 +14870,11 @@ export namespace Prisma {
     notifyFeeStatementIssued?: boolean
     notifyRegistrationUpdated?: boolean
     notifyFeeStatementPaid?: boolean
+    notifyStaffStudentAdjustment?: boolean
     updatedAt?: boolean
   }
 
-  export type SystemEmailSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "smtpHost" | "smtpPort" | "smtpSecure" | "smtpUser" | "smtpPassword" | "mailFrom" | "passwordResetExpiresMinutes" | "appUrl" | "studentNotificationsEnabled" | "notifyRegistrationLocked" | "notifyFeeStatementIssued" | "notifyRegistrationUpdated" | "notifyFeeStatementPaid" | "updatedAt", ExtArgs["result"]["systemEmailSettings"]>
+  export type SystemEmailSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "smtpHost" | "smtpPort" | "smtpSecure" | "smtpUser" | "smtpPassword" | "mailFrom" | "passwordResetExpiresMinutes" | "appUrl" | "studentNotificationsEnabled" | "notifyRegistrationLocked" | "notifyFeeStatementIssued" | "notifyRegistrationUpdated" | "notifyFeeStatementPaid" | "notifyStaffStudentAdjustment" | "updatedAt", ExtArgs["result"]["systemEmailSettings"]>
 
   export type $SystemEmailSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SystemEmailSettings"
@@ -14348,6 +14897,10 @@ export namespace Prisma {
       notifyFeeStatementIssued: boolean
       notifyRegistrationUpdated: boolean
       notifyFeeStatementPaid: boolean
+      /**
+       * Staff/student hybrid: teacher-step outcome for late adjustment (To student, Cc EO + grade form teachers).
+       */
+      notifyStaffStudentAdjustment: boolean
       updatedAt: Date
     }, ExtArgs["result"]["systemEmailSettings"]>
     composites: {}
@@ -14732,6 +15285,7 @@ export namespace Prisma {
     readonly notifyFeeStatementIssued: FieldRef<"SystemEmailSettings", 'Boolean'>
     readonly notifyRegistrationUpdated: FieldRef<"SystemEmailSettings", 'Boolean'>
     readonly notifyFeeStatementPaid: FieldRef<"SystemEmailSettings", 'Boolean'>
+    readonly notifyStaffStudentAdjustment: FieldRef<"SystemEmailSettings", 'Boolean'>
     readonly updatedAt: FieldRef<"SystemEmailSettings", 'DateTime'>
   }
     
@@ -18640,6 +19194,7 @@ export namespace Prisma {
     examRegistrations?: boolean | Candidate$examRegistrationsArgs<ExtArgs>
     auditLogs?: boolean | Candidate$auditLogsArgs<ExtArgs>
     changeRequests?: boolean | Candidate$changeRequestsArgs<ExtArgs>
+    studentAdjustmentRequests?: boolean | Candidate$studentAdjustmentRequestsArgs<ExtArgs>
     feeStatements?: boolean | Candidate$feeStatementsArgs<ExtArgs>
     examDocumentAuditLogs?: boolean | Candidate$examDocumentAuditLogsArgs<ExtArgs>
     candidateAuditLogs?: boolean | Candidate$candidateAuditLogsArgs<ExtArgs>
@@ -18701,6 +19256,7 @@ export namespace Prisma {
     examRegistrations?: boolean | Candidate$examRegistrationsArgs<ExtArgs>
     auditLogs?: boolean | Candidate$auditLogsArgs<ExtArgs>
     changeRequests?: boolean | Candidate$changeRequestsArgs<ExtArgs>
+    studentAdjustmentRequests?: boolean | Candidate$studentAdjustmentRequestsArgs<ExtArgs>
     feeStatements?: boolean | Candidate$feeStatementsArgs<ExtArgs>
     examDocumentAuditLogs?: boolean | Candidate$examDocumentAuditLogsArgs<ExtArgs>
     candidateAuditLogs?: boolean | Candidate$candidateAuditLogsArgs<ExtArgs>
@@ -18722,6 +19278,7 @@ export namespace Prisma {
       examRegistrations: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
       auditLogs: Prisma.$RegistrationAuditLogPayload<ExtArgs>[]
       changeRequests: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
+      studentAdjustmentRequests: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>[]
       feeStatements: Prisma.$FeeStatementPayload<ExtArgs>[]
       examDocumentAuditLogs: Prisma.$ExamDocumentAuditLogPayload<ExtArgs>[]
       candidateAuditLogs: Prisma.$CandidateAuditLogPayload<ExtArgs>[]
@@ -19130,6 +19687,7 @@ export namespace Prisma {
     examRegistrations<T extends Candidate$examRegistrationsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$examRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends Candidate$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     changeRequests<T extends Candidate$changeRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$changeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentAdjustmentRequests<T extends Candidate$studentAdjustmentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$studentAdjustmentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeStatements<T extends Candidate$feeStatementsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$feeStatementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     examDocumentAuditLogs<T extends Candidate$examDocumentAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$examDocumentAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamDocumentAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     candidateAuditLogs<T extends Candidate$candidateAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Candidate$candidateAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -19683,6 +20241,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RegistrationChangeRequestScalarFieldEnum | RegistrationChangeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * Candidate.studentAdjustmentRequests
+   */
+  export type Candidate$studentAdjustmentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    where?: StudentAdjustmentRequestWhereInput
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentAdjustmentRequestScalarFieldEnum | StudentAdjustmentRequestScalarFieldEnum[]
   }
 
   /**
@@ -22864,6 +23446,946 @@ export namespace Prisma {
 
 
   /**
+   * Model ClassHomeroomTeacher
+   */
+
+  export type AggregateClassHomeroomTeacher = {
+    _count: ClassHomeroomTeacherCountAggregateOutputType | null
+    _min: ClassHomeroomTeacherMinAggregateOutputType | null
+    _max: ClassHomeroomTeacherMaxAggregateOutputType | null
+  }
+
+  export type ClassHomeroomTeacherMinAggregateOutputType = {
+    id: string | null
+    grade: $Enums.Grade | null
+    className: string | null
+    teacherUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ClassHomeroomTeacherMaxAggregateOutputType = {
+    id: string | null
+    grade: $Enums.Grade | null
+    className: string | null
+    teacherUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ClassHomeroomTeacherCountAggregateOutputType = {
+    id: number
+    grade: number
+    className: number
+    teacherUserId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ClassHomeroomTeacherMinAggregateInputType = {
+    id?: true
+    grade?: true
+    className?: true
+    teacherUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ClassHomeroomTeacherMaxAggregateInputType = {
+    id?: true
+    grade?: true
+    className?: true
+    teacherUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ClassHomeroomTeacherCountAggregateInputType = {
+    id?: true
+    grade?: true
+    className?: true
+    teacherUserId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ClassHomeroomTeacherAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ClassHomeroomTeacher to aggregate.
+     */
+    where?: ClassHomeroomTeacherWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClassHomeroomTeachers to fetch.
+     */
+    orderBy?: ClassHomeroomTeacherOrderByWithRelationInput | ClassHomeroomTeacherOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ClassHomeroomTeacherWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClassHomeroomTeachers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClassHomeroomTeachers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ClassHomeroomTeachers
+    **/
+    _count?: true | ClassHomeroomTeacherCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ClassHomeroomTeacherMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ClassHomeroomTeacherMaxAggregateInputType
+  }
+
+  export type GetClassHomeroomTeacherAggregateType<T extends ClassHomeroomTeacherAggregateArgs> = {
+        [P in keyof T & keyof AggregateClassHomeroomTeacher]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateClassHomeroomTeacher[P]>
+      : GetScalarType<T[P], AggregateClassHomeroomTeacher[P]>
+  }
+
+
+
+
+  export type ClassHomeroomTeacherGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ClassHomeroomTeacherWhereInput
+    orderBy?: ClassHomeroomTeacherOrderByWithAggregationInput | ClassHomeroomTeacherOrderByWithAggregationInput[]
+    by: ClassHomeroomTeacherScalarFieldEnum[] | ClassHomeroomTeacherScalarFieldEnum
+    having?: ClassHomeroomTeacherScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ClassHomeroomTeacherCountAggregateInputType | true
+    _min?: ClassHomeroomTeacherMinAggregateInputType
+    _max?: ClassHomeroomTeacherMaxAggregateInputType
+  }
+
+  export type ClassHomeroomTeacherGroupByOutputType = {
+    id: string
+    grade: $Enums.Grade
+    className: string
+    teacherUserId: string
+    createdAt: Date
+    updatedAt: Date
+    _count: ClassHomeroomTeacherCountAggregateOutputType | null
+    _min: ClassHomeroomTeacherMinAggregateOutputType | null
+    _max: ClassHomeroomTeacherMaxAggregateOutputType | null
+  }
+
+  type GetClassHomeroomTeacherGroupByPayload<T extends ClassHomeroomTeacherGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ClassHomeroomTeacherGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ClassHomeroomTeacherGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ClassHomeroomTeacherGroupByOutputType[P]>
+            : GetScalarType<T[P], ClassHomeroomTeacherGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ClassHomeroomTeacherSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    grade?: boolean
+    className?: boolean
+    teacherUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    teacher?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["classHomeroomTeacher"]>
+
+
+
+  export type ClassHomeroomTeacherSelectScalar = {
+    id?: boolean
+    grade?: boolean
+    className?: boolean
+    teacherUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ClassHomeroomTeacherOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "grade" | "className" | "teacherUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["classHomeroomTeacher"]>
+  export type ClassHomeroomTeacherInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    teacher?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ClassHomeroomTeacherPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ClassHomeroomTeacher"
+    objects: {
+      teacher: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      grade: $Enums.Grade
+      className: string
+      teacherUserId: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["classHomeroomTeacher"]>
+    composites: {}
+  }
+
+  type ClassHomeroomTeacherGetPayload<S extends boolean | null | undefined | ClassHomeroomTeacherDefaultArgs> = $Result.GetResult<Prisma.$ClassHomeroomTeacherPayload, S>
+
+  type ClassHomeroomTeacherCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ClassHomeroomTeacherFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ClassHomeroomTeacherCountAggregateInputType | true
+    }
+
+  export interface ClassHomeroomTeacherDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ClassHomeroomTeacher'], meta: { name: 'ClassHomeroomTeacher' } }
+    /**
+     * Find zero or one ClassHomeroomTeacher that matches the filter.
+     * @param {ClassHomeroomTeacherFindUniqueArgs} args - Arguments to find a ClassHomeroomTeacher
+     * @example
+     * // Get one ClassHomeroomTeacher
+     * const classHomeroomTeacher = await prisma.classHomeroomTeacher.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ClassHomeroomTeacherFindUniqueArgs>(args: SelectSubset<T, ClassHomeroomTeacherFindUniqueArgs<ExtArgs>>): Prisma__ClassHomeroomTeacherClient<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ClassHomeroomTeacher that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ClassHomeroomTeacherFindUniqueOrThrowArgs} args - Arguments to find a ClassHomeroomTeacher
+     * @example
+     * // Get one ClassHomeroomTeacher
+     * const classHomeroomTeacher = await prisma.classHomeroomTeacher.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ClassHomeroomTeacherFindUniqueOrThrowArgs>(args: SelectSubset<T, ClassHomeroomTeacherFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ClassHomeroomTeacherClient<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ClassHomeroomTeacher that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassHomeroomTeacherFindFirstArgs} args - Arguments to find a ClassHomeroomTeacher
+     * @example
+     * // Get one ClassHomeroomTeacher
+     * const classHomeroomTeacher = await prisma.classHomeroomTeacher.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ClassHomeroomTeacherFindFirstArgs>(args?: SelectSubset<T, ClassHomeroomTeacherFindFirstArgs<ExtArgs>>): Prisma__ClassHomeroomTeacherClient<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ClassHomeroomTeacher that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassHomeroomTeacherFindFirstOrThrowArgs} args - Arguments to find a ClassHomeroomTeacher
+     * @example
+     * // Get one ClassHomeroomTeacher
+     * const classHomeroomTeacher = await prisma.classHomeroomTeacher.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ClassHomeroomTeacherFindFirstOrThrowArgs>(args?: SelectSubset<T, ClassHomeroomTeacherFindFirstOrThrowArgs<ExtArgs>>): Prisma__ClassHomeroomTeacherClient<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ClassHomeroomTeachers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassHomeroomTeacherFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ClassHomeroomTeachers
+     * const classHomeroomTeachers = await prisma.classHomeroomTeacher.findMany()
+     * 
+     * // Get first 10 ClassHomeroomTeachers
+     * const classHomeroomTeachers = await prisma.classHomeroomTeacher.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const classHomeroomTeacherWithIdOnly = await prisma.classHomeroomTeacher.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ClassHomeroomTeacherFindManyArgs>(args?: SelectSubset<T, ClassHomeroomTeacherFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ClassHomeroomTeacher.
+     * @param {ClassHomeroomTeacherCreateArgs} args - Arguments to create a ClassHomeroomTeacher.
+     * @example
+     * // Create one ClassHomeroomTeacher
+     * const ClassHomeroomTeacher = await prisma.classHomeroomTeacher.create({
+     *   data: {
+     *     // ... data to create a ClassHomeroomTeacher
+     *   }
+     * })
+     * 
+     */
+    create<T extends ClassHomeroomTeacherCreateArgs>(args: SelectSubset<T, ClassHomeroomTeacherCreateArgs<ExtArgs>>): Prisma__ClassHomeroomTeacherClient<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ClassHomeroomTeachers.
+     * @param {ClassHomeroomTeacherCreateManyArgs} args - Arguments to create many ClassHomeroomTeachers.
+     * @example
+     * // Create many ClassHomeroomTeachers
+     * const classHomeroomTeacher = await prisma.classHomeroomTeacher.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ClassHomeroomTeacherCreateManyArgs>(args?: SelectSubset<T, ClassHomeroomTeacherCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ClassHomeroomTeacher.
+     * @param {ClassHomeroomTeacherDeleteArgs} args - Arguments to delete one ClassHomeroomTeacher.
+     * @example
+     * // Delete one ClassHomeroomTeacher
+     * const ClassHomeroomTeacher = await prisma.classHomeroomTeacher.delete({
+     *   where: {
+     *     // ... filter to delete one ClassHomeroomTeacher
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ClassHomeroomTeacherDeleteArgs>(args: SelectSubset<T, ClassHomeroomTeacherDeleteArgs<ExtArgs>>): Prisma__ClassHomeroomTeacherClient<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ClassHomeroomTeacher.
+     * @param {ClassHomeroomTeacherUpdateArgs} args - Arguments to update one ClassHomeroomTeacher.
+     * @example
+     * // Update one ClassHomeroomTeacher
+     * const classHomeroomTeacher = await prisma.classHomeroomTeacher.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ClassHomeroomTeacherUpdateArgs>(args: SelectSubset<T, ClassHomeroomTeacherUpdateArgs<ExtArgs>>): Prisma__ClassHomeroomTeacherClient<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ClassHomeroomTeachers.
+     * @param {ClassHomeroomTeacherDeleteManyArgs} args - Arguments to filter ClassHomeroomTeachers to delete.
+     * @example
+     * // Delete a few ClassHomeroomTeachers
+     * const { count } = await prisma.classHomeroomTeacher.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ClassHomeroomTeacherDeleteManyArgs>(args?: SelectSubset<T, ClassHomeroomTeacherDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ClassHomeroomTeachers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassHomeroomTeacherUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ClassHomeroomTeachers
+     * const classHomeroomTeacher = await prisma.classHomeroomTeacher.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ClassHomeroomTeacherUpdateManyArgs>(args: SelectSubset<T, ClassHomeroomTeacherUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ClassHomeroomTeacher.
+     * @param {ClassHomeroomTeacherUpsertArgs} args - Arguments to update or create a ClassHomeroomTeacher.
+     * @example
+     * // Update or create a ClassHomeroomTeacher
+     * const classHomeroomTeacher = await prisma.classHomeroomTeacher.upsert({
+     *   create: {
+     *     // ... data to create a ClassHomeroomTeacher
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ClassHomeroomTeacher we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ClassHomeroomTeacherUpsertArgs>(args: SelectSubset<T, ClassHomeroomTeacherUpsertArgs<ExtArgs>>): Prisma__ClassHomeroomTeacherClient<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ClassHomeroomTeachers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassHomeroomTeacherCountArgs} args - Arguments to filter ClassHomeroomTeachers to count.
+     * @example
+     * // Count the number of ClassHomeroomTeachers
+     * const count = await prisma.classHomeroomTeacher.count({
+     *   where: {
+     *     // ... the filter for the ClassHomeroomTeachers we want to count
+     *   }
+     * })
+    **/
+    count<T extends ClassHomeroomTeacherCountArgs>(
+      args?: Subset<T, ClassHomeroomTeacherCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ClassHomeroomTeacherCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ClassHomeroomTeacher.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassHomeroomTeacherAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ClassHomeroomTeacherAggregateArgs>(args: Subset<T, ClassHomeroomTeacherAggregateArgs>): Prisma.PrismaPromise<GetClassHomeroomTeacherAggregateType<T>>
+
+    /**
+     * Group by ClassHomeroomTeacher.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClassHomeroomTeacherGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ClassHomeroomTeacherGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ClassHomeroomTeacherGroupByArgs['orderBy'] }
+        : { orderBy?: ClassHomeroomTeacherGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ClassHomeroomTeacherGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClassHomeroomTeacherGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ClassHomeroomTeacher model
+   */
+  readonly fields: ClassHomeroomTeacherFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ClassHomeroomTeacher.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ClassHomeroomTeacherClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    teacher<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ClassHomeroomTeacher model
+   */
+  interface ClassHomeroomTeacherFieldRefs {
+    readonly id: FieldRef<"ClassHomeroomTeacher", 'String'>
+    readonly grade: FieldRef<"ClassHomeroomTeacher", 'Grade'>
+    readonly className: FieldRef<"ClassHomeroomTeacher", 'String'>
+    readonly teacherUserId: FieldRef<"ClassHomeroomTeacher", 'String'>
+    readonly createdAt: FieldRef<"ClassHomeroomTeacher", 'DateTime'>
+    readonly updatedAt: FieldRef<"ClassHomeroomTeacher", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ClassHomeroomTeacher findUnique
+   */
+  export type ClassHomeroomTeacherFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+    /**
+     * Filter, which ClassHomeroomTeacher to fetch.
+     */
+    where: ClassHomeroomTeacherWhereUniqueInput
+  }
+
+  /**
+   * ClassHomeroomTeacher findUniqueOrThrow
+   */
+  export type ClassHomeroomTeacherFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+    /**
+     * Filter, which ClassHomeroomTeacher to fetch.
+     */
+    where: ClassHomeroomTeacherWhereUniqueInput
+  }
+
+  /**
+   * ClassHomeroomTeacher findFirst
+   */
+  export type ClassHomeroomTeacherFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+    /**
+     * Filter, which ClassHomeroomTeacher to fetch.
+     */
+    where?: ClassHomeroomTeacherWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClassHomeroomTeachers to fetch.
+     */
+    orderBy?: ClassHomeroomTeacherOrderByWithRelationInput | ClassHomeroomTeacherOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ClassHomeroomTeachers.
+     */
+    cursor?: ClassHomeroomTeacherWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClassHomeroomTeachers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClassHomeroomTeachers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ClassHomeroomTeachers.
+     */
+    distinct?: ClassHomeroomTeacherScalarFieldEnum | ClassHomeroomTeacherScalarFieldEnum[]
+  }
+
+  /**
+   * ClassHomeroomTeacher findFirstOrThrow
+   */
+  export type ClassHomeroomTeacherFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+    /**
+     * Filter, which ClassHomeroomTeacher to fetch.
+     */
+    where?: ClassHomeroomTeacherWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClassHomeroomTeachers to fetch.
+     */
+    orderBy?: ClassHomeroomTeacherOrderByWithRelationInput | ClassHomeroomTeacherOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ClassHomeroomTeachers.
+     */
+    cursor?: ClassHomeroomTeacherWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClassHomeroomTeachers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClassHomeroomTeachers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ClassHomeroomTeachers.
+     */
+    distinct?: ClassHomeroomTeacherScalarFieldEnum | ClassHomeroomTeacherScalarFieldEnum[]
+  }
+
+  /**
+   * ClassHomeroomTeacher findMany
+   */
+  export type ClassHomeroomTeacherFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+    /**
+     * Filter, which ClassHomeroomTeachers to fetch.
+     */
+    where?: ClassHomeroomTeacherWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClassHomeroomTeachers to fetch.
+     */
+    orderBy?: ClassHomeroomTeacherOrderByWithRelationInput | ClassHomeroomTeacherOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ClassHomeroomTeachers.
+     */
+    cursor?: ClassHomeroomTeacherWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClassHomeroomTeachers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClassHomeroomTeachers.
+     */
+    skip?: number
+    distinct?: ClassHomeroomTeacherScalarFieldEnum | ClassHomeroomTeacherScalarFieldEnum[]
+  }
+
+  /**
+   * ClassHomeroomTeacher create
+   */
+  export type ClassHomeroomTeacherCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ClassHomeroomTeacher.
+     */
+    data: XOR<ClassHomeroomTeacherCreateInput, ClassHomeroomTeacherUncheckedCreateInput>
+  }
+
+  /**
+   * ClassHomeroomTeacher createMany
+   */
+  export type ClassHomeroomTeacherCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ClassHomeroomTeachers.
+     */
+    data: ClassHomeroomTeacherCreateManyInput | ClassHomeroomTeacherCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ClassHomeroomTeacher update
+   */
+  export type ClassHomeroomTeacherUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ClassHomeroomTeacher.
+     */
+    data: XOR<ClassHomeroomTeacherUpdateInput, ClassHomeroomTeacherUncheckedUpdateInput>
+    /**
+     * Choose, which ClassHomeroomTeacher to update.
+     */
+    where: ClassHomeroomTeacherWhereUniqueInput
+  }
+
+  /**
+   * ClassHomeroomTeacher updateMany
+   */
+  export type ClassHomeroomTeacherUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ClassHomeroomTeachers.
+     */
+    data: XOR<ClassHomeroomTeacherUpdateManyMutationInput, ClassHomeroomTeacherUncheckedUpdateManyInput>
+    /**
+     * Filter which ClassHomeroomTeachers to update
+     */
+    where?: ClassHomeroomTeacherWhereInput
+    /**
+     * Limit how many ClassHomeroomTeachers to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ClassHomeroomTeacher upsert
+   */
+  export type ClassHomeroomTeacherUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ClassHomeroomTeacher to update in case it exists.
+     */
+    where: ClassHomeroomTeacherWhereUniqueInput
+    /**
+     * In case the ClassHomeroomTeacher found by the `where` argument doesn't exist, create a new ClassHomeroomTeacher with this data.
+     */
+    create: XOR<ClassHomeroomTeacherCreateInput, ClassHomeroomTeacherUncheckedCreateInput>
+    /**
+     * In case the ClassHomeroomTeacher was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ClassHomeroomTeacherUpdateInput, ClassHomeroomTeacherUncheckedUpdateInput>
+  }
+
+  /**
+   * ClassHomeroomTeacher delete
+   */
+  export type ClassHomeroomTeacherDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+    /**
+     * Filter which ClassHomeroomTeacher to delete.
+     */
+    where: ClassHomeroomTeacherWhereUniqueInput
+  }
+
+  /**
+   * ClassHomeroomTeacher deleteMany
+   */
+  export type ClassHomeroomTeacherDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ClassHomeroomTeachers to delete
+     */
+    where?: ClassHomeroomTeacherWhereInput
+    /**
+     * Limit how many ClassHomeroomTeachers to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ClassHomeroomTeacher without action
+   */
+  export type ClassHomeroomTeacherDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ClassHomeroomTeacher
+     */
+    select?: ClassHomeroomTeacherSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ClassHomeroomTeacher
+     */
+    omit?: ClassHomeroomTeacherOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ClassHomeroomTeacherInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model RegistrationWindow
    */
 
@@ -22897,6 +24419,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled: boolean | null
     officeOnlyRegistrationEnabled: boolean | null
     postLockAdjustmentEnabled: boolean | null
+    studentAdjustmentRequestEnabled: boolean | null
+    studentAdjustmentRequestCloseAt: Date | null
     paymentFeePercent: Decimal | null
     createdById: string | null
     createdAt: Date | null
@@ -22917,6 +24441,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled: boolean | null
     officeOnlyRegistrationEnabled: boolean | null
     postLockAdjustmentEnabled: boolean | null
+    studentAdjustmentRequestEnabled: boolean | null
+    studentAdjustmentRequestCloseAt: Date | null
     paymentFeePercent: Decimal | null
     createdById: string | null
     createdAt: Date | null
@@ -22937,6 +24463,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled: number
     officeOnlyRegistrationEnabled: number
     postLockAdjustmentEnabled: number
+    studentAdjustmentRequestEnabled: number
+    studentAdjustmentRequestCloseAt: number
     paymentFeePercent: number
     createdById: number
     createdAt: number
@@ -22967,6 +24495,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: true
     officeOnlyRegistrationEnabled?: true
     postLockAdjustmentEnabled?: true
+    studentAdjustmentRequestEnabled?: true
+    studentAdjustmentRequestCloseAt?: true
     paymentFeePercent?: true
     createdById?: true
     createdAt?: true
@@ -22987,6 +24517,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: true
     officeOnlyRegistrationEnabled?: true
     postLockAdjustmentEnabled?: true
+    studentAdjustmentRequestEnabled?: true
+    studentAdjustmentRequestCloseAt?: true
     paymentFeePercent?: true
     createdById?: true
     createdAt?: true
@@ -23007,6 +24539,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: true
     officeOnlyRegistrationEnabled?: true
     postLockAdjustmentEnabled?: true
+    studentAdjustmentRequestEnabled?: true
+    studentAdjustmentRequestCloseAt?: true
     paymentFeePercent?: true
     createdById?: true
     createdAt?: true
@@ -23114,6 +24648,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled: boolean
     officeOnlyRegistrationEnabled: boolean
     postLockAdjustmentEnabled: boolean
+    studentAdjustmentRequestEnabled: boolean
+    studentAdjustmentRequestCloseAt: Date | null
     paymentFeePercent: Decimal
     createdById: string | null
     createdAt: Date
@@ -23153,6 +24689,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: boolean
     paymentFeePercent?: boolean
     createdById?: boolean
     createdAt?: boolean
@@ -23163,6 +24701,7 @@ export namespace Prisma {
     registrations?: boolean | RegistrationWindow$registrationsArgs<ExtArgs>
     workspaces?: boolean | RegistrationWindow$workspacesArgs<ExtArgs>
     changeRequests?: boolean | RegistrationWindow$changeRequestsArgs<ExtArgs>
+    studentAdjustmentRequests?: boolean | RegistrationWindow$studentAdjustmentRequestsArgs<ExtArgs>
     feeStages?: boolean | RegistrationWindow$feeStagesArgs<ExtArgs>
     registrationAuditLogs?: boolean | RegistrationWindow$registrationAuditLogsArgs<ExtArgs>
     feeRules?: boolean | RegistrationWindow$feeRulesArgs<ExtArgs>
@@ -23194,13 +24733,15 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: boolean
     paymentFeePercent?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RegistrationWindowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "examBoardId" | "examSeriesId" | "title" | "academicYear" | "studentRegistrationOpenAt" | "studentRegistrationCloseAt" | "registrationCloseAt" | "status" | "studentSelfRegistrationEnabled" | "eoAssistedRegistrationEnabled" | "officeOnlyRegistrationEnabled" | "postLockAdjustmentEnabled" | "paymentFeePercent" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationWindow"]>
+  export type RegistrationWindowOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "examBoardId" | "examSeriesId" | "title" | "academicYear" | "studentRegistrationOpenAt" | "studentRegistrationCloseAt" | "registrationCloseAt" | "status" | "studentSelfRegistrationEnabled" | "eoAssistedRegistrationEnabled" | "officeOnlyRegistrationEnabled" | "postLockAdjustmentEnabled" | "studentAdjustmentRequestEnabled" | "studentAdjustmentRequestCloseAt" | "paymentFeePercent" | "createdById" | "createdAt" | "updatedAt", ExtArgs["result"]["registrationWindow"]>
   export type RegistrationWindowInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     examBoard?: boolean | ExamBoardDefaultArgs<ExtArgs>
     examSeries?: boolean | ExamSeriesDefaultArgs<ExtArgs>
@@ -23208,6 +24749,7 @@ export namespace Prisma {
     registrations?: boolean | RegistrationWindow$registrationsArgs<ExtArgs>
     workspaces?: boolean | RegistrationWindow$workspacesArgs<ExtArgs>
     changeRequests?: boolean | RegistrationWindow$changeRequestsArgs<ExtArgs>
+    studentAdjustmentRequests?: boolean | RegistrationWindow$studentAdjustmentRequestsArgs<ExtArgs>
     feeStages?: boolean | RegistrationWindow$feeStagesArgs<ExtArgs>
     registrationAuditLogs?: boolean | RegistrationWindow$registrationAuditLogsArgs<ExtArgs>
     feeRules?: boolean | RegistrationWindow$feeRulesArgs<ExtArgs>
@@ -23232,6 +24774,7 @@ export namespace Prisma {
       registrations: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
       workspaces: Prisma.$RegistrationWorkspacePayload<ExtArgs>[]
       changeRequests: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
+      studentAdjustmentRequests: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>[]
       feeStages: Prisma.$RegistrationFeeStagePayload<ExtArgs>[]
       registrationAuditLogs: Prisma.$RegistrationAuditLogPayload<ExtArgs>[]
       feeRules: Prisma.$FeeRulePayload<ExtArgs>[]
@@ -23262,6 +24805,14 @@ export namespace Prisma {
       eoAssistedRegistrationEnabled: boolean
       officeOnlyRegistrationEnabled: boolean
       postLockAdjustmentEnabled: boolean
+      /**
+       * When true, students may submit a late adjustment request after student registration close.
+       */
+      studentAdjustmentRequestEnabled: boolean
+      /**
+       * Latest time a student may submit (or resubmit after reject) a late adjustment request.
+       */
+      studentAdjustmentRequestCloseAt: Date | null
       /**
        * Payment platform fee retained on withdrawal refunds (copied from exam-board policy).
        */
@@ -23615,6 +25166,7 @@ export namespace Prisma {
     registrations<T extends RegistrationWindow$registrationsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workspaces<T extends RegistrationWindow$workspacesArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$workspacesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationWorkspacePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     changeRequests<T extends RegistrationWindow$changeRequestsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$changeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentAdjustmentRequests<T extends RegistrationWindow$studentAdjustmentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$studentAdjustmentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeStages<T extends RegistrationWindow$feeStagesArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$feeStagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationFeeStagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     registrationAuditLogs<T extends RegistrationWindow$registrationAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$registrationAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeRules<T extends RegistrationWindow$feeRulesArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindow$feeRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -23669,6 +25221,8 @@ export namespace Prisma {
     readonly eoAssistedRegistrationEnabled: FieldRef<"RegistrationWindow", 'Boolean'>
     readonly officeOnlyRegistrationEnabled: FieldRef<"RegistrationWindow", 'Boolean'>
     readonly postLockAdjustmentEnabled: FieldRef<"RegistrationWindow", 'Boolean'>
+    readonly studentAdjustmentRequestEnabled: FieldRef<"RegistrationWindow", 'Boolean'>
+    readonly studentAdjustmentRequestCloseAt: FieldRef<"RegistrationWindow", 'DateTime'>
     readonly paymentFeePercent: FieldRef<"RegistrationWindow", 'Decimal'>
     readonly createdById: FieldRef<"RegistrationWindow", 'String'>
     readonly createdAt: FieldRef<"RegistrationWindow", 'DateTime'>
@@ -24104,6 +25658,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RegistrationChangeRequestScalarFieldEnum | RegistrationChangeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * RegistrationWindow.studentAdjustmentRequests
+   */
+  export type RegistrationWindow$studentAdjustmentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    where?: StudentAdjustmentRequestWhereInput
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentAdjustmentRequestScalarFieldEnum | StudentAdjustmentRequestScalarFieldEnum[]
   }
 
   /**
@@ -27994,6 +29572,7 @@ export namespace Prisma {
     registrations?: boolean | RegistrationWorkspace$registrationsArgs<ExtArgs>
     auditLogs?: boolean | RegistrationWorkspace$auditLogsArgs<ExtArgs>
     changeRequests?: boolean | RegistrationWorkspace$changeRequestsArgs<ExtArgs>
+    studentAdjustmentRequests?: boolean | RegistrationWorkspace$studentAdjustmentRequestsArgs<ExtArgs>
     feeStatements?: boolean | RegistrationWorkspace$feeStatementsArgs<ExtArgs>
     offlineWithdrawalRefunds?: boolean | RegistrationWorkspace$offlineWithdrawalRefundsArgs<ExtArgs>
     _count?: boolean | RegistrationWorkspaceCountOutputTypeDefaultArgs<ExtArgs>
@@ -28053,6 +29632,7 @@ export namespace Prisma {
     registrations?: boolean | RegistrationWorkspace$registrationsArgs<ExtArgs>
     auditLogs?: boolean | RegistrationWorkspace$auditLogsArgs<ExtArgs>
     changeRequests?: boolean | RegistrationWorkspace$changeRequestsArgs<ExtArgs>
+    studentAdjustmentRequests?: boolean | RegistrationWorkspace$studentAdjustmentRequestsArgs<ExtArgs>
     feeStatements?: boolean | RegistrationWorkspace$feeStatementsArgs<ExtArgs>
     offlineWithdrawalRefunds?: boolean | RegistrationWorkspace$offlineWithdrawalRefundsArgs<ExtArgs>
     _count?: boolean | RegistrationWorkspaceCountOutputTypeDefaultArgs<ExtArgs>
@@ -28071,6 +29651,7 @@ export namespace Prisma {
       registrations: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
       auditLogs: Prisma.$RegistrationAuditLogPayload<ExtArgs>[]
       changeRequests: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
+      studentAdjustmentRequests: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>[]
       feeStatements: Prisma.$FeeStatementPayload<ExtArgs>[]
       offlineWithdrawalRefunds: Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>[]
     }
@@ -28462,6 +30043,7 @@ export namespace Prisma {
     registrations<T extends RegistrationWorkspace$registrationsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspace$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditLogs<T extends RegistrationWorkspace$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspace$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     changeRequests<T extends RegistrationWorkspace$changeRequestsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspace$changeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentAdjustmentRequests<T extends RegistrationWorkspace$studentAdjustmentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspace$studentAdjustmentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeStatements<T extends RegistrationWorkspace$feeStatementsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspace$feeStatementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     offlineWithdrawalRefunds<T extends RegistrationWorkspace$offlineWithdrawalRefundsArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspace$offlineWithdrawalRefundsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OfflineWithdrawalRefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -29056,6 +30638,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RegistrationChangeRequestScalarFieldEnum | RegistrationChangeRequestScalarFieldEnum[]
+  }
+
+  /**
+   * RegistrationWorkspace.studentAdjustmentRequests
+   */
+  export type RegistrationWorkspace$studentAdjustmentRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    where?: StudentAdjustmentRequestWhereInput
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentAdjustmentRequestScalarFieldEnum | StudentAdjustmentRequestScalarFieldEnum[]
   }
 
   /**
@@ -34185,6 +35791,2196 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: RegistrationChangeRequestExamSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StudentAdjustmentRequest
+   */
+
+  export type AggregateStudentAdjustmentRequest = {
+    _count: StudentAdjustmentRequestCountAggregateOutputType | null
+    _min: StudentAdjustmentRequestMinAggregateOutputType | null
+    _max: StudentAdjustmentRequestMaxAggregateOutputType | null
+  }
+
+  export type StudentAdjustmentRequestMinAggregateOutputType = {
+    id: string | null
+    registrationWorkspaceId: string | null
+    registrationWindowId: string | null
+    studentId: string | null
+    candidateId: string | null
+    status: $Enums.StudentAdjustmentRequestStatus | null
+    submittedAt: Date | null
+    primaryHomeroomTeacherId: string | null
+    studentGradeSnapshot: $Enums.Grade | null
+    studentClassNameSnapshot: string | null
+    teacherReviewedByUserId: string | null
+    teacherReviewedAt: Date | null
+    teacherReviewReason: string | null
+    eoReviewedByUserId: string | null
+    eoReviewedAt: Date | null
+    eoReviewReason: string | null
+    rejectedAtStage: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StudentAdjustmentRequestMaxAggregateOutputType = {
+    id: string | null
+    registrationWorkspaceId: string | null
+    registrationWindowId: string | null
+    studentId: string | null
+    candidateId: string | null
+    status: $Enums.StudentAdjustmentRequestStatus | null
+    submittedAt: Date | null
+    primaryHomeroomTeacherId: string | null
+    studentGradeSnapshot: $Enums.Grade | null
+    studentClassNameSnapshot: string | null
+    teacherReviewedByUserId: string | null
+    teacherReviewedAt: Date | null
+    teacherReviewReason: string | null
+    eoReviewedByUserId: string | null
+    eoReviewedAt: Date | null
+    eoReviewReason: string | null
+    rejectedAtStage: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StudentAdjustmentRequestCountAggregateOutputType = {
+    id: number
+    registrationWorkspaceId: number
+    registrationWindowId: number
+    studentId: number
+    candidateId: number
+    status: number
+    submittedAt: number
+    primaryHomeroomTeacherId: number
+    studentGradeSnapshot: number
+    studentClassNameSnapshot: number
+    teacherReviewedByUserId: number
+    teacherReviewedAt: number
+    teacherReviewReason: number
+    eoReviewedByUserId: number
+    eoReviewedAt: number
+    eoReviewReason: number
+    rejectedAtStage: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type StudentAdjustmentRequestMinAggregateInputType = {
+    id?: true
+    registrationWorkspaceId?: true
+    registrationWindowId?: true
+    studentId?: true
+    candidateId?: true
+    status?: true
+    submittedAt?: true
+    primaryHomeroomTeacherId?: true
+    studentGradeSnapshot?: true
+    studentClassNameSnapshot?: true
+    teacherReviewedByUserId?: true
+    teacherReviewedAt?: true
+    teacherReviewReason?: true
+    eoReviewedByUserId?: true
+    eoReviewedAt?: true
+    eoReviewReason?: true
+    rejectedAtStage?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StudentAdjustmentRequestMaxAggregateInputType = {
+    id?: true
+    registrationWorkspaceId?: true
+    registrationWindowId?: true
+    studentId?: true
+    candidateId?: true
+    status?: true
+    submittedAt?: true
+    primaryHomeroomTeacherId?: true
+    studentGradeSnapshot?: true
+    studentClassNameSnapshot?: true
+    teacherReviewedByUserId?: true
+    teacherReviewedAt?: true
+    teacherReviewReason?: true
+    eoReviewedByUserId?: true
+    eoReviewedAt?: true
+    eoReviewReason?: true
+    rejectedAtStage?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StudentAdjustmentRequestCountAggregateInputType = {
+    id?: true
+    registrationWorkspaceId?: true
+    registrationWindowId?: true
+    studentId?: true
+    candidateId?: true
+    status?: true
+    submittedAt?: true
+    primaryHomeroomTeacherId?: true
+    studentGradeSnapshot?: true
+    studentClassNameSnapshot?: true
+    teacherReviewedByUserId?: true
+    teacherReviewedAt?: true
+    teacherReviewReason?: true
+    eoReviewedByUserId?: true
+    eoReviewedAt?: true
+    eoReviewReason?: true
+    rejectedAtStage?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type StudentAdjustmentRequestAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudentAdjustmentRequest to aggregate.
+     */
+    where?: StudentAdjustmentRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentAdjustmentRequests to fetch.
+     */
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentAdjustmentRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentAdjustmentRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StudentAdjustmentRequests
+    **/
+    _count?: true | StudentAdjustmentRequestCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StudentAdjustmentRequestMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StudentAdjustmentRequestMaxAggregateInputType
+  }
+
+  export type GetStudentAdjustmentRequestAggregateType<T extends StudentAdjustmentRequestAggregateArgs> = {
+        [P in keyof T & keyof AggregateStudentAdjustmentRequest]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStudentAdjustmentRequest[P]>
+      : GetScalarType<T[P], AggregateStudentAdjustmentRequest[P]>
+  }
+
+
+
+
+  export type StudentAdjustmentRequestGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestWhereInput
+    orderBy?: StudentAdjustmentRequestOrderByWithAggregationInput | StudentAdjustmentRequestOrderByWithAggregationInput[]
+    by: StudentAdjustmentRequestScalarFieldEnum[] | StudentAdjustmentRequestScalarFieldEnum
+    having?: StudentAdjustmentRequestScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StudentAdjustmentRequestCountAggregateInputType | true
+    _min?: StudentAdjustmentRequestMinAggregateInputType
+    _max?: StudentAdjustmentRequestMaxAggregateInputType
+  }
+
+  export type StudentAdjustmentRequestGroupByOutputType = {
+    id: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    candidateId: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt: Date
+    primaryHomeroomTeacherId: string | null
+    studentGradeSnapshot: $Enums.Grade | null
+    studentClassNameSnapshot: string | null
+    teacherReviewedByUserId: string | null
+    teacherReviewedAt: Date | null
+    teacherReviewReason: string | null
+    eoReviewedByUserId: string | null
+    eoReviewedAt: Date | null
+    eoReviewReason: string | null
+    rejectedAtStage: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt: Date
+    updatedAt: Date
+    _count: StudentAdjustmentRequestCountAggregateOutputType | null
+    _min: StudentAdjustmentRequestMinAggregateOutputType | null
+    _max: StudentAdjustmentRequestMaxAggregateOutputType | null
+  }
+
+  type GetStudentAdjustmentRequestGroupByPayload<T extends StudentAdjustmentRequestGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StudentAdjustmentRequestGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StudentAdjustmentRequestGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StudentAdjustmentRequestGroupByOutputType[P]>
+            : GetScalarType<T[P], StudentAdjustmentRequestGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StudentAdjustmentRequestSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    registrationWorkspaceId?: boolean
+    registrationWindowId?: boolean
+    studentId?: boolean
+    candidateId?: boolean
+    status?: boolean
+    submittedAt?: boolean
+    primaryHomeroomTeacherId?: boolean
+    studentGradeSnapshot?: boolean
+    studentClassNameSnapshot?: boolean
+    teacherReviewedByUserId?: boolean
+    teacherReviewedAt?: boolean
+    teacherReviewReason?: boolean
+    eoReviewedByUserId?: boolean
+    eoReviewedAt?: boolean
+    eoReviewReason?: boolean
+    rejectedAtStage?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    registrationWorkspace?: boolean | RegistrationWorkspaceDefaultArgs<ExtArgs>
+    registrationWindow?: boolean | RegistrationWindowDefaultArgs<ExtArgs>
+    student?: boolean | UserDefaultArgs<ExtArgs>
+    candidate?: boolean | StudentAdjustmentRequest$candidateArgs<ExtArgs>
+    primaryHomeroomTeacher?: boolean | StudentAdjustmentRequest$primaryHomeroomTeacherArgs<ExtArgs>
+    teacherReviewedBy?: boolean | StudentAdjustmentRequest$teacherReviewedByArgs<ExtArgs>
+    eoReviewedBy?: boolean | StudentAdjustmentRequest$eoReviewedByArgs<ExtArgs>
+    items?: boolean | StudentAdjustmentRequest$itemsArgs<ExtArgs>
+    _count?: boolean | StudentAdjustmentRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["studentAdjustmentRequest"]>
+
+
+
+  export type StudentAdjustmentRequestSelectScalar = {
+    id?: boolean
+    registrationWorkspaceId?: boolean
+    registrationWindowId?: boolean
+    studentId?: boolean
+    candidateId?: boolean
+    status?: boolean
+    submittedAt?: boolean
+    primaryHomeroomTeacherId?: boolean
+    studentGradeSnapshot?: boolean
+    studentClassNameSnapshot?: boolean
+    teacherReviewedByUserId?: boolean
+    teacherReviewedAt?: boolean
+    teacherReviewReason?: boolean
+    eoReviewedByUserId?: boolean
+    eoReviewedAt?: boolean
+    eoReviewReason?: boolean
+    rejectedAtStage?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type StudentAdjustmentRequestOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "registrationWorkspaceId" | "registrationWindowId" | "studentId" | "candidateId" | "status" | "submittedAt" | "primaryHomeroomTeacherId" | "studentGradeSnapshot" | "studentClassNameSnapshot" | "teacherReviewedByUserId" | "teacherReviewedAt" | "teacherReviewReason" | "eoReviewedByUserId" | "eoReviewedAt" | "eoReviewReason" | "rejectedAtStage" | "createdAt" | "updatedAt", ExtArgs["result"]["studentAdjustmentRequest"]>
+  export type StudentAdjustmentRequestInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    registrationWorkspace?: boolean | RegistrationWorkspaceDefaultArgs<ExtArgs>
+    registrationWindow?: boolean | RegistrationWindowDefaultArgs<ExtArgs>
+    student?: boolean | UserDefaultArgs<ExtArgs>
+    candidate?: boolean | StudentAdjustmentRequest$candidateArgs<ExtArgs>
+    primaryHomeroomTeacher?: boolean | StudentAdjustmentRequest$primaryHomeroomTeacherArgs<ExtArgs>
+    teacherReviewedBy?: boolean | StudentAdjustmentRequest$teacherReviewedByArgs<ExtArgs>
+    eoReviewedBy?: boolean | StudentAdjustmentRequest$eoReviewedByArgs<ExtArgs>
+    items?: boolean | StudentAdjustmentRequest$itemsArgs<ExtArgs>
+    _count?: boolean | StudentAdjustmentRequestCountOutputTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $StudentAdjustmentRequestPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StudentAdjustmentRequest"
+    objects: {
+      registrationWorkspace: Prisma.$RegistrationWorkspacePayload<ExtArgs>
+      registrationWindow: Prisma.$RegistrationWindowPayload<ExtArgs>
+      student: Prisma.$UserPayload<ExtArgs>
+      candidate: Prisma.$CandidatePayload<ExtArgs> | null
+      primaryHomeroomTeacher: Prisma.$UserPayload<ExtArgs> | null
+      teacherReviewedBy: Prisma.$UserPayload<ExtArgs> | null
+      eoReviewedBy: Prisma.$UserPayload<ExtArgs> | null
+      items: Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      registrationWorkspaceId: string
+      registrationWindowId: string
+      studentId: string
+      candidateId: string | null
+      status: $Enums.StudentAdjustmentRequestStatus
+      submittedAt: Date
+      /**
+       * Form teacher for the student's class at submit time (required for routing).
+       */
+      primaryHomeroomTeacherId: string | null
+      studentGradeSnapshot: $Enums.Grade | null
+      studentClassNameSnapshot: string | null
+      teacherReviewedByUserId: string | null
+      teacherReviewedAt: Date | null
+      teacherReviewReason: string | null
+      eoReviewedByUserId: string | null
+      eoReviewedAt: Date | null
+      eoReviewReason: string | null
+      rejectedAtStage: $Enums.StudentAdjustmentRejectedAtStage | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["studentAdjustmentRequest"]>
+    composites: {}
+  }
+
+  type StudentAdjustmentRequestGetPayload<S extends boolean | null | undefined | StudentAdjustmentRequestDefaultArgs> = $Result.GetResult<Prisma.$StudentAdjustmentRequestPayload, S>
+
+  type StudentAdjustmentRequestCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StudentAdjustmentRequestFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StudentAdjustmentRequestCountAggregateInputType | true
+    }
+
+  export interface StudentAdjustmentRequestDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StudentAdjustmentRequest'], meta: { name: 'StudentAdjustmentRequest' } }
+    /**
+     * Find zero or one StudentAdjustmentRequest that matches the filter.
+     * @param {StudentAdjustmentRequestFindUniqueArgs} args - Arguments to find a StudentAdjustmentRequest
+     * @example
+     * // Get one StudentAdjustmentRequest
+     * const studentAdjustmentRequest = await prisma.studentAdjustmentRequest.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StudentAdjustmentRequestFindUniqueArgs>(args: SelectSubset<T, StudentAdjustmentRequestFindUniqueArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StudentAdjustmentRequest that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StudentAdjustmentRequestFindUniqueOrThrowArgs} args - Arguments to find a StudentAdjustmentRequest
+     * @example
+     * // Get one StudentAdjustmentRequest
+     * const studentAdjustmentRequest = await prisma.studentAdjustmentRequest.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StudentAdjustmentRequestFindUniqueOrThrowArgs>(args: SelectSubset<T, StudentAdjustmentRequestFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudentAdjustmentRequest that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestFindFirstArgs} args - Arguments to find a StudentAdjustmentRequest
+     * @example
+     * // Get one StudentAdjustmentRequest
+     * const studentAdjustmentRequest = await prisma.studentAdjustmentRequest.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StudentAdjustmentRequestFindFirstArgs>(args?: SelectSubset<T, StudentAdjustmentRequestFindFirstArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudentAdjustmentRequest that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestFindFirstOrThrowArgs} args - Arguments to find a StudentAdjustmentRequest
+     * @example
+     * // Get one StudentAdjustmentRequest
+     * const studentAdjustmentRequest = await prisma.studentAdjustmentRequest.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StudentAdjustmentRequestFindFirstOrThrowArgs>(args?: SelectSubset<T, StudentAdjustmentRequestFindFirstOrThrowArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StudentAdjustmentRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StudentAdjustmentRequests
+     * const studentAdjustmentRequests = await prisma.studentAdjustmentRequest.findMany()
+     * 
+     * // Get first 10 StudentAdjustmentRequests
+     * const studentAdjustmentRequests = await prisma.studentAdjustmentRequest.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const studentAdjustmentRequestWithIdOnly = await prisma.studentAdjustmentRequest.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StudentAdjustmentRequestFindManyArgs>(args?: SelectSubset<T, StudentAdjustmentRequestFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StudentAdjustmentRequest.
+     * @param {StudentAdjustmentRequestCreateArgs} args - Arguments to create a StudentAdjustmentRequest.
+     * @example
+     * // Create one StudentAdjustmentRequest
+     * const StudentAdjustmentRequest = await prisma.studentAdjustmentRequest.create({
+     *   data: {
+     *     // ... data to create a StudentAdjustmentRequest
+     *   }
+     * })
+     * 
+     */
+    create<T extends StudentAdjustmentRequestCreateArgs>(args: SelectSubset<T, StudentAdjustmentRequestCreateArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StudentAdjustmentRequests.
+     * @param {StudentAdjustmentRequestCreateManyArgs} args - Arguments to create many StudentAdjustmentRequests.
+     * @example
+     * // Create many StudentAdjustmentRequests
+     * const studentAdjustmentRequest = await prisma.studentAdjustmentRequest.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StudentAdjustmentRequestCreateManyArgs>(args?: SelectSubset<T, StudentAdjustmentRequestCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a StudentAdjustmentRequest.
+     * @param {StudentAdjustmentRequestDeleteArgs} args - Arguments to delete one StudentAdjustmentRequest.
+     * @example
+     * // Delete one StudentAdjustmentRequest
+     * const StudentAdjustmentRequest = await prisma.studentAdjustmentRequest.delete({
+     *   where: {
+     *     // ... filter to delete one StudentAdjustmentRequest
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StudentAdjustmentRequestDeleteArgs>(args: SelectSubset<T, StudentAdjustmentRequestDeleteArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StudentAdjustmentRequest.
+     * @param {StudentAdjustmentRequestUpdateArgs} args - Arguments to update one StudentAdjustmentRequest.
+     * @example
+     * // Update one StudentAdjustmentRequest
+     * const studentAdjustmentRequest = await prisma.studentAdjustmentRequest.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StudentAdjustmentRequestUpdateArgs>(args: SelectSubset<T, StudentAdjustmentRequestUpdateArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StudentAdjustmentRequests.
+     * @param {StudentAdjustmentRequestDeleteManyArgs} args - Arguments to filter StudentAdjustmentRequests to delete.
+     * @example
+     * // Delete a few StudentAdjustmentRequests
+     * const { count } = await prisma.studentAdjustmentRequest.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StudentAdjustmentRequestDeleteManyArgs>(args?: SelectSubset<T, StudentAdjustmentRequestDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StudentAdjustmentRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StudentAdjustmentRequests
+     * const studentAdjustmentRequest = await prisma.studentAdjustmentRequest.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StudentAdjustmentRequestUpdateManyArgs>(args: SelectSubset<T, StudentAdjustmentRequestUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one StudentAdjustmentRequest.
+     * @param {StudentAdjustmentRequestUpsertArgs} args - Arguments to update or create a StudentAdjustmentRequest.
+     * @example
+     * // Update or create a StudentAdjustmentRequest
+     * const studentAdjustmentRequest = await prisma.studentAdjustmentRequest.upsert({
+     *   create: {
+     *     // ... data to create a StudentAdjustmentRequest
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StudentAdjustmentRequest we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StudentAdjustmentRequestUpsertArgs>(args: SelectSubset<T, StudentAdjustmentRequestUpsertArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StudentAdjustmentRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestCountArgs} args - Arguments to filter StudentAdjustmentRequests to count.
+     * @example
+     * // Count the number of StudentAdjustmentRequests
+     * const count = await prisma.studentAdjustmentRequest.count({
+     *   where: {
+     *     // ... the filter for the StudentAdjustmentRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends StudentAdjustmentRequestCountArgs>(
+      args?: Subset<T, StudentAdjustmentRequestCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StudentAdjustmentRequestCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StudentAdjustmentRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StudentAdjustmentRequestAggregateArgs>(args: Subset<T, StudentAdjustmentRequestAggregateArgs>): Prisma.PrismaPromise<GetStudentAdjustmentRequestAggregateType<T>>
+
+    /**
+     * Group by StudentAdjustmentRequest.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StudentAdjustmentRequestGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StudentAdjustmentRequestGroupByArgs['orderBy'] }
+        : { orderBy?: StudentAdjustmentRequestGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StudentAdjustmentRequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStudentAdjustmentRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StudentAdjustmentRequest model
+   */
+  readonly fields: StudentAdjustmentRequestFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StudentAdjustmentRequest.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StudentAdjustmentRequestClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    registrationWorkspace<T extends RegistrationWorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWorkspaceDefaultArgs<ExtArgs>>): Prisma__RegistrationWorkspaceClient<$Result.GetResult<Prisma.$RegistrationWorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    registrationWindow<T extends RegistrationWindowDefaultArgs<ExtArgs> = {}>(args?: Subset<T, RegistrationWindowDefaultArgs<ExtArgs>>): Prisma__RegistrationWindowClient<$Result.GetResult<Prisma.$RegistrationWindowPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    student<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    candidate<T extends StudentAdjustmentRequest$candidateArgs<ExtArgs> = {}>(args?: Subset<T, StudentAdjustmentRequest$candidateArgs<ExtArgs>>): Prisma__CandidateClient<$Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    primaryHomeroomTeacher<T extends StudentAdjustmentRequest$primaryHomeroomTeacherArgs<ExtArgs> = {}>(args?: Subset<T, StudentAdjustmentRequest$primaryHomeroomTeacherArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    teacherReviewedBy<T extends StudentAdjustmentRequest$teacherReviewedByArgs<ExtArgs> = {}>(args?: Subset<T, StudentAdjustmentRequest$teacherReviewedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    eoReviewedBy<T extends StudentAdjustmentRequest$eoReviewedByArgs<ExtArgs> = {}>(args?: Subset<T, StudentAdjustmentRequest$eoReviewedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    items<T extends StudentAdjustmentRequest$itemsArgs<ExtArgs> = {}>(args?: Subset<T, StudentAdjustmentRequest$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StudentAdjustmentRequest model
+   */
+  interface StudentAdjustmentRequestFieldRefs {
+    readonly id: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly registrationWorkspaceId: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly registrationWindowId: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly studentId: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly candidateId: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly status: FieldRef<"StudentAdjustmentRequest", 'StudentAdjustmentRequestStatus'>
+    readonly submittedAt: FieldRef<"StudentAdjustmentRequest", 'DateTime'>
+    readonly primaryHomeroomTeacherId: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly studentGradeSnapshot: FieldRef<"StudentAdjustmentRequest", 'Grade'>
+    readonly studentClassNameSnapshot: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly teacherReviewedByUserId: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly teacherReviewedAt: FieldRef<"StudentAdjustmentRequest", 'DateTime'>
+    readonly teacherReviewReason: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly eoReviewedByUserId: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly eoReviewedAt: FieldRef<"StudentAdjustmentRequest", 'DateTime'>
+    readonly eoReviewReason: FieldRef<"StudentAdjustmentRequest", 'String'>
+    readonly rejectedAtStage: FieldRef<"StudentAdjustmentRequest", 'StudentAdjustmentRejectedAtStage'>
+    readonly createdAt: FieldRef<"StudentAdjustmentRequest", 'DateTime'>
+    readonly updatedAt: FieldRef<"StudentAdjustmentRequest", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StudentAdjustmentRequest findUnique
+   */
+  export type StudentAdjustmentRequestFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentAdjustmentRequest to fetch.
+     */
+    where: StudentAdjustmentRequestWhereUniqueInput
+  }
+
+  /**
+   * StudentAdjustmentRequest findUniqueOrThrow
+   */
+  export type StudentAdjustmentRequestFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentAdjustmentRequest to fetch.
+     */
+    where: StudentAdjustmentRequestWhereUniqueInput
+  }
+
+  /**
+   * StudentAdjustmentRequest findFirst
+   */
+  export type StudentAdjustmentRequestFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentAdjustmentRequest to fetch.
+     */
+    where?: StudentAdjustmentRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentAdjustmentRequests to fetch.
+     */
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudentAdjustmentRequests.
+     */
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentAdjustmentRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentAdjustmentRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudentAdjustmentRequests.
+     */
+    distinct?: StudentAdjustmentRequestScalarFieldEnum | StudentAdjustmentRequestScalarFieldEnum[]
+  }
+
+  /**
+   * StudentAdjustmentRequest findFirstOrThrow
+   */
+  export type StudentAdjustmentRequestFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentAdjustmentRequest to fetch.
+     */
+    where?: StudentAdjustmentRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentAdjustmentRequests to fetch.
+     */
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudentAdjustmentRequests.
+     */
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentAdjustmentRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentAdjustmentRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudentAdjustmentRequests.
+     */
+    distinct?: StudentAdjustmentRequestScalarFieldEnum | StudentAdjustmentRequestScalarFieldEnum[]
+  }
+
+  /**
+   * StudentAdjustmentRequest findMany
+   */
+  export type StudentAdjustmentRequestFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentAdjustmentRequests to fetch.
+     */
+    where?: StudentAdjustmentRequestWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentAdjustmentRequests to fetch.
+     */
+    orderBy?: StudentAdjustmentRequestOrderByWithRelationInput | StudentAdjustmentRequestOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StudentAdjustmentRequests.
+     */
+    cursor?: StudentAdjustmentRequestWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentAdjustmentRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentAdjustmentRequests.
+     */
+    skip?: number
+    distinct?: StudentAdjustmentRequestScalarFieldEnum | StudentAdjustmentRequestScalarFieldEnum[]
+  }
+
+  /**
+   * StudentAdjustmentRequest create
+   */
+  export type StudentAdjustmentRequestCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StudentAdjustmentRequest.
+     */
+    data: XOR<StudentAdjustmentRequestCreateInput, StudentAdjustmentRequestUncheckedCreateInput>
+  }
+
+  /**
+   * StudentAdjustmentRequest createMany
+   */
+  export type StudentAdjustmentRequestCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StudentAdjustmentRequests.
+     */
+    data: StudentAdjustmentRequestCreateManyInput | StudentAdjustmentRequestCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StudentAdjustmentRequest update
+   */
+  export type StudentAdjustmentRequestUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StudentAdjustmentRequest.
+     */
+    data: XOR<StudentAdjustmentRequestUpdateInput, StudentAdjustmentRequestUncheckedUpdateInput>
+    /**
+     * Choose, which StudentAdjustmentRequest to update.
+     */
+    where: StudentAdjustmentRequestWhereUniqueInput
+  }
+
+  /**
+   * StudentAdjustmentRequest updateMany
+   */
+  export type StudentAdjustmentRequestUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StudentAdjustmentRequests.
+     */
+    data: XOR<StudentAdjustmentRequestUpdateManyMutationInput, StudentAdjustmentRequestUncheckedUpdateManyInput>
+    /**
+     * Filter which StudentAdjustmentRequests to update
+     */
+    where?: StudentAdjustmentRequestWhereInput
+    /**
+     * Limit how many StudentAdjustmentRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudentAdjustmentRequest upsert
+   */
+  export type StudentAdjustmentRequestUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StudentAdjustmentRequest to update in case it exists.
+     */
+    where: StudentAdjustmentRequestWhereUniqueInput
+    /**
+     * In case the StudentAdjustmentRequest found by the `where` argument doesn't exist, create a new StudentAdjustmentRequest with this data.
+     */
+    create: XOR<StudentAdjustmentRequestCreateInput, StudentAdjustmentRequestUncheckedCreateInput>
+    /**
+     * In case the StudentAdjustmentRequest was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StudentAdjustmentRequestUpdateInput, StudentAdjustmentRequestUncheckedUpdateInput>
+  }
+
+  /**
+   * StudentAdjustmentRequest delete
+   */
+  export type StudentAdjustmentRequestDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+    /**
+     * Filter which StudentAdjustmentRequest to delete.
+     */
+    where: StudentAdjustmentRequestWhereUniqueInput
+  }
+
+  /**
+   * StudentAdjustmentRequest deleteMany
+   */
+  export type StudentAdjustmentRequestDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudentAdjustmentRequests to delete
+     */
+    where?: StudentAdjustmentRequestWhereInput
+    /**
+     * Limit how many StudentAdjustmentRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudentAdjustmentRequest.candidate
+   */
+  export type StudentAdjustmentRequest$candidateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Candidate
+     */
+    select?: CandidateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Candidate
+     */
+    omit?: CandidateOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateInclude<ExtArgs> | null
+    where?: CandidateWhereInput
+  }
+
+  /**
+   * StudentAdjustmentRequest.primaryHomeroomTeacher
+   */
+  export type StudentAdjustmentRequest$primaryHomeroomTeacherArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * StudentAdjustmentRequest.teacherReviewedBy
+   */
+  export type StudentAdjustmentRequest$teacherReviewedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * StudentAdjustmentRequest.eoReviewedBy
+   */
+  export type StudentAdjustmentRequest$eoReviewedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * StudentAdjustmentRequest.items
+   */
+  export type StudentAdjustmentRequest$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    where?: StudentAdjustmentRequestItemWhereInput
+    orderBy?: StudentAdjustmentRequestItemOrderByWithRelationInput | StudentAdjustmentRequestItemOrderByWithRelationInput[]
+    cursor?: StudentAdjustmentRequestItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentAdjustmentRequestItemScalarFieldEnum | StudentAdjustmentRequestItemScalarFieldEnum[]
+  }
+
+  /**
+   * StudentAdjustmentRequest without action
+   */
+  export type StudentAdjustmentRequestDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequest
+     */
+    select?: StudentAdjustmentRequestSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequest
+     */
+    omit?: StudentAdjustmentRequestOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StudentAdjustmentRequestItem
+   */
+
+  export type AggregateStudentAdjustmentRequestItem = {
+    _count: StudentAdjustmentRequestItemCountAggregateOutputType | null
+    _min: StudentAdjustmentRequestItemMinAggregateOutputType | null
+    _max: StudentAdjustmentRequestItemMaxAggregateOutputType | null
+  }
+
+  export type StudentAdjustmentRequestItemMinAggregateOutputType = {
+    id: string | null
+    requestId: string | null
+    itemType: $Enums.StudentAdjustmentRequestItemType | null
+    targetExamSessionId: string | null
+    targetRegistrationId: string | null
+    studentReason: string | null
+    createdAt: Date | null
+  }
+
+  export type StudentAdjustmentRequestItemMaxAggregateOutputType = {
+    id: string | null
+    requestId: string | null
+    itemType: $Enums.StudentAdjustmentRequestItemType | null
+    targetExamSessionId: string | null
+    targetRegistrationId: string | null
+    studentReason: string | null
+    createdAt: Date | null
+  }
+
+  export type StudentAdjustmentRequestItemCountAggregateOutputType = {
+    id: number
+    requestId: number
+    itemType: number
+    targetExamSessionId: number
+    targetRegistrationId: number
+    studentReason: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type StudentAdjustmentRequestItemMinAggregateInputType = {
+    id?: true
+    requestId?: true
+    itemType?: true
+    targetExamSessionId?: true
+    targetRegistrationId?: true
+    studentReason?: true
+    createdAt?: true
+  }
+
+  export type StudentAdjustmentRequestItemMaxAggregateInputType = {
+    id?: true
+    requestId?: true
+    itemType?: true
+    targetExamSessionId?: true
+    targetRegistrationId?: true
+    studentReason?: true
+    createdAt?: true
+  }
+
+  export type StudentAdjustmentRequestItemCountAggregateInputType = {
+    id?: true
+    requestId?: true
+    itemType?: true
+    targetExamSessionId?: true
+    targetRegistrationId?: true
+    studentReason?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type StudentAdjustmentRequestItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudentAdjustmentRequestItem to aggregate.
+     */
+    where?: StudentAdjustmentRequestItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentAdjustmentRequestItems to fetch.
+     */
+    orderBy?: StudentAdjustmentRequestItemOrderByWithRelationInput | StudentAdjustmentRequestItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StudentAdjustmentRequestItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentAdjustmentRequestItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentAdjustmentRequestItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StudentAdjustmentRequestItems
+    **/
+    _count?: true | StudentAdjustmentRequestItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StudentAdjustmentRequestItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StudentAdjustmentRequestItemMaxAggregateInputType
+  }
+
+  export type GetStudentAdjustmentRequestItemAggregateType<T extends StudentAdjustmentRequestItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateStudentAdjustmentRequestItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStudentAdjustmentRequestItem[P]>
+      : GetScalarType<T[P], AggregateStudentAdjustmentRequestItem[P]>
+  }
+
+
+
+
+  export type StudentAdjustmentRequestItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentAdjustmentRequestItemWhereInput
+    orderBy?: StudentAdjustmentRequestItemOrderByWithAggregationInput | StudentAdjustmentRequestItemOrderByWithAggregationInput[]
+    by: StudentAdjustmentRequestItemScalarFieldEnum[] | StudentAdjustmentRequestItemScalarFieldEnum
+    having?: StudentAdjustmentRequestItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StudentAdjustmentRequestItemCountAggregateInputType | true
+    _min?: StudentAdjustmentRequestItemMinAggregateInputType
+    _max?: StudentAdjustmentRequestItemMaxAggregateInputType
+  }
+
+  export type StudentAdjustmentRequestItemGroupByOutputType = {
+    id: string
+    requestId: string
+    itemType: $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId: string | null
+    targetRegistrationId: string | null
+    studentReason: string
+    createdAt: Date
+    _count: StudentAdjustmentRequestItemCountAggregateOutputType | null
+    _min: StudentAdjustmentRequestItemMinAggregateOutputType | null
+    _max: StudentAdjustmentRequestItemMaxAggregateOutputType | null
+  }
+
+  type GetStudentAdjustmentRequestItemGroupByPayload<T extends StudentAdjustmentRequestItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StudentAdjustmentRequestItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StudentAdjustmentRequestItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StudentAdjustmentRequestItemGroupByOutputType[P]>
+            : GetScalarType<T[P], StudentAdjustmentRequestItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StudentAdjustmentRequestItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    requestId?: boolean
+    itemType?: boolean
+    targetExamSessionId?: boolean
+    targetRegistrationId?: boolean
+    studentReason?: boolean
+    createdAt?: boolean
+    request?: boolean | StudentAdjustmentRequestDefaultArgs<ExtArgs>
+    targetExamSession?: boolean | StudentAdjustmentRequestItem$targetExamSessionArgs<ExtArgs>
+  }, ExtArgs["result"]["studentAdjustmentRequestItem"]>
+
+
+
+  export type StudentAdjustmentRequestItemSelectScalar = {
+    id?: boolean
+    requestId?: boolean
+    itemType?: boolean
+    targetExamSessionId?: boolean
+    targetRegistrationId?: boolean
+    studentReason?: boolean
+    createdAt?: boolean
+  }
+
+  export type StudentAdjustmentRequestItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "requestId" | "itemType" | "targetExamSessionId" | "targetRegistrationId" | "studentReason" | "createdAt", ExtArgs["result"]["studentAdjustmentRequestItem"]>
+  export type StudentAdjustmentRequestItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    request?: boolean | StudentAdjustmentRequestDefaultArgs<ExtArgs>
+    targetExamSession?: boolean | StudentAdjustmentRequestItem$targetExamSessionArgs<ExtArgs>
+  }
+
+  export type $StudentAdjustmentRequestItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StudentAdjustmentRequestItem"
+    objects: {
+      request: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>
+      targetExamSession: Prisma.$ExamSessionPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      requestId: string
+      itemType: $Enums.StudentAdjustmentRequestItemType
+      targetExamSessionId: string | null
+      targetRegistrationId: string | null
+      studentReason: string
+      createdAt: Date
+    }, ExtArgs["result"]["studentAdjustmentRequestItem"]>
+    composites: {}
+  }
+
+  type StudentAdjustmentRequestItemGetPayload<S extends boolean | null | undefined | StudentAdjustmentRequestItemDefaultArgs> = $Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload, S>
+
+  type StudentAdjustmentRequestItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StudentAdjustmentRequestItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StudentAdjustmentRequestItemCountAggregateInputType | true
+    }
+
+  export interface StudentAdjustmentRequestItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StudentAdjustmentRequestItem'], meta: { name: 'StudentAdjustmentRequestItem' } }
+    /**
+     * Find zero or one StudentAdjustmentRequestItem that matches the filter.
+     * @param {StudentAdjustmentRequestItemFindUniqueArgs} args - Arguments to find a StudentAdjustmentRequestItem
+     * @example
+     * // Get one StudentAdjustmentRequestItem
+     * const studentAdjustmentRequestItem = await prisma.studentAdjustmentRequestItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StudentAdjustmentRequestItemFindUniqueArgs>(args: SelectSubset<T, StudentAdjustmentRequestItemFindUniqueArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestItemClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StudentAdjustmentRequestItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StudentAdjustmentRequestItemFindUniqueOrThrowArgs} args - Arguments to find a StudentAdjustmentRequestItem
+     * @example
+     * // Get one StudentAdjustmentRequestItem
+     * const studentAdjustmentRequestItem = await prisma.studentAdjustmentRequestItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StudentAdjustmentRequestItemFindUniqueOrThrowArgs>(args: SelectSubset<T, StudentAdjustmentRequestItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestItemClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudentAdjustmentRequestItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestItemFindFirstArgs} args - Arguments to find a StudentAdjustmentRequestItem
+     * @example
+     * // Get one StudentAdjustmentRequestItem
+     * const studentAdjustmentRequestItem = await prisma.studentAdjustmentRequestItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StudentAdjustmentRequestItemFindFirstArgs>(args?: SelectSubset<T, StudentAdjustmentRequestItemFindFirstArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestItemClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StudentAdjustmentRequestItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestItemFindFirstOrThrowArgs} args - Arguments to find a StudentAdjustmentRequestItem
+     * @example
+     * // Get one StudentAdjustmentRequestItem
+     * const studentAdjustmentRequestItem = await prisma.studentAdjustmentRequestItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StudentAdjustmentRequestItemFindFirstOrThrowArgs>(args?: SelectSubset<T, StudentAdjustmentRequestItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestItemClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StudentAdjustmentRequestItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StudentAdjustmentRequestItems
+     * const studentAdjustmentRequestItems = await prisma.studentAdjustmentRequestItem.findMany()
+     * 
+     * // Get first 10 StudentAdjustmentRequestItems
+     * const studentAdjustmentRequestItems = await prisma.studentAdjustmentRequestItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const studentAdjustmentRequestItemWithIdOnly = await prisma.studentAdjustmentRequestItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StudentAdjustmentRequestItemFindManyArgs>(args?: SelectSubset<T, StudentAdjustmentRequestItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StudentAdjustmentRequestItem.
+     * @param {StudentAdjustmentRequestItemCreateArgs} args - Arguments to create a StudentAdjustmentRequestItem.
+     * @example
+     * // Create one StudentAdjustmentRequestItem
+     * const StudentAdjustmentRequestItem = await prisma.studentAdjustmentRequestItem.create({
+     *   data: {
+     *     // ... data to create a StudentAdjustmentRequestItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends StudentAdjustmentRequestItemCreateArgs>(args: SelectSubset<T, StudentAdjustmentRequestItemCreateArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestItemClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StudentAdjustmentRequestItems.
+     * @param {StudentAdjustmentRequestItemCreateManyArgs} args - Arguments to create many StudentAdjustmentRequestItems.
+     * @example
+     * // Create many StudentAdjustmentRequestItems
+     * const studentAdjustmentRequestItem = await prisma.studentAdjustmentRequestItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StudentAdjustmentRequestItemCreateManyArgs>(args?: SelectSubset<T, StudentAdjustmentRequestItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a StudentAdjustmentRequestItem.
+     * @param {StudentAdjustmentRequestItemDeleteArgs} args - Arguments to delete one StudentAdjustmentRequestItem.
+     * @example
+     * // Delete one StudentAdjustmentRequestItem
+     * const StudentAdjustmentRequestItem = await prisma.studentAdjustmentRequestItem.delete({
+     *   where: {
+     *     // ... filter to delete one StudentAdjustmentRequestItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StudentAdjustmentRequestItemDeleteArgs>(args: SelectSubset<T, StudentAdjustmentRequestItemDeleteArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestItemClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StudentAdjustmentRequestItem.
+     * @param {StudentAdjustmentRequestItemUpdateArgs} args - Arguments to update one StudentAdjustmentRequestItem.
+     * @example
+     * // Update one StudentAdjustmentRequestItem
+     * const studentAdjustmentRequestItem = await prisma.studentAdjustmentRequestItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StudentAdjustmentRequestItemUpdateArgs>(args: SelectSubset<T, StudentAdjustmentRequestItemUpdateArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestItemClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StudentAdjustmentRequestItems.
+     * @param {StudentAdjustmentRequestItemDeleteManyArgs} args - Arguments to filter StudentAdjustmentRequestItems to delete.
+     * @example
+     * // Delete a few StudentAdjustmentRequestItems
+     * const { count } = await prisma.studentAdjustmentRequestItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StudentAdjustmentRequestItemDeleteManyArgs>(args?: SelectSubset<T, StudentAdjustmentRequestItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StudentAdjustmentRequestItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StudentAdjustmentRequestItems
+     * const studentAdjustmentRequestItem = await prisma.studentAdjustmentRequestItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StudentAdjustmentRequestItemUpdateManyArgs>(args: SelectSubset<T, StudentAdjustmentRequestItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one StudentAdjustmentRequestItem.
+     * @param {StudentAdjustmentRequestItemUpsertArgs} args - Arguments to update or create a StudentAdjustmentRequestItem.
+     * @example
+     * // Update or create a StudentAdjustmentRequestItem
+     * const studentAdjustmentRequestItem = await prisma.studentAdjustmentRequestItem.upsert({
+     *   create: {
+     *     // ... data to create a StudentAdjustmentRequestItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StudentAdjustmentRequestItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StudentAdjustmentRequestItemUpsertArgs>(args: SelectSubset<T, StudentAdjustmentRequestItemUpsertArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestItemClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StudentAdjustmentRequestItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestItemCountArgs} args - Arguments to filter StudentAdjustmentRequestItems to count.
+     * @example
+     * // Count the number of StudentAdjustmentRequestItems
+     * const count = await prisma.studentAdjustmentRequestItem.count({
+     *   where: {
+     *     // ... the filter for the StudentAdjustmentRequestItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends StudentAdjustmentRequestItemCountArgs>(
+      args?: Subset<T, StudentAdjustmentRequestItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StudentAdjustmentRequestItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StudentAdjustmentRequestItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StudentAdjustmentRequestItemAggregateArgs>(args: Subset<T, StudentAdjustmentRequestItemAggregateArgs>): Prisma.PrismaPromise<GetStudentAdjustmentRequestItemAggregateType<T>>
+
+    /**
+     * Group by StudentAdjustmentRequestItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StudentAdjustmentRequestItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StudentAdjustmentRequestItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StudentAdjustmentRequestItemGroupByArgs['orderBy'] }
+        : { orderBy?: StudentAdjustmentRequestItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StudentAdjustmentRequestItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStudentAdjustmentRequestItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StudentAdjustmentRequestItem model
+   */
+  readonly fields: StudentAdjustmentRequestItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StudentAdjustmentRequestItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StudentAdjustmentRequestItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    request<T extends StudentAdjustmentRequestDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentAdjustmentRequestDefaultArgs<ExtArgs>>): Prisma__StudentAdjustmentRequestClient<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    targetExamSession<T extends StudentAdjustmentRequestItem$targetExamSessionArgs<ExtArgs> = {}>(args?: Subset<T, StudentAdjustmentRequestItem$targetExamSessionArgs<ExtArgs>>): Prisma__ExamSessionClient<$Result.GetResult<Prisma.$ExamSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StudentAdjustmentRequestItem model
+   */
+  interface StudentAdjustmentRequestItemFieldRefs {
+    readonly id: FieldRef<"StudentAdjustmentRequestItem", 'String'>
+    readonly requestId: FieldRef<"StudentAdjustmentRequestItem", 'String'>
+    readonly itemType: FieldRef<"StudentAdjustmentRequestItem", 'StudentAdjustmentRequestItemType'>
+    readonly targetExamSessionId: FieldRef<"StudentAdjustmentRequestItem", 'String'>
+    readonly targetRegistrationId: FieldRef<"StudentAdjustmentRequestItem", 'String'>
+    readonly studentReason: FieldRef<"StudentAdjustmentRequestItem", 'String'>
+    readonly createdAt: FieldRef<"StudentAdjustmentRequestItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StudentAdjustmentRequestItem findUnique
+   */
+  export type StudentAdjustmentRequestItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentAdjustmentRequestItem to fetch.
+     */
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+  }
+
+  /**
+   * StudentAdjustmentRequestItem findUniqueOrThrow
+   */
+  export type StudentAdjustmentRequestItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentAdjustmentRequestItem to fetch.
+     */
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+  }
+
+  /**
+   * StudentAdjustmentRequestItem findFirst
+   */
+  export type StudentAdjustmentRequestItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentAdjustmentRequestItem to fetch.
+     */
+    where?: StudentAdjustmentRequestItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentAdjustmentRequestItems to fetch.
+     */
+    orderBy?: StudentAdjustmentRequestItemOrderByWithRelationInput | StudentAdjustmentRequestItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudentAdjustmentRequestItems.
+     */
+    cursor?: StudentAdjustmentRequestItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentAdjustmentRequestItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentAdjustmentRequestItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudentAdjustmentRequestItems.
+     */
+    distinct?: StudentAdjustmentRequestItemScalarFieldEnum | StudentAdjustmentRequestItemScalarFieldEnum[]
+  }
+
+  /**
+   * StudentAdjustmentRequestItem findFirstOrThrow
+   */
+  export type StudentAdjustmentRequestItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentAdjustmentRequestItem to fetch.
+     */
+    where?: StudentAdjustmentRequestItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentAdjustmentRequestItems to fetch.
+     */
+    orderBy?: StudentAdjustmentRequestItemOrderByWithRelationInput | StudentAdjustmentRequestItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StudentAdjustmentRequestItems.
+     */
+    cursor?: StudentAdjustmentRequestItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentAdjustmentRequestItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentAdjustmentRequestItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StudentAdjustmentRequestItems.
+     */
+    distinct?: StudentAdjustmentRequestItemScalarFieldEnum | StudentAdjustmentRequestItemScalarFieldEnum[]
+  }
+
+  /**
+   * StudentAdjustmentRequestItem findMany
+   */
+  export type StudentAdjustmentRequestItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    /**
+     * Filter, which StudentAdjustmentRequestItems to fetch.
+     */
+    where?: StudentAdjustmentRequestItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StudentAdjustmentRequestItems to fetch.
+     */
+    orderBy?: StudentAdjustmentRequestItemOrderByWithRelationInput | StudentAdjustmentRequestItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StudentAdjustmentRequestItems.
+     */
+    cursor?: StudentAdjustmentRequestItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StudentAdjustmentRequestItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StudentAdjustmentRequestItems.
+     */
+    skip?: number
+    distinct?: StudentAdjustmentRequestItemScalarFieldEnum | StudentAdjustmentRequestItemScalarFieldEnum[]
+  }
+
+  /**
+   * StudentAdjustmentRequestItem create
+   */
+  export type StudentAdjustmentRequestItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StudentAdjustmentRequestItem.
+     */
+    data: XOR<StudentAdjustmentRequestItemCreateInput, StudentAdjustmentRequestItemUncheckedCreateInput>
+  }
+
+  /**
+   * StudentAdjustmentRequestItem createMany
+   */
+  export type StudentAdjustmentRequestItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StudentAdjustmentRequestItems.
+     */
+    data: StudentAdjustmentRequestItemCreateManyInput | StudentAdjustmentRequestItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StudentAdjustmentRequestItem update
+   */
+  export type StudentAdjustmentRequestItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StudentAdjustmentRequestItem.
+     */
+    data: XOR<StudentAdjustmentRequestItemUpdateInput, StudentAdjustmentRequestItemUncheckedUpdateInput>
+    /**
+     * Choose, which StudentAdjustmentRequestItem to update.
+     */
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+  }
+
+  /**
+   * StudentAdjustmentRequestItem updateMany
+   */
+  export type StudentAdjustmentRequestItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StudentAdjustmentRequestItems.
+     */
+    data: XOR<StudentAdjustmentRequestItemUpdateManyMutationInput, StudentAdjustmentRequestItemUncheckedUpdateManyInput>
+    /**
+     * Filter which StudentAdjustmentRequestItems to update
+     */
+    where?: StudentAdjustmentRequestItemWhereInput
+    /**
+     * Limit how many StudentAdjustmentRequestItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudentAdjustmentRequestItem upsert
+   */
+  export type StudentAdjustmentRequestItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StudentAdjustmentRequestItem to update in case it exists.
+     */
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+    /**
+     * In case the StudentAdjustmentRequestItem found by the `where` argument doesn't exist, create a new StudentAdjustmentRequestItem with this data.
+     */
+    create: XOR<StudentAdjustmentRequestItemCreateInput, StudentAdjustmentRequestItemUncheckedCreateInput>
+    /**
+     * In case the StudentAdjustmentRequestItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StudentAdjustmentRequestItemUpdateInput, StudentAdjustmentRequestItemUncheckedUpdateInput>
+  }
+
+  /**
+   * StudentAdjustmentRequestItem delete
+   */
+  export type StudentAdjustmentRequestItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    /**
+     * Filter which StudentAdjustmentRequestItem to delete.
+     */
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+  }
+
+  /**
+   * StudentAdjustmentRequestItem deleteMany
+   */
+  export type StudentAdjustmentRequestItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StudentAdjustmentRequestItems to delete
+     */
+    where?: StudentAdjustmentRequestItemWhereInput
+    /**
+     * Limit how many StudentAdjustmentRequestItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StudentAdjustmentRequestItem.targetExamSession
+   */
+  export type StudentAdjustmentRequestItem$targetExamSessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ExamSession
+     */
+    select?: ExamSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ExamSession
+     */
+    omit?: ExamSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExamSessionInclude<ExtArgs> | null
+    where?: ExamSessionWhereInput
+  }
+
+  /**
+   * StudentAdjustmentRequestItem without action
+   */
+  export type StudentAdjustmentRequestItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
   }
 
 
@@ -45019,6 +48815,7 @@ export namespace Prisma {
     changeRequestTargets?: boolean | ExamSession$changeRequestTargetsArgs<ExtArgs>
     changeRequestReplacements?: boolean | ExamSession$changeRequestReplacementsArgs<ExtArgs>
     changeRequestExamSessions?: boolean | ExamSession$changeRequestExamSessionsArgs<ExtArgs>
+    studentAdjustmentRequestItems?: boolean | ExamSession$studentAdjustmentRequestItemsArgs<ExtArgs>
     feeRules?: boolean | ExamSession$feeRulesArgs<ExtArgs>
     feeStatementItems?: boolean | ExamSession$feeStatementItemsArgs<ExtArgs>
     examDocumentAuditLogs?: boolean | ExamSession$examDocumentAuditLogsArgs<ExtArgs>
@@ -45055,6 +48852,7 @@ export namespace Prisma {
     changeRequestTargets?: boolean | ExamSession$changeRequestTargetsArgs<ExtArgs>
     changeRequestReplacements?: boolean | ExamSession$changeRequestReplacementsArgs<ExtArgs>
     changeRequestExamSessions?: boolean | ExamSession$changeRequestExamSessionsArgs<ExtArgs>
+    studentAdjustmentRequestItems?: boolean | ExamSession$studentAdjustmentRequestItemsArgs<ExtArgs>
     feeRules?: boolean | ExamSession$feeRulesArgs<ExtArgs>
     feeStatementItems?: boolean | ExamSession$feeStatementItemsArgs<ExtArgs>
     examDocumentAuditLogs?: boolean | ExamSession$examDocumentAuditLogsArgs<ExtArgs>
@@ -45075,6 +48873,7 @@ export namespace Prisma {
       changeRequestTargets: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
       changeRequestReplacements: Prisma.$RegistrationChangeRequestPayload<ExtArgs>[]
       changeRequestExamSessions: Prisma.$RegistrationChangeRequestExamSessionPayload<ExtArgs>[]
+      studentAdjustmentRequestItems: Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>[]
       feeRules: Prisma.$FeeRulePayload<ExtArgs>[]
       feeStatementItems: Prisma.$FeeStatementItemPayload<ExtArgs>[]
       examDocumentAuditLogs: Prisma.$ExamDocumentAuditLogPayload<ExtArgs>[]
@@ -45443,6 +49242,7 @@ export namespace Prisma {
     changeRequestTargets<T extends ExamSession$changeRequestTargetsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$changeRequestTargetsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     changeRequestReplacements<T extends ExamSession$changeRequestReplacementsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$changeRequestReplacementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     changeRequestExamSessions<T extends ExamSession$changeRequestExamSessionsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$changeRequestExamSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegistrationChangeRequestExamSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    studentAdjustmentRequestItems<T extends ExamSession$studentAdjustmentRequestItemsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$studentAdjustmentRequestItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeRules<T extends ExamSession$feeRulesArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$feeRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeStatementItems<T extends ExamSession$feeStatementItemsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$feeStatementItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     examDocumentAuditLogs<T extends ExamSession$examDocumentAuditLogsArgs<ExtArgs> = {}>(args?: Subset<T, ExamSession$examDocumentAuditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ExamDocumentAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -45969,6 +49769,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RegistrationChangeRequestExamSessionScalarFieldEnum | RegistrationChangeRequestExamSessionScalarFieldEnum[]
+  }
+
+  /**
+   * ExamSession.studentAdjustmentRequestItems
+   */
+  export type ExamSession$studentAdjustmentRequestItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentAdjustmentRequestItem
+     */
+    select?: StudentAdjustmentRequestItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StudentAdjustmentRequestItem
+     */
+    omit?: StudentAdjustmentRequestItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentAdjustmentRequestItemInclude<ExtArgs> | null
+    where?: StudentAdjustmentRequestItemWhereInput
+    orderBy?: StudentAdjustmentRequestItemOrderByWithRelationInput | StudentAdjustmentRequestItemOrderByWithRelationInput[]
+    cursor?: StudentAdjustmentRequestItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentAdjustmentRequestItemScalarFieldEnum | StudentAdjustmentRequestItemScalarFieldEnum[]
   }
 
   /**
@@ -69974,6 +73798,7 @@ export namespace Prisma {
     notifyFeeStatementIssued: 'notifyFeeStatementIssued',
     notifyRegistrationUpdated: 'notifyRegistrationUpdated',
     notifyFeeStatementPaid: 'notifyFeeStatementPaid',
+    notifyStaffStudentAdjustment: 'notifyStaffStudentAdjustment',
     updatedAt: 'updatedAt'
   };
 
@@ -70112,6 +73937,18 @@ export namespace Prisma {
   export type TeacherAssignmentScalarFieldEnum = (typeof TeacherAssignmentScalarFieldEnum)[keyof typeof TeacherAssignmentScalarFieldEnum]
 
 
+  export const ClassHomeroomTeacherScalarFieldEnum: {
+    id: 'id',
+    grade: 'grade',
+    className: 'className',
+    teacherUserId: 'teacherUserId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ClassHomeroomTeacherScalarFieldEnum = (typeof ClassHomeroomTeacherScalarFieldEnum)[keyof typeof ClassHomeroomTeacherScalarFieldEnum]
+
+
   export const RegistrationWindowScalarFieldEnum: {
     id: 'id',
     examBoardId: 'examBoardId',
@@ -70126,6 +73963,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled: 'eoAssistedRegistrationEnabled',
     officeOnlyRegistrationEnabled: 'officeOnlyRegistrationEnabled',
     postLockAdjustmentEnabled: 'postLockAdjustmentEnabled',
+    studentAdjustmentRequestEnabled: 'studentAdjustmentRequestEnabled',
+    studentAdjustmentRequestCloseAt: 'studentAdjustmentRequestCloseAt',
     paymentFeePercent: 'paymentFeePercent',
     createdById: 'createdById',
     createdAt: 'createdAt',
@@ -70338,6 +74177,44 @@ export namespace Prisma {
   };
 
   export type RegistrationChangeRequestExamSessionScalarFieldEnum = (typeof RegistrationChangeRequestExamSessionScalarFieldEnum)[keyof typeof RegistrationChangeRequestExamSessionScalarFieldEnum]
+
+
+  export const StudentAdjustmentRequestScalarFieldEnum: {
+    id: 'id',
+    registrationWorkspaceId: 'registrationWorkspaceId',
+    registrationWindowId: 'registrationWindowId',
+    studentId: 'studentId',
+    candidateId: 'candidateId',
+    status: 'status',
+    submittedAt: 'submittedAt',
+    primaryHomeroomTeacherId: 'primaryHomeroomTeacherId',
+    studentGradeSnapshot: 'studentGradeSnapshot',
+    studentClassNameSnapshot: 'studentClassNameSnapshot',
+    teacherReviewedByUserId: 'teacherReviewedByUserId',
+    teacherReviewedAt: 'teacherReviewedAt',
+    teacherReviewReason: 'teacherReviewReason',
+    eoReviewedByUserId: 'eoReviewedByUserId',
+    eoReviewedAt: 'eoReviewedAt',
+    eoReviewReason: 'eoReviewReason',
+    rejectedAtStage: 'rejectedAtStage',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type StudentAdjustmentRequestScalarFieldEnum = (typeof StudentAdjustmentRequestScalarFieldEnum)[keyof typeof StudentAdjustmentRequestScalarFieldEnum]
+
+
+  export const StudentAdjustmentRequestItemScalarFieldEnum: {
+    id: 'id',
+    requestId: 'requestId',
+    itemType: 'itemType',
+    targetExamSessionId: 'targetExamSessionId',
+    targetRegistrationId: 'targetRegistrationId',
+    studentReason: 'studentReason',
+    createdAt: 'createdAt'
+  };
+
+  export type StudentAdjustmentRequestItemScalarFieldEnum = (typeof StudentAdjustmentRequestItemScalarFieldEnum)[keyof typeof StudentAdjustmentRequestItemScalarFieldEnum]
 
 
   export const ExamBoardScalarFieldEnum: {
@@ -71145,6 +75022,15 @@ export namespace Prisma {
   export type TeacherAssignmentOrderByRelevanceFieldEnum = (typeof TeacherAssignmentOrderByRelevanceFieldEnum)[keyof typeof TeacherAssignmentOrderByRelevanceFieldEnum]
 
 
+  export const ClassHomeroomTeacherOrderByRelevanceFieldEnum: {
+    id: 'id',
+    className: 'className',
+    teacherUserId: 'teacherUserId'
+  };
+
+  export type ClassHomeroomTeacherOrderByRelevanceFieldEnum = (typeof ClassHomeroomTeacherOrderByRelevanceFieldEnum)[keyof typeof ClassHomeroomTeacherOrderByRelevanceFieldEnum]
+
+
   export const RegistrationWindowOrderByRelevanceFieldEnum: {
     id: 'id',
     examBoardId: 'examBoardId',
@@ -71283,6 +75169,34 @@ export namespace Prisma {
   };
 
   export type RegistrationChangeRequestExamSessionOrderByRelevanceFieldEnum = (typeof RegistrationChangeRequestExamSessionOrderByRelevanceFieldEnum)[keyof typeof RegistrationChangeRequestExamSessionOrderByRelevanceFieldEnum]
+
+
+  export const StudentAdjustmentRequestOrderByRelevanceFieldEnum: {
+    id: 'id',
+    registrationWorkspaceId: 'registrationWorkspaceId',
+    registrationWindowId: 'registrationWindowId',
+    studentId: 'studentId',
+    candidateId: 'candidateId',
+    primaryHomeroomTeacherId: 'primaryHomeroomTeacherId',
+    studentClassNameSnapshot: 'studentClassNameSnapshot',
+    teacherReviewedByUserId: 'teacherReviewedByUserId',
+    teacherReviewReason: 'teacherReviewReason',
+    eoReviewedByUserId: 'eoReviewedByUserId',
+    eoReviewReason: 'eoReviewReason'
+  };
+
+  export type StudentAdjustmentRequestOrderByRelevanceFieldEnum = (typeof StudentAdjustmentRequestOrderByRelevanceFieldEnum)[keyof typeof StudentAdjustmentRequestOrderByRelevanceFieldEnum]
+
+
+  export const StudentAdjustmentRequestItemOrderByRelevanceFieldEnum: {
+    id: 'id',
+    requestId: 'requestId',
+    targetExamSessionId: 'targetExamSessionId',
+    targetRegistrationId: 'targetRegistrationId',
+    studentReason: 'studentReason'
+  };
+
+  export type StudentAdjustmentRequestItemOrderByRelevanceFieldEnum = (typeof StudentAdjustmentRequestItemOrderByRelevanceFieldEnum)[keyof typeof StudentAdjustmentRequestItemOrderByRelevanceFieldEnum]
 
 
   export const ExamBoardOrderByRelevanceFieldEnum: {
@@ -71955,6 +75869,27 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'StudentAdjustmentRequestStatus'
+   */
+  export type EnumStudentAdjustmentRequestStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentAdjustmentRequestStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'StudentAdjustmentRejectedAtStage'
+   */
+  export type EnumStudentAdjustmentRejectedAtStageFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentAdjustmentRejectedAtStage'>
+    
+
+
+  /**
+   * Reference to a field of type 'StudentAdjustmentRequestItemType'
+   */
+  export type EnumStudentAdjustmentRequestItemTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentAdjustmentRequestItemType'>
+    
+
+
+  /**
    * Reference to a field of type 'KeyDateType'
    */
   export type EnumKeyDateTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'KeyDateType'>
@@ -72200,6 +76135,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundListRelationFilter
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineListRelationFilter
     studentNotificationLogs?: StudentNotificationLogListRelationFilter
+    studentAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestListRelationFilter
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestListRelationFilter
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
+    classHomeroomAssignments?: ClassHomeroomTeacherListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -72260,6 +76200,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundOrderByRelationAggregateInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineOrderByRelationAggregateInput
     studentNotificationLogs?: StudentNotificationLogOrderByRelationAggregateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestOrderByRelationAggregateInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestOrderByRelationAggregateInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestOrderByRelationAggregateInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestOrderByRelationAggregateInput
+    classHomeroomAssignments?: ClassHomeroomTeacherOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -72324,6 +76269,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundListRelationFilter
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineListRelationFilter
     studentNotificationLogs?: StudentNotificationLogListRelationFilter
+    studentAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestListRelationFilter
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestListRelationFilter
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
+    classHomeroomAssignments?: ClassHomeroomTeacherListRelationFilter
   }, "id" | "username" | "email" | "phone" | "studentNo">
 
   export type UserOrderByWithAggregationInput = {
@@ -72674,6 +76624,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: BoolFilter<"SystemEmailSettings"> | boolean
     notifyRegistrationUpdated?: BoolFilter<"SystemEmailSettings"> | boolean
     notifyFeeStatementPaid?: BoolFilter<"SystemEmailSettings"> | boolean
+    notifyStaffStudentAdjustment?: BoolFilter<"SystemEmailSettings"> | boolean
     updatedAt?: DateTimeFilter<"SystemEmailSettings"> | Date | string
   }
 
@@ -72692,6 +76643,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: SortOrder
     notifyRegistrationUpdated?: SortOrder
     notifyFeeStatementPaid?: SortOrder
+    notifyStaffStudentAdjustment?: SortOrder
     updatedAt?: SortOrder
     _relevance?: SystemEmailSettingsOrderByRelevanceInput
   }
@@ -72714,6 +76666,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: BoolFilter<"SystemEmailSettings"> | boolean
     notifyRegistrationUpdated?: BoolFilter<"SystemEmailSettings"> | boolean
     notifyFeeStatementPaid?: BoolFilter<"SystemEmailSettings"> | boolean
+    notifyStaffStudentAdjustment?: BoolFilter<"SystemEmailSettings"> | boolean
     updatedAt?: DateTimeFilter<"SystemEmailSettings"> | Date | string
   }, "id">
 
@@ -72732,6 +76685,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: SortOrder
     notifyRegistrationUpdated?: SortOrder
     notifyFeeStatementPaid?: SortOrder
+    notifyStaffStudentAdjustment?: SortOrder
     updatedAt?: SortOrder
     _count?: SystemEmailSettingsCountOrderByAggregateInput
     _avg?: SystemEmailSettingsAvgOrderByAggregateInput
@@ -72758,6 +76712,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
     notifyRegistrationUpdated?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
     notifyFeeStatementPaid?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
+    notifyStaffStudentAdjustment?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
     updatedAt?: DateTimeWithAggregatesFilter<"SystemEmailSettings"> | Date | string
   }
 
@@ -73070,6 +77025,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationListRelationFilter
     auditLogs?: RegistrationAuditLogListRelationFilter
     changeRequests?: RegistrationChangeRequestListRelationFilter
+    studentAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
     feeStatements?: FeeStatementListRelationFilter
     examDocumentAuditLogs?: ExamDocumentAuditLogListRelationFilter
     candidateAuditLogs?: CandidateAuditLogListRelationFilter
@@ -73124,6 +77080,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationOrderByRelationAggregateInput
     auditLogs?: RegistrationAuditLogOrderByRelationAggregateInput
     changeRequests?: RegistrationChangeRequestOrderByRelationAggregateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestOrderByRelationAggregateInput
     feeStatements?: FeeStatementOrderByRelationAggregateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogOrderByRelationAggregateInput
     candidateAuditLogs?: CandidateAuditLogOrderByRelationAggregateInput
@@ -73182,6 +77139,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationListRelationFilter
     auditLogs?: RegistrationAuditLogListRelationFilter
     changeRequests?: RegistrationChangeRequestListRelationFilter
+    studentAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
     feeStatements?: FeeStatementListRelationFilter
     examDocumentAuditLogs?: ExamDocumentAuditLogListRelationFilter
     candidateAuditLogs?: CandidateAuditLogListRelationFilter
@@ -73509,6 +77467,68 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"TeacherAssignment"> | Date | string
   }
 
+  export type ClassHomeroomTeacherWhereInput = {
+    AND?: ClassHomeroomTeacherWhereInput | ClassHomeroomTeacherWhereInput[]
+    OR?: ClassHomeroomTeacherWhereInput[]
+    NOT?: ClassHomeroomTeacherWhereInput | ClassHomeroomTeacherWhereInput[]
+    id?: StringFilter<"ClassHomeroomTeacher"> | string
+    grade?: EnumGradeFilter<"ClassHomeroomTeacher"> | $Enums.Grade
+    className?: StringFilter<"ClassHomeroomTeacher"> | string
+    teacherUserId?: StringFilter<"ClassHomeroomTeacher"> | string
+    createdAt?: DateTimeFilter<"ClassHomeroomTeacher"> | Date | string
+    updatedAt?: DateTimeFilter<"ClassHomeroomTeacher"> | Date | string
+    teacher?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ClassHomeroomTeacherOrderByWithRelationInput = {
+    id?: SortOrder
+    grade?: SortOrder
+    className?: SortOrder
+    teacherUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    teacher?: UserOrderByWithRelationInput
+    _relevance?: ClassHomeroomTeacherOrderByRelevanceInput
+  }
+
+  export type ClassHomeroomTeacherWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    grade_className?: ClassHomeroomTeacherGradeClassNameCompoundUniqueInput
+    AND?: ClassHomeroomTeacherWhereInput | ClassHomeroomTeacherWhereInput[]
+    OR?: ClassHomeroomTeacherWhereInput[]
+    NOT?: ClassHomeroomTeacherWhereInput | ClassHomeroomTeacherWhereInput[]
+    grade?: EnumGradeFilter<"ClassHomeroomTeacher"> | $Enums.Grade
+    className?: StringFilter<"ClassHomeroomTeacher"> | string
+    teacherUserId?: StringFilter<"ClassHomeroomTeacher"> | string
+    createdAt?: DateTimeFilter<"ClassHomeroomTeacher"> | Date | string
+    updatedAt?: DateTimeFilter<"ClassHomeroomTeacher"> | Date | string
+    teacher?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "grade_className">
+
+  export type ClassHomeroomTeacherOrderByWithAggregationInput = {
+    id?: SortOrder
+    grade?: SortOrder
+    className?: SortOrder
+    teacherUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ClassHomeroomTeacherCountOrderByAggregateInput
+    _max?: ClassHomeroomTeacherMaxOrderByAggregateInput
+    _min?: ClassHomeroomTeacherMinOrderByAggregateInput
+  }
+
+  export type ClassHomeroomTeacherScalarWhereWithAggregatesInput = {
+    AND?: ClassHomeroomTeacherScalarWhereWithAggregatesInput | ClassHomeroomTeacherScalarWhereWithAggregatesInput[]
+    OR?: ClassHomeroomTeacherScalarWhereWithAggregatesInput[]
+    NOT?: ClassHomeroomTeacherScalarWhereWithAggregatesInput | ClassHomeroomTeacherScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ClassHomeroomTeacher"> | string
+    grade?: EnumGradeWithAggregatesFilter<"ClassHomeroomTeacher"> | $Enums.Grade
+    className?: StringWithAggregatesFilter<"ClassHomeroomTeacher"> | string
+    teacherUserId?: StringWithAggregatesFilter<"ClassHomeroomTeacher"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"ClassHomeroomTeacher"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ClassHomeroomTeacher"> | Date | string
+  }
+
   export type RegistrationWindowWhereInput = {
     AND?: RegistrationWindowWhereInput | RegistrationWindowWhereInput[]
     OR?: RegistrationWindowWhereInput[]
@@ -73526,6 +77546,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     officeOnlyRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     postLockAdjustmentEnabled?: BoolFilter<"RegistrationWindow"> | boolean
+    studentAdjustmentRequestEnabled?: BoolFilter<"RegistrationWindow"> | boolean
+    studentAdjustmentRequestCloseAt?: DateTimeNullableFilter<"RegistrationWindow"> | Date | string | null
     paymentFeePercent?: DecimalFilter<"RegistrationWindow"> | Decimal | DecimalJsLike | number | string
     createdById?: StringNullableFilter<"RegistrationWindow"> | string | null
     createdAt?: DateTimeFilter<"RegistrationWindow"> | Date | string
@@ -73536,6 +77558,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationListRelationFilter
     workspaces?: RegistrationWorkspaceListRelationFilter
     changeRequests?: RegistrationChangeRequestListRelationFilter
+    studentAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
     feeStages?: RegistrationFeeStageListRelationFilter
     registrationAuditLogs?: RegistrationAuditLogListRelationFilter
     feeRules?: FeeRuleListRelationFilter
@@ -73564,6 +77587,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: SortOrder
     officeOnlyRegistrationEnabled?: SortOrder
     postLockAdjustmentEnabled?: SortOrder
+    studentAdjustmentRequestEnabled?: SortOrder
+    studentAdjustmentRequestCloseAt?: SortOrderInput | SortOrder
     paymentFeePercent?: SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -73574,6 +77599,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationOrderByRelationAggregateInput
     workspaces?: RegistrationWorkspaceOrderByRelationAggregateInput
     changeRequests?: RegistrationChangeRequestOrderByRelationAggregateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestOrderByRelationAggregateInput
     feeStages?: RegistrationFeeStageOrderByRelationAggregateInput
     registrationAuditLogs?: RegistrationAuditLogOrderByRelationAggregateInput
     feeRules?: FeeRuleOrderByRelationAggregateInput
@@ -73606,6 +77632,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     officeOnlyRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     postLockAdjustmentEnabled?: BoolFilter<"RegistrationWindow"> | boolean
+    studentAdjustmentRequestEnabled?: BoolFilter<"RegistrationWindow"> | boolean
+    studentAdjustmentRequestCloseAt?: DateTimeNullableFilter<"RegistrationWindow"> | Date | string | null
     paymentFeePercent?: DecimalFilter<"RegistrationWindow"> | Decimal | DecimalJsLike | number | string
     createdById?: StringNullableFilter<"RegistrationWindow"> | string | null
     createdAt?: DateTimeFilter<"RegistrationWindow"> | Date | string
@@ -73616,6 +77644,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationListRelationFilter
     workspaces?: RegistrationWorkspaceListRelationFilter
     changeRequests?: RegistrationChangeRequestListRelationFilter
+    studentAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
     feeStages?: RegistrationFeeStageListRelationFilter
     registrationAuditLogs?: RegistrationAuditLogListRelationFilter
     feeRules?: FeeRuleListRelationFilter
@@ -73644,6 +77673,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: SortOrder
     officeOnlyRegistrationEnabled?: SortOrder
     postLockAdjustmentEnabled?: SortOrder
+    studentAdjustmentRequestEnabled?: SortOrder
+    studentAdjustmentRequestCloseAt?: SortOrderInput | SortOrder
     paymentFeePercent?: SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -73672,6 +77703,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolWithAggregatesFilter<"RegistrationWindow"> | boolean
     officeOnlyRegistrationEnabled?: BoolWithAggregatesFilter<"RegistrationWindow"> | boolean
     postLockAdjustmentEnabled?: BoolWithAggregatesFilter<"RegistrationWindow"> | boolean
+    studentAdjustmentRequestEnabled?: BoolWithAggregatesFilter<"RegistrationWindow"> | boolean
+    studentAdjustmentRequestCloseAt?: DateTimeNullableWithAggregatesFilter<"RegistrationWindow"> | Date | string | null
     paymentFeePercent?: DecimalWithAggregatesFilter<"RegistrationWindow"> | Decimal | DecimalJsLike | number | string
     createdById?: StringNullableWithAggregatesFilter<"RegistrationWindow"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"RegistrationWindow"> | Date | string
@@ -73994,6 +78027,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationListRelationFilter
     auditLogs?: RegistrationAuditLogListRelationFilter
     changeRequests?: RegistrationChangeRequestListRelationFilter
+    studentAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
     feeStatements?: FeeStatementListRelationFilter
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
   }
@@ -74046,6 +78080,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationOrderByRelationAggregateInput
     auditLogs?: RegistrationAuditLogOrderByRelationAggregateInput
     changeRequests?: RegistrationChangeRequestOrderByRelationAggregateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestOrderByRelationAggregateInput
     feeStatements?: FeeStatementOrderByRelationAggregateInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundOrderByRelationAggregateInput
     _relevance?: RegistrationWorkspaceOrderByRelevanceInput
@@ -74104,6 +78139,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationListRelationFilter
     auditLogs?: RegistrationAuditLogListRelationFilter
     changeRequests?: RegistrationChangeRequestListRelationFilter
+    studentAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
     feeStatements?: FeeStatementListRelationFilter
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundListRelationFilter
   }, "id" | "registrationNumber" | "confirmationNumber" | "candidateId_registrationWindowId_registrationType" | "studentId_registrationWindowId_registrationType">
@@ -74856,6 +78892,222 @@ export namespace Prisma {
     changeRequestId?: StringWithAggregatesFilter<"RegistrationChangeRequestExamSession"> | string
     examSessionId?: StringWithAggregatesFilter<"RegistrationChangeRequestExamSession"> | string
     createdAt?: DateTimeWithAggregatesFilter<"RegistrationChangeRequestExamSession"> | Date | string
+  }
+
+  export type StudentAdjustmentRequestWhereInput = {
+    AND?: StudentAdjustmentRequestWhereInput | StudentAdjustmentRequestWhereInput[]
+    OR?: StudentAdjustmentRequestWhereInput[]
+    NOT?: StudentAdjustmentRequestWhereInput | StudentAdjustmentRequestWhereInput[]
+    id?: StringFilter<"StudentAdjustmentRequest"> | string
+    registrationWorkspaceId?: StringFilter<"StudentAdjustmentRequest"> | string
+    registrationWindowId?: StringFilter<"StudentAdjustmentRequest"> | string
+    studentId?: StringFilter<"StudentAdjustmentRequest"> | string
+    candidateId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    status?: EnumStudentAdjustmentRequestStatusFilter<"StudentAdjustmentRequest"> | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFilter<"StudentAdjustmentRequest"> | Date | string
+    primaryHomeroomTeacherId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    studentGradeSnapshot?: EnumGradeNullableFilter<"StudentAdjustmentRequest"> | $Enums.Grade | null
+    studentClassNameSnapshot?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    teacherReviewedByUserId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    teacherReviewedAt?: DateTimeNullableFilter<"StudentAdjustmentRequest"> | Date | string | null
+    teacherReviewReason?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    eoReviewedByUserId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    eoReviewedAt?: DateTimeNullableFilter<"StudentAdjustmentRequest"> | Date | string | null
+    eoReviewReason?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    rejectedAtStage?: EnumStudentAdjustmentRejectedAtStageNullableFilter<"StudentAdjustmentRequest"> | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFilter<"StudentAdjustmentRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"StudentAdjustmentRequest"> | Date | string
+    registrationWorkspace?: XOR<RegistrationWorkspaceScalarRelationFilter, RegistrationWorkspaceWhereInput>
+    registrationWindow?: XOR<RegistrationWindowScalarRelationFilter, RegistrationWindowWhereInput>
+    student?: XOR<UserScalarRelationFilter, UserWhereInput>
+    candidate?: XOR<CandidateNullableScalarRelationFilter, CandidateWhereInput> | null
+    primaryHomeroomTeacher?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    teacherReviewedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    eoReviewedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    items?: StudentAdjustmentRequestItemListRelationFilter
+  }
+
+  export type StudentAdjustmentRequestOrderByWithRelationInput = {
+    id?: SortOrder
+    registrationWorkspaceId?: SortOrder
+    registrationWindowId?: SortOrder
+    studentId?: SortOrder
+    candidateId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    submittedAt?: SortOrder
+    primaryHomeroomTeacherId?: SortOrderInput | SortOrder
+    studentGradeSnapshot?: SortOrderInput | SortOrder
+    studentClassNameSnapshot?: SortOrderInput | SortOrder
+    teacherReviewedByUserId?: SortOrderInput | SortOrder
+    teacherReviewedAt?: SortOrderInput | SortOrder
+    teacherReviewReason?: SortOrderInput | SortOrder
+    eoReviewedByUserId?: SortOrderInput | SortOrder
+    eoReviewedAt?: SortOrderInput | SortOrder
+    eoReviewReason?: SortOrderInput | SortOrder
+    rejectedAtStage?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    registrationWorkspace?: RegistrationWorkspaceOrderByWithRelationInput
+    registrationWindow?: RegistrationWindowOrderByWithRelationInput
+    student?: UserOrderByWithRelationInput
+    candidate?: CandidateOrderByWithRelationInput
+    primaryHomeroomTeacher?: UserOrderByWithRelationInput
+    teacherReviewedBy?: UserOrderByWithRelationInput
+    eoReviewedBy?: UserOrderByWithRelationInput
+    items?: StudentAdjustmentRequestItemOrderByRelationAggregateInput
+    _relevance?: StudentAdjustmentRequestOrderByRelevanceInput
+  }
+
+  export type StudentAdjustmentRequestWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StudentAdjustmentRequestWhereInput | StudentAdjustmentRequestWhereInput[]
+    OR?: StudentAdjustmentRequestWhereInput[]
+    NOT?: StudentAdjustmentRequestWhereInput | StudentAdjustmentRequestWhereInput[]
+    registrationWorkspaceId?: StringFilter<"StudentAdjustmentRequest"> | string
+    registrationWindowId?: StringFilter<"StudentAdjustmentRequest"> | string
+    studentId?: StringFilter<"StudentAdjustmentRequest"> | string
+    candidateId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    status?: EnumStudentAdjustmentRequestStatusFilter<"StudentAdjustmentRequest"> | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFilter<"StudentAdjustmentRequest"> | Date | string
+    primaryHomeroomTeacherId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    studentGradeSnapshot?: EnumGradeNullableFilter<"StudentAdjustmentRequest"> | $Enums.Grade | null
+    studentClassNameSnapshot?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    teacherReviewedByUserId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    teacherReviewedAt?: DateTimeNullableFilter<"StudentAdjustmentRequest"> | Date | string | null
+    teacherReviewReason?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    eoReviewedByUserId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    eoReviewedAt?: DateTimeNullableFilter<"StudentAdjustmentRequest"> | Date | string | null
+    eoReviewReason?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    rejectedAtStage?: EnumStudentAdjustmentRejectedAtStageNullableFilter<"StudentAdjustmentRequest"> | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFilter<"StudentAdjustmentRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"StudentAdjustmentRequest"> | Date | string
+    registrationWorkspace?: XOR<RegistrationWorkspaceScalarRelationFilter, RegistrationWorkspaceWhereInput>
+    registrationWindow?: XOR<RegistrationWindowScalarRelationFilter, RegistrationWindowWhereInput>
+    student?: XOR<UserScalarRelationFilter, UserWhereInput>
+    candidate?: XOR<CandidateNullableScalarRelationFilter, CandidateWhereInput> | null
+    primaryHomeroomTeacher?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    teacherReviewedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    eoReviewedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    items?: StudentAdjustmentRequestItemListRelationFilter
+  }, "id">
+
+  export type StudentAdjustmentRequestOrderByWithAggregationInput = {
+    id?: SortOrder
+    registrationWorkspaceId?: SortOrder
+    registrationWindowId?: SortOrder
+    studentId?: SortOrder
+    candidateId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    submittedAt?: SortOrder
+    primaryHomeroomTeacherId?: SortOrderInput | SortOrder
+    studentGradeSnapshot?: SortOrderInput | SortOrder
+    studentClassNameSnapshot?: SortOrderInput | SortOrder
+    teacherReviewedByUserId?: SortOrderInput | SortOrder
+    teacherReviewedAt?: SortOrderInput | SortOrder
+    teacherReviewReason?: SortOrderInput | SortOrder
+    eoReviewedByUserId?: SortOrderInput | SortOrder
+    eoReviewedAt?: SortOrderInput | SortOrder
+    eoReviewReason?: SortOrderInput | SortOrder
+    rejectedAtStage?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: StudentAdjustmentRequestCountOrderByAggregateInput
+    _max?: StudentAdjustmentRequestMaxOrderByAggregateInput
+    _min?: StudentAdjustmentRequestMinOrderByAggregateInput
+  }
+
+  export type StudentAdjustmentRequestScalarWhereWithAggregatesInput = {
+    AND?: StudentAdjustmentRequestScalarWhereWithAggregatesInput | StudentAdjustmentRequestScalarWhereWithAggregatesInput[]
+    OR?: StudentAdjustmentRequestScalarWhereWithAggregatesInput[]
+    NOT?: StudentAdjustmentRequestScalarWhereWithAggregatesInput | StudentAdjustmentRequestScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StudentAdjustmentRequest"> | string
+    registrationWorkspaceId?: StringWithAggregatesFilter<"StudentAdjustmentRequest"> | string
+    registrationWindowId?: StringWithAggregatesFilter<"StudentAdjustmentRequest"> | string
+    studentId?: StringWithAggregatesFilter<"StudentAdjustmentRequest"> | string
+    candidateId?: StringNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | string | null
+    status?: EnumStudentAdjustmentRequestStatusWithAggregatesFilter<"StudentAdjustmentRequest"> | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeWithAggregatesFilter<"StudentAdjustmentRequest"> | Date | string
+    primaryHomeroomTeacherId?: StringNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | string | null
+    studentGradeSnapshot?: EnumGradeNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | $Enums.Grade | null
+    studentClassNameSnapshot?: StringNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | string | null
+    teacherReviewedByUserId?: StringNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | string | null
+    teacherReviewedAt?: DateTimeNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | Date | string | null
+    teacherReviewReason?: StringNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | string | null
+    eoReviewedByUserId?: StringNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | string | null
+    eoReviewedAt?: DateTimeNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | Date | string | null
+    eoReviewReason?: StringNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | string | null
+    rejectedAtStage?: EnumStudentAdjustmentRejectedAtStageNullableWithAggregatesFilter<"StudentAdjustmentRequest"> | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeWithAggregatesFilter<"StudentAdjustmentRequest"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"StudentAdjustmentRequest"> | Date | string
+  }
+
+  export type StudentAdjustmentRequestItemWhereInput = {
+    AND?: StudentAdjustmentRequestItemWhereInput | StudentAdjustmentRequestItemWhereInput[]
+    OR?: StudentAdjustmentRequestItemWhereInput[]
+    NOT?: StudentAdjustmentRequestItemWhereInput | StudentAdjustmentRequestItemWhereInput[]
+    id?: StringFilter<"StudentAdjustmentRequestItem"> | string
+    requestId?: StringFilter<"StudentAdjustmentRequestItem"> | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFilter<"StudentAdjustmentRequestItem"> | $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: StringNullableFilter<"StudentAdjustmentRequestItem"> | string | null
+    targetRegistrationId?: StringNullableFilter<"StudentAdjustmentRequestItem"> | string | null
+    studentReason?: StringFilter<"StudentAdjustmentRequestItem"> | string
+    createdAt?: DateTimeFilter<"StudentAdjustmentRequestItem"> | Date | string
+    request?: XOR<StudentAdjustmentRequestScalarRelationFilter, StudentAdjustmentRequestWhereInput>
+    targetExamSession?: XOR<ExamSessionNullableScalarRelationFilter, ExamSessionWhereInput> | null
+  }
+
+  export type StudentAdjustmentRequestItemOrderByWithRelationInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    itemType?: SortOrder
+    targetExamSessionId?: SortOrderInput | SortOrder
+    targetRegistrationId?: SortOrderInput | SortOrder
+    studentReason?: SortOrder
+    createdAt?: SortOrder
+    request?: StudentAdjustmentRequestOrderByWithRelationInput
+    targetExamSession?: ExamSessionOrderByWithRelationInput
+    _relevance?: StudentAdjustmentRequestItemOrderByRelevanceInput
+  }
+
+  export type StudentAdjustmentRequestItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StudentAdjustmentRequestItemWhereInput | StudentAdjustmentRequestItemWhereInput[]
+    OR?: StudentAdjustmentRequestItemWhereInput[]
+    NOT?: StudentAdjustmentRequestItemWhereInput | StudentAdjustmentRequestItemWhereInput[]
+    requestId?: StringFilter<"StudentAdjustmentRequestItem"> | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFilter<"StudentAdjustmentRequestItem"> | $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: StringNullableFilter<"StudentAdjustmentRequestItem"> | string | null
+    targetRegistrationId?: StringNullableFilter<"StudentAdjustmentRequestItem"> | string | null
+    studentReason?: StringFilter<"StudentAdjustmentRequestItem"> | string
+    createdAt?: DateTimeFilter<"StudentAdjustmentRequestItem"> | Date | string
+    request?: XOR<StudentAdjustmentRequestScalarRelationFilter, StudentAdjustmentRequestWhereInput>
+    targetExamSession?: XOR<ExamSessionNullableScalarRelationFilter, ExamSessionWhereInput> | null
+  }, "id">
+
+  export type StudentAdjustmentRequestItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    itemType?: SortOrder
+    targetExamSessionId?: SortOrderInput | SortOrder
+    targetRegistrationId?: SortOrderInput | SortOrder
+    studentReason?: SortOrder
+    createdAt?: SortOrder
+    _count?: StudentAdjustmentRequestItemCountOrderByAggregateInput
+    _max?: StudentAdjustmentRequestItemMaxOrderByAggregateInput
+    _min?: StudentAdjustmentRequestItemMinOrderByAggregateInput
+  }
+
+  export type StudentAdjustmentRequestItemScalarWhereWithAggregatesInput = {
+    AND?: StudentAdjustmentRequestItemScalarWhereWithAggregatesInput | StudentAdjustmentRequestItemScalarWhereWithAggregatesInput[]
+    OR?: StudentAdjustmentRequestItemScalarWhereWithAggregatesInput[]
+    NOT?: StudentAdjustmentRequestItemScalarWhereWithAggregatesInput | StudentAdjustmentRequestItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"StudentAdjustmentRequestItem"> | string
+    requestId?: StringWithAggregatesFilter<"StudentAdjustmentRequestItem"> | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeWithAggregatesFilter<"StudentAdjustmentRequestItem"> | $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: StringNullableWithAggregatesFilter<"StudentAdjustmentRequestItem"> | string | null
+    targetRegistrationId?: StringNullableWithAggregatesFilter<"StudentAdjustmentRequestItem"> | string | null
+    studentReason?: StringWithAggregatesFilter<"StudentAdjustmentRequestItem"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"StudentAdjustmentRequestItem"> | Date | string
   }
 
   export type ExamBoardWhereInput = {
@@ -75766,6 +80018,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestListRelationFilter
     changeRequestReplacements?: RegistrationChangeRequestListRelationFilter
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionListRelationFilter
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemListRelationFilter
     feeRules?: FeeRuleListRelationFilter
     feeStatementItems?: FeeStatementItemListRelationFilter
     examDocumentAuditLogs?: ExamDocumentAuditLogListRelationFilter
@@ -75795,6 +80048,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestOrderByRelationAggregateInput
     changeRequestReplacements?: RegistrationChangeRequestOrderByRelationAggregateInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionOrderByRelationAggregateInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemOrderByRelationAggregateInput
     feeRules?: FeeRuleOrderByRelationAggregateInput
     feeStatementItems?: FeeStatementItemOrderByRelationAggregateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogOrderByRelationAggregateInput
@@ -75828,6 +80082,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestListRelationFilter
     changeRequestReplacements?: RegistrationChangeRequestListRelationFilter
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionListRelationFilter
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemListRelationFilter
     feeRules?: FeeRuleListRelationFilter
     feeStatementItems?: FeeStatementItemListRelationFilter
     examDocumentAuditLogs?: ExamDocumentAuditLogListRelationFilter
@@ -78550,6 +82805,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -78610,6 +82870,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUpdateInput = {
@@ -78670,6 +82935,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -78730,6 +83000,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -79111,6 +83386,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: boolean
     notifyRegistrationUpdated?: boolean
     notifyFeeStatementPaid?: boolean
+    notifyStaffStudentAdjustment?: boolean
     updatedAt?: Date | string
   }
 
@@ -79129,6 +83405,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: boolean
     notifyRegistrationUpdated?: boolean
     notifyFeeStatementPaid?: boolean
+    notifyStaffStudentAdjustment?: boolean
     updatedAt?: Date | string
   }
 
@@ -79147,6 +83424,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
     notifyRegistrationUpdated?: BoolFieldUpdateOperationsInput | boolean
     notifyFeeStatementPaid?: BoolFieldUpdateOperationsInput | boolean
+    notifyStaffStudentAdjustment?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79165,6 +83443,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
     notifyRegistrationUpdated?: BoolFieldUpdateOperationsInput | boolean
     notifyFeeStatementPaid?: BoolFieldUpdateOperationsInput | boolean
+    notifyStaffStudentAdjustment?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79183,6 +83462,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: boolean
     notifyRegistrationUpdated?: boolean
     notifyFeeStatementPaid?: boolean
+    notifyStaffStudentAdjustment?: boolean
     updatedAt?: Date | string
   }
 
@@ -79201,6 +83481,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
     notifyRegistrationUpdated?: BoolFieldUpdateOperationsInput | boolean
     notifyFeeStatementPaid?: BoolFieldUpdateOperationsInput | boolean
+    notifyStaffStudentAdjustment?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79219,6 +83500,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: BoolFieldUpdateOperationsInput | boolean
     notifyRegistrationUpdated?: BoolFieldUpdateOperationsInput | boolean
     notifyFeeStatementPaid?: BoolFieldUpdateOperationsInput | boolean
+    notifyStaffStudentAdjustment?: BoolFieldUpdateOperationsInput | boolean
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -79528,6 +83810,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -79581,6 +83864,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -79634,6 +83918,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -79687,6 +83972,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -80037,6 +84323,68 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ClassHomeroomTeacherCreateInput = {
+    id?: string
+    grade: $Enums.Grade
+    className: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    teacher: UserCreateNestedOneWithoutClassHomeroomAssignmentsInput
+  }
+
+  export type ClassHomeroomTeacherUncheckedCreateInput = {
+    id?: string
+    grade: $Enums.Grade
+    className: string
+    teacherUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ClassHomeroomTeacherUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    grade?: EnumGradeFieldUpdateOperationsInput | $Enums.Grade
+    className?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    teacher?: UserUpdateOneRequiredWithoutClassHomeroomAssignmentsNestedInput
+  }
+
+  export type ClassHomeroomTeacherUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    grade?: EnumGradeFieldUpdateOperationsInput | $Enums.Grade
+    className?: StringFieldUpdateOperationsInput | string
+    teacherUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClassHomeroomTeacherCreateManyInput = {
+    id?: string
+    grade: $Enums.Grade
+    className: string
+    teacherUserId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ClassHomeroomTeacherUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    grade?: EnumGradeFieldUpdateOperationsInput | $Enums.Grade
+    className?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClassHomeroomTeacherUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    grade?: EnumGradeFieldUpdateOperationsInput | $Enums.Grade
+    className?: StringFieldUpdateOperationsInput | string
+    teacherUserId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type RegistrationWindowCreateInput = {
     id?: string
     title: string
@@ -80049,6 +84397,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -80058,6 +84408,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -80086,6 +84437,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -80093,6 +84446,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -80119,6 +84473,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80128,6 +84484,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -80156,6 +84513,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80163,6 +84522,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -80191,6 +84551,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -80209,6 +84571,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80228,6 +84592,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -80555,6 +84921,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -80600,6 +84967,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -80645,6 +85013,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -80690,6 +85059,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -81505,6 +85875,225 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     changeRequestId?: StringFieldUpdateOperationsInput | string
     examSessionId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestCreateInput = {
+    id?: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    student: UserCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    candidate?: CandidateCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    primaryHomeroomTeacher?: UserCreateNestedOneWithoutPrimaryHomeroomAdjustmentRequestsInput
+    teacherReviewedBy?: UserCreateNestedOneWithoutTeacherReviewedStudentAdjustmentsInput
+    eoReviewedBy?: UserCreateNestedOneWithoutEoReviewedStudentAdjustmentsInput
+    items?: StudentAdjustmentRequestItemCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    student?: UserUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    candidate?: CandidateUpdateOneWithoutStudentAdjustmentRequestsNestedInput
+    primaryHomeroomTeacher?: UserUpdateOneWithoutPrimaryHomeroomAdjustmentRequestsNestedInput
+    teacherReviewedBy?: UserUpdateOneWithoutTeacherReviewedStudentAdjustmentsNestedInput
+    eoReviewedBy?: UserUpdateOneWithoutEoReviewedStudentAdjustmentsNestedInput
+    items?: StudentAdjustmentRequestItemUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestCreateManyInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestItemCreateInput = {
+    id?: string
+    itemType: $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: string | null
+    studentReason: string
+    createdAt?: Date | string
+    request: StudentAdjustmentRequestCreateNestedOneWithoutItemsInput
+    targetExamSession?: ExamSessionCreateNestedOneWithoutStudentAdjustmentRequestItemsInput
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedCreateInput = {
+    id?: string
+    requestId: string
+    itemType: $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: string | null
+    targetRegistrationId?: string | null
+    studentReason: string
+    createdAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentReason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    request?: StudentAdjustmentRequestUpdateOneRequiredWithoutItemsNestedInput
+    targetExamSession?: ExamSessionUpdateOneWithoutStudentAdjustmentRequestItemsNestedInput
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    requestId?: StringFieldUpdateOperationsInput | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetRegistrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentReason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestItemCreateManyInput = {
+    id?: string
+    requestId: string
+    itemType: $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: string | null
+    targetRegistrationId?: string | null
+    studentReason: string
+    createdAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentReason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    requestId?: StringFieldUpdateOperationsInput | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetRegistrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentReason?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -82501,6 +87090,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -82527,6 +87117,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -82553,6 +87144,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -82579,6 +87171,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -85630,6 +90223,18 @@ export namespace Prisma {
     none?: StudentNotificationLogWhereInput
   }
 
+  export type StudentAdjustmentRequestListRelationFilter = {
+    every?: StudentAdjustmentRequestWhereInput
+    some?: StudentAdjustmentRequestWhereInput
+    none?: StudentAdjustmentRequestWhereInput
+  }
+
+  export type ClassHomeroomTeacherListRelationFilter = {
+    every?: ClassHomeroomTeacherWhereInput
+    some?: ClassHomeroomTeacherWhereInput
+    none?: ClassHomeroomTeacherWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -85748,6 +90353,14 @@ export namespace Prisma {
   }
 
   export type StudentNotificationLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StudentAdjustmentRequestOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ClassHomeroomTeacherOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -86264,6 +90877,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: SortOrder
     notifyRegistrationUpdated?: SortOrder
     notifyFeeStatementPaid?: SortOrder
+    notifyStaffStudentAdjustment?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -86287,6 +90901,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: SortOrder
     notifyRegistrationUpdated?: SortOrder
     notifyFeeStatementPaid?: SortOrder
+    notifyStaffStudentAdjustment?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -86305,6 +90920,7 @@ export namespace Prisma {
     notifyFeeStatementIssued?: SortOrder
     notifyRegistrationUpdated?: SortOrder
     notifyFeeStatementPaid?: SortOrder
+    notifyStaffStudentAdjustment?: SortOrder
     updatedAt?: SortOrder
   }
 
@@ -86928,6 +91544,44 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type ClassHomeroomTeacherOrderByRelevanceInput = {
+    fields: ClassHomeroomTeacherOrderByRelevanceFieldEnum | ClassHomeroomTeacherOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type ClassHomeroomTeacherGradeClassNameCompoundUniqueInput = {
+    grade: $Enums.Grade
+    className: string
+  }
+
+  export type ClassHomeroomTeacherCountOrderByAggregateInput = {
+    id?: SortOrder
+    grade?: SortOrder
+    className?: SortOrder
+    teacherUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ClassHomeroomTeacherMaxOrderByAggregateInput = {
+    id?: SortOrder
+    grade?: SortOrder
+    className?: SortOrder
+    teacherUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ClassHomeroomTeacherMinOrderByAggregateInput = {
+    id?: SortOrder
+    grade?: SortOrder
+    className?: SortOrder
+    teacherUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type EnumRegistrationWindowStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.RegistrationWindowStatus | EnumRegistrationWindowStatusFieldRefInput<$PrismaModel>
     in?: $Enums.RegistrationWindowStatus[]
@@ -86991,6 +91645,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: SortOrder
     officeOnlyRegistrationEnabled?: SortOrder
     postLockAdjustmentEnabled?: SortOrder
+    studentAdjustmentRequestEnabled?: SortOrder
+    studentAdjustmentRequestCloseAt?: SortOrder
     paymentFeePercent?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
@@ -87015,6 +91671,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: SortOrder
     officeOnlyRegistrationEnabled?: SortOrder
     postLockAdjustmentEnabled?: SortOrder
+    studentAdjustmentRequestEnabled?: SortOrder
+    studentAdjustmentRequestCloseAt?: SortOrder
     paymentFeePercent?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
@@ -87035,6 +91693,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: SortOrder
     officeOnlyRegistrationEnabled?: SortOrder
     postLockAdjustmentEnabled?: SortOrder
+    studentAdjustmentRequestEnabled?: SortOrder
+    studentAdjustmentRequestCloseAt?: SortOrder
     paymentFeePercent?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
@@ -88075,6 +92735,185 @@ export namespace Prisma {
     changeRequestId?: SortOrder
     examSessionId?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type EnumStudentAdjustmentRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRequestStatus | EnumStudentAdjustmentRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentAdjustmentRequestStatus[]
+    notIn?: $Enums.StudentAdjustmentRequestStatus[]
+    not?: NestedEnumStudentAdjustmentRequestStatusFilter<$PrismaModel> | $Enums.StudentAdjustmentRequestStatus
+  }
+
+  export type EnumStudentAdjustmentRejectedAtStageNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRejectedAtStage | EnumStudentAdjustmentRejectedAtStageFieldRefInput<$PrismaModel> | null
+    in?: $Enums.StudentAdjustmentRejectedAtStage[] | null
+    notIn?: $Enums.StudentAdjustmentRejectedAtStage[] | null
+    not?: NestedEnumStudentAdjustmentRejectedAtStageNullableFilter<$PrismaModel> | $Enums.StudentAdjustmentRejectedAtStage | null
+  }
+
+  export type RegistrationWorkspaceScalarRelationFilter = {
+    is?: RegistrationWorkspaceWhereInput
+    isNot?: RegistrationWorkspaceWhereInput
+  }
+
+  export type StudentAdjustmentRequestItemListRelationFilter = {
+    every?: StudentAdjustmentRequestItemWhereInput
+    some?: StudentAdjustmentRequestItemWhereInput
+    none?: StudentAdjustmentRequestItemWhereInput
+  }
+
+  export type StudentAdjustmentRequestItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StudentAdjustmentRequestOrderByRelevanceInput = {
+    fields: StudentAdjustmentRequestOrderByRelevanceFieldEnum | StudentAdjustmentRequestOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type StudentAdjustmentRequestCountOrderByAggregateInput = {
+    id?: SortOrder
+    registrationWorkspaceId?: SortOrder
+    registrationWindowId?: SortOrder
+    studentId?: SortOrder
+    candidateId?: SortOrder
+    status?: SortOrder
+    submittedAt?: SortOrder
+    primaryHomeroomTeacherId?: SortOrder
+    studentGradeSnapshot?: SortOrder
+    studentClassNameSnapshot?: SortOrder
+    teacherReviewedByUserId?: SortOrder
+    teacherReviewedAt?: SortOrder
+    teacherReviewReason?: SortOrder
+    eoReviewedByUserId?: SortOrder
+    eoReviewedAt?: SortOrder
+    eoReviewReason?: SortOrder
+    rejectedAtStage?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudentAdjustmentRequestMaxOrderByAggregateInput = {
+    id?: SortOrder
+    registrationWorkspaceId?: SortOrder
+    registrationWindowId?: SortOrder
+    studentId?: SortOrder
+    candidateId?: SortOrder
+    status?: SortOrder
+    submittedAt?: SortOrder
+    primaryHomeroomTeacherId?: SortOrder
+    studentGradeSnapshot?: SortOrder
+    studentClassNameSnapshot?: SortOrder
+    teacherReviewedByUserId?: SortOrder
+    teacherReviewedAt?: SortOrder
+    teacherReviewReason?: SortOrder
+    eoReviewedByUserId?: SortOrder
+    eoReviewedAt?: SortOrder
+    eoReviewReason?: SortOrder
+    rejectedAtStage?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StudentAdjustmentRequestMinOrderByAggregateInput = {
+    id?: SortOrder
+    registrationWorkspaceId?: SortOrder
+    registrationWindowId?: SortOrder
+    studentId?: SortOrder
+    candidateId?: SortOrder
+    status?: SortOrder
+    submittedAt?: SortOrder
+    primaryHomeroomTeacherId?: SortOrder
+    studentGradeSnapshot?: SortOrder
+    studentClassNameSnapshot?: SortOrder
+    teacherReviewedByUserId?: SortOrder
+    teacherReviewedAt?: SortOrder
+    teacherReviewReason?: SortOrder
+    eoReviewedByUserId?: SortOrder
+    eoReviewedAt?: SortOrder
+    eoReviewReason?: SortOrder
+    rejectedAtStage?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumStudentAdjustmentRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRequestStatus | EnumStudentAdjustmentRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentAdjustmentRequestStatus[]
+    notIn?: $Enums.StudentAdjustmentRequestStatus[]
+    not?: NestedEnumStudentAdjustmentRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.StudentAdjustmentRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStudentAdjustmentRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumStudentAdjustmentRequestStatusFilter<$PrismaModel>
+  }
+
+  export type EnumStudentAdjustmentRejectedAtStageNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRejectedAtStage | EnumStudentAdjustmentRejectedAtStageFieldRefInput<$PrismaModel> | null
+    in?: $Enums.StudentAdjustmentRejectedAtStage[] | null
+    notIn?: $Enums.StudentAdjustmentRejectedAtStage[] | null
+    not?: NestedEnumStudentAdjustmentRejectedAtStageNullableWithAggregatesFilter<$PrismaModel> | $Enums.StudentAdjustmentRejectedAtStage | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumStudentAdjustmentRejectedAtStageNullableFilter<$PrismaModel>
+    _max?: NestedEnumStudentAdjustmentRejectedAtStageNullableFilter<$PrismaModel>
+  }
+
+  export type EnumStudentAdjustmentRequestItemTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRequestItemType | EnumStudentAdjustmentRequestItemTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentAdjustmentRequestItemType[]
+    notIn?: $Enums.StudentAdjustmentRequestItemType[]
+    not?: NestedEnumStudentAdjustmentRequestItemTypeFilter<$PrismaModel> | $Enums.StudentAdjustmentRequestItemType
+  }
+
+  export type StudentAdjustmentRequestScalarRelationFilter = {
+    is?: StudentAdjustmentRequestWhereInput
+    isNot?: StudentAdjustmentRequestWhereInput
+  }
+
+  export type StudentAdjustmentRequestItemOrderByRelevanceInput = {
+    fields: StudentAdjustmentRequestItemOrderByRelevanceFieldEnum | StudentAdjustmentRequestItemOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type StudentAdjustmentRequestItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    itemType?: SortOrder
+    targetExamSessionId?: SortOrder
+    targetRegistrationId?: SortOrder
+    studentReason?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StudentAdjustmentRequestItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    itemType?: SortOrder
+    targetExamSessionId?: SortOrder
+    targetRegistrationId?: SortOrder
+    studentReason?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StudentAdjustmentRequestItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    requestId?: SortOrder
+    itemType?: SortOrder
+    targetExamSessionId?: SortOrder
+    targetRegistrationId?: SortOrder
+    studentReason?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumStudentAdjustmentRequestItemTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRequestItemType | EnumStudentAdjustmentRequestItemTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentAdjustmentRequestItemType[]
+    notIn?: $Enums.StudentAdjustmentRequestItemType[]
+    not?: NestedEnumStudentAdjustmentRequestItemTypeWithAggregatesFilter<$PrismaModel> | $Enums.StudentAdjustmentRequestItemType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStudentAdjustmentRequestItemTypeFilter<$PrismaModel>
+    _max?: NestedEnumStudentAdjustmentRequestItemTypeFilter<$PrismaModel>
   }
 
   export type QualificationListRelationFilter = {
@@ -89657,11 +94496,6 @@ export namespace Prisma {
     not?: NestedEnumOfflineWithdrawalRefundStatusFilter<$PrismaModel> | $Enums.OfflineWithdrawalRefundStatus
   }
 
-  export type RegistrationWorkspaceScalarRelationFilter = {
-    is?: RegistrationWorkspaceWhereInput
-    isNot?: RegistrationWorkspaceWhereInput
-  }
-
   export type OfflineWithdrawalRefundOrderByRelevanceInput = {
     fields: OfflineWithdrawalRefundOrderByRelevanceFieldEnum | OfflineWithdrawalRefundOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -91020,6 +95854,41 @@ export namespace Prisma {
     connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
   }
 
+  export type StudentAdjustmentRequestCreateNestedManyWithoutStudentInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutStudentInput, StudentAdjustmentRequestUncheckedCreateWithoutStudentInput> | StudentAdjustmentRequestCreateWithoutStudentInput[] | StudentAdjustmentRequestUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutStudentInput | StudentAdjustmentRequestCreateOrConnectWithoutStudentInput[]
+    createMany?: StudentAdjustmentRequestCreateManyStudentInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput> | StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput[] | StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutTeacherReviewedByInput | StudentAdjustmentRequestCreateOrConnectWithoutTeacherReviewedByInput[]
+    createMany?: StudentAdjustmentRequestCreateManyTeacherReviewedByInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutEoReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput> | StudentAdjustmentRequestCreateWithoutEoReviewedByInput[] | StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutEoReviewedByInput | StudentAdjustmentRequestCreateOrConnectWithoutEoReviewedByInput[]
+    createMany?: StudentAdjustmentRequestCreateManyEoReviewedByInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput, StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput> | StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput[] | StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutPrimaryHomeroomTeacherInput | StudentAdjustmentRequestCreateOrConnectWithoutPrimaryHomeroomTeacherInput[]
+    createMany?: StudentAdjustmentRequestCreateManyPrimaryHomeroomTeacherInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+  }
+
+  export type ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput = {
+    create?: XOR<ClassHomeroomTeacherCreateWithoutTeacherInput, ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput> | ClassHomeroomTeacherCreateWithoutTeacherInput[] | ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput[]
+    connectOrCreate?: ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput | ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput[]
+    createMany?: ClassHomeroomTeacherCreateManyTeacherInputEnvelope
+    connect?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
+  }
+
   export type SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -91330,6 +96199,41 @@ export namespace Prisma {
     connectOrCreate?: StudentNotificationLogCreateOrConnectWithoutStudentInput | StudentNotificationLogCreateOrConnectWithoutStudentInput[]
     createMany?: StudentNotificationLogCreateManyStudentInputEnvelope
     connect?: StudentNotificationLogWhereUniqueInput | StudentNotificationLogWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutStudentInput, StudentAdjustmentRequestUncheckedCreateWithoutStudentInput> | StudentAdjustmentRequestCreateWithoutStudentInput[] | StudentAdjustmentRequestUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutStudentInput | StudentAdjustmentRequestCreateOrConnectWithoutStudentInput[]
+    createMany?: StudentAdjustmentRequestCreateManyStudentInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput> | StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput[] | StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutTeacherReviewedByInput | StudentAdjustmentRequestCreateOrConnectWithoutTeacherReviewedByInput[]
+    createMany?: StudentAdjustmentRequestCreateManyTeacherReviewedByInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutEoReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput> | StudentAdjustmentRequestCreateWithoutEoReviewedByInput[] | StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutEoReviewedByInput | StudentAdjustmentRequestCreateOrConnectWithoutEoReviewedByInput[]
+    createMany?: StudentAdjustmentRequestCreateManyEoReviewedByInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput, StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput> | StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput[] | StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutPrimaryHomeroomTeacherInput | StudentAdjustmentRequestCreateOrConnectWithoutPrimaryHomeroomTeacherInput[]
+    createMany?: StudentAdjustmentRequestCreateManyPrimaryHomeroomTeacherInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+  }
+
+  export type ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput = {
+    create?: XOR<ClassHomeroomTeacherCreateWithoutTeacherInput, ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput> | ClassHomeroomTeacherCreateWithoutTeacherInput[] | ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput[]
+    connectOrCreate?: ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput | ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput[]
+    createMany?: ClassHomeroomTeacherCreateManyTeacherInputEnvelope
+    connect?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -91970,6 +96874,76 @@ export namespace Prisma {
     deleteMany?: StudentNotificationLogScalarWhereInput | StudentNotificationLogScalarWhereInput[]
   }
 
+  export type StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutStudentInput, StudentAdjustmentRequestUncheckedCreateWithoutStudentInput> | StudentAdjustmentRequestCreateWithoutStudentInput[] | StudentAdjustmentRequestUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutStudentInput | StudentAdjustmentRequestCreateOrConnectWithoutStudentInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutStudentInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: StudentAdjustmentRequestCreateManyStudentInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutStudentInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutStudentInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput> | StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput[] | StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutTeacherReviewedByInput | StudentAdjustmentRequestCreateOrConnectWithoutTeacherReviewedByInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutTeacherReviewedByInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutTeacherReviewedByInput[]
+    createMany?: StudentAdjustmentRequestCreateManyTeacherReviewedByInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutTeacherReviewedByInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutTeacherReviewedByInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutTeacherReviewedByInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutTeacherReviewedByInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutEoReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput> | StudentAdjustmentRequestCreateWithoutEoReviewedByInput[] | StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutEoReviewedByInput | StudentAdjustmentRequestCreateOrConnectWithoutEoReviewedByInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutEoReviewedByInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutEoReviewedByInput[]
+    createMany?: StudentAdjustmentRequestCreateManyEoReviewedByInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutEoReviewedByInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutEoReviewedByInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutEoReviewedByInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutEoReviewedByInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput, StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput> | StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput[] | StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutPrimaryHomeroomTeacherInput | StudentAdjustmentRequestCreateOrConnectWithoutPrimaryHomeroomTeacherInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutPrimaryHomeroomTeacherInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutPrimaryHomeroomTeacherInput[]
+    createMany?: StudentAdjustmentRequestCreateManyPrimaryHomeroomTeacherInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutPrimaryHomeroomTeacherInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutPrimaryHomeroomTeacherInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutPrimaryHomeroomTeacherInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutPrimaryHomeroomTeacherInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+  }
+
+  export type ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput = {
+    create?: XOR<ClassHomeroomTeacherCreateWithoutTeacherInput, ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput> | ClassHomeroomTeacherCreateWithoutTeacherInput[] | ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput[]
+    connectOrCreate?: ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput | ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput[]
+    upsert?: ClassHomeroomTeacherUpsertWithWhereUniqueWithoutTeacherInput | ClassHomeroomTeacherUpsertWithWhereUniqueWithoutTeacherInput[]
+    createMany?: ClassHomeroomTeacherCreateManyTeacherInputEnvelope
+    set?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
+    disconnect?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
+    delete?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
+    connect?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
+    update?: ClassHomeroomTeacherUpdateWithWhereUniqueWithoutTeacherInput | ClassHomeroomTeacherUpdateWithWhereUniqueWithoutTeacherInput[]
+    updateMany?: ClassHomeroomTeacherUpdateManyWithWhereWithoutTeacherInput | ClassHomeroomTeacherUpdateManyWithWhereWithoutTeacherInput[]
+    deleteMany?: ClassHomeroomTeacherScalarWhereInput | ClassHomeroomTeacherScalarWhereInput[]
+  }
+
   export type SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -92588,6 +97562,76 @@ export namespace Prisma {
     deleteMany?: StudentNotificationLogScalarWhereInput | StudentNotificationLogScalarWhereInput[]
   }
 
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutStudentInput, StudentAdjustmentRequestUncheckedCreateWithoutStudentInput> | StudentAdjustmentRequestCreateWithoutStudentInput[] | StudentAdjustmentRequestUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutStudentInput | StudentAdjustmentRequestCreateOrConnectWithoutStudentInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutStudentInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: StudentAdjustmentRequestCreateManyStudentInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutStudentInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutStudentInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput> | StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput[] | StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutTeacherReviewedByInput | StudentAdjustmentRequestCreateOrConnectWithoutTeacherReviewedByInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutTeacherReviewedByInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutTeacherReviewedByInput[]
+    createMany?: StudentAdjustmentRequestCreateManyTeacherReviewedByInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutTeacherReviewedByInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutTeacherReviewedByInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutTeacherReviewedByInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutTeacherReviewedByInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutEoReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput> | StudentAdjustmentRequestCreateWithoutEoReviewedByInput[] | StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutEoReviewedByInput | StudentAdjustmentRequestCreateOrConnectWithoutEoReviewedByInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutEoReviewedByInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutEoReviewedByInput[]
+    createMany?: StudentAdjustmentRequestCreateManyEoReviewedByInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutEoReviewedByInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutEoReviewedByInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutEoReviewedByInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutEoReviewedByInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput, StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput> | StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput[] | StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutPrimaryHomeroomTeacherInput | StudentAdjustmentRequestCreateOrConnectWithoutPrimaryHomeroomTeacherInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutPrimaryHomeroomTeacherInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutPrimaryHomeroomTeacherInput[]
+    createMany?: StudentAdjustmentRequestCreateManyPrimaryHomeroomTeacherInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutPrimaryHomeroomTeacherInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutPrimaryHomeroomTeacherInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutPrimaryHomeroomTeacherInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutPrimaryHomeroomTeacherInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+  }
+
+  export type ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput = {
+    create?: XOR<ClassHomeroomTeacherCreateWithoutTeacherInput, ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput> | ClassHomeroomTeacherCreateWithoutTeacherInput[] | ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput[]
+    connectOrCreate?: ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput | ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput[]
+    upsert?: ClassHomeroomTeacherUpsertWithWhereUniqueWithoutTeacherInput | ClassHomeroomTeacherUpsertWithWhereUniqueWithoutTeacherInput[]
+    createMany?: ClassHomeroomTeacherCreateManyTeacherInputEnvelope
+    set?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
+    disconnect?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
+    delete?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
+    connect?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
+    update?: ClassHomeroomTeacherUpdateWithWhereUniqueWithoutTeacherInput | ClassHomeroomTeacherUpdateWithWhereUniqueWithoutTeacherInput[]
+    updateMany?: ClassHomeroomTeacherUpdateManyWithWhereWithoutTeacherInput | ClassHomeroomTeacherUpdateManyWithWhereWithoutTeacherInput[]
+    deleteMany?: ClassHomeroomTeacherScalarWhereInput | ClassHomeroomTeacherScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
     create?: XOR<UserCreateWithoutPasswordResetTokensInput, UserUncheckedCreateWithoutPasswordResetTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutPasswordResetTokensInput
@@ -92867,6 +97911,13 @@ export namespace Prisma {
     connect?: RegistrationChangeRequestWhereUniqueInput | RegistrationChangeRequestWhereUniqueInput[]
   }
 
+  export type StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutCandidateInput, StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput> | StudentAdjustmentRequestCreateWithoutCandidateInput[] | StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutCandidateInput | StudentAdjustmentRequestCreateOrConnectWithoutCandidateInput[]
+    createMany?: StudentAdjustmentRequestCreateManyCandidateInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+  }
+
   export type FeeStatementCreateNestedManyWithoutCandidateInput = {
     create?: XOR<FeeStatementCreateWithoutCandidateInput, FeeStatementUncheckedCreateWithoutCandidateInput> | FeeStatementCreateWithoutCandidateInput[] | FeeStatementUncheckedCreateWithoutCandidateInput[]
     connectOrCreate?: FeeStatementCreateOrConnectWithoutCandidateInput | FeeStatementCreateOrConnectWithoutCandidateInput[]
@@ -92963,6 +98014,13 @@ export namespace Prisma {
     connectOrCreate?: RegistrationChangeRequestCreateOrConnectWithoutCandidateInput | RegistrationChangeRequestCreateOrConnectWithoutCandidateInput[]
     createMany?: RegistrationChangeRequestCreateManyCandidateInputEnvelope
     connect?: RegistrationChangeRequestWhereUniqueInput | RegistrationChangeRequestWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutCandidateInput, StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput> | StudentAdjustmentRequestCreateWithoutCandidateInput[] | StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutCandidateInput | StudentAdjustmentRequestCreateOrConnectWithoutCandidateInput[]
+    createMany?: StudentAdjustmentRequestCreateManyCandidateInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
   }
 
   export type FeeStatementUncheckedCreateNestedManyWithoutCandidateInput = {
@@ -93122,6 +98180,20 @@ export namespace Prisma {
     update?: RegistrationChangeRequestUpdateWithWhereUniqueWithoutCandidateInput | RegistrationChangeRequestUpdateWithWhereUniqueWithoutCandidateInput[]
     updateMany?: RegistrationChangeRequestUpdateManyWithWhereWithoutCandidateInput | RegistrationChangeRequestUpdateManyWithWhereWithoutCandidateInput[]
     deleteMany?: RegistrationChangeRequestScalarWhereInput | RegistrationChangeRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutCandidateInput, StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput> | StudentAdjustmentRequestCreateWithoutCandidateInput[] | StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutCandidateInput | StudentAdjustmentRequestCreateOrConnectWithoutCandidateInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutCandidateInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutCandidateInput[]
+    createMany?: StudentAdjustmentRequestCreateManyCandidateInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutCandidateInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutCandidateInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutCandidateInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutCandidateInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
   }
 
   export type FeeStatementUpdateManyWithoutCandidateNestedInput = {
@@ -93318,6 +98390,20 @@ export namespace Prisma {
     update?: RegistrationChangeRequestUpdateWithWhereUniqueWithoutCandidateInput | RegistrationChangeRequestUpdateWithWhereUniqueWithoutCandidateInput[]
     updateMany?: RegistrationChangeRequestUpdateManyWithWhereWithoutCandidateInput | RegistrationChangeRequestUpdateManyWithWhereWithoutCandidateInput[]
     deleteMany?: RegistrationChangeRequestScalarWhereInput | RegistrationChangeRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutCandidateInput, StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput> | StudentAdjustmentRequestCreateWithoutCandidateInput[] | StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutCandidateInput | StudentAdjustmentRequestCreateOrConnectWithoutCandidateInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutCandidateInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutCandidateInput[]
+    createMany?: StudentAdjustmentRequestCreateManyCandidateInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutCandidateInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutCandidateInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutCandidateInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutCandidateInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput = {
@@ -93570,6 +98656,20 @@ export namespace Prisma {
     update?: XOR<XOR<SubjectUpdateToOneWithWhereWithoutTeacherAssignmentsInput, SubjectUpdateWithoutTeacherAssignmentsInput>, SubjectUncheckedUpdateWithoutTeacherAssignmentsInput>
   }
 
+  export type UserCreateNestedOneWithoutClassHomeroomAssignmentsInput = {
+    create?: XOR<UserCreateWithoutClassHomeroomAssignmentsInput, UserUncheckedCreateWithoutClassHomeroomAssignmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutClassHomeroomAssignmentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutClassHomeroomAssignmentsNestedInput = {
+    create?: XOR<UserCreateWithoutClassHomeroomAssignmentsInput, UserUncheckedCreateWithoutClassHomeroomAssignmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutClassHomeroomAssignmentsInput
+    upsert?: UserUpsertWithoutClassHomeroomAssignmentsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutClassHomeroomAssignmentsInput, UserUpdateWithoutClassHomeroomAssignmentsInput>, UserUncheckedUpdateWithoutClassHomeroomAssignmentsInput>
+  }
+
   export type ExamBoardCreateNestedOneWithoutRegistrationWindowsInput = {
     create?: XOR<ExamBoardCreateWithoutRegistrationWindowsInput, ExamBoardUncheckedCreateWithoutRegistrationWindowsInput>
     connectOrCreate?: ExamBoardCreateOrConnectWithoutRegistrationWindowsInput
@@ -93607,6 +98707,13 @@ export namespace Prisma {
     connectOrCreate?: RegistrationChangeRequestCreateOrConnectWithoutRegistrationWindowInput | RegistrationChangeRequestCreateOrConnectWithoutRegistrationWindowInput[]
     createMany?: RegistrationChangeRequestCreateManyRegistrationWindowInputEnvelope
     connect?: RegistrationChangeRequestWhereUniqueInput | RegistrationChangeRequestWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWindowInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput> | StudentAdjustmentRequestCreateWithoutRegistrationWindowInput[] | StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWindowInput | StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWindowInput[]
+    createMany?: StudentAdjustmentRequestCreateManyRegistrationWindowInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
   }
 
   export type RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput = {
@@ -93712,6 +98819,13 @@ export namespace Prisma {
     connectOrCreate?: RegistrationChangeRequestCreateOrConnectWithoutRegistrationWindowInput | RegistrationChangeRequestCreateOrConnectWithoutRegistrationWindowInput[]
     createMany?: RegistrationChangeRequestCreateManyRegistrationWindowInputEnvelope
     connect?: RegistrationChangeRequestWhereUniqueInput | RegistrationChangeRequestWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWindowInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput> | StudentAdjustmentRequestCreateWithoutRegistrationWindowInput[] | StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWindowInput | StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWindowInput[]
+    createMany?: StudentAdjustmentRequestCreateManyRegistrationWindowInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
   }
 
   export type RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput = {
@@ -93876,6 +98990,20 @@ export namespace Prisma {
     update?: RegistrationChangeRequestUpdateWithWhereUniqueWithoutRegistrationWindowInput | RegistrationChangeRequestUpdateWithWhereUniqueWithoutRegistrationWindowInput[]
     updateMany?: RegistrationChangeRequestUpdateManyWithWhereWithoutRegistrationWindowInput | RegistrationChangeRequestUpdateManyWithWhereWithoutRegistrationWindowInput[]
     deleteMany?: RegistrationChangeRequestScalarWhereInput | RegistrationChangeRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWindowInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput> | StudentAdjustmentRequestCreateWithoutRegistrationWindowInput[] | StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWindowInput | StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWindowInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutRegistrationWindowInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutRegistrationWindowInput[]
+    createMany?: StudentAdjustmentRequestCreateManyRegistrationWindowInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutRegistrationWindowInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutRegistrationWindowInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutRegistrationWindowInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutRegistrationWindowInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
   }
 
   export type RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput = {
@@ -94086,6 +99214,20 @@ export namespace Prisma {
     update?: RegistrationChangeRequestUpdateWithWhereUniqueWithoutRegistrationWindowInput | RegistrationChangeRequestUpdateWithWhereUniqueWithoutRegistrationWindowInput[]
     updateMany?: RegistrationChangeRequestUpdateManyWithWhereWithoutRegistrationWindowInput | RegistrationChangeRequestUpdateManyWithWhereWithoutRegistrationWindowInput[]
     deleteMany?: RegistrationChangeRequestScalarWhereInput | RegistrationChangeRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWindowInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput> | StudentAdjustmentRequestCreateWithoutRegistrationWindowInput[] | StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWindowInput | StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWindowInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutRegistrationWindowInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutRegistrationWindowInput[]
+    createMany?: StudentAdjustmentRequestCreateManyRegistrationWindowInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutRegistrationWindowInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutRegistrationWindowInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutRegistrationWindowInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutRegistrationWindowInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
   }
 
   export type RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput = {
@@ -94529,6 +99671,13 @@ export namespace Prisma {
     connect?: RegistrationChangeRequestWhereUniqueInput | RegistrationChangeRequestWhereUniqueInput[]
   }
 
+  export type StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput> | StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput[] | StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWorkspaceInput | StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWorkspaceInput[]
+    createMany?: StudentAdjustmentRequestCreateManyRegistrationWorkspaceInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+  }
+
   export type FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput = {
     create?: XOR<FeeStatementCreateWithoutRegistrationWorkspaceInput, FeeStatementUncheckedCreateWithoutRegistrationWorkspaceInput> | FeeStatementCreateWithoutRegistrationWorkspaceInput[] | FeeStatementUncheckedCreateWithoutRegistrationWorkspaceInput[]
     connectOrCreate?: FeeStatementCreateOrConnectWithoutRegistrationWorkspaceInput | FeeStatementCreateOrConnectWithoutRegistrationWorkspaceInput[]
@@ -94562,6 +99711,13 @@ export namespace Prisma {
     connectOrCreate?: RegistrationChangeRequestCreateOrConnectWithoutRegistrationWorkspaceInput | RegistrationChangeRequestCreateOrConnectWithoutRegistrationWorkspaceInput[]
     createMany?: RegistrationChangeRequestCreateManyRegistrationWorkspaceInputEnvelope
     connect?: RegistrationChangeRequestWhereUniqueInput | RegistrationChangeRequestWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput> | StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput[] | StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWorkspaceInput | StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWorkspaceInput[]
+    createMany?: StudentAdjustmentRequestCreateManyRegistrationWorkspaceInputEnvelope
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
   }
 
   export type FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput = {
@@ -94708,6 +99864,20 @@ export namespace Prisma {
     deleteMany?: RegistrationChangeRequestScalarWhereInput | RegistrationChangeRequestScalarWhereInput[]
   }
 
+  export type StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput> | StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput[] | StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWorkspaceInput | StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWorkspaceInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput[]
+    createMany?: StudentAdjustmentRequestCreateManyRegistrationWorkspaceInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutRegistrationWorkspaceInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutRegistrationWorkspaceInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+  }
+
   export type FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput = {
     create?: XOR<FeeStatementCreateWithoutRegistrationWorkspaceInput, FeeStatementUncheckedCreateWithoutRegistrationWorkspaceInput> | FeeStatementCreateWithoutRegistrationWorkspaceInput[] | FeeStatementUncheckedCreateWithoutRegistrationWorkspaceInput[]
     connectOrCreate?: FeeStatementCreateOrConnectWithoutRegistrationWorkspaceInput | FeeStatementCreateOrConnectWithoutRegistrationWorkspaceInput[]
@@ -94776,6 +99946,20 @@ export namespace Prisma {
     update?: RegistrationChangeRequestUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput | RegistrationChangeRequestUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput[]
     updateMany?: RegistrationChangeRequestUpdateManyWithWhereWithoutRegistrationWorkspaceInput | RegistrationChangeRequestUpdateManyWithWhereWithoutRegistrationWorkspaceInput[]
     deleteMany?: RegistrationChangeRequestScalarWhereInput | RegistrationChangeRequestScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput> | StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput[] | StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput[]
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWorkspaceInput | StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWorkspaceInput[]
+    upsert?: StudentAdjustmentRequestUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput | StudentAdjustmentRequestUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput[]
+    createMany?: StudentAdjustmentRequestCreateManyRegistrationWorkspaceInputEnvelope
+    set?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestWhereUniqueInput | StudentAdjustmentRequestWhereUniqueInput[]
+    update?: StudentAdjustmentRequestUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput | StudentAdjustmentRequestUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput[]
+    updateMany?: StudentAdjustmentRequestUpdateManyWithWhereWithoutRegistrationWorkspaceInput | StudentAdjustmentRequestUpdateManyWithWhereWithoutRegistrationWorkspaceInput[]
+    deleteMany?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
   }
 
   export type FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput = {
@@ -95456,6 +100640,196 @@ export namespace Prisma {
     upsert?: ExamSessionUpsertWithoutChangeRequestExamSessionsInput
     connect?: ExamSessionWhereUniqueInput
     update?: XOR<XOR<ExamSessionUpdateToOneWithWhereWithoutChangeRequestExamSessionsInput, ExamSessionUpdateWithoutChangeRequestExamSessionsInput>, ExamSessionUncheckedUpdateWithoutChangeRequestExamSessionsInput>
+  }
+
+  export type RegistrationWorkspaceCreateNestedOneWithoutStudentAdjustmentRequestsInput = {
+    create?: XOR<RegistrationWorkspaceCreateWithoutStudentAdjustmentRequestsInput, RegistrationWorkspaceUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    connectOrCreate?: RegistrationWorkspaceCreateOrConnectWithoutStudentAdjustmentRequestsInput
+    connect?: RegistrationWorkspaceWhereUniqueInput
+  }
+
+  export type RegistrationWindowCreateNestedOneWithoutStudentAdjustmentRequestsInput = {
+    create?: XOR<RegistrationWindowCreateWithoutStudentAdjustmentRequestsInput, RegistrationWindowUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    connectOrCreate?: RegistrationWindowCreateOrConnectWithoutStudentAdjustmentRequestsInput
+    connect?: RegistrationWindowWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutStudentAdjustmentRequestsInput = {
+    create?: XOR<UserCreateWithoutStudentAdjustmentRequestsInput, UserUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStudentAdjustmentRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type CandidateCreateNestedOneWithoutStudentAdjustmentRequestsInput = {
+    create?: XOR<CandidateCreateWithoutStudentAdjustmentRequestsInput, CandidateUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    connectOrCreate?: CandidateCreateOrConnectWithoutStudentAdjustmentRequestsInput
+    connect?: CandidateWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutPrimaryHomeroomAdjustmentRequestsInput = {
+    create?: XOR<UserCreateWithoutPrimaryHomeroomAdjustmentRequestsInput, UserUncheckedCreateWithoutPrimaryHomeroomAdjustmentRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPrimaryHomeroomAdjustmentRequestsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutTeacherReviewedStudentAdjustmentsInput = {
+    create?: XOR<UserCreateWithoutTeacherReviewedStudentAdjustmentsInput, UserUncheckedCreateWithoutTeacherReviewedStudentAdjustmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTeacherReviewedStudentAdjustmentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutEoReviewedStudentAdjustmentsInput = {
+    create?: XOR<UserCreateWithoutEoReviewedStudentAdjustmentsInput, UserUncheckedCreateWithoutEoReviewedStudentAdjustmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutEoReviewedStudentAdjustmentsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type StudentAdjustmentRequestItemCreateNestedManyWithoutRequestInput = {
+    create?: XOR<StudentAdjustmentRequestItemCreateWithoutRequestInput, StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput> | StudentAdjustmentRequestItemCreateWithoutRequestInput[] | StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: StudentAdjustmentRequestItemCreateOrConnectWithoutRequestInput | StudentAdjustmentRequestItemCreateOrConnectWithoutRequestInput[]
+    createMany?: StudentAdjustmentRequestItemCreateManyRequestInputEnvelope
+    connect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutRequestInput = {
+    create?: XOR<StudentAdjustmentRequestItemCreateWithoutRequestInput, StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput> | StudentAdjustmentRequestItemCreateWithoutRequestInput[] | StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: StudentAdjustmentRequestItemCreateOrConnectWithoutRequestInput | StudentAdjustmentRequestItemCreateOrConnectWithoutRequestInput[]
+    createMany?: StudentAdjustmentRequestItemCreateManyRequestInputEnvelope
+    connect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+  }
+
+  export type EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput = {
+    set?: $Enums.StudentAdjustmentRequestStatus
+  }
+
+  export type NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput = {
+    set?: $Enums.StudentAdjustmentRejectedAtStage | null
+  }
+
+  export type RegistrationWorkspaceUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput = {
+    create?: XOR<RegistrationWorkspaceCreateWithoutStudentAdjustmentRequestsInput, RegistrationWorkspaceUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    connectOrCreate?: RegistrationWorkspaceCreateOrConnectWithoutStudentAdjustmentRequestsInput
+    upsert?: RegistrationWorkspaceUpsertWithoutStudentAdjustmentRequestsInput
+    connect?: RegistrationWorkspaceWhereUniqueInput
+    update?: XOR<XOR<RegistrationWorkspaceUpdateToOneWithWhereWithoutStudentAdjustmentRequestsInput, RegistrationWorkspaceUpdateWithoutStudentAdjustmentRequestsInput>, RegistrationWorkspaceUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type RegistrationWindowUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput = {
+    create?: XOR<RegistrationWindowCreateWithoutStudentAdjustmentRequestsInput, RegistrationWindowUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    connectOrCreate?: RegistrationWindowCreateOrConnectWithoutStudentAdjustmentRequestsInput
+    upsert?: RegistrationWindowUpsertWithoutStudentAdjustmentRequestsInput
+    connect?: RegistrationWindowWhereUniqueInput
+    update?: XOR<XOR<RegistrationWindowUpdateToOneWithWhereWithoutStudentAdjustmentRequestsInput, RegistrationWindowUpdateWithoutStudentAdjustmentRequestsInput>, RegistrationWindowUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutStudentAdjustmentRequestsInput, UserUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutStudentAdjustmentRequestsInput
+    upsert?: UserUpsertWithoutStudentAdjustmentRequestsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStudentAdjustmentRequestsInput, UserUpdateWithoutStudentAdjustmentRequestsInput>, UserUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type CandidateUpdateOneWithoutStudentAdjustmentRequestsNestedInput = {
+    create?: XOR<CandidateCreateWithoutStudentAdjustmentRequestsInput, CandidateUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    connectOrCreate?: CandidateCreateOrConnectWithoutStudentAdjustmentRequestsInput
+    upsert?: CandidateUpsertWithoutStudentAdjustmentRequestsInput
+    disconnect?: CandidateWhereInput | boolean
+    delete?: CandidateWhereInput | boolean
+    connect?: CandidateWhereUniqueInput
+    update?: XOR<XOR<CandidateUpdateToOneWithWhereWithoutStudentAdjustmentRequestsInput, CandidateUpdateWithoutStudentAdjustmentRequestsInput>, CandidateUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type UserUpdateOneWithoutPrimaryHomeroomAdjustmentRequestsNestedInput = {
+    create?: XOR<UserCreateWithoutPrimaryHomeroomAdjustmentRequestsInput, UserUncheckedCreateWithoutPrimaryHomeroomAdjustmentRequestsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPrimaryHomeroomAdjustmentRequestsInput
+    upsert?: UserUpsertWithoutPrimaryHomeroomAdjustmentRequestsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPrimaryHomeroomAdjustmentRequestsInput, UserUpdateWithoutPrimaryHomeroomAdjustmentRequestsInput>, UserUncheckedUpdateWithoutPrimaryHomeroomAdjustmentRequestsInput>
+  }
+
+  export type UserUpdateOneWithoutTeacherReviewedStudentAdjustmentsNestedInput = {
+    create?: XOR<UserCreateWithoutTeacherReviewedStudentAdjustmentsInput, UserUncheckedCreateWithoutTeacherReviewedStudentAdjustmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTeacherReviewedStudentAdjustmentsInput
+    upsert?: UserUpsertWithoutTeacherReviewedStudentAdjustmentsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTeacherReviewedStudentAdjustmentsInput, UserUpdateWithoutTeacherReviewedStudentAdjustmentsInput>, UserUncheckedUpdateWithoutTeacherReviewedStudentAdjustmentsInput>
+  }
+
+  export type UserUpdateOneWithoutEoReviewedStudentAdjustmentsNestedInput = {
+    create?: XOR<UserCreateWithoutEoReviewedStudentAdjustmentsInput, UserUncheckedCreateWithoutEoReviewedStudentAdjustmentsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutEoReviewedStudentAdjustmentsInput
+    upsert?: UserUpsertWithoutEoReviewedStudentAdjustmentsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEoReviewedStudentAdjustmentsInput, UserUpdateWithoutEoReviewedStudentAdjustmentsInput>, UserUncheckedUpdateWithoutEoReviewedStudentAdjustmentsInput>
+  }
+
+  export type StudentAdjustmentRequestItemUpdateManyWithoutRequestNestedInput = {
+    create?: XOR<StudentAdjustmentRequestItemCreateWithoutRequestInput, StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput> | StudentAdjustmentRequestItemCreateWithoutRequestInput[] | StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: StudentAdjustmentRequestItemCreateOrConnectWithoutRequestInput | StudentAdjustmentRequestItemCreateOrConnectWithoutRequestInput[]
+    upsert?: StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutRequestInput | StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutRequestInput[]
+    createMany?: StudentAdjustmentRequestItemCreateManyRequestInputEnvelope
+    set?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    update?: StudentAdjustmentRequestItemUpdateWithWhereUniqueWithoutRequestInput | StudentAdjustmentRequestItemUpdateWithWhereUniqueWithoutRequestInput[]
+    updateMany?: StudentAdjustmentRequestItemUpdateManyWithWhereWithoutRequestInput | StudentAdjustmentRequestItemUpdateManyWithWhereWithoutRequestInput[]
+    deleteMany?: StudentAdjustmentRequestItemScalarWhereInput | StudentAdjustmentRequestItemScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestNestedInput = {
+    create?: XOR<StudentAdjustmentRequestItemCreateWithoutRequestInput, StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput> | StudentAdjustmentRequestItemCreateWithoutRequestInput[] | StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput[]
+    connectOrCreate?: StudentAdjustmentRequestItemCreateOrConnectWithoutRequestInput | StudentAdjustmentRequestItemCreateOrConnectWithoutRequestInput[]
+    upsert?: StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutRequestInput | StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutRequestInput[]
+    createMany?: StudentAdjustmentRequestItemCreateManyRequestInputEnvelope
+    set?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    update?: StudentAdjustmentRequestItemUpdateWithWhereUniqueWithoutRequestInput | StudentAdjustmentRequestItemUpdateWithWhereUniqueWithoutRequestInput[]
+    updateMany?: StudentAdjustmentRequestItemUpdateManyWithWhereWithoutRequestInput | StudentAdjustmentRequestItemUpdateManyWithWhereWithoutRequestInput[]
+    deleteMany?: StudentAdjustmentRequestItemScalarWhereInput | StudentAdjustmentRequestItemScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestCreateNestedOneWithoutItemsInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutItemsInput, StudentAdjustmentRequestUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutItemsInput
+    connect?: StudentAdjustmentRequestWhereUniqueInput
+  }
+
+  export type ExamSessionCreateNestedOneWithoutStudentAdjustmentRequestItemsInput = {
+    create?: XOR<ExamSessionCreateWithoutStudentAdjustmentRequestItemsInput, ExamSessionUncheckedCreateWithoutStudentAdjustmentRequestItemsInput>
+    connectOrCreate?: ExamSessionCreateOrConnectWithoutStudentAdjustmentRequestItemsInput
+    connect?: ExamSessionWhereUniqueInput
+  }
+
+  export type EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput = {
+    set?: $Enums.StudentAdjustmentRequestItemType
+  }
+
+  export type StudentAdjustmentRequestUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<StudentAdjustmentRequestCreateWithoutItemsInput, StudentAdjustmentRequestUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: StudentAdjustmentRequestCreateOrConnectWithoutItemsInput
+    upsert?: StudentAdjustmentRequestUpsertWithoutItemsInput
+    connect?: StudentAdjustmentRequestWhereUniqueInput
+    update?: XOR<XOR<StudentAdjustmentRequestUpdateToOneWithWhereWithoutItemsInput, StudentAdjustmentRequestUpdateWithoutItemsInput>, StudentAdjustmentRequestUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type ExamSessionUpdateOneWithoutStudentAdjustmentRequestItemsNestedInput = {
+    create?: XOR<ExamSessionCreateWithoutStudentAdjustmentRequestItemsInput, ExamSessionUncheckedCreateWithoutStudentAdjustmentRequestItemsInput>
+    connectOrCreate?: ExamSessionCreateOrConnectWithoutStudentAdjustmentRequestItemsInput
+    upsert?: ExamSessionUpsertWithoutStudentAdjustmentRequestItemsInput
+    disconnect?: ExamSessionWhereInput | boolean
+    delete?: ExamSessionWhereInput | boolean
+    connect?: ExamSessionWhereUniqueInput
+    update?: XOR<XOR<ExamSessionUpdateToOneWithWhereWithoutStudentAdjustmentRequestItemsInput, ExamSessionUpdateWithoutStudentAdjustmentRequestItemsInput>, ExamSessionUncheckedUpdateWithoutStudentAdjustmentRequestItemsInput>
   }
 
   export type QualificationCreateNestedManyWithoutExamBoardInput = {
@@ -98221,6 +103595,13 @@ export namespace Prisma {
     connect?: RegistrationChangeRequestExamSessionWhereUniqueInput | RegistrationChangeRequestExamSessionWhereUniqueInput[]
   }
 
+  export type StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput = {
+    create?: XOR<StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput, StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput> | StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput[] | StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput[]
+    connectOrCreate?: StudentAdjustmentRequestItemCreateOrConnectWithoutTargetExamSessionInput | StudentAdjustmentRequestItemCreateOrConnectWithoutTargetExamSessionInput[]
+    createMany?: StudentAdjustmentRequestItemCreateManyTargetExamSessionInputEnvelope
+    connect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+  }
+
   export type FeeRuleCreateNestedManyWithoutExamSessionInput = {
     create?: XOR<FeeRuleCreateWithoutExamSessionInput, FeeRuleUncheckedCreateWithoutExamSessionInput> | FeeRuleCreateWithoutExamSessionInput[] | FeeRuleUncheckedCreateWithoutExamSessionInput[]
     connectOrCreate?: FeeRuleCreateOrConnectWithoutExamSessionInput | FeeRuleCreateOrConnectWithoutExamSessionInput[]
@@ -98296,6 +103677,13 @@ export namespace Prisma {
     connectOrCreate?: RegistrationChangeRequestExamSessionCreateOrConnectWithoutExamSessionInput | RegistrationChangeRequestExamSessionCreateOrConnectWithoutExamSessionInput[]
     createMany?: RegistrationChangeRequestExamSessionCreateManyExamSessionInputEnvelope
     connect?: RegistrationChangeRequestExamSessionWhereUniqueInput | RegistrationChangeRequestExamSessionWhereUniqueInput[]
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput = {
+    create?: XOR<StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput, StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput> | StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput[] | StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput[]
+    connectOrCreate?: StudentAdjustmentRequestItemCreateOrConnectWithoutTargetExamSessionInput | StudentAdjustmentRequestItemCreateOrConnectWithoutTargetExamSessionInput[]
+    createMany?: StudentAdjustmentRequestItemCreateManyTargetExamSessionInputEnvelope
+    connect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
   }
 
   export type FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput = {
@@ -98434,6 +103822,20 @@ export namespace Prisma {
     update?: RegistrationChangeRequestExamSessionUpdateWithWhereUniqueWithoutExamSessionInput | RegistrationChangeRequestExamSessionUpdateWithWhereUniqueWithoutExamSessionInput[]
     updateMany?: RegistrationChangeRequestExamSessionUpdateManyWithWhereWithoutExamSessionInput | RegistrationChangeRequestExamSessionUpdateManyWithWhereWithoutExamSessionInput[]
     deleteMany?: RegistrationChangeRequestExamSessionScalarWhereInput | RegistrationChangeRequestExamSessionScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput = {
+    create?: XOR<StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput, StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput> | StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput[] | StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput[]
+    connectOrCreate?: StudentAdjustmentRequestItemCreateOrConnectWithoutTargetExamSessionInput | StudentAdjustmentRequestItemCreateOrConnectWithoutTargetExamSessionInput[]
+    upsert?: StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutTargetExamSessionInput | StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutTargetExamSessionInput[]
+    createMany?: StudentAdjustmentRequestItemCreateManyTargetExamSessionInputEnvelope
+    set?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    update?: StudentAdjustmentRequestItemUpdateWithWhereUniqueWithoutTargetExamSessionInput | StudentAdjustmentRequestItemUpdateWithWhereUniqueWithoutTargetExamSessionInput[]
+    updateMany?: StudentAdjustmentRequestItemUpdateManyWithWhereWithoutTargetExamSessionInput | StudentAdjustmentRequestItemUpdateManyWithWhereWithoutTargetExamSessionInput[]
+    deleteMany?: StudentAdjustmentRequestItemScalarWhereInput | StudentAdjustmentRequestItemScalarWhereInput[]
   }
 
   export type FeeRuleUpdateManyWithoutExamSessionNestedInput = {
@@ -98588,6 +103990,20 @@ export namespace Prisma {
     update?: RegistrationChangeRequestExamSessionUpdateWithWhereUniqueWithoutExamSessionInput | RegistrationChangeRequestExamSessionUpdateWithWhereUniqueWithoutExamSessionInput[]
     updateMany?: RegistrationChangeRequestExamSessionUpdateManyWithWhereWithoutExamSessionInput | RegistrationChangeRequestExamSessionUpdateManyWithWhereWithoutExamSessionInput[]
     deleteMany?: RegistrationChangeRequestExamSessionScalarWhereInput | RegistrationChangeRequestExamSessionScalarWhereInput[]
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput = {
+    create?: XOR<StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput, StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput> | StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput[] | StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput[]
+    connectOrCreate?: StudentAdjustmentRequestItemCreateOrConnectWithoutTargetExamSessionInput | StudentAdjustmentRequestItemCreateOrConnectWithoutTargetExamSessionInput[]
+    upsert?: StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutTargetExamSessionInput | StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutTargetExamSessionInput[]
+    createMany?: StudentAdjustmentRequestItemCreateManyTargetExamSessionInputEnvelope
+    set?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    disconnect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    delete?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    connect?: StudentAdjustmentRequestItemWhereUniqueInput | StudentAdjustmentRequestItemWhereUniqueInput[]
+    update?: StudentAdjustmentRequestItemUpdateWithWhereUniqueWithoutTargetExamSessionInput | StudentAdjustmentRequestItemUpdateWithWhereUniqueWithoutTargetExamSessionInput[]
+    updateMany?: StudentAdjustmentRequestItemUpdateManyWithWhereWithoutTargetExamSessionInput | StudentAdjustmentRequestItemUpdateManyWithWhereWithoutTargetExamSessionInput[]
+    deleteMany?: StudentAdjustmentRequestItemScalarWhereInput | StudentAdjustmentRequestItemScalarWhereInput[]
   }
 
   export type FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput = {
@@ -102106,6 +107522,57 @@ export namespace Prisma {
     _max?: NestedEnumRegistrationChangeRequestStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumStudentAdjustmentRequestStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRequestStatus | EnumStudentAdjustmentRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentAdjustmentRequestStatus[]
+    notIn?: $Enums.StudentAdjustmentRequestStatus[]
+    not?: NestedEnumStudentAdjustmentRequestStatusFilter<$PrismaModel> | $Enums.StudentAdjustmentRequestStatus
+  }
+
+  export type NestedEnumStudentAdjustmentRejectedAtStageNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRejectedAtStage | EnumStudentAdjustmentRejectedAtStageFieldRefInput<$PrismaModel> | null
+    in?: $Enums.StudentAdjustmentRejectedAtStage[] | null
+    notIn?: $Enums.StudentAdjustmentRejectedAtStage[] | null
+    not?: NestedEnumStudentAdjustmentRejectedAtStageNullableFilter<$PrismaModel> | $Enums.StudentAdjustmentRejectedAtStage | null
+  }
+
+  export type NestedEnumStudentAdjustmentRequestStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRequestStatus | EnumStudentAdjustmentRequestStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentAdjustmentRequestStatus[]
+    notIn?: $Enums.StudentAdjustmentRequestStatus[]
+    not?: NestedEnumStudentAdjustmentRequestStatusWithAggregatesFilter<$PrismaModel> | $Enums.StudentAdjustmentRequestStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStudentAdjustmentRequestStatusFilter<$PrismaModel>
+    _max?: NestedEnumStudentAdjustmentRequestStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumStudentAdjustmentRejectedAtStageNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRejectedAtStage | EnumStudentAdjustmentRejectedAtStageFieldRefInput<$PrismaModel> | null
+    in?: $Enums.StudentAdjustmentRejectedAtStage[] | null
+    notIn?: $Enums.StudentAdjustmentRejectedAtStage[] | null
+    not?: NestedEnumStudentAdjustmentRejectedAtStageNullableWithAggregatesFilter<$PrismaModel> | $Enums.StudentAdjustmentRejectedAtStage | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumStudentAdjustmentRejectedAtStageNullableFilter<$PrismaModel>
+    _max?: NestedEnumStudentAdjustmentRejectedAtStageNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumStudentAdjustmentRequestItemTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRequestItemType | EnumStudentAdjustmentRequestItemTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentAdjustmentRequestItemType[]
+    notIn?: $Enums.StudentAdjustmentRequestItemType[]
+    not?: NestedEnumStudentAdjustmentRequestItemTypeFilter<$PrismaModel> | $Enums.StudentAdjustmentRequestItemType
+  }
+
+  export type NestedEnumStudentAdjustmentRequestItemTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StudentAdjustmentRequestItemType | EnumStudentAdjustmentRequestItemTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StudentAdjustmentRequestItemType[]
+    notIn?: $Enums.StudentAdjustmentRequestItemType[]
+    not?: NestedEnumStudentAdjustmentRequestItemTypeWithAggregatesFilter<$PrismaModel> | $Enums.StudentAdjustmentRequestItemType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStudentAdjustmentRequestItemTypeFilter<$PrismaModel>
+    _max?: NestedEnumStudentAdjustmentRequestItemTypeFilter<$PrismaModel>
+  }
+
   export type NestedEnumKeyDateTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.KeyDateType | EnumKeyDateTypeFieldRefInput<$PrismaModel>
     in?: $Enums.KeyDateType[]
@@ -102748,6 +108215,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -102756,6 +108225,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -102784,12 +108254,15 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -103118,6 +108591,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -103162,6 +108636,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -103216,6 +108691,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -103260,6 +108736,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -104005,6 +109482,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -104057,6 +109535,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -104192,6 +109671,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -104236,6 +109716,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -104290,6 +109771,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -104334,6 +109816,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -105238,6 +110721,248 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StudentAdjustmentRequestCreateWithoutStudentInput = {
+    id?: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    candidate?: CandidateCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    primaryHomeroomTeacher?: UserCreateNestedOneWithoutPrimaryHomeroomAdjustmentRequestsInput
+    teacherReviewedBy?: UserCreateNestedOneWithoutTeacherReviewedStudentAdjustmentsInput
+    eoReviewedBy?: UserCreateNestedOneWithoutEoReviewedStudentAdjustmentsInput
+    items?: StudentAdjustmentRequestItemCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateWithoutStudentInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestCreateOrConnectWithoutStudentInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    create: XOR<StudentAdjustmentRequestCreateWithoutStudentInput, StudentAdjustmentRequestUncheckedCreateWithoutStudentInput>
+  }
+
+  export type StudentAdjustmentRequestCreateManyStudentInputEnvelope = {
+    data: StudentAdjustmentRequestCreateManyStudentInput | StudentAdjustmentRequestCreateManyStudentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput = {
+    id?: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    student: UserCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    candidate?: CandidateCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    primaryHomeroomTeacher?: UserCreateNestedOneWithoutPrimaryHomeroomAdjustmentRequestsInput
+    eoReviewedBy?: UserCreateNestedOneWithoutEoReviewedStudentAdjustmentsInput
+    items?: StudentAdjustmentRequestItemCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestCreateOrConnectWithoutTeacherReviewedByInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    create: XOR<StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput>
+  }
+
+  export type StudentAdjustmentRequestCreateManyTeacherReviewedByInputEnvelope = {
+    data: StudentAdjustmentRequestCreateManyTeacherReviewedByInput | StudentAdjustmentRequestCreateManyTeacherReviewedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudentAdjustmentRequestCreateWithoutEoReviewedByInput = {
+    id?: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    student: UserCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    candidate?: CandidateCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    primaryHomeroomTeacher?: UserCreateNestedOneWithoutPrimaryHomeroomAdjustmentRequestsInput
+    teacherReviewedBy?: UserCreateNestedOneWithoutTeacherReviewedStudentAdjustmentsInput
+    items?: StudentAdjustmentRequestItemCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestCreateOrConnectWithoutEoReviewedByInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    create: XOR<StudentAdjustmentRequestCreateWithoutEoReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput>
+  }
+
+  export type StudentAdjustmentRequestCreateManyEoReviewedByInputEnvelope = {
+    data: StudentAdjustmentRequestCreateManyEoReviewedByInput | StudentAdjustmentRequestCreateManyEoReviewedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput = {
+    id?: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    student: UserCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    candidate?: CandidateCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    teacherReviewedBy?: UserCreateNestedOneWithoutTeacherReviewedStudentAdjustmentsInput
+    eoReviewedBy?: UserCreateNestedOneWithoutEoReviewedStudentAdjustmentsInput
+    items?: StudentAdjustmentRequestItemCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestCreateOrConnectWithoutPrimaryHomeroomTeacherInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    create: XOR<StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput, StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput>
+  }
+
+  export type StudentAdjustmentRequestCreateManyPrimaryHomeroomTeacherInputEnvelope = {
+    data: StudentAdjustmentRequestCreateManyPrimaryHomeroomTeacherInput | StudentAdjustmentRequestCreateManyPrimaryHomeroomTeacherInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ClassHomeroomTeacherCreateWithoutTeacherInput = {
+    id?: string
+    grade: $Enums.Grade
+    className: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput = {
+    id?: string
+    grade: $Enums.Grade
+    className: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput = {
+    where: ClassHomeroomTeacherWhereUniqueInput
+    create: XOR<ClassHomeroomTeacherCreateWithoutTeacherInput, ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput>
+  }
+
+  export type ClassHomeroomTeacherCreateManyTeacherInputEnvelope = {
+    data: ClassHomeroomTeacherCreateManyTeacherInput | ClassHomeroomTeacherCreateManyTeacherInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SourceDocumentUpsertWithWhereUniqueWithoutUploadedByInput = {
     where: SourceDocumentWhereUniqueInput
     update: XOR<SourceDocumentUpdateWithoutUploadedByInput, SourceDocumentUncheckedUpdateWithoutUploadedByInput>
@@ -105382,6 +111107,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     officeOnlyRegistrationEnabled?: BoolFilter<"RegistrationWindow"> | boolean
     postLockAdjustmentEnabled?: BoolFilter<"RegistrationWindow"> | boolean
+    studentAdjustmentRequestEnabled?: BoolFilter<"RegistrationWindow"> | boolean
+    studentAdjustmentRequestCloseAt?: DateTimeNullableFilter<"RegistrationWindow"> | Date | string | null
     paymentFeePercent?: DecimalFilter<"RegistrationWindow"> | Decimal | DecimalJsLike | number | string
     createdById?: StringNullableFilter<"RegistrationWindow"> | string | null
     createdAt?: DateTimeFilter<"RegistrationWindow"> | Date | string
@@ -105952,6 +111679,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -106004,6 +111732,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -106766,6 +112495,123 @@ export namespace Prisma {
     sentAt?: DateTimeNullableFilter<"StudentNotificationLog"> | Date | string | null
   }
 
+  export type StudentAdjustmentRequestUpsertWithWhereUniqueWithoutStudentInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    update: XOR<StudentAdjustmentRequestUpdateWithoutStudentInput, StudentAdjustmentRequestUncheckedUpdateWithoutStudentInput>
+    create: XOR<StudentAdjustmentRequestCreateWithoutStudentInput, StudentAdjustmentRequestUncheckedCreateWithoutStudentInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateWithWhereUniqueWithoutStudentInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    data: XOR<StudentAdjustmentRequestUpdateWithoutStudentInput, StudentAdjustmentRequestUncheckedUpdateWithoutStudentInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithWhereWithoutStudentInput = {
+    where: StudentAdjustmentRequestScalarWhereInput
+    data: XOR<StudentAdjustmentRequestUpdateManyMutationInput, StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentInput>
+  }
+
+  export type StudentAdjustmentRequestScalarWhereInput = {
+    AND?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+    OR?: StudentAdjustmentRequestScalarWhereInput[]
+    NOT?: StudentAdjustmentRequestScalarWhereInput | StudentAdjustmentRequestScalarWhereInput[]
+    id?: StringFilter<"StudentAdjustmentRequest"> | string
+    registrationWorkspaceId?: StringFilter<"StudentAdjustmentRequest"> | string
+    registrationWindowId?: StringFilter<"StudentAdjustmentRequest"> | string
+    studentId?: StringFilter<"StudentAdjustmentRequest"> | string
+    candidateId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    status?: EnumStudentAdjustmentRequestStatusFilter<"StudentAdjustmentRequest"> | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFilter<"StudentAdjustmentRequest"> | Date | string
+    primaryHomeroomTeacherId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    studentGradeSnapshot?: EnumGradeNullableFilter<"StudentAdjustmentRequest"> | $Enums.Grade | null
+    studentClassNameSnapshot?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    teacherReviewedByUserId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    teacherReviewedAt?: DateTimeNullableFilter<"StudentAdjustmentRequest"> | Date | string | null
+    teacherReviewReason?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    eoReviewedByUserId?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    eoReviewedAt?: DateTimeNullableFilter<"StudentAdjustmentRequest"> | Date | string | null
+    eoReviewReason?: StringNullableFilter<"StudentAdjustmentRequest"> | string | null
+    rejectedAtStage?: EnumStudentAdjustmentRejectedAtStageNullableFilter<"StudentAdjustmentRequest"> | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFilter<"StudentAdjustmentRequest"> | Date | string
+    updatedAt?: DateTimeFilter<"StudentAdjustmentRequest"> | Date | string
+  }
+
+  export type StudentAdjustmentRequestUpsertWithWhereUniqueWithoutTeacherReviewedByInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    update: XOR<StudentAdjustmentRequestUpdateWithoutTeacherReviewedByInput, StudentAdjustmentRequestUncheckedUpdateWithoutTeacherReviewedByInput>
+    create: XOR<StudentAdjustmentRequestCreateWithoutTeacherReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutTeacherReviewedByInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateWithWhereUniqueWithoutTeacherReviewedByInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    data: XOR<StudentAdjustmentRequestUpdateWithoutTeacherReviewedByInput, StudentAdjustmentRequestUncheckedUpdateWithoutTeacherReviewedByInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithWhereWithoutTeacherReviewedByInput = {
+    where: StudentAdjustmentRequestScalarWhereInput
+    data: XOR<StudentAdjustmentRequestUpdateManyMutationInput, StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByInput>
+  }
+
+  export type StudentAdjustmentRequestUpsertWithWhereUniqueWithoutEoReviewedByInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    update: XOR<StudentAdjustmentRequestUpdateWithoutEoReviewedByInput, StudentAdjustmentRequestUncheckedUpdateWithoutEoReviewedByInput>
+    create: XOR<StudentAdjustmentRequestCreateWithoutEoReviewedByInput, StudentAdjustmentRequestUncheckedCreateWithoutEoReviewedByInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateWithWhereUniqueWithoutEoReviewedByInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    data: XOR<StudentAdjustmentRequestUpdateWithoutEoReviewedByInput, StudentAdjustmentRequestUncheckedUpdateWithoutEoReviewedByInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithWhereWithoutEoReviewedByInput = {
+    where: StudentAdjustmentRequestScalarWhereInput
+    data: XOR<StudentAdjustmentRequestUpdateManyMutationInput, StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByInput>
+  }
+
+  export type StudentAdjustmentRequestUpsertWithWhereUniqueWithoutPrimaryHomeroomTeacherInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    update: XOR<StudentAdjustmentRequestUpdateWithoutPrimaryHomeroomTeacherInput, StudentAdjustmentRequestUncheckedUpdateWithoutPrimaryHomeroomTeacherInput>
+    create: XOR<StudentAdjustmentRequestCreateWithoutPrimaryHomeroomTeacherInput, StudentAdjustmentRequestUncheckedCreateWithoutPrimaryHomeroomTeacherInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateWithWhereUniqueWithoutPrimaryHomeroomTeacherInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    data: XOR<StudentAdjustmentRequestUpdateWithoutPrimaryHomeroomTeacherInput, StudentAdjustmentRequestUncheckedUpdateWithoutPrimaryHomeroomTeacherInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithWhereWithoutPrimaryHomeroomTeacherInput = {
+    where: StudentAdjustmentRequestScalarWhereInput
+    data: XOR<StudentAdjustmentRequestUpdateManyMutationInput, StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherInput>
+  }
+
+  export type ClassHomeroomTeacherUpsertWithWhereUniqueWithoutTeacherInput = {
+    where: ClassHomeroomTeacherWhereUniqueInput
+    update: XOR<ClassHomeroomTeacherUpdateWithoutTeacherInput, ClassHomeroomTeacherUncheckedUpdateWithoutTeacherInput>
+    create: XOR<ClassHomeroomTeacherCreateWithoutTeacherInput, ClassHomeroomTeacherUncheckedCreateWithoutTeacherInput>
+  }
+
+  export type ClassHomeroomTeacherUpdateWithWhereUniqueWithoutTeacherInput = {
+    where: ClassHomeroomTeacherWhereUniqueInput
+    data: XOR<ClassHomeroomTeacherUpdateWithoutTeacherInput, ClassHomeroomTeacherUncheckedUpdateWithoutTeacherInput>
+  }
+
+  export type ClassHomeroomTeacherUpdateManyWithWhereWithoutTeacherInput = {
+    where: ClassHomeroomTeacherScalarWhereInput
+    data: XOR<ClassHomeroomTeacherUpdateManyMutationInput, ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherInput>
+  }
+
+  export type ClassHomeroomTeacherScalarWhereInput = {
+    AND?: ClassHomeroomTeacherScalarWhereInput | ClassHomeroomTeacherScalarWhereInput[]
+    OR?: ClassHomeroomTeacherScalarWhereInput[]
+    NOT?: ClassHomeroomTeacherScalarWhereInput | ClassHomeroomTeacherScalarWhereInput[]
+    id?: StringFilter<"ClassHomeroomTeacher"> | string
+    grade?: EnumGradeFilter<"ClassHomeroomTeacher"> | $Enums.Grade
+    className?: StringFilter<"ClassHomeroomTeacher"> | string
+    teacherUserId?: StringFilter<"ClassHomeroomTeacher"> | string
+    createdAt?: DateTimeFilter<"ClassHomeroomTeacher"> | Date | string
+    updatedAt?: DateTimeFilter<"ClassHomeroomTeacher"> | Date | string
+  }
+
   export type UserCreateWithoutPasswordResetTokensInput = {
     id?: string
     name: string
@@ -106823,6 +112669,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -106882,6 +112733,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -106957,6 +112813,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -107016,6 +112877,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserCreateWithoutStudentProfileInput = {
@@ -107075,6 +112941,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutStudentProfileInput = {
@@ -107134,6 +113005,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -107209,6 +113085,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentProfileInput = {
@@ -107268,6 +113149,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserCreateWithoutTeacherProfileInput = {
@@ -107327,6 +113213,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutTeacherProfileInput = {
@@ -107386,6 +113277,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutTeacherProfileInput = {
@@ -107461,6 +113357,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherProfileInput = {
@@ -107520,6 +113421,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserCreateWithoutStudentNotificationLogsInput = {
@@ -107579,6 +113485,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutStudentNotificationLogsInput = {
@@ -107638,6 +113549,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutStudentNotificationLogsInput = {
@@ -107657,6 +113573,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -107666,6 +113584,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -107693,6 +113612,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -107700,6 +113621,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -107887,6 +113809,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentNotificationLogsInput = {
@@ -107946,6 +113873,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutStudentNotificationLogsInput = {
@@ -107971,6 +113903,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -107980,6 +113914,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -108007,6 +113942,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -108014,6 +113951,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -108191,6 +114129,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsTargetInput = {
@@ -108250,6 +114193,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsTargetInput = {
@@ -108314,6 +114262,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsPerformedInput = {
@@ -108373,6 +114326,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsPerformedInput = {
@@ -108448,6 +114406,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsTargetInput = {
@@ -108507,6 +114470,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUpsertWithoutUserAuditLogsPerformedInput = {
@@ -108577,6 +114545,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsPerformedInput = {
@@ -108636,6 +114609,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExamDocumentAuditLogsInput = {
@@ -108650,6 +114628,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -108659,6 +114639,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -108686,6 +114667,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -108693,6 +114676,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -108729,6 +114713,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
@@ -108754,6 +114739,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
@@ -108808,6 +114794,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutCandidateInput
@@ -108860,6 +114847,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutCandidateInput
@@ -108932,6 +114920,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -108991,6 +114984,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutExamDocumentAuditLogsPerformedInput = {
@@ -109021,6 +115019,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -109030,6 +115030,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -109057,6 +115058,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -109064,6 +115067,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -109106,6 +115110,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
@@ -109131,6 +115136,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -109191,6 +115197,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutCandidateNestedInput
@@ -109243,6 +115250,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutCandidateNestedInput
@@ -109321,6 +115329,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -109380,6 +115393,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserCreateWithoutCandidateInput = {
@@ -109439,6 +115457,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutCandidateInput = {
@@ -109498,6 +115521,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutCandidateInput = {
@@ -109585,6 +115613,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -109629,6 +115658,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -109862,6 +115892,60 @@ export namespace Prisma {
 
   export type RegistrationChangeRequestCreateManyCandidateInputEnvelope = {
     data: RegistrationChangeRequestCreateManyCandidateInput | RegistrationChangeRequestCreateManyCandidateInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudentAdjustmentRequestCreateWithoutCandidateInput = {
+    id?: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    student: UserCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    primaryHomeroomTeacher?: UserCreateNestedOneWithoutPrimaryHomeroomAdjustmentRequestsInput
+    teacherReviewedBy?: UserCreateNestedOneWithoutTeacherReviewedStudentAdjustmentsInput
+    eoReviewedBy?: UserCreateNestedOneWithoutEoReviewedStudentAdjustmentsInput
+    items?: StudentAdjustmentRequestItemCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestCreateOrConnectWithoutCandidateInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    create: XOR<StudentAdjustmentRequestCreateWithoutCandidateInput, StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput>
+  }
+
+  export type StudentAdjustmentRequestCreateManyCandidateInputEnvelope = {
+    data: StudentAdjustmentRequestCreateManyCandidateInput | StudentAdjustmentRequestCreateManyCandidateInput[]
     skipDuplicates?: boolean
   }
 
@@ -110403,6 +116487,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateInput = {
@@ -110462,6 +116551,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type CandidateExamIdentityUpsertWithWhereUniqueWithoutCandidateInput = {
@@ -110542,6 +116636,22 @@ export namespace Prisma {
   export type RegistrationChangeRequestUpdateManyWithWhereWithoutCandidateInput = {
     where: RegistrationChangeRequestScalarWhereInput
     data: XOR<RegistrationChangeRequestUpdateManyMutationInput, RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateInput>
+  }
+
+  export type StudentAdjustmentRequestUpsertWithWhereUniqueWithoutCandidateInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    update: XOR<StudentAdjustmentRequestUpdateWithoutCandidateInput, StudentAdjustmentRequestUncheckedUpdateWithoutCandidateInput>
+    create: XOR<StudentAdjustmentRequestCreateWithoutCandidateInput, StudentAdjustmentRequestUncheckedCreateWithoutCandidateInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateWithWhereUniqueWithoutCandidateInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    data: XOR<StudentAdjustmentRequestUpdateWithoutCandidateInput, StudentAdjustmentRequestUncheckedUpdateWithoutCandidateInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithWhereWithoutCandidateInput = {
+    where: StudentAdjustmentRequestScalarWhereInput
+    data: XOR<StudentAdjustmentRequestUpdateManyMutationInput, StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateInput>
   }
 
   export type FeeStatementUpsertWithWhereUniqueWithoutCandidateInput = {
@@ -110730,6 +116840,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutCandidateInput
@@ -110782,6 +116893,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutCandidateInput
@@ -110854,6 +116966,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutCandidateAuditLogsPerformedInput = {
@@ -110913,6 +117030,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutCandidateAuditLogsPerformedInput = {
@@ -110973,6 +117095,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutCandidateNestedInput
@@ -111025,6 +117148,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutCandidateNestedInput
@@ -111103,6 +117227,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateAuditLogsPerformedInput = {
@@ -111162,6 +117291,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type CandidateCreateWithoutExamIdentitiesInput = {
@@ -111205,6 +117339,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -111257,6 +117392,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -111419,6 +117555,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutCandidateExamIdentitiesCreatedInput = {
@@ -111478,6 +117619,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutCandidateExamIdentitiesCreatedInput = {
@@ -111542,6 +117688,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -111601,6 +117752,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -111660,6 +117816,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -111712,6 +117869,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -111886,6 +118044,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateExamIdentitiesCreatedInput = {
@@ -111945,6 +118108,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUpsertWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -112015,6 +118183,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -112074,6 +118247,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserCreateWithoutTeacherAssignmentsInput = {
@@ -112133,6 +118311,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutTeacherAssignmentsInput = {
@@ -112192,6 +118375,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutTeacherAssignmentsInput = {
@@ -112312,6 +118500,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherAssignmentsInput = {
@@ -112371,6 +118564,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type SubjectUpsertWithoutTeacherAssignmentsInput = {
@@ -112422,6 +118620,278 @@ export namespace Prisma {
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutSubjectNestedInput
     cashInCodes?: CashInCodeUncheckedUpdateManyWithoutSubjectNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutSubjectNestedInput
+  }
+
+  export type UserCreateWithoutClassHomeroomAssignmentsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+  }
+
+  export type UserUncheckedCreateWithoutClassHomeroomAssignmentsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+  }
+
+  export type UserCreateOrConnectWithoutClassHomeroomAssignmentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutClassHomeroomAssignmentsInput, UserUncheckedCreateWithoutClassHomeroomAssignmentsInput>
+  }
+
+  export type UserUpsertWithoutClassHomeroomAssignmentsInput = {
+    update: XOR<UserUpdateWithoutClassHomeroomAssignmentsInput, UserUncheckedUpdateWithoutClassHomeroomAssignmentsInput>
+    create: XOR<UserCreateWithoutClassHomeroomAssignmentsInput, UserUncheckedCreateWithoutClassHomeroomAssignmentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutClassHomeroomAssignmentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutClassHomeroomAssignmentsInput, UserUncheckedUpdateWithoutClassHomeroomAssignmentsInput>
+  }
+
+  export type UserUpdateWithoutClassHomeroomAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutClassHomeroomAssignmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
   }
 
   export type ExamBoardCreateWithoutRegistrationWindowsInput = {
@@ -112625,6 +119095,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWindowsInput = {
@@ -112684,6 +119159,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWindowsInput = {
@@ -112833,6 +119313,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -112877,6 +119358,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -112940,6 +119422,60 @@ export namespace Prisma {
 
   export type RegistrationChangeRequestCreateManyRegistrationWindowInputEnvelope = {
     data: RegistrationChangeRequestCreateManyRegistrationWindowInput | RegistrationChangeRequestCreateManyRegistrationWindowInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudentAdjustmentRequestCreateWithoutRegistrationWindowInput = {
+    id?: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    student: UserCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    candidate?: CandidateCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    primaryHomeroomTeacher?: UserCreateNestedOneWithoutPrimaryHomeroomAdjustmentRequestsInput
+    teacherReviewedBy?: UserCreateNestedOneWithoutTeacherReviewedStudentAdjustmentsInput
+    eoReviewedBy?: UserCreateNestedOneWithoutEoReviewedStudentAdjustmentsInput
+    items?: StudentAdjustmentRequestItemCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput = {
+    id?: string
+    registrationWorkspaceId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWindowInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    create: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWindowInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput>
+  }
+
+  export type StudentAdjustmentRequestCreateManyRegistrationWindowInputEnvelope = {
+    data: StudentAdjustmentRequestCreateManyRegistrationWindowInput | StudentAdjustmentRequestCreateManyRegistrationWindowInput[]
     skipDuplicates?: boolean
   }
 
@@ -113747,6 +120283,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWindowsInput = {
@@ -113806,6 +120347,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWindowInput = {
@@ -113854,6 +120400,22 @@ export namespace Prisma {
   export type RegistrationChangeRequestUpdateManyWithWhereWithoutRegistrationWindowInput = {
     where: RegistrationChangeRequestScalarWhereInput
     data: XOR<RegistrationChangeRequestUpdateManyMutationInput, RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowInput>
+  }
+
+  export type StudentAdjustmentRequestUpsertWithWhereUniqueWithoutRegistrationWindowInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    update: XOR<StudentAdjustmentRequestUpdateWithoutRegistrationWindowInput, StudentAdjustmentRequestUncheckedUpdateWithoutRegistrationWindowInput>
+    create: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWindowInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWindowInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateWithWhereUniqueWithoutRegistrationWindowInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    data: XOR<StudentAdjustmentRequestUpdateWithoutRegistrationWindowInput, StudentAdjustmentRequestUncheckedUpdateWithoutRegistrationWindowInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithWhereWithoutRegistrationWindowInput = {
+    where: StudentAdjustmentRequestScalarWhereInput
+    data: XOR<StudentAdjustmentRequestUpdateManyMutationInput, StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowInput>
   }
 
   export type RegistrationFeeStageUpsertWithWhereUniqueWithoutRegistrationWindowInput = {
@@ -114091,6 +120653,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -114100,6 +120664,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -114127,6 +120692,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -114134,6 +120701,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -114209,6 +120777,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutBoardSubmissionBaselinesSubmittedInput = {
@@ -114268,6 +120841,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutBoardSubmissionBaselinesSubmittedInput = {
@@ -114298,6 +120876,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -114307,6 +120887,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -114334,6 +120915,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -114341,6 +120924,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -114422,6 +121006,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBoardSubmissionBaselinesSubmittedInput = {
@@ -114481,6 +121070,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationWindowCreateWithoutIncludedSeriesInput = {
@@ -114495,6 +121089,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -114504,6 +121100,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -114531,6 +121128,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -114538,6 +121137,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -114634,6 +121234,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -114643,6 +121245,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -114670,6 +121273,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -114677,6 +121282,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -114763,6 +121369,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -114772,6 +121380,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
@@ -114799,6 +121408,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -114806,6 +121417,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -114864,6 +121476,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -114908,6 +121521,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -115115,6 +121729,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -115124,6 +121740,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
@@ -115151,6 +121768,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -115158,6 +121777,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -115260,6 +121880,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -115312,6 +121933,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -115385,6 +122007,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWorkspacesInput = {
@@ -115444,6 +122071,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWorkspacesInput = {
@@ -115463,6 +122095,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -115471,6 +122105,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutRegistrationWindowsInput
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -115499,12 +122134,15 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -115581,6 +122219,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutWorkspacesLastAdjustedInput = {
@@ -115640,6 +122283,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutWorkspacesLastAdjustedInput = {
@@ -115749,6 +122397,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsCreatedInput = {
@@ -115808,6 +122461,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsCreatedInput = {
@@ -115872,6 +122530,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -115931,6 +122594,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsUpdatedInput = {
@@ -116160,6 +122828,60 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput = {
+    id?: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    student: UserCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    candidate?: CandidateCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    primaryHomeroomTeacher?: UserCreateNestedOneWithoutPrimaryHomeroomAdjustmentRequestsInput
+    teacherReviewedBy?: UserCreateNestedOneWithoutTeacherReviewedStudentAdjustmentsInput
+    eoReviewedBy?: UserCreateNestedOneWithoutEoReviewedStudentAdjustmentsInput
+    items?: StudentAdjustmentRequestItemCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput = {
+    id?: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutRequestInput
+  }
+
+  export type StudentAdjustmentRequestCreateOrConnectWithoutRegistrationWorkspaceInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    create: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput>
+  }
+
+  export type StudentAdjustmentRequestCreateManyRegistrationWorkspaceInputEnvelope = {
+    data: StudentAdjustmentRequestCreateManyRegistrationWorkspaceInput | StudentAdjustmentRequestCreateManyRegistrationWorkspaceInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FeeStatementCreateWithoutRegistrationWorkspaceInput = {
     id?: string
     businessType?: $Enums.FeeStatementBusinessType
@@ -116386,6 +123108,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -116438,6 +123161,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -116517,6 +123241,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWorkspacesInput = {
@@ -116576,6 +123305,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutWorkspacesInput = {
@@ -116601,6 +123335,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -116609,6 +123345,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutRegistrationWindowsNestedInput
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -116637,12 +123374,15 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -116725,6 +123465,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkspacesLastAdjustedInput = {
@@ -116784,6 +123529,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutWorkspacesInput = {
@@ -116905,6 +123655,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsCreatedInput = {
@@ -116964,6 +123719,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUpsertWithoutRestrictedRegistrationsUpdatedInput = {
@@ -117034,6 +123794,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -117093,6 +123858,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput = {
@@ -117141,6 +123911,22 @@ export namespace Prisma {
   export type RegistrationChangeRequestUpdateManyWithWhereWithoutRegistrationWorkspaceInput = {
     where: RegistrationChangeRequestScalarWhereInput
     data: XOR<RegistrationChangeRequestUpdateManyMutationInput, RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceInput>
+  }
+
+  export type StudentAdjustmentRequestUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    update: XOR<StudentAdjustmentRequestUpdateWithoutRegistrationWorkspaceInput, StudentAdjustmentRequestUncheckedUpdateWithoutRegistrationWorkspaceInput>
+    create: XOR<StudentAdjustmentRequestCreateWithoutRegistrationWorkspaceInput, StudentAdjustmentRequestUncheckedCreateWithoutRegistrationWorkspaceInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateWithWhereUniqueWithoutRegistrationWorkspaceInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    data: XOR<StudentAdjustmentRequestUpdateWithoutRegistrationWorkspaceInput, StudentAdjustmentRequestUncheckedUpdateWithoutRegistrationWorkspaceInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateManyWithWhereWithoutRegistrationWorkspaceInput = {
+    where: StudentAdjustmentRequestScalarWhereInput
+    data: XOR<StudentAdjustmentRequestUpdateManyMutationInput, StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceInput>
   }
 
   export type FeeStatementUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput = {
@@ -117216,6 +124002,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -117268,6 +124055,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -117341,6 +124129,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutStudentRegistrationsInput = {
@@ -117400,6 +124193,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutStudentRegistrationsInput = {
@@ -117447,6 +124245,7 @@ export namespace Prisma {
     restrictedUpdatedBy?: UserCreateNestedOneWithoutRestrictedRegistrationsUpdatedInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -117491,6 +124290,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -117517,6 +124317,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -117542,6 +124343,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -117567,6 +124369,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -117575,6 +124379,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutRegistrationWindowsInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -117603,12 +124408,15 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -117915,6 +124723,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationsAddedInput = {
@@ -117974,6 +124787,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationsAddedInput = {
@@ -118246,6 +125064,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -118298,6 +125117,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -118377,6 +125197,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentRegistrationsInput = {
@@ -118436,6 +125261,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutRegistrationsInput = {
@@ -118489,6 +125319,7 @@ export namespace Prisma {
     restrictedUpdatedBy?: UserUpdateOneWithoutRestrictedRegistrationsUpdatedNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -118533,6 +125364,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -118565,6 +125397,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -118590,6 +125423,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -118621,6 +125455,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -118629,6 +125465,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutRegistrationWindowsNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -118657,12 +125494,15 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -118999,6 +125839,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationsAddedInput = {
@@ -119058,6 +125903,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutRegistrationsInput = {
@@ -119199,6 +126049,7 @@ export namespace Prisma {
     restrictedUpdatedBy?: UserCreateNestedOneWithoutRestrictedRegistrationsUpdatedInput
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -119243,6 +126094,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -119264,6 +126116,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -119273,6 +126127,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
@@ -119300,6 +126155,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -119307,6 +126164,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -119366,6 +126224,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutCandidateInput
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -119418,6 +126277,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutCandidateInput
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -119491,6 +126351,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -119550,6 +126415,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsAsStudentInput = {
@@ -119716,6 +126586,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -119741,6 +126612,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -119811,6 +126683,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput = {
@@ -119870,6 +126747,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsPerformedInput = {
@@ -119928,6 +126810,7 @@ export namespace Prisma {
     restrictedUpdatedBy?: UserUpdateOneWithoutRestrictedRegistrationsUpdatedNestedInput
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -119972,6 +126855,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -119999,6 +126883,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -120008,6 +126894,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
@@ -120035,6 +126922,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -120042,6 +126931,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -120107,6 +126997,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutCandidateNestedInput
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -120159,6 +127050,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutCandidateNestedInput
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -120238,6 +127130,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -120297,6 +127194,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithoutAuditLogsInput = {
@@ -120481,6 +127383,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -120506,6 +127409,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -120582,6 +127486,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsPerformedInput = {
@@ -120641,6 +127550,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationWorkspaceCreateWithoutChangeRequestsInput = {
@@ -120683,6 +127597,7 @@ export namespace Prisma {
     restrictedUpdatedBy?: UserCreateNestedOneWithoutRestrictedRegistrationsUpdatedInput
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -120727,6 +127642,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
@@ -120748,6 +127664,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -120756,6 +127674,7 @@ export namespace Prisma {
     createdBy?: UserCreateNestedOneWithoutRegistrationWindowsInput
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -120784,12 +127703,15 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -120866,6 +127788,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutStudentChangeRequestsInput = {
@@ -120925,6 +127852,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutStudentChangeRequestsInput = {
@@ -120973,6 +127905,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutCandidateInput
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -121025,6 +127958,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutCandidateInput
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -121098,6 +128032,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationChangeRequestsInput = {
@@ -121157,6 +128096,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationChangeRequestsInput = {
@@ -121181,6 +128125,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -121206,6 +128151,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -121236,6 +128182,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -121261,6 +128208,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -121331,6 +128279,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutReviewedChangeRequestsInput = {
@@ -121390,6 +128343,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutReviewedChangeRequestsInput = {
@@ -121470,6 +128428,7 @@ export namespace Prisma {
     restrictedUpdatedBy?: UserUpdateOneWithoutRestrictedRegistrationsUpdatedNestedInput
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -121514,6 +128473,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -121541,6 +128501,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -121549,6 +128511,7 @@ export namespace Prisma {
     createdBy?: UserUpdateOneWithoutRegistrationWindowsNestedInput
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -121577,12 +128540,15 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -121665,6 +128631,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentChangeRequestsInput = {
@@ -121724,6 +128695,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type CandidateUpsertWithoutChangeRequestsInput = {
@@ -121778,6 +128754,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutCandidateNestedInput
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -121830,6 +128807,7 @@ export namespace Prisma {
     registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutCandidateNestedInput
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -121909,6 +128887,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationChangeRequestsInput = {
@@ -121968,6 +128951,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type ExamSessionUpsertWithoutChangeRequestTargetsInput = {
@@ -121998,6 +128986,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -122023,6 +129012,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -122059,6 +129049,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -122084,6 +129075,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -122160,6 +129152,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewedChangeRequestsInput = {
@@ -122219,6 +129216,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationChangeRequestExamSessionUpsertWithWhereUniqueWithoutChangeRequestInput = {
@@ -122311,6 +129313,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -122336,6 +129339,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -122430,6 +129434,7 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -122455,6 +129460,1964 @@ export namespace Prisma {
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
+    feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutExamSessionNestedInput
+  }
+
+  export type RegistrationWorkspaceCreateWithoutStudentAdjustmentRequestsInput = {
+    id?: string
+    lockedAt?: Date | string | null
+    lastAdjustedByRole?: $Enums.UserRole | null
+    lastAdjustedAt?: Date | string | null
+    lastAdjustmentReason?: string | null
+    lastAdjustmentSummary?: string | null
+    hasPostLockAdjustment?: boolean
+    isLateRegistration?: boolean
+    entryType?: $Enums.FeeEntryType
+    entryTypeOverridden?: boolean
+    entryTypeOverrideReason?: string | null
+    registrationSource?: $Enums.RegistrationSource
+    visibility?: $Enums.RegistrationVisibility
+    billingScope?: $Enums.BillingScope
+    registrationType?: $Enums.RegistrationType
+    reason?: string | null
+    visibleToStudent?: boolean
+    visibleToTeacher?: boolean
+    visibleInStudentPortal?: boolean
+    visibleInTeacherPortal?: boolean
+    visibleInStudentDocuments?: boolean
+    visibleInStudentBilling?: boolean
+    restrictedReason?: string | null
+    restrictedCreatedAt?: Date | string | null
+    restrictedUpdatedAt?: Date | string | null
+    includeCandidateRegistrationFee?: boolean
+    registrationNumber?: string | null
+    confirmationNumber?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    candidate?: CandidateCreateNestedOneWithoutRegistrationWorkspacesInput
+    student?: UserCreateNestedOneWithoutRegistrationWorkspacesInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutWorkspacesInput
+    lastAdjustedByUser?: UserCreateNestedOneWithoutWorkspacesLastAdjustedInput
+    feeStage?: RegistrationFeeStageCreateNestedOneWithoutWorkspacesInput
+    restrictedCreatedBy?: UserCreateNestedOneWithoutRestrictedRegistrationsCreatedInput
+    restrictedUpdatedBy?: UserCreateNestedOneWithoutRestrictedRegistrationsUpdatedInput
+    registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
+    auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
+    changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
+  }
+
+  export type RegistrationWorkspaceUncheckedCreateWithoutStudentAdjustmentRequestsInput = {
+    id?: string
+    candidateId?: string | null
+    studentId?: string | null
+    registrationWindowId: string
+    lockedAt?: Date | string | null
+    lastAdjustedByUserId?: string | null
+    lastAdjustedByRole?: $Enums.UserRole | null
+    lastAdjustedAt?: Date | string | null
+    lastAdjustmentReason?: string | null
+    lastAdjustmentSummary?: string | null
+    hasPostLockAdjustment?: boolean
+    isLateRegistration?: boolean
+    entryType?: $Enums.FeeEntryType
+    feeStageId?: string | null
+    entryTypeOverridden?: boolean
+    entryTypeOverrideReason?: string | null
+    registrationSource?: $Enums.RegistrationSource
+    visibility?: $Enums.RegistrationVisibility
+    billingScope?: $Enums.BillingScope
+    registrationType?: $Enums.RegistrationType
+    reason?: string | null
+    visibleToStudent?: boolean
+    visibleToTeacher?: boolean
+    visibleInStudentPortal?: boolean
+    visibleInTeacherPortal?: boolean
+    visibleInStudentDocuments?: boolean
+    visibleInStudentBilling?: boolean
+    restrictedReason?: string | null
+    restrictedCreatedById?: string | null
+    restrictedCreatedAt?: Date | string | null
+    restrictedUpdatedById?: string | null
+    restrictedUpdatedAt?: Date | string | null
+    includeCandidateRegistrationFee?: boolean
+    registrationNumber?: string | null
+    confirmationNumber?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+  }
+
+  export type RegistrationWorkspaceCreateOrConnectWithoutStudentAdjustmentRequestsInput = {
+    where: RegistrationWorkspaceWhereUniqueInput
+    create: XOR<RegistrationWorkspaceCreateWithoutStudentAdjustmentRequestsInput, RegistrationWorkspaceUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type RegistrationWindowCreateWithoutStudentAdjustmentRequestsInput = {
+    id?: string
+    title: string
+    academicYear: string
+    studentRegistrationOpenAt: Date | string
+    studentRegistrationCloseAt: Date | string
+    registrationCloseAt: Date | string
+    status?: $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: boolean
+    eoAssistedRegistrationEnabled?: boolean
+    officeOnlyRegistrationEnabled?: boolean
+    postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examBoard: ExamBoardCreateNestedOneWithoutRegistrationWindowsInput
+    examSeries: ExamSeriesCreateNestedOneWithoutRegistrationWindowsInput
+    createdBy?: UserCreateNestedOneWithoutRegistrationWindowsInput
+    registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
+    workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
+    changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
+    registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
+    exchangeRates?: ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
+    feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWindowInput
+    feeAuditLogs?: FeeAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    includedSeries?: RegistrationWindowIncludedSeriesCreateNestedManyWithoutRegistrationWindowInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWindowInput
+    boardSubmissionBaselines?: BoardSubmissionBaselineCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutRegistrationWindowInput
+  }
+
+  export type RegistrationWindowUncheckedCreateWithoutStudentAdjustmentRequestsInput = {
+    id?: string
+    examBoardId: string
+    examSeriesId: string
+    title: string
+    academicYear: string
+    studentRegistrationOpenAt: Date | string
+    studentRegistrationCloseAt: Date | string
+    registrationCloseAt: Date | string
+    status?: $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: boolean
+    eoAssistedRegistrationEnabled?: boolean
+    officeOnlyRegistrationEnabled?: boolean
+    postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
+    paymentFeePercent?: Decimal | DecimalJsLike | number | string
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    feeAuditLogs?: FeeAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    includedSeries?: RegistrationWindowIncludedSeriesUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
+  }
+
+  export type RegistrationWindowCreateOrConnectWithoutStudentAdjustmentRequestsInput = {
+    where: RegistrationWindowWhereUniqueInput
+    create: XOR<RegistrationWindowCreateWithoutStudentAdjustmentRequestsInput, RegistrationWindowUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type UserCreateWithoutStudentAdjustmentRequestsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserUncheckedCreateWithoutStudentAdjustmentRequestsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserCreateOrConnectWithoutStudentAdjustmentRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutStudentAdjustmentRequestsInput, UserUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type CandidateCreateWithoutStudentAdjustmentRequestsInput = {
+    id?: string
+    studentId: string
+    assessmentHubCandidateNumber: string
+    candidateType: $Enums.CandidateType
+    studentNumber?: string | null
+    englishName: string
+    chineseName?: string | null
+    surnamePinyin?: string | null
+    givenNamePinyin?: string | null
+    preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    legalEnglishName?: string | null
+    email?: string | null
+    phone?: string | null
+    dateOfBirth?: Date | string | null
+    gender?: $Enums.Gender | null
+    nationality?: string | null
+    idDocumentType?: $Enums.IdDocumentType | null
+    idDocumentNumber?: string | null
+    idNumber?: string | null
+    passportNumber?: string | null
+    photoUrl?: string | null
+    emergencyContactName?: string | null
+    emergencyContactPhone?: string | null
+    schoolName?: string | null
+    grade?: $Enums.Grade | null
+    className?: string | null
+    graduationYear?: number | null
+    status?: $Enums.CandidateStatus
+    loginEnabled?: boolean
+    sourceSystem?: string | null
+    externalId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutCandidateInput
+    examIdentities?: CandidateExamIdentityCreateNestedManyWithoutCandidateInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutCandidateInput
+    examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
+    auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
+    changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
+    candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutCandidateInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutCandidateInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutCandidateInput
+    certificateRequests?: CertificateRequestCreateNestedManyWithoutCandidateInput
+    postResultsAuditLogs?: PostResultsAuditLogCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutCandidateInput
+  }
+
+  export type CandidateUncheckedCreateWithoutStudentAdjustmentRequestsInput = {
+    id?: string
+    studentId: string
+    assessmentHubCandidateNumber: string
+    candidateType: $Enums.CandidateType
+    userId?: string | null
+    studentNumber?: string | null
+    englishName: string
+    chineseName?: string | null
+    surnamePinyin?: string | null
+    givenNamePinyin?: string | null
+    preferredEnglishName?: string | null
+    firstName?: string | null
+    lastName?: string | null
+    legalEnglishName?: string | null
+    email?: string | null
+    phone?: string | null
+    dateOfBirth?: Date | string | null
+    gender?: $Enums.Gender | null
+    nationality?: string | null
+    idDocumentType?: $Enums.IdDocumentType | null
+    idDocumentNumber?: string | null
+    idNumber?: string | null
+    passportNumber?: string | null
+    photoUrl?: string | null
+    emergencyContactName?: string | null
+    emergencyContactPhone?: string | null
+    schoolName?: string | null
+    grade?: $Enums.Grade | null
+    className?: string | null
+    graduationYear?: number | null
+    status?: $Enums.CandidateStatus
+    loginEnabled?: boolean
+    sourceSystem?: string | null
+    externalId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    examIdentities?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCandidateInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutCandidateInput
+    examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
+    auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutCandidateInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutCandidateInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutCandidateInput
+    certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutCandidateInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedCreateNestedManyWithoutCandidateInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCandidateInput
+  }
+
+  export type CandidateCreateOrConnectWithoutStudentAdjustmentRequestsInput = {
+    where: CandidateWhereUniqueInput
+    create: XOR<CandidateCreateWithoutStudentAdjustmentRequestsInput, CandidateUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type UserCreateWithoutPrimaryHomeroomAdjustmentRequestsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserUncheckedCreateWithoutPrimaryHomeroomAdjustmentRequestsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserCreateOrConnectWithoutPrimaryHomeroomAdjustmentRequestsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPrimaryHomeroomAdjustmentRequestsInput, UserUncheckedCreateWithoutPrimaryHomeroomAdjustmentRequestsInput>
+  }
+
+  export type UserCreateWithoutTeacherReviewedStudentAdjustmentsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserUncheckedCreateWithoutTeacherReviewedStudentAdjustmentsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserCreateOrConnectWithoutTeacherReviewedStudentAdjustmentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTeacherReviewedStudentAdjustmentsInput, UserUncheckedCreateWithoutTeacherReviewedStudentAdjustmentsInput>
+  }
+
+  export type UserCreateWithoutEoReviewedStudentAdjustmentsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserUncheckedCreateWithoutEoReviewedStudentAdjustmentsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserCreateOrConnectWithoutEoReviewedStudentAdjustmentsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutEoReviewedStudentAdjustmentsInput, UserUncheckedCreateWithoutEoReviewedStudentAdjustmentsInput>
+  }
+
+  export type StudentAdjustmentRequestItemCreateWithoutRequestInput = {
+    id?: string
+    itemType: $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: string | null
+    studentReason: string
+    createdAt?: Date | string
+    targetExamSession?: ExamSessionCreateNestedOneWithoutStudentAdjustmentRequestItemsInput
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput = {
+    id?: string
+    itemType: $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: string | null
+    targetRegistrationId?: string | null
+    studentReason: string
+    createdAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestItemCreateOrConnectWithoutRequestInput = {
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+    create: XOR<StudentAdjustmentRequestItemCreateWithoutRequestInput, StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput>
+  }
+
+  export type StudentAdjustmentRequestItemCreateManyRequestInputEnvelope = {
+    data: StudentAdjustmentRequestItemCreateManyRequestInput | StudentAdjustmentRequestItemCreateManyRequestInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type RegistrationWorkspaceUpsertWithoutStudentAdjustmentRequestsInput = {
+    update: XOR<RegistrationWorkspaceUpdateWithoutStudentAdjustmentRequestsInput, RegistrationWorkspaceUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+    create: XOR<RegistrationWorkspaceCreateWithoutStudentAdjustmentRequestsInput, RegistrationWorkspaceUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    where?: RegistrationWorkspaceWhereInput
+  }
+
+  export type RegistrationWorkspaceUpdateToOneWithWhereWithoutStudentAdjustmentRequestsInput = {
+    where?: RegistrationWorkspaceWhereInput
+    data: XOR<RegistrationWorkspaceUpdateWithoutStudentAdjustmentRequestsInput, RegistrationWorkspaceUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type RegistrationWorkspaceUpdateWithoutStudentAdjustmentRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAdjustedByRole?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    lastAdjustedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAdjustmentReason?: NullableStringFieldUpdateOperationsInput | string | null
+    lastAdjustmentSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    hasPostLockAdjustment?: BoolFieldUpdateOperationsInput | boolean
+    isLateRegistration?: BoolFieldUpdateOperationsInput | boolean
+    entryType?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    entryTypeOverridden?: BoolFieldUpdateOperationsInput | boolean
+    entryTypeOverrideReason?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationSource?: EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+    visibility?: EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+    billingScope?: EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+    registrationType?: EnumRegistrationTypeFieldUpdateOperationsInput | $Enums.RegistrationType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    visibleToStudent?: BoolFieldUpdateOperationsInput | boolean
+    visibleToTeacher?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentPortal?: BoolFieldUpdateOperationsInput | boolean
+    visibleInTeacherPortal?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentDocuments?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentBilling?: BoolFieldUpdateOperationsInput | boolean
+    restrictedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    candidate?: CandidateUpdateOneWithoutRegistrationWorkspacesNestedInput
+    student?: UserUpdateOneWithoutRegistrationWorkspacesNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutWorkspacesNestedInput
+    lastAdjustedByUser?: UserUpdateOneWithoutWorkspacesLastAdjustedNestedInput
+    feeStage?: RegistrationFeeStageUpdateOneWithoutWorkspacesNestedInput
+    restrictedCreatedBy?: UserUpdateOneWithoutRestrictedRegistrationsCreatedNestedInput
+    restrictedUpdatedBy?: UserUpdateOneWithoutRestrictedRegistrationsUpdatedNestedInput
+    registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
+    auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
+    changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
+  }
+
+  export type RegistrationWorkspaceUncheckedUpdateWithoutStudentAdjustmentRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    lockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAdjustedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    lastAdjustedByRole?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    lastAdjustedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastAdjustmentReason?: NullableStringFieldUpdateOperationsInput | string | null
+    lastAdjustmentSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    hasPostLockAdjustment?: BoolFieldUpdateOperationsInput | boolean
+    isLateRegistration?: BoolFieldUpdateOperationsInput | boolean
+    entryType?: EnumFeeEntryTypeFieldUpdateOperationsInput | $Enums.FeeEntryType
+    feeStageId?: NullableStringFieldUpdateOperationsInput | string | null
+    entryTypeOverridden?: BoolFieldUpdateOperationsInput | boolean
+    entryTypeOverrideReason?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationSource?: EnumRegistrationSourceFieldUpdateOperationsInput | $Enums.RegistrationSource
+    visibility?: EnumRegistrationVisibilityFieldUpdateOperationsInput | $Enums.RegistrationVisibility
+    billingScope?: EnumBillingScopeFieldUpdateOperationsInput | $Enums.BillingScope
+    registrationType?: EnumRegistrationTypeFieldUpdateOperationsInput | $Enums.RegistrationType
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    visibleToStudent?: BoolFieldUpdateOperationsInput | boolean
+    visibleToTeacher?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentPortal?: BoolFieldUpdateOperationsInput | boolean
+    visibleInTeacherPortal?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentDocuments?: BoolFieldUpdateOperationsInput | boolean
+    visibleInStudentBilling?: BoolFieldUpdateOperationsInput | boolean
+    restrictedReason?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictedCreatedById?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictedCreatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    restrictedUpdatedById?: NullableStringFieldUpdateOperationsInput | string | null
+    restrictedUpdatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    includeCandidateRegistrationFee?: BoolFieldUpdateOperationsInput | boolean
+    registrationNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    confirmationNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+  }
+
+  export type RegistrationWindowUpsertWithoutStudentAdjustmentRequestsInput = {
+    update: XOR<RegistrationWindowUpdateWithoutStudentAdjustmentRequestsInput, RegistrationWindowUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+    create: XOR<RegistrationWindowCreateWithoutStudentAdjustmentRequestsInput, RegistrationWindowUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    where?: RegistrationWindowWhereInput
+  }
+
+  export type RegistrationWindowUpdateToOneWithWhereWithoutStudentAdjustmentRequestsInput = {
+    where?: RegistrationWindowWhereInput
+    data: XOR<RegistrationWindowUpdateWithoutStudentAdjustmentRequestsInput, RegistrationWindowUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type RegistrationWindowUpdateWithoutStudentAdjustmentRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    academicYear?: StringFieldUpdateOperationsInput | string
+    studentRegistrationOpenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentRegistrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examBoard?: ExamBoardUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+    examSeries?: ExamSeriesUpdateOneRequiredWithoutRegistrationWindowsNestedInput
+    createdBy?: UserUpdateOneWithoutRegistrationWindowsNestedInput
+    registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
+    workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
+    changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
+    registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
+    exchangeRates?: ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
+    feeStatements?: FeeStatementUpdateManyWithoutRegistrationWindowNestedInput
+    feeAuditLogs?: FeeAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    includedSeries?: RegistrationWindowIncludedSeriesUpdateManyWithoutRegistrationWindowNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWindowNestedInput
+    boardSubmissionBaselines?: BoardSubmissionBaselineUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutRegistrationWindowNestedInput
+  }
+
+  export type RegistrationWindowUncheckedUpdateWithoutStudentAdjustmentRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    examBoardId?: StringFieldUpdateOperationsInput | string
+    examSeriesId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    academicYear?: StringFieldUpdateOperationsInput | string
+    studentRegistrationOpenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentRegistrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationCloseAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumRegistrationWindowStatusFieldUpdateOperationsInput | $Enums.RegistrationWindowStatus
+    studentSelfRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
+    postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    feeAuditLogs?: FeeAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    includedSeries?: RegistrationWindowIncludedSeriesUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    boardSubmissionBaselines?: BoardSubmissionBaselineUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+  }
+
+  export type UserUpsertWithoutStudentAdjustmentRequestsInput = {
+    update: XOR<UserUpdateWithoutStudentAdjustmentRequestsInput, UserUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+    create: XOR<UserCreateWithoutStudentAdjustmentRequestsInput, UserUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutStudentAdjustmentRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutStudentAdjustmentRequestsInput, UserUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type UserUpdateWithoutStudentAdjustmentRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutStudentAdjustmentRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type CandidateUpsertWithoutStudentAdjustmentRequestsInput = {
+    update: XOR<CandidateUpdateWithoutStudentAdjustmentRequestsInput, CandidateUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+    create: XOR<CandidateCreateWithoutStudentAdjustmentRequestsInput, CandidateUncheckedCreateWithoutStudentAdjustmentRequestsInput>
+    where?: CandidateWhereInput
+  }
+
+  export type CandidateUpdateToOneWithWhereWithoutStudentAdjustmentRequestsInput = {
+    where?: CandidateWhereInput
+    data: XOR<CandidateUpdateWithoutStudentAdjustmentRequestsInput, CandidateUncheckedUpdateWithoutStudentAdjustmentRequestsInput>
+  }
+
+  export type CandidateUpdateWithoutStudentAdjustmentRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    assessmentHubCandidateNumber?: StringFieldUpdateOperationsInput | string
+    candidateType?: EnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType
+    studentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    englishName?: StringFieldUpdateOperationsInput | string
+    chineseName?: NullableStringFieldUpdateOperationsInput | string | null
+    surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
+    givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    idDocumentType?: NullableEnumIdDocumentTypeFieldUpdateOperationsInput | $Enums.IdDocumentType | null
+    idDocumentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    passportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyContactName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyContactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    schoolName?: NullableStringFieldUpdateOperationsInput | string | null
+    grade?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    graduationYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCandidateStatusFieldUpdateOperationsInput | $Enums.CandidateStatus
+    loginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    sourceSystem?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutCandidateNestedInput
+    examIdentities?: CandidateExamIdentityUpdateManyWithoutCandidateNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutCandidateNestedInput
+    examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
+    auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
+    changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
+    candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutCandidateNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutCandidateNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutCandidateNestedInput
+    certificateRequests?: CertificateRequestUpdateManyWithoutCandidateNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type CandidateUncheckedUpdateWithoutStudentAdjustmentRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    assessmentHubCandidateNumber?: StringFieldUpdateOperationsInput | string
+    candidateType?: EnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    englishName?: StringFieldUpdateOperationsInput | string
+    chineseName?: NullableStringFieldUpdateOperationsInput | string | null
+    surnamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
+    givenNamePinyin?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    firstName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: NullableStringFieldUpdateOperationsInput | string | null
+    legalEnglishName?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    dateOfBirth?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    gender?: NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    idDocumentType?: NullableEnumIdDocumentTypeFieldUpdateOperationsInput | $Enums.IdDocumentType | null
+    idDocumentNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    idNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    passportNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    photoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyContactName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyContactPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    schoolName?: NullableStringFieldUpdateOperationsInput | string | null
+    grade?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    className?: NullableStringFieldUpdateOperationsInput | string | null
+    graduationYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumCandidateStatusFieldUpdateOperationsInput | $Enums.CandidateStatus
+    loginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    sourceSystem?: NullableStringFieldUpdateOperationsInput | string | null
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    examIdentities?: CandidateExamIdentityUncheckedUpdateManyWithoutCandidateNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutCandidateNestedInput
+    examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
+    auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    postResultsAuditLogs?: PostResultsAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type UserUpsertWithoutPrimaryHomeroomAdjustmentRequestsInput = {
+    update: XOR<UserUpdateWithoutPrimaryHomeroomAdjustmentRequestsInput, UserUncheckedUpdateWithoutPrimaryHomeroomAdjustmentRequestsInput>
+    create: XOR<UserCreateWithoutPrimaryHomeroomAdjustmentRequestsInput, UserUncheckedCreateWithoutPrimaryHomeroomAdjustmentRequestsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPrimaryHomeroomAdjustmentRequestsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPrimaryHomeroomAdjustmentRequestsInput, UserUncheckedUpdateWithoutPrimaryHomeroomAdjustmentRequestsInput>
+  }
+
+  export type UserUpdateWithoutPrimaryHomeroomAdjustmentRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPrimaryHomeroomAdjustmentRequestsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type UserUpsertWithoutTeacherReviewedStudentAdjustmentsInput = {
+    update: XOR<UserUpdateWithoutTeacherReviewedStudentAdjustmentsInput, UserUncheckedUpdateWithoutTeacherReviewedStudentAdjustmentsInput>
+    create: XOR<UserCreateWithoutTeacherReviewedStudentAdjustmentsInput, UserUncheckedCreateWithoutTeacherReviewedStudentAdjustmentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTeacherReviewedStudentAdjustmentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTeacherReviewedStudentAdjustmentsInput, UserUncheckedUpdateWithoutTeacherReviewedStudentAdjustmentsInput>
+  }
+
+  export type UserUpdateWithoutTeacherReviewedStudentAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTeacherReviewedStudentAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type UserUpsertWithoutEoReviewedStudentAdjustmentsInput = {
+    update: XOR<UserUpdateWithoutEoReviewedStudentAdjustmentsInput, UserUncheckedUpdateWithoutEoReviewedStudentAdjustmentsInput>
+    create: XOR<UserCreateWithoutEoReviewedStudentAdjustmentsInput, UserUncheckedCreateWithoutEoReviewedStudentAdjustmentsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutEoReviewedStudentAdjustmentsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutEoReviewedStudentAdjustmentsInput, UserUncheckedUpdateWithoutEoReviewedStudentAdjustmentsInput>
+  }
+
+  export type UserUpdateWithoutEoReviewedStudentAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutEoReviewedStudentAdjustmentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutRequestInput = {
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+    update: XOR<StudentAdjustmentRequestItemUpdateWithoutRequestInput, StudentAdjustmentRequestItemUncheckedUpdateWithoutRequestInput>
+    create: XOR<StudentAdjustmentRequestItemCreateWithoutRequestInput, StudentAdjustmentRequestItemUncheckedCreateWithoutRequestInput>
+  }
+
+  export type StudentAdjustmentRequestItemUpdateWithWhereUniqueWithoutRequestInput = {
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+    data: XOR<StudentAdjustmentRequestItemUpdateWithoutRequestInput, StudentAdjustmentRequestItemUncheckedUpdateWithoutRequestInput>
+  }
+
+  export type StudentAdjustmentRequestItemUpdateManyWithWhereWithoutRequestInput = {
+    where: StudentAdjustmentRequestItemScalarWhereInput
+    data: XOR<StudentAdjustmentRequestItemUpdateManyMutationInput, StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestInput>
+  }
+
+  export type StudentAdjustmentRequestItemScalarWhereInput = {
+    AND?: StudentAdjustmentRequestItemScalarWhereInput | StudentAdjustmentRequestItemScalarWhereInput[]
+    OR?: StudentAdjustmentRequestItemScalarWhereInput[]
+    NOT?: StudentAdjustmentRequestItemScalarWhereInput | StudentAdjustmentRequestItemScalarWhereInput[]
+    id?: StringFilter<"StudentAdjustmentRequestItem"> | string
+    requestId?: StringFilter<"StudentAdjustmentRequestItem"> | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFilter<"StudentAdjustmentRequestItem"> | $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: StringNullableFilter<"StudentAdjustmentRequestItem"> | string | null
+    targetRegistrationId?: StringNullableFilter<"StudentAdjustmentRequestItem"> | string | null
+    studentReason?: StringFilter<"StudentAdjustmentRequestItem"> | string
+    createdAt?: DateTimeFilter<"StudentAdjustmentRequestItem"> | Date | string
+  }
+
+  export type StudentAdjustmentRequestCreateWithoutItemsInput = {
+    id?: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    registrationWorkspace: RegistrationWorkspaceCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    registrationWindow: RegistrationWindowCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    student: UserCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    candidate?: CandidateCreateNestedOneWithoutStudentAdjustmentRequestsInput
+    primaryHomeroomTeacher?: UserCreateNestedOneWithoutPrimaryHomeroomAdjustmentRequestsInput
+    teacherReviewedBy?: UserCreateNestedOneWithoutTeacherReviewedStudentAdjustmentsInput
+    eoReviewedBy?: UserCreateNestedOneWithoutEoReviewedStudentAdjustmentsInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedCreateWithoutItemsInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestCreateOrConnectWithoutItemsInput = {
+    where: StudentAdjustmentRequestWhereUniqueInput
+    create: XOR<StudentAdjustmentRequestCreateWithoutItemsInput, StudentAdjustmentRequestUncheckedCreateWithoutItemsInput>
+  }
+
+  export type ExamSessionCreateWithoutStudentAdjustmentRequestItemsInput = {
+    id?: string
+    date: Date | string
+    startTime?: string | null
+    endTime?: string | null
+    timezone?: string | null
+    venue?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    paper: PaperCreateNestedOneWithoutExamSessionsInput
+    examSeries: ExamSeriesCreateNestedOneWithoutExamSessionsInput
+    sourceDocument?: SourceDocumentCreateNestedOneWithoutExamSessionsInput
+    studentExamRegistrations?: StudentExamRegistrationCreateNestedManyWithoutExamSessionInput
+    registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutExamSessionInput
+    changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
+    changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
+    changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
+    feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutExamSessionInput
+  }
+
+  export type ExamSessionUncheckedCreateWithoutStudentAdjustmentRequestItemsInput = {
+    id?: string
+    date: Date | string
+    startTime?: string | null
+    endTime?: string | null
+    timezone?: string | null
+    venue?: string | null
+    notes?: string | null
+    paperId: string
+    examSeriesId: string
+    sourceDocumentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    studentExamRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutExamSessionInput
+    registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+    changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
+    changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
+    changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
+    feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutExamSessionInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutExamSessionInput
+  }
+
+  export type ExamSessionCreateOrConnectWithoutStudentAdjustmentRequestItemsInput = {
+    where: ExamSessionWhereUniqueInput
+    create: XOR<ExamSessionCreateWithoutStudentAdjustmentRequestItemsInput, ExamSessionUncheckedCreateWithoutStudentAdjustmentRequestItemsInput>
+  }
+
+  export type StudentAdjustmentRequestUpsertWithoutItemsInput = {
+    update: XOR<StudentAdjustmentRequestUpdateWithoutItemsInput, StudentAdjustmentRequestUncheckedUpdateWithoutItemsInput>
+    create: XOR<StudentAdjustmentRequestCreateWithoutItemsInput, StudentAdjustmentRequestUncheckedCreateWithoutItemsInput>
+    where?: StudentAdjustmentRequestWhereInput
+  }
+
+  export type StudentAdjustmentRequestUpdateToOneWithWhereWithoutItemsInput = {
+    where?: StudentAdjustmentRequestWhereInput
+    data: XOR<StudentAdjustmentRequestUpdateWithoutItemsInput, StudentAdjustmentRequestUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type StudentAdjustmentRequestUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    student?: UserUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    candidate?: CandidateUpdateOneWithoutStudentAdjustmentRequestsNestedInput
+    primaryHomeroomTeacher?: UserUpdateOneWithoutPrimaryHomeroomAdjustmentRequestsNestedInput
+    teacherReviewedBy?: UserUpdateOneWithoutTeacherReviewedStudentAdjustmentsNestedInput
+    eoReviewedBy?: UserUpdateOneWithoutEoReviewedStudentAdjustmentsNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExamSessionUpsertWithoutStudentAdjustmentRequestItemsInput = {
+    update: XOR<ExamSessionUpdateWithoutStudentAdjustmentRequestItemsInput, ExamSessionUncheckedUpdateWithoutStudentAdjustmentRequestItemsInput>
+    create: XOR<ExamSessionCreateWithoutStudentAdjustmentRequestItemsInput, ExamSessionUncheckedCreateWithoutStudentAdjustmentRequestItemsInput>
+    where?: ExamSessionWhereInput
+  }
+
+  export type ExamSessionUpdateToOneWithWhereWithoutStudentAdjustmentRequestItemsInput = {
+    where?: ExamSessionWhereInput
+    data: XOR<ExamSessionUpdateWithoutStudentAdjustmentRequestItemsInput, ExamSessionUncheckedUpdateWithoutStudentAdjustmentRequestItemsInput>
+  }
+
+  export type ExamSessionUpdateWithoutStudentAdjustmentRequestItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    venue?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paper?: PaperUpdateOneRequiredWithoutExamSessionsNestedInput
+    examSeries?: ExamSeriesUpdateOneRequiredWithoutExamSessionsNestedInput
+    sourceDocument?: SourceDocumentUpdateOneWithoutExamSessionsNestedInput
+    studentExamRegistrations?: StudentExamRegistrationUpdateManyWithoutExamSessionNestedInput
+    registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutExamSessionNestedInput
+    changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
+    changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
+    changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
+    feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
+    examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutExamSessionNestedInput
+    offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutExamSessionNestedInput
+  }
+
+  export type ExamSessionUncheckedUpdateWithoutStudentAdjustmentRequestItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    startTime?: NullableStringFieldUpdateOperationsInput | string | null
+    endTime?: NullableStringFieldUpdateOperationsInput | string | null
+    timezone?: NullableStringFieldUpdateOperationsInput | string | null
+    venue?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    paperId?: StringFieldUpdateOperationsInput | string
+    examSeriesId?: StringFieldUpdateOperationsInput | string
+    sourceDocumentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentExamRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutExamSessionNestedInput
+    registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
+    changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
+    changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
+    changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -122751,6 +131714,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -122759,6 +131724,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -122786,6 +131752,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -122793,6 +131761,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -126532,6 +135501,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -126557,6 +135527,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -127360,6 +136331,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -127385,6 +136357,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -127497,6 +136470,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -127505,6 +136480,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -127532,6 +136508,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -127539,6 +136517,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -128898,6 +137877,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput = {
+    id?: string
+    itemType: $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: string | null
+    studentReason: string
+    createdAt?: Date | string
+    request: StudentAdjustmentRequestCreateNestedOneWithoutItemsInput
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput = {
+    id?: string
+    requestId: string
+    itemType: $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: string | null
+    studentReason: string
+    createdAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestItemCreateOrConnectWithoutTargetExamSessionInput = {
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+    create: XOR<StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput, StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput>
+  }
+
+  export type StudentAdjustmentRequestItemCreateManyTargetExamSessionInputEnvelope = {
+    data: StudentAdjustmentRequestItemCreateManyTargetExamSessionInput | StudentAdjustmentRequestItemCreateManyTargetExamSessionInput[]
+    skipDuplicates?: boolean
+  }
+
   export type FeeRuleCreateWithoutExamSessionInput = {
     id?: string
     entryType?: $Enums.FeeEntryType
@@ -129461,6 +138468,22 @@ export namespace Prisma {
   export type RegistrationChangeRequestExamSessionUpdateManyWithWhereWithoutExamSessionInput = {
     where: RegistrationChangeRequestExamSessionScalarWhereInput
     data: XOR<RegistrationChangeRequestExamSessionUpdateManyMutationInput, RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionInput>
+  }
+
+  export type StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutTargetExamSessionInput = {
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+    update: XOR<StudentAdjustmentRequestItemUpdateWithoutTargetExamSessionInput, StudentAdjustmentRequestItemUncheckedUpdateWithoutTargetExamSessionInput>
+    create: XOR<StudentAdjustmentRequestItemCreateWithoutTargetExamSessionInput, StudentAdjustmentRequestItemUncheckedCreateWithoutTargetExamSessionInput>
+  }
+
+  export type StudentAdjustmentRequestItemUpdateWithWhereUniqueWithoutTargetExamSessionInput = {
+    where: StudentAdjustmentRequestItemWhereUniqueInput
+    data: XOR<StudentAdjustmentRequestItemUpdateWithoutTargetExamSessionInput, StudentAdjustmentRequestItemUncheckedUpdateWithoutTargetExamSessionInput>
+  }
+
+  export type StudentAdjustmentRequestItemUpdateManyWithWhereWithoutTargetExamSessionInput = {
+    where: StudentAdjustmentRequestItemScalarWhereInput
+    data: XOR<StudentAdjustmentRequestItemUpdateManyMutationInput, StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionInput>
   }
 
   export type FeeRuleUpsertWithWhereUniqueWithoutExamSessionInput = {
@@ -130886,6 +139909,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutSourceDocumentsInput = {
@@ -130945,6 +139973,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutSourceDocumentsInput = {
@@ -131075,6 +140108,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -131100,6 +140134,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -131363,6 +140398,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSourceDocumentsInput = {
@@ -131422,6 +140462,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type PaperUpsertWithWhereUniqueWithoutSourceDocumentInput = {
@@ -131516,6 +140561,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -131525,6 +140572,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     exchangeRates?: ExchangeRateCreateNestedManyWithoutRegistrationWindowInput
@@ -131552,6 +140600,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -131559,6 +140609,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     exchangeRates?: ExchangeRateUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -131860,6 +140911,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
@@ -131885,6 +140937,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
@@ -131954,6 +141007,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutFeeRulesCreatedInput = {
@@ -132013,6 +141071,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutFeeRulesCreatedInput = {
@@ -132043,6 +141106,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -132052,6 +141117,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     exchangeRates?: ExchangeRateUpdateManyWithoutRegistrationWindowNestedInput
@@ -132079,6 +141145,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -132086,6 +141154,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     exchangeRates?: ExchangeRateUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -132423,6 +141492,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
@@ -132448,6 +141518,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -132523,6 +141594,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeRulesCreatedInput = {
@@ -132582,6 +141658,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExchangeRatesInput = {
@@ -132596,6 +141677,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -132605,6 +141688,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -132632,6 +141716,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -132639,6 +141725,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -132714,6 +141801,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutExchangeRatesCreatedInput = {
@@ -132773,6 +141865,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutExchangeRatesCreatedInput = {
@@ -132803,6 +141900,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -132812,6 +141911,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -132839,6 +141939,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -132846,6 +141948,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -132927,6 +142030,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExchangeRatesCreatedInput = {
@@ -132986,6 +142094,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type CandidateCreateWithoutFeeStatementsInput = {
@@ -133030,6 +142143,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutCandidateInput
@@ -133082,6 +142196,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutCandidateInput
@@ -133154,6 +142269,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsAsStudentInput = {
@@ -133213,6 +142333,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsAsStudentInput = {
@@ -133261,6 +142386,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
@@ -133305,6 +142431,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
@@ -133325,6 +142452,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -133334,6 +142463,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -133361,6 +142491,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -133368,6 +142500,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -133490,6 +142623,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsGeneratedInput = {
@@ -133549,6 +142687,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsGeneratedInput = {
@@ -134027,6 +143170,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsRegenerationChangedInput = {
@@ -134086,6 +143234,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsRegenerationChangedInput = {
@@ -134504,6 +143657,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutCandidateNestedInput
@@ -134556,6 +143710,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutCandidateNestedInput
@@ -134634,6 +143789,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsAsStudentInput = {
@@ -134693,6 +143853,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutFeeStatementsInput = {
@@ -134747,6 +143912,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
@@ -134791,6 +143957,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
@@ -134817,6 +143984,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -134826,6 +143995,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -134853,6 +144023,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -134860,6 +144032,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -134994,6 +144167,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsGeneratedInput = {
@@ -135053,6 +144231,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type FeeStatementUpsertWithoutSuccessorStatementsInput = {
@@ -135369,6 +144552,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsRegenerationChangedInput = {
@@ -135428,6 +144616,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeStatementInput = {
@@ -135700,6 +144893,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutPaymentOrdersCancelledInput = {
@@ -135759,6 +144957,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutPaymentOrdersCancelledInput = {
@@ -135941,6 +145144,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPaymentOrdersCancelledInput = {
@@ -136000,6 +145208,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type FeeStatementCreateWithoutItemsInput = {
@@ -136180,6 +145393,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutExamSessionInput
@@ -136205,6 +145419,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutExamSessionInput
@@ -136418,6 +145633,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutExamSessionNestedInput
@@ -136443,6 +145659,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -136491,6 +145708,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
@@ -136535,6 +145753,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutRegistrationWorkspaceInput
   }
 
@@ -136555,6 +145774,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -136564,6 +145785,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -136591,6 +145813,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -136598,6 +145822,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -136658,6 +145883,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -136710,6 +145936,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -136743,6 +145970,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -136768,6 +145996,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -136837,6 +146066,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutOfflineWithdrawalRefundsCreatedInput = {
@@ -136896,6 +146130,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutOfflineWithdrawalRefundsCreatedInput = {
@@ -136960,6 +146199,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -137019,6 +146263,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -137078,6 +146327,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
@@ -137122,6 +146372,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
 
@@ -137148,6 +146399,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -137157,6 +146410,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -137184,6 +146438,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -137191,6 +146447,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -137257,6 +146514,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -137309,6 +146567,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -137348,6 +146607,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -137373,6 +146633,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -137448,6 +146709,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCreatedInput = {
@@ -137507,6 +146773,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUpsertWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -137577,6 +146848,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -137636,6 +146912,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type RegistrationWindowCreateWithoutFeeAuditLogsInput = {
@@ -137650,6 +146931,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -137659,6 +146942,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -137686,6 +146970,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -137693,6 +146979,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -137768,6 +147055,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutFeeAuditLogsPerformedInput = {
@@ -137827,6 +147119,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutFeeAuditLogsPerformedInput = {
@@ -137857,6 +147154,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -137866,6 +147165,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -137893,6 +147193,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -137900,6 +147202,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -137981,6 +147284,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeAuditLogsPerformedInput = {
@@ -138040,6 +147348,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type ExamBoardCreateWithoutReviewWindowsInput = {
@@ -138243,6 +147556,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutReviewWindowsCreatedInput = {
@@ -138302,6 +147620,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutReviewWindowsCreatedInput = {
@@ -138901,6 +148224,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewWindowsCreatedInput = {
@@ -138960,6 +148288,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type ReviewWindowServiceUpsertWithWhereUniqueWithoutReviewWindowInput = {
@@ -139276,6 +148609,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -139328,6 +148662,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -139602,6 +148937,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -139627,6 +148963,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -139782,6 +149119,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsRequestedInput = {
@@ -139841,6 +149183,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsRequestedInput = {
@@ -139905,6 +149252,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsReviewedInput = {
@@ -139964,6 +149316,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsReviewedInput = {
@@ -140178,6 +149535,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -140230,6 +149588,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -140528,6 +149887,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -140553,6 +149913,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -140726,6 +150087,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsRequestedInput = {
@@ -140785,6 +150151,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUpsertWithoutReviewRequestsReviewedInput = {
@@ -140855,6 +150226,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsReviewedInput = {
@@ -140914,6 +150290,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type FeeStatementUpsertWithoutReviewRequestsInput = {
@@ -141112,6 +150493,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -141164,6 +150546,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -141519,6 +150902,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutCashInRequestsRequestedInput = {
@@ -141578,6 +150966,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutCashInRequestsRequestedInput = {
@@ -141792,6 +151185,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -141844,6 +151238,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -142235,6 +151630,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCashInRequestsRequestedInput = {
@@ -142294,6 +151694,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type FeeStatementUpsertWithoutCashInRequestsInput = {
@@ -142492,6 +151897,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -142544,6 +151950,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -142818,6 +152225,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutExamSessionInput
@@ -142843,6 +152251,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutTargetExamSessionInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReplacementExamSessionInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedCreateNestedManyWithoutExamSessionInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedCreateNestedManyWithoutTargetExamSessionInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutExamSessionInput
     feeStatementItems?: FeeStatementItemUncheckedCreateNestedManyWithoutExamSessionInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutExamSessionInput
@@ -142998,6 +152407,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutAccessToScriptRequestsRequestedInput = {
@@ -143057,6 +152471,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutAccessToScriptRequestsRequestedInput = {
@@ -143271,6 +152690,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -143323,6 +152743,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -143621,6 +153042,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -143646,6 +153068,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -143819,6 +153242,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccessToScriptRequestsRequestedInput = {
@@ -143878,6 +153306,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type FeeStatementUpsertWithoutAccessToScriptRequestsInput = {
@@ -144076,6 +153509,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -144128,6 +153562,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -144344,6 +153779,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutCertificateRequestsRequestedInput = {
@@ -144403,6 +153843,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutCertificateRequestsRequestedInput = {
@@ -144617,6 +154062,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -144669,6 +154115,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -144903,6 +154350,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCertificateRequestsRequestedInput = {
@@ -144962,6 +154414,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type FeeStatementUpsertWithoutCertificateRequestsInput = {
@@ -145393,6 +154850,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutFeeSchedulesCreatedInput = {
@@ -145452,6 +154914,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutFeeSchedulesCreatedInput = {
@@ -145946,6 +155413,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeSchedulesCreatedInput = {
@@ -146005,6 +155477,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeScheduleInput = {
@@ -146081,6 +155558,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogCreateNestedManyWithoutCandidateInput
@@ -146133,6 +155611,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutCandidateInput
     auditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutCandidateInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutCandidateInput
     feeStatements?: FeeStatementUncheckedCreateNestedManyWithoutCandidateInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutCandidateInput
     candidateAuditLogs?: CandidateAuditLogUncheckedCreateNestedManyWithoutCandidateInput
@@ -146304,6 +155783,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -146313,6 +155794,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleCreateNestedManyWithoutRegistrationWindowInput
@@ -146340,6 +155822,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -146347,6 +155831,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutRegistrationWindowInput
     workspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRegistrationWindowInput
     changeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeStages?: RegistrationFeeStageUncheckedCreateNestedManyWithoutRegistrationWindowInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedCreateNestedManyWithoutRegistrationWindowInput
     feeRules?: FeeRuleUncheckedCreateNestedManyWithoutRegistrationWindowInput
@@ -146469,6 +155954,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutPostResultsAuditLogsPerformedInput = {
@@ -146528,6 +156018,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutPostResultsAuditLogsPerformedInput = {
@@ -146588,6 +156083,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUpdateManyWithoutCandidateNestedInput
@@ -146640,6 +156136,7 @@ export namespace Prisma {
     examRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutCandidateNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutCandidateNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutCandidateNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
     candidateAuditLogs?: CandidateAuditLogUncheckedUpdateManyWithoutCandidateNestedInput
@@ -146829,6 +156326,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146838,6 +156337,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -146865,6 +156365,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -146872,6 +156374,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -147006,6 +156509,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostResultsAuditLogsPerformedInput = {
@@ -147065,6 +156573,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserCreateWithoutBackupSettingsUpdatedInput = {
@@ -147124,6 +156637,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutBackupSettingsUpdatedInput = {
@@ -147183,6 +156701,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutBackupSettingsUpdatedInput = {
@@ -147258,6 +156781,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupSettingsUpdatedInput = {
@@ -147317,6 +156845,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserCreateWithoutBackupJobsTriggeredInput = {
@@ -147376,6 +156909,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
   }
 
   export type UserUncheckedCreateWithoutBackupJobsTriggeredInput = {
@@ -147435,6 +156973,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
     studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
   }
 
   export type UserCreateOrConnectWithoutBackupJobsTriggeredInput = {
@@ -147510,6 +157053,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupJobsTriggeredInput = {
@@ -147569,6 +157117,11 @@ export namespace Prisma {
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
     studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
   }
 
   export type SourceDocumentCreateManyUploadedByInput = {
@@ -147607,6 +157160,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -148496,6 +158051,98 @@ export namespace Prisma {
     sentAt?: Date | string | null
   }
 
+  export type StudentAdjustmentRequestCreateManyStudentInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestCreateManyTeacherReviewedByInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestCreateManyEoReviewedByInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestCreateManyPrimaryHomeroomTeacherInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ClassHomeroomTeacherCreateManyTeacherInput = {
+    id?: string
+    grade: $Enums.Grade
+    className: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type SourceDocumentUpdateWithoutUploadedByInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -148584,6 +158231,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -148592,6 +158241,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -148620,12 +158270,15 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -148654,6 +158307,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -149032,6 +158687,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -149076,6 +158732,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -149159,6 +158816,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -149203,6 +158861,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -150186,6 +159845,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -150230,6 +159890,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -150313,6 +159974,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -150357,6 +160019,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -151441,6 +161104,290 @@ export namespace Prisma {
     sentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type StudentAdjustmentRequestUpdateWithoutStudentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    candidate?: CandidateUpdateOneWithoutStudentAdjustmentRequestsNestedInput
+    primaryHomeroomTeacher?: UserUpdateOneWithoutPrimaryHomeroomAdjustmentRequestsNestedInput
+    teacherReviewedBy?: UserUpdateOneWithoutTeacherReviewedStudentAdjustmentsNestedInput
+    eoReviewedBy?: UserUpdateOneWithoutEoReviewedStudentAdjustmentsNestedInput
+    items?: StudentAdjustmentRequestItemUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateWithoutStudentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestUpdateWithoutTeacherReviewedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    student?: UserUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    candidate?: CandidateUpdateOneWithoutStudentAdjustmentRequestsNestedInput
+    primaryHomeroomTeacher?: UserUpdateOneWithoutPrimaryHomeroomAdjustmentRequestsNestedInput
+    eoReviewedBy?: UserUpdateOneWithoutEoReviewedStudentAdjustmentsNestedInput
+    items?: StudentAdjustmentRequestItemUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateWithoutTeacherReviewedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestUpdateWithoutEoReviewedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    student?: UserUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    candidate?: CandidateUpdateOneWithoutStudentAdjustmentRequestsNestedInput
+    primaryHomeroomTeacher?: UserUpdateOneWithoutPrimaryHomeroomAdjustmentRequestsNestedInput
+    teacherReviewedBy?: UserUpdateOneWithoutTeacherReviewedStudentAdjustmentsNestedInput
+    items?: StudentAdjustmentRequestItemUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateWithoutEoReviewedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestUpdateWithoutPrimaryHomeroomTeacherInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    student?: UserUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    candidate?: CandidateUpdateOneWithoutStudentAdjustmentRequestsNestedInput
+    teacherReviewedBy?: UserUpdateOneWithoutTeacherReviewedStudentAdjustmentsNestedInput
+    eoReviewedBy?: UserUpdateOneWithoutEoReviewedStudentAdjustmentsNestedInput
+    items?: StudentAdjustmentRequestItemUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateWithoutPrimaryHomeroomTeacherInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClassHomeroomTeacherUpdateWithoutTeacherInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    grade?: EnumGradeFieldUpdateOperationsInput | $Enums.Grade
+    className?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClassHomeroomTeacherUncheckedUpdateWithoutTeacherInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    grade?: EnumGradeFieldUpdateOperationsInput | $Enums.Grade
+    className?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    grade?: EnumGradeFieldUpdateOperationsInput | $Enums.Grade
+    className?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CandidateExamIdentityCreateManyCandidateInput = {
     id?: string
     examBoardId: string
@@ -151583,6 +161530,27 @@ export namespace Prisma {
     reviewedByUserId?: string | null
     reviewedAt?: Date | string | null
     reviewNote?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestCreateManyCandidateInput = {
+    id?: string
+    registrationWorkspaceId: string
+    registrationWindowId: string
+    studentId: string
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -151853,6 +161821,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -151897,6 +161866,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -152220,6 +162190,71 @@ export namespace Prisma {
     reviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reviewNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestUpdateWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    student?: UserUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    primaryHomeroomTeacher?: UserUpdateOneWithoutPrimaryHomeroomAdjustmentRequestsNestedInput
+    teacherReviewedBy?: UserUpdateOneWithoutTeacherReviewedStudentAdjustmentsNestedInput
+    eoReviewedBy?: UserUpdateOneWithoutEoReviewedStudentAdjustmentsNestedInput
+    items?: StudentAdjustmentRequestItemUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -152887,6 +162922,27 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type StudentAdjustmentRequestCreateManyRegistrationWindowInput = {
+    id?: string
+    registrationWorkspaceId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type RegistrationFeeStageCreateManyRegistrationWindowInput = {
     id?: string
     stageCode: $Enums.FeeEntryType
@@ -153280,6 +163336,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -153324,6 +163381,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -153425,6 +163483,71 @@ export namespace Prisma {
     reviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reviewNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestUpdateWithoutRegistrationWindowInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    student?: UserUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    candidate?: CandidateUpdateOneWithoutStudentAdjustmentRequestsNestedInput
+    primaryHomeroomTeacher?: UserUpdateOneWithoutPrimaryHomeroomAdjustmentRequestsNestedInput
+    teacherReviewedBy?: UserUpdateOneWithoutTeacherReviewedStudentAdjustmentsNestedInput
+    eoReviewedBy?: UserUpdateOneWithoutEoReviewedStudentAdjustmentsNestedInput
+    items?: StudentAdjustmentRequestItemUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateWithoutRegistrationWindowInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWorkspaceId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -154258,6 +164381,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -154302,6 +164426,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     auditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     feeStatements?: FeeStatementUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
     offlineWithdrawalRefunds?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutRegistrationWorkspaceNestedInput
   }
@@ -154659,6 +164784,27 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type StudentAdjustmentRequestCreateManyRegistrationWorkspaceInput = {
+    id?: string
+    registrationWindowId: string
+    studentId: string
+    candidateId?: string | null
+    status: $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: Date | string
+    primaryHomeroomTeacherId?: string | null
+    studentGradeSnapshot?: $Enums.Grade | null
+    studentClassNameSnapshot?: string | null
+    teacherReviewedByUserId?: string | null
+    teacherReviewedAt?: Date | string | null
+    teacherReviewReason?: string | null
+    eoReviewedByUserId?: string | null
+    eoReviewedAt?: Date | string | null
+    eoReviewReason?: string | null
+    rejectedAtStage?: $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type FeeStatementCreateManyRegistrationWorkspaceInput = {
     id?: string
     businessType?: $Enums.FeeStatementBusinessType
@@ -155007,6 +165153,71 @@ export namespace Prisma {
     reviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     reviewNote?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestUpdateWithoutRegistrationWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    registrationWindow?: RegistrationWindowUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    student?: UserUpdateOneRequiredWithoutStudentAdjustmentRequestsNestedInput
+    candidate?: CandidateUpdateOneWithoutStudentAdjustmentRequestsNestedInput
+    primaryHomeroomTeacher?: UserUpdateOneWithoutPrimaryHomeroomAdjustmentRequestsNestedInput
+    teacherReviewedBy?: UserUpdateOneWithoutTeacherReviewedStudentAdjustmentsNestedInput
+    eoReviewedBy?: UserUpdateOneWithoutEoReviewedStudentAdjustmentsNestedInput
+    items?: StudentAdjustmentRequestItemUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateWithoutRegistrationWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestNestedInput
+  }
+
+  export type StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWorkspaceInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    registrationWindowId?: StringFieldUpdateOperationsInput | string
+    studentId?: StringFieldUpdateOperationsInput | string
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumStudentAdjustmentRequestStatusFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestStatus
+    submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    primaryHomeroomTeacherId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentGradeSnapshot?: NullableEnumGradeFieldUpdateOperationsInput | $Enums.Grade | null
+    studentClassNameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    teacherReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    teacherReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    eoReviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    eoReviewReason?: NullableStringFieldUpdateOperationsInput | string | null
+    rejectedAtStage?: NullableEnumStudentAdjustmentRejectedAtStageFieldUpdateOperationsInput | $Enums.StudentAdjustmentRejectedAtStage | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -155533,6 +165744,42 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type StudentAdjustmentRequestItemCreateManyRequestInput = {
+    id?: string
+    itemType: $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: string | null
+    targetRegistrationId?: string | null
+    studentReason: string
+    createdAt?: Date | string
+  }
+
+  export type StudentAdjustmentRequestItemUpdateWithoutRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentReason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    targetExamSession?: ExamSessionUpdateOneWithoutStudentAdjustmentRequestItemsNestedInput
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedUpdateWithoutRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetRegistrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentReason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedUpdateManyWithoutRequestInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestItemType
+    targetExamSessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    targetRegistrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentReason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type QualificationCreateManyExamBoardInput = {
     id?: string
     name: string
@@ -155624,6 +165871,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -156148,6 +166397,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -156156,6 +166407,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -156183,6 +166435,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -156190,6 +166444,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -156217,6 +166472,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -158447,6 +168704,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -158472,6 +168730,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -159021,6 +169280,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: boolean
     officeOnlyRegistrationEnabled?: boolean
     postLockAdjustmentEnabled?: boolean
+    studentAdjustmentRequestEnabled?: boolean
+    studentAdjustmentRequestCloseAt?: Date | string | null
     paymentFeePercent?: Decimal | DecimalJsLike | number | string
     createdById?: string | null
     createdAt?: Date | string
@@ -159246,6 +169507,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -159271,6 +169533,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput
@@ -159398,6 +169661,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -159406,6 +169671,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUpdateManyWithoutRegistrationWindowNestedInput
@@ -159433,6 +169699,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -159440,6 +169708,7 @@ export namespace Prisma {
     registrations?: StudentExamRegistrationUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     workspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     changeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeStages?: RegistrationFeeStageUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     registrationAuditLogs?: RegistrationAuditLogUncheckedUpdateManyWithoutRegistrationWindowNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutRegistrationWindowNestedInput
@@ -159467,6 +169736,8 @@ export namespace Prisma {
     eoAssistedRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     officeOnlyRegistrationEnabled?: BoolFieldUpdateOperationsInput | boolean
     postLockAdjustmentEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestEnabled?: BoolFieldUpdateOperationsInput | boolean
+    studentAdjustmentRequestCloseAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     paymentFeePercent?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -160221,6 +170492,15 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type StudentAdjustmentRequestItemCreateManyTargetExamSessionInput = {
+    id?: string
+    requestId: string
+    itemType: $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: string | null
+    studentReason: string
+    createdAt?: Date | string
+  }
+
   export type FeeRuleCreateManyExamSessionInput = {
     id?: string
     registrationWindowId: string
@@ -160715,6 +170995,33 @@ export namespace Prisma {
   export type RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionInput = {
     id?: StringFieldUpdateOperationsInput | string
     changeRequestId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestItemUpdateWithoutTargetExamSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentReason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    request?: StudentAdjustmentRequestUpdateOneRequiredWithoutItemsNestedInput
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedUpdateWithoutTargetExamSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    requestId?: StringFieldUpdateOperationsInput | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentReason?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    requestId?: StringFieldUpdateOperationsInput | string
+    itemType?: EnumStudentAdjustmentRequestItemTypeFieldUpdateOperationsInput | $Enums.StudentAdjustmentRequestItemType
+    targetRegistrationId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentReason?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -161307,6 +171614,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUpdateManyWithoutExamSessionNestedInput
@@ -161332,6 +171640,7 @@ export namespace Prisma {
     changeRequestTargets?: RegistrationChangeRequestUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     changeRequestReplacements?: RegistrationChangeRequestUncheckedUpdateManyWithoutReplacementExamSessionNestedInput
     changeRequestExamSessions?: RegistrationChangeRequestExamSessionUncheckedUpdateManyWithoutExamSessionNestedInput
+    studentAdjustmentRequestItems?: StudentAdjustmentRequestItemUncheckedUpdateManyWithoutTargetExamSessionNestedInput
     feeRules?: FeeRuleUncheckedUpdateManyWithoutExamSessionNestedInput
     feeStatementItems?: FeeStatementItemUncheckedUpdateManyWithoutExamSessionNestedInput
     examDocumentAuditLogs?: ExamDocumentAuditLogUncheckedUpdateManyWithoutExamSessionNestedInput

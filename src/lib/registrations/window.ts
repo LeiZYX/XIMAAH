@@ -106,6 +106,31 @@ export function canTeacherSubmitChangeRequest(
   return now > window.studentRegistrationCloseAt;
 }
 
+export type StudentAdjustmentWindowTiming = RegistrationWindowTiming & {
+  studentAdjustmentRequestEnabled?: boolean;
+  studentAdjustmentRequestCloseAt?: Date | null;
+};
+
+/** Latest time a student may submit (or resubmit after reject) a late adjustment request. */
+export function resolveStudentAdjustmentRequestCloseAt(
+  window: StudentAdjustmentWindowTiming,
+): Date {
+  if (window.studentAdjustmentRequestCloseAt) {
+    return window.studentAdjustmentRequestCloseAt;
+  }
+  return window.registrationCloseAt;
+}
+
+export function canStudentSubmitAdjustmentRequest(
+  window: StudentAdjustmentWindowTiming,
+  now = new Date(),
+): boolean {
+  if (!window.studentAdjustmentRequestEnabled) return false;
+  if (window.status !== "OPEN") return false;
+  if (now <= window.studentRegistrationCloseAt) return false;
+  return now <= resolveStudentAdjustmentRequestCloseAt(window);
+}
+
 export function describeStudentRegistrationAvailability(
   window:
     | (RegistrationWindowTiming & { title?: string })

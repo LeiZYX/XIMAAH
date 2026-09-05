@@ -126,6 +126,7 @@ export async function deliverStudentNotification(params: {
   subject: string;
   text: string;
   html: string;
+  cc?: string[];
   studentUserId?: string | null;
   registrationWindowId?: string | null;
   feeStatementId?: string | null;
@@ -146,7 +147,10 @@ export async function deliverStudentNotification(params: {
       feeStatementId: params.feeStatementId,
       subject: params.subject,
       error: "SMTP not configured",
-      metadata: params.metadata,
+      metadata: {
+        ...params.metadata,
+        ...(params.cc?.length ? { cc: params.cc } : {}),
+      },
     });
     return { delivered: false, skipped: true, reason: "SMTP not configured" };
   }
@@ -154,6 +158,7 @@ export async function deliverStudentNotification(params: {
   try {
     const result = await sendMail({
       to: params.to,
+      cc: params.cc,
       subject: params.subject,
       text: params.text,
       html: params.html,
@@ -170,7 +175,10 @@ export async function deliverStudentNotification(params: {
         feeStatementId: params.feeStatementId,
         subject: params.subject,
         error: result.reason,
-        metadata: params.metadata,
+        metadata: {
+          ...params.metadata,
+          ...(params.cc?.length ? { cc: params.cc } : {}),
+        },
       });
       return { delivered: false, skipped: true, reason: result.reason };
     }
@@ -184,7 +192,10 @@ export async function deliverStudentNotification(params: {
       registrationWindowId: params.registrationWindowId,
       feeStatementId: params.feeStatementId,
       subject: params.subject,
-      metadata: params.metadata,
+      metadata: {
+        ...params.metadata,
+        ...(params.cc?.length ? { cc: params.cc } : {}),
+      },
     });
     return { delivered: true };
   } catch (error) {
@@ -199,7 +210,10 @@ export async function deliverStudentNotification(params: {
       feeStatementId: params.feeStatementId,
       subject: params.subject,
       error: message,
-      metadata: params.metadata,
+      metadata: {
+        ...params.metadata,
+        ...(params.cc?.length ? { cc: params.cc } : {}),
+      },
     });
     console.error(`[student-notification] ${params.type} failed:`, message);
     return { delivered: false, reason: message };
