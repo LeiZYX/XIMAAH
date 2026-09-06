@@ -32,11 +32,14 @@ type ExportCandidate = Pick<
   | "status"
   | "emergencyContactName"
   | "emergencyContactPhone"
+  | "externalId"
+  | "schoolName"
 > & {
   examIdentities?: Array<{
     uciNumber: string | null;
     candidateNumber: string | null;
-    examBoard: { code: string };
+    centreNumber?: string | null;
+    examBoard: { code: string; name?: string };
   }>;
 };
 
@@ -45,6 +48,8 @@ export const CANDIDATE_IMPORT_HEADERS = [
   "preferredEnglishName",
   "firstName",
   "lastName",
+  "surnamePinyin",
+  "givenNamePinyin",
   "legalEnglishName",
   "gender",
   "dateOfBirth",
@@ -59,10 +64,14 @@ export const CANDIDATE_IMPORT_HEADERS = [
   "className",
   "graduationYear",
   "assessmentHubCandidateNumber",
+  "examBoard",
+  "centreNumber",
   "uci",
   "boardCandidateNumber",
   "emergencyContactName",
   "emergencyContactPhone",
+  "externalId",
+  "schoolName",
 ] as const;
 
 function csvEscape(value: unknown): string {
@@ -80,6 +89,8 @@ export function candidatesToCsv(candidates: ExportCandidate[]): string {
       candidate.preferredEnglishName,
       firstName,
       lastName,
+      candidate.surnamePinyin ?? lastName,
+      candidate.givenNamePinyin ?? firstName,
       candidate.legalEnglishName ?? candidate.englishName,
       candidate.gender ? genderLabel(candidate.gender) : "",
       formatDateOfBirth(candidate.dateOfBirth) === "—" ? "" : formatDateOfBirth(candidate.dateOfBirth),
@@ -94,10 +105,14 @@ export function candidatesToCsv(candidates: ExportCandidate[]): string {
       candidate.className,
       candidate.graduationYear,
       candidate.assessmentHubCandidateNumber,
+      primaryIdentity?.examBoard?.name ?? primaryIdentity?.examBoard?.code ?? "",
+      primaryIdentity?.centreNumber,
       primaryIdentity?.uciNumber,
       primaryIdentity?.candidateNumber,
       candidate.emergencyContactName,
       candidate.emergencyContactPhone,
+      candidate.externalId,
+      candidate.schoolName,
     ]
       .map(csvEscape)
       .join(",");

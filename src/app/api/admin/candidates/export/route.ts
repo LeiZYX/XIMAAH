@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     orderBy: [{ englishName: "asc" }],
     include: {
       examIdentities: {
-        include: { examBoard: { select: { code: true } } },
+        include: { examBoard: { select: { code: true, name: true } } },
         orderBy: { examBoard: { name: "asc" } },
         take: 1,
       },

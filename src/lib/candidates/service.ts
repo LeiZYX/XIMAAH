@@ -223,9 +223,10 @@ export async function createExternalCandidate(input: {
   emergencyContactPhone?: string | null;
   assessmentHubCandidateNumber?: string | null;
   externalId?: string | null;
+  sourceSystem?: string | null;
 }) {
-  const firstName = input.firstName?.trim() || null;
-  const lastName = input.lastName?.trim() || null;
+  const firstName = input.firstName?.trim() || input.givenNamePinyin?.trim() || null;
+  const lastName = input.lastName?.trim() || input.surnamePinyin?.trim() || null;
   const legalEnglishName =
     [firstName, lastName].filter(Boolean).join(" ") ||
     input.legalEnglishName?.trim() ||
@@ -266,7 +267,7 @@ export async function createExternalCandidate(input: {
       emergencyContactPhone: input.emergencyContactPhone?.trim() || null,
       loginEnabled: false,
       status: "ACTIVE",
-      sourceSystem: "MANUAL",
+      sourceSystem: input.sourceSystem?.trim() || "MANUAL",
       externalId: input.externalId?.trim() || null,
     },
   });

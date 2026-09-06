@@ -9,9 +9,20 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.0";
+export const CURRENT_VERSION = "1.3.1";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.1",
+    releaseDate: "2026-09-06",
+    summary:
+      "One-shot External candidate CSV import with profile fields plus UCI and board Candidate Number.",
+    changes: [
+      "Candidates → Import / Export: External rows (candidateType=EXTERNAL) create or update the person and Board identity in one CSV",
+      "Supports chineseName, surname/given pinyin (or first/last name), gender, DOB, ID, examBoard, centreNumber, uci, boardCandidateNumber, and friendly header aliases",
+      "Download External sample CSV from the import page; re-import matches by externalId, Assessment Hub number, or ID/passport",
+    ],
+  },
   {
     version: "1.3.0",
     releaseDate: "2026-09-05",
