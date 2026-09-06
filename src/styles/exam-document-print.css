@@ -24,4 +24,17 @@
     break-after: page;
     page-break-after: always;
   }
+
+  .desk-label-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8mm;
+  }
+
+  .desk-label-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1.5pt solid #0f172a;
+    padding: 4mm;
+  }
 }

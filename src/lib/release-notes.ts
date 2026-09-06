@@ -9,9 +9,18 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.1";
+export const CURRENT_VERSION = "1.3.2";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.2",
+    releaseDate: "2026-09-06",
+    summary: "Exam Documents: Desk Labels preview and print for exam room seating.",
+    changes: [
+      "Exam Room Documents → Desk Labels: printable seat cards with name, Cand No, UCI, paper, room, and time (seat order matches Seating Plan)",
+      "Candidate Labels print is enabled (removed from coming-soon block)",
+    ],
+  },
   {
     version: "1.3.1",
     releaseDate: "2026-09-06",

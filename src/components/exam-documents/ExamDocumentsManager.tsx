@@ -30,7 +30,7 @@ const DOCUMENT_CATEGORIES: Record<
     types: [
       { value: "ATTENDANCE_REGISTER", implemented: true },
       { value: "SEATING_PLAN", implemented: true },
-      { value: "DESK_LABELS", implemented: false },
+      { value: "DESK_LABELS", implemented: true },
       { value: "CANDIDATE_LABELS", implemented: true },
     ],
   },
@@ -511,6 +511,58 @@ export function ExamDocumentsManager({ apiBasePath }: { apiBasePath: string }) {
                           <div className="font-medium">Seat {seat.seat}</div>
                           <div>{seat.candidateName}</div>
                           <div className="text-slate-600">{seat.boardCandidateNumber ?? seat.candidateNumber ?? "—"}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            ) : null}
+
+            {Array.isArray(preview?.deskSheets) ? (
+              <div className="space-y-6">
+                {(preview.deskSheets as Record<string, unknown>[]).map((sheet, index) => (
+                  <section key={index} className="exam-document-page border border-slate-200 p-4">
+                    <CentreHeaderBlock centre={centreFromRecord(sheet.centre)} />
+                    <h2 className="text-lg font-semibold">Desk Labels</h2>
+                    <p className="text-sm text-slate-700">
+                      {String(sheet.subject)} · {String(sheet.paperCode)} · Room {String(sheet.room)} ·{" "}
+                      {String(sheet.date)} {String(sheet.time)}
+                    </p>
+                    <div className="desk-label-grid mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                      {(sheet.labels as Record<string, string | null>[]).map((label, labelIndex) => (
+                        <div
+                          key={labelIndex}
+                          className="desk-label-card rounded border-2 border-slate-800 bg-white p-3 text-sm"
+                        >
+                          <div className="flex items-baseline justify-between gap-2 border-b border-slate-300 pb-1">
+                            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                              Seat
+                            </span>
+                            <span className="text-xl font-bold tabular-nums text-slate-900">
+                              {String(label.seat)}
+                            </span>
+                          </div>
+                          <p className="mt-2 text-base font-semibold leading-tight text-slate-900">
+                            {String(label.candidateName)}
+                          </p>
+                          {label.chineseName ? (
+                            <p className="text-sm text-slate-600">{String(label.chineseName)}</p>
+                          ) : null}
+                          <p className="mt-1 font-mono text-sm font-medium text-slate-800">
+                            Cand No. {String(label.boardCandidateNumber ?? "—")}
+                          </p>
+                          {label.uciNumber ? (
+                            <p className="font-mono text-xs text-slate-600">
+                              UCI {String(label.uciNumber)}
+                            </p>
+                          ) : null}
+                          <p className="mt-2 text-xs text-slate-600">
+                            {String(label.paperCode)} · Room {String(label.room)}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            {String(label.date)} {String(label.time)}
+                          </p>
                         </div>
                       ))}
                     </div>

@@ -12,8 +12,6 @@ import {
 import { generateRestrictedInvoice } from "@/lib/fees/restricted-invoice";
 
 const COMING_SOON_TYPES = new Set<ExamDocumentType>([
-  "DESK_LABELS",
-  "CANDIDATE_LABELS",
   "SUBJECT_CANDIDATE_LIST",
   "ROOM_CANDIDATE_LIST",
   "MISSING_CANDIDATE_REPORT",

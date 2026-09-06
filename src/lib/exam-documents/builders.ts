@@ -240,6 +240,53 @@ export function buildCandidateLabelPages(rows: RegistrationRow[]) {
   });
 }
 
+export function buildDeskLabelSheets(rows: RegistrationRow[]) {
+  return groupRegistrationsBySession(rows).map((group) => {
+    const first = group.registrations[0]!;
+    const centre = centreForRow(first);
+    const date = formatExamDate(
+      group.session.date instanceof Date
+        ? group.session.date.toISOString()
+        : String(group.session.date),
+    );
+    const time = group.session.startTime ?? "—";
+    const room = group.session.venue ?? "TBC";
+
+    return {
+      documentTitle: "Desk Labels",
+      centre,
+      room,
+      date,
+      time,
+      paperCode: group.session.paper.code,
+      paperTitle: group.session.paper.title,
+      subject: group.session.paper.subject.name,
+      labels: group.registrations.map((row, index) => {
+        const identity = boardIdentityForRow(row);
+        const profile = candidateDocumentProfile(row);
+        return {
+          seat: String(index + 1),
+          candidateName: profile.displayName || row.studentNameSnapshot,
+          chineseName: profile.chineseName,
+          permanentStudentId: row.candidate?.studentId ?? null,
+          boardCandidateNumber: identity?.candidateNumber ?? "—",
+          uciNumber: identity?.uciNumber ?? null,
+          studentNumber: row.studentNoSnapshot,
+          grade: row.gradeSnapshot,
+          className: row.classNameSnapshot,
+          paperCode: row.paper.code,
+          subject: row.subject.name,
+          room,
+          date,
+          time,
+          centreNumber: centre.centreNumber,
+          examBoard: row.examBoard.name,
+        };
+      }),
+    };
+  });
+}
+
 export function buildDocumentPayload(
   documentType: ExamDocumentType,
   rows: RegistrationRow[],
@@ -253,6 +300,8 @@ export function buildDocumentPayload(
       return { registers: buildAttendanceRegisters(rows) };
     case "SEATING_PLAN":
       return { plans: buildSeatingPlans(rows) };
+    case "DESK_LABELS":
+      return { deskSheets: buildDeskLabelSheets(rows) };
     case "CANDIDATE_LIST": {
       const listRows = buildCandidateListRows(rows);
       const centre = listRows[0]?.centre ?? (rows[0] ? centreForRow(rows[0]) : null);
