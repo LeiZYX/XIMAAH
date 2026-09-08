@@ -139,16 +139,23 @@ export function maskIdDocumentNumber(value: string | null | undefined): string {
   return `${"*".repeat(Math.max(trimmed.length - 4, 4))}${trimmed.slice(-4)}`;
 }
 
-export function validateCandidateIdentity(input: CandidateIdentityInput): string[] {
+export function validateCandidateIdentity(
+  input: CandidateIdentityInput,
+  options?: { requireDateOfBirthAndIdDocument?: boolean },
+): string[] {
   const errors: string[] = [];
   const names = resolveSyncedNameParts(input);
+  const requireDateOfBirthAndIdDocument = options?.requireDateOfBirthAndIdDocument !== false;
+
   if (!input.chineseName?.trim()) errors.push("Chinese Name is required");
   if (!names.firstName) errors.push("Firstname is required");
   if (!names.lastName) errors.push("Lastname is required");
   if (!input.gender) errors.push("Gender is required");
-  if (!input.dateOfBirth) errors.push("Date of Birth is required");
-  if (!input.idDocumentType) errors.push("ID Document Type is required");
-  if (!input.idDocumentNumber?.trim()) errors.push("ID / Passport Number is required");
+  if (requireDateOfBirthAndIdDocument) {
+    if (!input.dateOfBirth) errors.push("Date of Birth is required");
+    if (!input.idDocumentType) errors.push("ID Document Type is required");
+    if (!input.idDocumentNumber?.trim()) errors.push("ID / Passport Number is required");
+  }
   if (!input.assessmentHubCandidateNumber?.trim()) errors.push("Assessment Hub number is required");
   return errors;
 }

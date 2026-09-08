@@ -322,7 +322,9 @@ export async function importCandidates(
     const row = normalizeCandidateImportRow(rawRow as Record<string, string | undefined>);
     const candidateType = parseCandidateTypeInput(row.candidateType) ?? "INTERNAL";
     const identityInput = rowToIdentityInput(row);
-    const validationErrors = validateCandidateIdentity(identityInput);
+    const validationErrors = validateCandidateIdentity(identityInput, {
+      requireDateOfBirthAndIdDocument: candidateType !== "EXTERNAL",
+    });
     if (validationErrors.length > 0) {
       results.errors.push(`Row ${index + 1}: ${validationErrors.join("; ")}`);
       results.skipped += 1;
