@@ -368,6 +368,7 @@ export function StaffRegistrationModal({
             onDisplayCurrencyChange={setDisplayCurrency}
             showDisplayCurrencySelector
             disabled={submitting}
+            autoIncludeWhenRequired
           />
 
           <BillingPreviewPanel

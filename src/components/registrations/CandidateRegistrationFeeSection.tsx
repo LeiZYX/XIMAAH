@@ -10,9 +10,16 @@ import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
   type FeeStatementDisplayCurrencyOption,
 } from "@/lib/fees/display-currency";
-import { classifyUciNumber } from "@/lib/candidates/uci-allocation";
+import {
+  classifyUciNumber,
+  examBoardUsesEdexcelUciRules,
+  needsCandidateRegistrationFeeForUci,
+} from "@/lib/candidates/uci-allocation";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import { CANDIDATE_REGISTRATION_FEE_SERVICE_NAME } from "@/lib/fees/candidate-registration-fee-constants";
+
+const AUTO_EDEXCEL_REGISTRATION_FEE_REASON =
+  "Edexcel candidate registration fee required (UCI missing or not board-confirmed)";
 
 export interface CandidateRegistrationFeeAuditInfo {
   performedByName: string;
@@ -33,7 +40,7 @@ export interface CandidateRegistrationFeeSectionProps {
   examBoardId: string | null;
   examBoardName: string | null;
   registrationWindowId: string | null;
-  /** When set, loads board identity and hides Add if a UCI already exists. */
+  /** When set, loads board identity; confirmed UCI (trailing letter) blocks Add. */
   candidateId?: string | null;
   savedIncluded: boolean;
   pendingIncluded: boolean;
@@ -48,6 +55,11 @@ export interface CandidateRegistrationFeeSectionProps {
   onSave?: () => void;
   saving?: boolean;
   showSaveButton?: boolean;
+  /**
+   * Create/register modals: auto-include fee when Edexcel UCI is empty or has no trailing letter.
+   * Workspace detail should leave this false so staff control pending changes explicitly.
+   */
+  autoIncludeWhenRequired?: boolean;
 }
 
 function roleLabel(role: string): string {
@@ -74,6 +86,7 @@ export function CandidateRegistrationFeeSection({
   onSave,
   saving = false,
   showSaveButton = false,
+  autoIncludeWhenRequired = false,
 }: CandidateRegistrationFeeSectionProps) {
   const [preview, setPreview] = useState<FeePreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
@@ -91,10 +104,17 @@ export function CandidateRegistrationFeeSection({
 
   const hasExistingUci = Boolean(existingUciNumber?.trim());
   const uciIsBoardConfirmed = classifyUciNumber(existingUciNumber) === "CONFIRMED";
+  const isEdexcelBoard = examBoardUsesEdexcelUciRules(null, examBoardName);
+  const feeRequiredByUci =
+    autoIncludeWhenRequired &&
+    isEdexcelBoard &&
+    Boolean(examBoardId) &&
+    !uciLoading &&
+    needsCandidateRegistrationFeeForUci(existingUciNumber);
   /** Add is blocked only when UCI ends with a letter (board-confirmed). Provisional / legacy UCIs still need the fee. */
   const blockAddBecauseUci = uciIsBoardConfirmed && !savedIncluded && !pendingIncluded;
   const showAddedCard = pendingIncluded;
-  const reasonRequired = pendingChange;
+  const reasonRequired = pendingChange && !feeRequiredByUci;
   const reasonLabel = pendingIncluded
     ? "Reason for adding Candidate Registration Fee"
     : "Reason for removing Candidate Registration Fee";
@@ -133,6 +153,38 @@ export function CandidateRegistrationFeeSection({
       cancelled = true;
     };
   }, [candidateId, examBoardId]);
+
+  useEffect(() => {
+    if (!autoIncludeWhenRequired || !examBoardId || uciLoading) return;
+    if (!examBoardUsesEdexcelUciRules(null, examBoardName)) return;
+
+    if (classifyUciNumber(existingUciNumber) === "CONFIRMED") {
+      if (pendingIncluded && !savedIncluded) {
+        onPendingIncludedChange(false);
+      }
+      return;
+    }
+
+    if (!needsCandidateRegistrationFeeForUci(existingUciNumber)) return;
+
+    if (!pendingIncluded && !savedIncluded) {
+      onPendingIncludedChange(true);
+    }
+    if (!feeReason.trim()) {
+      onFeeReasonChange(AUTO_EDEXCEL_REGISTRATION_FEE_REASON);
+    }
+  }, [
+    autoIncludeWhenRequired,
+    examBoardId,
+    examBoardName,
+    existingUciNumber,
+    feeReason,
+    onFeeReasonChange,
+    onPendingIncludedChange,
+    pendingIncluded,
+    savedIncluded,
+    uciLoading,
+  ]);
 
   useEffect(() => {
     if (!examBoardId || !registrationWindowId) {
@@ -254,14 +306,16 @@ export function CandidateRegistrationFeeSection({
           badge={pendingBadge}
           muted={pendingBadge === "Pending Remove"}
           action={
-            <button
-              type="button"
-              disabled={disabled}
-              onClick={() => onPendingIncludedChange(false)}
-              className="rounded-lg border border-red-200 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
-            >
-              Remove
-            </button>
+            feeRequiredByUci ? null : (
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() => onPendingIncludedChange(false)}
+                className="rounded-lg border border-red-200 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
+              >
+                Remove
+              </button>
+            )
           }
         >
           <div className="grid gap-3 sm:grid-cols-2">
@@ -275,6 +329,12 @@ export function CandidateRegistrationFeeSection({
             />
             {hasExistingUci ? (
               <RegistrationItemMeta label="UCI Number" value={existingUciNumber ?? "—"} />
+            ) : null}
+            {feeRequiredByUci ? (
+              <p className="sm:col-span-2 text-sm text-slate-600">
+                Required automatically because UCI is missing or not board-confirmed (no trailing
+                letter).
+              </p>
             ) : null}
             <SalesAmountDisplay
               amounts={amounts}

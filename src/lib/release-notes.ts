@@ -18,6 +18,7 @@ export const releaseNotes: ReleaseNote[] = [
     summary:
       "Edexcel Candidate Registration Fee: External included; provisional UCI (no trailing letter) can still add the fee.",
     changes: [
+      "Staff create/register modals auto-include Candidate Registration Fee in the preview when UCI is empty or has no trailing letter",
       "External Edexcel registrations auto-add Candidate Registration Fee when UCI is empty or has no trailing letter (empty External UCI is not auto-allocated yet)",
       "Removing all subjects auto-removes the registration fee; imported/pre-existing UCI is kept; system-allocated Internal provisional UCI is cleared",
       "Staff UI blocks Add Candidate Registration Fee only for board-confirmed UCI (trailing letter), not for provisional numbers",

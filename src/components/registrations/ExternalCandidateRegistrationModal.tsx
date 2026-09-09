@@ -349,6 +349,7 @@ export function ExternalCandidateRegistrationModal({
             onDisplayCurrencyChange={setDisplayCurrency}
             showDisplayCurrencySelector
             disabled={submitting}
+            autoIncludeWhenRequired
           />
 
           <BillingPreviewPanel
