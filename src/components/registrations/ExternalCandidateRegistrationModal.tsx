@@ -350,6 +350,7 @@ export function ExternalCandidateRegistrationModal({
             showDisplayCurrencySelector
             disabled={submitting}
             autoIncludeWhenRequired
+            assumeEmptyUciWithoutCandidate={!useExisting}
           />
 
           <BillingPreviewPanel

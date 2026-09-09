@@ -60,6 +60,11 @@ export interface CandidateRegistrationFeeSectionProps {
    * Workspace detail should leave this false so staff control pending changes explicitly.
    */
   autoIncludeWhenRequired?: boolean;
+  /**
+   * When true and no candidateId yet (Create new external), treat UCI as empty and auto-include.
+   * Search-existing with no selection must leave this false so the fee stays off.
+   */
+  assumeEmptyUciWithoutCandidate?: boolean;
 }
 
 function roleLabel(role: string): string {
@@ -87,6 +92,7 @@ export function CandidateRegistrationFeeSection({
   saving = false,
   showSaveButton = false,
   autoIncludeWhenRequired = false,
+  assumeEmptyUciWithoutCandidate = false,
 }: CandidateRegistrationFeeSectionProps) {
   const [preview, setPreview] = useState<FeePreview | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
@@ -102,11 +108,13 @@ export function CandidateRegistrationFeeSection({
         ? ("Pending Remove" as const)
         : null;
 
+  const hasCandidateContext = Boolean(candidateId) || assumeEmptyUciWithoutCandidate;
   const hasExistingUci = Boolean(existingUciNumber?.trim());
   const uciIsBoardConfirmed = classifyUciNumber(existingUciNumber) === "CONFIRMED";
   const isEdexcelBoard = examBoardUsesEdexcelUciRules(null, examBoardName);
   const feeRequiredByUci =
     autoIncludeWhenRequired &&
+    hasCandidateContext &&
     isEdexcelBoard &&
     Boolean(examBoardId) &&
     !uciLoading &&
@@ -158,6 +166,14 @@ export function CandidateRegistrationFeeSection({
     if (!autoIncludeWhenRequired || !examBoardId || uciLoading) return;
     if (!examBoardUsesEdexcelUciRules(null, examBoardName)) return;
 
+    // Search-existing with no candidate selected: do not treat as empty UCI / required fee.
+    if (!candidateId && !assumeEmptyUciWithoutCandidate) {
+      if (pendingIncluded && !savedIncluded) {
+        onPendingIncludedChange(false);
+      }
+      return;
+    }
+
     if (classifyUciNumber(existingUciNumber) === "CONFIRMED") {
       if (pendingIncluded && !savedIncluded) {
         onPendingIncludedChange(false);
@@ -174,7 +190,9 @@ export function CandidateRegistrationFeeSection({
       onFeeReasonChange(AUTO_EDEXCEL_REGISTRATION_FEE_REASON);
     }
   }, [
+    assumeEmptyUciWithoutCandidate,
     autoIncludeWhenRequired,
+    candidateId,
     examBoardId,
     examBoardName,
     existingUciNumber,
