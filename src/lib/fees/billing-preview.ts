@@ -1,18 +1,22 @@
 import { calculateFeeAmounts } from "@/lib/fees/calculate";
-import {
-  previewCandidateRegistrationFee,
-} from "@/lib/fees/candidate-registration-fee";
 import type { FeeStatementDisplayCurrencyOption } from "@/lib/fees/display-currency";
 import { findMatchingFeeRuleWithFallback, resolveEntryTypeForRegistration } from "@/lib/fees/match";
 import type { BillingPreviewLine } from "@/components/registrations/BillingPreviewPanel";
 import { prisma } from "@/lib/prisma";
 import { AUTO_BILLING_SCOPES } from "@/lib/registrations/metadata";
 
+/**
+ * Billing preview lists exam entries only.
+ * Candidate Registration Fee is owned by CandidateRegistrationFeeSection to avoid duplicate cards.
+ */
 export async function buildWorkspaceBillingPreview(params: {
   workspaceId: string;
   includeCandidateRegistrationFee: boolean;
   savedCandidateRegistrationFee?: boolean;
 }): Promise<BillingPreviewLine[]> {
+  void params.includeCandidateRegistrationFee;
+  void params.savedCandidateRegistrationFee;
+
   const workspace = await prisma.registrationWorkspace.findUnique({
     where: { id: params.workspaceId },
     include: {
@@ -79,31 +83,6 @@ export async function buildWorkspaceBillingPreview(params: {
     });
   }
 
-  const savedFee = params.savedCandidateRegistrationFee ?? workspace.includeCandidateRegistrationFee;
-  if (params.includeCandidateRegistrationFee || savedFee) {
-    const preview = await previewCandidateRegistrationFee(
-      workspace.registrationWindow.examBoardId,
-      workspace.registrationWindowId,
-    );
-
-    let status: BillingPreviewLine["status"] = "ACTIVE";
-    if (params.includeCandidateRegistrationFee && !savedFee) status = "PENDING_ADD";
-    if (!params.includeCandidateRegistrationFee && savedFee) status = "PENDING_REMOVE";
-
-    if (preview && (params.includeCandidateRegistrationFee || status === "PENDING_REMOVE")) {
-      lines.push({
-        id: "candidate-registration-fee",
-        kind: "CANDIDATE_REGISTRATION",
-        serviceName: preview.serviceName,
-        boardName: workspace.registrationWindow.examBoard.name,
-        salesGbp: preview.salesGbp,
-        salesCny: preview.salesCny,
-        feeScheduleVersion: preview.version,
-        status,
-      });
-    }
-  }
-
   return lines;
 }
 
@@ -113,7 +92,10 @@ export async function buildModalBillingPreview(params: {
   includeCandidateRegistrationFee: boolean;
   displayCurrency?: FeeStatementDisplayCurrencyOption;
 }): Promise<BillingPreviewLine[]> {
-  if (params.examSessionIds.length === 0 && !params.includeCandidateRegistrationFee) {
+  void params.includeCandidateRegistrationFee;
+  void params.displayCurrency;
+
+  if (params.examSessionIds.length === 0) {
     return [];
   }
 
@@ -131,22 +113,20 @@ export async function buildModalBillingPreview(params: {
       where: { registrationWindowId: params.registrationWindowId },
       orderBy: { effectiveDate: "desc" },
     }),
-    params.examSessionIds.length
-      ? prisma.examSession.findMany({
-          where: { id: { in: params.examSessionIds } },
+    prisma.examSession.findMany({
+      where: { id: { in: params.examSessionIds } },
+      include: {
+        paper: {
           include: {
-            paper: {
-              include: {
-                subject: { include: { qualification: true } },
-              },
-            },
-            examSeries: true,
+            subject: { include: { qualification: true } },
           },
-        })
-      : Promise.resolve([]),
+        },
+        examSeries: true,
+      },
+    }),
   ]);
 
-  const lines: BillingPreviewLine[] = sessions.map((session) => {
+  return sessions.map((session) => {
     const qualificationId = session.paper.subject.qualificationId;
     const rule = findMatchingFeeRuleWithFallback(rules, {
       examBoardId: window.examBoardId,
@@ -175,28 +155,7 @@ export async function buildModalBillingPreview(params: {
       paperCode: session.paper.code,
       salesGbp,
       salesCny,
-      status: "PENDING_ADD",
+      status: "PENDING_ADD" as const,
     };
   });
-
-  if (params.includeCandidateRegistrationFee) {
-    const preview = await previewCandidateRegistrationFee(
-      window.examBoardId,
-      params.registrationWindowId,
-    );
-    if (preview) {
-      lines.push({
-        id: "candidate-registration-fee",
-        kind: "CANDIDATE_REGISTRATION",
-        serviceName: preview.serviceName,
-        boardName: window.examBoard.name,
-        salesGbp: preview.salesGbp,
-        salesCny: preview.salesCny,
-        feeScheduleVersion: preview.version,
-        status: "PENDING_ADD",
-      });
-    }
-  }
-
-  return lines;
 }

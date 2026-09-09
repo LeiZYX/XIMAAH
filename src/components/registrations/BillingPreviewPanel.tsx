@@ -46,9 +46,12 @@ export function BillingPreviewPanel({
   const [query, setQuery] = useState("");
 
   const filteredLines = useMemo(() => {
+    // Candidate Registration Fee is owned by CandidateRegistrationFeeSection above;
+    // keep Billing Preview to exam entries only to avoid a duplicate £ fee card.
+    const withoutDuplicateFee = lines.filter((line) => line.kind !== "CANDIDATE_REGISTRATION");
     const q = query.trim().toLowerCase();
-    if (!q) return lines;
-    return lines.filter((line) => {
+    if (!q) return withoutDuplicateFee;
+    return withoutDuplicateFee.filter((line) => {
       const haystack = [
         line.serviceName,
         line.boardName,
@@ -71,10 +74,12 @@ export function BillingPreviewPanel({
     );
   }
 
-  if (lines.length === 0) {
+  const examEntryCount = lines.filter((line) => line.kind !== "CANDIDATE_REGISTRATION").length;
+
+  if (examEntryCount === 0) {
     return (
       <div className="rounded-lg border border-dashed border-slate-200 bg-slate-50/60 p-4 text-sm text-slate-500">
-        No billable items selected yet.
+        No exam entries selected yet.
       </div>
     );
   }
