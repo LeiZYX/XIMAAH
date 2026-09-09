@@ -25,10 +25,11 @@ async function countActiveSubjectsInWorkspace(
 }
 
 /**
- * After a subject is added to an Internal Edexcel workspace:
+ * After a subject is added to an Edexcel workspace (Internal or External):
  * - snapshot UCI at first touch
- * - allocate provisional UCI when empty (Centre + B + school number last 6)
+ * - Internal only: allocate provisional UCI when empty (Centre + B + school number last 6)
  * - force Candidate Registration Fee when UCI empty or without trailing letter
+ * - External empty UCI: do not allocate (99xxxx deferred); still charge the fee
  */
 export async function ensureEdexcelUciAndRegistrationFeeOnSubjectAdd(params: {
   workspaceId: string;
@@ -62,7 +63,6 @@ export async function ensureEdexcelUciAndRegistrationFeeOnSubjectAdd(params: {
   });
 
   if (!workspace?.candidateId) return;
-  if (workspace.registrationType === "EXTERNAL") return;
 
   const board = workspace.registrationWindow.examBoard;
   if (!examBoardUsesEdexcelUciRules(board.code, board.name)) return;
@@ -76,7 +76,10 @@ export async function ensureEdexcelUciAndRegistrationFeeOnSubjectAdd(params: {
       user: { select: { studentProfile: { select: { studentNo: true } } } },
     },
   });
-  if (!candidate || candidate.candidateType !== "INTERNAL") return;
+  if (!candidate) return;
+  if (candidate.candidateType !== "INTERNAL" && candidate.candidateType !== "EXTERNAL") {
+    return;
+  }
 
   let identity = await client.candidateExamIdentity.findUnique({
     where: {
@@ -102,9 +105,9 @@ export async function ensureEdexcelUciAndRegistrationFeeOnSubjectAdd(params: {
   }
 
   let nextUci = currentUci;
-  let allocatedBySystem = workspace.uciAllocatedBySystem;
 
-  if (!nextUci) {
+  // Internal only: auto-allocate provisional UCI when empty. External 99xxxx deferred.
+  if (!nextUci && candidate.candidateType === "INTERNAL") {
     const schoolNo =
       candidate.studentNumber?.trim() ||
       candidate.user?.studentProfile?.studentNo?.trim() ||
@@ -144,7 +147,6 @@ export async function ensureEdexcelUciAndRegistrationFeeOnSubjectAdd(params: {
     }
 
     nextUci = allocated;
-    allocatedBySystem = true;
     await client.registrationWorkspace.update({
       where: { id: workspace.id },
       data: { uciAllocatedBySystem: true },
@@ -171,10 +173,48 @@ export type RegistrationFeeRemovalGate = {
 };
 
 /**
- * Registration fee may be removed (and system UCI cleared) only when:
- * - no active/locked subjects remain
- * - UCI was empty at workspace entry and was system-allocated
- * - Bulk Entries baseline has not been submitted
+ * Pure gate for tests and evaluateRegistrationFeeRemovalGate.
+ *
+ * - No subjects → fee may be removed
+ * - clearUci only when entry UCI was empty and system-allocated, and no Bulk baseline
+ * - Imported / pre-existing UCI: remove fee, keep UCI
+ */
+export function computeEdexcelRegistrationFeeRemovalGate(input: {
+  activeSubjectCount: number;
+  uciEntrySnapshotCaptured: boolean;
+  uciAtEntry: string | null | undefined;
+  uciAllocatedBySystem: boolean;
+  hasBulkEntriesBaseline: boolean;
+}): RegistrationFeeRemovalGate {
+  if (input.activeSubjectCount > 0) {
+    return {
+      allowed: false,
+      clearUci: false,
+      reason: "Candidate Registration Fee cannot be removed while exam subjects remain",
+    };
+  }
+
+  const startedEmpty =
+    input.uciEntrySnapshotCaptured &&
+    (input.uciAtEntry == null || input.uciAtEntry.trim() === "");
+  const clearUci = Boolean(startedEmpty && input.uciAllocatedBySystem);
+
+  if (clearUci && input.hasBulkEntriesBaseline) {
+    return {
+      allowed: false,
+      clearUci: false,
+      reason:
+        "Candidate Registration Fee and UCI cannot be cleared after Bulk Entries baseline was submitted",
+    };
+  }
+
+  return { allowed: true, clearUci };
+}
+
+/**
+ * Registration fee may be removed when no active/locked subjects remain.
+ * System-allocated provisional UCI is cleared only when UCI was empty at entry
+ * and Bulk Entries baseline has not been submitted. Pre-existing UCIs are kept.
  */
 export async function evaluateRegistrationFeeRemovalGate(
   workspaceId: string,
@@ -211,36 +251,15 @@ export async function evaluateRegistrationFeeRemovalGate(
   }
 
   const activeCount = await countActiveSubjectsInWorkspace(workspaceId, client);
-  if (activeCount > 0) {
-    return {
-      allowed: false,
-      clearUci: false,
-      reason: "Candidate Registration Fee cannot be removed while exam subjects remain",
-    };
-  }
+  const baseline = await hasBulkEntriesBaseline(workspace.registrationWindowId);
 
-  const startedEmpty =
-    workspace.uciEntrySnapshotCaptured &&
-    (workspace.uciAtEntry == null || workspace.uciAtEntry.trim() === "");
-  if (!startedEmpty || !workspace.uciAllocatedBySystem) {
-    return {
-      allowed: false,
-      clearUci: false,
-      reason:
-        "Candidate Registration Fee cannot be removed because a UCI already existed when registration started",
-    };
-  }
-
-  if (await hasBulkEntriesBaseline(workspace.registrationWindowId)) {
-    return {
-      allowed: false,
-      clearUci: false,
-      reason:
-        "Candidate Registration Fee and UCI cannot be cleared after Bulk Entries baseline was submitted",
-    };
-  }
-
-  return { allowed: true, clearUci: true };
+  return computeEdexcelRegistrationFeeRemovalGate({
+    activeSubjectCount: activeCount,
+    uciEntrySnapshotCaptured: workspace.uciEntrySnapshotCaptured,
+    uciAtEntry: workspace.uciAtEntry,
+    uciAllocatedBySystem: workspace.uciAllocatedBySystem,
+    hasBulkEntriesBaseline: baseline,
+  });
 }
 
 /** Clear system-allocated provisional UCI when fee removal is allowed. */
@@ -291,7 +310,8 @@ export async function clearSystemAllocatedUciIfNeeded(params: {
 }
 
 /**
- * After subjects are removed: if none remain and clearance is allowed, drop fee + UCI.
+ * After subjects are removed: if none remain and clearance is allowed, drop fee
+ * (and clear system-allocated UCI only when the gate says so).
  */
 export async function maybeClearEdexcelRegistrationFeeAndUciAfterSubjectRemoval(params: {
   workspaceId: string;
@@ -329,7 +349,11 @@ export async function maybeClearEdexcelRegistrationFeeAndUciAfterSubjectRemoval(
     workspaceId: workspace.id,
     includeCandidateRegistrationFee: false,
     performedBy: params.performedBy,
-    reason: params.reason?.trim() || "All subjects removed before Bulk Entries baseline",
+    reason:
+      params.reason?.trim() ||
+      (gate.clearUci
+        ? "All subjects removed; cleared system-allocated provisional UCI"
+        : "All subjects removed; Candidate Registration Fee removed (UCI unchanged)"),
     tx: params.tx,
     skipRemovalGate: true,
     clearUciOnRemove: gate.clearUci,

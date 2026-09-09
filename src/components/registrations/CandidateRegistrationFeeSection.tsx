@@ -10,6 +10,7 @@ import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
   type FeeStatementDisplayCurrencyOption,
 } from "@/lib/fees/display-currency";
+import { classifyUciNumber } from "@/lib/candidates/uci-allocation";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import { CANDIDATE_REGISTRATION_FEE_SERVICE_NAME } from "@/lib/fees/candidate-registration-fee-constants";
 
@@ -89,8 +90,9 @@ export function CandidateRegistrationFeeSection({
         : null;
 
   const hasExistingUci = Boolean(existingUciNumber?.trim());
-  /** Add is blocked when board identity already has a UCI (unless fee is already on this registration). */
-  const blockAddBecauseUci = hasExistingUci && !savedIncluded && !pendingIncluded;
+  const uciIsBoardConfirmed = classifyUciNumber(existingUciNumber) === "CONFIRMED";
+  /** Add is blocked only when UCI ends with a letter (board-confirmed). Provisional / legacy UCIs still need the fee. */
+  const blockAddBecauseUci = uciIsBoardConfirmed && !savedIncluded && !pendingIncluded;
   const showAddedCard = pendingIncluded;
   const reasonRequired = pendingChange;
   const reasonLabel = pendingIncluded
@@ -217,7 +219,7 @@ export function CandidateRegistrationFeeSection({
             {CANDIDATE_REGISTRATION_FEE_SERVICE_NAME}
           </p>
           <p className="mt-1 text-sm text-slate-600">
-            This student already has a UCI for{" "}
+            This student already has a board-confirmed UCI (trailing letter) for{" "}
             <span className="font-medium">{examBoardName ?? "this exam board"}</span>. Add Candidate
             Registration Fee is not available.
           </p>

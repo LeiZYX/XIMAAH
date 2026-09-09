@@ -9,9 +9,20 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.2";
+export const CURRENT_VERSION = "1.3.3";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.3",
+    releaseDate: "2026-09-09",
+    summary:
+      "Edexcel Candidate Registration Fee: External included; provisional UCI (no trailing letter) can still add the fee.",
+    changes: [
+      "External Edexcel registrations auto-add Candidate Registration Fee when UCI is empty or has no trailing letter (empty External UCI is not auto-allocated yet)",
+      "Removing all subjects auto-removes the registration fee; imported/pre-existing UCI is kept; system-allocated Internal provisional UCI is cleared",
+      "Staff UI blocks Add Candidate Registration Fee only for board-confirmed UCI (trailing letter), not for provisional numbers",
+    ],
+  },
   {
     version: "1.3.2",
     releaseDate: "2026-09-06",
