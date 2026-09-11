@@ -51,7 +51,11 @@ export function workspaceStudentLabel(workspace: {
     chineseName?: string | null;
     studentNumber?: string | null;
   } | null;
-  registrations?: Array<{ studentNameSnapshot?: string | null }>;
+  /** Optional; callers may only select `{ id }` — keep `id?` so weak types still assign. */
+  registrations?: ReadonlyArray<{
+    id?: string;
+    studentNameSnapshot?: string | null;
+  }>;
 }): string {
   const english =
     workspace.student?.name?.trim() ||
