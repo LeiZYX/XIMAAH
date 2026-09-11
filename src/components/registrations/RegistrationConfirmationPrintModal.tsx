@@ -156,9 +156,6 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
           <h4 className="border-b border-slate-200 pb-2 text-sm font-semibold uppercase tracking-wide text-indigo-700">Candidate Information</h4>
           <dl className="mt-3 grid gap-3 sm:grid-cols-2">
             <SummaryField label="Candidate Name" value={student.name} />
-            {student.permanentStudentId && student.permanentStudentId !== "—" ? (
-              <SummaryField label="Student ID" value={student.permanentStudentId} />
-            ) : null}
             <SummaryField label="Candidate Type" value={candidateTypeLabel(student.candidateType)} />
             {isInternal ? (
               <>
@@ -176,18 +173,14 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
                 <thead>
                   <tr className="border-b border-slate-200 text-left text-xs uppercase text-slate-500">
                     <th className="py-1 pr-3">Exam board</th>
-                    <th className="py-1 pr-3">Board candidate no.</th>
-                    <th className="py-1 pr-3">UCI</th>
-                    <th className="py-1">Centre no.</th>
+                    <th className="py-1">UCI No.</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data.examBoardIdentities.map((identity) => (
                     <tr key={identity.examBoardCode} className="border-b border-slate-100">
                       <td className="py-1.5 pr-3">{identity.examBoardName}</td>
-                      <td className="py-1.5 pr-3">{identity.boardCandidateNumber ?? "—"}</td>
-                      <td className="py-1.5 pr-3">{identity.uci ?? "—"}</td>
-                      <td className="py-1.5">{identity.centreNumber ?? "—"}</td>
+                      <td className="py-1.5">{identity.uci ?? "—"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -390,6 +383,7 @@ export function buildWorkspaceConfirmationPrintData(workspace: {
     id: string;
     title: string;
     studentRegistrationOpenAt: string | Date;
+    studentRegistrationCloseAt?: string | Date | null;
     registrationCloseAt: string | Date;
     examBoard: { name: string; code: string };
     examSeries: { name: string; year: number };
@@ -462,8 +456,12 @@ export function buildWorkspaceConfirmationPrintData(workspace: {
       id: workspace.registrationWindow.id,
       title: workspace.registrationWindow.title,
       status: "CLOSED",
-      startAt: workspace.registrationWindow.studentRegistrationOpenAt,
-      endAt: workspace.registrationWindow.registrationCloseAt,
+      studentRegistrationOpenAt: String(workspace.registrationWindow.studentRegistrationOpenAt),
+      studentRegistrationCloseAt: String(
+        workspace.registrationWindow.studentRegistrationCloseAt ??
+          workspace.registrationWindow.registrationCloseAt,
+      ),
+      registrationCloseAt: String(workspace.registrationWindow.registrationCloseAt),
     },
     examSeries: workspace.registrationWindow.examSeries,
     registrations: workspace.registrations.map((row) => ({
@@ -481,8 +479,12 @@ export function buildWorkspaceConfirmationPrintData(workspace: {
         id: workspace.registrationWindow.id,
         title: workspace.registrationWindow.title,
         status: "CLOSED",
-        startAt: workspace.registrationWindow.studentRegistrationOpenAt,
-        endAt: workspace.registrationWindow.registrationCloseAt,
+        studentRegistrationOpenAt: String(workspace.registrationWindow.studentRegistrationOpenAt),
+        studentRegistrationCloseAt: String(
+          workspace.registrationWindow.studentRegistrationCloseAt ??
+            workspace.registrationWindow.registrationCloseAt,
+        ),
+        registrationCloseAt: String(workspace.registrationWindow.registrationCloseAt),
       },
     })),
     lastUpdatedAt: lastUpdated,

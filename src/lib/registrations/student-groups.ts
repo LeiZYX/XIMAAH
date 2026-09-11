@@ -108,9 +108,15 @@ export function windowCardStatus(
   return "Closed";
 }
 
-export function formatWindowRange(startAt: string, endAt: string): string {
-  const start = new Date(startAt);
-  const end = new Date(endAt);
+export function formatWindowRange(
+  startAt: string | Date | null | undefined,
+  endAt: string | Date | null | undefined,
+): string {
+  const start = startAt != null && startAt !== "" ? new Date(startAt) : null;
+  const end = endAt != null && endAt !== "" ? new Date(endAt) : null;
+  if (!start || Number.isNaN(start.getTime()) || !end || Number.isNaN(end.getTime())) {
+    return "—";
+  }
   const sameYear = start.getFullYear() === end.getFullYear();
   const dateFmt: Intl.DateTimeFormatOptions = {
     month: "short",
