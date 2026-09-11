@@ -317,10 +317,6 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
             <div className="mt-6 grid gap-8 sm:grid-cols-2 text-sm">
               <div className="space-y-5">
                 <div>
-                  <p className="text-slate-600">Student name:</p>
-                  <div className="mt-6 border-b border-slate-400" />
-                </div>
-                <div>
                   <p className="text-slate-600">Student signature:</p>
                   <div className="mt-8 border-b border-slate-400" />
                 </div>
@@ -330,10 +326,6 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
                 </div>
               </div>
               <div className="space-y-5">
-                <div>
-                  <p className="text-slate-600">Parent / guardian name:</p>
-                  <div className="mt-6 border-b border-slate-400" />
-                </div>
                 <div>
                   <p className="text-slate-600">Parent / guardian signature:</p>
                   <div className="mt-8 border-b border-slate-400" />
