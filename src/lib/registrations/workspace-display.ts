@@ -1,4 +1,5 @@
 import type { UserRole } from "@/generated/prisma/enums";
+import { formatEnglishWithChineseName } from "@/lib/candidates/identity";
 
 export interface AdjustmentSummaryPayload {
   added: Array<{ subject: string; paperCode: string; paperTitle: string }>;
@@ -45,11 +46,19 @@ export function formatAdjusterLabel(
 
 export function workspaceStudentLabel(workspace: {
   student?: { name: string; studentNo?: string | null } | null;
-  candidate?: { englishName?: string | null; studentNumber?: string | null } | null;
+  candidate?: {
+    englishName?: string | null;
+    chineseName?: string | null;
+    studentNumber?: string | null;
+  } | null;
+  registrations?: Array<{ studentNameSnapshot?: string | null }>;
 }): string {
-  if (workspace.student?.name?.trim()) return workspace.student.name;
-  if (workspace.candidate?.englishName?.trim()) return workspace.candidate.englishName;
-  return "—";
+  const english =
+    workspace.student?.name?.trim() ||
+    workspace.candidate?.englishName?.trim() ||
+    workspace.registrations?.[0]?.studentNameSnapshot?.trim() ||
+    "";
+  return formatEnglishWithChineseName(english || null, workspace.candidate?.chineseName);
 }
 
 export function workspaceStudentNo(workspace: {

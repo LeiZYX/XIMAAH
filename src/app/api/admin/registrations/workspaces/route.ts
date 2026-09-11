@@ -24,6 +24,7 @@ const workspaceListInclude = {
   candidate: {
     select: {
       englishName: true,
+      chineseName: true,
       studentId: true,
       studentNumber: true,
       candidateType: true,

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { formatEnglishWithChineseName } from "@/lib/candidates/identity";
 import { auditActionLabel } from "@/lib/registrations/audit-labels";
 import {
   formatAdjusterLabel,
@@ -360,6 +361,7 @@ export function buildWorkspaceConfirmationPrintData(workspace: {
   lastAdjustmentSummary: string | null;
   candidate?: {
     englishName?: string | null;
+    chineseName?: string | null;
     studentId?: string | null;
     studentNumber?: string | null;
     grade?: string | null;
@@ -423,8 +425,10 @@ export function buildWorkspaceConfirmationPrintData(workspace: {
   const profile = workspace.student?.studentProfile;
   const firstReg = workspace.registrations[0];
   const studentSnapshots = {
-    studentNameSnapshot:
+    studentNameSnapshot: formatEnglishWithChineseName(
       firstReg?.studentNameSnapshot ?? candidate?.englishName ?? workspace.student?.name ?? "",
+      candidate?.chineseName,
+    ),
     studentNoSnapshot:
       firstReg?.studentNoSnapshot ?? candidate?.studentNumber ?? profile?.studentNo ?? "",
     gradeSnapshot: firstReg?.gradeSnapshot ?? candidate?.grade ?? profile?.currentGrade ?? "",

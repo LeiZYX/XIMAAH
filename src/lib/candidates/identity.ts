@@ -79,6 +79,17 @@ export function computeDisplayName(candidate: {
   return candidate.englishName?.trim() ?? "";
 }
 
+/** Display form: `Eric（中文名）` when both are present. */
+export function formatEnglishWithChineseName(
+  englishName: string | null | undefined,
+  chineseName?: string | null,
+): string {
+  const english = englishName?.trim() || "";
+  const chinese = chineseName?.trim() || "";
+  if (english && chinese) return `${english}（${chinese}）`;
+  return english || chinese || "—";
+}
+
 export function genderLabel(gender: Gender | string | null | undefined): string {
   switch (gender) {
     case "MALE":

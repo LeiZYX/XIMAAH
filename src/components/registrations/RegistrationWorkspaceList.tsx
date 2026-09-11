@@ -55,6 +55,7 @@ interface WorkspaceRow {
   } | null;
   candidate: {
     englishName: string | null;
+    chineseName: string | null;
     studentId: string | null;
     studentNumber: string | null;
     candidateType: string | null;
