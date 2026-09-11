@@ -30,7 +30,7 @@ interface RegistrationRow {
   subject: { name: string; code: string };
   paper: { code: string; title: string };
   examSession: { date: string; startTime: string | null };
-  candidate?: { studentId: string | null } | null;
+  candidate?: { studentId: string | null; chineseName?: string | null } | null;
 }
 
 interface RegistrationListProps {
@@ -296,14 +296,12 @@ export function RegistrationList({
               <tr className="border-b text-xs uppercase text-slate-500">
                 {showStudentColumns ? (
                   <>
-                    <th className="py-2 pr-4">Student</th>
-                    <th className="py-2 pr-4">Student ID</th>
+                    <th className="py-2 pr-4">School student no</th>
+                    <th className="py-2 pr-4">Student name（中文姓名）</th>
                     <th className="py-2 pr-4">Grade</th>
                     <th className="py-2 pr-4">Class</th>
                   </>
                 ) : null}
-                <th className="py-2 pr-4">Board</th>
-                <th className="py-2 pr-4">Registration #</th>
                 <th className="py-2 pr-4">Series</th>
                 <th className="py-2 pr-4">Subject</th>
                 <th className="py-2 pr-4">Paper</th>
@@ -323,18 +321,19 @@ export function RegistrationList({
                 <tr key={row.id} className="border-b border-slate-100">
                   {showStudentColumns ? (
                     <>
-                      <td className="py-2 pr-4">{row.studentNameSnapshot}</td>
                       <td className="py-2 pr-4 font-mono text-xs">
-                        {row.candidate?.studentId ?? "—"}
+                        {row.studentNoSnapshot || "—"}
+                      </td>
+                      <td className="py-2 pr-4">
+                        {row.studentNameSnapshot}
+                        {row.candidate?.chineseName
+                          ? `（${row.candidate.chineseName}）`
+                          : ""}
                       </td>
                       <td className="py-2 pr-4">{row.gradeSnapshot}</td>
                       <td className="py-2 pr-4">{row.classNameSnapshot}</td>
                     </>
                   ) : null}
-                  <td className="py-2 pr-4">{row.examBoard.name}</td>
-                  <td className="py-2 pr-4 font-mono text-xs">
-                    {row.registrationWorkspace?.registrationNumber ?? "—"}
-                  </td>
                   <td className="py-2 pr-4">
                     {row.examSeries.name} ({row.examSeries.year})
                   </td>

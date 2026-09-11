@@ -3,34 +3,18 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  formatStudentHeaderLabel,
-  formatStudentMobileHeaderLabel,
-} from "@/lib/auth/student-identity";
 
 type NavLink = {
   href: string;
   label: string;
 };
 
-type HeaderUser = {
-  name: string;
-  role: string;
-  homePath?: string;
-  studentNo?: string | null;
-  chineseName?: string | null;
-  preferredEnglishName?: string | null;
-  studentProfile?: {
-    studentNo?: string | null;
-    currentGrade?: string | null;
-    currentClassName?: string | null;
-  } | null;
-};
-
 export function AppHeader() {
   const router = useRouter();
   const pathname = usePathname();
-  const [user, setUser] = useState<HeaderUser | null>(null);
+  const [user, setUser] = useState<{ name: string; role: string; homePath?: string } | null>(
+    null,
+  );
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -115,25 +99,6 @@ export function AppHeader() {
     );
   }
 
-  const studentIdentity =
-    user?.role === "STUDENT"
-      ? {
-          name: user.name,
-          chineseName: user.chineseName,
-          preferredEnglishName: user.preferredEnglishName,
-          studentNo: user.studentProfile?.studentNo ?? user.studentNo ?? null,
-          currentGrade: user.studentProfile?.currentGrade ?? null,
-          currentClassName: user.studentProfile?.currentClassName ?? null,
-        }
-      : null;
-
-  const desktopUserLabel = studentIdentity
-    ? formatStudentHeaderLabel(studentIdentity)
-    : user?.name;
-  const mobileUserLabel = studentIdentity
-    ? formatStudentMobileHeaderLabel(studentIdentity)
-    : user?.name;
-
   return (
     <header className="border-b border-slate-200 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
@@ -153,12 +118,7 @@ export function AppHeader() {
           {navLinks.map((link) => renderNavLink(link))}
           {user ? (
             <>
-              <span
-                className="max-w-[14rem] truncate px-2 text-xs text-slate-500"
-                title={desktopUserLabel}
-              >
-                {desktopUserLabel}
-              </span>
+              <span className="max-w-[8rem] truncate px-2 text-xs text-slate-500">{user.name}</span>
               <button
                 type="button"
                 onClick={handleLogout}
@@ -172,11 +132,8 @@ export function AppHeader() {
 
         <div className="flex items-center gap-2 lg:hidden">
           {user ? (
-            <span
-              className="max-w-[5rem] truncate text-xs text-slate-500 sm:max-w-[10rem]"
-              title={desktopUserLabel}
-            >
-              {mobileUserLabel}
+            <span className="max-w-[5rem] truncate text-xs text-slate-500 sm:max-w-[8rem]">
+              {user.name}
             </span>
           ) : null}
           <button
@@ -213,16 +170,6 @@ export function AppHeader() {
             className="relative z-50 border-t border-slate-200 bg-white px-4 py-3 lg:hidden"
           >
             <div className="mx-auto flex max-w-7xl flex-col gap-1">
-              {studentIdentity ? (
-                <div className="mb-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-                  <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-                    Signed in as
-                  </p>
-                  <p className="mt-0.5 text-sm font-medium text-slate-900">
-                    {formatStudentHeaderLabel(studentIdentity)}
-                  </p>
-                </div>
-              ) : null}
               {navLinks.map((link) => renderNavLink(link, true))}
               {user ? (
                 <button

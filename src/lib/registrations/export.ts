@@ -10,6 +10,7 @@ type RegistrationRow = {
   subject: { name: string; code: string; qualification: { level: string; name: string } };
   paper: { code: string; title: string };
   examSession: { date: Date; startTime: string | null; endTime: string | null };
+  candidate?: { chineseName?: string | null } | null;
 };
 
 export function registrationToExportRow(row: RegistrationRow) {
@@ -21,12 +22,15 @@ export function registrationToExportRow(row: RegistrationRow) {
         ? "AM"
         : "";
 
+  const studentName = row.candidate?.chineseName
+    ? `${row.studentNameSnapshot}（${row.candidate.chineseName}）`
+    : row.studentNameSnapshot;
+
   return {
-    "Student name": row.studentNameSnapshot,
-    "Student number": row.studentNoSnapshot,
+    "School student no": row.studentNoSnapshot,
+    "Student name（中文姓名）": studentName,
     Grade: row.gradeSnapshot,
     Class: row.classNameSnapshot,
-    "Exam board": row.examBoard.name,
     "Exam series": `${row.examSeries.name} (${row.examSeries.year})`,
     Qualification: `${row.subject.qualification.level} ${row.subject.qualification.name}`,
     Subject: row.subject.name,
