@@ -106,17 +106,6 @@ export function buildPrintDocumentTitle(data: ConfirmationPrintData, at = new Da
   return `${sanitize(student.name)}-${ymd}-${sanitize(registrationName)}-${timestamp}`;
 }
 
-function candidateTypeLabel(value: string): string {
-  switch (value) {
-    case "INTERNAL":
-      return "Internal (school student)";
-    case "EXTERNAL":
-      return "External candidate";
-    default:
-      return value;
-  }
-}
-
 function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrintData; printTimestamp: Date }) {
   const { group } = data;
   const student = getStudentSnapshotFromRegistrations(group.registrations);
@@ -156,7 +145,6 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
           <h4 className="border-b border-slate-200 pb-2 text-sm font-semibold uppercase tracking-wide text-indigo-700">Candidate Information</h4>
           <dl className="mt-3 grid gap-3 sm:grid-cols-2">
             <SummaryField label="Candidate Name" value={student.name} />
-            <SummaryField label="Candidate Type" value={candidateTypeLabel(student.candidateType)} />
             {isInternal ? (
               <>
                 <SummaryField label="Grade" value={student.grade} />
@@ -364,7 +352,9 @@ export function buildWorkspaceConfirmationPrintData(workspace: {
     candidateType?: string | null;
     examIdentities?: Array<{
       examBoard: { name: string; code: string };
+      candidateNumber?: string | null;
       boardCandidateNumber?: string | null;
+      uciNumber?: string | null;
       uci?: string | null;
       centreNumber?: string | null;
     }>;
@@ -441,9 +431,9 @@ export function buildWorkspaceConfirmationPrintData(workspace: {
     candidate?.examIdentities?.map((identity) => ({
       examBoardName: identity.examBoard.name,
       examBoardCode: identity.examBoard.code,
-      boardCandidateNumber: identity.boardCandidateNumber,
-      uci: identity.uci,
-      centreNumber: identity.centreNumber,
+      boardCandidateNumber: identity.candidateNumber ?? identity.boardCandidateNumber ?? null,
+      uci: identity.uciNumber ?? identity.uci ?? null,
+      centreNumber: identity.centreNumber ?? null,
     })) ?? [];
   const lastUpdated = workspace.registrations.reduce(
     (latest, row) => (new Date(row.updatedAt) > new Date(latest) ? String(row.updatedAt) : latest),
