@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { formatPermanentStudentId } from "@/lib/candidates/display-identifiers";
+import { formatEnglishWithChineseName } from "@/lib/candidates/identity";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import {
@@ -161,6 +162,7 @@ interface WorkspaceData {
   candidate?: {
     id?: string;
     englishName: string;
+    chineseName?: string | null;
     studentId: string | null;
     studentNumber: string | null;
     grade: string | null;
@@ -169,7 +171,9 @@ interface WorkspaceData {
     candidateType: string;
     examIdentities?: Array<{
       boardCandidateNumber: string | null;
-      uci: string | null;
+      candidateNumber?: string | null;
+      uci?: string | null;
+      uciNumber?: string | null;
       centreNumber: string | null;
       examBoard: { name: string; code: string };
     }>;
@@ -646,8 +650,10 @@ export function RegistrationWorkspaceDetail({
 
   const profile = workspace.student?.studentProfile;
   const candidate = workspace.candidate;
-  const displayName =
-    candidate?.englishName ?? workspace.student?.name ?? workspace.registrations[0]?.studentNameSnapshot ?? "—";
+  const displayName = formatEnglishWithChineseName(
+    candidate?.englishName ?? workspace.student?.name ?? workspace.registrations[0]?.studentNameSnapshot ?? "",
+    candidate?.chineseName,
+  );
   const displayStudentId = formatPermanentStudentId(candidate?.studentId);
   const displayStudentNo =
     candidate?.studentNumber ?? profile?.studentNo ?? workspace.registrations[0]?.studentNoSnapshot ?? "—";
