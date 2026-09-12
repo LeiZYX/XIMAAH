@@ -304,6 +304,14 @@ export function RegistrationWorkspaceDetail({
     () => canAdjust && workspace?.registrationType === "INTERNAL_NORMAL",
     [canAdjust, workspace?.registrationType],
   );
+  const showRegistrationFeePanel = useMemo(
+    () =>
+      Boolean(
+        workspace &&
+          (allowPostLockAdjustment || workspace.registrationType === "EXTERNAL"),
+      ),
+    [allowPostLockAdjustment, workspace],
+  );
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -329,7 +337,7 @@ export function RegistrationWorkspaceDetail({
   }, [workspace?.id, workspace?.includeCandidateRegistrationFee]);
 
   useEffect(() => {
-    if (!workspace || !allowPostLockAdjustment) return;
+    if (!workspace || !showRegistrationFeePanel) return;
 
     let cancelled = false;
     setBillingPreviewLoading(true);
@@ -358,7 +366,7 @@ export function RegistrationWorkspaceDetail({
     workspace,
     workspaceId,
     includeCandidateRegistrationFee,
-    allowPostLockAdjustment,
+    showRegistrationFeePanel,
     pendingAdd.length,
     pendingRemove.length,
     pendingReplace.length,
@@ -657,6 +665,17 @@ export function RegistrationWorkspaceDetail({
   const displayStudentId = formatPermanentStudentId(candidate?.studentId);
   const displayStudentNo =
     candidate?.studentNumber ?? profile?.studentNo ?? workspace.registrations[0]?.studentNoSnapshot ?? "—";
+  const board = workspace.registrationWindow.examBoard;
+  const matchedIdentity = candidate?.examIdentities?.find(
+    (identity) =>
+      identity.examBoard.code === board.code || identity.examBoard.name === board.name,
+  );
+  const displayUci =
+    matchedIdentity?.uciNumber?.trim() ||
+    matchedIdentity?.uci?.trim() ||
+    candidate?.examIdentities?.[0]?.uciNumber?.trim() ||
+    candidate?.examIdentities?.[0]?.uci?.trim() ||
+    "—";
   const adjustment = parseAdjustmentSummary(workspace.lastAdjustmentSummary);
   const feeAuditInfo = findCandidateRegistrationFeeAuditInfo(workspace.auditLogs);
 
@@ -731,6 +750,10 @@ export function RegistrationWorkspaceDetail({
             <div><dt className="text-slate-500">Name</dt><dd className="font-medium">{displayName}</dd></div>
             <div><dt className="text-slate-500">Student ID</dt><dd className="font-medium font-mono text-xs">{displayStudentId}</dd></div>
             <div><dt className="text-slate-500">Candidate Type</dt><dd className="font-medium">{candidate?.candidateType ?? workspace.registrations[0]?.candidateTypeSnapshot ?? "—"}</dd></div>
+            <div>
+              <dt className="text-slate-500">UCI No.</dt>
+              <dd className="font-medium font-mono text-xs sm:text-sm">{displayUci}</dd>
+            </div>
             {(candidate?.candidateType ?? workspace.registrations[0]?.candidateTypeSnapshot) === "INTERNAL" ? (
               <>
                 <div><dt className="text-slate-500">Grade</dt><dd className="font-medium">{candidate?.grade ?? profile?.currentGrade ?? workspace.registrations[0]?.gradeSnapshot ?? "—"}</dd></div>
@@ -910,7 +933,7 @@ export function RegistrationWorkspaceDetail({
         </Card>
       ) : null}
 
-      {allowPostLockAdjustment ? (
+      {showRegistrationFeePanel ? (
         <Card className="space-y-4">
           <CandidateRegistrationFeeSection
             examBoardId={workspace.registrationWindow.examBoard.id}
@@ -926,8 +949,8 @@ export function RegistrationWorkspaceDetail({
             displayCurrency={displayCurrency}
             onDisplayCurrencyChange={setDisplayCurrency}
             showDisplayCurrencySelector
-            disabled={savingFeeSelection || applying}
-            showSaveButton
+            disabled={savingFeeSelection || applying || !canAdjust}
+            showSaveButton={canAdjust}
             saving={savingFeeSelection}
             onSave={() => void saveFeeSelectionOnly()}
           />
