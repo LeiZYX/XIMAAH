@@ -175,7 +175,7 @@ interface WorkspaceData {
       uci?: string | null;
       uciNumber?: string | null;
       centreNumber: string | null;
-      examBoard: { name: string; code: string };
+      examBoard: { id?: string; name: string; code?: string };
     }>;
   } | null;
   registrationWindow: {
@@ -185,7 +185,7 @@ interface WorkspaceData {
     studentRegistrationOpenAt: string;
     studentRegistrationCloseAt: string;
     registrationCloseAt: string;
-    examBoard: { id: string; name: string };
+    examBoard: { id: string; name: string; code?: string };
     examSeries: { id: string; name: string; year: number };
   };
   registrations: Array<{
@@ -666,10 +666,12 @@ export function RegistrationWorkspaceDetail({
   const displayStudentNo =
     candidate?.studentNumber ?? profile?.studentNo ?? workspace.registrations[0]?.studentNoSnapshot ?? "—";
   const board = workspace.registrationWindow.examBoard;
-  const matchedIdentity = candidate?.examIdentities?.find(
-    (identity) =>
-      identity.examBoard.code === board.code || identity.examBoard.name === board.name,
-  );
+  const matchedIdentity = candidate?.examIdentities?.find((identity) => {
+    if (board.code && identity.examBoard.code) {
+      return identity.examBoard.code === board.code;
+    }
+    return identity.examBoard.name === board.name;
+  });
   const displayUci =
     matchedIdentity?.uciNumber?.trim() ||
     matchedIdentity?.uci?.trim() ||
