@@ -273,8 +273,16 @@ async function realignRegistrationWorkspacesByType() {
   }
 }
 
+/**
+ * Attach orphan exam registrations (registrationWorkspaceId = null) to workspaces.
+ * Does not run the expensive full-table realign on every call — use
+ * `realignRegistrationWorkspacesByType` only for one-off maintenance.
+ */
 export async function backfillRegistrationWorkspaces() {
-  await realignRegistrationWorkspacesByType();
+  const orphanCount = await prisma.studentExamRegistration.count({
+    where: { registrationWorkspaceId: null },
+  });
+  if (orphanCount === 0) return;
 
   const rows = await prisma.studentExamRegistration.findMany({
     where: { registrationWorkspaceId: null },
@@ -329,6 +337,11 @@ export async function backfillRegistrationWorkspaces() {
       data: { registrationWorkspaceId: workspace.id },
     });
   }
+}
+
+/** One-off maintenance: fix workspaces whose linked registrations disagree on type. */
+export async function realignRegistrationWorkspacesByTypeForMaintenance() {
+  await realignRegistrationWorkspacesByType();
 }
 
 export async function getRegistrationWorkspaceById(workspaceId: string) {

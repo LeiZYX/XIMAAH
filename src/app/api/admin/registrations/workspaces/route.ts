@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { buildPaginationMeta, parseListPagination } from "@/lib/pagination";
 import { prisma } from "@/lib/prisma";
-import { backfillRegistrationWorkspaces } from "@/lib/registrations/workspace";
 import {
   buildWorkspaceRegistrationTypeWhere,
   parseStaffRegistrationTypes,
@@ -79,7 +78,8 @@ export async function GET(request: NextRequest) {
   const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
   if (auth.error) return auth.error;
 
-  await backfillRegistrationWorkspaces();
+  // Skip backfillRegistrationWorkspaces() — it previously realigned every workspace on
+  // each list load and made Internal/External registration pages very slow.
 
   const params = request.nextUrl.searchParams;
   const lockedOnly = params.get("lockedOnly") === "true";
