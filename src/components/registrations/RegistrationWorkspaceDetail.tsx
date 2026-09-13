@@ -403,6 +403,7 @@ export function RegistrationWorkspaceDetail({
     setSelectedSessionId("");
     setSelectedRegistrationId("");
     setReplacementSessionId("");
+    setConfirmFeeImpact(false);
   }
 
   const isLocked = Boolean(workspace?.lockedAt || workspace?.registrations.every((r) => r.lockedAt));
@@ -554,12 +555,14 @@ export function RegistrationWorkspaceDetail({
     if (!selectedSessionId) return;
     setPendingAdd((current) => (current.includes(selectedSessionId) ? current : [...current, selectedSessionId]));
     setSelectedSessionId("");
+    setConfirmFeeImpact(false);
   }
 
   function queueRemove() {
     if (!selectedRegistrationId) return;
     setPendingRemove((current) => (current.includes(selectedRegistrationId) ? current : [...current, selectedRegistrationId]));
     setSelectedRegistrationId("");
+    setConfirmFeeImpact(false);
   }
 
   function queueReplace() {
@@ -570,6 +573,7 @@ export function RegistrationWorkspaceDetail({
     ]);
     setSelectedRegistrationId("");
     setReplacementSessionId("");
+    setConfirmFeeImpact(false);
   }
 
   async function reviewRequest(
@@ -698,34 +702,6 @@ export function RegistrationWorkspaceDetail({
             </a>{" "}
             and use <strong>Regenerate Revised Statement</strong>.
           </p>
-        </div>
-      ) : null}
-
-      {confirmFeeImpact ? (
-        <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-4 text-sm text-amber-950">
-          <p className="font-medium">This will affect the issued fee statement</p>
-          <p className="mt-2">
-            This registration already has an issued fee statement. Changing billing items will mark
-            it as needing regeneration. You will need to regenerate a revised statement afterwards.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <button
-              type="button"
-              disabled={applying}
-              onClick={() => void executeApplyChanges()}
-              className="rounded-lg bg-amber-700 px-4 py-2 text-sm font-medium text-white hover:bg-amber-800 disabled:opacity-50"
-            >
-              Continue with adjustment
-            </button>
-            <button
-              type="button"
-              disabled={applying}
-              onClick={() => setConfirmFeeImpact(false)}
-              className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-white disabled:opacity-50"
-            >
-              Cancel
-            </button>
-          </div>
         </div>
       ) : null}
 
@@ -927,7 +903,12 @@ export function RegistrationWorkspaceDetail({
                   />
                 </label>
               ) : null}
-              <button type="button" disabled={applying} onClick={applyChanges} className="mt-3 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50">
+              <button
+                type="button"
+                disabled={applying}
+                onClick={applyChanges}
+                className="mt-3 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+              >
                 {applying ? "Applying..." : "Apply Changes"}
               </button>
             </div>
@@ -1133,6 +1114,46 @@ export function RegistrationWorkspaceDetail({
           </ul>
         )}
       </Card>
+
+      {confirmFeeImpact ? (
+        <div
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-amber-300 bg-amber-50 px-4 py-4 shadow-[0_-8px_24px_rgba(15,23,42,0.12)] lg:left-64"
+          role="alertdialog"
+          aria-labelledby="fee-impact-title"
+          aria-describedby="fee-impact-desc"
+        >
+          <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-sm text-amber-950">
+              <p id="fee-impact-title" className="font-medium">
+                This will affect the issued fee statement
+              </p>
+              <p id="fee-impact-desc" className="mt-1">
+                This registration already has an issued fee statement. Changing billing items will
+                mark it as needing regeneration. You will need to regenerate a revised statement
+                afterwards.
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={applying}
+                onClick={() => void executeApplyChanges()}
+                className="rounded-lg bg-amber-700 px-4 py-2 text-sm font-medium text-white hover:bg-amber-800 disabled:opacity-50"
+              >
+                {applying ? "Applying..." : "Continue with adjustment"}
+              </button>
+              <button
+                type="button"
+                disabled={applying}
+                onClick={() => setConfirmFeeImpact(false)}
+                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
