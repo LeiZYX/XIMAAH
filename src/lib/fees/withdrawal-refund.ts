@@ -4,6 +4,7 @@ import { createFeeAuditLog } from "@/lib/fees/audit";
 import { calculateFeeAmounts } from "@/lib/fees/calculate";
 import { findMatchingFeeRuleWithFallback, resolveEntryTypeForRegistration } from "@/lib/fees/match";
 import { roundMoney, toNumber } from "@/lib/fees/money";
+import { sumWorkspacePaidGbp } from "@/lib/fees/payment-due";
 import {
   DEFAULT_PAYMENT_FEE_PERCENT,
   effectiveWithdrawalRefundPercent,
@@ -455,6 +456,37 @@ export async function listOfflineWithdrawalRefundGroups(params: {
     latestStatementByWorkspace.set(workspaceId, statement);
   }
 
+  const revisedStatements =
+    workspaceIds.length === 0
+      ? []
+      : await prisma.feeStatement.findMany({
+          where: {
+            registrationWorkspaceId: { in: workspaceIds },
+            statementKind: "NORMAL",
+            status: "REVISED",
+          },
+          select: {
+            registrationWorkspaceId: true,
+            totalGbpAmount: true,
+            generatedAt: true,
+          },
+          orderBy: { generatedAt: "desc" },
+        });
+
+  const priorBilledByWorkspace = new Map<string, number>();
+  for (const statement of revisedStatements) {
+    const workspaceId = statement.registrationWorkspaceId;
+    if (!workspaceId || priorBilledByWorkspace.has(workspaceId)) continue;
+    priorBilledByWorkspace.set(workspaceId, toNumber(statement.totalGbpAmount));
+  }
+
+  const onlinePaidByWorkspace = new Map<string, number>();
+  await Promise.all(
+    workspaceIds.map(async (workspaceId) => {
+      onlinePaidByWorkspace.set(workspaceId, await sumWorkspacePaidGbp(workspaceId));
+    }),
+  );
+
   const groupMap = new Map<
     string,
     {
@@ -506,6 +538,13 @@ export async function listOfflineWithdrawalRefundGroups(params: {
       completedLines.reduce((sum, line) => sum + line.creditGbp, 0),
     );
     const statement = latestStatementByWorkspace.get(group.workspaceId) ?? null;
+    const onlinePaidGbp = onlinePaidByWorkspace.get(group.workspaceId) ?? 0;
+    const priorBilledGbp = priorBilledByWorkspace.get(group.workspaceId) ?? null;
+    const statementPreviouslyPaidGbp = statement
+      ? toNumber(statement.previouslyPaidGbpAmount)
+      : 0;
+    // Prefer live online payments; fall back to statement snapshot.
+    const alreadyPaidGbp = onlinePaidGbp > 0 ? onlinePaidGbp : statementPreviouslyPaidGbp;
 
     let rollupStatus: "PENDING_OFFLINE" | "COMPLETED" | "MIXED" | "ZERO_NO_REFUND" =
       "ZERO_NO_REFUND";
@@ -526,13 +565,24 @@ export async function listOfflineWithdrawalRefundGroups(params: {
       completedCount: completedLines.length,
       pendingCreditGbp,
       completedCreditGbp,
+      onlinePaidGbp,
+      alreadyPaidGbp,
+      priorBilledGbp,
+      paymentSource:
+        onlinePaidGbp > 0
+          ? ("ONLINE" as const)
+          : alreadyPaidGbp > 0
+            ? ("STATEMENT_SNAPSHOT" as const)
+            : pendingCreditGbp > 0
+              ? ("NO_ONLINE_PAYMENT_RECORDED" as const)
+              : ("NONE" as const),
       statement: statement
         ? {
             id: statement.id,
             statementNo: statement.statementNo,
             status: statement.status,
             totalGbp: toNumber(statement.totalGbpAmount),
-            previouslyPaidGbp: toNumber(statement.previouslyPaidGbpAmount),
+            previouslyPaidGbp: statementPreviouslyPaidGbp,
             amountDueGbp:
               statement.amountDueGbpAmount == null
                 ? toNumber(statement.totalGbpAmount)

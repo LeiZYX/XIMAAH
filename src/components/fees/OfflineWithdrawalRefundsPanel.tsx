@@ -44,6 +44,10 @@ type RefundGroup = {
   completedCount: number;
   pendingCreditGbp: number;
   completedCreditGbp: number;
+  onlinePaidGbp: number;
+  alreadyPaidGbp: number;
+  priorBilledGbp: number | null;
+  paymentSource: "ONLINE" | "STATEMENT_SNAPSHOT" | "NO_ONLINE_PAYMENT_RECORDED" | "NONE";
   statement: {
     id: string;
     statementNo: string;
@@ -172,7 +176,7 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
     <div className="space-y-4">
       <PageHeader
         title="Offline withdrawal refunds"
-        description="Student-level queue for finance: see revised fee total, already paid, amount due, and offline refund credit. Mark each student (or line) after refunding outside the payment platform."
+        description="Student-level queue for finance: prior billed vs revised total, online paid (GlobePay), amount due, and offline refund credit. Pending refund is calculated from withdrawn exam sales — it does not require an online payment record. Mark each student after refunding outside the payment platform."
       />
       <FeeManagementNav basePath={basePath} />
 
@@ -259,8 +263,9 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
                 <tr>
                   <th className="px-3 py-2 text-left font-medium text-slate-600">Student</th>
                   <th className="px-3 py-2 text-left font-medium text-slate-600">Window</th>
+                  <th className="px-3 py-2 text-right font-medium text-slate-600">Prior billed</th>
                   <th className="px-3 py-2 text-right font-medium text-slate-600">Revised total</th>
-                  <th className="px-3 py-2 text-right font-medium text-slate-600">Already paid</th>
+                  <th className="px-3 py-2 text-right font-medium text-slate-600">Online paid</th>
                   <th className="px-3 py-2 text-right font-medium text-slate-600">Amount due</th>
                   <th className="px-3 py-2 text-right font-medium text-slate-600">Pending refund</th>
                   <th className="px-3 py-2 text-left font-medium text-slate-600">Status</th>
@@ -302,14 +307,20 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
                           </div>
                         </td>
                         <td className="px-3 py-2 text-right">
+                          {group.priorBilledGbp != null
+                            ? formatMoney(group.priorBilledGbp, "GBP")
+                            : "—"}
+                        </td>
+                        <td className="px-3 py-2 text-right">
                           {group.statement
                             ? formatMoney(group.statement.totalGbp, "GBP")
                             : "—"}
                         </td>
                         <td className="px-3 py-2 text-right">
-                          {group.statement
-                            ? formatMoney(group.statement.previouslyPaidGbp, "GBP")
-                            : "—"}
+                          <div>{formatMoney(group.onlinePaidGbp ?? group.alreadyPaidGbp ?? 0, "GBP")}</div>
+                          {group.paymentSource === "NO_ONLINE_PAYMENT_RECORDED" ? (
+                            <div className="text-xs text-amber-700">No online payment recorded</div>
+                          ) : null}
                         </td>
                         <td className="px-3 py-2 text-right">
                           {group.statement
@@ -369,7 +380,7 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
                                   </div>
                                 ) : null}
                               </td>
-                              <td className="px-3 py-2 text-right text-xs text-slate-600" colSpan={3}>
+                              <td className="px-3 py-2 text-right text-xs text-slate-600" colSpan={4}>
                                 Sales {formatMoney(line.salesAmountGbp, "GBP")} ·{" "}
                                 {line.effectiveRefundPercent}%
                               </td>
