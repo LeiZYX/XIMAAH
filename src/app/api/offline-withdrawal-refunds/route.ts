@@ -3,8 +3,7 @@ import { jsonError } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { canGenerateFeeStatements } from "@/lib/auth/permissions";
 import type { OfflineWithdrawalRefundStatus } from "@/generated/prisma/enums";
-import { listOfflineWithdrawalRefunds } from "@/lib/fees/withdrawal-refund";
-import { toNumber } from "@/lib/fees/money";
+import { listOfflineWithdrawalRefundGroups } from "@/lib/fees/withdrawal-refund";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -25,21 +24,10 @@ export async function GET(request: NextRequest) {
     return jsonError("Invalid status filter", 400);
   }
 
-  const rows = await listOfflineWithdrawalRefunds({
+  const groups = await listOfflineWithdrawalRefundGroups({
     status: statusParam as OfflineWithdrawalRefundStatus | "ALL",
-    registrationWindowId,
+    registrationWindowId: registrationWindowId || undefined,
   });
 
-  return NextResponse.json(
-    rows.map((row) => ({
-      ...row,
-      salesAmountGbp: toNumber(row.salesAmountGbp),
-      salesAmountCny: row.salesAmountCny == null ? null : toNumber(row.salesAmountCny),
-      configuredRefundPercent: toNumber(row.configuredRefundPercent),
-      paymentFeePercent: toNumber(row.paymentFeePercent),
-      effectiveRefundPercent: toNumber(row.effectiveRefundPercent),
-      creditGbp: toNumber(row.creditGbp),
-      creditCny: row.creditCny == null ? null : toNumber(row.creditCny),
-    })),
-  );
+  return NextResponse.json({ groups });
 }

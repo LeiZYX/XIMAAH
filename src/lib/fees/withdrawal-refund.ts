@@ -372,6 +372,7 @@ export async function listOfflineWithdrawalRefunds(params: {
         select: {
           id: true,
           englishName: true,
+          chineseName: true,
           studentNumber: true,
           assessmentHubCandidateNumber: true,
         },
@@ -387,6 +388,169 @@ export async function listOfflineWithdrawalRefunds(params: {
     },
     orderBy: [{ status: "asc" }, { createdAt: "desc" }],
   });
+}
+
+function serializeRefundLine(
+  row: Awaited<ReturnType<typeof listOfflineWithdrawalRefunds>>[number],
+) {
+  return {
+    id: row.id,
+    status: row.status,
+    paperCodeSnapshot: row.paperCodeSnapshot,
+    subjectSnapshot: row.subjectSnapshot,
+    feeStageCode: row.feeStageCode,
+    salesAmountGbp: toNumber(row.salesAmountGbp),
+    configuredRefundPercent: toNumber(row.configuredRefundPercent),
+    paymentFeePercent: toNumber(row.paymentFeePercent),
+    effectiveRefundPercent: toNumber(row.effectiveRefundPercent),
+    creditGbp: toNumber(row.creditGbp),
+    calculationNotes: row.calculationNotes,
+    offlineReference: row.offlineReference,
+    offlineNote: row.offlineNote,
+    createdAt: row.createdAt,
+    completedAt: row.completedAt,
+    createdByUser: row.createdByUser,
+    completedByUser: row.completedByUser,
+  };
+}
+
+/**
+ * Finance work queue: group withdrawal refund lines by registration workspace and
+ * attach the latest active fee statement totals (revised total / already paid / due).
+ */
+export async function listOfflineWithdrawalRefundGroups(params: {
+  status?: OfflineWithdrawalRefundStatus | "ALL";
+  registrationWindowId?: string;
+}) {
+  const lines = await listOfflineWithdrawalRefunds(params);
+  const workspaceIds = [...new Set(lines.map((row) => row.registrationWorkspaceId))];
+
+  const statements =
+    workspaceIds.length === 0
+      ? []
+      : await prisma.feeStatement.findMany({
+          where: {
+            registrationWorkspaceId: { in: workspaceIds },
+            statementKind: "NORMAL",
+            status: { in: ["DRAFT", "ISSUED", "PAID", "NEEDS_REGENERATION"] },
+          },
+          select: {
+            id: true,
+            statementNo: true,
+            status: true,
+            totalGbpAmount: true,
+            previouslyPaidGbpAmount: true,
+            amountDueGbpAmount: true,
+            paymentNotes: true,
+            registrationWorkspaceId: true,
+            generatedAt: true,
+          },
+          orderBy: { generatedAt: "desc" },
+        });
+
+  const latestStatementByWorkspace = new Map<string, (typeof statements)[number]>();
+  for (const statement of statements) {
+    const workspaceId = statement.registrationWorkspaceId;
+    if (!workspaceId || latestStatementByWorkspace.has(workspaceId)) continue;
+    latestStatementByWorkspace.set(workspaceId, statement);
+  }
+
+  const groupMap = new Map<
+    string,
+    {
+      workspaceId: string;
+      registrationNumber: string | null;
+      candidate: {
+        id: string;
+        englishName: string;
+        chineseName: string | null;
+        studentNumber: string | null;
+        assessmentHubCandidateNumber: string;
+      } | null;
+      registrationWindow: { id: string; title: string; academicYear: string };
+      lines: ReturnType<typeof serializeRefundLine>[];
+    }
+  >();
+
+  for (const row of lines) {
+    const existing = groupMap.get(row.registrationWorkspaceId);
+    const serialized = serializeRefundLine(row);
+    if (existing) {
+      existing.lines.push(serialized);
+      continue;
+    }
+    groupMap.set(row.registrationWorkspaceId, {
+      workspaceId: row.registrationWorkspaceId,
+      registrationNumber: row.registrationWorkspace.registrationNumber,
+      candidate: row.candidate
+        ? {
+            id: row.candidate.id,
+            englishName: row.candidate.englishName,
+            chineseName: row.candidate.chineseName,
+            studentNumber: row.candidate.studentNumber,
+            assessmentHubCandidateNumber: row.candidate.assessmentHubCandidateNumber,
+          }
+        : null,
+      registrationWindow: row.registrationWindow,
+      lines: [serialized],
+    });
+  }
+
+  const groups = [...groupMap.values()].map((group) => {
+    const pendingLines = group.lines.filter((line) => line.status === "PENDING_OFFLINE");
+    const completedLines = group.lines.filter((line) => line.status === "COMPLETED");
+    const pendingCreditGbp = roundMoney(
+      pendingLines.reduce((sum, line) => sum + line.creditGbp, 0),
+    );
+    const completedCreditGbp = roundMoney(
+      completedLines.reduce((sum, line) => sum + line.creditGbp, 0),
+    );
+    const statement = latestStatementByWorkspace.get(group.workspaceId) ?? null;
+
+    let rollupStatus: "PENDING_OFFLINE" | "COMPLETED" | "MIXED" | "ZERO_NO_REFUND" =
+      "ZERO_NO_REFUND";
+    if (pendingLines.length > 0 && completedLines.length > 0) rollupStatus = "MIXED";
+    else if (pendingLines.length > 0) rollupStatus = "PENDING_OFFLINE";
+    else if (completedLines.length > 0) rollupStatus = "COMPLETED";
+    else if (group.lines.some((line) => line.status === "ZERO_NO_REFUND")) {
+      rollupStatus = "ZERO_NO_REFUND";
+    }
+
+    return {
+      workspaceId: group.workspaceId,
+      registrationNumber: group.registrationNumber,
+      candidate: group.candidate,
+      registrationWindow: group.registrationWindow,
+      rollupStatus,
+      pendingCount: pendingLines.length,
+      completedCount: completedLines.length,
+      pendingCreditGbp,
+      completedCreditGbp,
+      statement: statement
+        ? {
+            id: statement.id,
+            statementNo: statement.statementNo,
+            status: statement.status,
+            totalGbp: toNumber(statement.totalGbpAmount),
+            previouslyPaidGbp: toNumber(statement.previouslyPaidGbpAmount),
+            amountDueGbp:
+              statement.amountDueGbpAmount == null
+                ? toNumber(statement.totalGbpAmount)
+                : toNumber(statement.amountDueGbpAmount),
+            paymentNotes: statement.paymentNotes,
+          }
+        : null,
+      lines: group.lines,
+    };
+  });
+
+  groups.sort((a, b) => {
+    const nameA = a.candidate?.englishName ?? "";
+    const nameB = b.candidate?.englishName ?? "";
+    return nameA.localeCompare(nameB);
+  });
+
+  return groups;
 }
 
 /** @deprecated unused helper kept for typing clarity */
