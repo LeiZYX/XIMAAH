@@ -36,10 +36,49 @@ interface DraftAdd {
   reason: string;
 }
 
+interface PendingRequestItem {
+  id: string;
+  itemType: "ADD" | "REMOVE";
+  studentReason: string;
+  targetRegistrationId: string | null;
+  targetExamSession: {
+    date: string;
+    startTime: string | null;
+    endTime: string | null;
+    paper: { code: string; title: string; subject: { name: string } };
+    examSeries?: { name: string; year: number };
+  } | null;
+}
+
 interface PendingRequestSummary {
   id: string;
   status: "PENDING_TEACHER" | "PENDING_EO" | "APPROVED" | "REJECTED";
   registrationWorkspaceId: string;
+  items?: PendingRequestItem[];
+}
+
+function formatPendingSessionLabel(
+  session: NonNullable<PendingRequestItem["targetExamSession"]>,
+): string {
+  const date = typeof session.date === "string" ? session.date.slice(0, 10) : String(session.date);
+  const time =
+    session.startTime && session.endTime
+      ? ` ${session.startTime}–${session.endTime}`
+      : session.startTime
+        ? ` ${session.startTime}`
+        : "";
+  const title = session.paper.title ? ` — ${session.paper.title}` : "";
+  const series = session.examSeries
+    ? ` · ${session.examSeries.name} (${session.examSeries.year})`
+    : "";
+  return `${session.paper.subject.name} · ${session.paper.code}${title} · ${date}${time}${series}`;
+}
+
+function pendingItemLabel(item: PendingRequestItem): string {
+  if (item.targetExamSession) return formatPendingSessionLabel(item.targetExamSession);
+  return item.itemType === "REMOVE"
+    ? `Remove registration ${item.targetRegistrationId ?? ""}`.trim()
+    : "Add exam";
 }
 
 interface SessionOption extends ExamSessionSearchable {
@@ -307,13 +346,69 @@ export function StudentAdjustmentRequestPanel({
   if (pendingLoading) return null;
 
   if (pending) {
+    const pendingItems = pending.items ?? [];
+    const pendingRemoves = pendingItems.filter((item) => item.itemType === "REMOVE");
+    const pendingAdds = pendingItems.filter((item) => item.itemType === "ADD");
+    const removeIdsPending = new Set(
+      pendingRemoves.map((item) => item.targetRegistrationId).filter(Boolean),
+    );
+    const currentKept = registrations.filter((row) => !removeIdsPending.has(row.id));
+
     return (
-      <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950">
-        <p className="font-medium">{pendingStatusLabel(pending.status)}</p>
-        <p className="mt-1 text-amber-900">
-          Your adjustment request is waiting for review. You cannot submit another request for this
-          registration until it is approved or rejected.
-        </p>
+      <div className="space-y-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-3 text-sm text-amber-950">
+        <div>
+          <p className="font-medium">{pendingStatusLabel(pending.status)}</p>
+          <p className="mt-1 text-amber-900">
+            Your adjustment request is waiting for review. You cannot submit another request for
+            this registration until it is approved or rejected.
+          </p>
+        </div>
+
+        <div className="rounded-lg border border-amber-200/80 bg-white/70 px-3 py-2">
+          <p className="font-medium text-slate-900">Currently registered</p>
+          {currentKept.length === 0 ? (
+            <p className="mt-1 text-slate-600">
+              {lateEntry || registrations.length === 0
+                ? "No exams registered yet."
+                : "All current exams are marked for removal (still enrolled until approved)."}
+            </p>
+          ) : (
+            <ul className="mt-1 list-disc space-y-1 pl-5 text-slate-800">
+              {currentKept.map((row) => (
+                <li key={row.id}>{examLabel(row)}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="rounded-lg border border-amber-200/80 bg-white/70 px-3 py-2">
+          <p className="font-medium text-slate-900">Pending changes</p>
+          {pendingItems.length === 0 ? (
+            <p className="mt-1 text-slate-600">No change details available.</p>
+          ) : (
+            <ul className="mt-2 space-y-2">
+              {pendingRemoves.map((item) => (
+                <li key={item.id} className="rounded-lg border border-rose-100 bg-rose-50/70 px-2.5 py-2">
+                  <p className="font-medium text-rose-900">Remove · {pendingItemLabel(item)}</p>
+                  {item.studentReason ? (
+                    <p className="mt-0.5 text-xs text-rose-800">Reason: {item.studentReason}</p>
+                  ) : null}
+                </li>
+              ))}
+              {pendingAdds.map((item) => (
+                <li
+                  key={item.id}
+                  className="rounded-lg border border-emerald-100 bg-emerald-50/70 px-2.5 py-2"
+                >
+                  <p className="font-medium text-emerald-900">Add · {pendingItemLabel(item)}</p>
+                  {item.studentReason ? (
+                    <p className="mt-0.5 text-xs text-emerald-800">Reason: {item.studentReason}</p>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     );
   }

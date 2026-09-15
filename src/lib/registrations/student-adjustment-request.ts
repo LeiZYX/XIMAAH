@@ -110,11 +110,51 @@ export async function getPendingStudentAdjustmentForWorkspace(workspaceId: strin
 }
 
 export async function listStudentAdjustmentRequestsForStudent(studentId: string) {
-  return prisma.studentAdjustmentRequest.findMany({
+  const rows = await prisma.studentAdjustmentRequest.findMany({
     where: { studentId },
     include: studentAdjustmentRequestInclude,
     orderBy: { submittedAt: "desc" },
   });
+
+  const removeRegistrationIds = [
+    ...new Set(
+      rows.flatMap((row) =>
+        row.items
+          .filter((item) => item.itemType === StudentAdjustmentRequestItemType.REMOVE)
+          .map((item) => item.targetRegistrationId)
+          .filter((id): id is string => Boolean(id)),
+      ),
+    ),
+  ];
+
+  if (removeRegistrationIds.length === 0) return rows;
+
+  const registrations = await prisma.studentExamRegistration.findMany({
+    where: { id: { in: removeRegistrationIds } },
+    include: {
+      examSession: { include: sessionInclude },
+    },
+  });
+  const sessionByRegistrationId = new Map(
+    registrations.map((row) => [row.id, row.examSession]),
+  );
+
+  return rows.map((row) => ({
+    ...row,
+    items: row.items.map((item) => {
+      if (
+        item.itemType === StudentAdjustmentRequestItemType.REMOVE &&
+        item.targetRegistrationId &&
+        !item.targetExamSession
+      ) {
+        return {
+          ...item,
+          targetExamSession: sessionByRegistrationId.get(item.targetRegistrationId) ?? null,
+        };
+      }
+      return item;
+    }),
+  }));
 }
 
 export async function listStudentAdjustmentRequestsForReview(filters?: {
