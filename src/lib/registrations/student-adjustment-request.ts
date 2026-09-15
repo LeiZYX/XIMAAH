@@ -250,6 +250,147 @@ export async function listAddableSessionsForStudentAdjustment(input: {
   return filterExamSessions(available, input.q, input.limit ?? 25);
 }
 
+export type StudentLateEntryWindow = {
+  id: string;
+  title: string;
+  status: string;
+  studentRegistrationOpenAt: Date;
+  studentRegistrationCloseAt: Date;
+  registrationCloseAt: Date;
+  studentAdjustmentRequestEnabled: boolean;
+  studentAdjustmentRequestCloseAt: Date | null;
+  postLockAdjustmentEnabled: boolean;
+  examBoard: { id: string; name: string; code: string };
+  examSeries: { name: string; year: number };
+};
+
+/** Open windows where late adjustment is allowed and the student has no active/locked exams yet. */
+export async function listStudentLateEntryAdjustmentWindows(
+  studentId: string,
+  now = new Date(),
+): Promise<Array<StudentLateEntryWindow & { existingWorkspaceId: string | null }>> {
+  const windows = await prisma.registrationWindow.findMany({
+    where: {
+      status: "OPEN",
+      studentAdjustmentRequestEnabled: true,
+      postLockAdjustmentEnabled: true,
+      studentRegistrationCloseAt: { lt: now },
+    },
+    select: {
+      id: true,
+      title: true,
+      status: true,
+      studentRegistrationOpenAt: true,
+      studentRegistrationCloseAt: true,
+      registrationCloseAt: true,
+      studentAdjustmentRequestEnabled: true,
+      studentAdjustmentRequestCloseAt: true,
+      postLockAdjustmentEnabled: true,
+      examBoard: { select: { id: true, name: true, code: true } },
+      examSeries: { select: { name: true, year: true } },
+    },
+    orderBy: [{ studentRegistrationCloseAt: "desc" }, { title: "asc" }],
+  });
+
+  const existing = await prisma.studentExamRegistration.findMany({
+    where: {
+      studentId,
+      status: { in: [RegistrationStatus.ACTIVE, RegistrationStatus.LOCKED] },
+      registrationType: "INTERNAL_NORMAL",
+    },
+    select: { registrationWindowId: true },
+  });
+  const windowsWithRegs = new Set(existing.map((row) => row.registrationWindowId));
+
+  const eligible = windows.filter(
+    (window) =>
+      !windowsWithRegs.has(window.id) && canStudentSubmitAdjustmentRequest(window, now),
+  );
+
+  const workspaces = await prisma.registrationWorkspace.findMany({
+    where: {
+      studentId,
+      registrationType: "INTERNAL_NORMAL",
+      registrationWindowId: { in: eligible.map((window) => window.id) },
+    },
+    select: { id: true, registrationWindowId: true },
+  });
+  const workspaceByWindow = new Map(
+    workspaces.map((row) => [row.registrationWindowId, row.id] as const),
+  );
+
+  return eligible.map((window) => ({
+    ...window,
+    existingWorkspaceId: workspaceByWindow.get(window.id) ?? null,
+  }));
+}
+
+/**
+ * Create/reuse an INTERNAL_NORMAL workspace for late entry after student registration closed,
+ * with no current ACTIVE/LOCKED exams. Locks the empty workspace so EO apply can proceed.
+ */
+export async function ensureStudentLateEntryWorkspace(
+  studentId: string,
+  registrationWindowId: string,
+  now = new Date(),
+) {
+  const window = await prisma.registrationWindow.findUnique({
+    where: { id: registrationWindowId },
+  });
+  if (!window) {
+    throw new RegistrationError("Registration window not found", 404);
+  }
+  if (!canStudentSubmitAdjustmentRequest(window, now)) {
+    const closeAt = resolveStudentAdjustmentRequestCloseAt(window);
+    throw new RegistrationError(
+      `Student adjustment requests are not available (deadline ${closeAt.toLocaleString()})`,
+      400,
+    );
+  }
+  if (!window.postLockAdjustmentEnabled) {
+    throw new RegistrationError(
+      "Post-lock adjustment is disabled for this registration window. Contact the Exams Office.",
+      400,
+    );
+  }
+
+  const activeCount = await prisma.studentExamRegistration.count({
+    where: {
+      studentId,
+      registrationWindowId,
+      status: { in: [RegistrationStatus.ACTIVE, RegistrationStatus.LOCKED] },
+      registrationType: "INTERNAL_NORMAL",
+    },
+  });
+  if (activeCount > 0) {
+    throw new RegistrationError(
+      "You already have exams for this window. Use Request adjustment on that registration card.",
+      400,
+    );
+  }
+
+  const { ensureRegistrationWorkspace } = await import("@/lib/registrations/workspace");
+  const workspace = await ensureRegistrationWorkspace(
+    studentId,
+    registrationWindowId,
+    "INTERNAL_NORMAL",
+  );
+
+  await assertNoPendingStudentAdjustment(workspace.id);
+
+  if (workspace.lockedAt) {
+    return workspace;
+  }
+
+  return prisma.registrationWorkspace.update({
+    where: { id: workspace.id },
+    data: {
+      lockedAt: now,
+      isLateRegistration: true,
+    },
+  });
+}
+
 export async function submitStudentAdjustmentRequest(
   student: { id: string },
   input: {

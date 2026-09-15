@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import {
   RegistrationPrintButton,
@@ -19,11 +19,102 @@ import {
   windowCardStatusClass,
 } from "@/lib/registrations/student-groups";
 
+type LateEntryWindow = {
+  id: string;
+  title: string;
+  status: string;
+  studentRegistrationOpenAt: string;
+  studentRegistrationCloseAt: string;
+  registrationCloseAt: string;
+  studentAdjustmentRequestEnabled?: boolean;
+  studentAdjustmentRequestCloseAt?: string | null;
+  existingWorkspaceId?: string | null;
+  examBoard: { id: string; name: string; code: string };
+  examSeries: { name: string; year: number };
+};
+
 interface StudentRegistrationGroupsProps {
   registrations: StudentRegistrationRow[];
   actionId: string | null;
   onRemove: (id: string) => void;
   onRefresh?: () => void;
+}
+
+function LateEntryWindowCard({
+  window,
+  onRefresh,
+}: {
+  window: LateEntryWindow;
+  onRefresh?: () => void;
+}) {
+  return (
+    <Card className="overflow-hidden p-0 ring-2 ring-amber-200 ring-inset">
+      <div className="border-b border-slate-100 bg-slate-50/80 px-4 py-4 sm:px-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="space-y-1">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              {window.examBoard.name}
+            </p>
+            <h2 className="text-base font-semibold text-slate-900 sm:text-lg">
+              {window.title || window.examSeries.name}
+            </h2>
+            <p className="text-sm text-slate-600">
+              {window.examSeries.name} ({window.examSeries.year})
+            </p>
+          </div>
+          <span className="rounded-full px-3 py-1 text-xs font-semibold text-amber-900 ring-1 ring-inset ring-amber-300 bg-amber-50">
+            No exams selected
+          </span>
+        </div>
+
+        <dl className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
+          <div>
+            <dt className="text-slate-500">Registration window</dt>
+            <dd className="font-medium text-slate-800">
+              {formatWindowRange(window.studentRegistrationOpenAt, window.registrationCloseAt)}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-slate-500">Selected exams</dt>
+            <dd className="font-medium text-slate-800">0</dd>
+          </div>
+          <div className="sm:col-span-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-amber-950">
+            Student registration has closed and you have not selected any exams for this window.
+            You can still request a late registration (teacher + Exams Office approval required).
+          </div>
+        </dl>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Link
+            href="/calendar?view=my"
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >
+            View My Calendar
+          </Link>
+        </div>
+
+        <div className="mt-4">
+          <StudentAdjustmentRequestPanel
+            workspaceId={window.existingWorkspaceId ?? undefined}
+            registrationWindowId={window.id}
+            registrations={[]}
+            lateEntry
+            window={{
+              id: window.id,
+              title: window.title,
+              status: window.status,
+              studentRegistrationOpenAt: window.studentRegistrationOpenAt,
+              studentRegistrationCloseAt: window.studentRegistrationCloseAt,
+              registrationCloseAt: window.registrationCloseAt,
+              studentAdjustmentRequestEnabled: window.studentAdjustmentRequestEnabled,
+              studentAdjustmentRequestCloseAt: window.studentAdjustmentRequestCloseAt,
+            }}
+            onSubmitted={() => onRefresh?.()}
+          />
+        </div>
+      </div>
+    </Card>
+  );
 }
 
 function WindowCard({
@@ -279,8 +370,32 @@ export function StudentRegistrationGroups({
   onRefresh,
 }: StudentRegistrationGroupsProps) {
   const groups = useMemo(() => groupRegistrationsByWindow(registrations), [registrations]);
+  const [lateEntryWindows, setLateEntryWindows] = useState<LateEntryWindow[]>([]);
+  const [lateEntryLoading, setLateEntryLoading] = useState(true);
 
-  if (groups.length === 0) {
+  const loadLateEntryWindows = useCallback(async () => {
+    setLateEntryLoading(true);
+    try {
+      const response = await fetch("/api/student/adjustment-requests/late-entry-windows");
+      const data = response.ok ? await response.json() : [];
+      setLateEntryWindows(Array.isArray(data) ? (data as LateEntryWindow[]) : []);
+    } catch {
+      setLateEntryWindows([]);
+    } finally {
+      setLateEntryLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadLateEntryWindows();
+  }, [loadLateEntryWindows, registrations]);
+
+  function handleRefresh() {
+    void loadLateEntryWindows();
+    onRefresh?.();
+  }
+
+  if (groups.length === 0 && !lateEntryLoading && lateEntryWindows.length === 0) {
     return (
       <Card>
         <p className="text-sm text-slate-600">
@@ -302,8 +417,11 @@ export function StudentRegistrationGroups({
           group={group}
           actionId={actionId}
           onRemove={onRemove}
-          onRefresh={onRefresh}
+          onRefresh={handleRefresh}
         />
+      ))}
+      {lateEntryWindows.map((window) => (
+        <LateEntryWindowCard key={window.id} window={window} onRefresh={handleRefresh} />
       ))}
     </div>
   );

@@ -103,17 +103,23 @@ export function pendingStatusLabel(status: string): string {
 }
 
 export function StudentAdjustmentRequestPanel({
-  workspaceId,
+  workspaceId: initialWorkspaceId,
+  registrationWindowId,
   registrations,
   window: registrationWindow,
+  lateEntry = false,
   onSubmitted,
 }: {
-  workspaceId: string;
+  workspaceId?: string;
+  registrationWindowId?: string;
   registrations: StudentRegistrationRow[];
   window: StudentRegistrationRow["registrationWindow"];
+  /** True when the student has no exams yet and is requesting a late first entry. */
+  lateEntry?: boolean;
   onSubmitted: () => void;
 }) {
   const eligible = studentAdjustmentEligible(registrationWindow);
+  const [workspaceId, setWorkspaceId] = useState(initialWorkspaceId ?? "");
   const [pending, setPending] = useState<PendingRequestSummary | null>(null);
   const [pendingLoading, setPendingLoading] = useState(true);
   const [phase, setPhase] = useState<"idle" | "warning" | "draft">("idle");
@@ -126,6 +132,7 @@ export function StudentAdjustmentRequestPanel({
   const [selectedSessionId, setSelectedSessionId] = useState("");
   const [addReason, setAddReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [preparing, setPreparing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadPending = useCallback(async () => {
@@ -134,13 +141,15 @@ export function StudentAdjustmentRequestPanel({
       const res = await fetch("/api/student/adjustment-requests");
       const data = res.ok ? await res.json() : [];
       const rows = Array.isArray(data) ? (data as PendingRequestSummary[]) : [];
-      const active =
-        rows.find(
-          (row) =>
-            row.registrationWorkspaceId === workspaceId &&
-            (row.status === "PENDING_TEACHER" || row.status === "PENDING_EO"),
-        ) ?? null;
-      setPending(active);
+      setPending(
+        workspaceId
+          ? (rows.find(
+              (row) =>
+                row.registrationWorkspaceId === workspaceId &&
+                (row.status === "PENDING_TEACHER" || row.status === "PENDING_EO"),
+            ) ?? null)
+          : null,
+      );
     } catch {
       setPending(null);
     } finally {
@@ -153,7 +162,7 @@ export function StudentAdjustmentRequestPanel({
   }, [loadPending]);
 
   useEffect(() => {
-    if (phase !== "draft") return;
+    if (phase !== "draft" || !workspaceId) return;
     const handle = globalThis.setTimeout(() => {
       setSessionsLoading(true);
       const params = new URLSearchParams();
@@ -180,6 +189,36 @@ export function StudentAdjustmentRequestPanel({
   const closeLabel = registrationWindow.studentAdjustmentRequestCloseAt
     ? new Date(registrationWindow.studentAdjustmentRequestCloseAt).toLocaleString()
     : new Date(registrationWindow.registrationCloseAt).toLocaleString();
+
+  async function continueAfterWarning() {
+    setError(null);
+    if (workspaceId) {
+      setPhase("draft");
+      return;
+    }
+    if (!lateEntry || !registrationWindowId) {
+      setError("Missing registration window for late entry.");
+      return;
+    }
+    setPreparing(true);
+    try {
+      const res = await fetch("/api/student/adjustment-requests/ensure-late-entry-workspace", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ registrationWindowId }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data.error ?? "Could not start late adjustment request");
+      }
+      setWorkspaceId(String(data.workspaceId));
+      setPhase("draft");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not start late adjustment request");
+    } finally {
+      setPreparing(false);
+    }
+  }
 
   function startRemove(row: StudentRegistrationRow) {
     const reason = (removeReasonDraft[row.id] ?? "").trim();
@@ -215,8 +254,16 @@ export function StudentAdjustmentRequestPanel({
   }
 
   async function submit() {
+    if (!workspaceId) {
+      setError("Registration workspace is not ready. Try again.");
+      return;
+    }
     if (removes.length + adds.length === 0) {
-      setError("Add or remove at least one exam before submitting.");
+      setError(
+        lateEntry
+          ? "Add at least one exam before submitting."
+          : "Add or remove at least one exam before submitting.",
+      );
       return;
     }
     setSubmitting(true);
@@ -277,20 +324,45 @@ export function StudentAdjustmentRequestPanel({
     return (
       <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
         <p className="font-semibold">{STUDENT_ADJUSTMENT_WARNING.title}</p>
-        <p className="mt-2 text-amber-900">{STUDENT_ADJUSTMENT_WARNING.body}</p>
+        <p className="mt-2 text-amber-900">
+          {lateEntry ? (
+            <>
+              You did not select exams before the student registration deadline. You can still{" "}
+              <strong>request to add exams now</strong>, but{" "}
+              <strong>late / high-late fees may apply</strong>.
+              <br />
+              <br />
+              Please confirm you understand before continuing. Your request will need{" "}
+              <strong>teacher approval</strong>, then <strong>Exams Office approval</strong>, before
+              any exams are added.
+            </>
+          ) : (
+            STUDENT_ADJUSTMENT_WARNING.body
+          )}
+        </p>
         <p className="mt-2 text-xs text-amber-800">Request deadline: {closeLabel}</p>
+        {error ? (
+          <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-red-700">
+            {error}
+          </div>
+        ) : null}
         <div className="mt-3 flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={() => setPhase("draft")}
-            className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+            disabled={preparing}
+            onClick={() => void continueAfterWarning()}
+            className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
           >
-            I understand — continue
+            {preparing ? "Preparing…" : "I understand — continue"}
           </button>
           <button
             type="button"
-            onClick={() => setPhase("idle")}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            disabled={preparing}
+            onClick={() => {
+              setPhase("idle");
+              setError(null);
+            }}
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
           >
             Cancel
           </button>
@@ -304,7 +376,9 @@ export function StudentAdjustmentRequestPanel({
       <div className="space-y-4 rounded-lg border border-indigo-200 bg-indigo-50/40 px-4 py-3 text-sm">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
-            <p className="font-semibold text-slate-900">Draft adjustment request</p>
+            <p className="font-semibold text-slate-900">
+              {lateEntry ? "Draft late registration request" : "Draft adjustment request"}
+            </p>
             <p className="text-xs text-slate-600">Deadline: {closeLabel}</p>
           </div>
           <button
@@ -325,41 +399,45 @@ export function StudentAdjustmentRequestPanel({
           </div>
         ) : null}
 
-        <div>
-          <p className="mb-2 font-medium text-slate-800">Remove exams</p>
-          <ul className="space-y-2">
-            {registrations.map((row) => {
-              if (removeIds.has(row.id)) return null;
-              return (
-                <li
-                  key={row.id}
-                  className="rounded-lg border border-slate-200 bg-white px-3 py-2"
-                >
-                  <p className="font-medium text-slate-900">{examLabel(row)}</p>
-                  <textarea
-                    value={removeReasonDraft[row.id] ?? ""}
-                    onChange={(e) =>
-                      setRemoveReasonDraft((prev) => ({ ...prev, [row.id]: e.target.value }))
-                    }
-                    placeholder="Reason for removal (required)"
-                    rows={2}
-                    className="mt-2 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => startRemove(row)}
-                    className="mt-2 rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        {!lateEntry && registrations.length > 0 ? (
+          <div>
+            <p className="mb-2 font-medium text-slate-800">Remove exams</p>
+            <ul className="space-y-2">
+              {registrations.map((row) => {
+                if (removeIds.has(row.id)) return null;
+                return (
+                  <li
+                    key={row.id}
+                    className="rounded-lg border border-slate-200 bg-white px-3 py-2"
                   >
-                    Remove
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+                    <p className="font-medium text-slate-900">{examLabel(row)}</p>
+                    <textarea
+                      value={removeReasonDraft[row.id] ?? ""}
+                      onChange={(e) =>
+                        setRemoveReasonDraft((prev) => ({ ...prev, [row.id]: e.target.value }))
+                      }
+                      placeholder="Reason for removal (required)"
+                      rows={2}
+                      className="mt-2 w-full rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => startRemove(row)}
+                      className="mt-2 rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      Remove
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ) : null}
 
         <div>
-          <p className="mb-2 font-medium text-slate-800">Add exam</p>
+          <p className="mb-2 font-medium text-slate-800">
+            {lateEntry ? "Add exams" : "Add exam"}
+          </p>
           <input
             value={sessionQuery}
             onChange={(e) => setSessionQuery(e.target.value)}
@@ -468,13 +546,23 @@ export function StudentAdjustmentRequestPanel({
   }
 
   return (
-    <button
-      type="button"
-      title={`Request deadline: ${closeLabel}`}
-      onClick={() => setPhase("warning")}
-      className="rounded-lg border border-indigo-300 bg-white px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50"
-    >
-      Request adjustment
-    </button>
+    <div className="space-y-2">
+      {error ? (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </div>
+      ) : null}
+      <button
+        type="button"
+        title={`Request deadline: ${closeLabel}`}
+        onClick={() => {
+          setError(null);
+          setPhase("warning");
+        }}
+        className="rounded-lg border border-indigo-300 bg-white px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50"
+      >
+        {lateEntry ? "Request late registration" : "Request adjustment"}
+      </button>
+    </div>
   );
 }
