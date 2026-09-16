@@ -90,6 +90,7 @@ export function TeacherUsersManager() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<TeacherFormState>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
   const [setPasswordUser, setSetPasswordUser] = useState<TeacherRow | null>(null);
   const [filters, setFilters] = useState({
     q: "",
@@ -172,11 +173,13 @@ export function TeacherUsersManager() {
   function openCreate() {
     setEditingId(null);
     setForm(emptyForm());
+    setFormError(null);
     setModalOpen(true);
   }
 
   function openEdit(row: TeacherRow) {
     setEditingId(row.id);
+    setFormError(null);
     setForm({
       name: row.name,
       email: row.email ?? "",
@@ -193,13 +196,14 @@ export function TeacherUsersManager() {
   async function handleSave(event: FormEvent) {
     event.preventDefault();
     setSaving(true);
+    setFormError(null);
     setError(null);
     setMessage(null);
 
     const codes = splitCommaList(form.subjectCodes);
     const { ids: subjectIds, missing } = resolveSubjectIds(codes);
     if (missing.length > 0) {
-      setError(`Unknown subject codes: ${missing.join(", ")}`);
+      setFormError(`Unknown subject codes: ${missing.join(", ")}`);
       setSaving(false);
       return;
     }
@@ -229,10 +233,11 @@ export function TeacherUsersManager() {
         throw new Error(typeof data.error === "string" ? data.error : "Save failed");
       }
       setModalOpen(false);
+      setFormError(null);
       setMessage(editingId ? "Teacher updated." : "Teacher created.");
       void load();
     } catch (saveError) {
-      setError(saveError instanceof Error ? saveError.message : "Save failed");
+      setFormError(saveError instanceof Error ? saveError.message : "Save failed");
     } finally {
       setSaving(false);
     }
@@ -438,6 +443,11 @@ export function TeacherUsersManager() {
             <h2 className="text-lg font-semibold text-slate-900">
               {editingId ? "Edit teacher" : "New teacher"}
             </h2>
+            {formError ? (
+              <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+                {formError}
+              </p>
+            ) : null}
             <form onSubmit={(e) => void handleSave(e)} className="mt-4 space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block text-sm text-slate-700 sm:col-span-2">
@@ -521,7 +531,10 @@ export function TeacherUsersManager() {
               <div className="flex justify-end gap-2 border-t border-slate-200 pt-4">
                 <button
                   type="button"
-                  onClick={() => setModalOpen(false)}
+                  onClick={() => {
+                    setFormError(null);
+                    setModalOpen(false);
+                  }}
                   className={buttonClass}
                   disabled={saving}
                 >

@@ -167,6 +167,7 @@ export function StudentUsersManager() {
   const [viewStudentId, setViewStudentId] = useState<string | null>(null);
   const [form, setForm] = useState<StudentFormState>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
   const [setPasswordUser, setSetPasswordUser] = useState<StudentRow | null>(null);
   const [filters, setFilters] = useState({
     q: "",
@@ -249,12 +250,14 @@ export function StudentUsersManager() {
     setEditingId(null);
     setViewStudentId(null);
     setForm(emptyForm());
+    setFormError(null);
     setModalOpen(true);
   }
 
   function openEdit(row: StudentRow) {
     setEditingId(row.id);
     setViewStudentId(row.studentId);
+    setFormError(null);
     setForm({
       firstName: row.firstName ?? row.pinyinFirstName ?? "",
       lastName: row.lastName ?? row.pinyinLastName ?? "",
@@ -278,6 +281,7 @@ export function StudentUsersManager() {
   async function handleSave(event: FormEvent) {
     event.preventDefault();
     setSaving(true);
+    setFormError(null);
     setError(null);
     setMessage(null);
 
@@ -316,10 +320,11 @@ export function StudentUsersManager() {
         setViewStudentId(data.studentId);
       }
       setModalOpen(false);
+      setFormError(null);
       setMessage(editingId ? "Student updated." : "Student created.");
       void load();
     } catch (saveError) {
-      setError(saveError instanceof Error ? saveError.message : "Save failed");
+      setFormError(saveError instanceof Error ? saveError.message : "Save failed");
     } finally {
       setSaving(false);
     }
@@ -592,6 +597,11 @@ export function StudentUsersManager() {
             <h2 className="text-lg font-semibold text-slate-900">
               {editingId ? "Edit student" : "New student"}
             </h2>
+            {formError ? (
+              <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+                {formError}
+              </p>
+            ) : null}
             <form onSubmit={(e) => void handleSave(e)} className="mt-4 space-y-4">
               <div className="rounded border border-slate-200 bg-slate-50 px-4 py-3">
                 <label className="block text-sm text-slate-700">
@@ -783,7 +793,10 @@ export function StudentUsersManager() {
               <div className="flex justify-end gap-2 border-t border-slate-200 pt-4">
                 <button
                   type="button"
-                  onClick={() => setModalOpen(false)}
+                  onClick={() => {
+                    setFormError(null);
+                    setModalOpen(false);
+                  }}
                   className={buttonClass}
                   disabled={saving}
                 >
