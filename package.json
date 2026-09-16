@@ -17,6 +17,7 @@
     "db:push": "prisma db push",
     "db:clear-registrations": "tsx scripts/clear-registrations.ts",
     "db:backfill-registration-numbers": "tsx scripts/backfill-registration-numbers.ts",
+    "db:backfill-student-adjustment-history": "tsx scripts/backfill-student-adjustment-history.ts",
     "db:cleanup-registration-data": "tsx scripts/cleanup-registration-data.ts",
     "db:clear-students": "tsx scripts/clear-student-data.ts",
     "db:create-test-students": "tsx scripts/create-test-students.ts",
