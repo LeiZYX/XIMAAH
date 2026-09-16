@@ -708,7 +708,9 @@ export function RegistrationWindowFeeRules({
                 <input
                   type="number"
                   min="0"
-                  step="0.01"
+                  step="any"
+                  inputMode="decimal"
+                  placeholder="e.g. 30.5"
                   value={formula.salesMarkupPercent}
                   onChange={(e) => setFormula({ ...formula, salesMarkupPercent: e.target.value })}
                   className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
@@ -728,8 +730,12 @@ export function RegistrationWindowFeeRules({
             <p className="text-xs text-slate-500">
               Example with Normal cost £10: Late cost = £
               {(10 * (Number(formula.lateMultiplier) || 0)).toFixed(2)}, High Late cost = £
-              {(10 * (Number(formula.highLateMultiplier) || 0)).toFixed(2)}, sales = cost +{" "}
-              {formula.salesMarkupPercent}%.
+              {(10 * (Number(formula.highLateMultiplier) || 0)).toFixed(2)}, sales = £
+              {(
+                10 *
+                (1 + (Number(formula.salesMarkupPercent) || 0) / 100)
+              ).toFixed(2)}{" "}
+              (cost + {formula.salesMarkupPercent || "0"}%).
             </p>
           </div>
         ) : null}
