@@ -8,6 +8,7 @@ import {
   RegistrationConfirmationPrintModal,
   buildConfirmationPrintData,
 } from "@/components/registrations/RegistrationConfirmationPrintModal";
+import { AdjustmentHistorySection } from "@/components/registrations/AdjustmentHistorySection";
 import { StudentAdjustmentRequestPanel } from "@/components/registrations/StudentAdjustmentRequestPanel";
 import {
   formatWindowRange,
@@ -357,6 +358,11 @@ function WindowCard({
               </ul>
             </div>
           ) : null}
+          <AdjustmentHistorySection
+            batches={group.postLockAdjustments}
+            lastAdjustmentSummary={group.lastAdjustmentSummary}
+            hasPostLockAdjustment={group.hasPostLockAdjustment}
+          />
         </div>
       ) : null}
     </Card>
