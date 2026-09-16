@@ -11,9 +11,11 @@ import {
   type AdjustmentSummaryPayload,
 } from "@/lib/registrations/workspace-display";
 import {
+  adjusterRoleLabel,
   formatAdjustmentAttribution,
   formatAdjustmentHeading,
   resolvePostLockAdjustmentHistory,
+  type AdjustmentApprovalSnapshot,
   type AdjustmentHistoryBatch,
 } from "@/lib/registrations/adjustment-history";
 import {
@@ -86,6 +88,113 @@ function SummaryField({ label, value }: { label: string; value: string }) {
 
 function ExamLineText(item: { subject: string; paperCode: string; paperTitle: string }) {
   return `${item.subject} — ${item.paperCode}${item.paperTitle ? ` ${item.paperTitle}` : ""}`;
+}
+
+function ApprovalBlock({
+  title,
+  approval,
+}: {
+  title: string;
+  approval: AdjustmentApprovalSnapshot;
+}) {
+  const by = formatAdjusterLabel(approval.byName, approval.byRole);
+  const when = approval.at ? new Date(approval.at).toLocaleString() : "—";
+  return (
+    <div className="mt-2">
+      <p className="font-medium">
+        {title}: {approval.decision}
+      </p>
+      <p className="mt-0.5 text-slate-700">
+        By: {by || adjusterRoleLabel(approval.byRole) || "—"}
+        {approval.at ? ` · On: ${when}` : null}
+      </p>
+      <p className="mt-0.5 whitespace-pre-wrap text-slate-800">
+        <span className="font-medium">Note:</span> {approval.reason?.trim() || "—"}
+      </p>
+    </div>
+  );
+}
+
+function AdjustmentBatchBody({ batch }: { batch: AdjustmentHistoryBatch }) {
+  const hasStructuredApprovals =
+    Boolean(batch.studentReasons && batch.studentReasons.length > 0) ||
+    Boolean(batch.teacherApproval) ||
+    Boolean(batch.eoApproval);
+
+  return (
+    <>
+      {batch.added.length > 0 ? (
+        <div className="mt-2">
+          <p className="font-medium">Added:</p>
+          <ul className="mt-1 list-disc pl-5">
+            {batch.added.map((item, i) => (
+              <li key={`a-${i}`}>{ExamLineText(item)}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {batch.removed.length > 0 ? (
+        <div className="mt-2">
+          <p className="font-medium">Removed:</p>
+          <ul className="mt-1 list-disc pl-5">
+            {batch.removed.map((item, i) => (
+              <li key={`r-${i}`}>{ExamLineText(item)}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {batch.replaced.length > 0 ? (
+        <div className="mt-2">
+          <p className="font-medium">Replaced:</p>
+          <ul className="mt-1 list-disc pl-5">
+            {batch.replaced.map((item, i) => (
+              <li key={`p-${i}`}>
+                {ExamLineText(item.from)} → {ExamLineText(item.to)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {batch.studentReasons && batch.studentReasons.length > 0 ? (
+        <div className="mt-2">
+          <p className="font-medium">Student reason:</p>
+          <ul className="mt-1 space-y-1">
+            {batch.studentReasons.map((line, i) => (
+              <li key={`sr-${i}`} className="whitespace-pre-wrap">
+                <span className="font-medium text-slate-700">
+                  {line.itemType === "ADD" ? "Add" : "Remove"} — {line.label}:
+                </span>{" "}
+                {line.reason}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
+      {batch.teacherApproval ? (
+        <ApprovalBlock title="Teacher approval" approval={batch.teacherApproval} />
+      ) : null}
+      {batch.eoApproval ? (
+        <ApprovalBlock title="Exams Office approval" approval={batch.eoApproval} />
+      ) : null}
+
+      {!hasStructuredApprovals && batch.reason ? (
+        <div className="mt-2">
+          <p className="font-medium">Reason:</p>
+          <p className="mt-1 whitespace-pre-wrap">{batch.reason}</p>
+        </div>
+      ) : null}
+
+      <p className="mt-2">
+        <span className="font-medium">Adjusted By:</span> {formatAdjustmentAttribution(batch)}
+      </p>
+      <p>
+        <span className="font-medium">Adjusted On:</span>{" "}
+        {new Date(batch.adjustedAt).toLocaleString()}
+      </p>
+    </>
+  );
 }
 
 export function buildPrintDocumentTitle(data: ConfirmationPrintData, at = new Date()): string {
@@ -240,36 +349,7 @@ function ConfirmationDocument({ data, printTimestamp }: { data: ConfirmationPrin
                   <p className="font-medium text-indigo-900">
                     {formatAdjustmentHeading(batch, index, postLockAdjustments.length)}
                   </p>
-                  {batch.added.length > 0 ? (
-                    <div className="mt-2">
-                      <p className="font-medium">Added:</p>
-                      <ul className="mt-1 list-disc pl-5">{batch.added.map((item, i) => <li key={`a-${index}-${i}`}>{ExamLineText(item)}</li>)}</ul>
-                    </div>
-                  ) : null}
-                  {batch.removed.length > 0 ? (
-                    <div className="mt-2">
-                      <p className="font-medium">Removed:</p>
-                      <ul className="mt-1 list-disc pl-5">{batch.removed.map((item, i) => <li key={`r-${index}-${i}`}>{ExamLineText(item)}</li>)}</ul>
-                    </div>
-                  ) : null}
-                  {batch.replaced.length > 0 ? (
-                    <div className="mt-2">
-                      <p className="font-medium">Replaced:</p>
-                      <ul className="mt-1 list-disc pl-5">
-                        {batch.replaced.map((item, i) => (
-                          <li key={`p-${index}-${i}`}>{ExamLineText(item.from)} → {ExamLineText(item.to)}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  ) : null}
-                  {batch.reason ? (
-                    <div className="mt-2">
-                      <p className="font-medium">Reason:</p>
-                      <p className="mt-1 whitespace-pre-wrap">{batch.reason}</p>
-                    </div>
-                  ) : null}
-                  <p className="mt-2"><span className="font-medium">Adjusted By:</span> {formatAdjustmentAttribution(batch)}</p>
-                  <p><span className="font-medium">Adjusted On:</span> {new Date(batch.adjustedAt).toLocaleString()}</p>
+                  <AdjustmentBatchBody batch={batch} />
                 </div>
               ))}
             </div>

@@ -19,6 +19,11 @@ import {
 } from "@/lib/registrations/workspace";
 import type { AdjustmentSummaryPayload } from "@/lib/registrations/workspace-display";
 import { appendAdjustmentHistoryBatch } from "@/lib/registrations/adjustment-history";
+import type {
+  AdjustmentApprovalSnapshot,
+  AdjustmentHistorySource,
+  AdjustmentStudentReasonLine,
+} from "@/lib/registrations/adjustment-history";
 import { markFeeStatementsNeedsRegeneration } from "@/lib/fees/statement";
 import type { FeeStatementChangeReasonCode } from "@/lib/fees/statement-lifecycle";
 import { applyCandidateRegistrationFeeSelection } from "@/lib/fees/candidate-registration-fee";
@@ -53,6 +58,10 @@ export interface PostLockAdjustmentInput {
   /** When fee stages are no longer active (e.g. window closed), staff must choose the fee stage. */
   entryTypeOverride?: import("@/generated/prisma/enums").FeeEntryType;
   teacherRequestedBy?: { name: string; role: UserRole };
+  source?: AdjustmentHistorySource;
+  studentReasons?: AdjustmentStudentReasonLine[];
+  teacherApproval?: AdjustmentApprovalSnapshot;
+  eoApproval?: AdjustmentApprovalSnapshot;
 }
 
 function auditActionForRole(
@@ -509,6 +518,12 @@ export async function applyPostLockAdjustment(
             reason,
             requestedByName: input.teacherRequestedBy?.name,
             requestedByRole: input.teacherRequestedBy?.role,
+            source:
+              input.source ??
+              (input.teacherRequestedBy ? "TEACHER_REQUEST" : "STAFF_DIRECT"),
+            studentReasons: input.studentReasons,
+            teacherApproval: input.teacherApproval,
+            eoApproval: input.eoApproval,
             ...summary,
           },
           {

@@ -679,7 +679,12 @@ export async function reviewStudentAdjustmentAsEo(
   const requestRow = await prisma.studentAdjustmentRequest.findUnique({
     where: { id: requestId },
     include: {
-      items: true,
+      items: {
+        include: {
+          targetExamSession: { include: sessionInclude },
+        },
+        orderBy: { createdAt: "asc" },
+      },
       teacherReviewedBy: { select: { name: true, role: true } },
     },
   });
@@ -707,35 +712,88 @@ export async function reviewStudentAdjustmentAsEo(
     };
   }
 
-  const addExamSessionIds = requestRow.items
-    .filter((item) => item.itemType === StudentAdjustmentRequestItemType.ADD)
-    .map((item) => item.targetExamSessionId)
-    .filter((id): id is string => Boolean(id));
   const removeRegistrationIds = requestRow.items
     .filter((item) => item.itemType === StudentAdjustmentRequestItemType.REMOVE)
     .map((item) => item.targetRegistrationId)
     .filter((id): id is string => Boolean(id));
 
-  const applyReasonParts = [
-    reason,
-    requestRow.teacherReviewReason
-      ? `Teacher approval: ${requestRow.teacherReviewReason}`
-      : null,
-  ].filter(Boolean);
+  const removeSessionByRegistrationId = new Map<
+    string,
+    {
+      paper: { code: string; title: string; subject: { name: string } };
+    } | null
+  >();
+  if (removeRegistrationIds.length > 0) {
+    const registrations = await prisma.studentExamRegistration.findMany({
+      where: { id: { in: removeRegistrationIds } },
+      include: { examSession: { include: sessionInclude } },
+    });
+    for (const row of registrations) {
+      removeSessionByRegistrationId.set(row.id, row.examSession);
+    }
+  }
+
+  const addExamSessionIds = requestRow.items
+    .filter((item) => item.itemType === StudentAdjustmentRequestItemType.ADD)
+    .map((item) => item.targetExamSessionId)
+    .filter((id): id is string => Boolean(id));
+
+  const studentReasons = requestRow.items.map((item) => {
+    const session =
+      item.targetExamSession ??
+      (item.targetRegistrationId
+        ? removeSessionByRegistrationId.get(item.targetRegistrationId)
+        : null);
+    const paper = session?.paper;
+    const label = paper
+      ? `${paper.subject.name} — ${paper.code}${paper.title ? ` ${paper.title}` : ""}`
+      : item.itemType === "REMOVE"
+        ? `Remove registration ${item.targetRegistrationId ?? ""}`.trim()
+        : "Add exam";
+    return {
+      itemType: item.itemType as "ADD" | "REMOVE",
+      label,
+      reason: item.studentReason,
+    };
+  });
+
+  const reviewedAt = new Date();
+  const reviewerUser = await prisma.user.findUnique({
+    where: { id: reviewer.id },
+    select: { name: true },
+  });
 
   await applyPostLockAdjustment(
     requestRow.registrationWorkspaceId,
     { id: reviewer.id, role: reviewer.role },
     {
-      reason: applyReasonParts.join(" · "),
+      reason,
       addExamSessionIds,
       removeRegistrationIds,
+      source: "STUDENT_REQUEST",
+      studentReasons,
       teacherRequestedBy: requestRow.teacherReviewedBy
         ? {
             name: requestRow.teacherReviewedBy.name,
             role: requestRow.teacherReviewedBy.role,
           }
         : undefined,
+      teacherApproval: requestRow.teacherReviewedBy
+        ? {
+            decision: "Approved",
+            reason: requestRow.teacherReviewReason?.trim() || "—",
+            byName: requestRow.teacherReviewedBy.name,
+            byRole: requestRow.teacherReviewedBy.role,
+            at: (requestRow.teacherReviewedAt ?? reviewedAt).toISOString(),
+          }
+        : undefined,
+      eoApproval: {
+        decision: "Approved",
+        reason,
+        byName: reviewerUser?.name ?? "",
+        byRole: reviewer.role,
+        at: reviewedAt.toISOString(),
+      },
     },
   );
 
@@ -744,7 +802,7 @@ export async function reviewStudentAdjustmentAsEo(
     data: {
       status: StudentAdjustmentRequestStatus.APPROVED,
       eoReviewedByUserId: reviewer.id,
-      eoReviewedAt: new Date(),
+      eoReviewedAt: reviewedAt,
       eoReviewReason: reason,
     },
     include: studentAdjustmentRequestInclude,

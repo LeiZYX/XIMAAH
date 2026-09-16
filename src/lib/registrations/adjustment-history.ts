@@ -5,10 +5,28 @@ import {
   type AdjustmentSummaryPayload,
 } from "@/lib/registrations/workspace-display";
 
+/** How this post-lock adjustment was initiated. */
+export type AdjustmentHistorySource = "STUDENT_REQUEST" | "TEACHER_REQUEST" | "STAFF_DIRECT";
+
+export interface AdjustmentApprovalSnapshot {
+  decision: "Approved" | "Rejected";
+  reason: string;
+  byName: string;
+  byRole: string;
+  at: string;
+}
+
+export interface AdjustmentStudentReasonLine {
+  itemType: "ADD" | "REMOVE";
+  label: string;
+  reason: string;
+}
+
 export interface AdjustmentHistoryBatch {
   adjustedAt: string;
   adjustedByName: string;
   adjustedByRole: string;
+  /** Staff/EO free-text for direct adjustments; student-flow EO note lives in eoApproval. */
   reason: string;
   added: AdjustmentSummaryPayload["added"];
   removed: AdjustmentSummaryPayload["removed"];
@@ -16,6 +34,10 @@ export interface AdjustmentHistoryBatch {
   requestedByName?: string;
   requestedByRole?: string;
   isLateRegistration?: boolean;
+  source?: AdjustmentHistorySource;
+  studentReasons?: AdjustmentStudentReasonLine[];
+  teacherApproval?: AdjustmentApprovalSnapshot;
+  eoApproval?: AdjustmentApprovalSnapshot;
 }
 
 const POST_LOCK_ADJUSTMENT_ACTIONS = new Set<RegistrationAuditAction | string>([
@@ -131,6 +153,13 @@ function attachTeacherRequester(
   };
 }
 
+function isStudentRequestBatch(batch: AdjustmentHistoryBatch): boolean {
+  return (
+    batch.source === "STUDENT_REQUEST" ||
+    Boolean(batch.studentReasons && batch.studentReasons.length > 0)
+  );
+}
+
 export function formatAdjustmentAttribution(batch: AdjustmentHistoryBatch): string {
   if (batch.isLateRegistration) {
     const creator = formatAdjusterLabel(batch.adjustedByName, batch.adjustedByRole);
@@ -140,7 +169,10 @@ export function formatAdjustmentAttribution(batch: AdjustmentHistoryBatch): stri
     }
     return `Created by ${creator}`;
   }
-  if (batch.requestedByName) {
+  if (isStudentRequestBatch(batch)) {
+    return `Applied by ${formatAdjusterLabel(batch.adjustedByName, batch.adjustedByRole)}`;
+  }
+  if (batch.requestedByName || batch.source === "TEACHER_REQUEST") {
     const teacher = formatAdjusterLabel(batch.requestedByName, batch.requestedByRole);
     const approver = formatAdjusterLabel(batch.adjustedByName, batch.adjustedByRole);
     return `Requested by ${teacher}; approved by ${approver}`;
@@ -159,10 +191,13 @@ export function formatAdjustmentHeading(batch: AdjustmentHistoryBatch, index: nu
     const approver = formatAdjusterLabel(batch.adjustedByName, batch.adjustedByRole);
     return `Late registration${suffix} — added by ${approver}`;
   }
-  if (batch.requestedByName) {
+  if (isStudentRequestBatch(batch)) {
+    return `Approved student adjustment${suffix}`;
+  }
+  if (batch.requestedByName || batch.source === "TEACHER_REQUEST") {
     const teacher = formatAdjusterLabel(batch.requestedByName, batch.requestedByRole);
     const approver = formatAdjusterLabel(batch.adjustedByName, batch.adjustedByRole);
-    return `Adjustment${suffix} — teacher request by ${teacher} approved by ${approver}`;
+    return `Teacher-requested adjustment${suffix} — by ${teacher}, approved by ${approver}`;
   }
   const role = adjusterRoleLabel(batch.adjustedByRole) || "Staff";
   return `Adjustment${suffix} by ${role}`;
@@ -193,6 +228,10 @@ export function parseStoredAdjustmentHistory(
         requestedByName: batch.requestedByName,
         requestedByRole: batch.requestedByRole,
         isLateRegistration: batch.isLateRegistration,
+        source: batch.source,
+        studentReasons: batch.studentReasons,
+        teacherApproval: batch.teacherApproval,
+        eoApproval: batch.eoApproval,
         added: batch.added ?? [],
         removed: batch.removed ?? [],
         replaced: batch.replaced ?? [],
@@ -219,7 +258,7 @@ export function parseStoredAdjustmentHistory(
 }
 
 export function serializeAdjustmentHistory(batches: AdjustmentHistoryBatch[]): string {
-  return JSON.stringify({ version: 2, batches });
+  return JSON.stringify({ version: 3, batches });
 }
 
 export function appendAdjustmentHistoryBatch(
@@ -239,12 +278,6 @@ export function resolvePostLockAdjustmentHistory(input: {
   lastAdjustedByRole?: string | null;
   lastAdjustmentReason?: string | null;
 }): AdjustmentHistoryBatch[] {
-  const fromAudit = input.auditLogs?.length
-    ? buildPostLockAdjustmentHistoryFromAuditLogs(input.auditLogs)
-    : [];
-
-  if (fromAudit.length > 0) return fromAudit;
-
   const fromStored = parseStoredAdjustmentHistory(input.lastAdjustmentSummary, {
     lastAdjustedAt: input.lastAdjustedAt,
     lastAdjustedByName: input.lastAdjustedByName,
@@ -252,11 +285,19 @@ export function resolvePostLockAdjustmentHistory(input: {
     lastAdjustmentReason: input.lastAdjustmentReason,
   });
 
-  if (fromStored.length > 0 && input.auditLogs?.length) {
-    return fromStored.map((batch) => attachTeacherRequester(batch, input.auditLogs!));
+  // Prefer stored batches — they carry student/teacher/EO structured fields.
+  if (fromStored.length > 0) {
+    if (input.auditLogs?.length) {
+      return fromStored.map((batch) => attachTeacherRequester(batch, input.auditLogs!));
+    }
+    return fromStored;
   }
 
-  return fromStored;
+  const fromAudit = input.auditLogs?.length
+    ? buildPostLockAdjustmentHistoryFromAuditLogs(input.auditLogs)
+    : [];
+
+  return fromAudit;
 }
 
 export function adjusterRoleLabel(role: string | null | undefined): string {
