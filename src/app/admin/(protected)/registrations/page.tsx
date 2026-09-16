@@ -31,8 +31,8 @@ export default function AdminRegistrationsPage() {
         apiPath="/api/admin/student-adjustment-requests"
         approveApiBase="/api/admin/student-adjustment-requests"
         status="PENDING_EO"
-        title="Pending student adjustment requests"
-        description="Second-step approval for student late adjustments. Approving applies the changes and may require regenerating the fee statement."
+        title="Student adjustment requests (Exams Office)"
+        description="Needs review: second-step approval for student late adjustments. Reviewed shows approved and rejected history. Approving applies the changes and may require regenerating the fee statement."
         detailBasePath="/admin/registrations"
       />
       <div className="flex flex-wrap items-center justify-between gap-3">

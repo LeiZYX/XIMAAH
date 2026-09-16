@@ -20,10 +20,22 @@ import { assertStudentCanRegister } from "@/lib/students/archive";
 export const changeRequestInclude = {
   requestedBy: { select: { id: true, name: true, role: true } },
   reviewedBy: { select: { id: true, name: true, role: true } },
-  student: { include: { studentProfile: true } },
+  student: {
+    include: {
+      studentProfile: true,
+      candidate: { select: { chineseName: true, englishName: true } },
+    },
+  },
+  candidate: { select: { chineseName: true, englishName: true, studentNumber: true } },
   registrationWorkspace: {
     include: {
-      student: { include: { studentProfile: true } },
+      student: {
+        include: {
+          studentProfile: true,
+          candidate: { select: { chineseName: true, englishName: true } },
+        },
+      },
+      candidate: { select: { chineseName: true, englishName: true } },
       registrationWindow: { include: { examBoard: true, examSeries: true } },
     },
   },
@@ -163,18 +175,35 @@ export async function listTeacherChangeRequests(teacherId: string) {
 }
 
 export async function listChangeRequestsForReviewer(filters?: {
-  status?: RegistrationChangeRequestStatus;
+  status?: RegistrationChangeRequestStatus | RegistrationChangeRequestStatus[];
   registrationWindowId?: string;
+  take?: number;
 }) {
+  const statusFilter = filters?.status
+    ? Array.isArray(filters.status)
+      ? { in: filters.status }
+      : filters.status
+    : undefined;
+
+  const take =
+    typeof filters?.take === "number" && filters.take > 0
+      ? Math.min(filters.take, 200)
+      : filters?.registrationWindowId
+        ? undefined
+        : Array.isArray(filters?.status) && filters.status.length > 1
+          ? 100
+          : undefined;
+
   return prisma.registrationChangeRequest.findMany({
     where: {
-      ...(filters?.status ? { status: filters.status } : {}),
+      ...(statusFilter ? { status: statusFilter } : {}),
       ...(filters?.registrationWindowId
         ? { registrationWindowId: filters.registrationWindowId }
         : {}),
     },
     include: changeRequestInclude,
     orderBy: { createdAt: "desc" },
+    ...(take ? { take } : {}),
   });
 }
 

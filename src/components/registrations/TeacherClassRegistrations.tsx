@@ -569,8 +569,8 @@ export function TeacherClassRegistrations() {
         apiPath="/api/teacher/student-adjustment-requests"
         approveApiBase="/api/teacher/student-adjustment-requests"
         status="PENDING_TEACHER"
-        title="Pending student adjustment requests"
-        description="Review late adjustment requests for your class or other classes in the same grade. Approve or reject with a reason before Exams Office review."
+        title="Student adjustment requests"
+        description="Needs review: late adjustment requests for your class or other classes in the same grade. Reviewed shows your past approvals and rejections, including items waiting for Exams Office."
       />
 
       {success ? (

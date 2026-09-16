@@ -34,8 +34,26 @@ const sessionInclude = {
 } as const;
 
 export const studentAdjustmentRequestInclude = {
-  student: { include: { studentProfile: true } },
-  candidate: { select: { id: true, englishName: true, studentNumber: true } },
+  student: {
+    include: {
+      studentProfile: true,
+      candidate: {
+        select: {
+          chineseName: true,
+          englishName: true,
+          studentNumber: true,
+        },
+      },
+    },
+  },
+  candidate: {
+    select: {
+      id: true,
+      englishName: true,
+      chineseName: true,
+      studentNumber: true,
+    },
+  },
   primaryHomeroomTeacher: { select: { id: true, name: true, role: true } },
   teacherReviewedBy: { select: { id: true, name: true, role: true } },
   eoReviewedBy: { select: { id: true, name: true, role: true } },
@@ -44,7 +62,13 @@ export const studentAdjustmentRequestInclude = {
   },
   registrationWorkspace: {
     include: {
-      student: { include: { studentProfile: true } },
+      student: {
+        include: {
+          studentProfile: true,
+          candidate: { select: { chineseName: true, englishName: true } },
+        },
+      },
+      candidate: { select: { chineseName: true, englishName: true } },
       registrationWindow: { include: { examBoard: true, examSeries: true } },
     },
   },
@@ -162,6 +186,9 @@ export async function listStudentAdjustmentRequestsForReview(filters?: {
   registrationWindowId?: string;
   /** When set, only requests the teacher may review (primary or same-grade form teacher). */
   reviewerTeacherId?: string;
+  /** Teacher history: requests that already have a teacher decision. */
+  reviewedByTeacher?: boolean;
+  take?: number;
 }) {
   const statusFilter = filters?.status
     ? Array.isArray(filters.status)
@@ -181,9 +208,19 @@ export async function listStudentAdjustmentRequestsForReview(filters?: {
     }
   }
 
+  const take =
+    typeof filters?.take === "number" && filters.take > 0
+      ? Math.min(filters.take, 200)
+      : filters?.registrationWindowId
+        ? undefined
+        : filters?.reviewedByTeacher || (Array.isArray(filters?.status) && filters.status.length > 1)
+          ? 100
+          : undefined;
+
   const rows = await prisma.studentAdjustmentRequest.findMany({
     where: {
       ...(statusFilter ? { status: statusFilter } : {}),
+      ...(filters?.reviewedByTeacher ? { teacherReviewedAt: { not: null } } : {}),
       ...(filters?.registrationWindowId
         ? { registrationWindowId: filters.registrationWindowId }
         : {}),
@@ -197,7 +234,10 @@ export async function listStudentAdjustmentRequestsForReview(filters?: {
         : {}),
     },
     include: studentAdjustmentRequestInclude,
-    orderBy: { submittedAt: "desc" },
+    orderBy: filters?.reviewedByTeacher
+      ? { teacherReviewedAt: "desc" }
+      : { submittedAt: "desc" },
+    ...(take ? { take } : {}),
   });
 
   const removeRegistrationIds = [

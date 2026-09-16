@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Card } from "@/components/ui/Card";
@@ -27,6 +25,7 @@ import {
   workspaceStudentLabel,
   workspaceStudentNo,
 } from "@/lib/registrations/workspace-display";
+import { GRADE_LABELS, GRADE_VALUES } from "@/lib/students/profile-enums";
 
 interface WorkspaceRegistration {
   id: string;
@@ -73,6 +72,7 @@ interface WorkspaceRow {
   lastAdjustedByUser: { name: string } | null;
   lastAdjustedByRole: string | null;
   changeRequests: Array<{ id: string; status: string }>;
+  studentAdjustmentRequests?: Array<{ id: string; status: string }>;
   restrictedCreatedBy: { name: string } | null;
 }
 
@@ -82,6 +82,7 @@ interface PaginatedWorkspaces {
   page: number;
   totalPages: number;
   pageSize: number;
+  facets?: { grades: string[]; classes: string[] };
 }
 
 function staffBasePathFromDetail(detailBasePath: string): "/admin" | "/exam-office" {
@@ -121,16 +122,13 @@ function classLabel(row: WorkspaceRow): string {
 }
 
 function contactLabel(row: WorkspaceRow): string {
-  return (
-    row.candidate?.email ||
-    row.candidate?.phone ||
-    row.student?.email ||
-    "—"
-  );
+  return row.candidate?.email || row.candidate?.phone || row.student?.email || "—";
 }
 
 function pendingCount(row: WorkspaceRow): number {
-  return row.changeRequests.filter((request) => request.status === "PENDING").length;
+  const changePending = row.changeRequests.filter((request) => request.status === "PENDING").length;
+  const adjustmentPending = row.studentAdjustmentRequests?.length ?? 0;
+  return changePending + adjustmentPending;
 }
 
 function TypeBadge({ type }: { type: string }) {
@@ -183,6 +181,14 @@ export function RegistrationWorkspaceList({
   const [pageSize, setPageSize] = useState<number>(LIST_PAGE_SIZES[0]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [gradeFilter, setGradeFilter] = useState("");
+  const [classFilter, setClassFilter] = useState("");
+  const [facets, setFacets] = useState<{ grades: string[]; classes: string[] }>({
+    grades: [],
+    classes: [],
+  });
   const [actionRowId, setActionRowId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -199,10 +205,24 @@ export function RegistrationWorkspaceList({
   const tableView = resolveWorkspaceTableView(registrationTypes);
   const title = workspaceListTitle(registrationTypes);
   const description = workspaceListDescription(registrationTypes);
+  const showNormalFilters = tableView === "normal";
 
   useEffect(() => {
     setPage(1);
+    setSearchInput("");
+    setSearchQuery("");
+    setGradeFilter("");
+    setClassFilter("");
   }, [registrationWindowId, registrationTypes]);
+
+  useEffect(() => {
+    if (!showNormalFilters) return;
+    const handle = window.setTimeout(() => {
+      setSearchQuery(searchInput.trim());
+      setPage(1);
+    }, 300);
+    return () => window.clearTimeout(handle);
+  }, [searchInput, showNormalFilters]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -216,12 +236,20 @@ export function RegistrationWorkspaceList({
       if (registrationWindowId) {
         params.set("registrationWindowId", registrationWindowId);
       }
+      if (showNormalFilters) {
+        if (searchQuery) params.set("q", searchQuery);
+        if (gradeFilter) params.set("grade", gradeFilter);
+        if (classFilter) params.set("className", classFilter);
+      }
       const response = await fetch(`${apiPath}?${params.toString()}`);
       const data = await readJsonResponse<PaginatedWorkspaces>(response);
       if (response.ok && data.workspaces) {
         setRows(data.workspaces);
         setTotal(data.total);
         setTotalPages(data.totalPages);
+        if (data.facets) {
+          setFacets(data.facets);
+        }
       } else {
         setRows([]);
         setTotal(0);
@@ -234,11 +262,25 @@ export function RegistrationWorkspaceList({
     } finally {
       setLoading(false);
     }
-  }, [apiPath, registrationWindowId, registrationTypes, page, pageSize]);
+  }, [
+    apiPath,
+    registrationWindowId,
+    registrationTypes,
+    page,
+    pageSize,
+    searchQuery,
+    gradeFilter,
+    classFilter,
+    showNormalFilters,
+  ]);
 
   useEffect(() => {
     void load();
   }, [load, workspaceRefreshKey]);
+
+  const gradeOptions = useMemo(() => {
+    return facets.grades.length > 0 ? facets.grades : [...GRADE_VALUES];
+  }, [facets.grades]);
 
   async function openPrintModal(workspaceId: string, autoPrint: boolean) {
     setActionRowId(workspaceId);
@@ -302,6 +344,9 @@ export function RegistrationWorkspaceList({
       return "Select a registration window to view registrations.";
     }
     if (tableView === "normal") {
+      if (searchQuery || gradeFilter || classFilter) {
+        return "No registrations match the current search or filters.";
+      }
       return "No internal student registrations for this window yet.";
     }
     if (tableView === "restricted") {
@@ -311,7 +356,7 @@ export function RegistrationWorkspaceList({
       return "No external candidate registrations for this window yet.";
     }
     return "No registrations match the selected type filters.";
-  }, [registrationWindowId, tableView]);
+  }, [registrationWindowId, tableView, searchQuery, gradeFilter, classFilter]);
 
   function renderActions(row: WorkspaceRow, view: WorkspaceTableView) {
     const busy = actionRowId === row.id;
@@ -395,7 +440,6 @@ export function RegistrationWorkspaceList({
             <tr className="border-b border-slate-200 text-slate-600">
               <th className="py-2 pr-4 font-medium">Student</th>
               <th className="py-2 pr-4 font-medium">Registration #</th>
-              <th className="py-2 pr-4 font-medium">Student ID</th>
               <th className="py-2 pr-4 font-medium">Grade</th>
               <th className="py-2 pr-4 font-medium">Class</th>
               <th className="py-2 pr-4 font-medium">Exam Board</th>
@@ -414,7 +458,6 @@ export function RegistrationWorkspaceList({
                   {workspaceStudentLabel(row)}
                 </td>
                 <td className="py-2 pr-4 font-mono text-xs">{row.registrationNumber ?? "—"}</td>
-                <td className="py-2 pr-4 font-mono text-xs">{workspacePermanentStudentId(row) ?? "—"}</td>
                 <td className="py-2 pr-4">{gradeLabel(row)}</td>
                 <td className="py-2 pr-4">{classLabel(row)}</td>
                 <td className="py-2 pr-4">{row.registrationWindow.examBoard.name}</td>
@@ -472,7 +515,9 @@ export function RegistrationWorkspaceList({
                   </div>
                 </td>
                 <td className="py-2 pr-4 font-mono text-xs">{row.registrationNumber ?? "—"}</td>
-                <td className="py-2 pr-4 font-mono text-xs">{workspacePermanentStudentId(row) ?? "—"}</td>
+                <td className="py-2 pr-4 font-mono text-xs">
+                  {workspacePermanentStudentId(row) ?? "—"}
+                </td>
                 <td className="py-2 pr-4">
                   {row.registrationWindow.title}
                   <span className="block text-xs text-slate-500">
@@ -590,6 +635,50 @@ export function RegistrationWorkspaceList({
       <Card>
         <h2 className="mb-1 text-lg font-semibold text-slate-900">{title}</h2>
         <p className="mb-3 text-sm text-slate-600">{description}</p>
+        {showNormalFilters ? (
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <input
+              type="search"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Search English / Chinese / pinyin / email / school ID"
+              className="min-w-[280px] flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              aria-label="Search students"
+            />
+            <select
+              value={gradeFilter}
+              onChange={(e) => {
+                setGradeFilter(e.target.value);
+                setPage(1);
+              }}
+              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              aria-label="Filter by grade"
+            >
+              <option value="">All grades</option>
+              {gradeOptions.map((grade) => (
+                <option key={grade} value={grade}>
+                  {GRADE_LABELS[grade as keyof typeof GRADE_LABELS] ?? grade}
+                </option>
+              ))}
+            </select>
+            <select
+              value={classFilter}
+              onChange={(e) => {
+                setClassFilter(e.target.value);
+                setPage(1);
+              }}
+              className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              aria-label="Filter by class"
+            >
+              <option value="">All classes</option>
+              {facets.classes.map((className) => (
+                <option key={className} value={className}>
+                  {className}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : null}
         {actionError ? (
           <p className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{actionError}</p>
         ) : null}
