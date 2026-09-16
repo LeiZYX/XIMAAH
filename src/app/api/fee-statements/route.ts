@@ -10,6 +10,7 @@ import {
   regenerateRevisedFeeStatement,
   validateWorkspaceFees,
 } from "@/lib/fees/statement";
+import { repriceWorkspaceByCurrentFeeStage } from "@/lib/fees/reprice-by-current-stage";
 import {
   hasIssuedFeeStatement,
   needsFeeStatementRegeneration,
@@ -132,14 +133,32 @@ export async function GET(request: NextRequest) {
     regenerationChangedBy: { select: { id: true, name: true } },
     revisedFromStatement: { select: { id: true, statementNo: true, status: true } },
     revisedToStatement: { select: { id: true, statementNo: true, status: true } },
-    candidate: { select: { studentId: true } },
+    candidate: {
+      select: {
+        studentId: true,
+        chineseName: true,
+        examIdentities: {
+          select: {
+            centreNumber: true,
+            uciNumber: true,
+            examBoardId: true,
+            examBoard: { select: { id: true, code: true } },
+          },
+        },
+      },
+    },
+    registrationWorkspace: {
+      select: {
+        uciAtEntry: true,
+      },
+    },
     paymentOrders: {
       include: { cancelledBy: { select: { id: true, name: true } } },
       orderBy: [{ version: "desc" as const }, { createdAt: "desc" as const }],
     },
     registrationWindow: {
       include: {
-        examBoard: { select: { name: true, code: true } },
+        examBoard: { select: { id: true, name: true, code: true } },
         examSeries: { select: { name: true, year: true } },
       },
     },
@@ -419,6 +438,68 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ results });
     }
 
+    if (data.action === "batch-reprice-by-current-fee-stage" && data.registrationWindowId) {
+      const workspaces = await findLockedWorkspacesForBilling(
+        data.registrationWindowId,
+        "INTERNAL_NORMAL",
+      );
+
+      const results: {
+        workspaceId: string;
+        ok: boolean;
+        error?: string;
+        statementId?: string;
+        targetStageLabel?: string;
+        changedCount?: number;
+        skippedOverriddenCount?: number;
+        defaultedToNormal?: boolean;
+      }[] = [];
+
+      for (const workspace of workspaces) {
+        try {
+          const result = await repriceWorkspaceByCurrentFeeStage({
+            workspaceId: workspace.id,
+            performedByUserId: auth.user.id,
+            displayCurrency:
+              (data.displayCurrency as "GBP" | "CNY" | "BOTH") ??
+              DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+          });
+          results.push({
+            workspaceId: workspace.id,
+            ok: true,
+            statementId: result.statement.id,
+            targetStageLabel: result.targetStageLabel,
+            changedCount: result.changes.length,
+            skippedOverriddenCount: result.skippedOverridden.length,
+            defaultedToNormal: result.defaultedToNormal,
+          });
+        } catch (error) {
+          results.push({
+            workspaceId: workspace.id,
+            ok: false,
+            error: error instanceof FeeError ? error.message : "Reprice failed",
+          });
+        }
+      }
+
+      try {
+        await createFeeAuditLog({
+          action: "FEE_STATEMENT_BATCH_GENERATED",
+          performedByUserId: auth.user.id,
+          registrationWindowId: data.registrationWindowId,
+          note: "Batch reprice by current fee stage",
+          metadata: {
+            action: "batch-reprice-by-current-fee-stage",
+            results,
+          },
+        });
+      } catch (auditError) {
+        console.error("Fee audit log failed:", auditError);
+      }
+
+      return NextResponse.json({ results });
+    }
+
     if (data.action === "batch-restricted" && data.registrationWindowId) {
       const results = await runOfficeInvoiceBatch({
         registrationWindowId: data.registrationWindowId,
@@ -467,6 +548,27 @@ export async function POST(request: NextRequest) {
       });
 
       return NextResponse.json(statement, { status: 201 });
+    }
+
+    if (data.action === "reprice-by-current-fee-stage" && data.workspaceId) {
+      const result = await repriceWorkspaceByCurrentFeeStage({
+        workspaceId: data.workspaceId,
+        performedByUserId: auth.user.id,
+        displayCurrency:
+          (data.displayCurrency as "GBP" | "CNY" | "BOTH") ?? DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+      });
+
+      return NextResponse.json(
+        {
+          statement: result.statement,
+          targetEntryType: result.targetEntryType,
+          targetStageLabel: result.targetStageLabel,
+          defaultedToNormal: result.defaultedToNormal,
+          changes: result.changes,
+          skippedOverridden: result.skippedOverridden,
+        },
+        { status: 201 },
+      );
     }
 
     if (!data.workspaceId) {

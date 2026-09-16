@@ -65,6 +65,25 @@ export async function GET() {
     },
     include: {
       items: true,
+      candidate: {
+        select: {
+          studentId: true,
+          chineseName: true,
+          examIdentities: {
+            select: {
+              centreNumber: true,
+              uciNumber: true,
+              examBoardId: true,
+              examBoard: { select: { id: true, code: true } },
+            },
+          },
+        },
+      },
+      registrationWorkspace: {
+        select: {
+          uciAtEntry: true,
+        },
+      },
       paymentOrders: {
         orderBy: [{ version: "desc" }, { createdAt: "desc" }],
         select: {
@@ -82,7 +101,7 @@ export async function GET() {
       },
       registrationWindow: {
         include: {
-          examBoard: { select: { name: true, code: true } },
+          examBoard: { select: { id: true, name: true, code: true } },
           examSeries: { select: { name: true, year: true } },
         },
       },

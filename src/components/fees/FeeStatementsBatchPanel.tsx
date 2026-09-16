@@ -170,6 +170,73 @@ export function FeeStatementsBatchPanel({
     }
   }
 
+  async function batchRepriceByCurrentFeeStage() {
+    const confirmed = window.confirm(
+      [
+        "Batch reprice using current fee-stage windows?",
+        "",
+        "This will process all locked internal-normal registrations in this window:",
+        "1) Re-evaluate Normal / Late / High Late from the window’s fee-stage dates (as of now)",
+        "2) Update entry stages (manual overrides are skipped)",
+        "3) Regenerate and issue a revised fee statement for each",
+        "",
+        "Use Batch generate if you only want to create statements without changing stages.",
+      ].join("\n"),
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch("/api/fee-statements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "batch-reprice-by-current-fee-stage",
+          registrationWindowId,
+          displayCurrency,
+        }),
+      });
+      const data = await readJsonResponse<{
+        error?: string;
+        results?: Array<{
+          ok: boolean;
+          error?: string;
+          targetStageLabel?: string;
+          changedCount?: number;
+          skippedOverriddenCount?: number;
+        }>;
+      }>(response);
+      if (!response.ok) throw new Error(data.error ?? "Batch reprice failed");
+      const results = data.results ?? [];
+      const okCount = results.filter((r) => r.ok).length;
+      const failCount = results.filter((r) => !r.ok).length;
+      const stageChanged = results
+        .filter((r) => r.ok)
+        .reduce((sum, r) => sum + (r.changedCount ?? 0), 0);
+      const stageLabel =
+        results.find((r) => r.ok && r.targetStageLabel)?.targetStageLabel ?? null;
+      const failMessages = results
+        .filter((r) => !r.ok)
+        .map((r) => r.error)
+        .filter(Boolean)
+        .slice(0, 2);
+      setMessage(
+        `Batch reprice processed ${results.length} workspace(s): ${okCount} ok${
+          stageLabel ? ` → ${stageLabel}` : ""
+        }.${stageChanged ? ` ${stageChanged} exam stage update(s).` : ""}${
+          failCount ? ` ${failCount} failed.` : ""
+        }${failMessages.length ? ` ${failMessages.join("; ")}` : ""}`,
+      );
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Batch reprice failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const printable = statements.filter((s) => selectedIds.includes(s.id));
 
   return (
@@ -214,6 +281,15 @@ export function FeeStatementsBatchPanel({
             className="rounded-lg border border-indigo-300 px-3 py-2 text-sm font-medium text-indigo-700 disabled:opacity-50"
           >
             Batch generate & issue
+          </button>
+          <button
+            type="button"
+            disabled={loading || !registrationWindowId}
+            onClick={() => void batchRepriceByCurrentFeeStage()}
+            title="Re-evaluate Normal/Late/High Late from current fee-stage windows for all locked internal-normal registrations, then regenerate statements"
+            className="rounded-lg border border-amber-300 px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-50 disabled:opacity-50"
+          >
+            Batch reprice by current fee stage
           </button>
           <button
             type="button"

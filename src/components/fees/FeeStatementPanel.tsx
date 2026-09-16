@@ -207,6 +207,66 @@ export function FeeStatementPanel({
     }
   }
 
+  async function repriceByCurrentFeeStage() {
+    const confirmed = window.confirm(
+      [
+        "Reprice using current fee-stage windows?",
+        "",
+        "This will:",
+        "1) Re-evaluate Normal / Late / High Late from the registration window’s fee-stage dates (as of now)",
+        "2) Update entry stages on this registration (manual overrides are skipped)",
+        "3) Regenerate and issue a revised fee statement",
+        "",
+        "Use Regenerate revised instead if you only want to refresh prices without changing stages.",
+      ].join("\n"),
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch("/api/fee-statements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "reprice-by-current-fee-stage",
+          workspaceId,
+          displayCurrency,
+        }),
+      });
+      const data = await readJsonResponse<{
+        error?: string;
+        statement?: { statementNo?: string; status?: string };
+        targetStageLabel?: string;
+        changes?: Array<{ paperCode: string | null; from: string; to: string }>;
+        skippedOverridden?: Array<{ paperCode: string | null }>;
+        defaultedToNormal?: boolean;
+      }>(response);
+      if (!response.ok) throw new Error(data.error ?? "Reprice failed");
+
+      const changedCount = data.changes?.length ?? 0;
+      const skippedCount = data.skippedOverridden?.length ?? 0;
+      const parts = [
+        `Repriced to ${data.targetStageLabel ?? "current stage"}`,
+        `statement ${data.statement?.statementNo ?? ""} issued (${data.statement?.status ?? ""})`,
+        `${changedCount} exam stage update(s)`,
+      ];
+      if (skippedCount > 0) {
+        parts.push(`${skippedCount} manual override(s) skipped`);
+      }
+      if (data.defaultedToNormal) {
+        parts.push("no active stage window matched now — defaulted to Normal");
+      }
+      setMessage(parts.join("; "));
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Reprice failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function issue(statementId: string) {
     setLoading(true);
     setError(null);
@@ -279,6 +339,15 @@ export function FeeStatementPanel({
                 Regenerate revised
               </button>
             )}
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => void repriceByCurrentFeeStage()}
+              title="Re-evaluate Normal/Late/High Late from current fee-stage windows, then regenerate the statement"
+              className="rounded-lg border border-amber-300 px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-50 disabled:opacity-50"
+            >
+              Reprice by current fee stage
+            </button>
             {outdatedStatement ? (
               <button
                 type="button"

@@ -21,8 +21,20 @@ export interface FeeStatementPrintData {
   classNameSnapshot: string;
   emailSnapshot: string | null;
   assessmentHubCandidateNumberSnapshot?: string | null;
-  candidate?: { studentId: string | null } | null;
+  candidate?: {
+    studentId: string | null;
+    chineseName?: string | null;
+    examIdentities?: Array<{
+      centreNumber: string | null;
+      uciNumber: string | null;
+      examBoardId?: string;
+      examBoard?: { id?: string; code: string } | null;
+    }>;
+  } | null;
   candidateTypeSnapshot?: string | null;
+  registrationWorkspace?: {
+    uciAtEntry?: string | null;
+  } | null;
   status: string;
   totalGbpAmount: number | string;
   totalCnyAmount: number | string;
@@ -47,7 +59,7 @@ export interface FeeStatementPrintData {
   }>;
   registrationWindow: {
     title: string;
-    examBoard: { name: string; code: string };
+    examBoard: { name: string; code: string; id?: string };
     examSeries: { name: string; year: number };
   };
   items: Array<{
@@ -90,6 +102,29 @@ export function FeeStatementPrintButton({ onClick, className }: { onClick: () =>
   );
 }
 
+function resolveBoardIdentity(statement: FeeStatementPrintData): {
+  centreNumber: string | null;
+  uciNumber: string | null;
+} {
+  const boardCode = statement.registrationWindow.examBoard.code?.trim().toUpperCase();
+  const boardId = statement.registrationWindow.examBoard.id;
+  const identities = statement.candidate?.examIdentities ?? [];
+  const matched =
+    identities.find(
+      (row) =>
+        (boardId && (row.examBoardId === boardId || row.examBoard?.id === boardId)) ||
+        (boardCode && row.examBoard?.code?.trim().toUpperCase() === boardCode),
+    ) ?? identities.find((row) => row.uciNumber?.trim() || row.centreNumber?.trim());
+
+  const uciFromIdentity = matched?.uciNumber?.trim() || null;
+  const uciFromWorkspace = statement.registrationWorkspace?.uciAtEntry?.trim() || null;
+
+  return {
+    centreNumber: matched?.centreNumber?.trim() || null,
+    uciNumber: uciFromIdentity || uciFromWorkspace || null,
+  };
+}
+
 function StatementDocument({
   statement,
   displayCurrency,
@@ -103,6 +138,8 @@ function StatementDocument({
   const totalCny = Number(statement.totalCnyAmount);
   const rate = statement.exchangeRateSnapshot ? Number(statement.exchangeRateSnapshot) : null;
   const isInternal = statement.candidateTypeSnapshot === "INTERNAL";
+  const chineseName = statement.candidate?.chineseName?.trim() || null;
+  const boardIdentity = resolveBoardIdentity(statement);
 
   return (
     <article className="fee-print-document">
@@ -124,11 +161,8 @@ function StatementDocument({
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Candidate information</h2>
             <dl className="space-y-1">
               <div><dt className="inline font-medium">Name: </dt><dd className="inline">{statement.studentNameSnapshot}</dd></div>
-              {(statement.permanentStudentIdSnapshot ?? statement.candidate?.studentId) ? (
-                <div><dt className="inline font-medium">Student ID: </dt><dd className="inline font-mono text-xs">{statement.permanentStudentIdSnapshot ?? statement.candidate?.studentId}</dd></div>
-              ) : null}
-              {statement.candidateTypeSnapshot ? (
-                <div><dt className="inline font-medium">Candidate type: </dt><dd className="inline">{statement.candidateTypeSnapshot === "INTERNAL" ? "Internal" : "External"}</dd></div>
+              {chineseName ? (
+                <div><dt className="inline font-medium">Chinese name: </dt><dd className="inline">{chineseName}</dd></div>
               ) : null}
               {isInternal ? (
                 <>
@@ -148,6 +182,14 @@ function StatementDocument({
               <div><dt className="inline font-medium">Window: </dt><dd className="inline">{statement.registrationWindow.title}</dd></div>
               <div><dt className="inline font-medium">Exam board: </dt><dd className="inline">{statement.registrationWindow.examBoard.name}</dd></div>
               <div><dt className="inline font-medium">Exam series: </dt><dd className="inline">{statement.registrationWindow.examSeries.name} ({statement.registrationWindow.examSeries.year})</dd></div>
+              <div>
+                <dt className="inline font-medium">UCI centre no.: </dt>
+                <dd className="inline">{boardIdentity.centreNumber || "—"}</dd>
+              </div>
+              <div>
+                <dt className="inline font-medium">UCI no.: </dt>
+                <dd className="inline">{boardIdentity.uciNumber || "—"}</dd>
+              </div>
               <div><dt className="inline font-medium">Status: </dt><dd className="inline">{statement.status}</dd></div>
               <div><dt className="inline font-medium">Generated: </dt><dd className="inline">{new Date(statement.generatedAt).toLocaleString()}</dd></div>
             </dl>
