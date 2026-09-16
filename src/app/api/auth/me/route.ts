@@ -23,7 +23,22 @@ export async function GET() {
       studentNo: true,
       role: true,
       mustChangePassword: true,
-      studentProfile: true,
+      studentProfile: {
+        select: {
+          studentNo: true,
+          currentGrade: true,
+          currentClassName: true,
+          email: true,
+          phone: true,
+          status: true,
+        },
+      },
+      candidate: {
+        select: {
+          chineseName: true,
+          preferredEnglishName: true,
+        },
+      },
     },
   });
 
@@ -31,9 +46,13 @@ export async function GET() {
     return NextResponse.json({ user: null }, { status: 401 });
   }
 
+  const { candidate, ...rest } = user;
+
   return NextResponse.json({
     user: {
-      ...user,
+      ...rest,
+      chineseName: candidate?.chineseName ?? null,
+      preferredEnglishName: candidate?.preferredEnglishName ?? null,
       homePath: homePathForRole(user.role),
     },
   });
