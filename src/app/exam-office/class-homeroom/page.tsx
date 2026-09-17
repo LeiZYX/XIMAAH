@@ -9,7 +9,7 @@ export default function ExamOfficeClassHomeroomPage() {
     <div className="space-y-4">
       <PageHeader
         title="Class form teachers"
-        description="Assign a form teacher (班主任) to each grade and class. Students need this before they can submit late adjustment requests."
+        description="Assign form teachers by grade and class. Students can submit late adjustments when their grade has at least one form teacher."
       />
       <ClassHomeroomTeachersPanel apiPath="/api/exam-office/class-homeroom-teachers" />
     </div>

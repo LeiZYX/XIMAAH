@@ -62,28 +62,48 @@ export async function requireHomeroomTeacherForStudent(studentId: string) {
     where: { userId: studentId },
     select: { currentGrade: true, currentClassName: true },
   });
-  if (!profile?.currentClassName?.trim()) {
+  if (!profile?.currentGrade) {
+    throw new RegistrationError(
+      "学生档案未填写年级，请先联系考务完善年级/班级后再提交",
+      400,
+    );
+  }
+  if (!profile.currentClassName?.trim()) {
     throw new RegistrationError(NO_STUDENT_CLASS_MESSAGE, 400);
   }
 
   const className = normalizeClassName(profile.currentClassName);
-  const assignment = await findHomeroomTeacherForClass(profile.currentGrade, className);
+  const classAssignment = await findHomeroomTeacherForClass(profile.currentGrade, className);
+  const gradeAssignments = await prisma.classHomeroomTeacher.findMany({
+    where: { grade: profile.currentGrade },
+    include: { teacher: { select: homeroomTeacherSelect } },
+    orderBy: [{ className: "asc" }],
+  });
+
+  const usable = (row: (typeof gradeAssignments)[number] | null | undefined) =>
+    Boolean(
+      row &&
+        row.teacher.isActive &&
+        row.teacher.role === UserRole.SUBJECT_TEACHER,
+    );
+
+  const assignment =
+    (usable(classAssignment) ? classAssignment : null) ??
+    gradeAssignments.find((row) => usable(row)) ??
+    null;
+
   if (!assignment) {
     throw new RegistrationError(
-      `${gradeLabel(profile.currentGrade)} 班级「${className}」尚未配置班主任，请联系考务在 Class form teachers 中配置`,
-      400,
-    );
-  }
-  if (!assignment.teacher.isActive || assignment.teacher.role !== UserRole.SUBJECT_TEACHER) {
-    throw new RegistrationError(
-      `${gradeLabel(profile.currentGrade)} 班级「${className}」的班主任账号不可用，请联系考务检查老师账号状态`,
+      `${gradeLabel(profile.currentGrade)} 尚未配置任何班主任，请联系考务在 Class form teachers 中至少配置一位同年级班主任`,
       400,
     );
   }
 
   return {
     grade: profile.currentGrade,
-    className: normalizeClassName(assignment.className) || className,
+    // Keep the student's own class on the request snapshot, even when routing
+    // falls back to another same-grade form teacher.
+    className,
     teacher: assignment.teacher,
     assignmentId: assignment.id,
   };

@@ -116,10 +116,11 @@ export function ClassHomeroomTeachersPanel({ apiPath }: { apiPath: string }) {
       <Card>
         <h2 className="text-lg font-semibold text-slate-900">Assign form teacher (班主任)</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Each grade + class can have one form teacher. Students cannot submit late adjustment
-          requests until their class is configured. Same-grade form teachers may also review those
-          requests. Class names are normalized on save/match (e.g. &quot;Class 1&quot; / &quot;1班&quot; →
-          &quot;1&quot;), so keep the same grade+class as on the student profile.
+          Assign form teachers by grade + class. Students can submit late adjustment requests when
+          their grade has at least one form teacher; if their exact class is configured, that
+          teacher is preferred, otherwise any same-grade form teacher can receive/review the
+          request. Class names are normalized on save/match (e.g. &quot;Class 1&quot; / &quot;1班&quot; →
+          &quot;1&quot;).
         </p>
         <form onSubmit={(e) => void handleSave(e)} className="mt-4 grid gap-3 sm:grid-cols-4">
           <label className="text-sm">

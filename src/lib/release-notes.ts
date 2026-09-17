@@ -64,8 +64,8 @@ export const releaseNotes: ReleaseNote[] = [
       "Student late exam adjustments with form-teacher routing, same-grade assist review, and staff email notifications.",
     changes: [
       "Registration window General: enable student late adjustment requests and set a request deadline between student close and final close",
-      "My Exam Registrations: locked cards offer Request adjustment (fee warning, draft add/remove with reasons, one-time submit). Submit requires a configured class form teacher (班主任)",
-      "Class form teachers (Admin Users / Exam Office): assign one form teacher per grade+class; same-grade form teachers may assist review",
+      "My Exam Registrations: locked cards offer Request adjustment (fee warning, draft add/remove with reasons, one-time submit). Submit requires at least one form teacher (班主任) in the student's grade; exact class is preferred when configured",
+      "Class form teachers (Admin Users / Exam Office): assign form teachers by grade+class; same-grade form teachers may receive and review late adjustment requests",
       "Teacher Class Registrations and EO/Admin Registrations: approve or reject with a required reason (form teacher → EO; EO apply reuses post-lock adjustment and fee statement regeneration)",
       "After teacher review: optional email To student, Cc EO and other same-grade form teachers (Password & Email Settings → Staff notifications)",
       "Locked registration confirmation print includes student and parent/guardian signature lines",

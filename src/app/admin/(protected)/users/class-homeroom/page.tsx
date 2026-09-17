@@ -11,7 +11,7 @@ export default function AdminClassHomeroomTeachersPage() {
       <UsersSubnav />
       <PageHeader
         title="Class form teachers"
-        description="Assign a form teacher (班主任) to each grade and class for student late adjustment routing."
+        description="Assign form teachers by grade and class for late adjustment routing. Same-grade form teachers can receive and review requests."
       />
       <ClassHomeroomTeachersPanel apiPath="/api/admin/class-homeroom-teachers" />
     </div>
