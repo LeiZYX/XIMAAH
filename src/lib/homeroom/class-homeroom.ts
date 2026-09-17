@@ -6,30 +6,55 @@ import { RegistrationError } from "@/lib/registrations/errors";
 export const NO_HOMEROOM_TEACHER_MESSAGE =
   "本班尚未配置班主任，请联系考务";
 
+export const NO_STUDENT_CLASS_MESSAGE =
+  "学生档案未填写班级，请先联系考务完善年级/班级后再提交";
+
+const homeroomTeacherSelect = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  isActive: true,
+  teacherProfile: { select: { email: true, status: true } },
+} as const;
+
+/** Canonical class label for storage/lookup (e.g. "Class 1" / "1班" → "1"). */
 export function normalizeClassName(className: string): string {
-  return className.trim();
+  let value = className.trim().replace(/\s+/g, " ");
+  if (!value) return "";
+  value = value.replace(/^(class|班级)\s*/i, "").trim();
+  value = value.replace(/班$/u, "").trim();
+  return value.replace(/\s+/g, " ");
+}
+
+/** Case-insensitive match key so "G5" and "g5" hit the same assignment. */
+export function classNameMatchKey(className: string): string {
+  return normalizeClassName(className).toLowerCase();
+}
+
+function gradeLabel(grade: Grade): string {
+  return String(grade).replace(/^G/, "G");
 }
 
 export async function findHomeroomTeacherForClass(grade: Grade, className: string) {
+  const key = classNameMatchKey(className);
+  if (!key) return null;
+
   const normalized = normalizeClassName(className);
-  if (!normalized) return null;
-  return prisma.classHomeroomTeacher.findUnique({
+  const exact = await prisma.classHomeroomTeacher.findUnique({
     where: {
       grade_className: { grade, className: normalized },
     },
-    include: {
-      teacher: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: true,
-          isActive: true,
-          teacherProfile: { select: { email: true, status: true } },
-        },
-      },
-    },
+    include: { teacher: { select: homeroomTeacherSelect } },
   });
+  if (exact) return exact;
+
+  // Fall back: match aliases already stored in the table (e.g. "Class 1" vs "1").
+  const rows = await prisma.classHomeroomTeacher.findMany({
+    where: { grade },
+    include: { teacher: { select: homeroomTeacherSelect } },
+  });
+  return rows.find((row) => classNameMatchKey(row.className) === key) ?? null;
 }
 
 export async function requireHomeroomTeacherForStudent(studentId: string) {
@@ -38,20 +63,27 @@ export async function requireHomeroomTeacherForStudent(studentId: string) {
     select: { currentGrade: true, currentClassName: true },
   });
   if (!profile?.currentClassName?.trim()) {
-    throw new RegistrationError(NO_HOMEROOM_TEACHER_MESSAGE, 400);
+    throw new RegistrationError(NO_STUDENT_CLASS_MESSAGE, 400);
   }
 
-  const assignment = await findHomeroomTeacherForClass(
-    profile.currentGrade,
-    profile.currentClassName,
-  );
-  if (!assignment || !assignment.teacher.isActive || assignment.teacher.role !== UserRole.SUBJECT_TEACHER) {
-    throw new RegistrationError(NO_HOMEROOM_TEACHER_MESSAGE, 400);
+  const className = normalizeClassName(profile.currentClassName);
+  const assignment = await findHomeroomTeacherForClass(profile.currentGrade, className);
+  if (!assignment) {
+    throw new RegistrationError(
+      `${gradeLabel(profile.currentGrade)} 班级「${className}」尚未配置班主任，请联系考务在 Class form teachers 中配置`,
+      400,
+    );
+  }
+  if (!assignment.teacher.isActive || assignment.teacher.role !== UserRole.SUBJECT_TEACHER) {
+    throw new RegistrationError(
+      `${gradeLabel(profile.currentGrade)} 班级「${className}」的班主任账号不可用，请联系考务检查老师账号状态`,
+      400,
+    );
   }
 
   return {
     grade: profile.currentGrade,
-    className: normalizeClassName(profile.currentClassName),
+    className: normalizeClassName(assignment.className) || className,
     teacher: assignment.teacher,
     assignmentId: assignment.id,
   };
@@ -128,6 +160,29 @@ export async function upsertClassHomeroomTeacher(input: {
   });
   if (!teacher || teacher.role !== UserRole.SUBJECT_TEACHER || !teacher.isActive) {
     throw new RegistrationError("Select an active subject teacher", 400);
+  }
+
+  // Prefer updating an existing alias row for the same grade+class key.
+  const existing = await findHomeroomTeacherForClass(input.grade, className);
+  if (existing && classNameMatchKey(existing.className) === classNameMatchKey(className)) {
+    return prisma.classHomeroomTeacher.update({
+      where: { id: existing.id },
+      data: {
+        className,
+        teacherUserId: input.teacherUserId,
+      },
+      include: {
+        teacher: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            username: true,
+            isActive: true,
+          },
+        },
+      },
+    });
   }
 
   return prisma.classHomeroomTeacher.upsert({

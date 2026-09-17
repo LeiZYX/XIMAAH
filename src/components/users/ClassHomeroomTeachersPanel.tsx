@@ -118,7 +118,8 @@ export function ClassHomeroomTeachersPanel({ apiPath }: { apiPath: string }) {
         <p className="mt-1 text-sm text-slate-600">
           Each grade + class can have one form teacher. Students cannot submit late adjustment
           requests until their class is configured. Same-grade form teachers may also review those
-          requests.
+          requests. Class names are normalized on save/match (e.g. &quot;Class 1&quot; / &quot;1班&quot; →
+          &quot;1&quot;), so keep the same grade+class as on the student profile.
         </p>
         <form onSubmit={(e) => void handleSave(e)} className="mt-4 grid gap-3 sm:grid-cols-4">
           <label className="text-sm">
@@ -141,7 +142,7 @@ export function ClassHomeroomTeachersPanel({ apiPath }: { apiPath: string }) {
             <input
               value={className}
               onChange={(e) => setClassName(e.target.value)}
-              placeholder="e.g. 10A"
+              placeholder="e.g. 1, G5, 10A"
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
               required
             />
