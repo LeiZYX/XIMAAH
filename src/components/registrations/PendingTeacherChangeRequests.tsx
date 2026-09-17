@@ -177,7 +177,7 @@ export function PendingTeacherChangeRequests({
       }
       setRejectingId(null);
       setRejectNote("");
-      setTab("reviewed");
+      // Stay on Needs review so the officer can continue the remaining queue.
       await load();
       bumpWorkspaceList();
     } catch (reviewError) {

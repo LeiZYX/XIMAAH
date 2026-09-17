@@ -1,12 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { useRegistrationsRefresh } from "@/components/registrations/registrations-refresh";
 import { formatEnglishWithChineseName } from "@/lib/candidates/identity";
 
 type ReviewTab = "needs" | "reviewed";
+
+/** Needs-review cards are tall; keep pages small. Reviewed cards are denser. */
+const NEEDS_PAGE_SIZE = 5;
+const REVIEWED_PAGE_SIZE = 10;
 
 interface AdjustmentItem {
   id: string;
@@ -175,6 +179,7 @@ export function PendingStudentAdjustmentRequests({
 }) {
   const role = status === "PENDING_TEACHER" ? "TEACHER" : "EO";
   const [tab, setTab] = useState<ReviewTab>("needs");
+  const [page, setPage] = useState(1);
   const [needsRows, setNeedsRows] = useState<AdjustmentRequestRow[]>([]);
   const [reviewedRows, setReviewedRows] = useState<AdjustmentRequestRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -183,6 +188,11 @@ export function PendingStudentAdjustmentRequests({
   const [error, setError] = useState<string | null>(null);
   const [feeNotice, setFeeNotice] = useState<string | null>(null);
   const { bumpWorkspaceList, registrationWindowId } = useRegistrationsRefresh();
+
+  function switchTab(next: ReviewTab) {
+    setTab(next);
+    setPage(1);
+  }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -262,7 +272,7 @@ export function PendingStudentAdjustmentRequests({
         delete next[requestId];
         return next;
       });
-      setTab("reviewed");
+      // Stay on Needs review so the teacher can continue the remaining queue.
       await load();
       bumpWorkspaceList();
     } catch (reviewError) {
@@ -272,7 +282,24 @@ export function PendingStudentAdjustmentRequests({
     }
   }
 
-  const rows = tab === "needs" ? needsRows : reviewedRows;
+  const allRows = tab === "needs" ? needsRows : reviewedRows;
+  const pageSize = tab === "needs" ? NEEDS_PAGE_SIZE : REVIEWED_PAGE_SIZE;
+  const totalPages = Math.max(1, Math.ceil(allRows.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
+  const rows = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return allRows.slice(start, start + pageSize);
+  }, [allRows, currentPage, pageSize]);
+
+  const rangeStart = allRows.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const rangeEnd = Math.min(currentPage * pageSize, allRows.length);
 
   return (
     <Card className="border-amber-200 bg-amber-50/50">
@@ -283,13 +310,13 @@ export function PendingStudentAdjustmentRequests({
           active={tab === "needs"}
           count={needsRows.length}
           label="Needs review"
-          onClick={() => setTab("needs")}
+          onClick={() => switchTab("needs")}
         />
         <TabButton
           active={tab === "reviewed"}
           count={reviewedRows.length}
           label="Reviewed"
-          onClick={() => setTab("reviewed")}
+          onClick={() => switchTab("reviewed")}
         />
       </div>
       {feeNotice ? (
@@ -304,7 +331,7 @@ export function PendingStudentAdjustmentRequests({
       ) : null}
       {loading ? (
         <p className="text-sm text-slate-500">Loading…</p>
-      ) : rows.length === 0 ? (
+      ) : allRows.length === 0 ? (
         <p className="text-sm text-slate-500">
           {tab === "needs"
             ? "No requests waiting for your review."
@@ -312,6 +339,34 @@ export function PendingStudentAdjustmentRequests({
         </p>
       ) : (
         <div className="space-y-4">
+          {allRows.length > pageSize ? (
+            <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-600">
+              <p>
+                Showing {rangeStart}–{rangeEnd} of {allRows.length}
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  disabled={currentPage <= 1}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                <span className="tabular-nums">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button
+                  type="button"
+                  disabled={currentPage >= totalPages}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          ) : null}
           {rows.map((row) => {
             const windowInfo = row.registrationWorkspace.registrationWindow;
             const badge = statusBadge(row, role);
@@ -458,6 +513,29 @@ export function PendingStudentAdjustmentRequests({
               </div>
             );
           })}
+          {allRows.length > pageSize ? (
+            <div className="flex flex-wrap items-center justify-end gap-2 text-sm text-slate-600">
+              <button
+                type="button"
+                disabled={currentPage <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <span className="tabular-nums">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                type="button"
+                disabled={currentPage >= totalPages}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 font-medium text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          ) : null}
         </div>
       )}
     </Card>
