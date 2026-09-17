@@ -16,6 +16,7 @@ export interface FeeReportFilters {
   month?: number;
   grade?: string;
   className?: string;
+  q?: string;
   candidateType?: CandidateType;
   registrationSource?: RegistrationSource;
   visibility?: RegistrationVisibility;
@@ -111,6 +112,7 @@ export function parseFeeReportFilters(searchParams: URLSearchParams): FeeReportF
     month: month ? Number(month) : undefined,
     grade: searchParams.get("grade")?.trim() || undefined,
     className: searchParams.get("className")?.trim() || undefined,
+    q: searchParams.get("q")?.trim() || undefined,
     candidateType:
       candidateType === "INTERNAL" || candidateType === "EXTERNAL"
         ? candidateType

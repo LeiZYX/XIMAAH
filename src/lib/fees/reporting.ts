@@ -28,22 +28,51 @@ export interface FeeSummaryCards {
   statementsNotGenerated: number;
 }
 
+export interface FeeSummaryFacet {
+  key: string;
+  label: string;
+  count: number;
+}
+
+/** One row per student (workspace) for Fee Summary. */
 export interface FeeSummaryRow {
+  candidateKey: string;
+  englishName: string;
+  chineseName: string | null;
+  candidateType: string;
+  grade: string;
+  className: string;
   registrationWindowId: string;
   registrationWindowTitle: string;
   examBoardName: string;
   examSeriesName: string;
   examSeriesYear: number;
-  grade: string;
-  className: string;
-  candidateType: string;
-  subjectName: string;
-  candidateCount: number;
-  examEntryCount: number;
-  totalGbp: number;
-  totalCny: number;
+  subjectCount: number;
+  registrationFeeGbp: number | null;
+  amountDueGbp: number;
+  paymentStatus: string;
+  statementStatus: string;
+  statementNo: string | null;
+  generatedAt: string | null;
+  systemMessages: string[];
   missingFeeRuleCount: number;
-  statementCount: number;
+}
+
+function feeSummaryPaymentStatus(statementStatus: string): string {
+  switch (statementStatus) {
+    case "PAID":
+      return "Paid";
+    case "ISSUED":
+      return "Unpaid";
+    case "DRAFT":
+      return "Draft";
+    case "NEEDS_REGENERATION":
+      return "Needs regeneration";
+    case "NOT_GENERATED":
+      return "No statement";
+    default:
+      return statementStatus.replace(/_/g, " ");
+  }
 }
 
 export interface FeeDetailRow {
@@ -93,7 +122,7 @@ type RegRow = {
   studentNoSnapshot: string;
   assessmentHubCandidateNumberSnapshot: string | null;
   candidateTypeSnapshot: string | null;
-  candidate?: { studentId: string | null } | null;
+  candidate?: { studentId: string | null; chineseName?: string | null } | null;
   registrationSource: string | null;
   visibility: string | null;
   billingScope: string | null;
@@ -140,7 +169,7 @@ async function loadBillableRegistrations(filters: FeeReportFilters): Promise<Reg
       registrationWorkspaceId: { in: workspaceIds },
     },
     include: {
-      candidate: { select: { studentId: true } },
+      candidate: { select: { studentId: true, chineseName: true } },
       subject: { select: { name: true, qualificationId: true } },
       paper: { select: { code: true, title: true } },
       examSession: { select: { date: true } },
@@ -171,8 +200,16 @@ function candidateKey(row: RegRow): string {
 export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<{
   cards: FeeSummaryCards;
   rows: FeeSummaryRow[];
+  byGrade: FeeSummaryFacet[];
+  byClass: FeeSummaryFacet[];
+  systemTips: string[];
 }> {
-  const registrations = await loadBillableRegistrations(filters);
+  // Load without grade/class so facets cover the full type/window scope.
+  const registrations = await loadBillableRegistrations({
+    ...filters,
+    grade: undefined,
+    className: undefined,
+  });
   const windowIds = [...new Set(registrations.map((r) => r.registrationWindow.id))];
 
   const [rules, exchangeRates, statements] = await Promise.all([
@@ -197,17 +234,22 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
         registrationWindowId: filters.registrationWindowId
           ? filters.registrationWindowId
           : { in: windowIds },
-        status: filters.statementStatus
-          ? filters.statementStatus
-          : { in: ["ISSUED", "PAID", "NEEDS_REGENERATION"] },
+        status: {
+          in: ["ISSUED", "PAID", "NEEDS_REGENERATION", "DRAFT"],
+        },
       },
       select: {
         id: true,
         registrationWorkspaceId: true,
         status: true,
+        statementNo: true,
         totalGbpAmount: true,
         totalCnyAmount: true,
+        amountDueGbpAmount: true,
+        generatedAt: true,
+        regenerationReason: true,
       },
+      orderBy: [{ generatedAt: "desc" }],
     }),
   ]);
 
@@ -227,29 +269,66 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
           })
         ).map((row) => row.id),
   );
+
+  type StudentAgg = {
+    candidateKey: string;
+    workspaceId: string | null;
+    englishName: string;
+    chineseName: string | null;
+    candidateType: string;
+    grade: string;
+    className: string;
+    registrationWindowId: string;
+    registrationWindowTitle: string;
+    examBoardName: string;
+    examSeriesName: string;
+    examSeriesYear: number;
+    examBoardId: string;
+    subjectIds: Set<string>;
+    examEntryCount: number;
+    examGbp: number;
+    registrationFeeGbp: number | null;
+    missingFeeRuleCount: number;
+    systemMessages: string[];
+  };
+
+  const studentMap = new Map<string, StudentAgg>();
   const candidateFeeWorkspacesHandled = new Set<string>();
-
-  const statementsByWorkspace = new Map<string, typeof statements>();
-  for (const statement of statements) {
-    if (!statement.registrationWorkspaceId) continue;
-    const list = statementsByWorkspace.get(statement.registrationWorkspaceId) ?? [];
-    list.push(statement);
-    statementsByWorkspace.set(statement.registrationWorkspaceId, list);
-  }
-
-  const groupMap = new Map<
-    string,
-    FeeSummaryRow & { candidateIds: Set<string>; workspaceIds: Set<string> }
-  >();
-
-  let missingFeeRules = 0;
-  let totalGbp = 0;
   let totalCny = 0;
-  const allCandidates = new Set<string>();
-  const workspacesWithStatement = new Set<string>();
 
   for (const reg of registrations) {
-    allCandidates.add(candidateKey(reg));
+    const key =
+      reg.registrationWorkspaceId ??
+      `${candidateKey(reg)}|${reg.registrationWindow.id}`;
+    let student = studentMap.get(key);
+    if (!student) {
+      student = {
+        candidateKey: candidateKey(reg),
+        workspaceId: reg.registrationWorkspaceId,
+        englishName: reg.studentNameSnapshot,
+        chineseName: reg.candidate?.chineseName?.trim() || null,
+        candidateType: reg.candidateTypeSnapshot ?? "INTERNAL",
+        grade: reg.gradeSnapshot,
+        className: reg.classNameSnapshot,
+        registrationWindowId: reg.registrationWindow.id,
+        registrationWindowTitle: reg.registrationWindow.title,
+        examBoardName: reg.examBoard.name,
+        examSeriesName: reg.examSeries.name,
+        examSeriesYear: reg.examSeries.year,
+        examBoardId: reg.examBoardId,
+        subjectIds: new Set(),
+        examEntryCount: 0,
+        examGbp: 0,
+        registrationFeeGbp: null,
+        missingFeeRuleCount: 0,
+        systemMessages: [],
+      };
+      studentMap.set(key, student);
+    }
+
+    student.subjectIds.add(reg.subjectId);
+    student.examEntryCount += 1;
+
     const entryType = resolveRegEntryType(reg);
     const match = findMatchingFeeRuleWithFallback(rules, {
       examBoardId: reg.examBoardId,
@@ -261,58 +340,12 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
       entryType,
     });
 
-    let lineGbp = 0;
-    let lineCny = 0;
-    let missing = 0;
     if (!match) {
-      missing = 1;
-      missingFeeRules += 1;
+      student.missingFeeRuleCount += 1;
     } else {
       const amounts = calculateFeeAmounts(match, exchangeRates);
-      lineGbp = amounts.salesGbp;
-      lineCny = amounts.salesCny;
-      totalGbp += lineGbp;
-      totalCny += lineCny;
-    }
-
-    const groupKey = [
-      reg.registrationWindow.id,
-      reg.examBoard.name,
-      reg.examSeries.name,
-      reg.gradeSnapshot,
-      reg.classNameSnapshot,
-      reg.candidateTypeSnapshot ?? "INTERNAL",
-      reg.subject.name,
-    ].join("|");
-
-    const existing = groupMap.get(groupKey);
-    if (existing) {
-      existing.examEntryCount += 1;
-      existing.totalGbp += lineGbp;
-      existing.totalCny += lineCny;
-      existing.missingFeeRuleCount += missing;
-      existing.candidateIds.add(candidateKey(reg));
-      if (reg.registrationWorkspaceId) existing.workspaceIds.add(reg.registrationWorkspaceId);
-    } else {
-      groupMap.set(groupKey, {
-        registrationWindowId: reg.registrationWindow.id,
-        registrationWindowTitle: reg.registrationWindow.title,
-        examBoardName: reg.examBoard.name,
-        examSeriesName: reg.examSeries.name,
-        examSeriesYear: reg.examSeries.year,
-        grade: reg.gradeSnapshot,
-        className: reg.classNameSnapshot,
-        candidateType: reg.candidateTypeSnapshot ?? "INTERNAL",
-        subjectName: reg.subject.name,
-        candidateCount: 0,
-        examEntryCount: 1,
-        totalGbp: lineGbp,
-        totalCny: lineCny,
-        missingFeeRuleCount: missing,
-        statementCount: 0,
-        candidateIds: new Set([candidateKey(reg)]),
-        workspaceIds: new Set(reg.registrationWorkspaceId ? [reg.registrationWorkspaceId] : []),
-      });
+      student.examGbp += amounts.salesGbp;
+      totalCny += amounts.salesCny;
     }
 
     if (
@@ -322,111 +355,194 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
     ) {
       candidateFeeWorkspacesHandled.add(reg.registrationWorkspaceId);
       const schedule = await loadCandidateRegistrationFeeSchedule(reg.examBoardId);
-      let feeGbp = 0;
-      let feeCny = 0;
-      let feeMissing = 0;
       if (!schedule) {
-        feeMissing = 1;
-        missingFeeRules += 1;
+        student.missingFeeRuleCount += 1;
+        student.systemMessages.push("Candidate registration fee schedule missing");
+        student.registrationFeeGbp = 0;
       } else {
         const windowRates = exchangeRates.filter(
           (rate) => rate.registrationWindowId === reg.registrationWindow.id,
         );
         const amounts = calculateFeeScheduleAmounts(schedule, windowRates);
-        feeGbp = amounts.salesGbp;
-        feeCny = amounts.salesCny;
-        totalGbp += feeGbp;
-        totalCny += feeCny;
+        student.registrationFeeGbp = amounts.salesGbp;
+        totalCny += amounts.salesCny;
       }
-
-      const feeGroupKey = [
-        reg.registrationWindow.id,
-        reg.examBoard.name,
-        reg.examSeries.name,
-        reg.gradeSnapshot,
-        reg.classNameSnapshot,
-        reg.candidateTypeSnapshot ?? "INTERNAL",
-        CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
-      ].join("|");
-
-      const feeExisting = groupMap.get(feeGroupKey);
-      if (feeExisting) {
-        feeExisting.examEntryCount += 1;
-        feeExisting.totalGbp += feeGbp;
-        feeExisting.totalCny += feeCny;
-        feeExisting.missingFeeRuleCount += feeMissing;
-        feeExisting.candidateIds.add(candidateKey(reg));
-        feeExisting.workspaceIds.add(reg.registrationWorkspaceId);
-      } else {
-        groupMap.set(feeGroupKey, {
-          registrationWindowId: reg.registrationWindow.id,
-          registrationWindowTitle: reg.registrationWindow.title,
-          examBoardName: reg.examBoard.name,
-          examSeriesName: reg.examSeries.name,
-          examSeriesYear: reg.examSeries.year,
-          grade: reg.gradeSnapshot,
-          className: reg.classNameSnapshot,
-          candidateType: reg.candidateTypeSnapshot ?? "INTERNAL",
-          subjectName: CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
-          candidateCount: 0,
-          examEntryCount: 1,
-          totalGbp: feeGbp,
-          totalCny: feeCny,
-          missingFeeRuleCount: feeMissing,
-          statementCount: 0,
-          candidateIds: new Set([candidateKey(reg)]),
-          workspaceIds: new Set([reg.registrationWorkspaceId]),
-        });
-      }
-      allCandidates.add(candidateKey(reg));
     }
   }
 
-  for (const group of groupMap.values()) {
-    group.candidateCount = group.candidateIds.size;
-    let stmtCount = 0;
-    for (const wsId of group.workspaceIds) {
-      const wsStatements = statementsByWorkspace.get(wsId) ?? [];
-      if (wsStatements.length > 0) {
-        stmtCount += wsStatements.length;
-        workspacesWithStatement.add(wsId);
-      }
+  const latestStatementByWorkspace = new Map<string, (typeof statements)[number]>();
+  for (const statement of statements) {
+    if (!statement.registrationWorkspaceId) continue;
+    if (!latestStatementByWorkspace.has(statement.registrationWorkspaceId)) {
+      latestStatementByWorkspace.set(statement.registrationWorkspaceId, statement);
     }
-    group.statementCount = stmtCount;
+  }
+
+  const allStudents: FeeSummaryRow[] = [...studentMap.values()].map((student) => {
+    const statement = student.workspaceId
+      ? latestStatementByWorkspace.get(student.workspaceId)
+      : undefined;
+    const statementStatus = statement?.status ?? "NOT_GENERATED";
+    const messages = [...student.systemMessages];
+    if (student.missingFeeRuleCount > 0) {
+      messages.push(
+        `${student.missingFeeRuleCount} missing fee rule${student.missingFeeRuleCount === 1 ? "" : "s"}`,
+      );
+    }
+    if (statementStatus === "NEEDS_REGENERATION") {
+      messages.push(
+        statement?.regenerationReason?.trim() || "Fee statement needs regeneration",
+      );
+    }
+
+    const calculatedDue =
+      Math.round((student.examGbp + (student.registrationFeeGbp ?? 0)) * 100) / 100;
+    const amountDueGbp = statement
+      ? toNumber(statement.amountDueGbpAmount ?? statement.totalGbpAmount)
+      : calculatedDue;
+
+    return {
+      candidateKey: student.candidateKey,
+      englishName: student.englishName,
+      chineseName: student.chineseName,
+      candidateType: student.candidateType,
+      grade: student.grade,
+      className: student.className,
+      registrationWindowId: student.registrationWindowId,
+      registrationWindowTitle: student.registrationWindowTitle,
+      examBoardName: student.examBoardName,
+      examSeriesName: student.examSeriesName,
+      examSeriesYear: student.examSeriesYear,
+      subjectCount: student.subjectIds.size,
+      registrationFeeGbp: student.registrationFeeGbp,
+      amountDueGbp: Math.round(amountDueGbp * 100) / 100,
+      paymentStatus: feeSummaryPaymentStatus(statementStatus),
+      statementStatus,
+      statementNo: statement?.statementNo ?? null,
+      generatedAt: statement?.generatedAt?.toISOString() ?? null,
+      systemMessages: [...new Set(messages)],
+      missingFeeRuleCount: student.missingFeeRuleCount,
+    };
+  });
+
+  const gradeCounts = new Map<string, number>();
+  for (const row of allStudents) {
+    const key = row.grade?.trim() || "UNASSIGNED";
+    gradeCounts.set(key, (gradeCounts.get(key) ?? 0) + 1);
+  }
+  const byGrade: FeeSummaryFacet[] = [...gradeCounts.entries()]
+    .map(([key, count]) => ({
+      key,
+      label: key === "UNASSIGNED" ? "Unassigned grade" : key,
+      count,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  const gradeForClass = filters.grade?.trim();
+  const classSource = gradeForClass
+    ? allStudents.filter((row) => (row.grade?.trim() || "UNASSIGNED") === gradeForClass)
+    : allStudents;
+  const classCounts = new Map<string, number>();
+  for (const row of classSource) {
+    const key = row.className?.trim() || "UNASSIGNED";
+    classCounts.set(key, (classCounts.get(key) ?? 0) + 1);
+  }
+  const byClass: FeeSummaryFacet[] = [...classCounts.entries()]
+    .map(([key, count]) => ({
+      key,
+      label: key === "UNASSIGNED" ? "Unassigned class" : key,
+      count,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+
+  const q = filters.q?.trim().toLowerCase();
+  const rows = allStudents
+    .filter((row) => {
+      if (filters.grade) {
+        const gradeKey = row.grade?.trim() || "UNASSIGNED";
+        if (gradeKey !== filters.grade.trim()) return false;
+      }
+      if (filters.className) {
+        const classKey = row.className?.trim() || "UNASSIGNED";
+        if (classKey !== filters.className.trim()) return false;
+      }
+      if (filters.statementStatus && row.statementStatus !== filters.statementStatus) {
+        return false;
+      }
+      if (q) {
+        const haystack = [
+          row.englishName,
+          row.chineseName ?? "",
+          row.candidateKey,
+          row.statementNo ?? "",
+          row.className,
+          row.grade,
+        ]
+          .join(" ")
+          .toLowerCase();
+        if (!haystack.includes(q)) return false;
+      }
+      return true;
+    })
+    .sort((a, b) => a.englishName.localeCompare(b.englishName));
+
+  const matchedStudents = [...studentMap.values()].filter((s) =>
+    rows.some(
+      (r) =>
+        r.candidateKey === s.candidateKey &&
+        r.registrationWindowId === s.registrationWindowId,
+    ),
+  );
+
+  const workspacesWithStatement = new Set<string>();
+  for (const student of matchedStudents) {
+    if (student.workspaceId && latestStatementByWorkspace.has(student.workspaceId)) {
+      workspacesWithStatement.add(student.workspaceId);
+    }
   }
 
   const lockedWorkspaceIds = new Set(
-    registrations.map((r) => r.registrationWorkspaceId).filter(Boolean) as string[],
+    matchedStudents.map((s) => s.workspaceId).filter(Boolean) as string[],
   );
 
   let paidAmount = 0;
   let unpaidAmount = 0;
-  for (const statement of statements) {
-    const gbp = toNumber(statement.totalGbpAmount);
-    const cny = toNumber(statement.totalCnyAmount);
-    if (statement.status === "PAID") {
-      paidAmount += gbp + cny;
-    } else if (statement.status === "ISSUED") {
-      unpaidAmount += gbp + cny;
-    }
+  for (const row of rows) {
+    if (row.statementStatus === "PAID") paidAmount += row.amountDueGbp;
+    else if (row.statementStatus === "ISSUED") unpaidAmount += row.amountDueGbp;
   }
 
-  const rows = [...groupMap.values()].map(({ candidateIds, workspaceIds, ...row }) => row);
-
-  return {
-    cards: {
-      totalCandidates: allCandidates.size,
-      totalExamEntries: registrations.length + candidateFeeWorkspaceIds.size,
-      totalGbpAmount: Math.round(totalGbp * 100) / 100,
-      totalCnyAmount: Math.round(totalCny * 100) / 100,
-      paidAmount: Math.round(paidAmount * 100) / 100,
-      unpaidAmount: Math.round(unpaidAmount * 100) / 100,
-      missingFeeRules,
-      statementsGenerated: workspacesWithStatement.size,
-      statementsNotGenerated: lockedWorkspaceIds.size - workspacesWithStatement.size,
-    },
-    rows,
+  const cards: FeeSummaryCards = {
+    totalCandidates: rows.length,
+    totalExamEntries: matchedStudents.reduce((sum, s) => sum + s.examEntryCount, 0),
+    totalGbpAmount: Math.round(rows.reduce((sum, row) => sum + row.amountDueGbp, 0) * 100) / 100,
+    totalCnyAmount: Math.round(totalCny * 100) / 100,
+    paidAmount: Math.round(paidAmount * 100) / 100,
+    unpaidAmount: Math.round(unpaidAmount * 100) / 100,
+    missingFeeRules: rows.reduce((sum, row) => sum + row.missingFeeRuleCount, 0),
+    statementsGenerated: workspacesWithStatement.size,
+    statementsNotGenerated: Math.max(0, lockedWorkspaceIds.size - workspacesWithStatement.size),
   };
+
+  const systemTips: string[] = [];
+  if (cards.missingFeeRules > 0) {
+    systemTips.push(
+      `${cards.missingFeeRules} missing fee rule match${cards.missingFeeRules === 1 ? "" : "es"} in the current selection.`,
+    );
+  }
+  if (cards.statementsNotGenerated > 0) {
+    systemTips.push(
+      `${cards.statementsNotGenerated} candidate${cards.statementsNotGenerated === 1 ? "" : "s"} still need a fee statement.`,
+    );
+  }
+  const needsRegen = rows.filter((row) => row.statementStatus === "NEEDS_REGENERATION").length;
+  if (needsRegen > 0) {
+    systemTips.push(
+      `${needsRegen} statement${needsRegen === 1 ? "" : "s"} need regeneration after registration changes.`,
+    );
+  }
+
+  return { cards, rows, byGrade, byClass, systemTips };
 }
 
 export async function buildFeeDetailsReport(
