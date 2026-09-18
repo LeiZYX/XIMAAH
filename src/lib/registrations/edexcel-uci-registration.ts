@@ -2,6 +2,7 @@ import type { Prisma } from "@/generated/prisma/client";
 import type { UserRole } from "@/generated/prisma/enums";
 import { hasBulkEntriesBaseline } from "@/lib/board-submissions/baseline";
 import {
+  classifyUciNumber,
   deriveInternalProvisionalUci,
   examBoardUsesEdexcelUciRules,
   needsCandidateRegistrationFeeForUci,
@@ -175,7 +176,8 @@ export type RegistrationFeeRemovalGate = {
 /**
  * Pure gate for tests and evaluateRegistrationFeeRemovalGate.
  *
- * - No subjects → fee may be removed
+ * - Board-confirmed UCI (trailing letter) → fee may be removed even with subjects
+ * - Otherwise: no subjects → fee may be removed
  * - clearUci only when entry UCI was empty and system-allocated, and no Bulk baseline
  * - Imported / pre-existing UCI: remove fee, keep UCI
  */
@@ -185,8 +187,18 @@ export function computeEdexcelRegistrationFeeRemovalGate(input: {
   uciAtEntry: string | null | undefined;
   uciAllocatedBySystem: boolean;
   hasBulkEntriesBaseline: boolean;
+  /** Live board identity UCI (preferred over entry snapshot for “fee still required?”). */
+  currentUci?: string | null;
 }): RegistrationFeeRemovalGate {
+  const currentUci = input.currentUci ?? input.uciAtEntry;
+  const uciConfirmed = classifyUciNumber(currentUci) === "CONFIRMED";
+
   if (input.activeSubjectCount > 0) {
+    // Fee is only required for empty / provisional UCI. Once board-confirmed,
+    // staff may drop the fee without removing subjects (e.g. corrected import).
+    if (uciConfirmed) {
+      return { allowed: true, clearUci: false };
+    }
     return {
       allowed: false,
       clearUci: false,
@@ -228,9 +240,11 @@ export async function evaluateRegistrationFeeRemovalGate(
       uciAtEntry: true,
       uciEntrySnapshotCaptured: true,
       uciAllocatedBySystem: true,
+      candidateId: true,
       registrationWindowId: true,
       registrationWindow: {
         select: {
+          examBoardId: true,
           examBoard: { select: { code: true, name: true } },
         },
       },
@@ -253,12 +267,27 @@ export async function evaluateRegistrationFeeRemovalGate(
   const activeCount = await countActiveSubjectsInWorkspace(workspaceId, client);
   const baseline = await hasBulkEntriesBaseline(workspace.registrationWindowId);
 
+  let currentUci: string | null = workspace.uciAtEntry?.trim() || null;
+  if (workspace.candidateId) {
+    const identity = await client.candidateExamIdentity.findUnique({
+      where: {
+        candidateId_examBoardId: {
+          candidateId: workspace.candidateId,
+          examBoardId: workspace.registrationWindow.examBoardId,
+        },
+      },
+      select: { uciNumber: true },
+    });
+    currentUci = identity?.uciNumber?.trim() || currentUci;
+  }
+
   return computeEdexcelRegistrationFeeRemovalGate({
     activeSubjectCount: activeCount,
     uciEntrySnapshotCaptured: workspace.uciEntrySnapshotCaptured,
     uciAtEntry: workspace.uciAtEntry,
     uciAllocatedBySystem: workspace.uciAllocatedBySystem,
     hasBulkEntriesBaseline: baseline,
+    currentUci,
   });
 }
 

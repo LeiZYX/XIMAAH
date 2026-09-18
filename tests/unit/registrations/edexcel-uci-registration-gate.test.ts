@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { computeEdexcelRegistrationFeeRemovalGate } from "@/lib/registrations/edexcel-uci-registration";
 
 describe("computeEdexcelRegistrationFeeRemovalGate", () => {
-  it("blocks removal while subjects remain", () => {
+  it("blocks removal while subjects remain and UCI is not board-confirmed", () => {
     expect(
       computeEdexcelRegistrationFeeRemovalGate({
         activeSubjectCount: 1,
@@ -10,12 +10,26 @@ describe("computeEdexcelRegistrationFeeRemovalGate", () => {
         uciAtEntry: null,
         uciAllocatedBySystem: true,
         hasBulkEntriesBaseline: false,
+        currentUci: "96834B240152",
       }),
     ).toEqual({
       allowed: false,
       clearUci: false,
       reason: "Candidate Registration Fee cannot be removed while exam subjects remain",
     });
+  });
+
+  it("allows fee removal with subjects when UCI is board-confirmed", () => {
+    expect(
+      computeEdexcelRegistrationFeeRemovalGate({
+        activeSubjectCount: 4,
+        uciEntrySnapshotCaptured: true,
+        uciAtEntry: "96834B240152",
+        uciAllocatedBySystem: false,
+        hasBulkEntriesBaseline: false,
+        currentUci: "96834B240152W",
+      }),
+    ).toEqual({ allowed: true, clearUci: false });
   });
 
   it("allows fee removal and clears system-allocated UCI when entry was empty", () => {

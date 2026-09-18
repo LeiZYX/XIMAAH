@@ -688,36 +688,6 @@ export function RegistrationWorkspaceDetail({
   return (
     <div className="space-y-6">
       <p className="text-sm"><Link href={backHref} className="text-indigo-600 hover:text-indigo-700">← Back to registrations</Link></p>
-      {error ? (
-        <div
-          role="status"
-          className="flex items-start justify-between gap-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800"
-        >
-          <p className="min-w-0 flex-1">{error}</p>
-          <button
-            type="button"
-            onClick={() => setError(null)}
-            className="shrink-0 text-xs font-medium opacity-70 hover:opacity-100"
-          >
-            Dismiss
-          </button>
-        </div>
-      ) : null}
-      {success ? (
-        <div
-          role="status"
-          className="flex items-start justify-between gap-3 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800"
-        >
-          <p className="min-w-0 flex-1">{success}</p>
-          <button
-            type="button"
-            onClick={() => setSuccess(null)}
-            className="shrink-0 text-xs font-medium opacity-70 hover:opacity-100"
-          >
-            Dismiss
-          </button>
-        </div>
-      ) : null}
 
       {feeNeedsRegeneration ? (
         <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
@@ -1166,6 +1136,31 @@ export function RegistrationWorkspaceDetail({
                 className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {error || success ? (
+        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4">
+          <div
+            role="status"
+            className={`pointer-events-auto max-w-xl rounded-lg px-4 py-3 text-sm shadow-lg ring-1 ring-black/10 ${
+              error ? "bg-red-700 text-white" : "bg-green-700 text-white"
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <p className="min-w-0 flex-1">{error ?? success}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setError(null);
+                  setSuccess(null);
+                }}
+                className="shrink-0 text-xs font-medium text-white/80 hover:text-white"
+              >
+                Dismiss
               </button>
             </div>
           </div>
