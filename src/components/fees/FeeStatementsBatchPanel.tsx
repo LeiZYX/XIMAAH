@@ -126,6 +126,100 @@ export function FeeStatementsBatchPanel({
     }
   }
 
+  async function regenerateStatement(statement: FeeStatementPrintData) {
+    const workspaceId = statement.registrationWorkspaceId;
+    if (!workspaceId) {
+      setError("This statement has no registration workspace; cannot regenerate.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch("/api/fee-statements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "regenerate-revised",
+          workspaceId,
+          displayCurrency: statement.displayCurrency ?? displayCurrency,
+        }),
+      });
+      const data = await readJsonResponse<{
+        error?: string;
+        statementNo?: string;
+        status?: string;
+      }>(response);
+      if (!response.ok) throw new Error(data.error ?? "Regenerate failed");
+      setMessage(
+        `Revised fee statement ${data.statementNo} generated and issued (${data.status}).`,
+      );
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Regenerate failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function repriceStatement(statement: FeeStatementPrintData) {
+    const workspaceId = statement.registrationWorkspaceId;
+    if (!workspaceId) {
+      setError("This statement has no registration workspace; cannot reprice.");
+      return;
+    }
+    const confirmed = window.confirm(
+      [
+        `Reprice ${statement.statementNo} (${statement.studentNameSnapshot}) using current fee-stage windows?`,
+        "",
+        "This will:",
+        "1) Re-evaluate Normal / Late / High Late from the registration window’s fee-stage dates (as of now)",
+        "2) Update entry stages on this registration (manual overrides are skipped)",
+        "3) Regenerate and issue a revised fee statement",
+        "",
+        "Use Regenerate if you only want to refresh prices without changing stages.",
+      ].join("\n"),
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch("/api/fee-statements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "reprice-by-current-fee-stage",
+          workspaceId,
+          displayCurrency: statement.displayCurrency ?? displayCurrency,
+        }),
+      });
+      const data = await readJsonResponse<{
+        error?: string;
+        statement?: { statementNo?: string; status?: string };
+        targetStageLabel?: string;
+        changes?: Array<{ paperCode: string | null }>;
+        skippedOverridden?: Array<{ paperCode: string | null }>;
+      }>(response);
+      if (!response.ok) throw new Error(data.error ?? "Reprice failed");
+      const changedCount = data.changes?.length ?? 0;
+      const skippedCount = data.skippedOverridden?.length ?? 0;
+      setMessage(
+        `Repriced ${statement.studentNameSnapshot} → ${data.targetStageLabel ?? "current stage"}; statement ${
+          data.statement?.statementNo ?? ""
+        } issued (${data.statement?.status ?? ""}). ${changedCount} exam stage update(s)${
+          skippedCount ? `; ${skippedCount} manual override(s) skipped` : ""
+        }.`,
+      );
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Reprice failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function batchGenerate(issue: boolean) {
     setLoading(true);
     setError(null);
@@ -303,9 +397,6 @@ export function FeeStatementsBatchPanel({
             Fee rules
           </a>
         </div>
-        {message ? <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{message}</p> : null}
-        {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p> : null}
-
         {!registrationWindowId ? (
           <p className="text-sm text-slate-500">Select a registration window to view fee statements.</p>
         ) : listLoading && statements.length === 0 ? (
@@ -321,7 +412,7 @@ export function FeeStatementsBatchPanel({
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[980px] text-left text-sm">
+              <table className="w-full min-w-[1100px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 text-slate-600">
                     <th className="py-2 pr-3 font-medium">
@@ -373,28 +464,44 @@ export function FeeStatementsBatchPanel({
                         />
                       </td>
                       <td className="py-2">
-                        <div className="flex items-center justify-end gap-2">
+                        <div className="flex flex-wrap items-center justify-end gap-2">
                           {statement.status === "DRAFT" ? (
                             <button
                               type="button"
                               disabled={loading}
                               onClick={() => void issueStatement(statement.id)}
+                              title="Issue this draft statement so the student can see and pay it"
                               className="rounded-lg bg-indigo-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
                             >
                               Issue
                             </button>
                           ) : null}
-                          {statement.status === "NEEDS_REGENERATION" ? (
-                            <span
-                              className="text-xs text-slate-400"
-                              title="Regenerate before issuing"
-                            >
-                              Needs regenerate
-                            </span>
-                          ) : null}
+                          <button
+                            type="button"
+                            disabled={loading || !statement.registrationWorkspaceId}
+                            onClick={() => void regenerateStatement(statement)}
+                            title="Regenerate a revised statement from current registration items and fees, without changing Normal/Late/High Late stages"
+                            className={`rounded-lg px-2.5 py-1 text-xs font-medium disabled:opacity-50 ${
+                              statement.status === "NEEDS_REGENERATION"
+                                ? "bg-amber-600 text-white hover:bg-amber-700"
+                                : "border border-indigo-300 text-indigo-700 hover:bg-indigo-50"
+                            }`}
+                          >
+                            Regenerate
+                          </button>
+                          <button
+                            type="button"
+                            disabled={loading || !statement.registrationWorkspaceId}
+                            onClick={() => void repriceStatement(statement)}
+                            title="Re-evaluate Normal/Late/High Late from current fee-stage windows, update exam stages (manual overrides skipped), then regenerate and issue the statement"
+                            className="rounded-lg border border-amber-300 px-2.5 py-1 text-xs font-medium text-amber-900 hover:bg-amber-50 disabled:opacity-50"
+                          >
+                            Reprice by current fee stage
+                          </button>
                           <button
                             type="button"
                             onClick={() => setPreviewStatement({ statement, autoPrint: false })}
+                            title="Open an on-screen preview of this fee statement"
                             className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                           >
                             Preview
@@ -402,6 +509,7 @@ export function FeeStatementsBatchPanel({
                           <button
                             type="button"
                             onClick={() => setPreviewStatement({ statement, autoPrint: true })}
+                            title="Open the print dialog for this fee statement"
                             className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                           >
                             Print
@@ -445,6 +553,31 @@ export function FeeStatementsBatchPanel({
           autoPrint={previewStatement.autoPrint}
           onClose={() => setPreviewStatement(null)}
         />
+      ) : null}
+
+      {message || error ? (
+        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4">
+          <div
+            role="status"
+            className={`pointer-events-auto max-w-xl rounded-lg px-4 py-3 text-sm shadow-lg ring-1 ring-black/10 ${
+              error ? "bg-red-700 text-white" : "bg-green-700 text-white"
+            }`}
+          >
+            <div className="flex items-start gap-3">
+              <p className="min-w-0 flex-1">{error ?? message}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setMessage(null);
+                  setError(null);
+                }}
+                className="shrink-0 text-xs font-medium text-white/80 hover:text-white"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
       ) : null}
     </>
   );

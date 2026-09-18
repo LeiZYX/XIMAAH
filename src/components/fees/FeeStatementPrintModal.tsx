@@ -32,6 +32,7 @@ export interface FeeStatementPrintData {
     }>;
   } | null;
   candidateTypeSnapshot?: string | null;
+  registrationWorkspaceId?: string | null;
   registrationWorkspace?: {
     uciAtEntry?: string | null;
   } | null;

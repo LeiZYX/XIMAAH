@@ -9,9 +9,21 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.4";
+export const CURRENT_VERSION = "1.3.5";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.5",
+    releaseDate: "2026-09-18",
+    summary:
+      "Fee Statements row actions with tooltips; batch feedback as bottom toast; Fee Summary expand/export; board-confirmed UCI fee removal.",
+    changes: [
+      "Fee Statements batch table: each row has Regenerate, Reprice by current fee stage, Preview, and Print with hover tooltips",
+      "Fee Statements batch/row success and error tips use Registration Window-style floating bottom toast with Dismiss",
+      "Fee Summary: expand a student row for fee line items; export Summary and Details as separate CSV/XLSX",
+      "Registration Adjustment: Candidate Registration Fee can be removed when UCI is board-confirmed (trailing letter)",
+    ],
+  },
   {
     version: "1.3.4",
     releaseDate: "2026-09-18",
