@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Card } from "@/components/ui/Card";
 import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -9,6 +9,7 @@ import {
   type FeeStatementPrintData,
 } from "@/components/fees/FeeStatementPrintModal";
 import { StatementPaymentOrdersPanel } from "@/components/fees/StatementPaymentOrdersPanel";
+import { formatEnglishWithChineseName } from "@/lib/candidates/identity";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
@@ -75,6 +76,13 @@ function IconActionButton({
   );
 }
 
+function statementCandidateLabel(statement: FeeStatementPrintData) {
+  return formatEnglishWithChineseName(
+    statement.studentNameSnapshot,
+    statement.candidate?.chineseName,
+  );
+}
+
 function ActionIcon({ children }: { children: ReactNode }) {
   return (
     <svg
@@ -112,15 +120,23 @@ export function FeeStatementsBatchPanel({
   const [batchPrintOpen, setBatchPrintOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [paymentFilter, setPaymentFilter] = useState<"all" | "unpaid" | "paid">("all");
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
+  const selectAllRef = useRef<HTMLInputElement>(null);
   const [previewStatement, setPreviewStatement] = useState<{
     statement: FeeStatementPrintData;
     autoPrint: boolean;
   } | null>(null);
 
   useEffect(() => {
+    const timer = window.setTimeout(() => setSearch(searchInput.trim()), 250);
+    return () => window.clearTimeout(timer);
+  }, [searchInput]);
+
+  useEffect(() => {
     setPage(1);
     setSelectedIds([]);
-  }, [registrationWindowId, paymentFilter]);
+  }, [registrationWindowId, paymentFilter, search]);
 
   const load = useCallback(async () => {
     if (!registrationWindowId) {
@@ -139,6 +155,9 @@ export function FeeStatementsBatchPanel({
       });
       if (paymentFilter !== "all") {
         params.set("paymentStatus", paymentFilter);
+      }
+      if (search) {
+        params.set("q", search);
       }
       const response = await fetch(`/api/fee-statements?${params.toString()}`);
       const data = await readJsonResponse<PaginatedStatements>(response);
@@ -159,7 +178,7 @@ export function FeeStatementsBatchPanel({
     } finally {
       setListLoading(false);
     }
-  }, [registrationWindowId, page, pageSize, paymentFilter]);
+  }, [registrationWindowId, page, pageSize, paymentFilter, search]);
 
   useEffect(() => {
     void load();
@@ -230,7 +249,7 @@ export function FeeStatementsBatchPanel({
     }
     const confirmed = window.confirm(
       [
-        `Reprice ${statement.statementNo} (${statement.studentNameSnapshot}) using current fee-stage windows?`,
+        `Reprice ${statement.statementNo} (${statementCandidateLabel(statement)}) using current fee-stage windows?`,
         "",
         "This will:",
         "1) Re-evaluate Normal / Late / High Late from the registration window’s fee-stage dates (as of now)",
@@ -266,7 +285,7 @@ export function FeeStatementsBatchPanel({
       const changedCount = data.changes?.length ?? 0;
       const skippedCount = data.skippedOverridden?.length ?? 0;
       setMessage(
-        `Repriced ${statement.studentNameSnapshot} → ${data.targetStageLabel ?? "current stage"}; statement ${
+        `Repriced ${statementCandidateLabel(statement)} → ${data.targetStageLabel ?? "current stage"}; statement ${
           data.statement?.statementNo ?? ""
         } issued (${data.statement?.status ?? ""}). ${changedCount} exam stage update(s)${
           skippedCount ? `; ${skippedCount} manual override(s) skipped` : ""
@@ -287,7 +306,7 @@ export function FeeStatementsBatchPanel({
     }
     const confirmed = window.confirm(
       [
-        `Mark ${statement.statementNo} (${statement.studentNameSnapshot}) as paid offline?`,
+        `Mark ${statement.statementNo} (${statementCandidateLabel(statement)}) as paid offline?`,
         "",
         "Use this when payment was received outside WeChat/Alipay QR.",
         "Open online payment orders for this statement will be closed.",
@@ -440,6 +459,15 @@ export function FeeStatementsBatchPanel({
   }
 
   const printable = statements.filter((s) => selectedIds.includes(s.id));
+  const pageIds = useMemo(() => statements.map((statement) => statement.id), [statements]);
+  const allPageSelected = pageIds.length > 0 && pageIds.every((id) => selectedIds.includes(id));
+  const somePageSelected = pageIds.some((id) => selectedIds.includes(id));
+
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate = somePageSelected && !allPageSelected;
+    }
+  }, [somePageSelected, allPageSelected]);
 
   return (
     <>
@@ -505,13 +533,30 @@ export function FeeStatementsBatchPanel({
             Fee rules
           </a>
         </div>
+        {registrationWindowId ? (
+          <div className="flex flex-wrap items-center gap-3">
+            <input
+              type="search"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Search name, Chinese name, or statement no…"
+              className="w-full max-w-md rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              aria-label="Search fee statements"
+            />
+            <p className="text-sm text-slate-500">
+              {total} statement{total === 1 ? "" : "s"}
+            </p>
+          </div>
+        ) : null}
         {!registrationWindowId ? (
           <p className="text-sm text-slate-500">Select a registration window to view fee statements.</p>
         ) : listLoading && statements.length === 0 ? (
           <p className="text-sm text-slate-500">Loading...</p>
         ) : statements.length === 0 ? (
           <p className="text-sm text-slate-500">
-            {paymentFilter === "unpaid"
+            {search
+              ? "No fee statements match this search."
+              : paymentFilter === "unpaid"
               ? "No unpaid (issued) fee statements for this window."
               : paymentFilter === "paid"
                 ? "No paid fee statements for this window."
@@ -524,7 +569,19 @@ export function FeeStatementsBatchPanel({
                 <thead>
                   <tr className="border-b border-slate-200 text-slate-600">
                     <th className="py-2 pr-3 font-medium">
-                      <span className="sr-only">Select</span>
+                      <input
+                        ref={selectAllRef}
+                        type="checkbox"
+                        checked={allPageSelected}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedIds((prev) => [...new Set([...prev, ...pageIds])]);
+                          } else {
+                            setSelectedIds((prev) => prev.filter((id) => !pageIds.includes(id)));
+                          }
+                        }}
+                        aria-label="Select all statements on this page"
+                      />
                     </th>
                     <th className="py-2 pr-4 font-medium">Statement</th>
                     <th className="py-2 pr-4 font-medium">Candidate</th>
@@ -552,7 +609,7 @@ export function FeeStatementsBatchPanel({
                         />
                       </td>
                       <td className="py-2 pr-4 font-medium text-slate-900">{statement.statementNo}</td>
-                      <td className="py-2 pr-4">{statement.studentNameSnapshot}</td>
+                      <td className="py-2 pr-4">{statementCandidateLabel(statement)}</td>
                       <td className="py-2 pr-4">
                         <span
                           className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${feeStatementStatusClass(statement.status)}`}

@@ -177,12 +177,23 @@ export async function GET(request: NextRequest) {
 
   const includeSuperseded = params.get("includeSuperseded") === "true";
   const paymentStatus = params.get("paymentStatus"); // unpaid | paid | all
+  const query = params.get("q")?.trim();
 
   const where: Prisma.FeeStatementWhereInput = {
     ...(registrationWindowId ? { registrationWindowId } : {}),
     ...(workspaceId ? { registrationWorkspaceId: workspaceId } : {}),
     ...(statementKind ? { statementKind } : {}),
     ...(!includeSuperseded ? { status: { notIn: ["REVISED", "CANCELLED"] } } : {}),
+    ...(query
+      ? {
+          OR: [
+            { statementNo: { contains: query } },
+            { studentNameSnapshot: { contains: query } },
+            { studentNoSnapshot: { contains: query } },
+            { candidate: { is: { chineseName: { contains: query } } } },
+          ],
+        }
+      : {}),
   };
 
   if (paymentStatus === "paid") {
