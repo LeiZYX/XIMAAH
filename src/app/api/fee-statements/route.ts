@@ -22,6 +22,7 @@ import {
   shouldRegenerateFeeStatement,
 } from "@/lib/fees/billing-workspaces";
 import { generateExternalInvoice, generateRestrictedInvoice } from "@/lib/fees/restricted-invoice";
+import { markFeeStatementPaidOffline } from "@/lib/fees/mark-paid-offline";
 import { buildPaginationMeta, parseListPagination } from "@/lib/pagination";
 import { prisma } from "@/lib/prisma";
 import type { FeeStatementKind } from "@/generated/prisma/enums";
@@ -305,6 +306,7 @@ export async function POST(request: NextRequest) {
     action?: string;
     statementId?: string;
     batchKind?: string;
+    note?: string;
   }>(body, []);
 
   if (!data) return jsonError("Invalid body");
@@ -313,6 +315,24 @@ export async function POST(request: NextRequest) {
     if (data.action === "issue" && data.statementId) {
       const statement = await issueFeeStatement(data.statementId);
       return NextResponse.json(statement);
+    }
+
+    if (data.action === "mark-paid-offline" && data.statementId) {
+      const result = await markFeeStatementPaidOffline({
+        statementId: data.statementId,
+        performedByUserId: auth.user.id,
+        note: data.note,
+        source: "FEE_STATEMENTS_BATCH",
+      });
+
+      if (!result.alreadyPaid) {
+        const { queueFeeStatementPaidNotification } = await import(
+          "@/lib/notifications/fee-statement-paid"
+        );
+        queueFeeStatementPaidNotification(result.statementId);
+      }
+
+      return NextResponse.json(result);
     }
 
     if (data.action === "validate" && data.workspaceId) {

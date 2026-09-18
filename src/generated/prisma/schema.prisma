@@ -221,6 +221,16 @@ enum FeeStatementStatus {
   NEEDS_REGENERATION
 }
 
+/**
+ * How a statement reached PAID (or NONE while still unpaid). Auto-set by payment / generate / mark-paid paths.
+ */
+enum FeePaymentSettlement {
+  NONE
+  ONLINE
+  OFFLINE
+  COVERED
+}
+
 enum FeeStatementKind {
   NORMAL
   RESTRICTED
@@ -1710,6 +1720,7 @@ model FeeStatement {
   assessmentHubCandidateNumberSnapshot String?
   candidateTypeSnapshot                CandidateType?
   status                               FeeStatementStatus          @default(DRAFT)
+  paymentSettlement                    FeePaymentSettlement        @default(NONE)
   studentVisible                       Boolean                     @default(true)
   totalGbpAmount                       Decimal                     @db.Decimal(12, 2)
   totalCnyAmount                       Decimal                     @db.Decimal(12, 2)

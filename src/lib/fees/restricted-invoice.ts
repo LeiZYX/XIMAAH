@@ -231,6 +231,7 @@ export async function generateOfficeInvoice(params: {
       assessmentHubCandidateNumberSnapshot: snapshot.assessmentHubCandidateNumberSnapshot,
       candidateTypeSnapshot: snapshot.candidateTypeSnapshot,
       status: noFurtherPaymentDue ? "PAID" : issue ? "ISSUED" : "DRAFT",
+      paymentSettlement: noFurtherPaymentDue ? "COVERED" : "NONE",
       totalGbpAmount: paymentSplit.totalGbp,
       totalCnyAmount: paymentSplit.totalCny,
       previouslyPaidGbpAmount: paymentSplit.previouslyPaidGbp,

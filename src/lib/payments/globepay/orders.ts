@@ -294,6 +294,7 @@ export async function markPaymentOrderPaid(params: {
         where: { id: order.feeStatementId },
         data: {
           status: "PAID",
+          paymentSettlement: "ONLINE",
           paymentNotes: order.feeStatement.paymentNotes
             ? `${order.feeStatement.paymentNotes}\n${note}`
             : note,

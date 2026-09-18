@@ -575,6 +575,16 @@ export const FeeStatementStatus: {
 export type FeeStatementStatus = (typeof FeeStatementStatus)[keyof typeof FeeStatementStatus]
 
 
+export const FeePaymentSettlement: {
+  NONE: 'NONE',
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  COVERED: 'COVERED'
+};
+
+export type FeePaymentSettlement = (typeof FeePaymentSettlement)[keyof typeof FeePaymentSettlement]
+
+
 export const FeeStatementKind: {
   NORMAL: 'NORMAL',
   RESTRICTED: 'RESTRICTED',
@@ -1042,6 +1052,10 @@ export const FeeStatementDisplayCurrency: typeof $Enums.FeeStatementDisplayCurre
 export type FeeStatementStatus = $Enums.FeeStatementStatus
 
 export const FeeStatementStatus: typeof $Enums.FeeStatementStatus
+
+export type FeePaymentSettlement = $Enums.FeePaymentSettlement
+
+export const FeePaymentSettlement: typeof $Enums.FeePaymentSettlement
 
 export type FeeStatementKind = $Enums.FeeStatementKind
 
@@ -55796,6 +55810,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot: string | null
     candidateTypeSnapshot: $Enums.CandidateType | null
     status: $Enums.FeeStatementStatus | null
+    paymentSettlement: $Enums.FeePaymentSettlement | null
     studentVisible: boolean | null
     totalGbpAmount: Decimal | null
     totalCnyAmount: Decimal | null
@@ -55836,6 +55851,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot: string | null
     candidateTypeSnapshot: $Enums.CandidateType | null
     status: $Enums.FeeStatementStatus | null
+    paymentSettlement: $Enums.FeePaymentSettlement | null
     studentVisible: boolean | null
     totalGbpAmount: Decimal | null
     totalCnyAmount: Decimal | null
@@ -55876,6 +55892,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot: number
     candidateTypeSnapshot: number
     status: number
+    paymentSettlement: number
     studentVisible: number
     totalGbpAmount: number
     totalCnyAmount: number
@@ -55938,6 +55955,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: true
     candidateTypeSnapshot?: true
     status?: true
+    paymentSettlement?: true
     studentVisible?: true
     totalGbpAmount?: true
     totalCnyAmount?: true
@@ -55978,6 +55996,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: true
     candidateTypeSnapshot?: true
     status?: true
+    paymentSettlement?: true
     studentVisible?: true
     totalGbpAmount?: true
     totalCnyAmount?: true
@@ -56018,6 +56037,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: true
     candidateTypeSnapshot?: true
     status?: true
+    paymentSettlement?: true
     studentVisible?: true
     totalGbpAmount?: true
     totalCnyAmount?: true
@@ -56145,6 +56165,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot: string | null
     candidateTypeSnapshot: $Enums.CandidateType | null
     status: $Enums.FeeStatementStatus
+    paymentSettlement: $Enums.FeePaymentSettlement
     studentVisible: boolean
     totalGbpAmount: Decimal
     totalCnyAmount: Decimal
@@ -56204,6 +56225,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: boolean
     candidateTypeSnapshot?: boolean
     status?: boolean
+    paymentSettlement?: boolean
     studentVisible?: boolean
     totalGbpAmount?: boolean
     totalCnyAmount?: boolean
@@ -56265,6 +56287,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: boolean
     candidateTypeSnapshot?: boolean
     status?: boolean
+    paymentSettlement?: boolean
     studentVisible?: boolean
     totalGbpAmount?: boolean
     totalCnyAmount?: boolean
@@ -56285,7 +56308,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type FeeStatementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessType" | "candidateId" | "studentId" | "registrationWorkspaceId" | "registrationWindowId" | "reviewWindowId" | "statementNo" | "statementKind" | "displayCurrency" | "exchangeRateSnapshot" | "studentNameSnapshot" | "studentNoSnapshot" | "gradeSnapshot" | "classNameSnapshot" | "emailSnapshot" | "assessmentHubCandidateNumberSnapshot" | "candidateTypeSnapshot" | "status" | "studentVisible" | "totalGbpAmount" | "totalCnyAmount" | "previouslyPaidGbpAmount" | "previouslyPaidCnyAmount" | "amountDueGbpAmount" | "amountDueCnyAmount" | "paymentNotes" | "generatedByUserId" | "generatedAt" | "issuedAt" | "revisedFromStatementId" | "revisedToStatementId" | "regenerationReason" | "regenerationChangedByUserId" | "regenerationChangedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["feeStatement"]>
+  export type FeeStatementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessType" | "candidateId" | "studentId" | "registrationWorkspaceId" | "registrationWindowId" | "reviewWindowId" | "statementNo" | "statementKind" | "displayCurrency" | "exchangeRateSnapshot" | "studentNameSnapshot" | "studentNoSnapshot" | "gradeSnapshot" | "classNameSnapshot" | "emailSnapshot" | "assessmentHubCandidateNumberSnapshot" | "candidateTypeSnapshot" | "status" | "paymentSettlement" | "studentVisible" | "totalGbpAmount" | "totalCnyAmount" | "previouslyPaidGbpAmount" | "previouslyPaidCnyAmount" | "amountDueGbpAmount" | "amountDueCnyAmount" | "paymentNotes" | "generatedByUserId" | "generatedAt" | "issuedAt" | "revisedFromStatementId" | "revisedToStatementId" | "regenerationReason" | "regenerationChangedByUserId" | "regenerationChangedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["feeStatement"]>
   export type FeeStatementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     candidate?: boolean | FeeStatement$candidateArgs<ExtArgs>
     student?: boolean | FeeStatement$studentArgs<ExtArgs>
@@ -56350,6 +56373,7 @@ export namespace Prisma {
       assessmentHubCandidateNumberSnapshot: string | null
       candidateTypeSnapshot: $Enums.CandidateType | null
       status: $Enums.FeeStatementStatus
+      paymentSettlement: $Enums.FeePaymentSettlement
       studentVisible: boolean
       totalGbpAmount: Prisma.Decimal
       totalCnyAmount: Prisma.Decimal
@@ -56780,6 +56804,7 @@ export namespace Prisma {
     readonly assessmentHubCandidateNumberSnapshot: FieldRef<"FeeStatement", 'String'>
     readonly candidateTypeSnapshot: FieldRef<"FeeStatement", 'CandidateType'>
     readonly status: FieldRef<"FeeStatement", 'FeeStatementStatus'>
+    readonly paymentSettlement: FieldRef<"FeeStatement", 'FeePaymentSettlement'>
     readonly studentVisible: FieldRef<"FeeStatement", 'Boolean'>
     readonly totalGbpAmount: FieldRef<"FeeStatement", 'Decimal'>
     readonly totalCnyAmount: FieldRef<"FeeStatement", 'Decimal'>
@@ -74535,6 +74560,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
     candidateTypeSnapshot: 'candidateTypeSnapshot',
     status: 'status',
+    paymentSettlement: 'paymentSettlement',
     studentVisible: 'studentVisible',
     totalGbpAmount: 'totalGbpAmount',
     totalCnyAmount: 'totalCnyAmount',
@@ -75997,6 +76023,13 @@ export namespace Prisma {
    * Reference to a field of type 'FeeStatementStatus'
    */
   export type EnumFeeStatementStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeStatementStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'FeePaymentSettlement'
+   */
+  export type EnumFeePaymentSettlementFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeePaymentSettlement'>
     
 
 
@@ -80783,6 +80816,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: StringNullableFilter<"FeeStatement"> | string | null
     candidateTypeSnapshot?: EnumCandidateTypeNullableFilter<"FeeStatement"> | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFilter<"FeeStatement"> | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFilter<"FeeStatement"> | $Enums.FeePaymentSettlement
     studentVisible?: BoolFilter<"FeeStatement"> | boolean
     totalGbpAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
@@ -80841,6 +80875,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: SortOrderInput | SortOrder
     candidateTypeSnapshot?: SortOrderInput | SortOrder
     status?: SortOrder
+    paymentSettlement?: SortOrder
     studentVisible?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
@@ -80903,6 +80938,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: StringNullableFilter<"FeeStatement"> | string | null
     candidateTypeSnapshot?: EnumCandidateTypeNullableFilter<"FeeStatement"> | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFilter<"FeeStatement"> | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFilter<"FeeStatement"> | $Enums.FeePaymentSettlement
     studentVisible?: BoolFilter<"FeeStatement"> | boolean
     totalGbpAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
@@ -80961,6 +80997,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: SortOrderInput | SortOrder
     candidateTypeSnapshot?: SortOrderInput | SortOrder
     status?: SortOrder
+    paymentSettlement?: SortOrder
     studentVisible?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
@@ -81009,6 +81046,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: StringNullableWithAggregatesFilter<"FeeStatement"> | string | null
     candidateTypeSnapshot?: EnumCandidateTypeNullableWithAggregatesFilter<"FeeStatement"> | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusWithAggregatesFilter<"FeeStatement"> | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementWithAggregatesFilter<"FeeStatement"> | $Enums.FeePaymentSettlement
     studentVisible?: BoolWithAggregatesFilter<"FeeStatement"> | boolean
     totalGbpAmount?: DecimalWithAggregatesFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalWithAggregatesFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
@@ -87907,6 +87945,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -87961,6 +88000,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -88005,6 +88045,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -88059,6 +88100,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -88108,6 +88150,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -88143,6 +88186,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -88179,6 +88223,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -94080,6 +94125,13 @@ export namespace Prisma {
     not?: NestedEnumFeeStatementStatusFilter<$PrismaModel> | $Enums.FeeStatementStatus
   }
 
+  export type EnumFeePaymentSettlementFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeePaymentSettlement | EnumFeePaymentSettlementFieldRefInput<$PrismaModel>
+    in?: $Enums.FeePaymentSettlement[]
+    notIn?: $Enums.FeePaymentSettlement[]
+    not?: NestedEnumFeePaymentSettlementFilter<$PrismaModel> | $Enums.FeePaymentSettlement
+  }
+
   export type ReviewWindowNullableScalarRelationFilter = {
     is?: ReviewWindowWhereInput | null
     isNot?: ReviewWindowWhereInput | null
@@ -94111,6 +94163,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: SortOrder
     candidateTypeSnapshot?: SortOrder
     status?: SortOrder
+    paymentSettlement?: SortOrder
     studentVisible?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
@@ -94161,6 +94214,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: SortOrder
     candidateTypeSnapshot?: SortOrder
     status?: SortOrder
+    paymentSettlement?: SortOrder
     studentVisible?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
@@ -94201,6 +94255,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: SortOrder
     candidateTypeSnapshot?: SortOrder
     status?: SortOrder
+    paymentSettlement?: SortOrder
     studentVisible?: SortOrder
     totalGbpAmount?: SortOrder
     totalCnyAmount?: SortOrder
@@ -94269,6 +94324,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFeeStatementStatusFilter<$PrismaModel>
     _max?: NestedEnumFeeStatementStatusFilter<$PrismaModel>
+  }
+
+  export type EnumFeePaymentSettlementWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeePaymentSettlement | EnumFeePaymentSettlementFieldRefInput<$PrismaModel>
+    in?: $Enums.FeePaymentSettlement[]
+    notIn?: $Enums.FeePaymentSettlement[]
+    not?: NestedEnumFeePaymentSettlementWithAggregatesFilter<$PrismaModel> | $Enums.FeePaymentSettlement
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFeePaymentSettlementFilter<$PrismaModel>
+    _max?: NestedEnumFeePaymentSettlementFilter<$PrismaModel>
   }
 
   export type EnumPaymentChannelFilter<$PrismaModel = never> = {
@@ -104959,6 +105024,10 @@ export namespace Prisma {
     set?: $Enums.FeeStatementStatus
   }
 
+  export type EnumFeePaymentSettlementFieldUpdateOperationsInput = {
+    set?: $Enums.FeePaymentSettlement
+  }
+
   export type CandidateUpdateOneWithoutFeeStatementsNestedInput = {
     create?: XOR<CandidateCreateWithoutFeeStatementsInput, CandidateUncheckedCreateWithoutFeeStatementsInput>
     connectOrCreate?: CandidateCreateOrConnectWithoutFeeStatementsInput
@@ -107806,6 +107875,13 @@ export namespace Prisma {
     not?: NestedEnumFeeStatementStatusFilter<$PrismaModel> | $Enums.FeeStatementStatus
   }
 
+  export type NestedEnumFeePaymentSettlementFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeePaymentSettlement | EnumFeePaymentSettlementFieldRefInput<$PrismaModel>
+    in?: $Enums.FeePaymentSettlement[]
+    notIn?: $Enums.FeePaymentSettlement[]
+    not?: NestedEnumFeePaymentSettlementFilter<$PrismaModel> | $Enums.FeePaymentSettlement
+  }
+
   export type NestedEnumFeeStatementBusinessTypeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.FeeStatementBusinessType | EnumFeeStatementBusinessTypeFieldRefInput<$PrismaModel>
     in?: $Enums.FeeStatementBusinessType[]
@@ -107844,6 +107920,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFeeStatementStatusFilter<$PrismaModel>
     _max?: NestedEnumFeeStatementStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumFeePaymentSettlementWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeePaymentSettlement | EnumFeePaymentSettlementFieldRefInput<$PrismaModel>
+    in?: $Enums.FeePaymentSettlement[]
+    notIn?: $Enums.FeePaymentSettlement[]
+    not?: NestedEnumFeePaymentSettlementWithAggregatesFilter<$PrismaModel> | $Enums.FeePaymentSettlement
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFeePaymentSettlementFilter<$PrismaModel>
+    _max?: NestedEnumFeePaymentSettlementFilter<$PrismaModel>
   }
 
   export type NestedEnumPaymentChannelFilter<$PrismaModel = never> = {
@@ -109113,6 +109199,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -109166,6 +109253,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -109219,6 +109307,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -109271,6 +109360,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -109325,6 +109415,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -109378,6 +109469,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -111650,6 +111742,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: StringNullableFilter<"FeeStatement"> | string | null
     candidateTypeSnapshot?: EnumCandidateTypeNullableFilter<"FeeStatement"> | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFilter<"FeeStatement"> | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFilter<"FeeStatement"> | $Enums.FeePaymentSettlement
     studentVisible?: BoolFilter<"FeeStatement"> | boolean
     totalGbpAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFilter<"FeeStatement"> | Decimal | DecimalJsLike | number | string
@@ -113775,6 +113868,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -113828,6 +113922,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -114111,6 +114206,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -114164,6 +114260,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -116090,6 +116187,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -116142,6 +116240,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -119830,6 +119929,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -119882,6 +119982,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -123035,6 +123136,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -123087,6 +123189,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -142906,6 +143009,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -142959,6 +143063,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -143007,6 +143112,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -143060,6 +143166,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -143113,6 +143220,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -143166,6 +143274,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -143214,6 +143323,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -143267,6 +143377,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -144462,6 +144573,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -144515,6 +144627,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -144585,6 +144698,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -144638,6 +144752,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -144948,6 +145063,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -145001,6 +145117,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -145193,6 +145310,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -145246,6 +145364,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -145428,6 +145547,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -145481,6 +145601,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -145656,6 +145777,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -145709,6 +145831,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -148079,6 +148202,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -148131,6 +148255,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -149553,6 +149678,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -149606,6 +149732,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -150533,6 +150660,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -150586,6 +150714,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -151203,6 +151332,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -151256,6 +151386,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -151937,6 +152068,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -151990,6 +152122,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -152708,6 +152841,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -152761,6 +152895,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -153549,6 +153684,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -153602,6 +153738,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -154080,6 +154217,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -154133,6 +154271,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -154657,6 +154796,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -154710,6 +154850,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -157683,6 +157824,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -157721,6 +157863,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -157761,6 +157904,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -159445,6 +159589,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -159498,6 +159643,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -159546,6 +159692,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -159580,6 +159727,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -159632,6 +159780,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -159680,6 +159829,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -159715,6 +159865,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -159768,6 +159919,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -159816,6 +159968,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -161835,6 +161988,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -162544,6 +162698,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -162596,6 +162751,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -162644,6 +162800,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -163314,6 +163471,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -164092,6 +164250,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -164144,6 +164303,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -164192,6 +164352,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -165118,6 +165279,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -165531,6 +165693,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -165583,6 +165746,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -165631,6 +165795,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -172070,6 +172235,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -172109,6 +172275,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -172287,6 +172454,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -172340,6 +172508,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -172388,6 +172557,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -172422,6 +172592,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -172475,6 +172646,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -172523,6 +172695,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -173079,6 +173252,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: string | null
     candidateTypeSnapshot?: $Enums.CandidateType | null
     status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
     studentVisible?: boolean
     totalGbpAmount: Decimal | DecimalJsLike | number | string
     totalCnyAmount: Decimal | DecimalJsLike | number | string
@@ -173387,6 +173561,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -173439,6 +173614,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -173487,6 +173663,7 @@ export namespace Prisma {
     assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
     candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
     status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
     studentVisible?: BoolFieldUpdateOperationsInput | boolean
     totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string

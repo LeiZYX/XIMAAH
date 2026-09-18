@@ -785,6 +785,7 @@ exports.Prisma.FeeStatementScalarFieldEnum = {
   assessmentHubCandidateNumberSnapshot: 'assessmentHubCandidateNumberSnapshot',
   candidateTypeSnapshot: 'candidateTypeSnapshot',
   status: 'status',
+  paymentSettlement: 'paymentSettlement',
   studentVisible: 'studentVisible',
   totalGbpAmount: 'totalGbpAmount',
   totalCnyAmount: 'totalCnyAmount',
@@ -2049,6 +2050,13 @@ exports.FeeStatementStatus = exports.$Enums.FeeStatementStatus = {
   CANCELLED: 'CANCELLED',
   REVISED: 'REVISED',
   NEEDS_REGENERATION: 'NEEDS_REGENERATION'
+};
+
+exports.FeePaymentSettlement = exports.$Enums.FeePaymentSettlement = {
+  NONE: 'NONE',
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  COVERED: 'COVERED'
 };
 
 exports.PaymentChannel = exports.$Enums.PaymentChannel = {

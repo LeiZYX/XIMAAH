@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Card } from "@/components/ui/Card";
 import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -14,6 +14,10 @@ import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
   type FeeStatementDisplayCurrencyOption,
 } from "@/lib/fees/display-currency";
+import {
+  feePaymentPaidClass,
+  feePaymentPaidLabel,
+} from "@/lib/fees/payment-settlement";
 import { LIST_PAGE_SIZES } from "@/lib/pagination";
 import {
   feeStatementStatusClass,
@@ -31,6 +35,62 @@ interface PaginatedStatements {
   page: number;
   totalPages: number;
   pageSize: number;
+}
+
+function IconActionButton({
+  label,
+  onClick,
+  disabled,
+  tone = "neutral",
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  disabled?: boolean;
+  tone?: "neutral" | "primary" | "warning" | "danger" | "success";
+  children: ReactNode;
+}) {
+  const toneClass =
+    tone === "primary"
+      ? "text-indigo-700 ring-indigo-200 hover:bg-indigo-50"
+      : tone === "warning"
+        ? "text-amber-800 ring-amber-200 hover:bg-amber-50"
+        : tone === "danger"
+          ? "text-red-700 ring-red-200 hover:bg-red-50"
+          : tone === "success"
+            ? "text-green-800 ring-green-200 hover:bg-green-50"
+            : "text-slate-700 ring-slate-200 hover:bg-slate-50";
+
+  return (
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      disabled={disabled}
+      onClick={onClick}
+      className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ring-1 ring-inset disabled:opacity-50 ${toneClass}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function ActionIcon({ children }: { children: ReactNode }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4"
+      aria-hidden
+    >
+      {children}
+    </svg>
+  );
 }
 
 export function FeeStatementsBatchPanel({
@@ -215,6 +275,54 @@ export function FeeStatementsBatchPanel({
       await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Reprice failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function markStatementPaidOffline(statement: FeeStatementPrintData) {
+    if (statement.status !== "ISSUED") {
+      setError("Only Issued statements can be marked paid offline.");
+      return;
+    }
+    const confirmed = window.confirm(
+      [
+        `Mark ${statement.statementNo} (${statement.studentNameSnapshot}) as paid offline?`,
+        "",
+        "Use this when payment was received outside WeChat/Alipay QR.",
+        "Open online payment orders for this statement will be closed.",
+        "This action is audited.",
+      ].join("\n"),
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch("/api/fee-statements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "mark-paid-offline",
+          statementId: statement.id,
+        }),
+      });
+      const data = await readJsonResponse<{
+        error?: string;
+        statementNo?: string;
+        alreadyPaid?: boolean;
+        paymentSettlement?: string;
+      }>(response);
+      if (!response.ok) throw new Error(data.error ?? "Mark paid failed");
+      setMessage(
+        data.alreadyPaid
+          ? `Statement ${data.statementNo} was already paid.`
+          : `Statement ${data.statementNo} marked paid offline (${data.paymentSettlement ?? "OFFLINE"}).`,
+      );
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Mark paid failed");
     } finally {
       setLoading(false);
     }
@@ -412,7 +520,7 @@ export function FeeStatementsBatchPanel({
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1100px] text-left text-sm">
+              <table className="w-full min-w-[1180px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 text-slate-600">
                     <th className="py-2 pr-3 font-medium">
@@ -421,6 +529,7 @@ export function FeeStatementsBatchPanel({
                     <th className="py-2 pr-4 font-medium">Statement</th>
                     <th className="py-2 pr-4 font-medium">Candidate</th>
                     <th className="py-2 pr-4 font-medium">Status</th>
+                    <th className="py-2 pr-4 font-medium">Payment</th>
                     <th className="py-2 pr-4 font-medium">Generated</th>
                     <th className="py-2 pr-4 font-medium">Online payment</th>
                     <th className="py-2 font-medium text-right">Actions</th>
@@ -451,6 +560,21 @@ export function FeeStatementsBatchPanel({
                           {feeStatementStatusLabel(statement.status)}
                         </span>
                       </td>
+                      <td className="py-2 pr-4">
+                        <span
+                          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${feePaymentPaidClass(
+                            statement.status,
+                            statement.paymentSettlement,
+                          )}`}
+                          title={
+                            statement.paymentSettlement
+                              ? `Settlement: ${statement.paymentSettlement}`
+                              : undefined
+                          }
+                        >
+                          {feePaymentPaidLabel(statement.status, statement.paymentSettlement)}
+                        </span>
+                      </td>
                       <td className="py-2 pr-4 whitespace-nowrap text-slate-700">
                         {statement.generatedAt
                           ? new Date(statement.generatedAt).toLocaleString()
@@ -464,56 +588,73 @@ export function FeeStatementsBatchPanel({
                         />
                       </td>
                       <td className="py-2">
-                        <div className="flex flex-wrap items-center justify-end gap-2">
+                        <div className="flex flex-wrap items-center justify-end gap-1.5">
                           {statement.status === "DRAFT" ? (
-                            <button
-                              type="button"
+                            <IconActionButton
+                              label="Issue"
                               disabled={loading}
+                              tone="primary"
                               onClick={() => void issueStatement(statement.id)}
-                              title="Issue this draft statement so the student can see and pay it"
-                              className="rounded-lg bg-indigo-600 px-2.5 py-1 text-xs font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
                             >
-                              Issue
-                            </button>
+                              <ActionIcon>
+                                <path d="M22 2 11 13" />
+                                <path d="M22 2 15 22 11 13 2 9z" />
+                              </ActionIcon>
+                            </IconActionButton>
                           ) : null}
-                          <button
-                            type="button"
+                          <IconActionButton
+                            label="Regenerate"
                             disabled={loading || !statement.registrationWorkspaceId}
+                            tone={
+                              statement.status === "NEEDS_REGENERATION" ? "warning" : "primary"
+                            }
                             onClick={() => void regenerateStatement(statement)}
-                            title="Regenerate a revised statement from current registration items and fees, without changing Normal/Late/High Late stages"
-                            className={`rounded-lg px-2.5 py-1 text-xs font-medium disabled:opacity-50 ${
-                              statement.status === "NEEDS_REGENERATION"
-                                ? "bg-amber-600 text-white hover:bg-amber-700"
-                                : "border border-indigo-300 text-indigo-700 hover:bg-indigo-50"
-                            }`}
                           >
-                            Regenerate
-                          </button>
-                          <button
-                            type="button"
+                            <ActionIcon>
+                              <path d="M21 12a9 9 0 1 1-2.6-6.2" />
+                              <path d="M21 3v6h-6" />
+                            </ActionIcon>
+                          </IconActionButton>
+                          <IconActionButton
+                            label="Reprice by current fee stage"
                             disabled={loading || !statement.registrationWorkspaceId}
+                            tone="warning"
                             onClick={() => void repriceStatement(statement)}
-                            title="Re-evaluate Normal/Late/High Late from current fee-stage windows, update exam stages (manual overrides skipped), then regenerate and issue the statement"
-                            className="rounded-lg border border-amber-300 px-2.5 py-1 text-xs font-medium text-amber-900 hover:bg-amber-50 disabled:opacity-50"
                           >
-                            Reprice by current fee stage
-                          </button>
-                          <button
-                            type="button"
+                            <ActionIcon>
+                              <path d="M12 2v20" />
+                              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                            </ActionIcon>
+                          </IconActionButton>
+                          <IconActionButton
+                            label="Mark as paid (offline)"
+                            disabled={loading || statement.status !== "ISSUED"}
+                            tone="success"
+                            onClick={() => void markStatementPaidOffline(statement)}
+                          >
+                            <ActionIcon>
+                              <path d="M20 6 9 17l-5-5" />
+                            </ActionIcon>
+                          </IconActionButton>
+                          <IconActionButton
+                            label="Preview"
                             onClick={() => setPreviewStatement({ statement, autoPrint: false })}
-                            title="Open an on-screen preview of this fee statement"
-                            className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                           >
-                            Preview
-                          </button>
-                          <button
-                            type="button"
+                            <ActionIcon>
+                              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                              <circle cx="12" cy="12" r="3" />
+                            </ActionIcon>
+                          </IconActionButton>
+                          <IconActionButton
+                            label="Print"
                             onClick={() => setPreviewStatement({ statement, autoPrint: true })}
-                            title="Open the print dialog for this fee statement"
-                            className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                           >
-                            Print
-                          </button>
+                            <ActionIcon>
+                              <path d="M6 9V2h12v7" />
+                              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                              <path d="M6 14h12v8H6z" />
+                            </ActionIcon>
+                          </IconActionButton>
                         </div>
                       </td>
                     </tr>

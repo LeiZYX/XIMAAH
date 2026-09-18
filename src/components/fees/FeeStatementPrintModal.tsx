@@ -37,6 +37,7 @@ export interface FeeStatementPrintData {
     uciAtEntry?: string | null;
   } | null;
   status: string;
+  paymentSettlement?: string | null;
   totalGbpAmount: number | string;
   totalCnyAmount: number | string;
   previouslyPaidGbpAmount?: number | string | null;

@@ -9,9 +9,20 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.5";
+export const CURRENT_VERSION = "1.3.6";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.6",
+    releaseDate: "2026-09-18",
+    summary:
+      "Fee Statements: icon row actions, Paid Online/Offline/Covered column, and audited mark-paid offline.",
+    changes: [
+      "Fee Statements batch table Actions use icon buttons with hover tooltips (Regenerate, Reprice, Mark as paid, Preview, Print)",
+      "New Payment column shows Unpaid or Paid · Online / Offline / Covered via paymentSettlement (auto-set on pay, mark-paid, or zero-due generate)",
+      "Mark as paid (offline) for Issued statements: closes open QR orders, writes FeeAuditLog, and sends the Fee statement paid email",
+    ],
+  },
   {
     version: "1.3.5",
     releaseDate: "2026-09-18",

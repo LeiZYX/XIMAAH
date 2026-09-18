@@ -145,6 +145,7 @@ export async function issueCashInFeeStatement(params: {
         amountDueGbpAmount: paymentSplit.amountDueGbp,
         amountDueCnyAmount: paymentSplit.amountDueCny,
         paymentNotes: noPaymentDue ? "No payment due." : null,
+        paymentSettlement: noPaymentDue ? "COVERED" : "NONE",
         generatedByUserId: params.performedByUserId,
         issuedAt: new Date(),
         items: {
@@ -326,6 +327,7 @@ export async function markCashInFeePaidOffline(params: {
       where: { id: request.feeStatement!.id },
       data: {
         status: "PAID",
+        paymentSettlement: "OFFLINE",
         amountDueGbpAmount: 0,
         amountDueCnyAmount: 0,
         paymentNotes: request.feeStatement!.paymentNotes

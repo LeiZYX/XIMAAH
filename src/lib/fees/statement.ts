@@ -34,6 +34,7 @@ import {
   sumWorkspacePaidGbp,
   statementAmountDueGbp,
 } from "@/lib/fees/payment-due";
+import { settlementForIssuedOrPaid } from "@/lib/fees/payment-settlement";
 import { finalizeRevisedFeeStatement } from "@/lib/fees/statement-lifecycle";
 import { queueFeeStatementIssuedNotification } from "@/lib/notifications/fee-statement-issued";
 
@@ -503,6 +504,9 @@ export async function generateFeeStatement(params: {
 
   const noFurtherPaymentDue = issue && paymentSplit.amountDueGbp <= 0;
   const initialStatus = noFurtherPaymentDue ? "PAID" : issue ? "ISSUED" : "DRAFT";
+  const initialSettlement = noFurtherPaymentDue
+    ? "COVERED"
+    : "NONE";
   const basePaymentNotes = noFurtherPaymentDue
     ? previouslyPaidGbp > 0
       ? `No additional payment due. Previous online payments £${paymentSplit.previouslyPaidGbp.toFixed(2)} cover the revised total £${paymentSplit.totalGbp.toFixed(2)}.`
@@ -535,6 +539,7 @@ export async function generateFeeStatement(params: {
       assessmentHubCandidateNumberSnapshot: assessmentHubCandidateNumber,
       candidateTypeSnapshot: candidateType,
       status: initialStatus,
+      paymentSettlement: initialSettlement,
       totalGbpAmount: paymentSplit.totalGbp,
       totalCnyAmount: paymentSplit.totalCny,
       previouslyPaidGbpAmount: paymentSplit.previouslyPaidGbp,
@@ -674,11 +679,11 @@ export async function issueFeeStatement(statementId: string) {
     throw new FeeError(`Cannot issue: ${parts.join("; ")}.`);
   }
 
-  const nextStatus = statementAmountDueGbp(statement) <= 0 ? "PAID" : "ISSUED";
+  const next = settlementForIssuedOrPaid(statementAmountDueGbp(statement));
 
   const issued = await prisma.feeStatement.update({
     where: { id: statementId },
-    data: { status: nextStatus, issuedAt: new Date() },
+    data: { status: next.status, paymentSettlement: next.paymentSettlement, issuedAt: new Date() },
     include: {
       items: true,
       registrationWindow: {
