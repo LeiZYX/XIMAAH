@@ -1,5 +1,11 @@
 import { GRADE_LABELS, type GradeValue } from "@/lib/students/profile-enums";
 
+export type StudentExamIdentitySummary = {
+  boardCode: string;
+  centreNumber: string | null;
+  uciNumber: string | null;
+};
+
 export type StudentIdentityFields = {
   name: string;
   chineseName?: string | null;
@@ -7,6 +13,7 @@ export type StudentIdentityFields = {
   studentNo?: string | null;
   currentGrade?: string | null;
   currentClassName?: string | null;
+  examIdentities?: StudentExamIdentitySummary[];
 };
 
 function trimOrNull(value: string | null | undefined): string | null {
@@ -37,9 +44,14 @@ export function formatGradeClassLine(identity: StudentIdentityFields): string | 
       ? GRADE_LABELS[gradeKey as GradeValue]
       : gradeKey;
   const className = trimOrNull(identity.currentClassName);
-  if (grade && className) return `${grade} · Class ${className}`;
+  const classLabel = className
+    ? /^class\b/i.test(className)
+      ? className
+      : `Class ${className}`
+    : null;
+  if (grade && classLabel) return `${grade} · ${classLabel}`;
   if (grade) return grade;
-  if (className) return `Class ${className}`;
+  if (classLabel) return classLabel;
   return null;
 }
 

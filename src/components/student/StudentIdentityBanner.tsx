@@ -11,6 +11,7 @@ export function StudentIdentityBanner({ identity }: { identity: StudentIdentityF
   const chineseName = resolveChineseName(identity);
   const schoolNo = resolveSchoolNo(identity);
   const gradeClass = formatGradeClassLine(identity);
+  const examIdentities = identity.examIdentities ?? [];
 
   const nameLine = chineseName ? `${englishName}（${chineseName}）` : englishName;
 
@@ -36,6 +37,36 @@ export function StudentIdentityBanner({ identity }: { identity: StudentIdentityF
         {gradeClass ? <span className="text-slate-400"> · </span> : null}
         {gradeClass ? <span>{gradeClass}</span> : null}
       </p>
+      {examIdentities.length > 0 ? (
+        <ul className="mt-2 space-y-1 text-sm text-slate-600">
+          {examIdentities.map((row) => (
+            <li key={row.boardCode}>
+              {examIdentities.length > 1 ? (
+                <span className="font-medium text-slate-700">{row.boardCode}: </span>
+              ) : null}
+              <span>
+                UCI Center no.{" "}
+                <span className="font-medium font-mono text-slate-800">
+                  {row.centreNumber ?? "—"}
+                </span>
+              </span>
+              <span className="text-slate-400"> · </span>
+              <span>
+                UCI no.{" "}
+                <span className="font-medium font-mono text-slate-800">
+                  {row.uciNumber ?? "—"}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="mt-2 text-sm text-slate-600">
+          UCI Center no. <span className="font-medium text-slate-800">—</span>
+          <span className="text-slate-400"> · </span>
+          UCI no. <span className="font-medium text-slate-800">—</span>
+        </p>
+      )}
     </section>
   );
 }

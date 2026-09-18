@@ -64,7 +64,9 @@ export async function GET() {
       status: { in: ["ISSUED", "PAID"] },
     },
     include: {
-      items: true,
+      items: {
+        orderBy: [{ createdAt: "asc" }],
+      },
       candidate: {
         select: {
           studentId: true,
