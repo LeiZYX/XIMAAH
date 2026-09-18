@@ -55,6 +55,8 @@ export interface CandidateRegistrationFeeSectionProps {
   onSave?: () => void;
   saving?: boolean;
   showSaveButton?: boolean;
+  /** When false, hide the add/remove reason field (parent collects reason elsewhere). */
+  showReasonField?: boolean;
   /**
    * Create/register modals: auto-include fee when Edexcel UCI is empty or has no trailing letter.
    * Workspace detail should leave this false so staff control pending changes explicitly.
@@ -91,6 +93,7 @@ export function CandidateRegistrationFeeSection({
   onSave,
   saving = false,
   showSaveButton = false,
+  showReasonField = true,
   autoIncludeWhenRequired = false,
   assumeEmptyUciWithoutCandidate = false,
 }: CandidateRegistrationFeeSectionProps) {
@@ -264,8 +267,9 @@ export function CandidateRegistrationFeeSection({
         <div>
           <h3 className="text-sm font-semibold text-slate-900">Additional Services</h3>
           <p className="mt-1 text-xs text-slate-600">
-            Optional fees selected by Exam Officer or Admin. Changes are saved when you click Save
-            Changes.
+            {showReasonField === false && showSaveButton === false
+              ? "Optional fees selected by Exam Officer or Admin. Use Add/Remove here, then enter one Adjustment reason and click Apply Changes in the Adjustment Panel."
+              : "Optional fees selected by Exam Officer or Admin. Changes are saved when you click Save Changes."}
           </p>
         </div>
         {showDisplayCurrencySelector && onDisplayCurrencyChange ? (
@@ -379,7 +383,7 @@ export function CandidateRegistrationFeeSection({
         </RegistrationItemCard>
       )}
 
-      {reasonRequired ? (
+      {reasonRequired && showReasonField ? (
         <label className="block text-sm">
           <span className="mb-1 block font-medium text-slate-700">
             {reasonLabel} <span className="text-red-600">*</span>

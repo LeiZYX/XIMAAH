@@ -130,6 +130,14 @@ function itemLabel(item: FeeStatementItemSummary): string {
   return subject;
 }
 
+function formatIssuedDateTime(value: string | null): string {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
 function FeeStatementCard({
   statement,
   onPaid,
@@ -147,11 +155,16 @@ function FeeStatementCard({
           <p className="text-xs font-medium uppercase tracking-wide text-slate-500">Statement</p>
           <p className="font-semibold text-slate-900">{statement.statementNo}</p>
         </div>
-        <span
-          className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${feeStatementStatusClass(statement.status)}`}
-        >
-          {feeStatementStatusLabel(statement.status)}
-        </span>
+        <div className="text-right">
+          <span
+            className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${feeStatementStatusClass(statement.status)}`}
+          >
+            {feeStatementStatusLabel(statement.status)}
+          </span>
+          <p className="mt-1 text-xs tabular-nums text-slate-500">
+            {formatIssuedDateTime(statement.issuedAt)}
+          </p>
+        </div>
       </div>
       <dl className="mt-3 space-y-2 text-sm">
         <div>
@@ -227,12 +240,6 @@ function FeeStatementCard({
         {statement.paymentNotes ? (
           <p className="text-xs text-slate-600">{statement.paymentNotes}</p>
         ) : null}
-        <div>
-          <dt className="text-slate-500">Issued</dt>
-          <dd className="font-medium text-slate-900">
-            {statement.issuedAt ? new Date(statement.issuedAt).toLocaleDateString() : "—"}
-          </dd>
-        </div>
       </dl>
       <div className="mt-4">
         <StudentFeePaymentPanel

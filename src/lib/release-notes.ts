@@ -9,9 +9,23 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.3";
+export const CURRENT_VERSION = "1.3.4";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.4",
+    releaseDate: "2026-09-18",
+    summary:
+      "Student fee statements with line items and UCI identity; Fee Summary student view; simpler registration-fee adjustment reason.",
+    changes: [
+      "My Exam Registrations and My fee statements show the Student portal Signed-in-as block, including UCI Center no. and UCI no.",
+      "My fee statements list each fee line (name and GBP) plus Fee total; issued time sits under the status badge as YYYY-MM-DD HH:mm:ss",
+      "Fee Summary: Overview-style Internal/External filters, grade dropdown and class pills, per-student rows without CNY",
+      "Fee statement batch table shows Generated time",
+      "Registration Adjustment Panel: one Adjustment reason covers exam changes and Candidate Registration Fee add/remove (no second reason box)",
+      "Registration workspace success/error tips use Fee rules-style green/red dismissible banners",
+    ],
+  },
   {
     version: "1.3.3",
     releaseDate: "2026-09-09",

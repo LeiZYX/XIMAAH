@@ -423,6 +423,8 @@ export function RegistrationWorkspaceDetail({
     setError(null);
     setSuccess(null);
     try {
+      const feeSelectionChanged =
+        includeCandidateRegistrationFee !== workspace?.includeCandidateRegistrationFee;
       const response = await fetch(`${apiBase}/${workspaceId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -432,7 +434,9 @@ export function RegistrationWorkspaceDetail({
           removeRegistrationIds: pendingRemove,
           replacements: pendingReplace,
           includeCandidateRegistrationFee,
-          candidateRegistrationFeeReason: candidateRegistrationFeeReason.trim() || undefined,
+          candidateRegistrationFeeReason: feeSelectionChanged
+            ? reason.trim()
+            : candidateRegistrationFeeReason.trim() || undefined,
           ...(entryTypeOverride && (pendingAdd.length > 0 || pendingReplace.length > 0)
             ? { entryTypeOverride }
             : {}),
@@ -447,6 +451,7 @@ export function RegistrationWorkspaceDetail({
       setPendingRemove([]);
       setPendingReplace([]);
       setReason("");
+      setCandidateRegistrationFeeReason("");
       setEntryTypeOverride("");
       setAdjustMode(null);
       setConfirmFeeImpact(false);
@@ -487,16 +492,7 @@ export function RegistrationWorkspaceDetail({
     }
 
     if (!hasPendingChanges && feeSelectionChanged) {
-      await saveFeeSelectionOnly();
-      return;
-    }
-
-    if (feeSelectionChanged && !candidateRegistrationFeeReason.trim()) {
-      setError(
-        includeCandidateRegistrationFee
-          ? "Reason for adding Candidate Registration Fee is required."
-          : "Reason for removing Candidate Registration Fee is required.",
-      );
+      await saveFeeSelectionOnly(reason.trim());
       return;
     }
 
@@ -508,13 +504,14 @@ export function RegistrationWorkspaceDetail({
     await executeApplyChanges();
   }
 
-  async function saveFeeSelectionOnly() {
+  async function saveFeeSelectionOnly(overrideReason?: string) {
     if (!workspace) return;
     if (includeCandidateRegistrationFee === workspace.includeCandidateRegistrationFee) {
       setError("No fee changes to save.");
       return;
     }
-    if (!candidateRegistrationFeeReason.trim()) {
+    const feeReason = (overrideReason ?? candidateRegistrationFeeReason).trim();
+    if (!feeReason) {
       setError(
         includeCandidateRegistrationFee
           ? "Reason for adding Candidate Registration Fee is required."
@@ -532,7 +529,7 @@ export function RegistrationWorkspaceDetail({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           includeCandidateRegistrationFee,
-          candidateRegistrationFeeReason: candidateRegistrationFeeReason.trim() || undefined,
+          candidateRegistrationFeeReason: feeReason,
         }),
       });
       if (!response.ok) {
@@ -541,9 +538,12 @@ export function RegistrationWorkspaceDetail({
       }
       setWorkspace(await response.json());
       setCandidateRegistrationFeeReason("");
+      setReason("");
       setFeeStatementRefreshKey((key) => key + 1);
       setFeeNeedsRegeneration(true);
-      setSuccess("Candidate Registration Fee selection saved. Regenerate the fee statement if one already exists.");
+      setSuccess(
+        "Candidate Registration Fee selection saved. Regenerate the fee statement if one already exists.",
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save fee selection");
     } finally {
@@ -688,8 +688,36 @@ export function RegistrationWorkspaceDetail({
   return (
     <div className="space-y-6">
       <p className="text-sm"><Link href={backHref} className="text-indigo-600 hover:text-indigo-700">← Back to registrations</Link></p>
-      {error ? <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div> : null}
-      {success ? <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{success}</div> : null}
+      {error ? (
+        <div
+          role="status"
+          className="flex items-start justify-between gap-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800"
+        >
+          <p className="min-w-0 flex-1">{error}</p>
+          <button
+            type="button"
+            onClick={() => setError(null)}
+            className="shrink-0 text-xs font-medium opacity-70 hover:opacity-100"
+          >
+            Dismiss
+          </button>
+        </div>
+      ) : null}
+      {success ? (
+        <div
+          role="status"
+          className="flex items-start justify-between gap-3 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800"
+        >
+          <p className="min-w-0 flex-1">{success}</p>
+          <button
+            type="button"
+            onClick={() => setSuccess(null)}
+            className="shrink-0 text-xs font-medium opacity-70 hover:opacity-100"
+          >
+            Dismiss
+          </button>
+        </div>
+      ) : null}
 
       {feeNeedsRegeneration ? (
         <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
@@ -861,7 +889,13 @@ export function RegistrationWorkspaceDetail({
               ) : null}
               <label className="mt-3 block">
                 <span className="mb-1 block font-medium text-slate-700">Adjustment reason *</span>
-                <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows={3} className="w-full rounded-lg border border-slate-300 px-3 py-2" placeholder="Required reason for exam adjustments" />
+                <textarea
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  rows={3}
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2"
+                  placeholder="Required reason for this adjustment (covers exams and registration fee changes)"
+                />
               </label>
               {pendingAdd.length > 0 || pendingReplace.length > 0 ? (
                 <label className="mt-3 block">
@@ -885,22 +919,6 @@ export function RegistrationWorkspaceDetail({
                     <option value="LATE">Late Entry</option>
                     <option value="HIGH_LATE">High Late Entry</option>
                   </select>
-                </label>
-              ) : null}
-              {includeCandidateRegistrationFee !== workspace.includeCandidateRegistrationFee ? (
-                <label className="mt-3 block">
-                  <span className="mb-1 block font-medium text-slate-700">
-                    {includeCandidateRegistrationFee
-                      ? "Reason for adding Candidate Registration Fee"
-                      : "Reason for removing Candidate Registration Fee"}{" "}
-                    *
-                  </span>
-                  <textarea
-                    value={candidateRegistrationFeeReason}
-                    onChange={(e) => setCandidateRegistrationFeeReason(e.target.value)}
-                    rows={2}
-                    className="w-full rounded-lg border border-slate-300 px-3 py-2"
-                  />
                 </label>
               ) : null}
               <button
@@ -933,9 +951,8 @@ export function RegistrationWorkspaceDetail({
             onDisplayCurrencyChange={setDisplayCurrency}
             showDisplayCurrencySelector
             disabled={savingFeeSelection || applying || !canAdjust}
-            showSaveButton={canAdjust}
-            saving={savingFeeSelection}
-            onSave={() => void saveFeeSelectionOnly()}
+            showReasonField={false}
+            showSaveButton={false}
           />
           <BillingPreviewPanel
             lines={billingPreviewLines}
