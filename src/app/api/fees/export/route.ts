@@ -7,6 +7,8 @@ import {
   exportDetailsCsv,
   exportDetailsXlsx,
   exportSummaryCsv,
+  exportSummaryDetailsCsv,
+  exportSummaryDetailsXlsx,
   exportSummaryXlsx,
 } from "@/lib/fees/export";
 import { parseFeeReportFilters } from "@/lib/fees/filters";
@@ -53,6 +55,36 @@ export async function GET(request: NextRequest) {
         headers: {
           "Content-Type": "text/csv; charset=utf-8",
           "Content-Disposition": 'attachment; filename="fee-summary.csv"',
+        },
+      });
+    }
+
+    if (type === "summary-details") {
+      const { rows } = await buildFeeSummaryReport(filters);
+      const lineCount = rows.reduce((sum, row) => sum + (row.lines?.length ?? 0), 0);
+      await createFeeAuditLog({
+        action: "FEE_SUMMARY_EXPORTED",
+        performedByUserId: auth.user.id,
+        registrationWindowId: filters.registrationWindowId,
+        metadata: { format, type: "summary-details", rowCount: lineCount },
+      });
+
+      if (format === "xlsx") {
+        const buffer = exportSummaryDetailsXlsx(rows);
+        return new NextResponse(new Uint8Array(buffer), {
+          headers: {
+            "Content-Type":
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "Content-Disposition": 'attachment; filename="fee-summary-details.xlsx"',
+          },
+        });
+      }
+
+      const csv = exportSummaryDetailsCsv(rows);
+      return new NextResponse(csv, {
+        headers: {
+          "Content-Type": "text/csv; charset=utf-8",
+          "Content-Disposition": 'attachment; filename="fee-summary-details.csv"',
         },
       });
     }

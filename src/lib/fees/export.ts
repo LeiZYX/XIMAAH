@@ -56,6 +56,95 @@ export function exportSummaryCsv(rows: FeeSummaryRow[]): string {
   return lines.join("\n");
 }
 
+/** Flatten Fee Summary student rows into one CSV/XLSX row per fee line item. */
+export function flattenSummaryDetailRows(rows: FeeSummaryRow[]) {
+  return rows.flatMap((row) => {
+    const lines = row.lines?.length
+      ? row.lines
+      : [
+          {
+            kind: "EXAM" as const,
+            label: "(no line items)",
+            paperCode: null,
+            entryType: null,
+            amountGbp: row.amountDueGbp,
+          },
+        ];
+    return lines.map((line) => ({
+      englishName: row.englishName,
+      chineseName: row.chineseName,
+      candidateType: row.candidateType,
+      grade: row.grade,
+      className: row.className,
+      registrationWindowTitle: row.registrationWindowTitle,
+      examBoardName: row.examBoardName,
+      examSeriesName: row.examSeriesName,
+      itemType: line.kind === "REGISTRATION_FEE" ? "Registration fee" : "Exam",
+      itemLabel: line.label,
+      paperCode: line.paperCode,
+      entryType: line.entryType,
+      amountGbp: line.amountGbp,
+      paymentStatus: row.paymentStatus,
+      statementStatus: row.statementStatus,
+      statementNo: row.statementNo,
+      generatedAt: row.generatedAt,
+      amountDueGbp: row.amountDueGbp,
+    }));
+  });
+}
+
+export function exportSummaryDetailsCsv(rows: FeeSummaryRow[]): string {
+  const flat = flattenSummaryDetailRows(rows);
+  const headers = [
+    "Student Name",
+    "Chinese Name",
+    "Candidate Type",
+    "Grade",
+    "Class",
+    "Registration Window",
+    "Exam Board",
+    "Exam Series",
+    "Item Type",
+    "Item",
+    "Paper Code",
+    "Entry Type",
+    "Amount GBP",
+    "Payment Status",
+    "Statement Status",
+    "Statement No.",
+    "Generated At",
+    "Student Amount Due GBP",
+  ];
+  const lines = [
+    headers.join(","),
+    ...flat.map((row) =>
+      [
+        row.englishName,
+        row.chineseName ?? "",
+        row.candidateType,
+        row.grade,
+        row.className,
+        row.registrationWindowTitle,
+        row.examBoardName,
+        row.examSeriesName,
+        row.itemType,
+        row.itemLabel,
+        row.paperCode ?? "",
+        row.entryType ?? "",
+        row.amountGbp,
+        row.paymentStatus,
+        row.statementStatus,
+        row.statementNo ?? "",
+        row.generatedAt ?? "",
+        row.amountDueGbp,
+      ]
+        .map(escapeCsv)
+        .join(","),
+    ),
+  ];
+  return lines.join("\n");
+}
+
 export function exportDetailsCsv(rows: FeeDetailRow[], showCosts: boolean): string {
   const headers = [
     "Statement No.",
@@ -144,6 +233,33 @@ export function exportSummaryXlsx(rows: FeeSummaryRow[]): Buffer {
   const sheet = XLSX.utils.json_to_sheet(data);
   const book = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(book, sheet, "Fee Summary");
+  return Buffer.from(XLSX.write(book, { type: "buffer", bookType: "xlsx" }));
+}
+
+export function exportSummaryDetailsXlsx(rows: FeeSummaryRow[]): Buffer {
+  const data = flattenSummaryDetailRows(rows).map((row) => ({
+    "Student Name": row.englishName,
+    "Chinese Name": row.chineseName ?? "",
+    "Candidate Type": row.candidateType,
+    Grade: row.grade,
+    Class: row.className,
+    "Registration Window": row.registrationWindowTitle,
+    "Exam Board": row.examBoardName,
+    "Exam Series": row.examSeriesName,
+    "Item Type": row.itemType,
+    Item: row.itemLabel,
+    "Paper Code": row.paperCode ?? "",
+    "Entry Type": row.entryType ?? "",
+    "Amount GBP": row.amountGbp,
+    "Payment Status": row.paymentStatus,
+    "Statement Status": row.statementStatus,
+    "Statement No.": row.statementNo ?? "",
+    "Generated At": row.generatedAt ?? "",
+    "Student Amount Due GBP": row.amountDueGbp,
+  }));
+  const sheet = XLSX.utils.json_to_sheet(data);
+  const book = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(book, sheet, "Fee Summary Details");
   return Buffer.from(XLSX.write(book, { type: "buffer", bookType: "xlsx" }));
 }
 

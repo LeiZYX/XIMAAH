@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { FeeManagementNav } from "@/components/fees/FeeManagementNav";
@@ -76,6 +75,8 @@ export function FeeSummaryView({ basePath }: FeeSummaryViewProps) {
   const [dismissedTips, setDismissedTips] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set());
 
   const selector = useRegistrationWindowSelector({
     scope: "staff",
@@ -134,6 +135,11 @@ export function FeeSummaryView({ basePath }: FeeSummaryViewProps) {
     void load();
   }, [load]);
 
+  useEffect(() => {
+    setExpandedKeys(new Set());
+    setDetailsOpen(false);
+  }, [filters]);
+
   function selectCandidateType(next: CandidateTypeSelection) {
     setCandidateType(next);
     setSelectedGrade("ALL");
@@ -145,14 +151,44 @@ export function FeeSummaryView({ basePath }: FeeSummaryViewProps) {
     setSelectedClass("ALL");
   }
 
-  function exportFile(format: "csv" | "xlsx") {
-    window.location.href = `/api/fees/export?type=summary&format=${format}&${filtersToParams(filters)}`;
+  function rowKey(row: FeeSummaryRow) {
+    return `${row.candidateKey}-${row.registrationWindowId}-${row.statementNo ?? "none"}`;
+  }
+
+  function isRowExpanded(row: FeeSummaryRow) {
+    return detailsOpen || expandedKeys.has(rowKey(row));
+  }
+
+  function toggleRow(row: FeeSummaryRow) {
+    const key = rowKey(row);
+    setExpandedKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+
+  function toggleDetailsMode() {
+    setDetailsOpen((open) => {
+      const next = !open;
+      if (!next) setExpandedKeys(new Set());
+      return next;
+    });
+  }
+
+  function exportFile(format: "csv" | "xlsx", type: "summary" | "summary-details" = "summary") {
+    window.location.href = `/api/fees/export?type=${type}&format=${format}&${filtersToParams(filters)}`;
   }
 
   const typeLabel = candidateType === "INTERNAL" ? "Internal" : "External";
   const classScopeTotal = byClass.reduce((sum, row) => sum + row.count, 0);
   const visibleTips = systemTips.filter((tip) => !dismissedTips.includes(tip));
   const showRegistrationFeeColumn = rows.some((row) => row.registrationFeeGbp != null);
+  const colSpan =
+    11 +
+    (candidateType === "INTERNAL" ? 1 : 0) +
+    (showRegistrationFeeColumn ? 1 : 0);
 
   return (
     <div className="space-y-6">
@@ -327,24 +363,43 @@ export function FeeSummaryView({ basePath }: FeeSummaryViewProps) {
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
-          onClick={() => exportFile("csv")}
+          onClick={() => exportFile("csv", "summary")}
           className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700"
         >
           Export summary CSV
         </button>
         <button
           type="button"
-          onClick={() => exportFile("xlsx")}
+          onClick={() => exportFile("xlsx", "summary")}
           className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700"
         >
           Export summary Excel
         </button>
-        <Link
-          href={`${basePath}/fee-details?${filtersToParams(filters)}`}
-          className="rounded-lg bg-indigo-600 px-3 py-2 text-sm font-medium text-white"
+        <button
+          type="button"
+          onClick={() => exportFile("csv", "summary-details")}
+          className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700"
         >
-          View details
-        </Link>
+          Export details CSV
+        </button>
+        <button
+          type="button"
+          onClick={() => exportFile("xlsx", "summary-details")}
+          className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700"
+        >
+          Export details Excel
+        </button>
+        <button
+          type="button"
+          onClick={toggleDetailsMode}
+          className={`rounded-lg px-3 py-2 text-sm font-medium ${
+            detailsOpen
+              ? "bg-indigo-700 text-white"
+              : "bg-indigo-600 text-white hover:bg-indigo-700"
+          }`}
+        >
+          {detailsOpen ? "Hide details" : "View details"}
+        </button>
       </div>
 
       <Card className="overflow-x-auto p-0">
@@ -358,6 +413,7 @@ export function FeeSummaryView({ basePath }: FeeSummaryViewProps) {
           <table className="min-w-full text-sm">
             <thead className="border-b border-slate-200 bg-slate-50 text-left text-xs uppercase text-slate-500">
               <tr>
+                <th className="w-10 px-3 py-3" />
                 <th className="px-4 py-3">Student</th>
                 <th className="px-4 py-3">Type</th>
                 {candidateType === "INTERNAL" ? (
@@ -377,44 +433,115 @@ export function FeeSummaryView({ basePath }: FeeSummaryViewProps) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {rows.map((row) => (
-                <tr key={`${row.candidateKey}-${row.registrationWindowId}-${row.statementNo ?? "none"}`}>
-                  <td className="px-4 py-2 font-medium text-slate-900">
-                    {formatEnglishWithChineseName(row.englishName, row.chineseName)}
-                  </td>
-                  <td className="px-4 py-2">{row.candidateType === "EXTERNAL" ? "External" : "Internal"}</td>
-                  {candidateType === "INTERNAL" ? (
-                    <td className="px-4 py-2">{row.className?.trim() || "—"}</td>
-                  ) : null}
-                  <td className="px-4 py-2">{row.registrationWindowTitle}</td>
-                  <td className="px-4 py-2">{row.examBoardName}</td>
-                  <td className="px-4 py-2">{row.examSeriesName}</td>
-                  <td className="px-4 py-2">{row.subjectCount}</td>
-                  {showRegistrationFeeColumn ? (
-                    <td className="px-4 py-2">
-                      {row.registrationFeeGbp != null
-                        ? formatMoney(row.registrationFeeGbp, "GBP")
-                        : "—"}
-                    </td>
-                  ) : null}
-                  <td className="px-4 py-2 font-medium">
-                    {formatMoney(row.amountDueGbp, "GBP")}
-                  </td>
-                  <td className="px-4 py-2">
-                    <span
-                      className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${feeStatementStatusClass(row.statementStatus)}`}
-                    >
-                      {row.paymentStatus}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2 whitespace-nowrap text-slate-700">
-                    {row.generatedAt ? new Date(row.generatedAt).toLocaleString() : "—"}
-                  </td>
-                  <td className="px-4 py-2 text-slate-600">
-                    {row.systemMessages.length > 0 ? row.systemMessages.join(" · ") : "—"}
-                  </td>
-                </tr>
-              ))}
+              {rows.map((row) => {
+                const key = rowKey(row);
+                const expanded = isRowExpanded(row);
+                const lines = row.lines ?? [];
+                return (
+                  <Fragment key={key}>
+                    <tr className={expanded ? "bg-slate-50/80" : undefined}>
+                      <td className="px-3 py-2">
+                        <button
+                          type="button"
+                          onClick={() => toggleRow(row)}
+                          className="rounded px-1.5 py-0.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                          aria-expanded={expanded}
+                          aria-label={expanded ? "Collapse details" : "Expand details"}
+                        >
+                          {expanded ? "▾" : "▸"}
+                        </button>
+                      </td>
+                      <td className="px-4 py-2 font-medium text-slate-900">
+                        {formatEnglishWithChineseName(row.englishName, row.chineseName)}
+                      </td>
+                      <td className="px-4 py-2">
+                        {row.candidateType === "EXTERNAL" ? "External" : "Internal"}
+                      </td>
+                      {candidateType === "INTERNAL" ? (
+                        <td className="px-4 py-2">{row.className?.trim() || "—"}</td>
+                      ) : null}
+                      <td className="px-4 py-2">{row.registrationWindowTitle}</td>
+                      <td className="px-4 py-2">{row.examBoardName}</td>
+                      <td className="px-4 py-2">{row.examSeriesName}</td>
+                      <td className="px-4 py-2">{row.subjectCount}</td>
+                      {showRegistrationFeeColumn ? (
+                        <td className="px-4 py-2">
+                          {row.registrationFeeGbp != null
+                            ? formatMoney(row.registrationFeeGbp, "GBP")
+                            : "—"}
+                        </td>
+                      ) : null}
+                      <td className="px-4 py-2 font-medium">
+                        {formatMoney(row.amountDueGbp, "GBP")}
+                      </td>
+                      <td className="px-4 py-2">
+                        <span
+                          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${feeStatementStatusClass(row.statementStatus)}`}
+                        >
+                          {row.paymentStatus}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 whitespace-nowrap text-slate-700">
+                        {row.generatedAt ? new Date(row.generatedAt).toLocaleString() : "—"}
+                      </td>
+                      <td className="px-4 py-2 text-slate-600">
+                        {row.systemMessages.length > 0 ? row.systemMessages.join(" · ") : "—"}
+                      </td>
+                    </tr>
+                    {expanded ? (
+                      <tr className="bg-white">
+                        <td colSpan={colSpan} className="px-4 py-3">
+                          {lines.length === 0 ? (
+                            <p className="text-sm text-slate-500">No line items for this student.</p>
+                          ) : (
+                            <div className="overflow-hidden rounded-lg border border-slate-200">
+                              <table className="min-w-full text-sm">
+                                <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+                                  <tr>
+                                    <th className="px-3 py-2">Item</th>
+                                    <th className="px-3 py-2">Type</th>
+                                    <th className="px-3 py-2">Entry</th>
+                                    <th className="px-3 py-2 text-right">Amount (GBP)</th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                  {lines.map((line, index) => (
+                                    <tr key={`${key}-line-${index}`}>
+                                      <td className="px-3 py-2 text-slate-900">{line.label}</td>
+                                      <td className="px-3 py-2 text-slate-600">
+                                        {line.kind === "REGISTRATION_FEE"
+                                          ? "Registration fee"
+                                          : "Exam"}
+                                      </td>
+                                      <td className="px-3 py-2 text-slate-600">
+                                        {line.entryType ?? "—"}
+                                      </td>
+                                      <td className="px-3 py-2 text-right font-medium tabular-nums text-slate-900">
+                                        {formatMoney(line.amountGbp, "GBP")}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                  <tr className="bg-slate-50">
+                                    <td
+                                      colSpan={3}
+                                      className="px-3 py-2 font-semibold text-slate-900"
+                                    >
+                                      Amount due
+                                    </td>
+                                    <td className="px-3 py-2 text-right font-semibold tabular-nums text-slate-900">
+                                      {formatMoney(row.amountDueGbp, "GBP")}
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ) : null}
+                  </Fragment>
+                );
+              })}
             </tbody>
           </table>
         )}

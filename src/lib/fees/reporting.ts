@@ -35,6 +35,14 @@ export interface FeeSummaryFacet {
 }
 
 /** One row per student (workspace) for Fee Summary. */
+export interface FeeSummaryLineItem {
+  kind: "EXAM" | "REGISTRATION_FEE";
+  label: string;
+  paperCode: string | null;
+  entryType: string | null;
+  amountGbp: number;
+}
+
 export interface FeeSummaryRow {
   candidateKey: string;
   englishName: string;
@@ -56,6 +64,7 @@ export interface FeeSummaryRow {
   generatedAt: string | null;
   systemMessages: string[];
   missingFeeRuleCount: number;
+  lines: FeeSummaryLineItem[];
 }
 
 function feeSummaryPaymentStatus(statementStatus: string): string {
@@ -248,6 +257,18 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
         amountDueGbpAmount: true,
         generatedAt: true,
         regenerationReason: true,
+        items: {
+          orderBy: [{ createdAt: "asc" }],
+          select: {
+            serviceType: true,
+            serviceNameSnapshot: true,
+            subjectSnapshot: true,
+            paperCodeSnapshot: true,
+            paperTitleSnapshot: true,
+            entryTypeSnapshot: true,
+            lineTotalGbp: true,
+          },
+        },
       },
       orderBy: [{ generatedAt: "desc" }],
     }),
@@ -290,6 +311,7 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
     registrationFeeGbp: number | null;
     missingFeeRuleCount: number;
     systemMessages: string[];
+    calculatedLines: FeeSummaryLineItem[];
   };
 
   const studentMap = new Map<string, StudentAgg>();
@@ -322,6 +344,7 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
         registrationFeeGbp: null,
         missingFeeRuleCount: 0,
         systemMessages: [],
+        calculatedLines: [],
       };
       studentMap.set(key, student);
     }
@@ -340,13 +363,26 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
       entryType,
     });
 
+    let lineGbp = 0;
     if (!match) {
       student.missingFeeRuleCount += 1;
     } else {
       const amounts = calculateFeeAmounts(match, exchangeRates);
+      lineGbp = amounts.salesGbp;
       student.examGbp += amounts.salesGbp;
       totalCny += amounts.salesCny;
     }
+
+    const paperLabel = reg.paper.title
+      ? `${reg.subject.name} · ${reg.paper.code} — ${reg.paper.title}`
+      : `${reg.subject.name} · ${reg.paper.code}`;
+    student.calculatedLines.push({
+      kind: "EXAM",
+      label: paperLabel,
+      paperCode: reg.paper.code,
+      entryType,
+      amountGbp: Math.round(lineGbp * 100) / 100,
+    });
 
     if (
       reg.registrationWorkspaceId &&
@@ -359,6 +395,13 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
         student.missingFeeRuleCount += 1;
         student.systemMessages.push("Candidate registration fee schedule missing");
         student.registrationFeeGbp = 0;
+        student.calculatedLines.push({
+          kind: "REGISTRATION_FEE",
+          label: CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
+          paperCode: null,
+          entryType: null,
+          amountGbp: 0,
+        });
       } else {
         const windowRates = exchangeRates.filter(
           (rate) => rate.registrationWindowId === reg.registrationWindow.id,
@@ -366,6 +409,13 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
         const amounts = calculateFeeScheduleAmounts(schedule, windowRates);
         student.registrationFeeGbp = amounts.salesGbp;
         totalCny += amounts.salesCny;
+        student.calculatedLines.push({
+          kind: "REGISTRATION_FEE",
+          label: CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
+          paperCode: null,
+          entryType: null,
+          amountGbp: Math.round(amounts.salesGbp * 100) / 100,
+        });
       }
     }
   }
@@ -376,6 +426,37 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
     if (!latestStatementByWorkspace.has(statement.registrationWorkspaceId)) {
       latestStatementByWorkspace.set(statement.registrationWorkspaceId, statement);
     }
+  }
+
+  function linesFromStatement(
+    statement: (typeof statements)[number],
+  ): FeeSummaryLineItem[] {
+    return statement.items.map((item) => {
+      const isRegFee = item.serviceType === "CANDIDATE_REGISTRATION";
+      if (isRegFee) {
+        return {
+          kind: "REGISTRATION_FEE" as const,
+          label: item.serviceNameSnapshot?.trim() || CANDIDATE_REGISTRATION_FEE_SERVICE_NAME,
+          paperCode: null,
+          entryType: null,
+          amountGbp: Math.round(toNumber(item.lineTotalGbp) * 100) / 100,
+        };
+      }
+      const subject = item.subjectSnapshot?.trim() || "—";
+      const paper = item.paperCodeSnapshot?.trim();
+      const title = item.paperTitleSnapshot?.trim();
+      let label = subject;
+      if (paper && title) label = `${subject} · ${paper} — ${title}`;
+      else if (paper) label = `${subject} · ${paper}`;
+      else if (title) label = `${subject} · ${title}`;
+      return {
+        kind: "EXAM" as const,
+        label,
+        paperCode: paper || null,
+        entryType: item.entryTypeSnapshot ?? null,
+        amountGbp: Math.round(toNumber(item.lineTotalGbp) * 100) / 100,
+      };
+    });
   }
 
   const allStudents: FeeSummaryRow[] = [...studentMap.values()].map((student) => {
@@ -401,6 +482,16 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
       ? toNumber(statement.amountDueGbpAmount ?? statement.totalGbpAmount)
       : calculatedDue;
 
+    const lines =
+      statement && statement.items.length > 0
+        ? linesFromStatement(statement)
+        : [...student.calculatedLines].sort((a, b) => {
+            if (a.kind !== b.kind) {
+              return a.kind === "REGISTRATION_FEE" ? 1 : -1;
+            }
+            return a.label.localeCompare(b.label);
+          });
+
     return {
       candidateKey: student.candidateKey,
       englishName: student.englishName,
@@ -422,6 +513,7 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
       generatedAt: statement?.generatedAt?.toISOString() ?? null,
       systemMessages: [...new Set(messages)],
       missingFeeRuleCount: student.missingFeeRuleCount,
+      lines,
     };
   });
 
