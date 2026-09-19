@@ -247,6 +247,17 @@ export function FeeStatementsBatchPanel({
       setError("This statement has no registration workspace; cannot regenerate.");
       return;
     }
+    const confirmed = window.confirm(
+      [
+        `Regenerate ${statement.statementNo} (${statementCandidateLabel(statement)})?`,
+        "",
+        "This will refresh prices from the current registration and issue a revised statement.",
+        "Fee stages (Normal / Late / High Late) are not changed.",
+        "Use Reprice by current fee stage if stages should be updated.",
+      ].join("\n"),
+    );
+    if (!confirmed) return;
+
     setLoading(true);
     setError(null);
     setMessage(null);

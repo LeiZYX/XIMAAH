@@ -10,7 +10,7 @@ export function feeRefundStatusLabel(status: string | null | undefined): string 
     case "SETTLED":
       return "已退完";
     default:
-      return "无需退费";
+      return "No refund";
   }
 }
 
