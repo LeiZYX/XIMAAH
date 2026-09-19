@@ -9,9 +9,18 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.8";
+export const CURRENT_VERSION = "1.3.9";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.9",
+    releaseDate: "2026-09-19",
+    summary: "Refund status says No refund, and Regenerate asks before it runs.",
+    changes: [
+      "Fee statement refund status “无需退费” is now “No refund”",
+      "Regenerate on a fee statement row asks for confirmation before issuing a revised statement",
+    ],
+  },
   {
     version: "1.3.8",
     releaseDate: "2026-09-19",
