@@ -901,6 +901,29 @@ exports.Prisma.OfflineWithdrawalRefundScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FeeRefundScalarFieldEnum = {
+  id: 'id',
+  feeStatementId: 'feeStatementId',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
+  method: 'method',
+  paymentOrderId: 'paymentOrderId',
+  amountGbp: 'amountGbp',
+  refundedAt: 'refundedAt',
+  externalReference: 'externalReference',
+  reason: 'reason',
+  note: 'note',
+  recordedByUserId: 'recordedByUserId',
+  recordedAt: 'recordedAt'
+};
+
+exports.Prisma.FeeRefundAllocationScalarFieldEnum = {
+  id: 'id',
+  feeRefundId: 'feeRefundId',
+  offlineWithdrawalRefundId: 'offlineWithdrawalRefundId',
+  amountGbp: 'amountGbp'
+};
+
 exports.Prisma.FeeAuditLogScalarFieldEnum = {
   id: 'id',
   action: 'action',
@@ -1596,6 +1619,23 @@ exports.Prisma.OfflineWithdrawalRefundOrderByRelevanceFieldEnum = {
   offlineNote: 'offlineNote'
 };
 
+exports.Prisma.FeeRefundOrderByRelevanceFieldEnum = {
+  id: 'id',
+  feeStatementId: 'feeStatementId',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  registrationWindowId: 'registrationWindowId',
+  paymentOrderId: 'paymentOrderId',
+  externalReference: 'externalReference',
+  note: 'note',
+  recordedByUserId: 'recordedByUserId'
+};
+
+exports.Prisma.FeeRefundAllocationOrderByRelevanceFieldEnum = {
+  id: 'id',
+  feeRefundId: 'feeRefundId',
+  offlineWithdrawalRefundId: 'offlineWithdrawalRefundId'
+};
+
 exports.Prisma.FeeAuditLogOrderByRelevanceFieldEnum = {
   id: 'id',
   registrationWindowId: 'registrationWindowId',
@@ -2104,7 +2144,8 @@ exports.FeeStatementEventKind = exports.$Enums.FeeStatementEventKind = {
   NEEDS_REGENERATION: 'NEEDS_REGENERATION',
   REGENERATED: 'REGENERATED',
   REPRICED: 'REPRICED',
-  SUPERSEDED: 'SUPERSEDED'
+  SUPERSEDED: 'SUPERSEDED',
+  REFUND_RECORDED: 'REFUND_RECORDED'
 };
 
 exports.FeeScheduleServiceType = exports.$Enums.FeeScheduleServiceType = {
@@ -2123,6 +2164,17 @@ exports.OfflineWithdrawalRefundStatus = exports.$Enums.OfflineWithdrawalRefundSt
   PENDING_OFFLINE: 'PENDING_OFFLINE',
   COMPLETED: 'COMPLETED',
   ZERO_NO_REFUND: 'ZERO_NO_REFUND'
+};
+
+exports.FeeRefundMethod = exports.$Enums.FeeRefundMethod = {
+  ORIGINAL_CHANNEL: 'ORIGINAL_CHANNEL',
+  OFFLINE: 'OFFLINE'
+};
+
+exports.FeeRefundReason = exports.$Enums.FeeRefundReason = {
+  WITHDRAWAL: 'WITHDRAWAL',
+  OVERPAYMENT: 'OVERPAYMENT',
+  OTHER: 'OTHER'
 };
 
 exports.FeeAuditAction = exports.$Enums.FeeAuditAction = {
@@ -2150,7 +2202,8 @@ exports.FeeAuditAction = exports.$Enums.FeeAuditAction = {
   OFFLINE_WITHDRAWAL_REFUND_RECORDED: 'OFFLINE_WITHDRAWAL_REFUND_RECORDED',
   OFFLINE_WITHDRAWAL_REFUND_COMPLETED: 'OFFLINE_WITHDRAWAL_REFUND_COMPLETED',
   FEE_STATEMENT_MARKED_PAID_OFFLINE: 'FEE_STATEMENT_MARKED_PAID_OFFLINE',
-  FEE_STATEMENT_REPRICED_BY_CURRENT_STAGE: 'FEE_STATEMENT_REPRICED_BY_CURRENT_STAGE'
+  FEE_STATEMENT_REPRICED_BY_CURRENT_STAGE: 'FEE_STATEMENT_REPRICED_BY_CURRENT_STAGE',
+  FEE_REFUND_RECORDED: 'FEE_REFUND_RECORDED'
 };
 
 exports.ReviewWindowStatus = exports.$Enums.ReviewWindowStatus = {
@@ -2282,6 +2335,8 @@ exports.Prisma.ModelName = {
   FeeStatementEvent: 'FeeStatementEvent',
   FeeStatementItem: 'FeeStatementItem',
   OfflineWithdrawalRefund: 'OfflineWithdrawalRefund',
+  FeeRefund: 'FeeRefund',
+  FeeRefundAllocation: 'FeeRefundAllocation',
   FeeAuditLog: 'FeeAuditLog',
   ReviewWindow: 'ReviewWindow',
   ReviewWindowService: 'ReviewWindowService',

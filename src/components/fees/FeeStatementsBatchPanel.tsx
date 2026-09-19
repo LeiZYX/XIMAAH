@@ -10,8 +10,9 @@ import {
 } from "@/components/fees/FeeStatementPrintModal";
 import { StatementPaymentOrdersPanel } from "@/components/fees/StatementPaymentOrdersPanel";
 import { FeeStatementHistoryModal } from "@/components/fees/FeeStatementHistoryModal";
+import { FeeRefundModal } from "@/components/fees/FeeRefundModal";
 import { formatEnglishWithChineseName } from "@/lib/candidates/identity";
-import { formatMoney, statementAmountDueGbp } from "@/lib/fees/money";
+import { formatMoney, roundMoney, statementAmountDueGbp } from "@/lib/fees/money";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
@@ -21,6 +22,10 @@ import {
   feePaymentPaidClass,
   feePaymentPaidLabel,
 } from "@/lib/fees/payment-settlement";
+import {
+  feeRefundStatusClass,
+  feeRefundStatusLabel,
+} from "@/lib/fees/refund-labels";
 import { LIST_PAGE_SIZES } from "@/lib/pagination";
 import {
   feeStatementStatusClass,
@@ -99,6 +104,19 @@ function statementAmountDueLabel(
   return formatMoney(gbp, "GBP");
 }
 
+function statementRefundDueLabel(
+  statement: FeeStatementPrintData,
+  currency: FeeStatementDisplayCurrencyOption,
+) {
+  const gbp = roundMoney(Number(statement.refundDueGbp ?? 0));
+  const rate = Number(statement.exchangeRateSnapshot);
+  const cny = Number.isFinite(rate) && rate > 0 ? roundMoney(gbp * rate) : null;
+  const cnyLabel = cny != null ? formatMoney(cny, "CNY") : null;
+  if (currency === "CNY") return cnyLabel ?? formatMoney(gbp, "GBP");
+  if (currency === "BOTH" && cnyLabel) return `${formatMoney(gbp, "GBP")} / ${cnyLabel}`;
+  return formatMoney(gbp, "GBP");
+}
+
 function ActionIcon({ children }: { children: ReactNode }) {
   return (
     <svg
@@ -144,6 +162,7 @@ export function FeeStatementsBatchPanel({
     autoPrint: boolean;
   } | null>(null);
   const [historyStatement, setHistoryStatement] = useState<FeeStatementPrintData | null>(null);
+  const [refundStatement, setRefundStatement] = useState<FeeStatementPrintData | null>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setSearch(searchInput.trim()), 250);
@@ -582,7 +601,7 @@ export function FeeStatementsBatchPanel({
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1280px] text-left text-sm">
+              <table className="w-full min-w-[1520px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 text-slate-600">
                     <th className="py-2 pr-3 font-medium">
@@ -605,6 +624,8 @@ export function FeeStatementsBatchPanel({
                     <th className="py-2 pr-4 font-medium">Status</th>
                     <th className="py-2 pr-4 font-medium">Payment</th>
                     <th className="py-2 pr-4 font-medium text-right">Amount due</th>
+                    <th className="py-2 pr-4 font-medium text-right">Refund due</th>
+                    <th className="py-2 pr-4 font-medium">Refund</th>
                     <th className="py-2 pr-4 font-medium">Generated</th>
                     <th className="py-2 pr-4 font-medium">Online payment</th>
                     <th className="py-2 font-medium text-right">Actions</th>
@@ -652,6 +673,16 @@ export function FeeStatementsBatchPanel({
                       </td>
                       <td className="py-2 pr-4 text-right whitespace-nowrap font-medium text-slate-900">
                         {statementAmountDueLabel(statement, displayCurrency)}
+                      </td>
+                      <td className="py-2 pr-4 text-right whitespace-nowrap text-slate-900">
+                        {statementRefundDueLabel(statement, displayCurrency)}
+                      </td>
+                      <td className="py-2 pr-4">
+                        <span
+                          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${feeRefundStatusClass(statement.refundStatus)}`}
+                        >
+                          {feeRefundStatusLabel(statement.refundStatus)}
+                        </span>
                       </td>
                       <td className="py-2 pr-4 whitespace-nowrap text-slate-700">
                         {statement.generatedAt
@@ -712,6 +743,21 @@ export function FeeStatementsBatchPanel({
                           >
                             <ActionIcon>
                               <path d="M20 6 9 17l-5-5" />
+                            </ActionIcon>
+                          </IconActionButton>
+                          <IconActionButton
+                            label={
+                              (statement.refundableGbp ?? 0) > 0.004
+                                ? "Record refund"
+                                : "Nothing left to refund"
+                            }
+                            disabled={loading || (statement.refundableGbp ?? 0) <= 0.004}
+                            tone="danger"
+                            onClick={() => setRefundStatement(statement)}
+                          >
+                            <ActionIcon>
+                              <path d="M3 7v6h6" />
+                              <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6.7 3L3 13" />
                             </ActionIcon>
                           </IconActionButton>
                           <IconActionButton
@@ -788,6 +834,19 @@ export function FeeStatementsBatchPanel({
           statementId={historyStatement.id}
           candidateLabel={statementCandidateLabel(historyStatement)}
           onClose={() => setHistoryStatement(null)}
+        />
+      ) : null}
+
+      {refundStatement ? (
+        <FeeRefundModal
+          statementId={refundStatement.id}
+          statementNo={refundStatement.statementNo}
+          onClose={() => setRefundStatement(null)}
+          onSaved={(text) => {
+            setError(null);
+            setMessage(text);
+            void load();
+          }}
         />
       ) : null}
 

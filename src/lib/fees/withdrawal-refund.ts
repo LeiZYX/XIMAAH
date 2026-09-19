@@ -313,48 +313,12 @@ export async function completeOfflineWithdrawalRefund(params: {
   offlineReference?: string | null;
   offlineNote?: string | null;
 }) {
-  const existing = await prisma.offlineWithdrawalRefund.findUnique({ where: { id: params.id } });
-  if (!existing) return { error: "Refund record not found", status: 404 as const };
-  if (existing.status !== "PENDING_OFFLINE") {
-    return { error: "Only pending offline refunds can be marked completed", status: 400 as const };
-  }
-
-  const updated = await prisma.offlineWithdrawalRefund.update({
-    where: { id: params.id },
-    data: {
-      status: "COMPLETED",
-      completedAt: new Date(),
-      completedByUserId: params.performedByUserId,
-      offlineReference: params.offlineReference?.trim() || null,
-      offlineNote: params.offlineNote?.trim() || null,
-    },
-    include: {
-      candidate: { select: { englishName: true, studentNumber: true } },
-      examSession: {
-        select: {
-          paper: { select: { code: true } },
-        },
-      },
-      createdByUser: { select: { id: true, name: true } },
-      completedByUser: { select: { id: true, name: true } },
-    },
-  });
-
-  await createFeeAuditLog({
-    action: "OFFLINE_WITHDRAWAL_REFUND_COMPLETED",
-    performedByUserId: params.performedByUserId,
-    registrationWindowId: updated.registrationWindowId,
-    note: `Marked offline refund completed for ${updated.paperCodeSnapshot} (£${toNumber(updated.creditGbp).toFixed(2)})`,
-    metadata: {
-      offlineWithdrawalRefundId: updated.id,
-      offlineReference: updated.offlineReference,
-      creditGbp: toNumber(updated.creditGbp),
-    },
-  }).catch((error) => {
-    console.error("Fee audit log failed:", error);
-  });
-
-  return { refund: updated };
+  void params;
+  return {
+    error:
+      "Record the refund from Fee Statements using Record refund, so the amount, date, and reference are kept.",
+    status: 400 as const,
+  };
 }
 
 export async function listOfflineWithdrawalRefunds(params: {
@@ -386,6 +350,7 @@ export async function listOfflineWithdrawalRefunds(params: {
       },
       createdByUser: { select: { id: true, name: true } },
       completedByUser: { select: { id: true, name: true } },
+      allocations: { select: { amountGbp: true } },
     },
     orderBy: [{ status: "asc" }, { createdAt: "desc" }],
   });
@@ -405,6 +370,16 @@ function serializeRefundLine(
     paymentFeePercent: toNumber(row.paymentFeePercent),
     effectiveRefundPercent: toNumber(row.effectiveRefundPercent),
     creditGbp: toNumber(row.creditGbp),
+    allocatedGbp: roundMoney(
+      row.allocations.reduce((sum, allocation) => sum + toNumber(allocation.amountGbp), 0),
+    ),
+    remainingGbp: roundMoney(
+      Math.max(
+        0,
+        toNumber(row.creditGbp) -
+          row.allocations.reduce((sum, allocation) => sum + toNumber(allocation.amountGbp), 0),
+      ),
+    ),
     calculationNotes: row.calculationNotes,
     offlineReference: row.offlineReference,
     offlineNote: row.offlineNote,
@@ -532,7 +507,7 @@ export async function listOfflineWithdrawalRefundGroups(params: {
     const pendingLines = group.lines.filter((line) => line.status === "PENDING_OFFLINE");
     const completedLines = group.lines.filter((line) => line.status === "COMPLETED");
     const pendingCreditGbp = roundMoney(
-      pendingLines.reduce((sum, line) => sum + line.creditGbp, 0),
+      pendingLines.reduce((sum, line) => sum + line.remainingGbp, 0),
     );
     const completedCreditGbp = roundMoney(
       completedLines.reduce((sum, line) => sum + line.creditGbp, 0),

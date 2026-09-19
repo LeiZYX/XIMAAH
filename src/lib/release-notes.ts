@@ -9,9 +9,19 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.7";
+export const CURRENT_VERSION = "1.3.8";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.8",
+    releaseDate: "2026-09-19",
+    summary: "Record exam refunds by hand, without changing the fee statement status.",
+    changes: [
+      "Fee Statements list shows Refund due and a refund status (待退, 部分已退, 已退完, 无需退费). Statement Status and Payment stay as they are",
+      "Record refund stores an original-channel or offline refund, with date, external reference, and a cap against money already collected",
+      "Withdrawal credit is reduced as refunds are recorded. History shows Refund recorded, and the action is audited",
+    ],
+  },
   {
     version: "1.3.7",
     releaseDate: "2026-09-19",

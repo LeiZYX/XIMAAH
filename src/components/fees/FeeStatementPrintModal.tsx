@@ -43,6 +43,9 @@ export interface FeeStatementPrintData {
   previouslyPaidGbpAmount?: number | string | null;
   amountDueGbpAmount?: number | string | null;
   amountDueCnyAmount?: number | string | null;
+  refundDueGbp?: number | null;
+  refundStatus?: string | null;
+  refundableGbp?: number | null;
   paymentNotes?: string | null;
   generatedAt: string;
   issuedAt: string | null;

@@ -242,6 +242,7 @@ enum FeeStatementEventKind {
   REGENERATED
   REPRICED
   SUPERSEDED
+  REFUND_RECORDED
 }
 
 enum FeeStatementKind {
@@ -322,12 +323,24 @@ enum FeeAuditAction {
   OFFLINE_WITHDRAWAL_REFUND_COMPLETED
   FEE_STATEMENT_MARKED_PAID_OFFLINE
   FEE_STATEMENT_REPRICED_BY_CURRENT_STAGE
+  FEE_REFUND_RECORDED
 }
 
 enum OfflineWithdrawalRefundStatus {
   PENDING_OFFLINE
   COMPLETED
   ZERO_NO_REFUND
+}
+
+enum FeeRefundMethod {
+  ORIGINAL_CHANNEL
+  OFFLINE
+}
+
+enum FeeRefundReason {
+  WITHDRAWAL
+  OVERPAYMENT
+  OTHER
 }
 
 enum BoardSubmissionKind {
@@ -537,6 +550,7 @@ model User {
   feeStatementsRegenerationChanged FeeStatement[] @relation("FeeStatementRegenerationChanged")
   feeAuditLogsPerformed            FeeAuditLog[]  @relation("FeeAuditPerformer")
   feeStatementEventsActed          FeeStatementEvent[] @relation("FeeStatementEventActor")
+  feeRefundsRecorded               FeeRefund[] @relation("FeeRefundRecorder")
   registrationsAdded               StudentExamRegistration[] @relation("RegistrationAddedBy")
   candidate                          Candidate?
   teacherProfile                     TeacherProfile?
@@ -915,6 +929,7 @@ model RegistrationWindow {
   examDocumentAuditLogs ExamDocumentAuditLog[]
   postResultsAuditLogs  PostResultsAuditLog[]
   offlineWithdrawalRefunds OfflineWithdrawalRefund[]
+  feeRefunds               FeeRefund[]
   boardSubmissionBaselines BoardSubmissionBaseline[]
   studentNotificationLogs  StudentNotificationLog[]
 
@@ -1053,6 +1068,7 @@ model RegistrationWorkspace {
   studentAdjustmentRequests StudentAdjustmentRequest[]
   feeStatements  FeeStatement[]
   offlineWithdrawalRefunds OfflineWithdrawalRefund[]
+  feeRefunds               FeeRefund[]
 
   @@unique([candidateId, registrationWindowId, registrationType], map: "rw_candidate_window_type_uq")
   @@unique([studentId, registrationWindowId, registrationType], map: "rw_student_window_type_uq")
@@ -1765,6 +1781,7 @@ model FeeStatement {
   items FeeStatementItem[]
   paymentOrders        PaymentOrder[]
   events               FeeStatementEvent[]
+  refunds              FeeRefund[]
   reviewRequests       ReviewRequest[]
   cashInRequests       CashInRequest[]
   accessToScriptRequests AccessToScriptRequest[]
@@ -1908,6 +1925,7 @@ model OfflineWithdrawalRefund {
   offlineNote              String?                       @db.Text
   createdAt                DateTime                      @default(now())
   updatedAt                DateTime                      @updatedAt
+  allocations              FeeRefundAllocation[]
 
   @@index([registrationWorkspaceId])
   @@index([registrationWindowId])
@@ -1917,6 +1935,46 @@ model OfflineWithdrawalRefund {
   @@index([createdByUserId])
   @@index([completedByUserId])
   @@index([createdAt])
+}
+
+model FeeRefund {
+  id                      String           @id @default(cuid())
+  feeStatementId          String
+  feeStatement            FeeStatement     @relation(fields: [feeStatementId], references: [id], onDelete: Cascade)
+  registrationWorkspaceId String
+  registrationWorkspace   RegistrationWorkspace @relation(fields: [registrationWorkspaceId], references: [id], onDelete: Cascade)
+  registrationWindowId    String?
+  registrationWindow      RegistrationWindow? @relation(fields: [registrationWindowId], references: [id], onDelete: SetNull)
+  method                  FeeRefundMethod
+  paymentOrderId          String?
+  amountGbp               Decimal          @db.Decimal(12, 2)
+  refundedAt              DateTime
+  externalReference       String
+  reason                  FeeRefundReason
+  note                    String?          @db.Text
+  recordedByUserId        String
+  recordedBy              User             @relation("FeeRefundRecorder", fields: [recordedByUserId], references: [id], onDelete: Cascade)
+  recordedAt              DateTime         @default(now())
+  allocations             FeeRefundAllocation[]
+
+  @@index([feeStatementId])
+  @@index([registrationWorkspaceId])
+  @@index([registrationWindowId])
+  @@index([paymentOrderId])
+  @@index([recordedByUserId])
+  @@index([recordedAt])
+}
+
+model FeeRefundAllocation {
+  id                        String                  @id @default(cuid())
+  feeRefundId               String
+  feeRefund                 FeeRefund               @relation(fields: [feeRefundId], references: [id], onDelete: Cascade)
+  offlineWithdrawalRefundId String
+  offlineWithdrawalRefund   OfflineWithdrawalRefund @relation(fields: [offlineWithdrawalRefundId], references: [id], onDelete: Cascade)
+  amountGbp                 Decimal                 @db.Decimal(12, 2)
+
+  @@index([feeRefundId])
+  @@index([offlineWithdrawalRefundId])
 }
 
 model FeeAuditLog {

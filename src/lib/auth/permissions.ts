@@ -38,6 +38,7 @@ export function canManageRegistrationWindows(role: UserRole): boolean {
 export {
   canConfigureFeeRules,
   canGenerateFeeStatements,
+  canRecordFeeRefunds,
   canViewFeeRuleCosts,
   canViewStudentFeeStatements,
 } from "@/lib/config/fees";

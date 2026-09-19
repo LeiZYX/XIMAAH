@@ -10,6 +10,7 @@ import {
   useRegistrationWindowSelector,
 } from "@/components/registrations/RegistrationWindowSelector";
 import { formatMoney } from "@/lib/fees/money";
+import { FeeRefundModal } from "@/components/fees/FeeRefundModal";
 
 type RefundLine = {
   id: string;
@@ -20,6 +21,7 @@ type RefundLine = {
   salesAmountGbp: number;
   effectiveRefundPercent: number;
   creditGbp: number;
+  remainingGbp?: number;
   calculationNotes: string | null;
   offlineReference: string | null;
   offlineNote: string | null;
@@ -94,9 +96,11 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
-  const [completingKey, setCompletingKey] = useState<string | null>(null);
-  const [reference, setReference] = useState("");
-  const [note, setNote] = useState("");
+  const [refundTarget, setRefundTarget] = useState<{
+    statementId: string;
+    statementNo: string;
+    lineIds: string[];
+  } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -134,41 +138,6 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
     });
   }
 
-  async function completeLines(ids: string[], key: string) {
-    if (ids.length === 0) return;
-    setCompletingKey(key);
-    setMessage(null);
-    setError(null);
-    try {
-      for (const id of ids) {
-        const response = await fetch(`/api/offline-withdrawal-refunds/${id}/complete`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            offlineReference: reference.trim() || undefined,
-            offlineNote: note.trim() || undefined,
-          }),
-        });
-        if (!response.ok) {
-          const body = await response.json().catch(() => null);
-          throw new Error(body?.error ?? "Could not mark refund completed");
-        }
-      }
-      setReference("");
-      setNote("");
-      setMessage(
-        ids.length === 1
-          ? "Marked as refunded offline. No payment-platform refund was sent."
-          : `Marked ${ids.length} line(s) as refunded offline.`,
-      );
-      await load();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not mark refund completed");
-    } finally {
-      setCompletingKey(null);
-    }
-  }
-
   const pendingStudentCount = groups.filter((group) => group.pendingCount > 0).length;
   const pendingCreditTotal = groups.reduce((sum, group) => sum + group.pendingCreditGbp, 0);
 
@@ -176,7 +145,7 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
     <div className="space-y-4">
       <PageHeader
         title="Offline withdrawal refunds"
-        description="Student-level queue for finance: prior billed vs revised total, online paid (GlobePay), amount due, and offline refund credit. Pending refund is calculated from withdrawn exam sales — it does not require an online payment record. Mark each student after refunding outside the payment platform."
+        description="Student-level queue for finance: prior billed vs revised total, online paid, amount due, and withdrawal credit. Record the actual refund (original channel or offline) from Record refund. This system does not send the money."
       />
       <FeeManagementNav basePath={basePath} />
 
@@ -219,29 +188,6 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
                 {formatMoney(pendingCreditTotal, "GBP")}
               </p>
             </div>
-          </div>
-        ) : null}
-
-        {status === "PENDING_OFFLINE" || status === "ALL" ? (
-          <div className="mb-4 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3 sm:grid-cols-2">
-            <label className="text-sm">
-              <span className="mb-1 block text-slate-600">Offline reference (optional)</span>
-              <input
-                value={reference}
-                onChange={(event) => setReference(event.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-                placeholder="Bank transfer / finance ticket #"
-              />
-            </label>
-            <label className="text-sm">
-              <span className="mb-1 block text-slate-600">Note (optional)</span>
-              <input
-                value={note}
-                onChange={(event) => setNote(event.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
-                placeholder="Refunded outside system"
-              />
-            </label>
           </div>
         ) : null}
 
@@ -354,15 +300,23 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
                             {pendingIds.length > 0 ? (
                               <button
                                 type="button"
-                                disabled={completingKey === `group:${group.workspaceId}`}
-                                onClick={() =>
-                                  void completeLines(pendingIds, `group:${group.workspaceId}`)
+                                disabled={!group.statement}
+                                title={
+                                  group.statement
+                                    ? "Record refund"
+                                    : "Generate a fee statement first"
                                 }
+                                onClick={() => {
+                                  if (!group.statement) return;
+                                  setRefundTarget({
+                                    statementId: group.statement.id,
+                                    statementNo: group.statement.statementNo,
+                                    lineIds: pendingIds,
+                                  });
+                                }}
                                 className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
                               >
-                                {completingKey === `group:${group.workspaceId}`
-                                  ? "Saving…"
-                                  : `Mark all pending (${pendingIds.length})`}
+                                Record refund
                               </button>
                             ) : null}
                           </div>
@@ -385,7 +339,12 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
                                 {line.effectiveRefundPercent}%
                               </td>
                               <td className="px-3 py-2 text-right font-medium">
-                                {formatMoney(line.creditGbp, "GBP")}
+                                {formatMoney(line.remainingGbp ?? line.creditGbp, "GBP")}
+                                {line.remainingGbp != null && line.remainingGbp < line.creditGbp ? (
+                                  <div className="text-xs font-normal text-slate-500">
+                                    of {formatMoney(line.creditGbp, "GBP")}
+                                  </div>
+                                ) : null}
                               </td>
                               <td className="px-3 py-2">
                                 <div>{statusLabel(line.status)}</div>
@@ -399,13 +358,23 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
                                 {line.status === "PENDING_OFFLINE" ? (
                                   <button
                                     type="button"
-                                    disabled={completingKey === `line:${line.id}`}
-                                    onClick={() => void completeLines([line.id], `line:${line.id}`)}
+                                    disabled={!group.statement}
+                                    title={
+                                      group.statement
+                                        ? "Record refund"
+                                        : "Generate a fee statement first"
+                                    }
+                                    onClick={() => {
+                                      if (!group.statement) return;
+                                      setRefundTarget({
+                                        statementId: group.statement.id,
+                                        statementNo: group.statement.statementNo,
+                                        lineIds: [line.id],
+                                      });
+                                    }}
                                     className="rounded-lg border border-indigo-200 bg-white px-3 py-1.5 text-xs font-medium text-indigo-700 hover:bg-indigo-50 disabled:opacity-50"
                                   >
-                                    {completingKey === `line:${line.id}`
-                                      ? "Saving…"
-                                      : "Mark refunded"}
+                                    Record refund
                                   </button>
                                 ) : (
                                   <span className="text-xs text-slate-400">
@@ -426,6 +395,20 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
           </div>
         )}
       </Card>
+      {refundTarget ? (
+        <FeeRefundModal
+          statementId={refundTarget.statementId}
+          statementNo={refundTarget.statementNo}
+          initialLineIds={refundTarget.lineIds}
+          onClose={() => setRefundTarget(null)}
+          onSaved={(text) => {
+            setError(null);
+            setMessage(text);
+            void load();
+          }}
+        />
+      ) : null}
     </div>
   );
 }
+

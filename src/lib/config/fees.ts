@@ -18,6 +18,11 @@ export function canGenerateFeeStatements(role: UserRole): boolean {
   return role === "ADMIN" || role === "EXAM_OFFICER";
 }
 
+/** Manual refund recording. Finance role is not wired yet, so current fee operators can record. */
+export function canRecordFeeRefunds(role: UserRole): boolean {
+  return role === "ADMIN" || role === "EXAM_OFFICER";
+}
+
 export function canViewFeeRuleCosts(role: UserRole): boolean {
   return role === "ADMIN" || (role === "EXAM_OFFICER" && examOfficerCanConfigureFeeRules());
 }

@@ -23,6 +23,7 @@ import {
 } from "@/lib/fees/billing-workspaces";
 import { generateExternalInvoice, generateRestrictedInvoice } from "@/lib/fees/restricted-invoice";
 import { markFeeStatementPaidOffline } from "@/lib/fees/mark-paid-offline";
+import { attachRefundSummaries } from "@/lib/fees/refunds";
 import { buildPaginationMeta, parseListPagination } from "@/lib/pagination";
 import { prisma } from "@/lib/prisma";
 import type { FeeStatementKind } from "@/generated/prisma/enums";
@@ -240,7 +241,8 @@ export async function GET(request: NextRequest) {
     if (!statement) {
       return jsonError("Fee statement not found", 404);
     }
-    return NextResponse.json({ statements: [statement] });
+    const [withRefund] = await attachRefundSummaries([statement]);
+    return NextResponse.json({ statements: [withRefund] });
   }
 
   if (workspaceId) {
@@ -275,7 +277,7 @@ export async function GET(request: NextRequest) {
         : null,
     };
 
-    return NextResponse.json({ statements, meta });
+    return NextResponse.json({ statements: await attachRefundSummaries(statements), meta });
   }
 
   if (registrationWindowId && all) {
@@ -293,7 +295,7 @@ export async function GET(request: NextRequest) {
       orderBy: [{ generatedAt: "desc" }],
       take: 500,
     });
-    return NextResponse.json(statements);
+    return NextResponse.json(await attachRefundSummaries(statements));
   }
 
   if (registrationWindowId) {
@@ -312,7 +314,7 @@ export async function GET(request: NextRequest) {
       take: safePageSize,
     });
     return NextResponse.json({
-      statements,
+      statements: await attachRefundSummaries(statements),
       total,
       page: safePage,
       totalPages,
@@ -326,7 +328,7 @@ export async function GET(request: NextRequest) {
     orderBy: [{ generatedAt: "desc" }],
     take: 200,
   });
-  return NextResponse.json(statements);
+  return NextResponse.json(await attachRefundSummaries(statements));
 }
 
 export async function POST(request: NextRequest) {
