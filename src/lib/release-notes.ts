@@ -9,9 +9,17 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.4.1";
+export const CURRENT_VERSION = "1.4.2";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.4.2",
+    releaseDate: "2026-09-19",
+    summary: "Fee statement rows keep the name and actions in view while you scroll sideways.",
+    changes: [
+      "On Fee Statements, the statement number and candidate stay pinned on the left, and the row actions stay pinned on the right",
+    ],
+  },
   {
     version: "1.4.1",
     releaseDate: "2026-09-19",

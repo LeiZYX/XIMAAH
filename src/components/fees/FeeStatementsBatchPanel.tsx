@@ -46,6 +46,13 @@ interface PaginatedStatements {
   pageSize: number;
 }
 
+const pinCheck = "sticky left-0 z-20 w-10 bg-white";
+const pinStatement = "sticky left-10 z-20 w-44 whitespace-nowrap bg-white";
+const pinCandidate =
+  "sticky left-[13.5rem] z-20 min-w-40 bg-white shadow-[4px_0_8px_-6px_rgba(15,23,42,0.35)]";
+const pinActions =
+  "sticky right-0 z-30 min-w-[20rem] bg-white pl-3 shadow-[-4px_0_8px_-6px_rgba(15,23,42,0.35)]";
+
 function IconActionButton({
   label,
   onClick,
@@ -618,10 +625,10 @@ export function FeeStatementsBatchPanel({
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1520px] text-left text-sm">
+              <table className="w-full min-w-[1520px] border-separate border-spacing-0 text-left text-sm">
                 <thead>
-                  <tr className="border-b border-slate-200 text-slate-600">
-                    <th className="py-2 pr-3 font-medium">
+                  <tr className="text-slate-600 [&>th]:border-b [&>th]:border-slate-200">
+                    <th className={`${pinCheck} py-2 pr-3 font-medium`}>
                       <input
                         ref={selectAllRef}
                         type="checkbox"
@@ -636,8 +643,8 @@ export function FeeStatementsBatchPanel({
                         aria-label="Select all statements on this page"
                       />
                     </th>
-                    <th className="py-2 pr-4 font-medium">Statement</th>
-                    <th className="py-2 pr-4 font-medium">Candidate</th>
+                    <th className={`${pinStatement} py-2 pr-4 font-medium`}>Statement</th>
+                    <th className={`${pinCandidate} py-2 pr-4 font-medium`}>Candidate</th>
                     <th className="py-2 pr-4 font-medium">Status</th>
                     <th className="py-2 pr-4 font-medium">Payment</th>
                     <th className="py-2 pr-4 font-medium text-right">Amount due</th>
@@ -645,13 +652,13 @@ export function FeeStatementsBatchPanel({
                     <th className="py-2 pr-4 font-medium">Refund</th>
                     <th className="py-2 pr-4 font-medium">Generated</th>
                     <th className="py-2 pr-4 font-medium">Online payment</th>
-                    <th className="py-2 font-medium text-right">Actions</th>
+                    <th className={`${pinActions} py-2 font-medium text-right`}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {statements.map((statement) => (
-                    <tr key={statement.id} className="border-b border-slate-100">
-                      <td className="py-2 pr-3">
+                    <tr key={statement.id} className="[&>td]:border-b [&>td]:border-slate-100">
+                      <td className={`${pinCheck} py-2 pr-3`}>
                         <input
                           type="checkbox"
                           checked={selectedIds.includes(statement.id)}
@@ -664,8 +671,8 @@ export function FeeStatementsBatchPanel({
                           }}
                         />
                       </td>
-                      <td className="py-2 pr-4 font-medium text-slate-900">{statement.statementNo}</td>
-                      <td className="py-2 pr-4">{statementCandidateLabel(statement)}</td>
+                      <td className={`${pinStatement} py-2 pr-4 font-medium text-slate-900`}>{statement.statementNo}</td>
+                      <td className={`${pinCandidate} py-2 pr-4`}>{statementCandidateLabel(statement)}</td>
                       <td className="py-2 pr-4">
                         <span
                           className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${feeStatementStatusClass(statement.status)}`}
@@ -713,8 +720,8 @@ export function FeeStatementsBatchPanel({
                           onChanged={() => void load()}
                         />
                       </td>
-                      <td className="py-2">
-                        <div className="flex flex-wrap items-center justify-end gap-1.5">
+                      <td className={`${pinActions} py-2`}>
+                        <div className="flex flex-nowrap items-center justify-end gap-1.5">
                           {statement.status === "DRAFT" ? (
                             <IconActionButton
                               label="Issue"
