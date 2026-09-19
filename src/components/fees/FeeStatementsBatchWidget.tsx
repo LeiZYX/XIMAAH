@@ -17,7 +17,9 @@ export function FeeStatementsBatchWidget({
 }: FeeStatementsBatchWidgetProps) {
   if (!registrationWindowId) return null;
 
-  const feeRulesHref = `${windowsBasePath}/${registrationWindowId}/fees`;
+  const feeRulesHref = windowsBasePath
+    ? `${windowsBasePath}/${registrationWindowId}/fees`
+    : "";
 
   if (statementType === "INTERNAL_NORMAL") {
     return (

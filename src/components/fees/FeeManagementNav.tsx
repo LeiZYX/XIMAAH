@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 interface FeeManagementNavProps {
-  basePath: "/admin" | "/exam-office";
+  basePath: "/admin" | "/exam-office" | "/finance";
 }
 
 const feeLinks = (base: string) => [
@@ -19,7 +19,10 @@ const feeLinks = (base: string) => [
 
 export function FeeManagementNav({ basePath }: FeeManagementNavProps) {
   const pathname = usePathname();
-  const links = feeLinks(basePath);
+  const links = feeLinks(basePath).filter((link) => {
+    if (basePath !== "/finance") return true;
+    return link.label !== "Fee Rules" && link.label !== "Batch Print";
+  });
 
   return (
     <nav className="flex flex-wrap gap-2 border-b border-slate-200 pb-3">

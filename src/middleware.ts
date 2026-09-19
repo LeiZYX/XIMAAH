@@ -3,6 +3,7 @@ import { verifySessionToken } from "@/lib/auth/session";
 import {
   canAccessAdminArea,
   canAccessExamOffice,
+  canAccessFinanceArea,
   canAccessStudentArea,
   canAccessTeacherArea,
   homePathForRole,
@@ -62,6 +63,7 @@ export async function middleware(request: NextRequest) {
   const isProtectedPage =
     pathname.startsWith("/admin") ||
     pathname.startsWith("/exam-office") ||
+    pathname.startsWith("/finance") ||
     pathname.startsWith("/teacher") ||
     pathname.startsWith("/student") ||
     pathname.startsWith("/account") ||
@@ -113,6 +115,11 @@ export async function middleware(request: NextRequest) {
     if (denied) return denied;
   }
 
+  if (pathname.startsWith("/finance")) {
+    const denied = roleGuard(request, user.role, canAccessFinanceArea(user.role));
+    if (denied) return denied;
+  }
+
   if (pathname.startsWith("/teacher")) {
     const denied = roleGuard(request, user.role, canAccessTeacherArea(user.role));
     if (denied) return denied;
@@ -130,6 +137,7 @@ export const config = {
   matcher: [
     "/admin/:path*",
     "/exam-office/:path*",
+    "/finance/:path*",
     "/teacher/:path*",
     "/student/:path*",
     "/account/:path*",

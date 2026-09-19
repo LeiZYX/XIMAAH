@@ -224,12 +224,14 @@ export function CandidateInvoicesBatchPanel({
           >
             Batch generate & issue
           </button>
+          {feeRulesHref ? (
           <a
             href={feeRulesHref}
             className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             Fee rules
           </a>
+          ) : null}
         </div>
         {message ? <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-800">{message}</p> : null}
         {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800">{error}</p> : null}

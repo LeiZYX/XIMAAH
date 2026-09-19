@@ -27,6 +27,7 @@ import {
   feeRefundStatusLabel,
 } from "@/lib/fees/refund-labels";
 import { LIST_PAGE_SIZES } from "@/lib/pagination";
+import { useStaffFeeCaps } from "@/components/fees/useStaffFeeCaps";
 import {
   feeStatementStatusClass,
   feeStatementStatusLabel,
@@ -163,6 +164,7 @@ export function FeeStatementsBatchPanel({
   } | null>(null);
   const [historyStatement, setHistoryStatement] = useState<FeeStatementPrintData | null>(null);
   const [refundStatement, setRefundStatement] = useState<FeeStatementPrintData | null>(null);
+  const feeCaps = useStaffFeeCaps();
 
   useEffect(() => {
     const timer = window.setTimeout(() => setSearch(searchInput.trim()), 250);
@@ -559,6 +561,7 @@ export function FeeStatementsBatchPanel({
           >
             Batch generate & issue
           </button>
+          {feeCaps.canReprice ? (
           <button
             type="button"
             disabled={loading || !registrationWindowId}
@@ -568,6 +571,7 @@ export function FeeStatementsBatchPanel({
           >
             Batch reprice by current fee stage
           </button>
+          ) : null}
           <button
             type="button"
             disabled={printable.length === 0}
@@ -576,9 +580,11 @@ export function FeeStatementsBatchPanel({
           >
             Batch print selected
           </button>
+          {feeRulesHref ? (
           <a href={feeRulesHref} className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
             Fee rules
           </a>
+          ) : null}
         </div>
         {registrationWindowId ? (
           <div className="flex flex-wrap items-center gap-3">
@@ -735,6 +741,7 @@ export function FeeStatementsBatchPanel({
                               <path d="M21 3v6h-6" />
                             </ActionIcon>
                           </IconActionButton>
+                          {feeCaps.canReprice ? (
                           <IconActionButton
                             label="Reprice by current fee stage"
                             disabled={loading || !statement.registrationWorkspaceId}
@@ -746,6 +753,7 @@ export function FeeStatementsBatchPanel({
                               <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                             </ActionIcon>
                           </IconActionButton>
+                          ) : null}
                           <IconActionButton
                             label="Mark as paid (offline)"
                             disabled={loading || statement.status !== "ISSUED"}
@@ -756,6 +764,7 @@ export function FeeStatementsBatchPanel({
                               <path d="M20 6 9 17l-5-5" />
                             </ActionIcon>
                           </IconActionButton>
+                          {feeCaps.canRecordRefund ? (
                           <IconActionButton
                             label={
                               (statement.refundableGbp ?? 0) > 0.004
@@ -771,6 +780,7 @@ export function FeeStatementsBatchPanel({
                               <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6.7 3L3 13" />
                             </ActionIcon>
                           </IconActionButton>
+                          ) : null}
                           <IconActionButton
                             label="Preview"
                             onClick={() => setPreviewStatement({ statement, autoPrint: false })}

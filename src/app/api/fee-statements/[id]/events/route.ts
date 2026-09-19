@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
-import { canGenerateFeeStatements } from "@/lib/auth/permissions";
+import { canGenerateFeeStatements, FEE_OPERATOR_ROLES } from "@/lib/auth/permissions";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export async function GET(
   _request: NextRequest,
   context: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
+  const auth = await requireAuth(FEE_OPERATOR_ROLES);
   if (auth.error) return auth.error;
   if (!canGenerateFeeStatements(auth.user.role)) {
     return jsonError("Forbidden", 403);

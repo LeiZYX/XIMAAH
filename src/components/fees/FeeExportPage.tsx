@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { FeeManagementNav } from "@/components/fees/FeeManagementNav";
 
 interface FeeExportPageProps {
-  basePath: "/admin" | "/exam-office";
+  basePath: "/admin" | "/exam-office" | "/finance";
 }
 
 export function FeeExportPage({ basePath }: FeeExportPageProps) {

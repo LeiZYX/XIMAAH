@@ -80,6 +80,8 @@ function roleLabel(role: string | null): string {
       return "Teacher";
     case "STUDENT":
       return "Student";
+    case "FINANCE":
+      return "Finance";
     default:
       return "—";
   }
@@ -236,6 +238,7 @@ export function LoginLogsPanel() {
               <option value="EXAM_OFFICER">Exam Officer</option>
               <option value="SUBJECT_TEACHER">Teacher</option>
               <option value="STUDENT">Student</option>
+              <option value="FINANCE">Finance</option>
             </select>
           </label>
           <label className="min-w-[16rem] flex-1 text-sm">

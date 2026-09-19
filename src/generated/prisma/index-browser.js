@@ -1788,7 +1788,8 @@ exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN',
   EXAM_OFFICER: 'EXAM_OFFICER',
   SUBJECT_TEACHER: 'SUBJECT_TEACHER',
-  STUDENT: 'STUDENT'
+  STUDENT: 'STUDENT',
+  FINANCE: 'FINANCE'
 };
 
 exports.LoginLogResult = exports.$Enums.LoginLogResult = {

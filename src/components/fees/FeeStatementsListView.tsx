@@ -19,7 +19,7 @@ import {
 } from "@/lib/registrations/workspace-type-filters";
 
 interface FeeStatementsListViewProps {
-  basePath: "/admin" | "/exam-office";
+  basePath: "/admin" | "/exam-office" | "/finance";
   windowsBasePath: string;
 }
 
@@ -122,8 +122,9 @@ export function FeeStatementsListView({
         <Card className="space-y-3">
           <RegistrationWindowSelectorFields state={selectorForUi} layout="inline" />
           <p className="text-sm text-slate-600">
-            No registration windows for this academic year. Create one under Registration Windows or
-            choose another academic year.
+            {basePath === "/finance"
+              ? "No registration windows for this academic year. Choose another academic year."
+              : "No registration windows for this academic year. Create one under Registration Windows or choose another academic year."}
           </p>
         </Card>
       ) : (

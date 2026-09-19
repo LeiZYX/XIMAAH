@@ -5,6 +5,7 @@ export const ROLE_HOME: Record<UserRole, string> = {
   EXAM_OFFICER: "/exam-office",
   SUBJECT_TEACHER: "/teacher",
   STUDENT: "/student",
+  FINANCE: "/finance",
 };
 
 export function homePathForRole(role: UserRole): string {
@@ -17,6 +18,10 @@ export function canAccessAdminArea(role: UserRole): boolean {
 
 export function canAccessExamOffice(role: UserRole): boolean {
   return role === "ADMIN" || role === "EXAM_OFFICER";
+}
+
+export function canAccessFinanceArea(role: UserRole): boolean {
+  return role === "FINANCE";
 }
 
 export function canAccessTeacherArea(role: UserRole): boolean {
@@ -39,6 +44,7 @@ export {
   canConfigureFeeRules,
   canGenerateFeeStatements,
   canRecordFeeRefunds,
+  canRepriceFeeStatements,
   canViewFeeRuleCosts,
   canViewStudentFeeStatements,
 } from "@/lib/config/fees";
@@ -46,6 +52,9 @@ export {
 export function canViewAllRegistrations(role: UserRole): boolean {
   return role === "ADMIN" || role === "EXAM_OFFICER";
 }
+
+export const FEE_OPERATOR_ROLES: UserRole[] = ["ADMIN", "EXAM_OFFICER", "FINANCE"];
+export const FEE_REFUND_RECORDER_ROLES: UserRole[] = ["ADMIN", "FINANCE"];
 
 export function canManageUsers(role: UserRole): boolean {
   return role === "ADMIN";
@@ -63,6 +72,7 @@ export function loginIdentifiersForRole(role: UserRole): string {
   switch (role) {
     case "ADMIN":
     case "EXAM_OFFICER":
+    case "FINANCE":
       return "username or email";
     case "SUBJECT_TEACHER":
       return "phone or email";

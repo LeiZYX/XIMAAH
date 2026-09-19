@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { ListPagination } from "@/components/ui/ListPagination";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { UsersSubnav } from "@/components/users/UsersSubnav";
+import { RolePermissionsTable } from "@/components/users/RolePermissionsTable";
 import { LIST_PAGE_SIZES } from "@/lib/pagination";
 import { USERS_MODULE_DESCRIPTION } from "@/lib/navigation/module-descriptions";
 
@@ -32,6 +33,7 @@ const ROLE_OPTIONS = [
   { value: "EXAM_OFFICER", label: "Exam Officer" },
   { value: "SUBJECT_TEACHER", label: "Subject Teacher" },
   { value: "STUDENT", label: "Student" },
+  { value: "FINANCE", label: "Finance" },
 ];
 
 function roleLabel(role: string) {
@@ -59,6 +61,17 @@ export function AllUsersManager() {
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [filters, setFilters] = useState({ q: "", role: "" });
+  const [account, setAccount] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "FINANCE",
+  });
+  const [creating, setCreating] = useState(false);
+  const [createMessage, setCreateMessage] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
 
   const updateFilters = useCallback((patch: Partial<typeof filters>) => {
     setFilters((prev) => ({ ...prev, ...patch }));
@@ -99,6 +112,37 @@ export function AllUsersManager() {
     void load();
   }, [load]);
 
+  async function createAccount(event: FormEvent) {
+    event.preventDefault();
+    setCreating(true);
+    setCreateMessage(null);
+    setCreateError(null);
+    try {
+      const response = await fetch("/api/admin/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(account),
+      });
+      const text = await response.text();
+      const data = text ? (JSON.parse(text) as { error?: string; user?: { name?: string } }) : {};
+      if (!response.ok) throw new Error(data.error ?? "Could not create the account");
+      setCreateMessage(`${data.user?.name ?? account.name} can sign in with username or email. They must change the password at first sign-in.`);
+      setAccount({
+        name: "",
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        role: account.role,
+      });
+      await load();
+    } catch (createErr) {
+      setCreateError(createErr instanceof Error ? createErr.message : "Could not create the account");
+    } finally {
+      setCreating(false);
+    }
+  }
+
   return (
     <div className="space-y-4">
       <UsersSubnav />
@@ -116,6 +160,79 @@ export function AllUsersManager() {
           </div>
         }
       />
+
+      <div className="grid gap-6 border border-slate-200 p-4 lg:grid-cols-[22rem_1fr]">
+        <form className="space-y-3" onSubmit={(event) => void createAccount(event)}>
+          <h2 className="text-sm font-medium text-slate-800">New staff account</h2>
+          <label className="flex flex-col gap-1 text-sm text-slate-700">
+            Name
+            <input
+              required
+              value={account.name}
+              onChange={(event) => setAccount((current) => ({ ...current, name: event.target.value }))}
+              className={inputClass}
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm text-slate-700">
+            Username
+            <input
+              value={account.username}
+              onChange={(event) => setAccount((current) => ({ ...current, username: event.target.value }))}
+              className={inputClass}
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm text-slate-700">
+            Email
+            <input
+              type="email"
+              value={account.email}
+              onChange={(event) => setAccount((current) => ({ ...current, email: event.target.value }))}
+              className={inputClass}
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm text-slate-700">
+            Role
+            <select
+              value={account.role}
+              onChange={(event) => setAccount((current) => ({ ...current, role: event.target.value }))}
+              className={inputClass}
+            >
+              <option value="ADMIN">Admin</option>
+              <option value="EXAM_OFFICER">Exam Officer</option>
+              <option value="FINANCE">Finance</option>
+            </select>
+          </label>
+          <label className="flex flex-col gap-1 text-sm text-slate-700">
+            Password
+            <input
+              required
+              type="password"
+              value={account.password}
+              onChange={(event) => setAccount((current) => ({ ...current, password: event.target.value }))}
+              className={inputClass}
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm text-slate-700">
+            Confirm password
+            <input
+              required
+              type="password"
+              value={account.confirmPassword}
+              onChange={(event) =>
+                setAccount((current) => ({ ...current, confirmPassword: event.target.value }))
+              }
+              className={inputClass}
+            />
+          </label>
+          <p className="text-xs text-slate-500">Enter a username or an email. They sign in the same way as other staff.</p>
+          {createError ? <p className="text-sm text-red-700">{createError}</p> : null}
+          {createMessage ? <p className="text-sm text-green-800">{createMessage}</p> : null}
+          <button type="submit" disabled={creating} className={primaryButtonClass}>
+            {creating ? "Creating..." : "Create account"}
+          </button>
+        </form>
+        <RolePermissionsTable activeRole={account.role} />
+      </div>
 
       <div className="space-y-4 border border-slate-200 p-4">
         <div className="flex flex-wrap items-end gap-3">

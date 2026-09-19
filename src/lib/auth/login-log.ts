@@ -223,7 +223,8 @@ export async function listLoginLogs(searchParams: URLSearchParams) {
     ...(role === "ADMIN" ||
     role === "EXAM_OFFICER" ||
     role === "SUBJECT_TEACHER" ||
-    role === "STUDENT"
+    role === "STUDENT" ||
+    role === "FINANCE"
       ? { roleSnapshot: role }
       : {}),
   };

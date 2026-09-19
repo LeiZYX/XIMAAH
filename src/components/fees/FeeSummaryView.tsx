@@ -22,7 +22,7 @@ import {
 } from "@/lib/fees/workspace-status";
 
 interface FeeSummaryViewProps {
-  basePath: "/admin" | "/exam-office";
+  basePath: "/admin" | "/exam-office" | "/finance";
 }
 
 type CandidateTypeSelection = "INTERNAL" | "EXTERNAL";

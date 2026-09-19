@@ -13,6 +13,7 @@ enum UserRole {
   EXAM_OFFICER
   SUBJECT_TEACHER
   STUDENT
+  FINANCE
 }
 
 enum LoginLogResult {

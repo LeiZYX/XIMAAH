@@ -15,12 +15,16 @@ export function canConfigureFeeRules(role: UserRole): boolean {
 }
 
 export function canGenerateFeeStatements(role: UserRole): boolean {
+  return role === "ADMIN" || role === "EXAM_OFFICER" || role === "FINANCE";
+}
+
+export function canRepriceFeeStatements(role: UserRole): boolean {
   return role === "ADMIN" || role === "EXAM_OFFICER";
 }
 
-/** Manual refund recording. Finance role is not wired yet, so current fee operators can record. */
+/** Manual refund recording. Exam Officer can view refund due, not record it. */
 export function canRecordFeeRefunds(role: UserRole): boolean {
-  return role === "ADMIN" || role === "EXAM_OFFICER";
+  return role === "ADMIN" || role === "FINANCE";
 }
 
 export function canViewFeeRuleCosts(role: UserRole): boolean {

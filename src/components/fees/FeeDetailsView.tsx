@@ -15,7 +15,7 @@ import { FEE_DETAILS_PAGE_SIZES } from "@/lib/fees/filters";
 import type { CandidateFeeDetailGroup } from "@/lib/fees/reporting";
 
 interface FeeDetailsViewProps {
-  basePath: "/admin" | "/exam-office";
+  basePath: "/admin" | "/exam-office" | "/finance";
   initialFilters?: FeeReportFilters;
 }
 

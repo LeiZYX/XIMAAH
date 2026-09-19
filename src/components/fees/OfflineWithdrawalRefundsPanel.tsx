@@ -11,6 +11,7 @@ import {
 } from "@/components/registrations/RegistrationWindowSelector";
 import { formatMoney } from "@/lib/fees/money";
 import { FeeRefundModal } from "@/components/fees/FeeRefundModal";
+import { useStaffFeeCaps } from "@/components/fees/useStaffFeeCaps";
 
 type RefundLine = {
   id: string;
@@ -83,7 +84,11 @@ function candidateLabel(group: RefundGroup) {
   return chinese ? `${name} (${chinese})` : name;
 }
 
-export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin" | "/exam-office" }) {
+export function OfflineWithdrawalRefundsPanel({
+  basePath,
+}: {
+  basePath: "/admin" | "/exam-office" | "/finance";
+}) {
   const windowSelector = useRegistrationWindowSelector({
     scope: "staff",
     allowEmpty: true,
@@ -101,6 +106,7 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
     statementNo: string;
     lineIds: string[];
   } | null>(null);
+  const feeCaps = useStaffFeeCaps();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -224,7 +230,10 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
                   const pendingIds = group.lines
                     .filter((line) => line.status === "PENDING_OFFLINE")
                     .map((line) => line.id);
-                  const detailHref = `${basePath}/registrations/${group.workspaceId}#fee-statement`;
+                  const detailHref =
+                    basePath === "/finance"
+                      ? `/finance/fee-statements?registrationWindowId=${group.registrationWindow.id}`
+                      : `${basePath}/registrations/${group.workspaceId}#fee-statement`;
                   return (
                     <Fragment key={group.workspaceId}>
                       <tr className="align-top">
@@ -297,7 +306,7 @@ export function OfflineWithdrawalRefundsPanel({ basePath }: { basePath: "/admin"
                             >
                               Open fee statement
                             </Link>
-                            {pendingIds.length > 0 ? (
+                            {feeCaps.canRecordRefund && pendingIds.length > 0 ? (
                               <button
                                 type="button"
                                 disabled={!group.statement}

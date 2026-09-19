@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
-import { canGenerateFeeStatements } from "@/lib/auth/permissions";
+import { canGenerateFeeStatements, canRepriceFeeStatements, FEE_OPERATOR_ROLES } from "@/lib/auth/permissions";
 import { createFeeAuditLog } from "@/lib/fees/audit";
 import {
   FeeError,
@@ -138,7 +138,7 @@ async function runOfficeInvoiceBatch(input: {
 }
 
 export async function GET(request: NextRequest) {
-  const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
+  const auth = await requireAuth(FEE_OPERATOR_ROLES);
   if (auth.error) return auth.error;
   if (!canGenerateFeeStatements(auth.user.role)) {
     return jsonError("Forbidden", 403);
@@ -332,7 +332,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
+  const auth = await requireAuth(FEE_OPERATOR_ROLES);
   if (auth.error) return auth.error;
   if (!canGenerateFeeStatements(auth.user.role)) {
     return jsonError("Forbidden", 403);
@@ -353,6 +353,14 @@ export async function POST(request: NextRequest) {
   }>(body, []);
 
   if (!data) return jsonError("Invalid body");
+
+  if (
+    (data.action === "reprice-by-current-fee-stage" ||
+      data.action === "batch-reprice-by-current-fee-stage") &&
+    !canRepriceFeeStatements(auth.user.role)
+  ) {
+    return jsonError("Forbidden", 403);
+  }
 
   try {
     if (data.action === "issue" && data.statementId) {

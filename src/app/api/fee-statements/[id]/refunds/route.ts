@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError } from "@/lib/api";
 import { requireAuth } from "@/lib/auth/require-auth";
-import { canRecordFeeRefunds } from "@/lib/auth/permissions";
+import { canRecordFeeRefunds, FEE_REFUND_RECORDER_ROLES } from "@/lib/auth/permissions";
 import { FeeError } from "@/lib/fees/statement";
 import {
   recordFeeRefund,
@@ -29,7 +29,7 @@ export async function POST(
   request: NextRequest,
   context: { params: Promise<{ id: string }> },
 ) {
-  const auth = await requireAuth(["ADMIN", "EXAM_OFFICER"]);
+  const auth = await requireAuth(FEE_REFUND_RECORDER_ROLES);
   if (auth.error) return auth.error;
   if (!canRecordFeeRefunds(auth.user.role)) {
     return jsonError("Forbidden", 403);

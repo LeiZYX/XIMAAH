@@ -9,9 +9,20 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.10";
+export const CURRENT_VERSION = "1.4.0";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.4.0",
+    releaseDate: "2026-09-19",
+    summary: "Finance is its own role, and All Users shows what Admin, Exam Officer, and Finance can do.",
+    changes: [
+      "Finance signs in to /finance. The sidebar is fee statements, offline refunds, fee summary, fee details, exports, and fee reports",
+      "Admin and Finance record refunds. Exam Officer can view refund due, but cannot record a refund or open the Offline Refunds form",
+      "Admin and Exam Officer can reprice by the current fee stage. Finance cannot, and cannot open fee rules",
+      "All Users can create an Admin, Exam Officer, or Finance account. The permission table sits next to the role selector",
+    ],
+  },
   {
     version: "1.3.10",
     releaseDate: "2026-09-19",
