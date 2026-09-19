@@ -45,17 +45,4 @@ export function computeStatementPaymentSplit(params: {
   };
 }
 
-/** Payable GBP for online payment / display (legacy rows fall back to total). */
-export function statementAmountDueGbp(statement: {
-  totalGbpAmount: { toString(): string } | number | string;
-  amountDueGbpAmount?: { toString(): string } | number | string | null;
-}): number {
-  if (
-    statement.amountDueGbpAmount !== undefined &&
-    statement.amountDueGbpAmount !== null &&
-    statement.amountDueGbpAmount !== ""
-  ) {
-    return roundMoney(Number(statement.amountDueGbpAmount));
-  }
-  return roundMoney(Number(statement.totalGbpAmount));
-}
+export { statementAmountDueGbp } from "@/lib/fees/money";

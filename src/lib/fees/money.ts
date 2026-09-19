@@ -13,3 +13,18 @@ export function formatMoney(value: number, currency: "GBP" | "CNY"): string {
   const symbol = currency === "GBP" ? "£" : "¥";
   return `${symbol}${value.toFixed(2)}`;
 }
+
+/** Payable GBP for display (legacy rows fall back to the statement total). */
+export function statementAmountDueGbp(statement: {
+  totalGbpAmount: { toString(): string } | number | string;
+  amountDueGbpAmount?: { toString(): string } | number | string | null;
+}): number {
+  if (
+    statement.amountDueGbpAmount !== undefined &&
+    statement.amountDueGbpAmount !== null &&
+    statement.amountDueGbpAmount !== ""
+  ) {
+    return roundMoney(Number(statement.amountDueGbpAmount));
+  }
+  return roundMoney(Number(statement.totalGbpAmount));
+}

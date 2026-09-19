@@ -11,8 +11,7 @@ import {
 import { StatementPaymentOrdersPanel } from "@/components/fees/StatementPaymentOrdersPanel";
 import { FeeStatementHistoryModal } from "@/components/fees/FeeStatementHistoryModal";
 import { formatEnglishWithChineseName } from "@/lib/candidates/identity";
-import { formatMoney } from "@/lib/fees/money";
-import { statementAmountDueGbp } from "@/lib/fees/payment-due";
+import { formatMoney, statementAmountDueGbp } from "@/lib/fees/money";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,

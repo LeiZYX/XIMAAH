@@ -37,15 +37,15 @@ async function candidateIdsMatchingPinyin(query: string): Promise<string[]> {
   const compact = query.replace(/\s+/g, "");
   if (!/^[a-z0-9]+$/i.test(compact)) return [];
   const pattern = pinyinLikePattern(compact.toLowerCase());
-  const rows = await prisma.$queryRaw<Array<{ id: string }>>(Prisma.sql`
-    SELECT \`id\` FROM \`Candidate\`
-    WHERE LOWER(REPLACE(CONCAT(IFNULL(\`surnamePinyin\`, ''), IFNULL(\`givenNamePinyin\`, '')), ' ', '')) LIKE ${pattern}
-       OR LOWER(REPLACE(CONCAT(IFNULL(\`givenNamePinyin\`, ''), IFNULL(\`surnamePinyin\`, '')), ' ', '')) LIKE ${pattern}
-       OR LOWER(REPLACE(IFNULL(\`surnamePinyin\`, ''), ' ', '')) LIKE ${pattern}
-       OR LOWER(REPLACE(IFNULL(\`givenNamePinyin\`, ''), ' ', '')) LIKE ${pattern}
-       OR LOWER(REPLACE(CONCAT(IFNULL(\`lastName\`, ''), IFNULL(\`firstName\`, '')), ' ', '')) LIKE ${pattern}
-       OR LOWER(REPLACE(CONCAT(IFNULL(\`firstName\`, ''), IFNULL(\`lastName\`, '')), ' ', '')) LIKE ${pattern}
-  `);
+  const rows = await prisma.$queryRaw<Array<{ id: string }>>`
+    SELECT id FROM Candidate
+    WHERE LOWER(REPLACE(CONCAT(IFNULL(surnamePinyin, ''), IFNULL(givenNamePinyin, '')), ' ', '')) LIKE ${pattern}
+       OR LOWER(REPLACE(CONCAT(IFNULL(givenNamePinyin, ''), IFNULL(surnamePinyin, '')), ' ', '')) LIKE ${pattern}
+       OR LOWER(REPLACE(IFNULL(surnamePinyin, ''), ' ', '')) LIKE ${pattern}
+       OR LOWER(REPLACE(IFNULL(givenNamePinyin, ''), ' ', '')) LIKE ${pattern}
+       OR LOWER(REPLACE(CONCAT(IFNULL(lastName, ''), IFNULL(firstName, '')), ' ', '')) LIKE ${pattern}
+       OR LOWER(REPLACE(CONCAT(IFNULL(firstName, ''), IFNULL(lastName, '')), ' ', '')) LIKE ${pattern}
+  `;
   return rows.map((row) => row.id);
 }
 
