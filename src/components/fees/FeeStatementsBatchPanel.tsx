@@ -11,6 +11,8 @@ import {
 import { StatementPaymentOrdersPanel } from "@/components/fees/StatementPaymentOrdersPanel";
 import { FeeStatementHistoryModal } from "@/components/fees/FeeStatementHistoryModal";
 import { formatEnglishWithChineseName } from "@/lib/candidates/identity";
+import { formatMoney } from "@/lib/fees/money";
+import { statementAmountDueGbp } from "@/lib/fees/payment-due";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import {
   DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
@@ -82,6 +84,20 @@ function statementCandidateLabel(statement: FeeStatementPrintData) {
     statement.studentNameSnapshot,
     statement.candidate?.chineseName,
   );
+}
+
+function statementAmountDueLabel(
+  statement: FeeStatementPrintData,
+  currency: FeeStatementDisplayCurrencyOption,
+) {
+  const gbp = statementAmountDueGbp(statement);
+  const cnyRaw = statement.amountDueCnyAmount;
+  const cny =
+    cnyRaw !== undefined && cnyRaw !== null && cnyRaw !== "" ? Number(cnyRaw) : null;
+  const cnyLabel = cny != null && Number.isFinite(cny) ? formatMoney(cny, "CNY") : null;
+  if (currency === "CNY") return cnyLabel ?? formatMoney(gbp, "GBP");
+  if (currency === "BOTH" && cnyLabel) return `${formatMoney(gbp, "GBP")} / ${cnyLabel}`;
+  return formatMoney(gbp, "GBP");
 }
 
 function ActionIcon({ children }: { children: ReactNode }) {
@@ -541,7 +557,7 @@ export function FeeStatementsBatchPanel({
               type="search"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Search name, Chinese name, or statement no…"
+              placeholder="Search name, Chinese name, pinyin, or statement no…"
               className="w-full max-w-md rounded-lg border border-slate-300 px-3 py-2 text-sm"
               aria-label="Search fee statements"
             />
@@ -567,7 +583,7 @@ export function FeeStatementsBatchPanel({
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1180px] text-left text-sm">
+              <table className="w-full min-w-[1280px] text-left text-sm">
                 <thead>
                   <tr className="border-b border-slate-200 text-slate-600">
                     <th className="py-2 pr-3 font-medium">
@@ -589,6 +605,7 @@ export function FeeStatementsBatchPanel({
                     <th className="py-2 pr-4 font-medium">Candidate</th>
                     <th className="py-2 pr-4 font-medium">Status</th>
                     <th className="py-2 pr-4 font-medium">Payment</th>
+                    <th className="py-2 pr-4 font-medium text-right">Amount due</th>
                     <th className="py-2 pr-4 font-medium">Generated</th>
                     <th className="py-2 pr-4 font-medium">Online payment</th>
                     <th className="py-2 font-medium text-right">Actions</th>
@@ -633,6 +650,9 @@ export function FeeStatementsBatchPanel({
                         >
                           {feePaymentPaidLabel(statement.status, statement.paymentSettlement)}
                         </span>
+                      </td>
+                      <td className="py-2 pr-4 text-right whitespace-nowrap font-medium text-slate-900">
+                        {statementAmountDueLabel(statement, displayCurrency)}
                       </td>
                       <td className="py-2 pr-4 whitespace-nowrap text-slate-700">
                         {statement.generatedAt

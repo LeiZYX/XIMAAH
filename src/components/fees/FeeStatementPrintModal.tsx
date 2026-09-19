@@ -42,6 +42,7 @@ export interface FeeStatementPrintData {
   totalCnyAmount: number | string;
   previouslyPaidGbpAmount?: number | string | null;
   amountDueGbpAmount?: number | string | null;
+  amountDueCnyAmount?: number | string | null;
   paymentNotes?: string | null;
   generatedAt: string;
   issuedAt: string | null;
