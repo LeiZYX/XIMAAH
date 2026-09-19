@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsonError, parseJsonBody } from "@/lib/api";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
+import { validatePassword } from "@/lib/auth/password-policy";
 import { createSessionToken, getSessionUser, sessionCookieOptions } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
 
@@ -17,10 +18,9 @@ export async function POST(request: NextRequest) {
     "newPassword",
   ]);
 
-  if (!data) return jsonError("currentPassword and newPassword are required");
-  if (data.newPassword.length < 8) {
-    return jsonError("New password must be at least 8 characters");
-  }
+  if (!data) return jsonError("Enter your current password and a new password.");
+  const passwordError = validatePassword(data.newPassword);
+  if (passwordError) return jsonError(passwordError);
 
   const user = await prisma.user.findUnique({ where: { id: auth.id } });
   if (!user || !(await verifyPassword(data.currentPassword, user.passwordHash))) {

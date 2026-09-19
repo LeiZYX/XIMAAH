@@ -51,6 +51,15 @@ function loginRedirect(request: NextRequest, next?: string) {
   return NextResponse.redirect(loginUrl);
 }
 
+function isAllowedDuringPasswordChange(pathname: string): boolean {
+  return (
+    pathname.startsWith("/account/change-password") ||
+    pathname === "/api/auth/change-password" ||
+    pathname === "/api/auth/logout" ||
+    pathname === "/api/auth/me"
+  );
+}
+
 function roleGuard(request: NextRequest, role: UserRole, allowed: boolean) {
   if (allowed) return null;
   return NextResponse.redirect(new URL(homePathForRole(role), request.url));
@@ -98,7 +107,7 @@ export async function middleware(request: NextRequest) {
     return loginRedirect(request);
   }
 
-  if (user.mustChangePassword && !pathname.startsWith("/account/change-password")) {
+  if (user.mustChangePassword && !isAllowedDuringPasswordChange(pathname)) {
     if (isProtectedApi) {
       return NextResponse.json({ error: "Password change required" }, { status: 403 });
     }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { validatePassword } from "@/lib/auth/password-policy";
 
 export default function ChangePasswordPage() {
   const router = useRouter();
@@ -17,7 +18,12 @@ export default function ChangePasswordPage() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     if (newPassword !== confirmPassword) {
-      setError("New passwords do not match");
+      setError("New passwords do not match.");
+      return;
+    }
+    const passwordError = validatePassword(newPassword);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
 
@@ -47,7 +53,10 @@ export default function ChangePasswordPage() {
     <div className="min-h-screen overflow-x-hidden bg-slate-50">
       <AppHeader />
       <div className="mx-auto max-w-lg px-4 py-6 sm:py-10">
-        <PageHeader title="Change password" description="Update your account password." />
+        <PageHeader
+          title="Change password"
+          description="Use the password you were given as the current password. The new one must be at least 8 characters and include a letter and a number."
+        />
         <Card>
           <form onSubmit={handleSubmit} className="space-y-4">
             <label className="block">

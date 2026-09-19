@@ -9,9 +9,17 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.4.0";
+export const CURRENT_VERSION = "1.4.1";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.4.1",
+    releaseDate: "2026-09-19",
+    summary: "Change password says why Save failed.",
+    changes: [
+      "A failed password change now says the actual reason, such as the current password is wrong, the two new passwords do not match, or the new password is missing a letter or a number",
+    ],
+  },
   {
     version: "1.4.0",
     releaseDate: "2026-09-19",
