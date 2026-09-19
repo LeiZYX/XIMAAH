@@ -5,6 +5,7 @@ import { getBackupJobById, serializeBackupJob } from "@/lib/backup/jobs";
 import { evaluateScheduledBackupDue } from "@/lib/backup/schedule";
 import { getResolvedBackupSettings } from "@/lib/backup/settings";
 import { runDatabaseBackup } from "@/lib/backup/run-backup";
+import { purgeExpiredLoginLogs } from "@/lib/auth/login-log";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -17,6 +18,10 @@ export async function POST(request: NextRequest) {
   if (!expectedSecret || providedSecret !== expectedSecret) {
     return jsonError("Forbidden", 403);
   }
+
+  await purgeExpiredLoginLogs().catch((error) => {
+    console.error("Login log purge failed:", error);
+  });
 
   const settings = await getResolvedBackupSettings();
   const lastSuccess = await prisma.backupJob.findFirst({

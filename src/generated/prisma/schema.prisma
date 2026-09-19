@@ -15,6 +15,17 @@ enum UserRole {
   STUDENT
 }
 
+enum LoginLogResult {
+  SUCCESS
+  FAILED
+  LOGOUT
+}
+
+enum LoginLogFailureReason {
+  INVALID_CREDENTIALS
+  INACTIVE
+}
+
 enum KeyDateType {
   DEADLINE
   RESULTS
@@ -584,9 +595,31 @@ model User {
   eoReviewedStudentAdjustments      StudentAdjustmentRequest[]  @relation("StudentAdjustmentEoReviewer")
   primaryHomeroomAdjustmentRequests StudentAdjustmentRequest[]  @relation("StudentAdjustmentPrimaryHomeroom")
   classHomeroomAssignments          ClassHomeroomTeacher[]      @relation("ClassHomeroomTeacher")
+  loginLogs                         LoginLog[]
 
   @@index([role])
   @@index([isActive])
+}
+
+model LoginLog {
+  id            String                 @id @default(cuid())
+  occurredAt    DateTime               @default(now())
+  lastAttemptAt DateTime               @default(now())
+  result        LoginLogResult
+  failureReason LoginLogFailureReason?
+  attemptCount  Int                    @default(1)
+  userId        String?
+  user          User?                  @relation(fields: [userId], references: [id], onDelete: SetNull)
+  nameSnapshot  String?
+  roleSnapshot  UserRole?
+  identifier    String                 @db.VarChar(191)
+  ipAddress     String                 @db.VarChar(64)
+  userAgent     String?                @db.VarChar(200)
+
+  @@index([lastAttemptAt])
+  @@index([result, occurredAt])
+  @@index([userId])
+  @@index([ipAddress, identifier, result, lastAttemptAt])
 }
 
 model PasswordResetToken {

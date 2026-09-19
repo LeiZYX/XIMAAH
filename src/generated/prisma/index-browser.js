@@ -136,6 +136,21 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.LoginLogScalarFieldEnum = {
+  id: 'id',
+  occurredAt: 'occurredAt',
+  lastAttemptAt: 'lastAttemptAt',
+  result: 'result',
+  failureReason: 'failureReason',
+  attemptCount: 'attemptCount',
+  userId: 'userId',
+  nameSnapshot: 'nameSnapshot',
+  roleSnapshot: 'roleSnapshot',
+  identifier: 'identifier',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent'
+};
+
 exports.Prisma.PasswordResetTokenScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1136,6 +1151,15 @@ exports.Prisma.UserOrderByRelevanceFieldEnum = {
   passwordHash: 'passwordHash'
 };
 
+exports.Prisma.LoginLogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  nameSnapshot: 'nameSnapshot',
+  identifier: 'identifier',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent'
+};
+
 exports.Prisma.PasswordResetTokenOrderByRelevanceFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -1767,6 +1791,17 @@ exports.UserRole = exports.$Enums.UserRole = {
   STUDENT: 'STUDENT'
 };
 
+exports.LoginLogResult = exports.$Enums.LoginLogResult = {
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  LOGOUT: 'LOGOUT'
+};
+
+exports.LoginLogFailureReason = exports.$Enums.LoginLogFailureReason = {
+  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+  INACTIVE: 'INACTIVE'
+};
+
 exports.Grade = exports.$Enums.Grade = {
   G9: 'G9',
   G10: 'G10',
@@ -2291,6 +2326,7 @@ exports.BackupTriggeredBy = exports.$Enums.BackupTriggeredBy = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  LoginLog: 'LoginLog',
   PasswordResetToken: 'PasswordResetToken',
   StudentProfile: 'StudentProfile',
   StudentIdSequence: 'StudentIdSequence',

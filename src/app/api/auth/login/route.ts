@@ -9,7 +9,7 @@ import {
   sessionCookieOptions,
 } from "@/lib/auth/session";
 import { homePathForRole } from "@/lib/auth/permissions";
-import { prisma } from "@/lib/prisma";
+import { recordLoginFailure, recordLoginSuccess } from "@/lib/auth/login-log";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -29,14 +29,41 @@ export async function POST(request: NextRequest) {
     }
 
     const user = await findUserByLoginIdentifier(data.identifier);
+    const passwordOk = user ? await verifyPassword(data.password, user.passwordHash) : false;
 
-    if (!user || !(await verifyPassword(data.password, user.passwordHash))) {
+    if (!user || !passwordOk) {
+      await recordLoginFailure({
+        headers: request.headers,
+        identifier: data.identifier,
+        user: user
+          ? { id: user.id, name: user.name, role: user.role }
+          : null,
+        reason: "INVALID_CREDENTIALS",
+      }).catch((error) => {
+        console.error("Login log failed:", error);
+      });
       return jsonError("Invalid credentials", 401);
     }
 
     if (user.role === "STUDENT" && user.isActive === false) {
+      await recordLoginFailure({
+        headers: request.headers,
+        identifier: data.identifier,
+        user: { id: user.id, name: user.name, role: user.role },
+        reason: "INACTIVE",
+      }).catch((error) => {
+        console.error("Login log failed:", error);
+      });
       return jsonError("This account is inactive. Contact the Exams Office if you need access.", 403);
     }
+
+    await recordLoginSuccess({
+      headers: request.headers,
+      identifier: data.identifier,
+      user: { id: user.id, name: user.name, role: user.role },
+    }).catch((error) => {
+      console.error("Login log failed:", error);
+    });
 
     const token = await createSessionToken({
       id: user.id,

@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model LoginLog
+ * 
+ */
+export type LoginLog = $Result.DefaultSelection<Prisma.$LoginLogPayload>
+/**
  * Model PasswordResetToken
  * 
  */
@@ -317,6 +322,23 @@ export namespace $Enums {
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const LoginLogResult: {
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+  LOGOUT: 'LOGOUT'
+};
+
+export type LoginLogResult = (typeof LoginLogResult)[keyof typeof LoginLogResult]
+
+
+export const LoginLogFailureReason: {
+  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+  INACTIVE: 'INACTIVE'
+};
+
+export type LoginLogFailureReason = (typeof LoginLogFailureReason)[keyof typeof LoginLogFailureReason]
 
 
 export const KeyDateType: {
@@ -1017,6 +1039,14 @@ export type UserRole = $Enums.UserRole
 
 export const UserRole: typeof $Enums.UserRole
 
+export type LoginLogResult = $Enums.LoginLogResult
+
+export const LoginLogResult: typeof $Enums.LoginLogResult
+
+export type LoginLogFailureReason = $Enums.LoginLogFailureReason
+
+export const LoginLogFailureReason: typeof $Enums.LoginLogFailureReason
+
 export type KeyDateType = $Enums.KeyDateType
 
 export const KeyDateType: typeof $Enums.KeyDateType
@@ -1372,6 +1402,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.loginLog`: Exposes CRUD operations for the **LoginLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LoginLogs
+    * const loginLogs = await prisma.loginLog.findMany()
+    * ```
+    */
+  get loginLog(): Prisma.LoginLogDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.passwordResetToken`: Exposes CRUD operations for the **PasswordResetToken** model.
@@ -2384,6 +2424,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    LoginLog: 'LoginLog',
     PasswordResetToken: 'PasswordResetToken',
     StudentProfile: 'StudentProfile',
     StudentIdSequence: 'StudentIdSequence',
@@ -2459,7 +2500,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "studentNotificationLog" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "classHomeroomTeacher" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "studentAdjustmentRequest" | "studentAdjustmentRequestItem" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementEvent" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeRefund" | "feeRefundAllocation" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
+      modelProps: "user" | "loginLog" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "studentNotificationLog" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "classHomeroomTeacher" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "studentAdjustmentRequest" | "studentAdjustmentRequestItem" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementEvent" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeRefund" | "feeRefundAllocation" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2526,6 +2567,72 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      LoginLog: {
+        payload: Prisma.$LoginLogPayload<ExtArgs>
+        fields: Prisma.LoginLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LoginLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LoginLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginLogPayload>
+          }
+          findFirst: {
+            args: Prisma.LoginLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LoginLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginLogPayload>
+          }
+          findMany: {
+            args: Prisma.LoginLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginLogPayload>[]
+          }
+          create: {
+            args: Prisma.LoginLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginLogPayload>
+          }
+          createMany: {
+            args: Prisma.LoginLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.LoginLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginLogPayload>
+          }
+          update: {
+            args: Prisma.LoginLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.LoginLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LoginLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.LoginLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginLogPayload>
+          }
+          aggregate: {
+            args: Prisma.LoginLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLoginLog>
+          }
+          groupBy: {
+            args: Prisma.LoginLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LoginLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LoginLogCountArgs<ExtArgs>
+            result: $Utils.Optional<LoginLogCountAggregateOutputType> | number
           }
         }
       }
@@ -6388,6 +6495,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    loginLog?: LoginLogOmit
     passwordResetToken?: PasswordResetTokenOmit
     studentProfile?: StudentProfileOmit
     studentIdSequence?: StudentIdSequenceOmit
@@ -6574,6 +6682,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments: number
     primaryHomeroomAdjustmentRequests: number
     classHomeroomAssignments: number
+    loginLogs: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6626,6 +6735,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: boolean | UserCountOutputTypeCountEoReviewedStudentAdjustmentsArgs
     primaryHomeroomAdjustmentRequests?: boolean | UserCountOutputTypeCountPrimaryHomeroomAdjustmentRequestsArgs
     classHomeroomAssignments?: boolean | UserCountOutputTypeCountClassHomeroomAssignmentsArgs
+    loginLogs?: boolean | UserCountOutputTypeCountLoginLogsArgs
   }
 
   // Custom InputTypes
@@ -6980,6 +7090,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountClassHomeroomAssignmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ClassHomeroomTeacherWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountLoginLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoginLogWhereInput
   }
 
 
@@ -8982,6 +9099,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: boolean | User$eoReviewedStudentAdjustmentsArgs<ExtArgs>
     primaryHomeroomAdjustmentRequests?: boolean | User$primaryHomeroomAdjustmentRequestsArgs<ExtArgs>
     classHomeroomAssignments?: boolean | User$classHomeroomAssignmentsArgs<ExtArgs>
+    loginLogs?: boolean | User$loginLogsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -9056,6 +9174,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: boolean | User$eoReviewedStudentAdjustmentsArgs<ExtArgs>
     primaryHomeroomAdjustmentRequests?: boolean | User$primaryHomeroomAdjustmentRequestsArgs<ExtArgs>
     classHomeroomAssignments?: boolean | User$classHomeroomAssignmentsArgs<ExtArgs>
+    loginLogs?: boolean | User$loginLogsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
 
@@ -9114,6 +9233,7 @@ export namespace Prisma {
       eoReviewedStudentAdjustments: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>[]
       primaryHomeroomAdjustmentRequests: Prisma.$StudentAdjustmentRequestPayload<ExtArgs>[]
       classHomeroomAssignments: Prisma.$ClassHomeroomTeacherPayload<ExtArgs>[]
+      loginLogs: Prisma.$LoginLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -9520,6 +9640,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments<T extends User$eoReviewedStudentAdjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$eoReviewedStudentAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     primaryHomeroomAdjustmentRequests<T extends User$primaryHomeroomAdjustmentRequestsArgs<ExtArgs> = {}>(args?: Subset<T, User$primaryHomeroomAdjustmentRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentAdjustmentRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     classHomeroomAssignments<T extends User$classHomeroomAssignmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$classHomeroomAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ClassHomeroomTeacherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    loginLogs<T extends User$loginLogsArgs<ExtArgs> = {}>(args?: Subset<T, User$loginLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11137,6 +11258,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.loginLogs
+   */
+  export type User$loginLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
+    where?: LoginLogWhereInput
+    orderBy?: LoginLogOrderByWithRelationInput | LoginLogOrderByWithRelationInput[]
+    cursor?: LoginLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LoginLogScalarFieldEnum | LoginLogScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11152,6 +11297,1065 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LoginLog
+   */
+
+  export type AggregateLoginLog = {
+    _count: LoginLogCountAggregateOutputType | null
+    _avg: LoginLogAvgAggregateOutputType | null
+    _sum: LoginLogSumAggregateOutputType | null
+    _min: LoginLogMinAggregateOutputType | null
+    _max: LoginLogMaxAggregateOutputType | null
+  }
+
+  export type LoginLogAvgAggregateOutputType = {
+    attemptCount: number | null
+  }
+
+  export type LoginLogSumAggregateOutputType = {
+    attemptCount: number | null
+  }
+
+  export type LoginLogMinAggregateOutputType = {
+    id: string | null
+    occurredAt: Date | null
+    lastAttemptAt: Date | null
+    result: $Enums.LoginLogResult | null
+    failureReason: $Enums.LoginLogFailureReason | null
+    attemptCount: number | null
+    userId: string | null
+    nameSnapshot: string | null
+    roleSnapshot: $Enums.UserRole | null
+    identifier: string | null
+    ipAddress: string | null
+    userAgent: string | null
+  }
+
+  export type LoginLogMaxAggregateOutputType = {
+    id: string | null
+    occurredAt: Date | null
+    lastAttemptAt: Date | null
+    result: $Enums.LoginLogResult | null
+    failureReason: $Enums.LoginLogFailureReason | null
+    attemptCount: number | null
+    userId: string | null
+    nameSnapshot: string | null
+    roleSnapshot: $Enums.UserRole | null
+    identifier: string | null
+    ipAddress: string | null
+    userAgent: string | null
+  }
+
+  export type LoginLogCountAggregateOutputType = {
+    id: number
+    occurredAt: number
+    lastAttemptAt: number
+    result: number
+    failureReason: number
+    attemptCount: number
+    userId: number
+    nameSnapshot: number
+    roleSnapshot: number
+    identifier: number
+    ipAddress: number
+    userAgent: number
+    _all: number
+  }
+
+
+  export type LoginLogAvgAggregateInputType = {
+    attemptCount?: true
+  }
+
+  export type LoginLogSumAggregateInputType = {
+    attemptCount?: true
+  }
+
+  export type LoginLogMinAggregateInputType = {
+    id?: true
+    occurredAt?: true
+    lastAttemptAt?: true
+    result?: true
+    failureReason?: true
+    attemptCount?: true
+    userId?: true
+    nameSnapshot?: true
+    roleSnapshot?: true
+    identifier?: true
+    ipAddress?: true
+    userAgent?: true
+  }
+
+  export type LoginLogMaxAggregateInputType = {
+    id?: true
+    occurredAt?: true
+    lastAttemptAt?: true
+    result?: true
+    failureReason?: true
+    attemptCount?: true
+    userId?: true
+    nameSnapshot?: true
+    roleSnapshot?: true
+    identifier?: true
+    ipAddress?: true
+    userAgent?: true
+  }
+
+  export type LoginLogCountAggregateInputType = {
+    id?: true
+    occurredAt?: true
+    lastAttemptAt?: true
+    result?: true
+    failureReason?: true
+    attemptCount?: true
+    userId?: true
+    nameSnapshot?: true
+    roleSnapshot?: true
+    identifier?: true
+    ipAddress?: true
+    userAgent?: true
+    _all?: true
+  }
+
+  export type LoginLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoginLog to aggregate.
+     */
+    where?: LoginLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginLogs to fetch.
+     */
+    orderBy?: LoginLogOrderByWithRelationInput | LoginLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LoginLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LoginLogs
+    **/
+    _count?: true | LoginLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LoginLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LoginLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LoginLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LoginLogMaxAggregateInputType
+  }
+
+  export type GetLoginLogAggregateType<T extends LoginLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateLoginLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLoginLog[P]>
+      : GetScalarType<T[P], AggregateLoginLog[P]>
+  }
+
+
+
+
+  export type LoginLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoginLogWhereInput
+    orderBy?: LoginLogOrderByWithAggregationInput | LoginLogOrderByWithAggregationInput[]
+    by: LoginLogScalarFieldEnum[] | LoginLogScalarFieldEnum
+    having?: LoginLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LoginLogCountAggregateInputType | true
+    _avg?: LoginLogAvgAggregateInputType
+    _sum?: LoginLogSumAggregateInputType
+    _min?: LoginLogMinAggregateInputType
+    _max?: LoginLogMaxAggregateInputType
+  }
+
+  export type LoginLogGroupByOutputType = {
+    id: string
+    occurredAt: Date
+    lastAttemptAt: Date
+    result: $Enums.LoginLogResult
+    failureReason: $Enums.LoginLogFailureReason | null
+    attemptCount: number
+    userId: string | null
+    nameSnapshot: string | null
+    roleSnapshot: $Enums.UserRole | null
+    identifier: string
+    ipAddress: string
+    userAgent: string | null
+    _count: LoginLogCountAggregateOutputType | null
+    _avg: LoginLogAvgAggregateOutputType | null
+    _sum: LoginLogSumAggregateOutputType | null
+    _min: LoginLogMinAggregateOutputType | null
+    _max: LoginLogMaxAggregateOutputType | null
+  }
+
+  type GetLoginLogGroupByPayload<T extends LoginLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LoginLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LoginLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LoginLogGroupByOutputType[P]>
+            : GetScalarType<T[P], LoginLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LoginLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    occurredAt?: boolean
+    lastAttemptAt?: boolean
+    result?: boolean
+    failureReason?: boolean
+    attemptCount?: boolean
+    userId?: boolean
+    nameSnapshot?: boolean
+    roleSnapshot?: boolean
+    identifier?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+    user?: boolean | LoginLog$userArgs<ExtArgs>
+  }, ExtArgs["result"]["loginLog"]>
+
+
+
+  export type LoginLogSelectScalar = {
+    id?: boolean
+    occurredAt?: boolean
+    lastAttemptAt?: boolean
+    result?: boolean
+    failureReason?: boolean
+    attemptCount?: boolean
+    userId?: boolean
+    nameSnapshot?: boolean
+    roleSnapshot?: boolean
+    identifier?: boolean
+    ipAddress?: boolean
+    userAgent?: boolean
+  }
+
+  export type LoginLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "occurredAt" | "lastAttemptAt" | "result" | "failureReason" | "attemptCount" | "userId" | "nameSnapshot" | "roleSnapshot" | "identifier" | "ipAddress" | "userAgent", ExtArgs["result"]["loginLog"]>
+  export type LoginLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | LoginLog$userArgs<ExtArgs>
+  }
+
+  export type $LoginLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LoginLog"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      occurredAt: Date
+      lastAttemptAt: Date
+      result: $Enums.LoginLogResult
+      failureReason: $Enums.LoginLogFailureReason | null
+      attemptCount: number
+      userId: string | null
+      nameSnapshot: string | null
+      roleSnapshot: $Enums.UserRole | null
+      identifier: string
+      ipAddress: string
+      userAgent: string | null
+    }, ExtArgs["result"]["loginLog"]>
+    composites: {}
+  }
+
+  type LoginLogGetPayload<S extends boolean | null | undefined | LoginLogDefaultArgs> = $Result.GetResult<Prisma.$LoginLogPayload, S>
+
+  type LoginLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LoginLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LoginLogCountAggregateInputType | true
+    }
+
+  export interface LoginLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LoginLog'], meta: { name: 'LoginLog' } }
+    /**
+     * Find zero or one LoginLog that matches the filter.
+     * @param {LoginLogFindUniqueArgs} args - Arguments to find a LoginLog
+     * @example
+     * // Get one LoginLog
+     * const loginLog = await prisma.loginLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LoginLogFindUniqueArgs>(args: SelectSubset<T, LoginLogFindUniqueArgs<ExtArgs>>): Prisma__LoginLogClient<$Result.GetResult<Prisma.$LoginLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LoginLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LoginLogFindUniqueOrThrowArgs} args - Arguments to find a LoginLog
+     * @example
+     * // Get one LoginLog
+     * const loginLog = await prisma.loginLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LoginLogFindUniqueOrThrowArgs>(args: SelectSubset<T, LoginLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LoginLogClient<$Result.GetResult<Prisma.$LoginLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LoginLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginLogFindFirstArgs} args - Arguments to find a LoginLog
+     * @example
+     * // Get one LoginLog
+     * const loginLog = await prisma.loginLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LoginLogFindFirstArgs>(args?: SelectSubset<T, LoginLogFindFirstArgs<ExtArgs>>): Prisma__LoginLogClient<$Result.GetResult<Prisma.$LoginLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LoginLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginLogFindFirstOrThrowArgs} args - Arguments to find a LoginLog
+     * @example
+     * // Get one LoginLog
+     * const loginLog = await prisma.loginLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LoginLogFindFirstOrThrowArgs>(args?: SelectSubset<T, LoginLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__LoginLogClient<$Result.GetResult<Prisma.$LoginLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LoginLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LoginLogs
+     * const loginLogs = await prisma.loginLog.findMany()
+     * 
+     * // Get first 10 LoginLogs
+     * const loginLogs = await prisma.loginLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const loginLogWithIdOnly = await prisma.loginLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LoginLogFindManyArgs>(args?: SelectSubset<T, LoginLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LoginLog.
+     * @param {LoginLogCreateArgs} args - Arguments to create a LoginLog.
+     * @example
+     * // Create one LoginLog
+     * const LoginLog = await prisma.loginLog.create({
+     *   data: {
+     *     // ... data to create a LoginLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends LoginLogCreateArgs>(args: SelectSubset<T, LoginLogCreateArgs<ExtArgs>>): Prisma__LoginLogClient<$Result.GetResult<Prisma.$LoginLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LoginLogs.
+     * @param {LoginLogCreateManyArgs} args - Arguments to create many LoginLogs.
+     * @example
+     * // Create many LoginLogs
+     * const loginLog = await prisma.loginLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LoginLogCreateManyArgs>(args?: SelectSubset<T, LoginLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a LoginLog.
+     * @param {LoginLogDeleteArgs} args - Arguments to delete one LoginLog.
+     * @example
+     * // Delete one LoginLog
+     * const LoginLog = await prisma.loginLog.delete({
+     *   where: {
+     *     // ... filter to delete one LoginLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LoginLogDeleteArgs>(args: SelectSubset<T, LoginLogDeleteArgs<ExtArgs>>): Prisma__LoginLogClient<$Result.GetResult<Prisma.$LoginLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LoginLog.
+     * @param {LoginLogUpdateArgs} args - Arguments to update one LoginLog.
+     * @example
+     * // Update one LoginLog
+     * const loginLog = await prisma.loginLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LoginLogUpdateArgs>(args: SelectSubset<T, LoginLogUpdateArgs<ExtArgs>>): Prisma__LoginLogClient<$Result.GetResult<Prisma.$LoginLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LoginLogs.
+     * @param {LoginLogDeleteManyArgs} args - Arguments to filter LoginLogs to delete.
+     * @example
+     * // Delete a few LoginLogs
+     * const { count } = await prisma.loginLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LoginLogDeleteManyArgs>(args?: SelectSubset<T, LoginLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LoginLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LoginLogs
+     * const loginLog = await prisma.loginLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LoginLogUpdateManyArgs>(args: SelectSubset<T, LoginLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one LoginLog.
+     * @param {LoginLogUpsertArgs} args - Arguments to update or create a LoginLog.
+     * @example
+     * // Update or create a LoginLog
+     * const loginLog = await prisma.loginLog.upsert({
+     *   create: {
+     *     // ... data to create a LoginLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LoginLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LoginLogUpsertArgs>(args: SelectSubset<T, LoginLogUpsertArgs<ExtArgs>>): Prisma__LoginLogClient<$Result.GetResult<Prisma.$LoginLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LoginLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginLogCountArgs} args - Arguments to filter LoginLogs to count.
+     * @example
+     * // Count the number of LoginLogs
+     * const count = await prisma.loginLog.count({
+     *   where: {
+     *     // ... the filter for the LoginLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends LoginLogCountArgs>(
+      args?: Subset<T, LoginLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LoginLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LoginLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LoginLogAggregateArgs>(args: Subset<T, LoginLogAggregateArgs>): Prisma.PrismaPromise<GetLoginLogAggregateType<T>>
+
+    /**
+     * Group by LoginLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LoginLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LoginLogGroupByArgs['orderBy'] }
+        : { orderBy?: LoginLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LoginLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLoginLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LoginLog model
+   */
+  readonly fields: LoginLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LoginLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LoginLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends LoginLog$userArgs<ExtArgs> = {}>(args?: Subset<T, LoginLog$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LoginLog model
+   */
+  interface LoginLogFieldRefs {
+    readonly id: FieldRef<"LoginLog", 'String'>
+    readonly occurredAt: FieldRef<"LoginLog", 'DateTime'>
+    readonly lastAttemptAt: FieldRef<"LoginLog", 'DateTime'>
+    readonly result: FieldRef<"LoginLog", 'LoginLogResult'>
+    readonly failureReason: FieldRef<"LoginLog", 'LoginLogFailureReason'>
+    readonly attemptCount: FieldRef<"LoginLog", 'Int'>
+    readonly userId: FieldRef<"LoginLog", 'String'>
+    readonly nameSnapshot: FieldRef<"LoginLog", 'String'>
+    readonly roleSnapshot: FieldRef<"LoginLog", 'UserRole'>
+    readonly identifier: FieldRef<"LoginLog", 'String'>
+    readonly ipAddress: FieldRef<"LoginLog", 'String'>
+    readonly userAgent: FieldRef<"LoginLog", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LoginLog findUnique
+   */
+  export type LoginLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginLog to fetch.
+     */
+    where: LoginLogWhereUniqueInput
+  }
+
+  /**
+   * LoginLog findUniqueOrThrow
+   */
+  export type LoginLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginLog to fetch.
+     */
+    where: LoginLogWhereUniqueInput
+  }
+
+  /**
+   * LoginLog findFirst
+   */
+  export type LoginLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginLog to fetch.
+     */
+    where?: LoginLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginLogs to fetch.
+     */
+    orderBy?: LoginLogOrderByWithRelationInput | LoginLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoginLogs.
+     */
+    cursor?: LoginLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoginLogs.
+     */
+    distinct?: LoginLogScalarFieldEnum | LoginLogScalarFieldEnum[]
+  }
+
+  /**
+   * LoginLog findFirstOrThrow
+   */
+  export type LoginLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginLog to fetch.
+     */
+    where?: LoginLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginLogs to fetch.
+     */
+    orderBy?: LoginLogOrderByWithRelationInput | LoginLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoginLogs.
+     */
+    cursor?: LoginLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoginLogs.
+     */
+    distinct?: LoginLogScalarFieldEnum | LoginLogScalarFieldEnum[]
+  }
+
+  /**
+   * LoginLog findMany
+   */
+  export type LoginLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
+    /**
+     * Filter, which LoginLogs to fetch.
+     */
+    where?: LoginLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginLogs to fetch.
+     */
+    orderBy?: LoginLogOrderByWithRelationInput | LoginLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LoginLogs.
+     */
+    cursor?: LoginLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginLogs.
+     */
+    skip?: number
+    distinct?: LoginLogScalarFieldEnum | LoginLogScalarFieldEnum[]
+  }
+
+  /**
+   * LoginLog create
+   */
+  export type LoginLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LoginLog.
+     */
+    data: XOR<LoginLogCreateInput, LoginLogUncheckedCreateInput>
+  }
+
+  /**
+   * LoginLog createMany
+   */
+  export type LoginLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LoginLogs.
+     */
+    data: LoginLogCreateManyInput | LoginLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LoginLog update
+   */
+  export type LoginLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LoginLog.
+     */
+    data: XOR<LoginLogUpdateInput, LoginLogUncheckedUpdateInput>
+    /**
+     * Choose, which LoginLog to update.
+     */
+    where: LoginLogWhereUniqueInput
+  }
+
+  /**
+   * LoginLog updateMany
+   */
+  export type LoginLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LoginLogs.
+     */
+    data: XOR<LoginLogUpdateManyMutationInput, LoginLogUncheckedUpdateManyInput>
+    /**
+     * Filter which LoginLogs to update
+     */
+    where?: LoginLogWhereInput
+    /**
+     * Limit how many LoginLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoginLog upsert
+   */
+  export type LoginLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LoginLog to update in case it exists.
+     */
+    where: LoginLogWhereUniqueInput
+    /**
+     * In case the LoginLog found by the `where` argument doesn't exist, create a new LoginLog with this data.
+     */
+    create: XOR<LoginLogCreateInput, LoginLogUncheckedCreateInput>
+    /**
+     * In case the LoginLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LoginLogUpdateInput, LoginLogUncheckedUpdateInput>
+  }
+
+  /**
+   * LoginLog delete
+   */
+  export type LoginLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
+    /**
+     * Filter which LoginLog to delete.
+     */
+    where: LoginLogWhereUniqueInput
+  }
+
+  /**
+   * LoginLog deleteMany
+   */
+  export type LoginLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoginLogs to delete
+     */
+    where?: LoginLogWhereInput
+    /**
+     * Limit how many LoginLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoginLog.user
+   */
+  export type LoginLog$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * LoginLog without action
+   */
+  export type LoginLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginLog
+     */
+    select?: LoginLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginLog
+     */
+    omit?: LoginLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LoginLogInclude<ExtArgs> | null
   }
 
 
@@ -77462,6 +78666,24 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const LoginLogScalarFieldEnum: {
+    id: 'id',
+    occurredAt: 'occurredAt',
+    lastAttemptAt: 'lastAttemptAt',
+    result: 'result',
+    failureReason: 'failureReason',
+    attemptCount: 'attemptCount',
+    userId: 'userId',
+    nameSnapshot: 'nameSnapshot',
+    roleSnapshot: 'roleSnapshot',
+    identifier: 'identifier',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent'
+  };
+
+  export type LoginLogScalarFieldEnum = (typeof LoginLogScalarFieldEnum)[keyof typeof LoginLogScalarFieldEnum]
+
+
   export const PasswordResetTokenScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -78645,6 +79867,18 @@ export namespace Prisma {
   export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnum)[keyof typeof UserOrderByRelevanceFieldEnum]
 
 
+  export const LoginLogOrderByRelevanceFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    nameSnapshot: 'nameSnapshot',
+    identifier: 'identifier',
+    ipAddress: 'ipAddress',
+    userAgent: 'userAgent'
+  };
+
+  export type LoginLogOrderByRelevanceFieldEnum = (typeof LoginLogOrderByRelevanceFieldEnum)[keyof typeof LoginLogOrderByRelevanceFieldEnum]
+
+
   export const PasswordResetTokenOrderByRelevanceFieldEnum: {
     id: 'id',
     userId: 'userId',
@@ -79478,6 +80712,27 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'LoginLogResult'
+   */
+  export type EnumLoginLogResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginLogResult'>
+    
+
+
+  /**
+   * Reference to a field of type 'LoginLogFailureReason'
+   */
+  export type EnumLoginLogFailureReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LoginLogFailureReason'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
    * Reference to a field of type 'Grade'
    */
   export type EnumGradeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Grade'>
@@ -79495,13 +80750,6 @@ export namespace Prisma {
    * Reference to a field of type 'StudentProfileStatus'
    */
   export type EnumStudentProfileStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentProfileStatus'>
-    
-
-
-  /**
-   * Reference to a field of type 'Int'
-   */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
     
 
 
@@ -79989,6 +81237,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestListRelationFilter
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
     classHomeroomAssignments?: ClassHomeroomTeacherListRelationFilter
+    loginLogs?: LoginLogListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -80056,6 +81305,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestOrderByRelationAggregateInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestOrderByRelationAggregateInput
     classHomeroomAssignments?: ClassHomeroomTeacherOrderByRelationAggregateInput
+    loginLogs?: LoginLogOrderByRelationAggregateInput
     _relevance?: UserOrderByRelevanceInput
   }
 
@@ -80127,6 +81377,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestListRelationFilter
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestListRelationFilter
     classHomeroomAssignments?: ClassHomeroomTeacherListRelationFilter
+    loginLogs?: LoginLogListRelationFilter
   }, "id" | "username" | "email" | "phone" | "studentNo">
 
   export type UserOrderByWithAggregationInput = {
@@ -80163,6 +81414,99 @@ export namespace Prisma {
     mustChangePassword?: BoolWithAggregatesFilter<"User"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type LoginLogWhereInput = {
+    AND?: LoginLogWhereInput | LoginLogWhereInput[]
+    OR?: LoginLogWhereInput[]
+    NOT?: LoginLogWhereInput | LoginLogWhereInput[]
+    id?: StringFilter<"LoginLog"> | string
+    occurredAt?: DateTimeFilter<"LoginLog"> | Date | string
+    lastAttemptAt?: DateTimeFilter<"LoginLog"> | Date | string
+    result?: EnumLoginLogResultFilter<"LoginLog"> | $Enums.LoginLogResult
+    failureReason?: EnumLoginLogFailureReasonNullableFilter<"LoginLog"> | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntFilter<"LoginLog"> | number
+    userId?: StringNullableFilter<"LoginLog"> | string | null
+    nameSnapshot?: StringNullableFilter<"LoginLog"> | string | null
+    roleSnapshot?: EnumUserRoleNullableFilter<"LoginLog"> | $Enums.UserRole | null
+    identifier?: StringFilter<"LoginLog"> | string
+    ipAddress?: StringFilter<"LoginLog"> | string
+    userAgent?: StringNullableFilter<"LoginLog"> | string | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type LoginLogOrderByWithRelationInput = {
+    id?: SortOrder
+    occurredAt?: SortOrder
+    lastAttemptAt?: SortOrder
+    result?: SortOrder
+    failureReason?: SortOrderInput | SortOrder
+    attemptCount?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    nameSnapshot?: SortOrderInput | SortOrder
+    roleSnapshot?: SortOrderInput | SortOrder
+    identifier?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    user?: UserOrderByWithRelationInput
+    _relevance?: LoginLogOrderByRelevanceInput
+  }
+
+  export type LoginLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: LoginLogWhereInput | LoginLogWhereInput[]
+    OR?: LoginLogWhereInput[]
+    NOT?: LoginLogWhereInput | LoginLogWhereInput[]
+    occurredAt?: DateTimeFilter<"LoginLog"> | Date | string
+    lastAttemptAt?: DateTimeFilter<"LoginLog"> | Date | string
+    result?: EnumLoginLogResultFilter<"LoginLog"> | $Enums.LoginLogResult
+    failureReason?: EnumLoginLogFailureReasonNullableFilter<"LoginLog"> | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntFilter<"LoginLog"> | number
+    userId?: StringNullableFilter<"LoginLog"> | string | null
+    nameSnapshot?: StringNullableFilter<"LoginLog"> | string | null
+    roleSnapshot?: EnumUserRoleNullableFilter<"LoginLog"> | $Enums.UserRole | null
+    identifier?: StringFilter<"LoginLog"> | string
+    ipAddress?: StringFilter<"LoginLog"> | string
+    userAgent?: StringNullableFilter<"LoginLog"> | string | null
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type LoginLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    occurredAt?: SortOrder
+    lastAttemptAt?: SortOrder
+    result?: SortOrder
+    failureReason?: SortOrderInput | SortOrder
+    attemptCount?: SortOrder
+    userId?: SortOrderInput | SortOrder
+    nameSnapshot?: SortOrderInput | SortOrder
+    roleSnapshot?: SortOrderInput | SortOrder
+    identifier?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrderInput | SortOrder
+    _count?: LoginLogCountOrderByAggregateInput
+    _avg?: LoginLogAvgOrderByAggregateInput
+    _max?: LoginLogMaxOrderByAggregateInput
+    _min?: LoginLogMinOrderByAggregateInput
+    _sum?: LoginLogSumOrderByAggregateInput
+  }
+
+  export type LoginLogScalarWhereWithAggregatesInput = {
+    AND?: LoginLogScalarWhereWithAggregatesInput | LoginLogScalarWhereWithAggregatesInput[]
+    OR?: LoginLogScalarWhereWithAggregatesInput[]
+    NOT?: LoginLogScalarWhereWithAggregatesInput | LoginLogScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"LoginLog"> | string
+    occurredAt?: DateTimeWithAggregatesFilter<"LoginLog"> | Date | string
+    lastAttemptAt?: DateTimeWithAggregatesFilter<"LoginLog"> | Date | string
+    result?: EnumLoginLogResultWithAggregatesFilter<"LoginLog"> | $Enums.LoginLogResult
+    failureReason?: EnumLoginLogFailureReasonNullableWithAggregatesFilter<"LoginLog"> | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntWithAggregatesFilter<"LoginLog"> | number
+    userId?: StringNullableWithAggregatesFilter<"LoginLog"> | string | null
+    nameSnapshot?: StringNullableWithAggregatesFilter<"LoginLog"> | string | null
+    roleSnapshot?: EnumUserRoleNullableWithAggregatesFilter<"LoginLog"> | $Enums.UserRole | null
+    identifier?: StringWithAggregatesFilter<"LoginLog"> | string
+    ipAddress?: StringWithAggregatesFilter<"LoginLog"> | string
+    userAgent?: StringNullableWithAggregatesFilter<"LoginLog"> | string | null
   }
 
   export type PasswordResetTokenWhereInput = {
@@ -86940,6 +88284,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -87007,6 +88352,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -87074,6 +88420,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -87141,6 +88488,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -87186,6 +88534,110 @@ export namespace Prisma {
     mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginLogCreateInput = {
+    id?: string
+    occurredAt?: Date | string
+    lastAttemptAt?: Date | string
+    result: $Enums.LoginLogResult
+    failureReason?: $Enums.LoginLogFailureReason | null
+    attemptCount?: number
+    nameSnapshot?: string | null
+    roleSnapshot?: $Enums.UserRole | null
+    identifier: string
+    ipAddress: string
+    userAgent?: string | null
+    user?: UserCreateNestedOneWithoutLoginLogsInput
+  }
+
+  export type LoginLogUncheckedCreateInput = {
+    id?: string
+    occurredAt?: Date | string
+    lastAttemptAt?: Date | string
+    result: $Enums.LoginLogResult
+    failureReason?: $Enums.LoginLogFailureReason | null
+    attemptCount?: number
+    userId?: string | null
+    nameSnapshot?: string | null
+    roleSnapshot?: $Enums.UserRole | null
+    identifier: string
+    ipAddress: string
+    userAgent?: string | null
+  }
+
+  export type LoginLogUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAttemptAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumLoginLogResultFieldUpdateOperationsInput | $Enums.LoginLogResult
+    failureReason?: NullableEnumLoginLogFailureReasonFieldUpdateOperationsInput | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    nameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSnapshot?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    identifier?: StringFieldUpdateOperationsInput | string
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+    user?: UserUpdateOneWithoutLoginLogsNestedInput
+  }
+
+  export type LoginLogUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAttemptAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumLoginLogResultFieldUpdateOperationsInput | $Enums.LoginLogResult
+    failureReason?: NullableEnumLoginLogFailureReasonFieldUpdateOperationsInput | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    nameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSnapshot?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    identifier?: StringFieldUpdateOperationsInput | string
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type LoginLogCreateManyInput = {
+    id?: string
+    occurredAt?: Date | string
+    lastAttemptAt?: Date | string
+    result: $Enums.LoginLogResult
+    failureReason?: $Enums.LoginLogFailureReason | null
+    attemptCount?: number
+    userId?: string | null
+    nameSnapshot?: string | null
+    roleSnapshot?: $Enums.UserRole | null
+    identifier: string
+    ipAddress: string
+    userAgent?: string | null
+  }
+
+  export type LoginLogUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAttemptAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumLoginLogResultFieldUpdateOperationsInput | $Enums.LoginLogResult
+    failureReason?: NullableEnumLoginLogFailureReasonFieldUpdateOperationsInput | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    nameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSnapshot?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    identifier?: StringFieldUpdateOperationsInput | string
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type LoginLogUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAttemptAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumLoginLogResultFieldUpdateOperationsInput | $Enums.LoginLogResult
+    failureReason?: NullableEnumLoginLogFailureReasonFieldUpdateOperationsInput | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    nameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSnapshot?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    identifier?: StringFieldUpdateOperationsInput | string
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PasswordResetTokenCreateInput = {
@@ -94665,6 +96117,12 @@ export namespace Prisma {
     none?: ClassHomeroomTeacherWhereInput
   }
 
+  export type LoginLogListRelationFilter = {
+    every?: LoginLogWhereInput
+    some?: LoginLogWhereInput
+    none?: LoginLogWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -94802,6 +96260,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type LoginLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserOrderByRelevanceInput = {
     fields: UserOrderByRelevanceFieldEnum | UserOrderByRelevanceFieldEnum[]
     sort: SortOrder
@@ -94919,6 +96381,148 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type EnumLoginLogResultFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginLogResult | EnumLoginLogResultFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginLogResult[]
+    notIn?: $Enums.LoginLogResult[]
+    not?: NestedEnumLoginLogResultFilter<$PrismaModel> | $Enums.LoginLogResult
+  }
+
+  export type EnumLoginLogFailureReasonNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginLogFailureReason | EnumLoginLogFailureReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LoginLogFailureReason[] | null
+    notIn?: $Enums.LoginLogFailureReason[] | null
+    not?: NestedEnumLoginLogFailureReasonNullableFilter<$PrismaModel> | $Enums.LoginLogFailureReason | null
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type EnumUserRoleNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.UserRole[] | null
+    notIn?: $Enums.UserRole[] | null
+    not?: NestedEnumUserRoleNullableFilter<$PrismaModel> | $Enums.UserRole | null
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type LoginLogOrderByRelevanceInput = {
+    fields: LoginLogOrderByRelevanceFieldEnum | LoginLogOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type LoginLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    occurredAt?: SortOrder
+    lastAttemptAt?: SortOrder
+    result?: SortOrder
+    failureReason?: SortOrder
+    attemptCount?: SortOrder
+    userId?: SortOrder
+    nameSnapshot?: SortOrder
+    roleSnapshot?: SortOrder
+    identifier?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+  }
+
+  export type LoginLogAvgOrderByAggregateInput = {
+    attemptCount?: SortOrder
+  }
+
+  export type LoginLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    occurredAt?: SortOrder
+    lastAttemptAt?: SortOrder
+    result?: SortOrder
+    failureReason?: SortOrder
+    attemptCount?: SortOrder
+    userId?: SortOrder
+    nameSnapshot?: SortOrder
+    roleSnapshot?: SortOrder
+    identifier?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+  }
+
+  export type LoginLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    occurredAt?: SortOrder
+    lastAttemptAt?: SortOrder
+    result?: SortOrder
+    failureReason?: SortOrder
+    attemptCount?: SortOrder
+    userId?: SortOrder
+    nameSnapshot?: SortOrder
+    roleSnapshot?: SortOrder
+    identifier?: SortOrder
+    ipAddress?: SortOrder
+    userAgent?: SortOrder
+  }
+
+  export type LoginLogSumOrderByAggregateInput = {
+    attemptCount?: SortOrder
+  }
+
+  export type EnumLoginLogResultWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginLogResult | EnumLoginLogResultFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginLogResult[]
+    notIn?: $Enums.LoginLogResult[]
+    not?: NestedEnumLoginLogResultWithAggregatesFilter<$PrismaModel> | $Enums.LoginLogResult
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLoginLogResultFilter<$PrismaModel>
+    _max?: NestedEnumLoginLogResultFilter<$PrismaModel>
+  }
+
+  export type EnumLoginLogFailureReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginLogFailureReason | EnumLoginLogFailureReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LoginLogFailureReason[] | null
+    notIn?: $Enums.LoginLogFailureReason[] | null
+    not?: NestedEnumLoginLogFailureReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.LoginLogFailureReason | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLoginLogFailureReasonNullableFilter<$PrismaModel>
+    _max?: NestedEnumLoginLogFailureReasonNullableFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type EnumUserRoleNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.UserRole[] | null
+    notIn?: $Enums.UserRole[] | null
+    not?: NestedEnumUserRoleNullableWithAggregatesFilter<$PrismaModel> | $Enums.UserRole | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumUserRoleNullableFilter<$PrismaModel>
+    _max?: NestedEnumUserRoleNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -95138,17 +96742,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
-  }
-
   export type StudentIdSequenceCountOrderByAggregateInput = {
     year?: SortOrder
     lastNumber?: SortOrder
@@ -95172,22 +96765,6 @@ export namespace Prisma {
   export type StudentIdSequenceSumOrderByAggregateInput = {
     year?: SortOrder
     lastNumber?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumTeacherProfileStatusFilter<$PrismaModel = never> = {
@@ -95379,11 +96956,6 @@ export namespace Prisma {
     in?: $Enums.StudentNotificationStatus[]
     notIn?: $Enums.StudentNotificationStatus[]
     not?: NestedEnumStudentNotificationStatusFilter<$PrismaModel> | $Enums.StudentNotificationStatus
-  }
-
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
   }
 
   export type RegistrationWindowNullableScalarRelationFilter = {
@@ -96397,13 +97969,6 @@ export namespace Prisma {
     _max?: NestedEnumWithdrawalRefundBasisFilter<$PrismaModel>
   }
 
-  export type EnumUserRoleNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel> | null
-    in?: $Enums.UserRole[] | null
-    notIn?: $Enums.UserRole[] | null
-    not?: NestedEnumUserRoleNullableFilter<$PrismaModel> | $Enums.UserRole | null
-  }
-
   export type EnumRegistrationSourceFilter<$PrismaModel = never> = {
     equals?: $Enums.RegistrationSource | EnumRegistrationSourceFieldRefInput<$PrismaModel>
     in?: $Enums.RegistrationSource[]
@@ -96582,16 +98147,6 @@ export namespace Prisma {
     confirmationNumber?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-  }
-
-  export type EnumUserRoleNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel> | null
-    in?: $Enums.UserRole[] | null
-    notIn?: $Enums.UserRole[] | null
-    not?: NestedEnumUserRoleNullableWithAggregatesFilter<$PrismaModel> | $Enums.UserRole | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumUserRoleNullableFilter<$PrismaModel>
-    _max?: NestedEnumUserRoleNullableFilter<$PrismaModel>
   }
 
   export type EnumRegistrationSourceWithAggregatesFilter<$PrismaModel = never> = {
@@ -100577,6 +102132,13 @@ export namespace Prisma {
     connect?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
   }
 
+  export type LoginLogCreateNestedManyWithoutUserInput = {
+    create?: XOR<LoginLogCreateWithoutUserInput, LoginLogUncheckedCreateWithoutUserInput> | LoginLogCreateWithoutUserInput[] | LoginLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginLogCreateOrConnectWithoutUserInput | LoginLogCreateOrConnectWithoutUserInput[]
+    createMany?: LoginLogCreateManyUserInputEnvelope
+    connect?: LoginLogWhereUniqueInput | LoginLogWhereUniqueInput[]
+  }
+
   export type SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -100936,6 +102498,13 @@ export namespace Prisma {
     connectOrCreate?: ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput | ClassHomeroomTeacherCreateOrConnectWithoutTeacherInput[]
     createMany?: ClassHomeroomTeacherCreateManyTeacherInputEnvelope
     connect?: ClassHomeroomTeacherWhereUniqueInput | ClassHomeroomTeacherWhereUniqueInput[]
+  }
+
+  export type LoginLogUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<LoginLogCreateWithoutUserInput, LoginLogUncheckedCreateWithoutUserInput> | LoginLogCreateWithoutUserInput[] | LoginLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginLogCreateOrConnectWithoutUserInput | LoginLogCreateOrConnectWithoutUserInput[]
+    createMany?: LoginLogCreateManyUserInputEnvelope
+    connect?: LoginLogWhereUniqueInput | LoginLogWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -101674,6 +103243,20 @@ export namespace Prisma {
     deleteMany?: ClassHomeroomTeacherScalarWhereInput | ClassHomeroomTeacherScalarWhereInput[]
   }
 
+  export type LoginLogUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LoginLogCreateWithoutUserInput, LoginLogUncheckedCreateWithoutUserInput> | LoginLogCreateWithoutUserInput[] | LoginLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginLogCreateOrConnectWithoutUserInput | LoginLogCreateOrConnectWithoutUserInput[]
+    upsert?: LoginLogUpsertWithWhereUniqueWithoutUserInput | LoginLogUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LoginLogCreateManyUserInputEnvelope
+    set?: LoginLogWhereUniqueInput | LoginLogWhereUniqueInput[]
+    disconnect?: LoginLogWhereUniqueInput | LoginLogWhereUniqueInput[]
+    delete?: LoginLogWhereUniqueInput | LoginLogWhereUniqueInput[]
+    connect?: LoginLogWhereUniqueInput | LoginLogWhereUniqueInput[]
+    update?: LoginLogUpdateWithWhereUniqueWithoutUserInput | LoginLogUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LoginLogUpdateManyWithWhereWithoutUserInput | LoginLogUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LoginLogScalarWhereInput | LoginLogScalarWhereInput[]
+  }
+
   export type SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput = {
     create?: XOR<SourceDocumentCreateWithoutUploadedByInput, SourceDocumentUncheckedCreateWithoutUploadedByInput> | SourceDocumentCreateWithoutUploadedByInput[] | SourceDocumentUncheckedCreateWithoutUploadedByInput[]
     connectOrCreate?: SourceDocumentCreateOrConnectWithoutUploadedByInput | SourceDocumentCreateOrConnectWithoutUploadedByInput[]
@@ -102390,6 +103973,56 @@ export namespace Prisma {
     deleteMany?: ClassHomeroomTeacherScalarWhereInput | ClassHomeroomTeacherScalarWhereInput[]
   }
 
+  export type LoginLogUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LoginLogCreateWithoutUserInput, LoginLogUncheckedCreateWithoutUserInput> | LoginLogCreateWithoutUserInput[] | LoginLogUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LoginLogCreateOrConnectWithoutUserInput | LoginLogCreateOrConnectWithoutUserInput[]
+    upsert?: LoginLogUpsertWithWhereUniqueWithoutUserInput | LoginLogUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LoginLogCreateManyUserInputEnvelope
+    set?: LoginLogWhereUniqueInput | LoginLogWhereUniqueInput[]
+    disconnect?: LoginLogWhereUniqueInput | LoginLogWhereUniqueInput[]
+    delete?: LoginLogWhereUniqueInput | LoginLogWhereUniqueInput[]
+    connect?: LoginLogWhereUniqueInput | LoginLogWhereUniqueInput[]
+    update?: LoginLogUpdateWithWhereUniqueWithoutUserInput | LoginLogUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LoginLogUpdateManyWithWhereWithoutUserInput | LoginLogUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LoginLogScalarWhereInput | LoginLogScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutLoginLogsInput = {
+    create?: XOR<UserCreateWithoutLoginLogsInput, UserUncheckedCreateWithoutLoginLogsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLoginLogsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumLoginLogResultFieldUpdateOperationsInput = {
+    set?: $Enums.LoginLogResult
+  }
+
+  export type NullableEnumLoginLogFailureReasonFieldUpdateOperationsInput = {
+    set?: $Enums.LoginLogFailureReason | null
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableEnumUserRoleFieldUpdateOperationsInput = {
+    set?: $Enums.UserRole | null
+  }
+
+  export type UserUpdateOneWithoutLoginLogsNestedInput = {
+    create?: XOR<UserCreateWithoutLoginLogsInput, UserUncheckedCreateWithoutLoginLogsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLoginLogsInput
+    upsert?: UserUpsertWithoutLoginLogsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLoginLogsInput, UserUpdateWithoutLoginLogsInput>, UserUncheckedUpdateWithoutLoginLogsInput>
+  }
+
   export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
     create?: XOR<UserCreateWithoutPasswordResetTokensInput, UserUncheckedCreateWithoutPasswordResetTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutPasswordResetTokensInput
@@ -102440,14 +104073,6 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutStudentProfileInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutStudentProfileInput, UserUpdateWithoutStudentProfileInput>, UserUncheckedUpdateWithoutStudentProfileInput>
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UserCreateNestedOneWithoutTeacherProfileInput = {
@@ -104546,10 +106171,6 @@ export namespace Prisma {
     connectOrCreate?: FeeRefundCreateOrConnectWithoutRegistrationWorkspaceInput | FeeRefundCreateOrConnectWithoutRegistrationWorkspaceInput[]
     createMany?: FeeRefundCreateManyRegistrationWorkspaceInputEnvelope
     connect?: FeeRefundWhereUniqueInput | FeeRefundWhereUniqueInput[]
-  }
-
-  export type NullableEnumUserRoleFieldUpdateOperationsInput = {
-    set?: $Enums.UserRole | null
   }
 
   export type EnumRegistrationSourceFieldUpdateOperationsInput = {
@@ -111957,6 +113578,84 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedEnumLoginLogResultFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginLogResult | EnumLoginLogResultFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginLogResult[]
+    notIn?: $Enums.LoginLogResult[]
+    not?: NestedEnumLoginLogResultFilter<$PrismaModel> | $Enums.LoginLogResult
+  }
+
+  export type NestedEnumLoginLogFailureReasonNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginLogFailureReason | EnumLoginLogFailureReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LoginLogFailureReason[] | null
+    notIn?: $Enums.LoginLogFailureReason[] | null
+    not?: NestedEnumLoginLogFailureReasonNullableFilter<$PrismaModel> | $Enums.LoginLogFailureReason | null
+  }
+
+  export type NestedEnumUserRoleNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.UserRole[] | null
+    notIn?: $Enums.UserRole[] | null
+    not?: NestedEnumUserRoleNullableFilter<$PrismaModel> | $Enums.UserRole | null
+  }
+
+  export type NestedEnumLoginLogResultWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginLogResult | EnumLoginLogResultFieldRefInput<$PrismaModel>
+    in?: $Enums.LoginLogResult[]
+    notIn?: $Enums.LoginLogResult[]
+    not?: NestedEnumLoginLogResultWithAggregatesFilter<$PrismaModel> | $Enums.LoginLogResult
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLoginLogResultFilter<$PrismaModel>
+    _max?: NestedEnumLoginLogResultFilter<$PrismaModel>
+  }
+
+  export type NestedEnumLoginLogFailureReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LoginLogFailureReason | EnumLoginLogFailureReasonFieldRefInput<$PrismaModel> | null
+    in?: $Enums.LoginLogFailureReason[] | null
+    notIn?: $Enums.LoginLogFailureReason[] | null
+    not?: NestedEnumLoginLogFailureReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.LoginLogFailureReason | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumLoginLogFailureReasonNullableFilter<$PrismaModel>
+    _max?: NestedEnumLoginLogFailureReasonNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[]
+    notIn?: number[]
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumUserRoleNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel> | null
+    in?: $Enums.UserRole[] | null
+    notIn?: $Enums.UserRole[] | null
+    not?: NestedEnumUserRoleNullableWithAggregatesFilter<$PrismaModel> | $Enums.UserRole | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumUserRoleNullableFilter<$PrismaModel>
+    _max?: NestedEnumUserRoleNullableFilter<$PrismaModel>
+  }
+
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | null
@@ -112058,33 +113757,6 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
-  }
-
-  export type NestedFloatFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel>
-    in?: number[]
-    notIn?: number[]
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatFilter<$PrismaModel> | number
   }
 
   export type NestedEnumTeacherProfileStatusFilter<$PrismaModel = never> = {
@@ -112409,13 +114081,6 @@ export namespace Prisma {
     _max?: NestedEnumWithdrawalRefundBasisFilter<$PrismaModel>
   }
 
-  export type NestedEnumUserRoleNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel> | null
-    in?: $Enums.UserRole[] | null
-    notIn?: $Enums.UserRole[] | null
-    not?: NestedEnumUserRoleNullableFilter<$PrismaModel> | $Enums.UserRole | null
-  }
-
   export type NestedEnumRegistrationSourceFilter<$PrismaModel = never> = {
     equals?: $Enums.RegistrationSource | EnumRegistrationSourceFieldRefInput<$PrismaModel>
     in?: $Enums.RegistrationSource[]
@@ -112442,16 +114107,6 @@ export namespace Prisma {
     in?: $Enums.RegistrationType[]
     notIn?: $Enums.RegistrationType[]
     not?: NestedEnumRegistrationTypeFilter<$PrismaModel> | $Enums.RegistrationType
-  }
-
-  export type NestedEnumUserRoleNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel> | null
-    in?: $Enums.UserRole[] | null
-    notIn?: $Enums.UserRole[] | null
-    not?: NestedEnumUserRoleNullableWithAggregatesFilter<$PrismaModel> | $Enums.UserRole | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumUserRoleNullableFilter<$PrismaModel>
-    _max?: NestedEnumUserRoleNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumRegistrationSourceWithAggregatesFilter<$PrismaModel = never> = {
@@ -116301,6 +117956,44 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type LoginLogCreateWithoutUserInput = {
+    id?: string
+    occurredAt?: Date | string
+    lastAttemptAt?: Date | string
+    result: $Enums.LoginLogResult
+    failureReason?: $Enums.LoginLogFailureReason | null
+    attemptCount?: number
+    nameSnapshot?: string | null
+    roleSnapshot?: $Enums.UserRole | null
+    identifier: string
+    ipAddress: string
+    userAgent?: string | null
+  }
+
+  export type LoginLogUncheckedCreateWithoutUserInput = {
+    id?: string
+    occurredAt?: Date | string
+    lastAttemptAt?: Date | string
+    result: $Enums.LoginLogResult
+    failureReason?: $Enums.LoginLogFailureReason | null
+    attemptCount?: number
+    nameSnapshot?: string | null
+    roleSnapshot?: $Enums.UserRole | null
+    identifier: string
+    ipAddress: string
+    userAgent?: string | null
+  }
+
+  export type LoginLogCreateOrConnectWithoutUserInput = {
+    where: LoginLogWhereUniqueInput
+    create: XOR<LoginLogCreateWithoutUserInput, LoginLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type LoginLogCreateManyUserInputEnvelope = {
+    data: LoginLogCreateManyUserInput | LoginLogCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type SourceDocumentUpsertWithWhereUniqueWithoutUploadedByInput = {
     where: SourceDocumentWhereUniqueInput
     update: XOR<SourceDocumentUpdateWithoutUploadedByInput, SourceDocumentUncheckedUpdateWithoutUploadedByInput>
@@ -118019,6 +119712,324 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"ClassHomeroomTeacher"> | Date | string
   }
 
+  export type LoginLogUpsertWithWhereUniqueWithoutUserInput = {
+    where: LoginLogWhereUniqueInput
+    update: XOR<LoginLogUpdateWithoutUserInput, LoginLogUncheckedUpdateWithoutUserInput>
+    create: XOR<LoginLogCreateWithoutUserInput, LoginLogUncheckedCreateWithoutUserInput>
+  }
+
+  export type LoginLogUpdateWithWhereUniqueWithoutUserInput = {
+    where: LoginLogWhereUniqueInput
+    data: XOR<LoginLogUpdateWithoutUserInput, LoginLogUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LoginLogUpdateManyWithWhereWithoutUserInput = {
+    where: LoginLogScalarWhereInput
+    data: XOR<LoginLogUpdateManyMutationInput, LoginLogUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type LoginLogScalarWhereInput = {
+    AND?: LoginLogScalarWhereInput | LoginLogScalarWhereInput[]
+    OR?: LoginLogScalarWhereInput[]
+    NOT?: LoginLogScalarWhereInput | LoginLogScalarWhereInput[]
+    id?: StringFilter<"LoginLog"> | string
+    occurredAt?: DateTimeFilter<"LoginLog"> | Date | string
+    lastAttemptAt?: DateTimeFilter<"LoginLog"> | Date | string
+    result?: EnumLoginLogResultFilter<"LoginLog"> | $Enums.LoginLogResult
+    failureReason?: EnumLoginLogFailureReasonNullableFilter<"LoginLog"> | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntFilter<"LoginLog"> | number
+    userId?: StringNullableFilter<"LoginLog"> | string | null
+    nameSnapshot?: StringNullableFilter<"LoginLog"> | string | null
+    roleSnapshot?: EnumUserRoleNullableFilter<"LoginLog"> | $Enums.UserRole | null
+    identifier?: StringFilter<"LoginLog"> | string
+    ipAddress?: StringFilter<"LoginLog"> | string
+    userAgent?: StringNullableFilter<"LoginLog"> | string | null
+  }
+
+  export type UserCreateWithoutLoginLogsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
+    feeRefundsRecorded?: FeeRefundCreateNestedManyWithoutRecordedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserUncheckedCreateWithoutLoginLogsInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
+    feeRefundsRecorded?: FeeRefundUncheckedCreateNestedManyWithoutRecordedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserCreateOrConnectWithoutLoginLogsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutLoginLogsInput, UserUncheckedCreateWithoutLoginLogsInput>
+  }
+
+  export type UserUpsertWithoutLoginLogsInput = {
+    update: XOR<UserUpdateWithoutLoginLogsInput, UserUncheckedUpdateWithoutLoginLogsInput>
+    create: XOR<UserCreateWithoutLoginLogsInput, UserUncheckedCreateWithoutLoginLogsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutLoginLogsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutLoginLogsInput, UserUncheckedUpdateWithoutLoginLogsInput>
+  }
+
+  export type UserUpdateWithoutLoginLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
+    feeRefundsRecorded?: FeeRefundUpdateManyWithoutRecordedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutLoginLogsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
+    feeRefundsRecorded?: FeeRefundUncheckedUpdateManyWithoutRecordedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+  }
+
   export type UserCreateWithoutPasswordResetTokensInput = {
     id?: string
     name: string
@@ -118083,6 +120094,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -118149,6 +120161,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -118231,6 +120244,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -118297,6 +120311,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutStudentProfileInput = {
@@ -118363,6 +120378,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentProfileInput = {
@@ -118429,6 +120445,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -118511,6 +120528,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentProfileInput = {
@@ -118577,6 +120595,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTeacherProfileInput = {
@@ -118643,6 +120662,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTeacherProfileInput = {
@@ -118709,6 +120729,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTeacherProfileInput = {
@@ -118791,6 +120812,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherProfileInput = {
@@ -118857,6 +120879,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutStudentNotificationLogsInput = {
@@ -118923,6 +120946,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentNotificationLogsInput = {
@@ -118989,6 +121013,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentNotificationLogsInput = {
@@ -119259,6 +121284,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentNotificationLogsInput = {
@@ -119325,6 +121351,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutStudentNotificationLogsInput = {
@@ -119591,6 +121618,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsTargetInput = {
@@ -119657,6 +121685,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsTargetInput = {
@@ -119728,6 +121757,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutUserAuditLogsPerformedInput = {
@@ -119794,6 +121824,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutUserAuditLogsPerformedInput = {
@@ -119876,6 +121907,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsTargetInput = {
@@ -119942,6 +121974,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutUserAuditLogsPerformedInput = {
@@ -120019,6 +122052,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutUserAuditLogsPerformedInput = {
@@ -120085,6 +122119,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExamDocumentAuditLogsInput = {
@@ -120400,6 +122435,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -120466,6 +122502,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutExamDocumentAuditLogsPerformedInput = {
@@ -120815,6 +122852,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExamDocumentAuditLogsPerformedInput = {
@@ -120881,6 +122919,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutCandidateInput = {
@@ -120947,6 +122986,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCandidateInput = {
@@ -121013,6 +123053,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCandidateInput = {
@@ -121997,6 +124038,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateInput = {
@@ -122063,6 +124105,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CandidateExamIdentityUpsertWithWhereUniqueWithoutCandidateInput = {
@@ -122480,6 +124523,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCandidateAuditLogsPerformedInput = {
@@ -122546,6 +124590,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCandidateAuditLogsPerformedInput = {
@@ -122745,6 +124790,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateAuditLogsPerformedInput = {
@@ -122811,6 +124857,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CandidateCreateWithoutExamIdentitiesInput = {
@@ -123077,6 +125124,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCandidateExamIdentitiesCreatedInput = {
@@ -123143,6 +125191,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCandidateExamIdentitiesCreatedInput = {
@@ -123214,6 +125263,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -123280,6 +125330,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -123574,6 +125625,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateExamIdentitiesCreatedInput = {
@@ -123640,6 +125692,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -123717,6 +125770,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCandidateExamIdentitiesUpdatedInput = {
@@ -123783,6 +125837,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTeacherAssignmentsInput = {
@@ -123849,6 +125904,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTeacherAssignmentsInput = {
@@ -123915,6 +125971,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTeacherAssignmentsInput = {
@@ -124042,6 +126099,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherAssignmentsInput = {
@@ -124108,6 +126166,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubjectUpsertWithoutTeacherAssignmentsInput = {
@@ -124225,6 +126284,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutClassHomeroomAssignmentsInput = {
@@ -124291,6 +126351,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutClassHomeroomAssignmentsInput = {
@@ -124373,6 +126434,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutClassHomeroomAssignmentsInput = {
@@ -124439,6 +126501,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ExamBoardCreateWithoutRegistrationWindowsInput = {
@@ -124649,6 +126712,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWindowsInput = {
@@ -124715,6 +126779,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWindowsInput = {
@@ -125899,6 +127964,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWindowsInput = {
@@ -125965,6 +128031,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWindowInput = {
@@ -126415,6 +128482,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBoardSubmissionBaselinesSubmittedInput = {
@@ -126481,6 +128549,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBoardSubmissionBaselinesSubmittedInput = {
@@ -126650,6 +128719,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBoardSubmissionBaselinesSubmittedInput = {
@@ -126716,6 +128786,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationWindowCreateWithoutIncludedSeriesInput = {
@@ -127671,6 +129742,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationWorkspacesInput = {
@@ -127737,6 +129809,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationWorkspacesInput = {
@@ -127889,6 +129962,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutWorkspacesLastAdjustedInput = {
@@ -127955,6 +130029,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutWorkspacesLastAdjustedInput = {
@@ -128071,6 +130146,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsCreatedInput = {
@@ -128137,6 +130213,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsCreatedInput = {
@@ -128208,6 +130285,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -128274,6 +130352,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRestrictedRegistrationsUpdatedInput = {
@@ -128973,6 +131052,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationWorkspacesInput = {
@@ -129039,6 +131119,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationWindowUpsertWithoutWorkspacesInput = {
@@ -129203,6 +131284,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutWorkspacesLastAdjustedInput = {
@@ -129269,6 +131351,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutWorkspacesInput = {
@@ -129397,6 +131480,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsCreatedInput = {
@@ -129463,6 +131547,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutRestrictedRegistrationsUpdatedInput = {
@@ -129540,6 +131625,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRestrictedRegistrationsUpdatedInput = {
@@ -129606,6 +131692,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutRegistrationWorkspaceInput = {
@@ -129895,6 +131982,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentRegistrationsInput = {
@@ -129961,6 +132049,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentRegistrationsInput = {
@@ -130503,6 +132592,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationsAddedInput = {
@@ -130569,6 +132659,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationsAddedInput = {
@@ -130981,6 +133072,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentRegistrationsInput = {
@@ -131047,6 +133139,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutRegistrationsInput = {
@@ -131637,6 +133730,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationsAddedInput = {
@@ -131703,6 +133797,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationFeeStageUpsertWithoutRegistrationsInput = {
@@ -132163,6 +134258,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -132229,6 +134325,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsAsStudentInput = {
@@ -132499,6 +134596,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationAuditLogsPerformedInput = {
@@ -132565,6 +134663,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationAuditLogsPerformedInput = {
@@ -132960,6 +135059,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsAsStudentInput = {
@@ -133026,6 +135126,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type StudentExamRegistrationUpsertWithoutAuditLogsInput = {
@@ -133320,6 +135421,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationAuditLogsPerformedInput = {
@@ -133386,6 +135488,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationWorkspaceCreateWithoutChangeRequestsInput = {
@@ -133636,6 +135739,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentChangeRequestsInput = {
@@ -133702,6 +135806,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentChangeRequestsInput = {
@@ -133884,6 +135989,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutRegistrationChangeRequestsInput = {
@@ -133950,6 +136056,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutRegistrationChangeRequestsInput = {
@@ -134135,6 +136242,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewedChangeRequestsInput = {
@@ -134201,6 +136309,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewedChangeRequestsInput = {
@@ -134501,6 +136610,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentChangeRequestsInput = {
@@ -134567,6 +136677,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CandidateUpsertWithoutChangeRequestsInput = {
@@ -134761,6 +136872,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRegistrationChangeRequestsInput = {
@@ -134827,6 +136939,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ExamSessionUpsertWithoutChangeRequestTargetsInput = {
@@ -135030,6 +137143,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewedChangeRequestsInput = {
@@ -135096,6 +137210,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationChangeRequestExamSessionUpsertWithWhereUniqueWithoutChangeRequestInput = {
@@ -135592,6 +137707,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutStudentAdjustmentRequestsInput = {
@@ -135658,6 +137774,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutStudentAdjustmentRequestsInput = {
@@ -135840,6 +137957,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPrimaryHomeroomAdjustmentRequestsInput = {
@@ -135906,6 +138024,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPrimaryHomeroomAdjustmentRequestsInput = {
@@ -135977,6 +138096,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTeacherReviewedStudentAdjustmentsInput = {
@@ -136043,6 +138163,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTeacherReviewedStudentAdjustmentsInput = {
@@ -136114,6 +138235,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEoReviewedStudentAdjustmentsInput = {
@@ -136180,6 +138302,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEoReviewedStudentAdjustmentsInput = {
@@ -136486,6 +138609,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutStudentAdjustmentRequestsInput = {
@@ -136552,6 +138676,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CandidateUpsertWithoutStudentAdjustmentRequestsInput = {
@@ -136746,6 +138871,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPrimaryHomeroomAdjustmentRequestsInput = {
@@ -136812,6 +138938,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutTeacherReviewedStudentAdjustmentsInput = {
@@ -136889,6 +139016,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTeacherReviewedStudentAdjustmentsInput = {
@@ -136955,6 +139083,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutEoReviewedStudentAdjustmentsInput = {
@@ -137032,6 +139161,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEoReviewedStudentAdjustmentsInput = {
@@ -137098,6 +139228,7 @@ export namespace Prisma {
     teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type StudentAdjustmentRequestItemUpsertWithWhereUniqueWithoutRequestInput = {
@@ -145849,6 +147980,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSourceDocumentsInput = {
@@ -145915,6 +148047,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSourceDocumentsInput = {
@@ -146342,6 +148475,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSourceDocumentsInput = {
@@ -146408,6 +148542,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PaperUpsertWithWhereUniqueWithoutSourceDocumentInput = {
@@ -146957,6 +149092,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeRulesCreatedInput = {
@@ -147023,6 +149159,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeRulesCreatedInput = {
@@ -147550,6 +149687,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeRulesCreatedInput = {
@@ -147616,6 +149754,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationWindowCreateWithoutExchangeRatesInput = {
@@ -147763,6 +149902,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutExchangeRatesCreatedInput = {
@@ -147829,6 +149969,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutExchangeRatesCreatedInput = {
@@ -147998,6 +150139,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutExchangeRatesCreatedInput = {
@@ -148064,6 +150206,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CandidateCreateWithoutFeeStatementsInput = {
@@ -148241,6 +150384,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsAsStudentInput = {
@@ -148307,6 +150451,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsAsStudentInput = {
@@ -148609,6 +150754,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsGeneratedInput = {
@@ -148675,6 +150821,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsGeneratedInput = {
@@ -149184,6 +151331,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementsRegenerationChangedInput = {
@@ -149250,6 +151398,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementsRegenerationChangedInput = {
@@ -149879,6 +152028,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsAsStudentInput = {
@@ -149945,6 +152095,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type RegistrationWorkspaceUpsertWithoutFeeStatementsInput = {
@@ -150271,6 +152422,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsGeneratedInput = {
@@ -150337,6 +152489,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutSuccessorStatementsInput = {
@@ -150672,6 +152825,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementsRegenerationChangedInput = {
@@ -150738,6 +152892,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeStatementInput = {
@@ -151055,6 +153210,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPaymentOrdersCancelledInput = {
@@ -151121,6 +153277,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPaymentOrdersCancelledInput = {
@@ -151316,6 +153473,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPaymentOrdersCancelledInput = {
@@ -151382,6 +153540,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeStatementCreateWithoutEventsInput = {
@@ -151555,6 +153714,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeStatementEventsActedInput = {
@@ -151621,6 +153781,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeStatementEventsActedInput = {
@@ -151816,6 +153977,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeStatementEventsActedInput = {
@@ -151882,6 +154044,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeStatementCreateWithoutItemsInput = {
@@ -152764,6 +154927,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOfflineWithdrawalRefundsCreatedInput = {
@@ -152830,6 +154994,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOfflineWithdrawalRefundsCreatedInput = {
@@ -152901,6 +155066,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -152967,6 +155133,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -153447,6 +155614,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCreatedInput = {
@@ -153513,6 +155681,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -153590,6 +155759,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOfflineWithdrawalRefundsCompletedInput = {
@@ -153656,6 +155826,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeRefundAllocationUpsertWithWhereUniqueWithoutOfflineWithdrawalRefundInput = {
@@ -154039,6 +156210,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeRefundsRecordedInput = {
@@ -154105,6 +156277,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeRefundsRecordedInput = {
@@ -154518,6 +156691,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeRefundsRecordedInput = {
@@ -154584,6 +156758,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeRefundAllocationUpsertWithWhereUniqueWithoutFeeRefundInput = {
@@ -154963,6 +157138,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeAuditLogsPerformedInput = {
@@ -155029,6 +157205,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeAuditLogsPerformedInput = {
@@ -155198,6 +157375,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeAuditLogsPerformedInput = {
@@ -155264,6 +157442,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ExamBoardCreateWithoutReviewWindowsInput = {
@@ -155474,6 +157653,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewWindowsCreatedInput = {
@@ -155540,6 +157720,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewWindowsCreatedInput = {
@@ -156152,6 +158333,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewWindowsCreatedInput = {
@@ -156218,6 +158400,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ReviewWindowServiceUpsertWithWhereUniqueWithoutReviewWindowInput = {
@@ -157051,6 +159234,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsRequestedInput = {
@@ -157117,6 +159301,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsRequestedInput = {
@@ -157188,6 +159373,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewRequestsReviewedInput = {
@@ -157254,6 +159440,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewRequestsReviewedInput = {
@@ -158033,6 +160220,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsRequestedInput = {
@@ -158099,6 +160287,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutReviewRequestsReviewedInput = {
@@ -158176,6 +160365,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewRequestsReviewedInput = {
@@ -158242,6 +160432,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutReviewRequestsInput = {
@@ -158862,6 +161053,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCashInRequestsRequestedInput = {
@@ -158928,6 +161120,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCashInRequestsRequestedInput = {
@@ -159600,6 +161793,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCashInRequestsRequestedInput = {
@@ -159666,6 +161860,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutCashInRequestsInput = {
@@ -160387,6 +162582,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAccessToScriptRequestsRequestedInput = {
@@ -160453,6 +162649,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAccessToScriptRequestsRequestedInput = {
@@ -161232,6 +163429,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAccessToScriptRequestsRequestedInput = {
@@ -161298,6 +163496,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutAccessToScriptRequestsInput = {
@@ -161779,6 +163978,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCertificateRequestsRequestedInput = {
@@ -161845,6 +164045,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCertificateRequestsRequestedInput = {
@@ -162360,6 +164561,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCertificateRequestsRequestedInput = {
@@ -162426,6 +164628,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeStatementUpsertWithoutCertificateRequestsInput = {
@@ -162870,6 +165073,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutFeeSchedulesCreatedInput = {
@@ -162936,6 +165140,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutFeeSchedulesCreatedInput = {
@@ -163437,6 +165642,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutFeeSchedulesCreatedInput = {
@@ -163503,6 +165709,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type FeeStatementItemUpsertWithWhereUniqueWithoutFeeScheduleInput = {
@@ -163984,6 +166191,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPostResultsAuditLogsPerformedInput = {
@@ -164050,6 +166258,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPostResultsAuditLogsPerformedInput = {
@@ -164545,6 +166754,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPostResultsAuditLogsPerformedInput = {
@@ -164611,6 +166821,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutBackupSettingsUpdatedInput = {
@@ -164677,6 +166888,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBackupSettingsUpdatedInput = {
@@ -164743,6 +166955,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBackupSettingsUpdatedInput = {
@@ -164825,6 +167038,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupSettingsUpdatedInput = {
@@ -164891,6 +167105,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutBackupJobsTriggeredInput = {
@@ -164957,6 +167172,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutBackupJobsTriggeredInput = {
@@ -165023,6 +167239,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutBackupJobsTriggeredInput = {
@@ -165105,6 +167322,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBackupJobsTriggeredInput = {
@@ -165171,6 +167389,7 @@ export namespace Prisma {
     eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
     primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
     classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SourceDocumentCreateManyUploadedByInput = {
@@ -166230,6 +168449,20 @@ export namespace Prisma {
     className: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type LoginLogCreateManyUserInput = {
+    id?: string
+    occurredAt?: Date | string
+    lastAttemptAt?: Date | string
+    result: $Enums.LoginLogResult
+    failureReason?: $Enums.LoginLogFailureReason | null
+    attemptCount?: number
+    nameSnapshot?: string | null
+    roleSnapshot?: $Enums.UserRole | null
+    identifier: string
+    ipAddress: string
+    userAgent?: string | null
   }
 
   export type SourceDocumentUpdateWithoutUploadedByInput = {
@@ -169623,6 +171856,48 @@ export namespace Prisma {
     className?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginLogUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAttemptAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumLoginLogResultFieldUpdateOperationsInput | $Enums.LoginLogResult
+    failureReason?: NullableEnumLoginLogFailureReasonFieldUpdateOperationsInput | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    nameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSnapshot?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    identifier?: StringFieldUpdateOperationsInput | string
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type LoginLogUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAttemptAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumLoginLogResultFieldUpdateOperationsInput | $Enums.LoginLogResult
+    failureReason?: NullableEnumLoginLogFailureReasonFieldUpdateOperationsInput | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    nameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSnapshot?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    identifier?: StringFieldUpdateOperationsInput | string
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type LoginLogUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastAttemptAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    result?: EnumLoginLogResultFieldUpdateOperationsInput | $Enums.LoginLogResult
+    failureReason?: NullableEnumLoginLogFailureReasonFieldUpdateOperationsInput | $Enums.LoginLogFailureReason | null
+    attemptCount?: IntFieldUpdateOperationsInput | number
+    nameSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    roleSnapshot?: NullableEnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole | null
+    identifier?: StringFieldUpdateOperationsInput | string
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    userAgent?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type CandidateExamIdentityCreateManyCandidateInput = {

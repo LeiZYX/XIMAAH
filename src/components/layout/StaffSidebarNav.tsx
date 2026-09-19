@@ -125,7 +125,10 @@ export function adminStaffSections(base: "/admin" | "/exam-office"): SidebarSect
     },
     {
       title: "Audit Logs",
-      links: [{ href: `${prefix}/audit-logs`, label: "Audit Logs" }],
+      links: [
+        { href: `${prefix}/audit-logs`, label: "Audit Logs" },
+        { href: `${prefix}/login-logs`, label: "Login Logs" },
+      ],
     },
   ];
 }

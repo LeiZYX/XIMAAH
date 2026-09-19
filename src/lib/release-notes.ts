@@ -9,9 +9,19 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.9";
+export const CURRENT_VERSION = "1.3.10";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.10",
+    releaseDate: "2026-09-19",
+    summary: "Login Logs for Admin and Exam Officer, separate from fee audit logs.",
+    changes: [
+      "Audit Logs sidebar adds Login Logs for successful sign-in, failed sign-in, and logout",
+      "Search matches English, Chinese, pinyin, and email. Failed tries from the same IP and login name within one minute stay one row",
+      "Success and logout are kept for two years. Failures are kept for 90 days",
+    ],
+  },
   {
     version: "1.3.9",
     releaseDate: "2026-09-19",
