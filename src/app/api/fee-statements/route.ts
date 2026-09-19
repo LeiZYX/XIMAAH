@@ -324,7 +324,9 @@ export async function POST(request: NextRequest) {
 
   try {
     if (data.action === "issue" && data.statementId) {
-      const statement = await issueFeeStatement(data.statementId);
+      const statement = await issueFeeStatement(data.statementId, {
+        performedByUserId: auth.user.id,
+      });
       return NextResponse.json(statement);
     }
 
@@ -400,7 +402,9 @@ export async function POST(request: NextRequest) {
                 });
                 continue;
               }
-              const issued = await issueFeeStatement(existingDraft.id);
+              const issued = await issueFeeStatement(existingDraft.id, {
+                performedByUserId: auth.user.id,
+              });
               results.push({
                 workspaceId: workspace.id,
                 ok: true,

@@ -123,6 +123,7 @@ export async function repriceWorkspaceByCurrentFeeStage(params: {
     workspaceId: params.workspaceId,
     generatedByUserId: params.performedByUserId,
     displayCurrency,
+    repriced: true,
   });
 
   await createFeeAuditLog({

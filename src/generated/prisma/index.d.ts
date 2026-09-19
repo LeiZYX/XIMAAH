@@ -225,6 +225,11 @@ export type FeeStatement = $Result.DefaultSelection<Prisma.$FeeStatementPayload>
  */
 export type PaymentOrder = $Result.DefaultSelection<Prisma.$PaymentOrderPayload>
 /**
+ * Model FeeStatementEvent
+ * 
+ */
+export type FeeStatementEvent = $Result.DefaultSelection<Prisma.$FeeStatementEventPayload>
+/**
  * Model FeeStatementItem
  * 
  */
@@ -583,6 +588,24 @@ export const FeePaymentSettlement: {
 };
 
 export type FeePaymentSettlement = (typeof FeePaymentSettlement)[keyof typeof FeePaymentSettlement]
+
+
+export const FeeStatementEventKind: {
+  GENERATED: 'GENERATED',
+  ISSUED: 'ISSUED',
+  COVERED: 'COVERED',
+  ORDER_CREATED: 'ORDER_CREATED',
+  ORDER_CANCELLED: 'ORDER_CANCELLED',
+  ORDER_CLOSED: 'ORDER_CLOSED',
+  PAID_ONLINE: 'PAID_ONLINE',
+  MARKED_PAID_OFFLINE: 'MARKED_PAID_OFFLINE',
+  NEEDS_REGENERATION: 'NEEDS_REGENERATION',
+  REGENERATED: 'REGENERATED',
+  REPRICED: 'REPRICED',
+  SUPERSEDED: 'SUPERSEDED'
+};
+
+export type FeeStatementEventKind = (typeof FeeStatementEventKind)[keyof typeof FeeStatementEventKind]
 
 
 export const FeeStatementKind: {
@@ -1056,6 +1079,10 @@ export const FeeStatementStatus: typeof $Enums.FeeStatementStatus
 export type FeePaymentSettlement = $Enums.FeePaymentSettlement
 
 export const FeePaymentSettlement: typeof $Enums.FeePaymentSettlement
+
+export type FeeStatementEventKind = $Enums.FeeStatementEventKind
+
+export const FeeStatementEventKind: typeof $Enums.FeeStatementEventKind
 
 export type FeeStatementKind = $Enums.FeeStatementKind
 
@@ -1720,6 +1747,16 @@ export class PrismaClient<
   get paymentOrder(): Prisma.PaymentOrderDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.feeStatementEvent`: Exposes CRUD operations for the **FeeStatementEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FeeStatementEvents
+    * const feeStatementEvents = await prisma.feeStatementEvent.findMany()
+    * ```
+    */
+  get feeStatementEvent(): Prisma.FeeStatementEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.feeStatementItem`: Exposes CRUD operations for the **FeeStatementItem** model.
     * Example usage:
     * ```ts
@@ -2331,6 +2368,7 @@ export namespace Prisma {
     ExchangeRate: 'ExchangeRate',
     FeeStatement: 'FeeStatement',
     PaymentOrder: 'PaymentOrder',
+    FeeStatementEvent: 'FeeStatementEvent',
     FeeStatementItem: 'FeeStatementItem',
     OfflineWithdrawalRefund: 'OfflineWithdrawalRefund',
     FeeAuditLog: 'FeeAuditLog',
@@ -2362,7 +2400,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "studentNotificationLog" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "classHomeroomTeacher" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "studentAdjustmentRequest" | "studentAdjustmentRequestItem" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
+      modelProps: "user" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "studentNotificationLog" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "classHomeroomTeacher" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "studentAdjustmentRequest" | "studentAdjustmentRequestItem" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementEvent" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -5138,6 +5176,72 @@ export namespace Prisma {
           }
         }
       }
+      FeeStatementEvent: {
+        payload: Prisma.$FeeStatementEventPayload<ExtArgs>
+        fields: Prisma.FeeStatementEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FeeStatementEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeeStatementEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FeeStatementEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeeStatementEventPayload>
+          }
+          findFirst: {
+            args: Prisma.FeeStatementEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeeStatementEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FeeStatementEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeeStatementEventPayload>
+          }
+          findMany: {
+            args: Prisma.FeeStatementEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeeStatementEventPayload>[]
+          }
+          create: {
+            args: Prisma.FeeStatementEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeeStatementEventPayload>
+          }
+          createMany: {
+            args: Prisma.FeeStatementEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.FeeStatementEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeeStatementEventPayload>
+          }
+          update: {
+            args: Prisma.FeeStatementEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeeStatementEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.FeeStatementEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FeeStatementEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.FeeStatementEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FeeStatementEventPayload>
+          }
+          aggregate: {
+            args: Prisma.FeeStatementEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFeeStatementEvent>
+          }
+          groupBy: {
+            args: Prisma.FeeStatementEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FeeStatementEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FeeStatementEventCountArgs<ExtArgs>
+            result: $Utils.Optional<FeeStatementEventCountAggregateOutputType> | number
+          }
+        }
+      }
       FeeStatementItem: {
         payload: Prisma.$FeeStatementItemPayload<ExtArgs>
         fields: Prisma.FeeStatementItemFieldRefs
@@ -6134,6 +6238,7 @@ export namespace Prisma {
     exchangeRate?: ExchangeRateOmit
     feeStatement?: FeeStatementOmit
     paymentOrder?: PaymentOrderOmit
+    feeStatementEvent?: FeeStatementEventOmit
     feeStatementItem?: FeeStatementItemOmit
     offlineWithdrawalRefund?: OfflineWithdrawalRefundOmit
     feeAuditLog?: FeeAuditLogOmit
@@ -6245,6 +6350,7 @@ export namespace Prisma {
     feeStatementsAsStudent: number
     feeStatementsRegenerationChanged: number
     feeAuditLogsPerformed: number
+    feeStatementEventsActed: number
     registrationsAdded: number
     userAuditLogsPerformed: number
     userAuditLogsTarget: number
@@ -6295,6 +6401,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: boolean | UserCountOutputTypeCountFeeStatementsAsStudentArgs
     feeStatementsRegenerationChanged?: boolean | UserCountOutputTypeCountFeeStatementsRegenerationChangedArgs
     feeAuditLogsPerformed?: boolean | UserCountOutputTypeCountFeeAuditLogsPerformedArgs
+    feeStatementEventsActed?: boolean | UserCountOutputTypeCountFeeStatementEventsActedArgs
     registrationsAdded?: boolean | UserCountOutputTypeCountRegistrationsAddedArgs
     userAuditLogsPerformed?: boolean | UserCountOutputTypeCountUserAuditLogsPerformedArgs
     userAuditLogsTarget?: boolean | UserCountOutputTypeCountUserAuditLogsTargetArgs
@@ -6461,6 +6568,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountFeeAuditLogsPerformedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FeeAuditLogWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFeeStatementEventsActedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeeStatementEventWhereInput
   }
 
   /**
@@ -8073,6 +8187,7 @@ export namespace Prisma {
     predecessorStatements: number
     items: number
     paymentOrders: number
+    events: number
     reviewRequests: number
     cashInRequests: number
     accessToScriptRequests: number
@@ -8085,6 +8200,7 @@ export namespace Prisma {
     predecessorStatements?: boolean | FeeStatementCountOutputTypeCountPredecessorStatementsArgs
     items?: boolean | FeeStatementCountOutputTypeCountItemsArgs
     paymentOrders?: boolean | FeeStatementCountOutputTypeCountPaymentOrdersArgs
+    events?: boolean | FeeStatementCountOutputTypeCountEventsArgs
     reviewRequests?: boolean | FeeStatementCountOutputTypeCountReviewRequestsArgs
     cashInRequests?: boolean | FeeStatementCountOutputTypeCountCashInRequestsArgs
     accessToScriptRequests?: boolean | FeeStatementCountOutputTypeCountAccessToScriptRequestsArgs
@@ -8129,6 +8245,13 @@ export namespace Prisma {
    */
   export type FeeStatementCountOutputTypeCountPaymentOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PaymentOrderWhereInput
+  }
+
+  /**
+   * FeeStatementCountOutputType without action
+   */
+  export type FeeStatementCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeeStatementEventWhereInput
   }
 
   /**
@@ -8535,6 +8658,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: boolean | User$feeStatementsAsStudentArgs<ExtArgs>
     feeStatementsRegenerationChanged?: boolean | User$feeStatementsRegenerationChangedArgs<ExtArgs>
     feeAuditLogsPerformed?: boolean | User$feeAuditLogsPerformedArgs<ExtArgs>
+    feeStatementEventsActed?: boolean | User$feeStatementEventsActedArgs<ExtArgs>
     registrationsAdded?: boolean | User$registrationsAddedArgs<ExtArgs>
     candidate?: boolean | User$candidateArgs<ExtArgs>
     teacherProfile?: boolean | User$teacherProfileArgs<ExtArgs>
@@ -8607,6 +8731,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: boolean | User$feeStatementsAsStudentArgs<ExtArgs>
     feeStatementsRegenerationChanged?: boolean | User$feeStatementsRegenerationChangedArgs<ExtArgs>
     feeAuditLogsPerformed?: boolean | User$feeAuditLogsPerformedArgs<ExtArgs>
+    feeStatementEventsActed?: boolean | User$feeStatementEventsActedArgs<ExtArgs>
     registrationsAdded?: boolean | User$registrationsAddedArgs<ExtArgs>
     candidate?: boolean | User$candidateArgs<ExtArgs>
     teacherProfile?: boolean | User$teacherProfileArgs<ExtArgs>
@@ -8663,6 +8788,7 @@ export namespace Prisma {
       feeStatementsAsStudent: Prisma.$FeeStatementPayload<ExtArgs>[]
       feeStatementsRegenerationChanged: Prisma.$FeeStatementPayload<ExtArgs>[]
       feeAuditLogsPerformed: Prisma.$FeeAuditLogPayload<ExtArgs>[]
+      feeStatementEventsActed: Prisma.$FeeStatementEventPayload<ExtArgs>[]
       registrationsAdded: Prisma.$StudentExamRegistrationPayload<ExtArgs>[]
       candidate: Prisma.$CandidatePayload<ExtArgs> | null
       teacherProfile: Prisma.$TeacherProfilePayload<ExtArgs> | null
@@ -9067,6 +9193,7 @@ export namespace Prisma {
     feeStatementsAsStudent<T extends User$feeStatementsAsStudentArgs<ExtArgs> = {}>(args?: Subset<T, User$feeStatementsAsStudentArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeStatementsRegenerationChanged<T extends User$feeStatementsRegenerationChangedArgs<ExtArgs> = {}>(args?: Subset<T, User$feeStatementsRegenerationChangedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     feeAuditLogsPerformed<T extends User$feeAuditLogsPerformedArgs<ExtArgs> = {}>(args?: Subset<T, User$feeAuditLogsPerformedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    feeStatementEventsActed<T extends User$feeStatementEventsActedArgs<ExtArgs> = {}>(args?: Subset<T, User$feeStatementEventsActedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     registrationsAdded<T extends User$registrationsAddedArgs<ExtArgs> = {}>(args?: Subset<T, User$registrationsAddedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentExamRegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     candidate<T extends User$candidateArgs<ExtArgs> = {}>(args?: Subset<T, User$candidateArgs<ExtArgs>>): Prisma__CandidateClient<$Result.GetResult<Prisma.$CandidatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     teacherProfile<T extends User$teacherProfileArgs<ExtArgs> = {}>(args?: Subset<T, User$teacherProfileArgs<ExtArgs>>): Prisma__TeacherProfileClient<$Result.GetResult<Prisma.$TeacherProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -9930,6 +10057,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FeeAuditLogScalarFieldEnum | FeeAuditLogScalarFieldEnum[]
+  }
+
+  /**
+   * User.feeStatementEventsActed
+   */
+  export type User$feeStatementEventsActedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    where?: FeeStatementEventWhereInput
+    orderBy?: FeeStatementEventOrderByWithRelationInput | FeeStatementEventOrderByWithRelationInput[]
+    cursor?: FeeStatementEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeeStatementEventScalarFieldEnum | FeeStatementEventScalarFieldEnum[]
   }
 
   /**
@@ -56257,6 +56408,7 @@ export namespace Prisma {
     regenerationChangedBy?: boolean | FeeStatement$regenerationChangedByArgs<ExtArgs>
     items?: boolean | FeeStatement$itemsArgs<ExtArgs>
     paymentOrders?: boolean | FeeStatement$paymentOrdersArgs<ExtArgs>
+    events?: boolean | FeeStatement$eventsArgs<ExtArgs>
     reviewRequests?: boolean | FeeStatement$reviewRequestsArgs<ExtArgs>
     cashInRequests?: boolean | FeeStatement$cashInRequestsArgs<ExtArgs>
     accessToScriptRequests?: boolean | FeeStatement$accessToScriptRequestsArgs<ExtArgs>
@@ -56323,6 +56475,7 @@ export namespace Prisma {
     regenerationChangedBy?: boolean | FeeStatement$regenerationChangedByArgs<ExtArgs>
     items?: boolean | FeeStatement$itemsArgs<ExtArgs>
     paymentOrders?: boolean | FeeStatement$paymentOrdersArgs<ExtArgs>
+    events?: boolean | FeeStatement$eventsArgs<ExtArgs>
     reviewRequests?: boolean | FeeStatement$reviewRequestsArgs<ExtArgs>
     cashInRequests?: boolean | FeeStatement$cashInRequestsArgs<ExtArgs>
     accessToScriptRequests?: boolean | FeeStatement$accessToScriptRequestsArgs<ExtArgs>
@@ -56347,6 +56500,7 @@ export namespace Prisma {
       regenerationChangedBy: Prisma.$UserPayload<ExtArgs> | null
       items: Prisma.$FeeStatementItemPayload<ExtArgs>[]
       paymentOrders: Prisma.$PaymentOrderPayload<ExtArgs>[]
+      events: Prisma.$FeeStatementEventPayload<ExtArgs>[]
       reviewRequests: Prisma.$ReviewRequestPayload<ExtArgs>[]
       cashInRequests: Prisma.$CashInRequestPayload<ExtArgs>[]
       accessToScriptRequests: Prisma.$AccessToScriptRequestPayload<ExtArgs>[]
@@ -56751,6 +56905,7 @@ export namespace Prisma {
     regenerationChangedBy<T extends FeeStatement$regenerationChangedByArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$regenerationChangedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends FeeStatement$itemsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     paymentOrders<T extends FeeStatement$paymentOrdersArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$paymentOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    events<T extends FeeStatement$eventsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviewRequests<T extends FeeStatement$reviewRequestsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$reviewRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cashInRequests<T extends FeeStatement$cashInRequestsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$cashInRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CashInRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     accessToScriptRequests<T extends FeeStatement$accessToScriptRequestsArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatement$accessToScriptRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AccessToScriptRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -57411,6 +57566,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PaymentOrderScalarFieldEnum | PaymentOrderScalarFieldEnum[]
+  }
+
+  /**
+   * FeeStatement.events
+   */
+  export type FeeStatement$eventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    where?: FeeStatementEventWhereInput
+    orderBy?: FeeStatementEventOrderByWithRelationInput | FeeStatementEventOrderByWithRelationInput[]
+    cursor?: FeeStatementEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FeeStatementEventScalarFieldEnum | FeeStatementEventScalarFieldEnum[]
   }
 
   /**
@@ -58715,6 +58894,994 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: PaymentOrderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FeeStatementEvent
+   */
+
+  export type AggregateFeeStatementEvent = {
+    _count: FeeStatementEventCountAggregateOutputType | null
+    _min: FeeStatementEventMinAggregateOutputType | null
+    _max: FeeStatementEventMaxAggregateOutputType | null
+  }
+
+  export type FeeStatementEventMinAggregateOutputType = {
+    id: string | null
+    feeStatementId: string | null
+    paymentOrderId: string | null
+    kind: $Enums.FeeStatementEventKind | null
+    occurredAt: Date | null
+    actorUserId: string | null
+    summary: string | null
+    createdAt: Date | null
+  }
+
+  export type FeeStatementEventMaxAggregateOutputType = {
+    id: string | null
+    feeStatementId: string | null
+    paymentOrderId: string | null
+    kind: $Enums.FeeStatementEventKind | null
+    occurredAt: Date | null
+    actorUserId: string | null
+    summary: string | null
+    createdAt: Date | null
+  }
+
+  export type FeeStatementEventCountAggregateOutputType = {
+    id: number
+    feeStatementId: number
+    paymentOrderId: number
+    kind: number
+    occurredAt: number
+    actorUserId: number
+    summary: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type FeeStatementEventMinAggregateInputType = {
+    id?: true
+    feeStatementId?: true
+    paymentOrderId?: true
+    kind?: true
+    occurredAt?: true
+    actorUserId?: true
+    summary?: true
+    createdAt?: true
+  }
+
+  export type FeeStatementEventMaxAggregateInputType = {
+    id?: true
+    feeStatementId?: true
+    paymentOrderId?: true
+    kind?: true
+    occurredAt?: true
+    actorUserId?: true
+    summary?: true
+    createdAt?: true
+  }
+
+  export type FeeStatementEventCountAggregateInputType = {
+    id?: true
+    feeStatementId?: true
+    paymentOrderId?: true
+    kind?: true
+    occurredAt?: true
+    actorUserId?: true
+    summary?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type FeeStatementEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeeStatementEvent to aggregate.
+     */
+    where?: FeeStatementEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeeStatementEvents to fetch.
+     */
+    orderBy?: FeeStatementEventOrderByWithRelationInput | FeeStatementEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FeeStatementEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeeStatementEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeeStatementEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FeeStatementEvents
+    **/
+    _count?: true | FeeStatementEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FeeStatementEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FeeStatementEventMaxAggregateInputType
+  }
+
+  export type GetFeeStatementEventAggregateType<T extends FeeStatementEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateFeeStatementEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFeeStatementEvent[P]>
+      : GetScalarType<T[P], AggregateFeeStatementEvent[P]>
+  }
+
+
+
+
+  export type FeeStatementEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FeeStatementEventWhereInput
+    orderBy?: FeeStatementEventOrderByWithAggregationInput | FeeStatementEventOrderByWithAggregationInput[]
+    by: FeeStatementEventScalarFieldEnum[] | FeeStatementEventScalarFieldEnum
+    having?: FeeStatementEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FeeStatementEventCountAggregateInputType | true
+    _min?: FeeStatementEventMinAggregateInputType
+    _max?: FeeStatementEventMaxAggregateInputType
+  }
+
+  export type FeeStatementEventGroupByOutputType = {
+    id: string
+    feeStatementId: string
+    paymentOrderId: string | null
+    kind: $Enums.FeeStatementEventKind
+    occurredAt: Date
+    actorUserId: string | null
+    summary: string
+    createdAt: Date
+    _count: FeeStatementEventCountAggregateOutputType | null
+    _min: FeeStatementEventMinAggregateOutputType | null
+    _max: FeeStatementEventMaxAggregateOutputType | null
+  }
+
+  type GetFeeStatementEventGroupByPayload<T extends FeeStatementEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FeeStatementEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FeeStatementEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FeeStatementEventGroupByOutputType[P]>
+            : GetScalarType<T[P], FeeStatementEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FeeStatementEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    feeStatementId?: boolean
+    paymentOrderId?: boolean
+    kind?: boolean
+    occurredAt?: boolean
+    actorUserId?: boolean
+    summary?: boolean
+    createdAt?: boolean
+    feeStatement?: boolean | FeeStatementDefaultArgs<ExtArgs>
+    actor?: boolean | FeeStatementEvent$actorArgs<ExtArgs>
+  }, ExtArgs["result"]["feeStatementEvent"]>
+
+
+
+  export type FeeStatementEventSelectScalar = {
+    id?: boolean
+    feeStatementId?: boolean
+    paymentOrderId?: boolean
+    kind?: boolean
+    occurredAt?: boolean
+    actorUserId?: boolean
+    summary?: boolean
+    createdAt?: boolean
+  }
+
+  export type FeeStatementEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "feeStatementId" | "paymentOrderId" | "kind" | "occurredAt" | "actorUserId" | "summary" | "createdAt", ExtArgs["result"]["feeStatementEvent"]>
+  export type FeeStatementEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    feeStatement?: boolean | FeeStatementDefaultArgs<ExtArgs>
+    actor?: boolean | FeeStatementEvent$actorArgs<ExtArgs>
+  }
+
+  export type $FeeStatementEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FeeStatementEvent"
+    objects: {
+      feeStatement: Prisma.$FeeStatementPayload<ExtArgs>
+      actor: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      feeStatementId: string
+      /**
+       * * Stored without a foreign key so closing or deleting an order does not drop the timeline row.
+       */
+      paymentOrderId: string | null
+      kind: $Enums.FeeStatementEventKind
+      occurredAt: Date
+      actorUserId: string | null
+      summary: string
+      createdAt: Date
+    }, ExtArgs["result"]["feeStatementEvent"]>
+    composites: {}
+  }
+
+  type FeeStatementEventGetPayload<S extends boolean | null | undefined | FeeStatementEventDefaultArgs> = $Result.GetResult<Prisma.$FeeStatementEventPayload, S>
+
+  type FeeStatementEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<FeeStatementEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: FeeStatementEventCountAggregateInputType | true
+    }
+
+  export interface FeeStatementEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FeeStatementEvent'], meta: { name: 'FeeStatementEvent' } }
+    /**
+     * Find zero or one FeeStatementEvent that matches the filter.
+     * @param {FeeStatementEventFindUniqueArgs} args - Arguments to find a FeeStatementEvent
+     * @example
+     * // Get one FeeStatementEvent
+     * const feeStatementEvent = await prisma.feeStatementEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FeeStatementEventFindUniqueArgs>(args: SelectSubset<T, FeeStatementEventFindUniqueArgs<ExtArgs>>): Prisma__FeeStatementEventClient<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one FeeStatementEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {FeeStatementEventFindUniqueOrThrowArgs} args - Arguments to find a FeeStatementEvent
+     * @example
+     * // Get one FeeStatementEvent
+     * const feeStatementEvent = await prisma.feeStatementEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FeeStatementEventFindUniqueOrThrowArgs>(args: SelectSubset<T, FeeStatementEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FeeStatementEventClient<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeeStatementEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeeStatementEventFindFirstArgs} args - Arguments to find a FeeStatementEvent
+     * @example
+     * // Get one FeeStatementEvent
+     * const feeStatementEvent = await prisma.feeStatementEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FeeStatementEventFindFirstArgs>(args?: SelectSubset<T, FeeStatementEventFindFirstArgs<ExtArgs>>): Prisma__FeeStatementEventClient<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first FeeStatementEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeeStatementEventFindFirstOrThrowArgs} args - Arguments to find a FeeStatementEvent
+     * @example
+     * // Get one FeeStatementEvent
+     * const feeStatementEvent = await prisma.feeStatementEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FeeStatementEventFindFirstOrThrowArgs>(args?: SelectSubset<T, FeeStatementEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__FeeStatementEventClient<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more FeeStatementEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeeStatementEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FeeStatementEvents
+     * const feeStatementEvents = await prisma.feeStatementEvent.findMany()
+     * 
+     * // Get first 10 FeeStatementEvents
+     * const feeStatementEvents = await prisma.feeStatementEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const feeStatementEventWithIdOnly = await prisma.feeStatementEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FeeStatementEventFindManyArgs>(args?: SelectSubset<T, FeeStatementEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a FeeStatementEvent.
+     * @param {FeeStatementEventCreateArgs} args - Arguments to create a FeeStatementEvent.
+     * @example
+     * // Create one FeeStatementEvent
+     * const FeeStatementEvent = await prisma.feeStatementEvent.create({
+     *   data: {
+     *     // ... data to create a FeeStatementEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends FeeStatementEventCreateArgs>(args: SelectSubset<T, FeeStatementEventCreateArgs<ExtArgs>>): Prisma__FeeStatementEventClient<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many FeeStatementEvents.
+     * @param {FeeStatementEventCreateManyArgs} args - Arguments to create many FeeStatementEvents.
+     * @example
+     * // Create many FeeStatementEvents
+     * const feeStatementEvent = await prisma.feeStatementEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FeeStatementEventCreateManyArgs>(args?: SelectSubset<T, FeeStatementEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a FeeStatementEvent.
+     * @param {FeeStatementEventDeleteArgs} args - Arguments to delete one FeeStatementEvent.
+     * @example
+     * // Delete one FeeStatementEvent
+     * const FeeStatementEvent = await prisma.feeStatementEvent.delete({
+     *   where: {
+     *     // ... filter to delete one FeeStatementEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FeeStatementEventDeleteArgs>(args: SelectSubset<T, FeeStatementEventDeleteArgs<ExtArgs>>): Prisma__FeeStatementEventClient<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one FeeStatementEvent.
+     * @param {FeeStatementEventUpdateArgs} args - Arguments to update one FeeStatementEvent.
+     * @example
+     * // Update one FeeStatementEvent
+     * const feeStatementEvent = await prisma.feeStatementEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FeeStatementEventUpdateArgs>(args: SelectSubset<T, FeeStatementEventUpdateArgs<ExtArgs>>): Prisma__FeeStatementEventClient<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more FeeStatementEvents.
+     * @param {FeeStatementEventDeleteManyArgs} args - Arguments to filter FeeStatementEvents to delete.
+     * @example
+     * // Delete a few FeeStatementEvents
+     * const { count } = await prisma.feeStatementEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FeeStatementEventDeleteManyArgs>(args?: SelectSubset<T, FeeStatementEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FeeStatementEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeeStatementEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FeeStatementEvents
+     * const feeStatementEvent = await prisma.feeStatementEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FeeStatementEventUpdateManyArgs>(args: SelectSubset<T, FeeStatementEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one FeeStatementEvent.
+     * @param {FeeStatementEventUpsertArgs} args - Arguments to update or create a FeeStatementEvent.
+     * @example
+     * // Update or create a FeeStatementEvent
+     * const feeStatementEvent = await prisma.feeStatementEvent.upsert({
+     *   create: {
+     *     // ... data to create a FeeStatementEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FeeStatementEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FeeStatementEventUpsertArgs>(args: SelectSubset<T, FeeStatementEventUpsertArgs<ExtArgs>>): Prisma__FeeStatementEventClient<$Result.GetResult<Prisma.$FeeStatementEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of FeeStatementEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeeStatementEventCountArgs} args - Arguments to filter FeeStatementEvents to count.
+     * @example
+     * // Count the number of FeeStatementEvents
+     * const count = await prisma.feeStatementEvent.count({
+     *   where: {
+     *     // ... the filter for the FeeStatementEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends FeeStatementEventCountArgs>(
+      args?: Subset<T, FeeStatementEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FeeStatementEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FeeStatementEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeeStatementEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FeeStatementEventAggregateArgs>(args: Subset<T, FeeStatementEventAggregateArgs>): Prisma.PrismaPromise<GetFeeStatementEventAggregateType<T>>
+
+    /**
+     * Group by FeeStatementEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FeeStatementEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FeeStatementEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FeeStatementEventGroupByArgs['orderBy'] }
+        : { orderBy?: FeeStatementEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FeeStatementEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFeeStatementEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FeeStatementEvent model
+   */
+  readonly fields: FeeStatementEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FeeStatementEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FeeStatementEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    feeStatement<T extends FeeStatementDefaultArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatementDefaultArgs<ExtArgs>>): Prisma__FeeStatementClient<$Result.GetResult<Prisma.$FeeStatementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    actor<T extends FeeStatementEvent$actorArgs<ExtArgs> = {}>(args?: Subset<T, FeeStatementEvent$actorArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FeeStatementEvent model
+   */
+  interface FeeStatementEventFieldRefs {
+    readonly id: FieldRef<"FeeStatementEvent", 'String'>
+    readonly feeStatementId: FieldRef<"FeeStatementEvent", 'String'>
+    readonly paymentOrderId: FieldRef<"FeeStatementEvent", 'String'>
+    readonly kind: FieldRef<"FeeStatementEvent", 'FeeStatementEventKind'>
+    readonly occurredAt: FieldRef<"FeeStatementEvent", 'DateTime'>
+    readonly actorUserId: FieldRef<"FeeStatementEvent", 'String'>
+    readonly summary: FieldRef<"FeeStatementEvent", 'String'>
+    readonly createdAt: FieldRef<"FeeStatementEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FeeStatementEvent findUnique
+   */
+  export type FeeStatementEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    /**
+     * Filter, which FeeStatementEvent to fetch.
+     */
+    where: FeeStatementEventWhereUniqueInput
+  }
+
+  /**
+   * FeeStatementEvent findUniqueOrThrow
+   */
+  export type FeeStatementEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    /**
+     * Filter, which FeeStatementEvent to fetch.
+     */
+    where: FeeStatementEventWhereUniqueInput
+  }
+
+  /**
+   * FeeStatementEvent findFirst
+   */
+  export type FeeStatementEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    /**
+     * Filter, which FeeStatementEvent to fetch.
+     */
+    where?: FeeStatementEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeeStatementEvents to fetch.
+     */
+    orderBy?: FeeStatementEventOrderByWithRelationInput | FeeStatementEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeeStatementEvents.
+     */
+    cursor?: FeeStatementEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeeStatementEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeeStatementEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeeStatementEvents.
+     */
+    distinct?: FeeStatementEventScalarFieldEnum | FeeStatementEventScalarFieldEnum[]
+  }
+
+  /**
+   * FeeStatementEvent findFirstOrThrow
+   */
+  export type FeeStatementEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    /**
+     * Filter, which FeeStatementEvent to fetch.
+     */
+    where?: FeeStatementEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeeStatementEvents to fetch.
+     */
+    orderBy?: FeeStatementEventOrderByWithRelationInput | FeeStatementEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FeeStatementEvents.
+     */
+    cursor?: FeeStatementEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeeStatementEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeeStatementEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FeeStatementEvents.
+     */
+    distinct?: FeeStatementEventScalarFieldEnum | FeeStatementEventScalarFieldEnum[]
+  }
+
+  /**
+   * FeeStatementEvent findMany
+   */
+  export type FeeStatementEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    /**
+     * Filter, which FeeStatementEvents to fetch.
+     */
+    where?: FeeStatementEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FeeStatementEvents to fetch.
+     */
+    orderBy?: FeeStatementEventOrderByWithRelationInput | FeeStatementEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FeeStatementEvents.
+     */
+    cursor?: FeeStatementEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FeeStatementEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FeeStatementEvents.
+     */
+    skip?: number
+    distinct?: FeeStatementEventScalarFieldEnum | FeeStatementEventScalarFieldEnum[]
+  }
+
+  /**
+   * FeeStatementEvent create
+   */
+  export type FeeStatementEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FeeStatementEvent.
+     */
+    data: XOR<FeeStatementEventCreateInput, FeeStatementEventUncheckedCreateInput>
+  }
+
+  /**
+   * FeeStatementEvent createMany
+   */
+  export type FeeStatementEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FeeStatementEvents.
+     */
+    data: FeeStatementEventCreateManyInput | FeeStatementEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FeeStatementEvent update
+   */
+  export type FeeStatementEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FeeStatementEvent.
+     */
+    data: XOR<FeeStatementEventUpdateInput, FeeStatementEventUncheckedUpdateInput>
+    /**
+     * Choose, which FeeStatementEvent to update.
+     */
+    where: FeeStatementEventWhereUniqueInput
+  }
+
+  /**
+   * FeeStatementEvent updateMany
+   */
+  export type FeeStatementEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FeeStatementEvents.
+     */
+    data: XOR<FeeStatementEventUpdateManyMutationInput, FeeStatementEventUncheckedUpdateManyInput>
+    /**
+     * Filter which FeeStatementEvents to update
+     */
+    where?: FeeStatementEventWhereInput
+    /**
+     * Limit how many FeeStatementEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeeStatementEvent upsert
+   */
+  export type FeeStatementEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FeeStatementEvent to update in case it exists.
+     */
+    where: FeeStatementEventWhereUniqueInput
+    /**
+     * In case the FeeStatementEvent found by the `where` argument doesn't exist, create a new FeeStatementEvent with this data.
+     */
+    create: XOR<FeeStatementEventCreateInput, FeeStatementEventUncheckedCreateInput>
+    /**
+     * In case the FeeStatementEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FeeStatementEventUpdateInput, FeeStatementEventUncheckedUpdateInput>
+  }
+
+  /**
+   * FeeStatementEvent delete
+   */
+  export type FeeStatementEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
+    /**
+     * Filter which FeeStatementEvent to delete.
+     */
+    where: FeeStatementEventWhereUniqueInput
+  }
+
+  /**
+   * FeeStatementEvent deleteMany
+   */
+  export type FeeStatementEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FeeStatementEvents to delete
+     */
+    where?: FeeStatementEventWhereInput
+    /**
+     * Limit how many FeeStatementEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * FeeStatementEvent.actor
+   */
+  export type FeeStatementEvent$actorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * FeeStatementEvent without action
+   */
+  export type FeeStatementEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FeeStatementEvent
+     */
+    select?: FeeStatementEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the FeeStatementEvent
+     */
+    omit?: FeeStatementEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FeeStatementEventInclude<ExtArgs> | null
   }
 
 
@@ -74611,6 +75778,20 @@ export namespace Prisma {
   export type PaymentOrderScalarFieldEnum = (typeof PaymentOrderScalarFieldEnum)[keyof typeof PaymentOrderScalarFieldEnum]
 
 
+  export const FeeStatementEventScalarFieldEnum: {
+    id: 'id',
+    feeStatementId: 'feeStatementId',
+    paymentOrderId: 'paymentOrderId',
+    kind: 'kind',
+    occurredAt: 'occurredAt',
+    actorUserId: 'actorUserId',
+    summary: 'summary',
+    createdAt: 'createdAt'
+  };
+
+  export type FeeStatementEventScalarFieldEnum = (typeof FeeStatementEventScalarFieldEnum)[keyof typeof FeeStatementEventScalarFieldEnum]
+
+
   export const FeeStatementItemScalarFieldEnum: {
     id: 'id',
     feeStatementId: 'feeStatementId',
@@ -75504,6 +76685,17 @@ export namespace Prisma {
   export type PaymentOrderOrderByRelevanceFieldEnum = (typeof PaymentOrderOrderByRelevanceFieldEnum)[keyof typeof PaymentOrderOrderByRelevanceFieldEnum]
 
 
+  export const FeeStatementEventOrderByRelevanceFieldEnum: {
+    id: 'id',
+    feeStatementId: 'feeStatementId',
+    paymentOrderId: 'paymentOrderId',
+    actorUserId: 'actorUserId',
+    summary: 'summary'
+  };
+
+  export type FeeStatementEventOrderByRelevanceFieldEnum = (typeof FeeStatementEventOrderByRelevanceFieldEnum)[keyof typeof FeeStatementEventOrderByRelevanceFieldEnum]
+
+
   export const FeeStatementItemOrderByRelevanceFieldEnum: {
     id: 'id',
     feeStatementId: 'feeStatementId',
@@ -76048,6 +77240,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'FeeStatementEventKind'
+   */
+  export type EnumFeeStatementEventKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeStatementEventKind'>
+    
+
+
+  /**
    * Reference to a field of type 'FeeScheduleServiceType'
    */
   export type EnumFeeScheduleServiceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeeScheduleServiceType'>
@@ -76190,6 +77389,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementListRelationFilter
     feeStatementsRegenerationChanged?: FeeStatementListRelationFilter
     feeAuditLogsPerformed?: FeeAuditLogListRelationFilter
+    feeStatementEventsActed?: FeeStatementEventListRelationFilter
     registrationsAdded?: StudentExamRegistrationListRelationFilter
     candidate?: XOR<CandidateNullableScalarRelationFilter, CandidateWhereInput> | null
     teacherProfile?: XOR<TeacherProfileNullableScalarRelationFilter, TeacherProfileWhereInput> | null
@@ -76255,6 +77455,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementOrderByRelationAggregateInput
     feeStatementsRegenerationChanged?: FeeStatementOrderByRelationAggregateInput
     feeAuditLogsPerformed?: FeeAuditLogOrderByRelationAggregateInput
+    feeStatementEventsActed?: FeeStatementEventOrderByRelationAggregateInput
     registrationsAdded?: StudentExamRegistrationOrderByRelationAggregateInput
     candidate?: CandidateOrderByWithRelationInput
     teacherProfile?: TeacherProfileOrderByWithRelationInput
@@ -76324,6 +77525,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementListRelationFilter
     feeStatementsRegenerationChanged?: FeeStatementListRelationFilter
     feeAuditLogsPerformed?: FeeAuditLogListRelationFilter
+    feeStatementEventsActed?: FeeStatementEventListRelationFilter
     registrationsAdded?: StudentExamRegistrationListRelationFilter
     candidate?: XOR<CandidateNullableScalarRelationFilter, CandidateWhereInput> | null
     teacherProfile?: XOR<TeacherProfileNullableScalarRelationFilter, TeacherProfileWhereInput> | null
@@ -80848,6 +82050,7 @@ export namespace Prisma {
     regenerationChangedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     items?: FeeStatementItemListRelationFilter
     paymentOrders?: PaymentOrderListRelationFilter
+    events?: FeeStatementEventListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     cashInRequests?: CashInRequestListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
@@ -80907,6 +82110,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserOrderByWithRelationInput
     items?: FeeStatementItemOrderByRelationAggregateInput
     paymentOrders?: PaymentOrderOrderByRelationAggregateInput
+    events?: FeeStatementEventOrderByRelationAggregateInput
     reviewRequests?: ReviewRequestOrderByRelationAggregateInput
     cashInRequests?: CashInRequestOrderByRelationAggregateInput
     accessToScriptRequests?: AccessToScriptRequestOrderByRelationAggregateInput
@@ -80970,6 +82174,7 @@ export namespace Prisma {
     regenerationChangedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     items?: FeeStatementItemListRelationFilter
     paymentOrders?: PaymentOrderListRelationFilter
+    events?: FeeStatementEventListRelationFilter
     reviewRequests?: ReviewRequestListRelationFilter
     cashInRequests?: CashInRequestListRelationFilter
     accessToScriptRequests?: AccessToScriptRequestListRelationFilter
@@ -81207,6 +82412,80 @@ export namespace Prisma {
     version?: IntWithAggregatesFilter<"PaymentOrder"> | number
     createdAt?: DateTimeWithAggregatesFilter<"PaymentOrder"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"PaymentOrder"> | Date | string
+  }
+
+  export type FeeStatementEventWhereInput = {
+    AND?: FeeStatementEventWhereInput | FeeStatementEventWhereInput[]
+    OR?: FeeStatementEventWhereInput[]
+    NOT?: FeeStatementEventWhereInput | FeeStatementEventWhereInput[]
+    id?: StringFilter<"FeeStatementEvent"> | string
+    feeStatementId?: StringFilter<"FeeStatementEvent"> | string
+    paymentOrderId?: StringNullableFilter<"FeeStatementEvent"> | string | null
+    kind?: EnumFeeStatementEventKindFilter<"FeeStatementEvent"> | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFilter<"FeeStatementEvent"> | Date | string
+    actorUserId?: StringNullableFilter<"FeeStatementEvent"> | string | null
+    summary?: StringFilter<"FeeStatementEvent"> | string
+    createdAt?: DateTimeFilter<"FeeStatementEvent"> | Date | string
+    feeStatement?: XOR<FeeStatementScalarRelationFilter, FeeStatementWhereInput>
+    actor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type FeeStatementEventOrderByWithRelationInput = {
+    id?: SortOrder
+    feeStatementId?: SortOrder
+    paymentOrderId?: SortOrderInput | SortOrder
+    kind?: SortOrder
+    occurredAt?: SortOrder
+    actorUserId?: SortOrderInput | SortOrder
+    summary?: SortOrder
+    createdAt?: SortOrder
+    feeStatement?: FeeStatementOrderByWithRelationInput
+    actor?: UserOrderByWithRelationInput
+    _relevance?: FeeStatementEventOrderByRelevanceInput
+  }
+
+  export type FeeStatementEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FeeStatementEventWhereInput | FeeStatementEventWhereInput[]
+    OR?: FeeStatementEventWhereInput[]
+    NOT?: FeeStatementEventWhereInput | FeeStatementEventWhereInput[]
+    feeStatementId?: StringFilter<"FeeStatementEvent"> | string
+    paymentOrderId?: StringNullableFilter<"FeeStatementEvent"> | string | null
+    kind?: EnumFeeStatementEventKindFilter<"FeeStatementEvent"> | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFilter<"FeeStatementEvent"> | Date | string
+    actorUserId?: StringNullableFilter<"FeeStatementEvent"> | string | null
+    summary?: StringFilter<"FeeStatementEvent"> | string
+    createdAt?: DateTimeFilter<"FeeStatementEvent"> | Date | string
+    feeStatement?: XOR<FeeStatementScalarRelationFilter, FeeStatementWhereInput>
+    actor?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type FeeStatementEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    feeStatementId?: SortOrder
+    paymentOrderId?: SortOrderInput | SortOrder
+    kind?: SortOrder
+    occurredAt?: SortOrder
+    actorUserId?: SortOrderInput | SortOrder
+    summary?: SortOrder
+    createdAt?: SortOrder
+    _count?: FeeStatementEventCountOrderByAggregateInput
+    _max?: FeeStatementEventMaxOrderByAggregateInput
+    _min?: FeeStatementEventMinOrderByAggregateInput
+  }
+
+  export type FeeStatementEventScalarWhereWithAggregatesInput = {
+    AND?: FeeStatementEventScalarWhereWithAggregatesInput | FeeStatementEventScalarWhereWithAggregatesInput[]
+    OR?: FeeStatementEventScalarWhereWithAggregatesInput[]
+    NOT?: FeeStatementEventScalarWhereWithAggregatesInput | FeeStatementEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FeeStatementEvent"> | string
+    feeStatementId?: StringWithAggregatesFilter<"FeeStatementEvent"> | string
+    paymentOrderId?: StringNullableWithAggregatesFilter<"FeeStatementEvent"> | string | null
+    kind?: EnumFeeStatementEventKindWithAggregatesFilter<"FeeStatementEvent"> | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeWithAggregatesFilter<"FeeStatementEvent"> | Date | string
+    actorUserId?: StringNullableWithAggregatesFilter<"FeeStatementEvent"> | string | null
+    summary?: StringWithAggregatesFilter<"FeeStatementEvent"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"FeeStatementEvent"> | Date | string
   }
 
   export type FeeStatementItemWhereInput = {
@@ -82880,6 +84159,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -82945,6 +84225,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -83010,6 +84291,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -83075,6 +84357,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -87973,6 +89256,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -88023,6 +89307,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -88073,6 +89358,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -88123,6 +89409,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -88408,6 +89695,81 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeeStatementEventCreateInput = {
+    id?: string
+    paymentOrderId?: string | null
+    kind: $Enums.FeeStatementEventKind
+    occurredAt?: Date | string
+    summary: string
+    createdAt?: Date | string
+    feeStatement: FeeStatementCreateNestedOneWithoutEventsInput
+    actor?: UserCreateNestedOneWithoutFeeStatementEventsActedInput
+  }
+
+  export type FeeStatementEventUncheckedCreateInput = {
+    id?: string
+    feeStatementId: string
+    paymentOrderId?: string | null
+    kind: $Enums.FeeStatementEventKind
+    occurredAt?: Date | string
+    actorUserId?: string | null
+    summary: string
+    createdAt?: Date | string
+  }
+
+  export type FeeStatementEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paymentOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: EnumFeeStatementEventKindFieldUpdateOperationsInput | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    summary?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feeStatement?: FeeStatementUpdateOneRequiredWithoutEventsNestedInput
+    actor?: UserUpdateOneWithoutFeeStatementEventsActedNestedInput
+  }
+
+  export type FeeStatementEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feeStatementId?: StringFieldUpdateOperationsInput | string
+    paymentOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: EnumFeeStatementEventKindFieldUpdateOperationsInput | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actorUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeeStatementEventCreateManyInput = {
+    id?: string
+    feeStatementId: string
+    paymentOrderId?: string | null
+    kind: $Enums.FeeStatementEventKind
+    occurredAt?: Date | string
+    actorUserId?: string | null
+    summary: string
+    createdAt?: Date | string
+  }
+
+  export type FeeStatementEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paymentOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: EnumFeeStatementEventKindFieldUpdateOperationsInput | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    summary?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeeStatementEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feeStatementId?: StringFieldUpdateOperationsInput | string
+    paymentOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: EnumFeeStatementEventKindFieldUpdateOperationsInput | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actorUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FeeStatementItemCreateInput = {
@@ -90240,6 +91602,12 @@ export namespace Prisma {
     none?: FeeAuditLogWhereInput
   }
 
+  export type FeeStatementEventListRelationFilter = {
+    every?: FeeStatementEventWhereInput
+    some?: FeeStatementEventWhereInput
+    none?: FeeStatementEventWhereInput
+  }
+
   export type CandidateNullableScalarRelationFilter = {
     is?: CandidateWhereInput | null
     isNot?: CandidateWhereInput | null
@@ -90414,6 +91782,10 @@ export namespace Prisma {
   }
 
   export type FeeAuditLogOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FeeStatementEventOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -94469,6 +95841,62 @@ export namespace Prisma {
     _max?: NestedEnumPaymentOrderStatusFilter<$PrismaModel>
   }
 
+  export type EnumFeeStatementEventKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeeStatementEventKind | EnumFeeStatementEventKindFieldRefInput<$PrismaModel>
+    in?: $Enums.FeeStatementEventKind[]
+    notIn?: $Enums.FeeStatementEventKind[]
+    not?: NestedEnumFeeStatementEventKindFilter<$PrismaModel> | $Enums.FeeStatementEventKind
+  }
+
+  export type FeeStatementEventOrderByRelevanceInput = {
+    fields: FeeStatementEventOrderByRelevanceFieldEnum | FeeStatementEventOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type FeeStatementEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    feeStatementId?: SortOrder
+    paymentOrderId?: SortOrder
+    kind?: SortOrder
+    occurredAt?: SortOrder
+    actorUserId?: SortOrder
+    summary?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FeeStatementEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    feeStatementId?: SortOrder
+    paymentOrderId?: SortOrder
+    kind?: SortOrder
+    occurredAt?: SortOrder
+    actorUserId?: SortOrder
+    summary?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type FeeStatementEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    feeStatementId?: SortOrder
+    paymentOrderId?: SortOrder
+    kind?: SortOrder
+    occurredAt?: SortOrder
+    actorUserId?: SortOrder
+    summary?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EnumFeeStatementEventKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeeStatementEventKind | EnumFeeStatementEventKindFieldRefInput<$PrismaModel>
+    in?: $Enums.FeeStatementEventKind[]
+    notIn?: $Enums.FeeStatementEventKind[]
+    not?: NestedEnumFeeStatementEventKindWithAggregatesFilter<$PrismaModel> | $Enums.FeeStatementEventKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFeeStatementEventKindFilter<$PrismaModel>
+    _max?: NestedEnumFeeStatementEventKindFilter<$PrismaModel>
+  }
+
   export type EnumFeeScheduleServiceTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.FeeScheduleServiceType | EnumFeeScheduleServiceTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.FeeScheduleServiceType[] | null
@@ -95832,6 +97260,13 @@ export namespace Prisma {
     connect?: FeeAuditLogWhereUniqueInput | FeeAuditLogWhereUniqueInput[]
   }
 
+  export type FeeStatementEventCreateNestedManyWithoutActorInput = {
+    create?: XOR<FeeStatementEventCreateWithoutActorInput, FeeStatementEventUncheckedCreateWithoutActorInput> | FeeStatementEventCreateWithoutActorInput[] | FeeStatementEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: FeeStatementEventCreateOrConnectWithoutActorInput | FeeStatementEventCreateOrConnectWithoutActorInput[]
+    createMany?: FeeStatementEventCreateManyActorInputEnvelope
+    connect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+  }
+
   export type StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput = {
     create?: XOR<StudentExamRegistrationCreateWithoutAddedByUserInput, StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput> | StudentExamRegistrationCreateWithoutAddedByUserInput[] | StudentExamRegistrationUncheckedCreateWithoutAddedByUserInput[]
     connectOrCreate?: StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput | StudentExamRegistrationCreateOrConnectWithoutAddedByUserInput[]
@@ -96177,6 +97612,13 @@ export namespace Prisma {
     connectOrCreate?: FeeAuditLogCreateOrConnectWithoutPerformedByInput | FeeAuditLogCreateOrConnectWithoutPerformedByInput[]
     createMany?: FeeAuditLogCreateManyPerformedByInputEnvelope
     connect?: FeeAuditLogWhereUniqueInput | FeeAuditLogWhereUniqueInput[]
+  }
+
+  export type FeeStatementEventUncheckedCreateNestedManyWithoutActorInput = {
+    create?: XOR<FeeStatementEventCreateWithoutActorInput, FeeStatementEventUncheckedCreateWithoutActorInput> | FeeStatementEventCreateWithoutActorInput[] | FeeStatementEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: FeeStatementEventCreateOrConnectWithoutActorInput | FeeStatementEventCreateOrConnectWithoutActorInput[]
+    createMany?: FeeStatementEventCreateManyActorInputEnvelope
+    connect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
   }
 
   export type StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput = {
@@ -96674,6 +98116,20 @@ export namespace Prisma {
     update?: FeeAuditLogUpdateWithWhereUniqueWithoutPerformedByInput | FeeAuditLogUpdateWithWhereUniqueWithoutPerformedByInput[]
     updateMany?: FeeAuditLogUpdateManyWithWhereWithoutPerformedByInput | FeeAuditLogUpdateManyWithWhereWithoutPerformedByInput[]
     deleteMany?: FeeAuditLogScalarWhereInput | FeeAuditLogScalarWhereInput[]
+  }
+
+  export type FeeStatementEventUpdateManyWithoutActorNestedInput = {
+    create?: XOR<FeeStatementEventCreateWithoutActorInput, FeeStatementEventUncheckedCreateWithoutActorInput> | FeeStatementEventCreateWithoutActorInput[] | FeeStatementEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: FeeStatementEventCreateOrConnectWithoutActorInput | FeeStatementEventCreateOrConnectWithoutActorInput[]
+    upsert?: FeeStatementEventUpsertWithWhereUniqueWithoutActorInput | FeeStatementEventUpsertWithWhereUniqueWithoutActorInput[]
+    createMany?: FeeStatementEventCreateManyActorInputEnvelope
+    set?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    disconnect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    delete?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    connect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    update?: FeeStatementEventUpdateWithWhereUniqueWithoutActorInput | FeeStatementEventUpdateWithWhereUniqueWithoutActorInput[]
+    updateMany?: FeeStatementEventUpdateManyWithWhereWithoutActorInput | FeeStatementEventUpdateManyWithWhereWithoutActorInput[]
+    deleteMany?: FeeStatementEventScalarWhereInput | FeeStatementEventScalarWhereInput[]
   }
 
   export type StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput = {
@@ -97362,6 +98818,20 @@ export namespace Prisma {
     update?: FeeAuditLogUpdateWithWhereUniqueWithoutPerformedByInput | FeeAuditLogUpdateWithWhereUniqueWithoutPerformedByInput[]
     updateMany?: FeeAuditLogUpdateManyWithWhereWithoutPerformedByInput | FeeAuditLogUpdateManyWithWhereWithoutPerformedByInput[]
     deleteMany?: FeeAuditLogScalarWhereInput | FeeAuditLogScalarWhereInput[]
+  }
+
+  export type FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput = {
+    create?: XOR<FeeStatementEventCreateWithoutActorInput, FeeStatementEventUncheckedCreateWithoutActorInput> | FeeStatementEventCreateWithoutActorInput[] | FeeStatementEventUncheckedCreateWithoutActorInput[]
+    connectOrCreate?: FeeStatementEventCreateOrConnectWithoutActorInput | FeeStatementEventCreateOrConnectWithoutActorInput[]
+    upsert?: FeeStatementEventUpsertWithWhereUniqueWithoutActorInput | FeeStatementEventUpsertWithWhereUniqueWithoutActorInput[]
+    createMany?: FeeStatementEventCreateManyActorInputEnvelope
+    set?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    disconnect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    delete?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    connect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    update?: FeeStatementEventUpdateWithWhereUniqueWithoutActorInput | FeeStatementEventUpdateWithWhereUniqueWithoutActorInput[]
+    updateMany?: FeeStatementEventUpdateManyWithWhereWithoutActorInput | FeeStatementEventUpdateManyWithWhereWithoutActorInput[]
+    deleteMany?: FeeStatementEventScalarWhereInput | FeeStatementEventScalarWhereInput[]
   }
 
   export type StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput = {
@@ -104910,6 +106380,13 @@ export namespace Prisma {
     connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
   }
 
+  export type FeeStatementEventCreateNestedManyWithoutFeeStatementInput = {
+    create?: XOR<FeeStatementEventCreateWithoutFeeStatementInput, FeeStatementEventUncheckedCreateWithoutFeeStatementInput> | FeeStatementEventCreateWithoutFeeStatementInput[] | FeeStatementEventUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: FeeStatementEventCreateOrConnectWithoutFeeStatementInput | FeeStatementEventCreateOrConnectWithoutFeeStatementInput[]
+    createMany?: FeeStatementEventCreateManyFeeStatementInputEnvelope
+    connect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+  }
+
   export type ReviewRequestCreateNestedManyWithoutFeeStatementInput = {
     create?: XOR<ReviewRequestCreateWithoutFeeStatementInput, ReviewRequestUncheckedCreateWithoutFeeStatementInput> | ReviewRequestCreateWithoutFeeStatementInput[] | ReviewRequestUncheckedCreateWithoutFeeStatementInput[]
     connectOrCreate?: ReviewRequestCreateOrConnectWithoutFeeStatementInput | ReviewRequestCreateOrConnectWithoutFeeStatementInput[]
@@ -104971,6 +106448,13 @@ export namespace Prisma {
     connectOrCreate?: PaymentOrderCreateOrConnectWithoutFeeStatementInput | PaymentOrderCreateOrConnectWithoutFeeStatementInput[]
     createMany?: PaymentOrderCreateManyFeeStatementInputEnvelope
     connect?: PaymentOrderWhereUniqueInput | PaymentOrderWhereUniqueInput[]
+  }
+
+  export type FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput = {
+    create?: XOR<FeeStatementEventCreateWithoutFeeStatementInput, FeeStatementEventUncheckedCreateWithoutFeeStatementInput> | FeeStatementEventCreateWithoutFeeStatementInput[] | FeeStatementEventUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: FeeStatementEventCreateOrConnectWithoutFeeStatementInput | FeeStatementEventCreateOrConnectWithoutFeeStatementInput[]
+    createMany?: FeeStatementEventCreateManyFeeStatementInputEnvelope
+    connect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
   }
 
   export type ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput = {
@@ -105172,6 +106656,20 @@ export namespace Prisma {
     deleteMany?: PaymentOrderScalarWhereInput | PaymentOrderScalarWhereInput[]
   }
 
+  export type FeeStatementEventUpdateManyWithoutFeeStatementNestedInput = {
+    create?: XOR<FeeStatementEventCreateWithoutFeeStatementInput, FeeStatementEventUncheckedCreateWithoutFeeStatementInput> | FeeStatementEventCreateWithoutFeeStatementInput[] | FeeStatementEventUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: FeeStatementEventCreateOrConnectWithoutFeeStatementInput | FeeStatementEventCreateOrConnectWithoutFeeStatementInput[]
+    upsert?: FeeStatementEventUpsertWithWhereUniqueWithoutFeeStatementInput | FeeStatementEventUpsertWithWhereUniqueWithoutFeeStatementInput[]
+    createMany?: FeeStatementEventCreateManyFeeStatementInputEnvelope
+    set?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    disconnect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    delete?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    connect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    update?: FeeStatementEventUpdateWithWhereUniqueWithoutFeeStatementInput | FeeStatementEventUpdateWithWhereUniqueWithoutFeeStatementInput[]
+    updateMany?: FeeStatementEventUpdateManyWithWhereWithoutFeeStatementInput | FeeStatementEventUpdateManyWithWhereWithoutFeeStatementInput[]
+    deleteMany?: FeeStatementEventScalarWhereInput | FeeStatementEventScalarWhereInput[]
+  }
+
   export type ReviewRequestUpdateManyWithoutFeeStatementNestedInput = {
     create?: XOR<ReviewRequestCreateWithoutFeeStatementInput, ReviewRequestUncheckedCreateWithoutFeeStatementInput> | ReviewRequestCreateWithoutFeeStatementInput[] | ReviewRequestUncheckedCreateWithoutFeeStatementInput[]
     connectOrCreate?: ReviewRequestCreateOrConnectWithoutFeeStatementInput | ReviewRequestCreateOrConnectWithoutFeeStatementInput[]
@@ -105298,6 +106796,20 @@ export namespace Prisma {
     deleteMany?: PaymentOrderScalarWhereInput | PaymentOrderScalarWhereInput[]
   }
 
+  export type FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput = {
+    create?: XOR<FeeStatementEventCreateWithoutFeeStatementInput, FeeStatementEventUncheckedCreateWithoutFeeStatementInput> | FeeStatementEventCreateWithoutFeeStatementInput[] | FeeStatementEventUncheckedCreateWithoutFeeStatementInput[]
+    connectOrCreate?: FeeStatementEventCreateOrConnectWithoutFeeStatementInput | FeeStatementEventCreateOrConnectWithoutFeeStatementInput[]
+    upsert?: FeeStatementEventUpsertWithWhereUniqueWithoutFeeStatementInput | FeeStatementEventUpsertWithWhereUniqueWithoutFeeStatementInput[]
+    createMany?: FeeStatementEventCreateManyFeeStatementInputEnvelope
+    set?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    disconnect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    delete?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    connect?: FeeStatementEventWhereUniqueInput | FeeStatementEventWhereUniqueInput[]
+    update?: FeeStatementEventUpdateWithWhereUniqueWithoutFeeStatementInput | FeeStatementEventUpdateWithWhereUniqueWithoutFeeStatementInput[]
+    updateMany?: FeeStatementEventUpdateManyWithWhereWithoutFeeStatementInput | FeeStatementEventUpdateManyWithWhereWithoutFeeStatementInput[]
+    deleteMany?: FeeStatementEventScalarWhereInput | FeeStatementEventScalarWhereInput[]
+  }
+
   export type ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput = {
     create?: XOR<ReviewRequestCreateWithoutFeeStatementInput, ReviewRequestUncheckedCreateWithoutFeeStatementInput> | ReviewRequestCreateWithoutFeeStatementInput[] | ReviewRequestUncheckedCreateWithoutFeeStatementInput[]
     connectOrCreate?: ReviewRequestCreateOrConnectWithoutFeeStatementInput | ReviewRequestCreateOrConnectWithoutFeeStatementInput[]
@@ -105404,6 +106916,40 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPaymentOrdersCancelledInput, UserUpdateWithoutPaymentOrdersCancelledInput>, UserUncheckedUpdateWithoutPaymentOrdersCancelledInput>
+  }
+
+  export type FeeStatementCreateNestedOneWithoutEventsInput = {
+    create?: XOR<FeeStatementCreateWithoutEventsInput, FeeStatementUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: FeeStatementCreateOrConnectWithoutEventsInput
+    connect?: FeeStatementWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutFeeStatementEventsActedInput = {
+    create?: XOR<UserCreateWithoutFeeStatementEventsActedInput, UserUncheckedCreateWithoutFeeStatementEventsActedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeeStatementEventsActedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumFeeStatementEventKindFieldUpdateOperationsInput = {
+    set?: $Enums.FeeStatementEventKind
+  }
+
+  export type FeeStatementUpdateOneRequiredWithoutEventsNestedInput = {
+    create?: XOR<FeeStatementCreateWithoutEventsInput, FeeStatementUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: FeeStatementCreateOrConnectWithoutEventsInput
+    upsert?: FeeStatementUpsertWithoutEventsInput
+    connect?: FeeStatementWhereUniqueInput
+    update?: XOR<XOR<FeeStatementUpdateToOneWithWhereWithoutEventsInput, FeeStatementUpdateWithoutEventsInput>, FeeStatementUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type UserUpdateOneWithoutFeeStatementEventsActedNestedInput = {
+    create?: XOR<UserCreateWithoutFeeStatementEventsActedInput, UserUncheckedCreateWithoutFeeStatementEventsActedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeeStatementEventsActedInput
+    upsert?: UserUpsertWithoutFeeStatementEventsActedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeeStatementEventsActedInput, UserUpdateWithoutFeeStatementEventsActedInput>, UserUncheckedUpdateWithoutFeeStatementEventsActedInput>
   }
 
   export type FeeStatementCreateNestedOneWithoutItemsInput = {
@@ -107966,6 +109512,23 @@ export namespace Prisma {
     _max?: NestedEnumPaymentOrderStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumFeeStatementEventKindFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeeStatementEventKind | EnumFeeStatementEventKindFieldRefInput<$PrismaModel>
+    in?: $Enums.FeeStatementEventKind[]
+    notIn?: $Enums.FeeStatementEventKind[]
+    not?: NestedEnumFeeStatementEventKindFilter<$PrismaModel> | $Enums.FeeStatementEventKind
+  }
+
+  export type NestedEnumFeeStatementEventKindWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FeeStatementEventKind | EnumFeeStatementEventKindFieldRefInput<$PrismaModel>
+    in?: $Enums.FeeStatementEventKind[]
+    notIn?: $Enums.FeeStatementEventKind[]
+    not?: NestedEnumFeeStatementEventKindWithAggregatesFilter<$PrismaModel> | $Enums.FeeStatementEventKind
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFeeStatementEventKindFilter<$PrismaModel>
+    _max?: NestedEnumFeeStatementEventKindFilter<$PrismaModel>
+  }
+
   export type NestedEnumFeeScheduleServiceTypeNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.FeeScheduleServiceType | EnumFeeScheduleServiceTypeFieldRefInput<$PrismaModel> | null
     in?: $Enums.FeeScheduleServiceType[] | null
@@ -109226,6 +110789,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -109275,6 +110839,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -109334,6 +110899,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -109383,6 +110949,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -109442,6 +111009,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -109491,6 +111059,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -109533,6 +111102,36 @@ export namespace Prisma {
 
   export type FeeAuditLogCreateManyPerformedByInputEnvelope = {
     data: FeeAuditLogCreateManyPerformedByInput | FeeAuditLogCreateManyPerformedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeeStatementEventCreateWithoutActorInput = {
+    id?: string
+    paymentOrderId?: string | null
+    kind: $Enums.FeeStatementEventKind
+    occurredAt?: Date | string
+    summary: string
+    createdAt?: Date | string
+    feeStatement: FeeStatementCreateNestedOneWithoutEventsInput
+  }
+
+  export type FeeStatementEventUncheckedCreateWithoutActorInput = {
+    id?: string
+    feeStatementId: string
+    paymentOrderId?: string | null
+    kind: $Enums.FeeStatementEventKind
+    occurredAt?: Date | string
+    summary: string
+    createdAt?: Date | string
+  }
+
+  export type FeeStatementEventCreateOrConnectWithoutActorInput = {
+    where: FeeStatementEventWhereUniqueInput
+    create: XOR<FeeStatementEventCreateWithoutActorInput, FeeStatementEventUncheckedCreateWithoutActorInput>
+  }
+
+  export type FeeStatementEventCreateManyActorInputEnvelope = {
+    data: FeeStatementEventCreateManyActorInput | FeeStatementEventCreateManyActorInput[]
     skipDuplicates?: boolean
   }
 
@@ -111824,6 +113423,36 @@ export namespace Prisma {
     note?: StringNullableFilter<"FeeAuditLog"> | string | null
   }
 
+  export type FeeStatementEventUpsertWithWhereUniqueWithoutActorInput = {
+    where: FeeStatementEventWhereUniqueInput
+    update: XOR<FeeStatementEventUpdateWithoutActorInput, FeeStatementEventUncheckedUpdateWithoutActorInput>
+    create: XOR<FeeStatementEventCreateWithoutActorInput, FeeStatementEventUncheckedCreateWithoutActorInput>
+  }
+
+  export type FeeStatementEventUpdateWithWhereUniqueWithoutActorInput = {
+    where: FeeStatementEventWhereUniqueInput
+    data: XOR<FeeStatementEventUpdateWithoutActorInput, FeeStatementEventUncheckedUpdateWithoutActorInput>
+  }
+
+  export type FeeStatementEventUpdateManyWithWhereWithoutActorInput = {
+    where: FeeStatementEventScalarWhereInput
+    data: XOR<FeeStatementEventUpdateManyMutationInput, FeeStatementEventUncheckedUpdateManyWithoutActorInput>
+  }
+
+  export type FeeStatementEventScalarWhereInput = {
+    AND?: FeeStatementEventScalarWhereInput | FeeStatementEventScalarWhereInput[]
+    OR?: FeeStatementEventScalarWhereInput[]
+    NOT?: FeeStatementEventScalarWhereInput | FeeStatementEventScalarWhereInput[]
+    id?: StringFilter<"FeeStatementEvent"> | string
+    feeStatementId?: StringFilter<"FeeStatementEvent"> | string
+    paymentOrderId?: StringNullableFilter<"FeeStatementEvent"> | string | null
+    kind?: EnumFeeStatementEventKindFilter<"FeeStatementEvent"> | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFilter<"FeeStatementEvent"> | Date | string
+    actorUserId?: StringNullableFilter<"FeeStatementEvent"> | string | null
+    summary?: StringFilter<"FeeStatementEvent"> | string
+    createdAt?: DateTimeFilter<"FeeStatementEvent"> | Date | string
+  }
+
   export type StudentExamRegistrationUpsertWithWhereUniqueWithoutAddedByUserInput = {
     where: StudentExamRegistrationWhereUniqueInput
     update: XOR<StudentExamRegistrationUpdateWithoutAddedByUserInput, StudentExamRegistrationUncheckedUpdateWithoutAddedByUserInput>
@@ -112856,6 +114485,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -112920,6 +114550,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -113000,6 +114631,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -113064,6 +114696,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -113128,6 +114761,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -113192,6 +114826,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -113272,6 +114907,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -113336,6 +114972,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -113401,6 +115038,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
@@ -113465,6 +115103,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
@@ -113545,6 +115184,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
@@ -113609,6 +115249,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
@@ -113673,6 +115314,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -113737,6 +115379,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -113896,6 +115539,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -113945,6 +115589,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -113999,6 +115644,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -114063,6 +115709,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -114234,6 +115881,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -114283,6 +115931,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -114321,6 +115970,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -114385,6 +116035,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -114454,6 +116105,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -114518,6 +116170,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -114598,6 +116251,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -114662,6 +116316,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -114737,6 +116392,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -114801,6 +116457,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -115112,6 +116769,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -115176,6 +116834,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -115521,6 +117180,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -115585,6 +117245,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -115649,6 +117310,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
     userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
@@ -115713,6 +117375,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
     userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
@@ -116214,6 +117877,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -116263,6 +117927,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -116687,6 +118352,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
     userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
@@ -116751,6 +118417,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
     userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
@@ -117166,6 +118833,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -117230,6 +118898,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -117427,6 +119096,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -117491,6 +119161,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -117755,6 +119426,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -117819,6 +119491,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -117888,6 +119561,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -117952,6 +119626,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -118244,6 +119919,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -118308,6 +119984,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -118383,6 +120060,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -118447,6 +120125,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -118510,6 +120189,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -118574,6 +120254,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -118699,6 +120380,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -118763,6 +120445,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -118879,6 +120562,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -118943,6 +120627,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -119023,6 +120708,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -119087,6 +120773,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -119294,6 +120981,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -119358,6 +121046,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -119956,6 +121645,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -120005,6 +121695,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -120490,6 +122181,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -120554,6 +122246,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -120985,6 +122678,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -121049,6 +122743,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -121214,6 +122909,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -121278,6 +122974,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -122220,6 +123917,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -122284,6 +123982,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -122432,6 +124131,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -122496,6 +124196,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -122611,6 +124312,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -122675,6 +124377,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -122744,6 +124447,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -122808,6 +124512,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -123163,6 +124868,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -123212,6 +124918,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -123456,6 +125163,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -123520,6 +125228,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -123680,6 +125389,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -123744,6 +125454,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -123871,6 +125582,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -123935,6 +125647,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -124010,6 +125723,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -124074,6 +125788,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -124344,6 +126059,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -124408,6 +126124,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -124945,6 +126662,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
     userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
@@ -125009,6 +126727,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
     userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
@@ -125418,6 +127137,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -125482,6 +127202,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -126067,6 +127788,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
     userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
@@ -126131,6 +127853,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
     userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
@@ -126584,6 +128307,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -126648,6 +128372,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -126916,6 +128641,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -126980,6 +128706,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -127369,6 +129096,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -127433,6 +129161,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -127725,6 +129454,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -127789,6 +129519,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -128033,6 +129764,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -128097,6 +129829,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -128277,6 +130010,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -128341,6 +130075,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -128524,6 +130259,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -128588,6 +130324,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -128882,6 +130619,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -128946,6 +130684,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -129138,6 +130877,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -129202,6 +130942,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -129403,6 +131144,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -129467,6 +131209,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -129958,6 +131701,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -130022,6 +131766,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -130202,6 +131947,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -130266,6 +132012,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -130335,6 +132082,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -130399,6 +132147,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -130468,6 +132217,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -130532,6 +132282,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -130832,6 +132583,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -130896,6 +132648,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -131088,6 +132841,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -131152,6 +132906,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -131227,6 +132982,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -131291,6 +133047,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -131366,6 +133123,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -131430,6 +133188,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -140172,6 +141931,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -140236,6 +141996,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -140661,6 +142422,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -140725,6 +142487,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -141270,6 +143033,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -141334,6 +143098,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -141857,6 +143622,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -141921,6 +143687,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -142064,6 +143831,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -142128,6 +143896,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -142293,6 +144062,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -142357,6 +144127,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -142532,6 +144303,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -142596,6 +144368,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -142892,6 +144665,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -142956,6 +144730,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -143036,6 +144811,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -143085,6 +144861,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -143139,6 +144916,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -143188,6 +144966,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -143247,6 +145026,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -143296,6 +145076,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -143350,6 +145131,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -143399,6 +145181,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -143447,6 +145230,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -143511,6 +145295,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -143670,6 +145455,36 @@ export namespace Prisma {
 
   export type PaymentOrderCreateManyFeeStatementInputEnvelope = {
     data: PaymentOrderCreateManyFeeStatementInput | PaymentOrderCreateManyFeeStatementInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FeeStatementEventCreateWithoutFeeStatementInput = {
+    id?: string
+    paymentOrderId?: string | null
+    kind: $Enums.FeeStatementEventKind
+    occurredAt?: Date | string
+    summary: string
+    createdAt?: Date | string
+    actor?: UserCreateNestedOneWithoutFeeStatementEventsActedInput
+  }
+
+  export type FeeStatementEventUncheckedCreateWithoutFeeStatementInput = {
+    id?: string
+    paymentOrderId?: string | null
+    kind: $Enums.FeeStatementEventKind
+    occurredAt?: Date | string
+    actorUserId?: string | null
+    summary: string
+    createdAt?: Date | string
+  }
+
+  export type FeeStatementEventCreateOrConnectWithoutFeeStatementInput = {
+    where: FeeStatementEventWhereUniqueInput
+    create: XOR<FeeStatementEventCreateWithoutFeeStatementInput, FeeStatementEventUncheckedCreateWithoutFeeStatementInput>
+  }
+
+  export type FeeStatementEventCreateManyFeeStatementInputEnvelope = {
+    data: FeeStatementEventCreateManyFeeStatementInput | FeeStatementEventCreateManyFeeStatementInput[]
     skipDuplicates?: boolean
   }
 
@@ -144066,6 +145881,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -144130,6 +145946,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -144450,6 +146267,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -144514,6 +146332,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -144600,6 +146419,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -144649,6 +146469,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -144725,6 +146546,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -144774,6 +146596,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -144839,6 +146662,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -144903,6 +146727,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -144966,6 +146791,22 @@ export namespace Prisma {
   export type PaymentOrderUpdateManyWithWhereWithoutFeeStatementInput = {
     where: PaymentOrderScalarWhereInput
     data: XOR<PaymentOrderUpdateManyMutationInput, PaymentOrderUncheckedUpdateManyWithoutFeeStatementInput>
+  }
+
+  export type FeeStatementEventUpsertWithWhereUniqueWithoutFeeStatementInput = {
+    where: FeeStatementEventWhereUniqueInput
+    update: XOR<FeeStatementEventUpdateWithoutFeeStatementInput, FeeStatementEventUncheckedUpdateWithoutFeeStatementInput>
+    create: XOR<FeeStatementEventCreateWithoutFeeStatementInput, FeeStatementEventUncheckedCreateWithoutFeeStatementInput>
+  }
+
+  export type FeeStatementEventUpdateWithWhereUniqueWithoutFeeStatementInput = {
+    where: FeeStatementEventWhereUniqueInput
+    data: XOR<FeeStatementEventUpdateWithoutFeeStatementInput, FeeStatementEventUncheckedUpdateWithoutFeeStatementInput>
+  }
+
+  export type FeeStatementEventUpdateManyWithWhereWithoutFeeStatementInput = {
+    where: FeeStatementEventScalarWhereInput
+    data: XOR<FeeStatementEventUpdateManyMutationInput, FeeStatementEventUncheckedUpdateManyWithoutFeeStatementInput>
   }
 
   export type ReviewRequestUpsertWithWhereUniqueWithoutFeeStatementInput = {
@@ -145090,6 +146931,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -145139,6 +146981,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -145183,6 +147026,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -145247,6 +147091,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -145337,6 +147182,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -145386,6 +147232,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -145436,6 +147283,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -145500,6 +147348,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -145521,6 +147370,498 @@ export namespace Prisma {
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type FeeStatementCreateWithoutEventsInput = {
+    id?: string
+    businessType?: $Enums.FeeStatementBusinessType
+    statementNo: string
+    statementKind?: $Enums.FeeStatementKind
+    displayCurrency?: $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot: string
+    studentNoSnapshot: string
+    gradeSnapshot: string
+    classNameSnapshot: string
+    emailSnapshot?: string | null
+    assessmentHubCandidateNumberSnapshot?: string | null
+    candidateTypeSnapshot?: $Enums.CandidateType | null
+    status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
+    studentVisible?: boolean
+    totalGbpAmount: Decimal | DecimalJsLike | number | string
+    totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    paymentNotes?: string | null
+    generatedAt?: Date | string
+    issuedAt?: Date | string | null
+    regenerationReason?: string | null
+    regenerationChangedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
+    student?: UserCreateNestedOneWithoutFeeStatementsAsStudentInput
+    registrationWorkspace?: RegistrationWorkspaceCreateNestedOneWithoutFeeStatementsInput
+    registrationWindow?: RegistrationWindowCreateNestedOneWithoutFeeStatementsInput
+    reviewWindow?: ReviewWindowCreateNestedOneWithoutFeeStatementsInput
+    generatedBy: UserCreateNestedOneWithoutFeeStatementsGeneratedInput
+    revisedFromStatement?: FeeStatementCreateNestedOneWithoutSuccessorStatementsInput
+    successorStatements?: FeeStatementCreateNestedManyWithoutRevisedFromStatementInput
+    revisedToStatement?: FeeStatementCreateNestedOneWithoutPredecessorStatementsInput
+    predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
+    regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
+    items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
+    cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
+    accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
+    certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutFeeStatementInput
+  }
+
+  export type FeeStatementUncheckedCreateWithoutEventsInput = {
+    id?: string
+    businessType?: $Enums.FeeStatementBusinessType
+    candidateId?: string | null
+    studentId?: string | null
+    registrationWorkspaceId?: string | null
+    registrationWindowId?: string | null
+    reviewWindowId?: string | null
+    statementNo: string
+    statementKind?: $Enums.FeeStatementKind
+    displayCurrency?: $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot: string
+    studentNoSnapshot: string
+    gradeSnapshot: string
+    classNameSnapshot: string
+    emailSnapshot?: string | null
+    assessmentHubCandidateNumberSnapshot?: string | null
+    candidateTypeSnapshot?: $Enums.CandidateType | null
+    status?: $Enums.FeeStatementStatus
+    paymentSettlement?: $Enums.FeePaymentSettlement
+    studentVisible?: boolean
+    totalGbpAmount: Decimal | DecimalJsLike | number | string
+    totalCnyAmount: Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: Decimal | DecimalJsLike | number | string | null
+    paymentNotes?: string | null
+    generatedByUserId: string
+    generatedAt?: Date | string
+    issuedAt?: Date | string | null
+    revisedFromStatementId?: string | null
+    revisedToStatementId?: string | null
+    regenerationReason?: string | null
+    regenerationChangedByUserId?: string | null
+    regenerationChangedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
+    predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
+    items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutFeeStatementInput
+  }
+
+  export type FeeStatementCreateOrConnectWithoutEventsInput = {
+    where: FeeStatementWhereUniqueInput
+    create: XOR<FeeStatementCreateWithoutEventsInput, FeeStatementUncheckedCreateWithoutEventsInput>
+  }
+
+  export type UserCreateWithoutFeeStatementEventsActedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserUncheckedCreateWithoutFeeStatementEventsActedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+  }
+
+  export type UserCreateOrConnectWithoutFeeStatementEventsActedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFeeStatementEventsActedInput, UserUncheckedCreateWithoutFeeStatementEventsActedInput>
+  }
+
+  export type FeeStatementUpsertWithoutEventsInput = {
+    update: XOR<FeeStatementUpdateWithoutEventsInput, FeeStatementUncheckedUpdateWithoutEventsInput>
+    create: XOR<FeeStatementCreateWithoutEventsInput, FeeStatementUncheckedCreateWithoutEventsInput>
+    where?: FeeStatementWhereInput
+  }
+
+  export type FeeStatementUpdateToOneWithWhereWithoutEventsInput = {
+    where?: FeeStatementWhereInput
+    data: XOR<FeeStatementUpdateWithoutEventsInput, FeeStatementUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type FeeStatementUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessType?: EnumFeeStatementBusinessTypeFieldUpdateOperationsInput | $Enums.FeeStatementBusinessType
+    statementNo?: StringFieldUpdateOperationsInput | string
+    statementKind?: EnumFeeStatementKindFieldUpdateOperationsInput | $Enums.FeeStatementKind
+    displayCurrency?: EnumFeeStatementDisplayCurrencyFieldUpdateOperationsInput | $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot?: StringFieldUpdateOperationsInput | string
+    studentNoSnapshot?: StringFieldUpdateOperationsInput | string
+    gradeSnapshot?: StringFieldUpdateOperationsInput | string
+    classNameSnapshot?: StringFieldUpdateOperationsInput | string
+    emailSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+    status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
+    studentVisible?: BoolFieldUpdateOperationsInput | boolean
+    totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
+    student?: UserUpdateOneWithoutFeeStatementsAsStudentNestedInput
+    registrationWorkspace?: RegistrationWorkspaceUpdateOneWithoutFeeStatementsNestedInput
+    registrationWindow?: RegistrationWindowUpdateOneWithoutFeeStatementsNestedInput
+    reviewWindow?: ReviewWindowUpdateOneWithoutFeeStatementsNestedInput
+    generatedBy?: UserUpdateOneRequiredWithoutFeeStatementsGeneratedNestedInput
+    revisedFromStatement?: FeeStatementUpdateOneWithoutSuccessorStatementsNestedInput
+    successorStatements?: FeeStatementUpdateManyWithoutRevisedFromStatementNestedInput
+    revisedToStatement?: FeeStatementUpdateOneWithoutPredecessorStatementsNestedInput
+    predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
+    regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
+    items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
+    cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
+    certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutFeeStatementNestedInput
+  }
+
+  export type FeeStatementUncheckedUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessType?: EnumFeeStatementBusinessTypeFieldUpdateOperationsInput | $Enums.FeeStatementBusinessType
+    candidateId?: NullableStringFieldUpdateOperationsInput | string | null
+    studentId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWorkspaceId?: NullableStringFieldUpdateOperationsInput | string | null
+    registrationWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewWindowId?: NullableStringFieldUpdateOperationsInput | string | null
+    statementNo?: StringFieldUpdateOperationsInput | string
+    statementKind?: EnumFeeStatementKindFieldUpdateOperationsInput | $Enums.FeeStatementKind
+    displayCurrency?: EnumFeeStatementDisplayCurrencyFieldUpdateOperationsInput | $Enums.FeeStatementDisplayCurrency
+    exchangeRateSnapshot?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    studentNameSnapshot?: StringFieldUpdateOperationsInput | string
+    studentNoSnapshot?: StringFieldUpdateOperationsInput | string
+    gradeSnapshot?: StringFieldUpdateOperationsInput | string
+    classNameSnapshot?: StringFieldUpdateOperationsInput | string
+    emailSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    assessmentHubCandidateNumberSnapshot?: NullableStringFieldUpdateOperationsInput | string | null
+    candidateTypeSnapshot?: NullableEnumCandidateTypeFieldUpdateOperationsInput | $Enums.CandidateType | null
+    status?: EnumFeeStatementStatusFieldUpdateOperationsInput | $Enums.FeeStatementStatus
+    paymentSettlement?: EnumFeePaymentSettlementFieldUpdateOperationsInput | $Enums.FeePaymentSettlement
+    studentVisible?: BoolFieldUpdateOperationsInput | boolean
+    totalGbpAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalCnyAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previouslyPaidGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    previouslyPaidCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueGbpAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    amountDueCnyAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paymentNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    generatedByUserId?: StringFieldUpdateOperationsInput | string
+    generatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    revisedFromStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    revisedToStatementId?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
+    predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
+    items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutFeeStatementNestedInput
+  }
+
+  export type UserUpsertWithoutFeeStatementEventsActedInput = {
+    update: XOR<UserUpdateWithoutFeeStatementEventsActedInput, UserUncheckedUpdateWithoutFeeStatementEventsActedInput>
+    create: XOR<UserCreateWithoutFeeStatementEventsActedInput, UserUncheckedCreateWithoutFeeStatementEventsActedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFeeStatementEventsActedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFeeStatementEventsActedInput, UserUncheckedUpdateWithoutFeeStatementEventsActedInput>
+  }
+
+  export type UserUpdateWithoutFeeStatementEventsActedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFeeStatementEventsActedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
     offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
     offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
     boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
@@ -145574,6 +147915,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementCreateNestedManyWithoutRevisedToStatementInput
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -145623,6 +147965,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -145804,6 +148147,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -145853,6 +148197,7 @@ export namespace Prisma {
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -146368,6 +148713,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -146432,6 +148778,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -146501,6 +148848,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -146565,6 +148913,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -147017,6 +149366,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -147081,6 +149431,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -147156,6 +149507,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -147220,6 +149572,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -147362,6 +149715,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -147426,6 +149780,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -147591,6 +149946,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -147655,6 +150011,7 @@ export namespace Prisma {
     feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -147864,6 +150221,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -147928,6 +150286,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -148229,6 +150588,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -148278,6 +150638,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -148534,6 +150895,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -148598,6 +150960,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -149429,6 +151792,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -149493,6 +151857,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -149562,6 +151927,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -149626,6 +151992,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -149706,6 +152073,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
@@ -149755,6 +152123,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -150399,6 +152768,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -150463,6 +152833,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -150538,6 +152909,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -150602,6 +152974,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -150688,6 +153061,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
@@ -150737,6 +153111,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -151216,6 +153591,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -151280,6 +153656,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -151360,6 +153737,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
@@ -151409,6 +153787,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -151946,6 +154325,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -152010,6 +154390,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -152096,6 +154477,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
@@ -152145,6 +154527,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -152725,6 +155108,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -152789,6 +155173,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -152869,6 +155254,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestCreateNestedManyWithoutFeeStatementInput
@@ -152918,6 +155304,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     certificateRequests?: CertificateRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -153562,6 +155949,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -153626,6 +156014,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -153712,6 +156101,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUpdateManyWithoutFeeStatementNestedInput
@@ -153761,6 +156151,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     certificateRequests?: CertificateRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -154101,6 +156492,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -154165,6 +156557,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -154245,6 +156638,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserCreateNestedOneWithoutFeeStatementsRegenerationChangedInput
     items?: FeeStatementItemCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestCreateNestedManyWithoutFeeStatementInput
@@ -154294,6 +156688,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
     items?: FeeStatementItemUncheckedCreateNestedManyWithoutFeeStatementInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutFeeStatementInput
+    events?: FeeStatementEventUncheckedCreateNestedManyWithoutFeeStatementInput
     reviewRequests?: ReviewRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     cashInRequests?: CashInRequestUncheckedCreateNestedManyWithoutFeeStatementInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedCreateNestedManyWithoutFeeStatementInput
@@ -154674,6 +157069,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -154738,6 +157134,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -154824,6 +157221,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -154873,6 +157271,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -155176,6 +157575,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -155240,6 +157640,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -155739,6 +158140,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -155803,6 +158205,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -156280,6 +158683,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -156344,6 +158748,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -156835,6 +159240,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -156899,6 +159305,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -156963,6 +159370,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -157027,6 +159435,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -157107,6 +159516,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -157171,6 +159581,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -157235,6 +159646,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
@@ -157299,6 +159711,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
     registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
     candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
     teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
@@ -157379,6 +159792,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
@@ -157443,6 +159857,7 @@ export namespace Prisma {
     feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
     feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
     feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
     teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -157931,6 +160346,16 @@ export namespace Prisma {
     performedAt?: Date | string
     metadata?: string | null
     note?: string | null
+  }
+
+  export type FeeStatementEventCreateManyActorInput = {
+    id?: string
+    feeStatementId: string
+    paymentOrderId?: string | null
+    kind: $Enums.FeeStatementEventKind
+    occurredAt?: Date | string
+    summary: string
+    createdAt?: Date | string
   }
 
   export type StudentExamRegistrationCreateManyAddedByUserInput = {
@@ -159616,6 +162041,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -159665,6 +162091,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -159754,6 +162181,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -159803,6 +162231,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -159892,6 +162321,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -159941,6 +162371,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -160013,6 +162444,36 @@ export namespace Prisma {
     performedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     metadata?: NullableStringFieldUpdateOperationsInput | string | null
     note?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type FeeStatementEventUpdateWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paymentOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: EnumFeeStatementEventKindFieldUpdateOperationsInput | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    summary?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    feeStatement?: FeeStatementUpdateOneRequiredWithoutEventsNestedInput
+  }
+
+  export type FeeStatementEventUncheckedUpdateWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feeStatementId?: StringFieldUpdateOperationsInput | string
+    paymentOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: EnumFeeStatementEventKindFieldUpdateOperationsInput | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    summary?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeeStatementEventUncheckedUpdateManyWithoutActorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    feeStatementId?: StringFieldUpdateOperationsInput | string
+    paymentOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: EnumFeeStatementEventKindFieldUpdateOperationsInput | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    summary?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StudentExamRegistrationUpdateWithoutAddedByUserInput = {
@@ -162725,6 +165186,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -162774,6 +165236,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -164277,6 +166740,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -164326,6 +166790,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -165720,6 +168185,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -165769,6 +168235,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -172347,6 +174814,16 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type FeeStatementEventCreateManyFeeStatementInput = {
+    id?: string
+    paymentOrderId?: string | null
+    kind: $Enums.FeeStatementEventKind
+    occurredAt?: Date | string
+    actorUserId?: string | null
+    summary: string
+    createdAt?: Date | string
+  }
+
   export type ReviewRequestCreateManyFeeStatementInput = {
     id?: string
     reviewWindowId: string
@@ -172481,6 +174958,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -172530,6 +175008,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -172619,6 +175098,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -172668,6 +175148,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
@@ -172869,6 +175350,36 @@ export namespace Prisma {
     version?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeeStatementEventUpdateWithoutFeeStatementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paymentOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: EnumFeeStatementEventKindFieldUpdateOperationsInput | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    summary?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actor?: UserUpdateOneWithoutFeeStatementEventsActedNestedInput
+  }
+
+  export type FeeStatementEventUncheckedUpdateWithoutFeeStatementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paymentOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: EnumFeeStatementEventKindFieldUpdateOperationsInput | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actorUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FeeStatementEventUncheckedUpdateManyWithoutFeeStatementInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    paymentOrderId?: NullableStringFieldUpdateOperationsInput | string | null
+    kind?: EnumFeeStatementEventKindFieldUpdateOperationsInput | $Enums.FeeStatementEventKind
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    actorUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    summary?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ReviewRequestUpdateWithoutFeeStatementInput = {
@@ -173588,6 +176099,7 @@ export namespace Prisma {
     regenerationChangedBy?: UserUpdateOneWithoutFeeStatementsRegenerationChangedNestedInput
     items?: FeeStatementItemUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUpdateManyWithoutFeeStatementNestedInput
@@ -173637,6 +176149,7 @@ export namespace Prisma {
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
     items?: FeeStatementItemUncheckedUpdateManyWithoutFeeStatementNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutFeeStatementNestedInput
+    events?: FeeStatementEventUncheckedUpdateManyWithoutFeeStatementNestedInput
     reviewRequests?: ReviewRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     cashInRequests?: CashInRequestUncheckedUpdateManyWithoutFeeStatementNestedInput
     accessToScriptRequests?: AccessToScriptRequestUncheckedUpdateManyWithoutFeeStatementNestedInput

@@ -1,6 +1,7 @@
 import { createFeeAuditLog } from "@/lib/fees/audit";
 import { FeeError } from "@/lib/fees/statement";
 import { offlineSettlement } from "@/lib/fees/payment-settlement";
+import { recordFeeStatementEvents } from "@/lib/fees/statement-events";
 import { prisma } from "@/lib/prisma";
 
 export async function markFeeStatementPaidOffline(params: {
@@ -50,6 +51,14 @@ export async function markFeeStatementPaidOffline(params: {
   const settlement = offlineSettlement();
 
   await prisma.$transaction(async (tx) => {
+    const openOrders = await tx.paymentOrder.findMany({
+      where: {
+        feeStatementId: statement.id,
+        status: { in: ["CREATED", "PAYING"] },
+      },
+      select: { id: true, partnerOrderId: true, channel: true },
+    });
+
     await tx.feeStatement.update({
       where: { id: statement.id },
       data: {
@@ -63,13 +72,31 @@ export async function markFeeStatementPaidOffline(params: {
       },
     });
 
-    await tx.paymentOrder.updateMany({
-      where: {
+    if (openOrders.length > 0) {
+      await tx.paymentOrder.updateMany({
+        where: { id: { in: openOrders.map((order) => order.id) } },
+        data: { status: "CLOSED" },
+      });
+    }
+
+    const occurredAt = new Date();
+    await recordFeeStatementEvents(tx, [
+      ...openOrders.map((order) => ({
         feeStatementId: statement.id,
-        status: { in: ["CREATED", "PAYING"] },
+        paymentOrderId: order.id,
+        kind: "ORDER_CLOSED" as const,
+        occurredAt,
+        actorUserId: params.performedByUserId,
+        summary: `Closed ${order.channel} order ${order.partnerOrderId} because the statement was marked paid offline`,
+      })),
+      {
+        feeStatementId: statement.id,
+        kind: "MARKED_PAID_OFFLINE" as const,
+        occurredAt,
+        actorUserId: params.performedByUserId,
+        summary: paymentNote,
       },
-      data: { status: "CLOSED" },
-    });
+    ]);
   });
 
   await createFeeAuditLog({

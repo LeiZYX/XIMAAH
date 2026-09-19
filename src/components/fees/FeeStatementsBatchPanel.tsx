@@ -9,6 +9,7 @@ import {
   type FeeStatementPrintData,
 } from "@/components/fees/FeeStatementPrintModal";
 import { StatementPaymentOrdersPanel } from "@/components/fees/StatementPaymentOrdersPanel";
+import { FeeStatementHistoryModal } from "@/components/fees/FeeStatementHistoryModal";
 import { formatEnglishWithChineseName } from "@/lib/candidates/identity";
 import { readJsonResponse } from "@/lib/client/fetch-json";
 import {
@@ -127,6 +128,7 @@ export function FeeStatementsBatchPanel({
     statement: FeeStatementPrintData;
     autoPrint: boolean;
   } | null>(null);
+  const [historyStatement, setHistoryStatement] = useState<FeeStatementPrintData | null>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setSearch(searchInput.trim()), 250);
@@ -703,6 +705,15 @@ export function FeeStatementsBatchPanel({
                             </ActionIcon>
                           </IconActionButton>
                           <IconActionButton
+                            label="History"
+                            onClick={() => setHistoryStatement(statement)}
+                          >
+                            <ActionIcon>
+                              <circle cx="12" cy="12" r="9" />
+                              <path d="M12 7v5l3 2" />
+                            </ActionIcon>
+                          </IconActionButton>
+                          <IconActionButton
                             label="Print"
                             onClick={() => setPreviewStatement({ statement, autoPrint: true })}
                           >
@@ -750,6 +761,14 @@ export function FeeStatementsBatchPanel({
           displayCurrency={previewStatement.statement.displayCurrency}
           autoPrint={previewStatement.autoPrint}
           onClose={() => setPreviewStatement(null)}
+        />
+      ) : null}
+
+      {historyStatement ? (
+        <FeeStatementHistoryModal
+          statementId={historyStatement.id}
+          candidateLabel={statementCandidateLabel(historyStatement)}
+          onClose={() => setHistoryStatement(null)}
         />
       ) : null}
 

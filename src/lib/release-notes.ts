@@ -9,9 +9,19 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.3.6";
+export const CURRENT_VERSION = "1.3.7";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.3.7",
+    releaseDate: "2026-09-19",
+    summary: "Fee statement history: generated, payment orders, online pay, and who marked paid.",
+    changes: [
+      "Each fee statement keeps an activity timeline: generated, issued, payment orders, paid online, marked paid offline, and revisions",
+      "Fee Statements batch table History icon opens that timeline, including who acted and when",
+      "Existing statements, orders, and offline-paid audit rows are backfilled into the timeline",
+    ],
+  },
   {
     version: "1.3.6",
     releaseDate: "2026-09-18",

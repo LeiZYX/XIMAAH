@@ -7,6 +7,7 @@ import {
   revokeGlobePayOrder,
 } from "@/lib/payments/globepay/client";
 import { statementAmountDueGbp } from "@/lib/fees/payment-due";
+import { recordFeeStatementEvent, recordFeeStatementEvents } from "@/lib/fees/statement-events";
 
 export class PaymentError extends Error {
   constructor(
@@ -87,15 +88,42 @@ async function nextPaymentVersion(feeStatementId: string): Promise<number> {
   return (latest?.version ?? 0) + 1;
 }
 
-export async function closeOpenPaymentOrdersForStatements(statementIds: string[]) {
+export async function closeOpenPaymentOrdersForStatements(
+  statementIds: string[],
+  reason?: string,
+) {
   if (statementIds.length === 0) return { count: 0 };
-  return prisma.paymentOrder.updateMany({
+  const open = await prisma.paymentOrder.findMany({
     where: {
       feeStatementId: { in: statementIds },
       status: { in: [...OPEN_PAYMENT_STATUSES] },
     },
+    select: {
+      id: true,
+      feeStatementId: true,
+      partnerOrderId: true,
+      channel: true,
+    },
+  });
+  if (open.length === 0) return { count: 0 };
+  await prisma.paymentOrder.updateMany({
+    where: { id: { in: open.map((order) => order.id) } },
     data: { status: "CLOSED" },
   });
+  await recordFeeStatementEvents(
+    prisma,
+    open.map((order) => ({
+      feeStatementId: order.feeStatementId,
+      paymentOrderId: order.id,
+      kind: "ORDER_CLOSED" as const,
+      summary: `Closed ${order.channel} order ${order.partnerOrderId}${
+        reason ? ` (${reason})` : ""
+      }`,
+    })),
+  ).catch((error) => {
+    console.error("Fee statement event log failed:", error);
+  });
+  return { count: open.length };
 }
 
 async function assertCanAccessFeeStatement(params: {
@@ -185,6 +213,14 @@ export async function createOrReusePaymentOrder(params: {
       where: { id: openSameChannel.id },
       data: { status: "CLOSED" },
     });
+    await recordFeeStatementEvent(prisma, {
+      feeStatementId: statement.id,
+      paymentOrderId: openSameChannel.id,
+      kind: "ORDER_CLOSED",
+      summary: `Closed ${openSameChannel.channel} order ${openSameChannel.partnerOrderId} before creating a new one`,
+    }).catch((error) => {
+      console.error("Fee statement event log failed:", error);
+    });
   }
 
   const version = await nextPaymentVersion(statement.id);
@@ -239,6 +275,16 @@ export async function createOrReusePaymentOrder(params: {
     },
   });
 
+  await recordFeeStatementEvent(prisma, {
+    feeStatementId: statement.id,
+    paymentOrderId: order.id,
+    kind: "ORDER_CREATED",
+    actorUserId: params.userId,
+    summary: `Created ${params.channel} order ${partnerOrderId} for £${amountGbpNumber.toFixed(2)}`,
+  }).catch((error) => {
+    console.error("Fee statement event log failed:", error);
+  });
+
   return serializePaymentOrder(order);
 }
 
@@ -279,17 +325,35 @@ export async function markPaymentOrderPaid(params: {
       },
     });
 
-    await tx.paymentOrder.updateMany({
+    const siblings = await tx.paymentOrder.findMany({
       where: {
         feeStatementId: order.feeStatementId,
         id: { not: order.id },
         status: { in: [...OPEN_PAYMENT_STATUSES] },
       },
-      data: { status: "CLOSED" },
+      select: { id: true, partnerOrderId: true, channel: true },
     });
 
+    if (siblings.length > 0) {
+      await tx.paymentOrder.updateMany({
+        where: { id: { in: siblings.map((row) => row.id) } },
+        data: { status: "CLOSED" },
+      });
+      await recordFeeStatementEvents(
+        tx,
+        siblings.map((row) => ({
+          feeStatementId: order.feeStatementId,
+          paymentOrderId: row.id,
+          kind: "ORDER_CLOSED" as const,
+          occurredAt: safePaidAt,
+          summary: `Closed ${row.channel} order ${row.partnerOrderId} after another order was paid`,
+        })),
+      );
+    }
+
     if (order.feeStatement.status === "ISSUED" || order.feeStatement.status === "PAID") {
-      const note = `Paid via ${order.channel} / GlobePay ${params.globepayOrderId ?? order.globepayOrderId ?? order.partnerOrderId}`;
+      const globepayId = params.globepayOrderId ?? order.globepayOrderId ?? order.partnerOrderId;
+      const note = `Paid via ${order.channel} / GlobePay ${globepayId}`;
       await tx.feeStatement.update({
         where: { id: order.feeStatementId },
         data: {
@@ -299,6 +363,17 @@ export async function markPaymentOrderPaid(params: {
             ? `${order.feeStatement.paymentNotes}\n${note}`
             : note,
         },
+      });
+      await recordFeeStatementEvent(tx, {
+        feeStatementId: order.feeStatementId,
+        paymentOrderId: order.id,
+        kind: "PAID_ONLINE",
+        occurredAt: safePaidAt,
+        summary: `Paid via ${order.channel} / ${order.partnerOrderId}${
+          params.globepayOrderId || order.globepayOrderId
+            ? ` (GlobePay ${params.globepayOrderId ?? order.globepayOrderId})`
+            : ""
+        }`,
       });
     }
 
@@ -452,6 +527,18 @@ export async function cancelPaymentOrder(params: {
       payUrl: null,
     },
     include: { cancelledBy: { select: { id: true, name: true } } },
+  });
+
+  await recordFeeStatementEvent(prisma, {
+    feeStatementId: order.feeStatementId,
+    paymentOrderId: order.id,
+    kind: "ORDER_CANCELLED",
+    actorUserId: params.cancelledByUserId,
+    summary: `Cancelled ${order.channel} order ${order.partnerOrderId}${
+      params.note?.trim() ? `: ${params.note.trim()}` : ""
+    }`,
+  }).catch((error) => {
+    console.error("Fee statement event log failed:", error);
   });
 
   return serializePaymentOrder(updated);

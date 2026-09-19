@@ -5,6 +5,7 @@ import {
   isCashInFeeStatementPayable,
 } from "@/lib/cash-in-requests/billing-utils";
 import { createFeeAuditLog } from "@/lib/fees/audit";
+import { recordOpenedFeeStatement, recordFeeStatementEvents } from "@/lib/fees/statement-events";
 import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-currency";
 import { toNumber } from "@/lib/fees/money";
 import { computeStatementPaymentSplit } from "@/lib/fees/payment-due";
@@ -212,6 +213,16 @@ export async function issueCashInFeeStatement(params: {
     },
   });
 
+  await recordOpenedFeeStatement({
+    statementId: statement.id,
+    statementNo: statement.statementNo,
+    actorUserId: params.performedByUserId,
+    issued: statement.status === "ISSUED",
+    covered: statement.status === "PAID",
+  }).catch((error) => {
+    console.error("Fee statement event log failed:", error);
+  });
+
   await logPostResultsAudit({
     action: "POST_RESULTS_FEE_STATEMENT_GENERATED",
     performedByUserId: params.performedByUserId,
@@ -323,6 +334,14 @@ export async function markCashInFeePaidOffline(params: {
   const paymentNote = `Offline payment recorded by staff. ${noteText}`;
 
   await prisma.$transaction(async (tx) => {
+    const openOrders = await tx.paymentOrder.findMany({
+      where: {
+        feeStatementId: request.feeStatement!.id,
+        status: { in: ["CREATED", "PAYING"] },
+      },
+      select: { id: true, partnerOrderId: true, channel: true },
+    });
+
     await tx.feeStatement.update({
       where: { id: request.feeStatement!.id },
       data: {
@@ -336,13 +355,31 @@ export async function markCashInFeePaidOffline(params: {
       },
     });
 
-    await tx.paymentOrder.updateMany({
-      where: {
+    if (openOrders.length > 0) {
+      await tx.paymentOrder.updateMany({
+        where: { id: { in: openOrders.map((order) => order.id) } },
+        data: { status: "CLOSED" },
+      });
+    }
+
+    const occurredAt = new Date();
+    await recordFeeStatementEvents(tx, [
+      ...openOrders.map((order) => ({
         feeStatementId: request.feeStatement!.id,
-        status: { in: ["CREATED", "PAYING"] },
+        paymentOrderId: order.id,
+        kind: "ORDER_CLOSED" as const,
+        occurredAt,
+        actorUserId: params.performedByUserId,
+        summary: `Closed ${order.channel} order ${order.partnerOrderId} because the statement was marked paid offline`,
+      })),
+      {
+        feeStatementId: request.feeStatement!.id,
+        kind: "MARKED_PAID_OFFLINE" as const,
+        occurredAt,
+        actorUserId: params.performedByUserId,
+        summary: paymentNote,
       },
-      data: { status: "CLOSED" },
-    });
+    ]);
   });
 
   await createFeeAuditLog({

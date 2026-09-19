@@ -8,6 +8,7 @@ import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-curre
 import { findMatchingFeeRuleWithFallback } from "@/lib/fees/match";
 import type { ExchangeRateRecord, FeeRuleRecord } from "@/lib/fees/types";
 import { FeeError, issueFeeStatement, ensureWorkspaceLockedForBilling } from "@/lib/fees/statement";
+import { recordOpenedFeeStatement } from "@/lib/fees/statement-events";
 import { computeStatementPaymentSplit, sumWorkspacePaidGbp } from "@/lib/fees/payment-due";
 import { centreInfoFromExamBoard } from "@/lib/exam-boards/centre";
 import { prisma } from "@/lib/prisma";
@@ -66,7 +67,9 @@ export async function generateOfficeInvoice(params: {
 
   if (existingDraft) {
     if (issue) {
-      const issued = await issueFeeStatement(existingDraft.id);
+      const issued = await issueFeeStatement(existingDraft.id, {
+        performedByUserId: generatedByUserId,
+      });
       const centre = centreInfoFromExamBoard(
         existingDraft.registrationWindow?.examBoard ??
           (() => {
@@ -244,6 +247,16 @@ export async function generateOfficeInvoice(params: {
       items: { create: lines },
     },
     include: { items: true, registrationWindow: { include: { examBoard: true } } },
+  });
+
+  await recordOpenedFeeStatement({
+    statementId: statement.id,
+    statementNo: statement.statementNo,
+    actorUserId: generatedByUserId,
+    issued: Boolean(issue) && !noFurtherPaymentDue,
+    covered: noFurtherPaymentDue,
+  }).catch((error) => {
+    console.error("Fee statement event log failed:", error);
   });
 
   const centre = centreInfoFromExamBoard(

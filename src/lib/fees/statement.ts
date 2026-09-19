@@ -36,6 +36,7 @@ import {
 } from "@/lib/fees/payment-due";
 import { settlementForIssuedOrPaid } from "@/lib/fees/payment-settlement";
 import { finalizeRevisedFeeStatement } from "@/lib/fees/statement-lifecycle";
+import { recordOpenedFeeStatement, recordFeeStatementEvent } from "@/lib/fees/statement-events";
 import { queueFeeStatementIssuedNotification } from "@/lib/notifications/fee-statement-issued";
 
 export class FeeError extends Error {
@@ -324,6 +325,7 @@ export async function regenerateRevisedFeeStatement(params: {
   workspaceId: string;
   generatedByUserId: string;
   displayCurrency?: FeeStatementDisplayCurrency;
+  repriced?: boolean;
 }) {
   return generateFeeStatement({
     ...params,
@@ -338,6 +340,7 @@ export async function generateFeeStatement(params: {
   displayCurrency?: FeeStatementDisplayCurrency;
   issue?: boolean;
   regenerate?: boolean;
+  repriced?: boolean;
 }) {
   const {
     workspaceId,
@@ -345,6 +348,7 @@ export async function generateFeeStatement(params: {
     displayCurrency = DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
     issue: issueRequested = false,
     regenerate: regenerateRequested = false,
+    repriced = false,
   } = params;
   let regenerate = regenerateRequested;
   let issue = issueRequested;
@@ -593,6 +597,18 @@ export async function generateFeeStatement(params: {
     queueFeeStatementIssuedNotification(statement.id);
   }
 
+  await recordOpenedFeeStatement({
+    statementId: statement.id,
+    statementNo: statement.statementNo,
+    actorUserId: generatedByUserId,
+    issued: Boolean(issue || noFurtherPaymentDue) && !noFurtherPaymentDue,
+    covered: noFurtherPaymentDue,
+    regenerated: regenerate,
+    repriced,
+  }).catch((error) => {
+    console.error("Fee statement event log failed:", error);
+  });
+
   return statement;
 }
 
@@ -643,7 +659,10 @@ function mapFeeLineToStatementItemCreate(
   return item;
 }
 
-export async function issueFeeStatement(statementId: string) {
+export async function issueFeeStatement(
+  statementId: string,
+  options?: { performedByUserId?: string | null },
+) {
   const statement = await prisma.feeStatement.findUnique({
     where: { id: statementId },
     include: { items: true },
@@ -696,6 +715,18 @@ export async function issueFeeStatement(statementId: string) {
   });
 
   queueFeeStatementIssuedNotification(issued.id);
+
+  await recordFeeStatementEvent(prisma, {
+    feeStatementId: issued.id,
+    kind: next.paymentSettlement === "COVERED" ? "COVERED" : "ISSUED",
+    actorUserId: options?.performedByUserId ?? issued.generatedByUserId,
+    summary:
+      next.paymentSettlement === "COVERED"
+        ? `No balance due. ${issued.statementNo} marked Paid · Covered`
+        : `Issued ${issued.statementNo}`,
+  }).catch((error) => {
+    console.error("Fee statement event log failed:", error);
+  });
 
   return issued;
 }

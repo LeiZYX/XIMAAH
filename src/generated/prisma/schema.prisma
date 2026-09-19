@@ -231,6 +231,21 @@ enum FeePaymentSettlement {
   COVERED
 }
 
+enum FeeStatementEventKind {
+  GENERATED
+  ISSUED
+  COVERED
+  ORDER_CREATED
+  ORDER_CANCELLED
+  ORDER_CLOSED
+  PAID_ONLINE
+  MARKED_PAID_OFFLINE
+  NEEDS_REGENERATION
+  REGENERATED
+  REPRICED
+  SUPERSEDED
+}
+
 enum FeeStatementKind {
   NORMAL
   RESTRICTED
@@ -523,6 +538,7 @@ model User {
   feeStatementsAsStudent            FeeStatement[]              @relation("FeeStatementStudent")
   feeStatementsRegenerationChanged  FeeStatement[]              @relation("FeeStatementRegenerationChanged")
   feeAuditLogsPerformed             FeeAuditLog[]               @relation("FeeAuditPerformer")
+  feeStatementEventsActed           FeeStatementEvent[]         @relation("FeeStatementEventActor")
   registrationsAdded                StudentExamRegistration[]   @relation("RegistrationAddedBy")
   candidate                         Candidate?
   teacherProfile                    TeacherProfile?
@@ -1754,6 +1770,7 @@ model FeeStatement {
 
   items                   FeeStatementItem[]
   paymentOrders           PaymentOrder[]
+  events                  FeeStatementEvent[]
   reviewRequests          ReviewRequest[]
   cashInRequests          CashInRequest[]
   accessToScriptRequests  AccessToScriptRequest[]
@@ -1803,6 +1820,27 @@ model PaymentOrder {
   @@index([feeStatementId])
   @@index([status])
   @@index([cancelledByUserId])
+}
+
+model FeeStatementEvent {
+  id             String                @id @default(cuid())
+  feeStatementId String
+  feeStatement   FeeStatement          @relation(fields: [feeStatementId], references: [id], onDelete: Cascade)
+  /**
+   * Stored without a foreign key so closing or deleting an order does not drop the timeline row.
+   */
+  paymentOrderId String?
+  kind           FeeStatementEventKind
+  occurredAt     DateTime              @default(now())
+  actorUserId    String?
+  actor          User?                 @relation("FeeStatementEventActor", fields: [actorUserId], references: [id], onDelete: SetNull)
+  summary        String                @db.Text
+  createdAt      DateTime              @default(now())
+
+  @@index([feeStatementId, occurredAt])
+  @@index([actorUserId])
+  @@index([paymentOrderId])
+  @@index([kind])
 }
 
 model FeeStatementItem {

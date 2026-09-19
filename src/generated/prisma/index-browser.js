@@ -830,6 +830,17 @@ exports.Prisma.PaymentOrderScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FeeStatementEventScalarFieldEnum = {
+  id: 'id',
+  feeStatementId: 'feeStatementId',
+  paymentOrderId: 'paymentOrderId',
+  kind: 'kind',
+  occurredAt: 'occurredAt',
+  actorUserId: 'actorUserId',
+  summary: 'summary',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.FeeStatementItemScalarFieldEnum = {
   id: 'id',
   feeStatementId: 'feeStatementId',
@@ -1546,6 +1557,14 @@ exports.Prisma.PaymentOrderOrderByRelevanceFieldEnum = {
   cancelNote: 'cancelNote'
 };
 
+exports.Prisma.FeeStatementEventOrderByRelevanceFieldEnum = {
+  id: 'id',
+  feeStatementId: 'feeStatementId',
+  paymentOrderId: 'paymentOrderId',
+  actorUserId: 'actorUserId',
+  summary: 'summary'
+};
+
 exports.Prisma.FeeStatementItemOrderByRelevanceFieldEnum = {
   id: 'id',
   feeStatementId: 'feeStatementId',
@@ -2073,6 +2092,21 @@ exports.PaymentOrderStatus = exports.$Enums.PaymentOrderStatus = {
   FAILED: 'FAILED'
 };
 
+exports.FeeStatementEventKind = exports.$Enums.FeeStatementEventKind = {
+  GENERATED: 'GENERATED',
+  ISSUED: 'ISSUED',
+  COVERED: 'COVERED',
+  ORDER_CREATED: 'ORDER_CREATED',
+  ORDER_CANCELLED: 'ORDER_CANCELLED',
+  ORDER_CLOSED: 'ORDER_CLOSED',
+  PAID_ONLINE: 'PAID_ONLINE',
+  MARKED_PAID_OFFLINE: 'MARKED_PAID_OFFLINE',
+  NEEDS_REGENERATION: 'NEEDS_REGENERATION',
+  REGENERATED: 'REGENERATED',
+  REPRICED: 'REPRICED',
+  SUPERSEDED: 'SUPERSEDED'
+};
+
 exports.FeeScheduleServiceType = exports.$Enums.FeeScheduleServiceType = {
   CANDIDATE_REGISTRATION: 'CANDIDATE_REGISTRATION',
   EXAM_ENTRY: 'EXAM_ENTRY',
@@ -2245,6 +2279,7 @@ exports.Prisma.ModelName = {
   ExchangeRate: 'ExchangeRate',
   FeeStatement: 'FeeStatement',
   PaymentOrder: 'PaymentOrder',
+  FeeStatementEvent: 'FeeStatementEvent',
   FeeStatementItem: 'FeeStatementItem',
   OfflineWithdrawalRefund: 'OfflineWithdrawalRefund',
   FeeAuditLog: 'FeeAuditLog',

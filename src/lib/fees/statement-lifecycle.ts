@@ -1,5 +1,6 @@
 import type { FeeAuditAction } from "@/generated/prisma/enums";
 import { createFeeAuditLog } from "@/lib/fees/audit";
+import { recordFeeStatementEvents } from "@/lib/fees/statement-events";
 import { closeOpenPaymentOrdersForStatements } from "@/lib/payments/globepay/orders";
 import { prisma } from "@/lib/prisma";
 
@@ -125,7 +126,23 @@ export async function markFeeStatementsNeedsRegeneration(params: {
     },
   });
 
-  await closeOpenPaymentOrdersForStatements(candidates.map((row) => row.id));
+  await recordFeeStatementEvents(
+    prisma,
+    candidates.map((row) => ({
+      feeStatementId: row.id,
+      kind: "NEEDS_REGENERATION" as const,
+      occurredAt: now,
+      actorUserId: params.performedByUserId,
+      summary: reason,
+    })),
+  ).catch((error) => {
+    console.error("Fee statement event log failed:", error);
+  });
+
+  await closeOpenPaymentOrdersForStatements(
+    candidates.map((row) => row.id),
+    "statement needs regeneration",
+  );
 
   const workspace = await prisma.registrationWorkspace.findUnique({
     where: { id: params.workspaceId },
@@ -217,6 +234,18 @@ export async function finalizeRevisedFeeStatement(params: {
       data: { revisedFromStatementId: primary.id },
     });
   }
+
+  await recordFeeStatementEvents(
+    prisma,
+    issuedHistory.map((old) => ({
+      feeStatementId: old.id,
+      kind: "SUPERSEDED" as const,
+      actorUserId: params.performedByUserId,
+      summary: `${old.statementNo} superseded by a revised statement`,
+    })),
+  ).catch((error) => {
+    console.error("Fee statement event log failed:", error);
+  });
 
   await createFeeAuditLog({
     action: "FEE_STATEMENT_REGENERATED_REVISED",
