@@ -26,6 +26,8 @@ export function feeStatementEventLabel(kind: string): string {
       return "Superseded";
     case "REFUND_RECORDED":
       return "Refund recorded";
+    case "SUBJECT_REMOVED":
+      return "Subject removed";
     default:
       return kind;
   }

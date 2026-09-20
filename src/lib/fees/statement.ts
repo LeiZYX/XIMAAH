@@ -506,6 +506,15 @@ export async function generateFeeStatement(params: {
   });
   const pendingOfflineCredit = roundMoney(Number(pendingOffline._sum.creditGbp ?? 0));
 
+  const noCashRemoved = await prisma.offlineWithdrawalRefund.aggregate({
+    where: {
+      registrationWorkspaceId: workspaceId,
+      status: "NO_CASH_UNCOLLECTED",
+    },
+    _sum: { creditGbp: true },
+  });
+  const noCashRemovedCredit = roundMoney(Number(noCashRemoved._sum.creditGbp ?? 0));
+
   const noFurtherPaymentDue = issue && paymentSplit.amountDueGbp <= 0;
   const initialStatus = noFurtherPaymentDue ? "PAID" : issue ? "ISSUED" : "DRAFT";
   const initialSettlement = noFurtherPaymentDue
@@ -522,7 +531,12 @@ export async function generateFeeStatement(params: {
     pendingOfflineCredit > 0
       ? `Offline refund pending £${pendingOfflineCredit.toFixed(2)} (finance processes outside the payment platform).`
       : null;
-  const paymentNotes = [basePaymentNotes, offlineNote].filter(Boolean).join(" ") || null;
+  const noCashNote =
+    noCashRemovedCredit > 0
+      ? `Removed subjects not charged £${noCashRemovedCredit.toFixed(2)} (nothing collected — no cash refund).`
+      : null;
+  const paymentNotes =
+    [basePaymentNotes, offlineNote, noCashNote].filter(Boolean).join(" ") || null;
 
   const statement = await prisma.feeStatement.create({
     data: {

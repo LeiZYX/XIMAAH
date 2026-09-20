@@ -15,7 +15,7 @@ import { useStaffFeeCaps } from "@/components/fees/useStaffFeeCaps";
 
 type RefundLine = {
   id: string;
-  status: "PENDING_OFFLINE" | "COMPLETED" | "ZERO_NO_REFUND";
+  status: "PENDING_OFFLINE" | "COMPLETED" | "ZERO_NO_REFUND" | "NO_CASH_UNCOLLECTED";
   paperCodeSnapshot: string;
   subjectSnapshot: string;
   feeStageCode: string;
@@ -42,7 +42,7 @@ type RefundGroup = {
     assessmentHubCandidateNumber: string;
   } | null;
   registrationWindow: { id: string; title: string; academicYear: string };
-  rollupStatus: "PENDING_OFFLINE" | "COMPLETED" | "MIXED" | "ZERO_NO_REFUND";
+  rollupStatus: "PENDING_OFFLINE" | "COMPLETED" | "MIXED" | "ZERO_NO_REFUND" | "NO_CASH_UNCOLLECTED";
   pendingCount: number;
   completedCount: number;
   pendingCreditGbp: number;
@@ -73,6 +73,8 @@ function statusLabel(status: RefundGroup["rollupStatus"] | RefundLine["status"])
       return "Partially completed";
     case "ZERO_NO_REFUND":
       return "No refund due";
+    case "NO_CASH_UNCOLLECTED":
+      return "Not charged — nothing collected";
     default:
       return status;
   }
@@ -93,9 +95,9 @@ export function OfflineWithdrawalRefundsPanel({
     scope: "staff",
     allowEmpty: true,
   });
-  const [status, setStatus] = useState<"PENDING_OFFLINE" | "COMPLETED" | "ZERO_NO_REFUND" | "ALL">(
-    "PENDING_OFFLINE",
-  );
+  const [status, setStatus] = useState<
+    "PENDING_OFFLINE" | "COMPLETED" | "ZERO_NO_REFUND" | "NO_CASH_UNCOLLECTED" | "ALL"
+  >("PENDING_OFFLINE");
   const [groups, setGroups] = useState<RefundGroup[]>([]);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
@@ -171,6 +173,7 @@ export function OfflineWithdrawalRefundsPanel({
               className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
             >
               <option value="PENDING_OFFLINE">Pending offline</option>
+              <option value="NO_CASH_UNCOLLECTED">Not charged — nothing collected</option>
               <option value="COMPLETED">Completed</option>
               <option value="ZERO_NO_REFUND">No refund due</option>
               <option value="ALL">All</option>

@@ -257,6 +257,7 @@ enum FeeStatementEventKind {
   REPRICED
   SUPERSEDED
   REFUND_RECORDED
+  SUBJECT_REMOVED
 }
 
 enum FeeStatementKind {
@@ -344,6 +345,8 @@ enum OfflineWithdrawalRefundStatus {
   PENDING_OFFLINE
   COMPLETED
   ZERO_NO_REFUND
+  /// Subject removed while nothing had been collected — audit only, not cash to pay out.
+  NO_CASH_UNCOLLECTED
 }
 
 enum FeeRefundMethod {

@@ -164,22 +164,78 @@ export async function refundSummariesByWorkspace(workspaceIds: string[]) {
 export async function attachRefundSummaries<
   T extends { registrationWorkspaceId?: string | null },
 >(statements: T[]) {
-  const summaries = await refundSummariesByWorkspace(
-    statements
-      .map((row) => row.registrationWorkspaceId)
-      .filter((id): id is string => Boolean(id)),
-  );
+  const workspaceIds = statements
+    .map((row) => row.registrationWorkspaceId)
+    .filter((id): id is string => Boolean(id));
+  const summaries = await refundSummariesByWorkspace(workspaceIds);
+  const removals = await removalCreditsByWorkspace(workspaceIds);
   return statements.map((row) => {
     const summary = row.registrationWorkspaceId
       ? summaries.get(row.registrationWorkspaceId)
       : undefined;
+    const removalCredits = row.registrationWorkspaceId
+      ? (removals.get(row.registrationWorkspaceId) ?? [])
+      : [];
     return {
       ...row,
       refundDueGbp: summary?.refundDueGbp ?? 0,
       refundStatus: summary?.refundStatus ?? "NONE",
       refundableGbp: summary?.refundableGbp ?? 0,
+      removalCredits,
     };
   });
+}
+
+export type RemovalCreditLine = {
+  id: string;
+  paperCodeSnapshot: string;
+  subjectSnapshot: string;
+  feeStageCode: string;
+  effectiveRefundPercent: number;
+  creditGbp: number;
+  status: "PENDING_OFFLINE" | "NO_CASH_UNCOLLECTED" | "COMPLETED" | "ZERO_NO_REFUND";
+};
+
+async function removalCreditsByWorkspace(workspaceIds: string[]) {
+  const ids = [...new Set(workspaceIds.filter(Boolean))];
+  const map = new Map<string, RemovalCreditLine[]>();
+  for (const id of ids) map.set(id, []);
+  if (ids.length === 0) return map;
+
+  const rows = await prisma.offlineWithdrawalRefund.findMany({
+    where: {
+      registrationWorkspaceId: { in: ids },
+      status: { in: ["PENDING_OFFLINE", "NO_CASH_UNCOLLECTED", "COMPLETED"] },
+      creditGbp: { gt: 0 },
+    },
+    select: {
+      id: true,
+      registrationWorkspaceId: true,
+      paperCodeSnapshot: true,
+      subjectSnapshot: true,
+      feeStageCode: true,
+      effectiveRefundPercent: true,
+      creditGbp: true,
+      status: true,
+      createdAt: true,
+    },
+    orderBy: { createdAt: "asc" },
+  });
+
+  for (const row of rows) {
+    const list = map.get(row.registrationWorkspaceId) ?? [];
+    list.push({
+      id: row.id,
+      paperCodeSnapshot: row.paperCodeSnapshot,
+      subjectSnapshot: row.subjectSnapshot,
+      feeStageCode: row.feeStageCode,
+      effectiveRefundPercent: toNumber(row.effectiveRefundPercent),
+      creditGbp: toNumber(row.creditGbp),
+      status: row.status,
+    });
+    map.set(row.registrationWorkspaceId, list);
+  }
+  return map;
 }
 
 type FeeDb = Prisma.TransactionClient | typeof prisma;

@@ -50,8 +50,6 @@ const pinCheck = "sticky left-0 z-20 w-10 bg-white";
 const pinStatement = "sticky left-10 z-20 w-44 whitespace-nowrap bg-white";
 const pinCandidate =
   "sticky left-[13.5rem] z-20 min-w-40 bg-white shadow-[4px_0_8px_-6px_rgba(15,23,42,0.35)]";
-const pinActions =
-  "sticky right-0 z-30 min-w-[20rem] bg-white pl-3 shadow-[-4px_0_8px_-6px_rgba(15,23,42,0.35)]";
 
 function IconActionButton({
   label,
@@ -652,7 +650,7 @@ export function FeeStatementsBatchPanel({
                     <th className="py-2 pr-4 font-medium">Refund</th>
                     <th className="py-2 pr-4 font-medium">Generated</th>
                     <th className="py-2 pr-4 font-medium">Online payment</th>
-                    <th className={`${pinActions} py-2 font-medium text-right`}>Actions</th>
+                    <th className="py-2 font-medium text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -720,8 +718,8 @@ export function FeeStatementsBatchPanel({
                           onChanged={() => void load()}
                         />
                       </td>
-                      <td className={`${pinActions} py-2`}>
-                        <div className="flex flex-nowrap items-center justify-end gap-1.5">
+                      <td className="py-2">
+                        <div className="flex flex-wrap items-center justify-end gap-1.5">
                           {statement.status === "DRAFT" ? (
                             <IconActionButton
                               label="Issue"

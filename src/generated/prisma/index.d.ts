@@ -636,7 +636,8 @@ export const FeeStatementEventKind: {
   REGENERATED: 'REGENERATED',
   REPRICED: 'REPRICED',
   SUPERSEDED: 'SUPERSEDED',
-  REFUND_RECORDED: 'REFUND_RECORDED'
+  REFUND_RECORDED: 'REFUND_RECORDED',
+  SUBJECT_REMOVED: 'SUBJECT_REMOVED'
 };
 
 export type FeeStatementEventKind = (typeof FeeStatementEventKind)[keyof typeof FeeStatementEventKind]
@@ -744,7 +745,8 @@ export type FeeAuditAction = (typeof FeeAuditAction)[keyof typeof FeeAuditAction
 export const OfflineWithdrawalRefundStatus: {
   PENDING_OFFLINE: 'PENDING_OFFLINE',
   COMPLETED: 'COMPLETED',
-  ZERO_NO_REFUND: 'ZERO_NO_REFUND'
+  ZERO_NO_REFUND: 'ZERO_NO_REFUND',
+  NO_CASH_UNCOLLECTED: 'NO_CASH_UNCOLLECTED'
 };
 
 export type OfflineWithdrawalRefundStatus = (typeof OfflineWithdrawalRefundStatus)[keyof typeof OfflineWithdrawalRefundStatus]

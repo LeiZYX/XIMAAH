@@ -5,6 +5,8 @@ import { calculateFeeAmounts } from "@/lib/fees/calculate";
 import { findMatchingFeeRuleWithFallback, resolveEntryTypeForRegistration } from "@/lib/fees/match";
 import { roundMoney, toNumber } from "@/lib/fees/money";
 import { sumWorkspacePaidGbp } from "@/lib/fees/payment-due";
+import { recordFeeStatementEvent } from "@/lib/fees/statement-events";
+import { workspaceHasCashCollected } from "@/lib/fees/workspace-collected";
 import {
   DEFAULT_PAYMENT_FEE_PERCENT,
   effectiveWithdrawalRefundPercent,
@@ -200,6 +202,17 @@ export async function recordOfflineWithdrawalRefundsForRemovals(params: {
       (feeStageCode === "LATE" ? 50 : feeStageCode === "HIGH_LATE" ? 0 : 100),
   );
   const policyNotes = stageRow?.withdrawalNotes ?? null;
+  const hasCashCollected = await workspaceHasCashCollected(workspace.id);
+
+  const activeStatement = await prisma.feeStatement.findFirst({
+    where: {
+      registrationWorkspaceId: workspace.id,
+      statementKind: "NORMAL",
+      status: { in: ["DRAFT", "ISSUED", "PAID", "NEEDS_REGENERATION"] },
+    },
+    orderBy: { generatedAt: "desc" },
+    select: { id: true },
+  });
 
   const results: WithdrawalRefundCalculation[] = [];
 
@@ -224,17 +237,17 @@ export async function recordOfflineWithdrawalRefundsForRemovals(params: {
       continue;
     }
 
-    // Avoid duplicate pending rows for the same cancelled registration/session.
-    const existingPending = await prisma.offlineWithdrawalRefund.findFirst({
+    // Avoid duplicate rows for the same cancelled registration/session.
+    const existingRow = await prisma.offlineWithdrawalRefund.findFirst({
       where: {
         registrationWorkspaceId: workspace.id,
         examSessionId: registration.examSessionId,
         registrationId: registration.id,
-        status: "PENDING_OFFLINE",
+        status: { in: ["PENDING_OFFLINE", "NO_CASH_UNCOLLECTED"] },
       },
       select: { id: true },
     });
-    if (existingPending) continue;
+    if (existingRow) continue;
 
     const calc = computeWithdrawalCredit({
       salesAmountGbp: billed.salesGbp,
@@ -246,6 +259,13 @@ export async function recordOfflineWithdrawalRefundsForRemovals(params: {
       policyNotes,
       sourceNote: billed.sourceNote,
     });
+
+    let status: OfflineWithdrawalRefundStatus = calc.status;
+    let calculationNotes = calc.calculationNotes;
+    if (calc.status === "PENDING_OFFLINE" && !hasCashCollected) {
+      status = "NO_CASH_UNCOLLECTED";
+      calculationNotes = `${calc.calculationNotes} · Nothing collected — no cash refund`;
+    }
 
     const row = await prisma.offlineWithdrawalRefund.create({
       data: {
@@ -265,9 +285,9 @@ export async function recordOfflineWithdrawalRefundsForRemovals(params: {
         effectiveRefundPercent: calc.effectiveRefundPercent,
         creditGbp: calc.creditGbp,
         creditCny: calc.creditCny,
-        status: calc.status,
+        status,
         policyNotes: calc.policyNotes,
-        calculationNotes: calc.calculationNotes,
+        calculationNotes,
         createdByUserId: params.performedByUserId,
       },
     });
@@ -276,22 +296,39 @@ export async function recordOfflineWithdrawalRefundsForRemovals(params: {
       action: "OFFLINE_WITHDRAWAL_REFUND_RECORDED",
       performedByUserId: params.performedByUserId,
       registrationWindowId: workspace.registrationWindowId,
-      note: `${registration.paper.code}: ${calc.calculationNotes}`,
+      note: `${registration.paper.code}: ${calculationNotes}`,
       metadata: {
         offlineWithdrawalRefundId: row.id,
         workspaceId: workspace.id,
         registrationId: registration.id,
         examSessionId: registration.examSessionId,
-        status: calc.status,
+        status,
         creditGbp: calc.creditGbp,
         effectiveRefundPercent: calc.effectiveRefundPercent,
         feeStageCode: calc.feeStageCode,
+        hasCashCollected,
       },
     }).catch((error) => {
       console.error("Fee audit log failed:", error);
     });
 
-    results.push(calc);
+    if (activeStatement && calc.creditGbp > 0.004) {
+      const summary =
+        status === "NO_CASH_UNCOLLECTED"
+          ? `Removed ${registration.paper.code} (${registration.subject.name}) · £${calc.creditGbp.toFixed(2)} · ${calc.feeStageCode} ${calc.effectiveRefundPercent}% · nothing collected — no cash refund`
+          : `Removed ${registration.paper.code} (${registration.subject.name}) · cash refund due £${calc.creditGbp.toFixed(2)} · ${calc.feeStageCode} ${calc.effectiveRefundPercent}%`;
+      await recordFeeStatementEvent(prisma, {
+        feeStatementId: activeStatement.id,
+        kind: "SUBJECT_REMOVED",
+        occurredAt: now,
+        actorUserId: params.performedByUserId,
+        summary,
+      }).catch((error) => {
+        console.error("Fee statement subject-removed event failed:", error);
+      });
+    }
+
+    results.push({ ...calc, status, calculationNotes });
   }
 
   return results;
@@ -300,11 +337,22 @@ export async function recordOfflineWithdrawalRefundsForRemovals(params: {
 export function summarizeWithdrawalRefunds(calcs: WithdrawalRefundCalculation[]): string | null {
   if (calcs.length === 0) return null;
   const pending = calcs.filter((row) => row.status === "PENDING_OFFLINE");
-  const totalCredit = roundMoney(pending.reduce((sum, row) => sum + row.creditGbp, 0));
-  if (pending.length === 0) {
-    return `Withdrawal recorded with no offline refund due (${calcs.length} item${calcs.length === 1 ? "" : "s"}).`;
+  const noCash = calcs.filter((row) => row.status === "NO_CASH_UNCOLLECTED");
+  const pendingCredit = roundMoney(pending.reduce((sum, row) => sum + row.creditGbp, 0));
+  const noCashCredit = roundMoney(noCash.reduce((sum, row) => sum + row.creditGbp, 0));
+  const parts: string[] = [];
+  if (pending.length > 0) {
+    parts.push(
+      `Offline refund pending: £${pendingCredit.toFixed(2)} across ${pending.length} removal${pending.length === 1 ? "" : "s"} (finance processes outside payment platform)`,
+    );
   }
-  return `Offline refund pending: £${totalCredit.toFixed(2)} across ${pending.length} removal${pending.length === 1 ? "" : "s"} (finance processes outside payment platform).`;
+  if (noCash.length > 0) {
+    parts.push(
+      `Removed subjects not charged: £${noCashCredit.toFixed(2)} across ${noCash.length} removal${noCash.length === 1 ? "" : "s"} (nothing collected — no cash refund)`,
+    );
+  }
+  if (parts.length > 0) return parts.join(" · ");
+  return `Withdrawal recorded with no offline refund due (${calcs.length} item${calcs.length === 1 ? "" : "s"}).`;
 }
 
 export async function completeOfflineWithdrawalRefund(params: {
@@ -521,11 +569,17 @@ export async function listOfflineWithdrawalRefundGroups(params: {
     // Prefer live online payments; fall back to statement snapshot.
     const alreadyPaidGbp = onlinePaidGbp > 0 ? onlinePaidGbp : statementPreviouslyPaidGbp;
 
-    let rollupStatus: "PENDING_OFFLINE" | "COMPLETED" | "MIXED" | "ZERO_NO_REFUND" =
-      "ZERO_NO_REFUND";
+    let rollupStatus:
+      | "PENDING_OFFLINE"
+      | "COMPLETED"
+      | "MIXED"
+      | "ZERO_NO_REFUND"
+      | "NO_CASH_UNCOLLECTED" = "ZERO_NO_REFUND";
+    const noCashLines = group.lines.filter((line) => line.status === "NO_CASH_UNCOLLECTED");
     if (pendingLines.length > 0 && completedLines.length > 0) rollupStatus = "MIXED";
     else if (pendingLines.length > 0) rollupStatus = "PENDING_OFFLINE";
     else if (completedLines.length > 0) rollupStatus = "COMPLETED";
+    else if (noCashLines.length > 0) rollupStatus = "NO_CASH_UNCOLLECTED";
     else if (group.lines.some((line) => line.status === "ZERO_NO_REFUND")) {
       rollupStatus = "ZERO_NO_REFUND";
     }

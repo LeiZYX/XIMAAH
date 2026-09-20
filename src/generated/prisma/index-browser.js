@@ -2181,7 +2181,8 @@ exports.FeeStatementEventKind = exports.$Enums.FeeStatementEventKind = {
   REGENERATED: 'REGENERATED',
   REPRICED: 'REPRICED',
   SUPERSEDED: 'SUPERSEDED',
-  REFUND_RECORDED: 'REFUND_RECORDED'
+  REFUND_RECORDED: 'REFUND_RECORDED',
+  SUBJECT_REMOVED: 'SUBJECT_REMOVED'
 };
 
 exports.FeeScheduleServiceType = exports.$Enums.FeeScheduleServiceType = {
@@ -2199,7 +2200,8 @@ exports.FeeScheduleServiceType = exports.$Enums.FeeScheduleServiceType = {
 exports.OfflineWithdrawalRefundStatus = exports.$Enums.OfflineWithdrawalRefundStatus = {
   PENDING_OFFLINE: 'PENDING_OFFLINE',
   COMPLETED: 'COMPLETED',
-  ZERO_NO_REFUND: 'ZERO_NO_REFUND'
+  ZERO_NO_REFUND: 'ZERO_NO_REFUND',
+  NO_CASH_UNCOLLECTED: 'NO_CASH_UNCOLLECTED'
 };
 
 exports.FeeRefundMethod = exports.$Enums.FeeRefundMethod = {

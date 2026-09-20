@@ -9,9 +9,20 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.4.2";
+export const CURRENT_VERSION = "1.4.3";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.4.3",
+    releaseDate: "2026-09-20",
+    summary:
+      "Unpaid subject removals no longer create cash refunds, and fee statements show removals in history and print.",
+    changes: [
+      "If nothing has been collected, removing a subject sets Refund due to £0. Amount due is only the subjects still on the statement",
+      "Statement History shows subject removals, including on the regenerated statement. Print and preview list removed subjects as cash refund due or not charged",
+      "Offline Refunds can filter “Not charged — nothing collected”. Fee Statements only pins the statement number and name on the left while scrolling",
+    ],
+  },
   {
     version: "1.4.2",
     releaseDate: "2026-09-19",

@@ -19,7 +19,13 @@ export async function GET(request: NextRequest) {
   const registrationWindowId =
     request.nextUrl.searchParams.get("registrationWindowId") ?? undefined;
 
-  const allowed = new Set(["PENDING_OFFLINE", "COMPLETED", "ZERO_NO_REFUND", "ALL"]);
+  const allowed = new Set([
+    "PENDING_OFFLINE",
+    "COMPLETED",
+    "ZERO_NO_REFUND",
+    "NO_CASH_UNCOLLECTED",
+    "ALL",
+  ]);
   if (!allowed.has(statusParam)) {
     return jsonError("Invalid status filter", 400);
   }

@@ -47,6 +47,15 @@ export interface FeeStatementPrintData {
   refundStatus?: string | null;
   refundableGbp?: number | null;
   paymentNotes?: string | null;
+  removalCredits?: Array<{
+    id: string;
+    paperCodeSnapshot: string;
+    subjectSnapshot: string;
+    feeStageCode: string;
+    effectiveRefundPercent: number;
+    creditGbp: number;
+    status: string;
+  }>;
   generatedAt: string;
   issuedAt: string | null;
   paymentOrders?: Array<{
@@ -276,6 +285,93 @@ function StatementDocument({
             })}
           </tbody>
         </table>
+
+        {(() => {
+          const removals = (statement.removalCredits ?? []).filter(
+            (row) =>
+              row.status === "PENDING_OFFLINE" ||
+              row.status === "NO_CASH_UNCOLLECTED" ||
+              row.status === "COMPLETED",
+          );
+          if (removals.length === 0) return null;
+          const cashDue = removals.filter((row) => row.status === "PENDING_OFFLINE");
+          const notCharged = removals.filter((row) => row.status === "NO_CASH_UNCOLLECTED");
+          const completed = removals.filter((row) => row.status === "COMPLETED");
+          return (
+            <div className="registration-print-keep-together mt-4 rounded-lg border border-slate-200 p-4">
+              <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Removed subjects
+              </h2>
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-slate-200 text-slate-600">
+                    <th className="py-1.5 pr-2 font-medium">Paper</th>
+                    <th className="py-1.5 pr-2 font-medium">Subject</th>
+                    <th className="py-1.5 pr-2 font-medium">Stage</th>
+                    <th className="py-1.5 pr-2 font-medium text-right">%</th>
+                    <th className="py-1.5 pr-2 font-medium text-right">Amount</th>
+                    <th className="py-1.5 font-medium">Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {removals.map((row) => (
+                    <tr key={row.id} className="border-b border-slate-100">
+                      <td className="py-1.5 pr-2 font-mono text-xs">{row.paperCodeSnapshot}</td>
+                      <td className="py-1.5 pr-2">{row.subjectSnapshot}</td>
+                      <td className="py-1.5 pr-2">{row.feeStageCode}</td>
+                      <td className="py-1.5 pr-2 text-right">{row.effectiveRefundPercent}</td>
+                      <td className="py-1.5 pr-2 text-right">
+                        {formatMoney(row.creditGbp, "GBP")}
+                      </td>
+                      <td className="py-1.5">
+                        {row.status === "PENDING_OFFLINE"
+                          ? "Cash refund due (offline)"
+                          : row.status === "NO_CASH_UNCOLLECTED"
+                            ? "Not charged — nothing collected"
+                            : "Cash refund completed"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <dl className="mt-3 space-y-1 text-sm">
+                {cashDue.length > 0 ? (
+                  <div>
+                    <dt className="inline font-medium">Cash refund due (offline): </dt>
+                    <dd className="inline">
+                      {formatMoney(
+                        cashDue.reduce((sum, row) => sum + row.creditGbp, 0),
+                        "GBP",
+                      )}
+                    </dd>
+                  </div>
+                ) : null}
+                {notCharged.length > 0 ? (
+                  <div>
+                    <dt className="inline font-medium">Not charged — nothing collected: </dt>
+                    <dd className="inline">
+                      {formatMoney(
+                        notCharged.reduce((sum, row) => sum + row.creditGbp, 0),
+                        "GBP",
+                      )}
+                    </dd>
+                  </div>
+                ) : null}
+                {completed.length > 0 ? (
+                  <div>
+                    <dt className="inline font-medium">Cash refund completed: </dt>
+                    <dd className="inline">
+                      {formatMoney(
+                        completed.reduce((sum, row) => sum + row.creditGbp, 0),
+                        "GBP",
+                      )}
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+            </div>
+          );
+        })()}
 
         <div className="registration-print-keep-together rounded-lg border border-slate-200 bg-slate-50 p-4">
           <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Summary</h2>
