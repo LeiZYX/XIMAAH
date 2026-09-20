@@ -1,4 +1,4 @@
-import type { FeeStatementDisplayCurrency } from "@/generated/prisma/enums";
+import type { FeeEntryType, FeeStatementDisplayCurrency } from "@/generated/prisma/enums";
 import { calculateFeeAmounts } from "@/lib/fees/calculate";
 import {
   buildCandidateRegistrationFeeLine,
@@ -18,6 +18,7 @@ import type {
   MissingFeeRuleWarning,
 } from "@/lib/fees/types";
 import type { Prisma } from "@/generated/prisma/client";
+import { Prisma as PrismaRuntime } from "@/generated/prisma/client";
 import type { BillingScope } from "@/generated/prisma/enums";
 import { prisma } from "@/lib/prisma";
 import { AUTO_BILLING_SCOPES } from "@/lib/registrations/metadata";
@@ -35,6 +36,11 @@ import {
   statementAmountDueGbp,
 } from "@/lib/fees/payment-due";
 import { settlementForIssuedOrPaid } from "@/lib/fees/payment-settlement";
+import {
+  applyPendingRepricePayload,
+  isPendingRepricePayload,
+  type PendingRepricePayload,
+} from "@/lib/fees/pending-reprice";
 import { finalizeRevisedFeeStatement } from "@/lib/fees/statement-lifecycle";
 import { recordOpenedFeeStatement, recordFeeStatementEvent } from "@/lib/fees/statement-events";
 import { queueFeeStatementIssuedNotification } from "@/lib/notifications/fee-statement-issued";
@@ -172,6 +178,10 @@ export async function validateWorkspaceFees(workspaceId: string): Promise<{
 export async function buildFeeLinesForWorkspace(
   workspaceId: string,
   displayCurrency: FeeStatementDisplayCurrency = DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+  options?: {
+    /** Projected entry types for draft reprice (registration stages not written yet). */
+    entryTypeByRegistrationId?: Record<string, FeeEntryType>;
+  },
 ): Promise<{
   lines: CalculatedFeeLine[];
   exchangeRateSnapshot: number | null;
@@ -220,7 +230,9 @@ export async function buildFeeLinesForWorkspace(
 
   for (const reg of workspace.registrations) {
     const qualificationId = reg.subject.qualificationId;
-    const entryType = resolveEntryTypeForRegistration(reg, workspace);
+    const entryType =
+      options?.entryTypeByRegistrationId?.[reg.id] ??
+      resolveEntryTypeForRegistration(reg, workspace);
     const rule = findMatchingFeeRuleWithFallback(rules, {
       examBoardId: reg.examBoardId,
       examSeriesId: reg.examSeriesId,
@@ -326,11 +338,14 @@ export async function regenerateRevisedFeeStatement(params: {
   generatedByUserId: string;
   displayCurrency?: FeeStatementDisplayCurrency;
   repriced?: boolean;
+  issue?: boolean;
+  entryTypeByRegistrationId?: Record<string, FeeEntryType>;
+  pendingRepricePayload?: PendingRepricePayload | null;
 }) {
   return generateFeeStatement({
     ...params,
     regenerate: true,
-    issue: true,
+    issue: params.issue ?? true,
   });
 }
 
@@ -341,6 +356,8 @@ export async function generateFeeStatement(params: {
   issue?: boolean;
   regenerate?: boolean;
   repriced?: boolean;
+  entryTypeByRegistrationId?: Record<string, FeeEntryType>;
+  pendingRepricePayload?: PendingRepricePayload | null;
 }) {
   const {
     workspaceId,
@@ -349,6 +366,8 @@ export async function generateFeeStatement(params: {
     issue: issueRequested = false,
     regenerate: regenerateRequested = false,
     repriced = false,
+    entryTypeByRegistrationId,
+    pendingRepricePayload = null,
   } = params;
   let regenerate = regenerateRequested;
   let issue = issueRequested;
@@ -431,13 +450,10 @@ export async function generateFeeStatement(params: {
     regenerate = true;
   }
 
-  if (regenerate && needsRegenerationStatement && !issue) {
-    issue = true;
-  }
-
   const { lines, exchangeRateSnapshot, warnings } = await buildFeeLinesForWorkspace(
     workspaceId,
     displayCurrency,
+    entryTypeByRegistrationId ? { entryTypeByRegistrationId } : undefined,
   );
 
   if (warnings.length > 0) {
@@ -567,6 +583,11 @@ export async function generateFeeStatement(params: {
       paymentNotes,
       generatedByUserId,
       issuedAt: issue || noFurtherPaymentDue ? new Date() : null,
+      ...(!issue && pendingRepricePayload
+        ? {
+            pendingRepricePayload: pendingRepricePayload as unknown as Prisma.InputJsonValue,
+          }
+        : {}),
       items: {
         create: lines.map((line) => mapFeeLineToStatementItemCreate(line)),
       },
@@ -582,7 +603,7 @@ export async function generateFeeStatement(params: {
     },
   });
 
-  if (regenerate) {
+  if (regenerate && (issue || noFurtherPaymentDue)) {
     await finalizeRevisedFeeStatement({
       workspaceId,
       newStatementId: statement.id,
@@ -712,6 +733,20 @@ export async function issueFeeStatement(
     throw new FeeError(`Cannot issue: ${parts.join("; ")}.`);
   }
 
+  const pending = isPendingRepricePayload(statement.pendingRepricePayload)
+    ? statement.pendingRepricePayload
+    : null;
+
+  if (pending) {
+    await prisma.$transaction(async (tx) => {
+      await applyPendingRepricePayload(pending, tx);
+      await tx.feeStatement.update({
+        where: { id: statementId },
+        data: { pendingRepricePayload: PrismaRuntime.DbNull },
+      });
+    });
+  }
+
   const next = settlementForIssuedOrPaid(statementAmountDueGbp(statement));
 
   const issued = await prisma.feeStatement.update({
@@ -726,6 +761,13 @@ export async function issueFeeStatement(
         },
       },
     },
+  });
+
+  await finalizeRevisedFeeStatement({
+    workspaceId: statement.registrationWorkspaceId,
+    newStatementId: issued.id,
+    performedByUserId: options?.performedByUserId ?? issued.generatedByUserId,
+    registrationWindowId: issued.registrationWindowId,
   });
 
   queueFeeStatementIssuedNotification(issued.id);
@@ -743,6 +785,62 @@ export async function issueFeeStatement(
   });
 
   return issued;
+}
+
+export async function discardDraftFeeStatement(
+  statementId: string,
+  options?: { performedByUserId?: string | null },
+) {
+  const statement = await prisma.feeStatement.findUnique({
+    where: { id: statementId },
+    select: {
+      id: true,
+      status: true,
+      issuedAt: true,
+      statementNo: true,
+      registrationWindowId: true,
+      registrationWorkspaceId: true,
+      pendingRepricePayload: true,
+      generatedByUserId: true,
+    },
+  });
+
+  if (!statement) throw new FeeError("Fee statement not found");
+  if (statement.status !== "DRAFT") {
+    throw new FeeError("Only draft fee statements can be discarded");
+  }
+  if (statement.issuedAt) {
+    throw new FeeError("Cannot discard a statement that was previously issued");
+  }
+
+  // Clear revision pointers that reference this row so delete cannot trip self-FKs.
+  await prisma.feeStatement.updateMany({
+    where: { revisedFromStatementId: statementId },
+    data: { revisedFromStatementId: null },
+  });
+  await prisma.feeStatement.updateMany({
+    where: { revisedToStatementId: statementId },
+    data: { revisedToStatementId: null },
+  });
+  await prisma.feeStatementItem.deleteMany({ where: { feeStatementId: statementId } });
+  await prisma.feeStatement.delete({ where: { id: statementId } });
+
+  await createFeeAuditLog({
+    action: "FEE_STATEMENT_GENERATED",
+    performedByUserId: options?.performedByUserId ?? statement.generatedByUserId,
+    registrationWindowId: statement.registrationWindowId,
+    note: `Discarded draft ${statement.statementNo}`,
+    metadata: {
+      discardedStatementId: statement.id,
+      statementNo: statement.statementNo,
+      workspaceId: statement.registrationWorkspaceId,
+      hadPendingReprice: Boolean(statement.pendingRepricePayload),
+    },
+  }).catch((error) => {
+    console.error("Fee audit log failed:", error);
+  });
+
+  return { id: statement.id, statementNo: statement.statementNo };
 }
 
 export { loadQualificationId };

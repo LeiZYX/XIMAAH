@@ -171,7 +171,45 @@ export function FeeStatementPanel({
     }
   }
 
+  function confirmDraftOrIssue(title: string, details: string[]): boolean | null {
+    const issueNow = window.confirm(
+      [
+        title,
+        "",
+        ...details,
+        "",
+        "OK = Issue now (student sees the new statement immediately)",
+        "Cancel = next step: save as draft, or abort",
+      ].join("\n"),
+    );
+    if (issueNow) return true;
+    const saveDraft = window.confirm(
+      [
+        title,
+        "",
+        "Save as draft instead?",
+        "Student will still see the current issued statement (if any).",
+        "Registration fee stages are not written until you Issue.",
+        "",
+        "OK = Save as draft",
+        "Cancel = Abort",
+      ].join("\n"),
+    );
+    if (saveDraft) return false;
+    return null;
+  }
+
   async function generate(regenerate = false) {
+    let issue = false;
+    if (regenerate) {
+      const choice = confirmDraftOrIssue("Regenerate revised fee statement?", [
+        "This refreshes prices from the current registration.",
+        "Fee stages (Normal / Late / High Late) are not changed.",
+      ]);
+      if (choice === null) return;
+      issue = choice;
+    }
+
     setLoading(true);
     setError(null);
     setMessage(null);
@@ -185,6 +223,7 @@ export function FeeStatementPanel({
                 action: "regenerate-revised",
                 workspaceId,
                 displayCurrency,
+                issue,
               }
             : {
                 workspaceId,
@@ -196,7 +235,9 @@ export function FeeStatementPanel({
       if (!response.ok) throw new Error(data.error ?? "Generation failed");
       setMessage(
         regenerate
-          ? `Revised fee statement ${data.statementNo} generated and issued (${data.status}).`
+          ? issue
+            ? `Revised fee statement ${data.statementNo} generated and issued (${data.status}).`
+            : `Revised fee statement ${data.statementNo} saved as draft (${data.status}). Issue when ready.`
           : `Fee statement ${data.statementNo} generated (${data.status}).`,
       );
       await load();
@@ -208,19 +249,14 @@ export function FeeStatementPanel({
   }
 
   async function repriceByCurrentFeeStage() {
-    const confirmed = window.confirm(
-      [
-        "Reprice using current fee-stage windows?",
-        "",
-        "This will:",
-        "1) Re-evaluate Normal / Late / High Late from the registration window’s fee-stage dates (as of now)",
-        "2) Update entry stages on this registration (manual overrides are skipped)",
-        "3) Regenerate and issue a revised fee statement",
-        "",
-        "Use Regenerate revised instead if you only want to refresh prices without changing stages.",
-      ].join("\n"),
-    );
-    if (!confirmed) return;
+    const issue = confirmDraftOrIssue("Reprice using current fee-stage windows?", [
+      "1) Re-evaluate Normal / Late / High Late from the registration window’s fee-stage dates (as of now)",
+      "2) Draft: preview prices only — stages write on Issue. Issue now: update stages immediately",
+      "3) Create a revised fee statement",
+      "",
+      "Use Regenerate revised instead if you only want to refresh prices without changing stages.",
+    ]);
+    if (issue === null) return;
 
     setLoading(true);
     setError(null);
@@ -233,6 +269,7 @@ export function FeeStatementPanel({
           action: "reprice-by-current-fee-stage",
           workspaceId,
           displayCurrency,
+          issue,
         }),
       });
       const data = await readJsonResponse<{
@@ -249,8 +286,8 @@ export function FeeStatementPanel({
       const skippedCount = data.skippedOverridden?.length ?? 0;
       const parts = [
         `Repriced to ${data.targetStageLabel ?? "current stage"}`,
-        `statement ${data.statement?.statementNo ?? ""} issued (${data.statement?.status ?? ""})`,
-        `${changedCount} exam stage update(s)`,
+        `statement ${data.statement?.statementNo ?? ""} ${issue ? "issued" : "saved as draft"} (${data.statement?.status ?? ""})`,
+        `${changedCount} exam stage update(s)${!issue && changedCount ? " (applied on Issue)" : ""}`,
       ];
       if (skippedCount > 0) {
         parts.push(`${skippedCount} manual override(s) skipped`);
@@ -282,6 +319,37 @@ export function FeeStatementPanel({
       await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Issue failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function discardDraft(statementId: string, statementNo: string) {
+    const confirmed = window.confirm(
+      [
+        `Discard draft ${statementNo}?`,
+        "",
+        "This deletes the draft only. Any current issued statement stays as-is.",
+        "Fee stages were not written for a reprice draft, so nothing needs restoring.",
+      ].join("\n"),
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch("/api/fee-statements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "discard-draft", statementId }),
+      });
+      const data = await readJsonResponse<{ error?: string; statementNo?: string }>(response);
+      if (!response.ok) throw new Error(data.error ?? "Discard failed");
+      setMessage(`Draft ${data.statementNo ?? statementNo} discarded.`);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Discard failed");
     } finally {
       setLoading(false);
     }
@@ -488,6 +556,16 @@ export function FeeStatementPanel({
                       {statement.status === "DRAFT" ? (
                         <button type="button" disabled={loading} onClick={() => void issue(statement.id)} className="text-indigo-600 disabled:text-slate-400">
                           Issue
+                        </button>
+                      ) : null}
+                      {statement.status === "DRAFT" ? (
+                        <button
+                          type="button"
+                          disabled={loading}
+                          onClick={() => void discardDraft(statement.id, statement.statementNo)}
+                          className="text-rose-600 disabled:text-slate-400"
+                        >
+                          Discard
                         </button>
                       ) : null}
                       {statement.status === "NEEDS_REGENERATION" ? (

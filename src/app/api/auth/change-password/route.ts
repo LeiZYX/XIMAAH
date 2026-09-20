@@ -3,6 +3,7 @@ import { jsonError, parseJsonBody } from "@/lib/api";
 import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { validatePassword } from "@/lib/auth/password-policy";
 import { createSessionToken, getSessionUser, sessionCookieOptions } from "@/lib/auth/session";
+import { studentLoginDisabledResponse } from "@/lib/features/settings";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -11,6 +12,9 @@ export const revalidate = 0;
 export async function POST(request: NextRequest) {
   const auth = await getSessionUser();
   if (!auth) return jsonError("Authentication required", 401);
+
+  const disabled = await studentLoginDisabledResponse(auth.role);
+  if (disabled) return disabled;
 
   const body = await request.json();
   const data = parseJsonBody<{ currentPassword: string; newPassword: string }>(body, [

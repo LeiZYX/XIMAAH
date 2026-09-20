@@ -227,6 +227,34 @@ export function FeeStatementsBatchPanel({
     void load();
   }, [load]);
 
+  function confirmDraftOrIssue(title: string, details: string[]): boolean | null {
+    const issueNow = window.confirm(
+      [
+        title,
+        "",
+        ...details,
+        "",
+        "OK = Issue now (student sees the new statement immediately)",
+        "Cancel = next step: save as draft, or abort",
+      ].join("\n"),
+    );
+    if (issueNow) return true;
+    const saveDraft = window.confirm(
+      [
+        title,
+        "",
+        "Save as draft instead?",
+        "Student will still see the current issued statement (if any).",
+        "Registration fee stages are not written until you Issue.",
+        "",
+        "OK = Save as draft",
+        "Cancel = Abort",
+      ].join("\n"),
+    );
+    if (saveDraft) return false;
+    return null;
+  }
+
   async function issueStatement(statementId: string) {
     setLoading(true);
     setError(null);
@@ -248,22 +276,56 @@ export function FeeStatementsBatchPanel({
     }
   }
 
+  async function discardDraftStatement(statement: FeeStatementPrintData) {
+    if (statement.status !== "DRAFT") {
+      setError("Only draft statements can be discarded.");
+      return;
+    }
+    const confirmed = window.confirm(
+      [
+        `Discard draft ${statement.statementNo} (${statementCandidateLabel(statement)})?`,
+        "",
+        "This deletes the draft only. Any current issued statement stays as-is.",
+        "Fee stages were not written for a reprice draft, so nothing needs restoring.",
+      ].join("\n"),
+    );
+    if (!confirmed) return;
+
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch("/api/fee-statements", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "discard-draft", statementId: statement.id }),
+      });
+      const data = await readJsonResponse<{ error?: string; statementNo?: string }>(response);
+      if (!response.ok) throw new Error(data.error ?? "Discard failed");
+      setMessage(`Draft ${data.statementNo ?? statement.statementNo} discarded.`);
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Discard failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function regenerateStatement(statement: FeeStatementPrintData) {
     const workspaceId = statement.registrationWorkspaceId;
     if (!workspaceId) {
       setError("This statement has no registration workspace; cannot regenerate.");
       return;
     }
-    const confirmed = window.confirm(
+    const issue = confirmDraftOrIssue(
+      `Regenerate ${statement.statementNo} (${statementCandidateLabel(statement)})?`,
       [
-        `Regenerate ${statement.statementNo} (${statementCandidateLabel(statement)})?`,
-        "",
-        "This will refresh prices from the current registration and issue a revised statement.",
+        "This refreshes prices from the current registration.",
         "Fee stages (Normal / Late / High Late) are not changed.",
         "Use Reprice by current fee stage if stages should be updated.",
-      ].join("\n"),
+      ],
     );
-    if (!confirmed) return;
+    if (issue === null) return;
 
     setLoading(true);
     setError(null);
@@ -276,6 +338,7 @@ export function FeeStatementsBatchPanel({
           action: "regenerate-revised",
           workspaceId,
           displayCurrency: statement.displayCurrency ?? displayCurrency,
+          issue,
         }),
       });
       const data = await readJsonResponse<{
@@ -285,7 +348,9 @@ export function FeeStatementsBatchPanel({
       }>(response);
       if (!response.ok) throw new Error(data.error ?? "Regenerate failed");
       setMessage(
-        `Revised fee statement ${data.statementNo} generated and issued (${data.status}).`,
+        issue
+          ? `Revised fee statement ${data.statementNo} generated and issued (${data.status}).`
+          : `Revised fee statement ${data.statementNo} saved as draft (${data.status}). Issue when ready.`,
       );
       await load();
     } catch (err) {
@@ -301,19 +366,17 @@ export function FeeStatementsBatchPanel({
       setError("This statement has no registration workspace; cannot reprice.");
       return;
     }
-    const confirmed = window.confirm(
+    const issue = confirmDraftOrIssue(
+      `Reprice ${statement.statementNo} (${statementCandidateLabel(statement)}) using current fee-stage windows?`,
       [
-        `Reprice ${statement.statementNo} (${statementCandidateLabel(statement)}) using current fee-stage windows?`,
-        "",
-        "This will:",
         "1) Re-evaluate Normal / Late / High Late from the registration window’s fee-stage dates (as of now)",
-        "2) Update entry stages on this registration (manual overrides are skipped)",
-        "3) Regenerate and issue a revised fee statement",
+        "2) Draft: preview prices only — stages write on Issue. Issue now: update stages immediately",
+        "3) Create a revised fee statement",
         "",
         "Use Regenerate if you only want to refresh prices without changing stages.",
-      ].join("\n"),
+      ],
     );
-    if (!confirmed) return;
+    if (issue === null) return;
 
     setLoading(true);
     setError(null);
@@ -326,6 +389,7 @@ export function FeeStatementsBatchPanel({
           action: "reprice-by-current-fee-stage",
           workspaceId,
           displayCurrency: statement.displayCurrency ?? displayCurrency,
+          issue,
         }),
       });
       const data = await readJsonResponse<{
@@ -341,9 +405,9 @@ export function FeeStatementsBatchPanel({
       setMessage(
         `Repriced ${statementCandidateLabel(statement)} → ${data.targetStageLabel ?? "current stage"}; statement ${
           data.statement?.statementNo ?? ""
-        } issued (${data.statement?.status ?? ""}). ${changedCount} exam stage update(s)${
+        } ${issue ? "issued" : "saved as draft"} (${data.statement?.status ?? ""}). ${changedCount} exam stage update(s)${
           skippedCount ? `; ${skippedCount} manual override(s) skipped` : ""
-        }.`,
+        }${!issue && changedCount ? " (applied on Issue)" : ""}.`,
       );
       await load();
     } catch (err) {
@@ -445,15 +509,21 @@ export function FeeStatementsBatchPanel({
     }
   }
 
-  async function batchRepriceByCurrentFeeStage() {
+  async function batchRepriceByCurrentFeeStage(issue: boolean) {
     const confirmed = window.confirm(
       [
-        "Batch reprice using current fee-stage windows?",
+        issue
+          ? "Batch reprice & issue using current fee-stage windows?"
+          : "Batch reprice (draft) using current fee-stage windows?",
         "",
         "This will process all locked internal-normal registrations in this window:",
         "1) Re-evaluate Normal / Late / High Late from the window’s fee-stage dates (as of now)",
-        "2) Update entry stages (manual overrides are skipped)",
-        "3) Regenerate and issue a revised fee statement for each",
+        issue
+          ? "2) Update entry stages (manual overrides are skipped)"
+          : "2) Preview new prices in draft — stages write only when you Issue each draft",
+        issue
+          ? "3) Regenerate and issue a revised fee statement for each"
+          : "3) Save a revised draft for each (student still sees the current issued statement)",
         "",
         "Use Batch generate if you only want to create statements without changing stages.",
       ].join("\n"),
@@ -471,6 +541,7 @@ export function FeeStatementsBatchPanel({
           action: "batch-reprice-by-current-fee-stage",
           registrationWindowId,
           displayCurrency,
+          issue,
         }),
       });
       const data = await readJsonResponse<{
@@ -498,9 +569,9 @@ export function FeeStatementsBatchPanel({
         .filter(Boolean)
         .slice(0, 2);
       setMessage(
-        `Batch reprice processed ${results.length} workspace(s): ${okCount} ok${
+        `Batch reprice (${issue ? "issued" : "draft"}) processed ${results.length} workspace(s): ${okCount} ok${
           stageLabel ? ` → ${stageLabel}` : ""
-        }.${stageChanged ? ` ${stageChanged} exam stage update(s).` : ""}${
+        }.${stageChanged ? ` ${stageChanged} exam stage update(s)${issue ? "" : " (on Issue)"}.` : ""}${
           failCount ? ` ${failCount} failed.` : ""
         }${failMessages.length ? ` ${failMessages.join("; ")}` : ""}`,
       );
@@ -567,15 +638,26 @@ export function FeeStatementsBatchPanel({
             Batch generate & issue
           </button>
           {feeCaps.canReprice ? (
-          <button
-            type="button"
-            disabled={loading || !registrationWindowId}
-            onClick={() => void batchRepriceByCurrentFeeStage()}
-            title="Re-evaluate Normal/Late/High Late from current fee-stage windows for all locked internal-normal registrations, then regenerate statements"
-            className="rounded-lg border border-amber-300 px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-50 disabled:opacity-50"
-          >
-            Batch reprice by current fee stage
-          </button>
+            <>
+              <button
+                type="button"
+                disabled={loading || !registrationWindowId}
+                onClick={() => void batchRepriceByCurrentFeeStage(false)}
+                title="Preview reprice as draft; fee stages write when each draft is issued"
+                className="rounded-lg border border-amber-300 px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-50 disabled:opacity-50"
+              >
+                Batch reprice (draft)
+              </button>
+              <button
+                type="button"
+                disabled={loading || !registrationWindowId}
+                onClick={() => void batchRepriceByCurrentFeeStage(true)}
+                title="Update Normal/Late/High Late from current fee-stage windows and issue revised statements"
+                className="rounded-lg border border-amber-300 px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-50 disabled:opacity-50"
+              >
+                Batch reprice & issue
+              </button>
+            </>
           ) : null}
           <button
             type="button"
@@ -730,6 +812,22 @@ export function FeeStatementsBatchPanel({
                               <ActionIcon>
                                 <path d="M22 2 11 13" />
                                 <path d="M22 2 15 22 11 13 2 9z" />
+                              </ActionIcon>
+                            </IconActionButton>
+                          ) : null}
+                          {statement.status === "DRAFT" ? (
+                            <IconActionButton
+                              label="Discard draft"
+                              disabled={loading}
+                              tone="danger"
+                              onClick={() => void discardDraftStatement(statement)}
+                            >
+                              <ActionIcon>
+                                <path d="M3 6h18" />
+                                <path d="M8 6V4h8v2" />
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                <path d="M10 11v6" />
+                                <path d="M14 11v6" />
                               </ActionIcon>
                             </IconActionButton>
                           ) : null}

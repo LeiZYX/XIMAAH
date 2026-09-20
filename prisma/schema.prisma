@@ -25,6 +25,7 @@ enum LoginLogResult {
 enum LoginLogFailureReason {
   INVALID_CREDENTIALS
   INACTIVE
+  FEATURE_DISABLED
 }
 
 enum KeyDateType {
@@ -517,6 +518,7 @@ enum UserAuditAction {
   BACKUP_MANUAL_FAILED
   BACKUP_FILE_DOWNLOADED
   BACKUP_FILE_DELETED
+  FEATURE_SETTINGS_UPDATED
 }
 
 enum CandidateType {
@@ -584,6 +586,7 @@ model User {
   certificateRequestsRequested       CertificateRequest[] @relation("CertificateRequestRequester")
   postResultsAuditLogsPerformed      PostResultsAuditLog[] @relation("PostResultsAuditPerformer")
   backupSettingsUpdated              BackupSetting[]     @relation("BackupSettingsUpdater")
+  featureSettingsUpdated             SystemFeatureSettings[] @relation("FeatureSettingsUpdater")
   backupJobsTriggered                BackupJob[]         @relation("BackupJobTriggeredBy")
   candidateExamIdentitiesCreated     CandidateExamIdentity[] @relation("CandidateExamIdentityCreatedBy")
   candidateExamIdentitiesUpdated     CandidateExamIdentity[] @relation("CandidateExamIdentityUpdatedBy")
@@ -702,6 +705,17 @@ model SystemEmailSettings {
   /// Staff/student hybrid: teacher-step outcome for late adjustment (To student, Cc EO + grade form teachers).
   notifyStaffStudentAdjustment Boolean @default(false)
   updatedAt                   DateTime @updatedAt
+}
+
+/// Global product feature switches (Admin Settings). Single-row table.
+model SystemFeatureSettings {
+  id                   String   @id @default("default")
+  /// When false, students cannot sign in, reset password, or stay in a session.
+  studentLoginEnabled  Boolean  @default(true)
+  updatedByUserId      String?
+  updatedBy            User?    @relation("FeatureSettingsUpdater", fields: [updatedByUserId], references: [id], onDelete: SetNull)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }
 
 /// Delivery log for internal-student notification emails (lock / fee statement, etc.).
@@ -1812,6 +1826,8 @@ model FeeStatement {
   regenerationChangedByUserId String?
   regenerationChangedBy   User?                       @relation("FeeStatementRegenerationChanged", fields: [regenerationChangedByUserId], references: [id], onDelete: SetNull)
   regenerationChangedAt   DateTime?
+  /** Deferred fee-stage updates for a reprice draft; applied only when the draft is issued. */
+  pendingRepricePayload   Json?
   createdAt               DateTime                    @default(now())
   updatedAt               DateTime                    @updatedAt
 

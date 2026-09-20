@@ -27,6 +27,7 @@ const setupLinks = [
 
 const settingsLinks = [
   { href: "/admin/settings/backup", label: "Backup Settings" },
+  { href: "/admin/settings/feature-switches", label: "Feature switches" },
 ];
 
 export function AdminSidebar() {

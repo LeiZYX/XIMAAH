@@ -49,6 +49,11 @@ export type TeacherProfile = $Result.DefaultSelection<Prisma.$TeacherProfilePayl
  */
 export type SystemEmailSettings = $Result.DefaultSelection<Prisma.$SystemEmailSettingsPayload>
 /**
+ * Model SystemFeatureSettings
+ * Global product feature switches (Admin Settings). Single-row table.
+ */
+export type SystemFeatureSettings = $Result.DefaultSelection<Prisma.$SystemFeatureSettingsPayload>
+/**
  * Model StudentNotificationLog
  * Delivery log for internal-student notification emails (lock / fee statement, etc.).
  */
@@ -336,7 +341,8 @@ export type LoginLogResult = (typeof LoginLogResult)[keyof typeof LoginLogResult
 
 export const LoginLogFailureReason: {
   INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
-  INACTIVE: 'INACTIVE'
+  INACTIVE: 'INACTIVE',
+  FEATURE_DISABLED: 'FEATURE_DISABLED'
 };
 
 export type LoginLogFailureReason = (typeof LoginLogFailureReason)[keyof typeof LoginLogFailureReason]
@@ -978,7 +984,8 @@ export const UserAuditAction: {
   BACKUP_MANUAL_SUCCESS: 'BACKUP_MANUAL_SUCCESS',
   BACKUP_MANUAL_FAILED: 'BACKUP_MANUAL_FAILED',
   BACKUP_FILE_DOWNLOADED: 'BACKUP_FILE_DOWNLOADED',
-  BACKUP_FILE_DELETED: 'BACKUP_FILE_DELETED'
+  BACKUP_FILE_DELETED: 'BACKUP_FILE_DELETED',
+  FEATURE_SETTINGS_UPDATED: 'FEATURE_SETTINGS_UPDATED'
 };
 
 export type UserAuditAction = (typeof UserAuditAction)[keyof typeof UserAuditAction]
@@ -1465,6 +1472,16 @@ export class PrismaClient<
     * ```
     */
   get systemEmailSettings(): Prisma.SystemEmailSettingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.systemFeatureSettings`: Exposes CRUD operations for the **SystemFeatureSettings** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SystemFeatureSettings
+    * const systemFeatureSettings = await prisma.systemFeatureSettings.findMany()
+    * ```
+    */
+  get systemFeatureSettings(): Prisma.SystemFeatureSettingsDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.studentNotificationLog`: Exposes CRUD operations for the **StudentNotificationLog** model.
@@ -2433,6 +2450,7 @@ export namespace Prisma {
     StudentIdSequence: 'StudentIdSequence',
     TeacherProfile: 'TeacherProfile',
     SystemEmailSettings: 'SystemEmailSettings',
+    SystemFeatureSettings: 'SystemFeatureSettings',
     StudentNotificationLog: 'StudentNotificationLog',
     UserAuditLog: 'UserAuditLog',
     ExamDocumentAuditLog: 'ExamDocumentAuditLog',
@@ -2503,7 +2521,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "loginLog" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "studentNotificationLog" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "classHomeroomTeacher" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "studentAdjustmentRequest" | "studentAdjustmentRequestItem" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementEvent" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeRefund" | "feeRefundAllocation" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
+      modelProps: "user" | "loginLog" | "passwordResetToken" | "studentProfile" | "studentIdSequence" | "teacherProfile" | "systemEmailSettings" | "systemFeatureSettings" | "studentNotificationLog" | "userAuditLog" | "examDocumentAuditLog" | "candidate" | "candidateAuditLog" | "candidateExamIdentity" | "teacherAssignment" | "classHomeroomTeacher" | "registrationWindow" | "boardSubmissionBaseline" | "registrationWindowIncludedSeries" | "registrationFeeStage" | "registrationWorkspace" | "studentExamRegistration" | "registrationAuditLog" | "registrationChangeRequest" | "registrationChangeRequestExamSession" | "studentAdjustmentRequest" | "studentAdjustmentRequestItem" | "examBoard" | "examBoardWithdrawalPolicy" | "qualification" | "subject" | "cashInCode" | "calendarSubjectSelection" | "calendarPaperSelection" | "paper" | "examSeries" | "examSession" | "keyDate" | "resource" | "sourceDocument" | "feeRule" | "exchangeRate" | "feeStatement" | "paymentOrder" | "feeStatementEvent" | "feeStatementItem" | "offlineWithdrawalRefund" | "feeRefund" | "feeRefundAllocation" | "feeAuditLog" | "reviewWindow" | "reviewWindowService" | "reviewRequest" | "cashInRequest" | "accessToScriptRequest" | "certificateRequest" | "feeSchedule" | "postResultsAuditLog" | "backupSetting" | "backupJob"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2966,6 +2984,72 @@ export namespace Prisma {
           count: {
             args: Prisma.SystemEmailSettingsCountArgs<ExtArgs>
             result: $Utils.Optional<SystemEmailSettingsCountAggregateOutputType> | number
+          }
+        }
+      }
+      SystemFeatureSettings: {
+        payload: Prisma.$SystemFeatureSettingsPayload<ExtArgs>
+        fields: Prisma.SystemFeatureSettingsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SystemFeatureSettingsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemFeatureSettingsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SystemFeatureSettingsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemFeatureSettingsPayload>
+          }
+          findFirst: {
+            args: Prisma.SystemFeatureSettingsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemFeatureSettingsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SystemFeatureSettingsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemFeatureSettingsPayload>
+          }
+          findMany: {
+            args: Prisma.SystemFeatureSettingsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemFeatureSettingsPayload>[]
+          }
+          create: {
+            args: Prisma.SystemFeatureSettingsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemFeatureSettingsPayload>
+          }
+          createMany: {
+            args: Prisma.SystemFeatureSettingsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.SystemFeatureSettingsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemFeatureSettingsPayload>
+          }
+          update: {
+            args: Prisma.SystemFeatureSettingsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemFeatureSettingsPayload>
+          }
+          deleteMany: {
+            args: Prisma.SystemFeatureSettingsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SystemFeatureSettingsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SystemFeatureSettingsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SystemFeatureSettingsPayload>
+          }
+          aggregate: {
+            args: Prisma.SystemFeatureSettingsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSystemFeatureSettings>
+          }
+          groupBy: {
+            args: Prisma.SystemFeatureSettingsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SystemFeatureSettingsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SystemFeatureSettingsCountArgs<ExtArgs>
+            result: $Utils.Optional<SystemFeatureSettingsCountAggregateOutputType> | number
           }
         }
       }
@@ -6504,6 +6588,7 @@ export namespace Prisma {
     studentIdSequence?: StudentIdSequenceOmit
     teacherProfile?: TeacherProfileOmit
     systemEmailSettings?: SystemEmailSettingsOmit
+    systemFeatureSettings?: SystemFeatureSettingsOmit
     studentNotificationLog?: StudentNotificationLogOmit
     userAuditLog?: UserAuditLogOmit
     examDocumentAuditLog?: ExamDocumentAuditLogOmit
@@ -6672,6 +6757,7 @@ export namespace Prisma {
     certificateRequestsRequested: number
     postResultsAuditLogsPerformed: number
     backupSettingsUpdated: number
+    featureSettingsUpdated: number
     backupJobsTriggered: number
     candidateExamIdentitiesCreated: number
     candidateExamIdentitiesUpdated: number
@@ -6725,6 +6811,7 @@ export namespace Prisma {
     certificateRequestsRequested?: boolean | UserCountOutputTypeCountCertificateRequestsRequestedArgs
     postResultsAuditLogsPerformed?: boolean | UserCountOutputTypeCountPostResultsAuditLogsPerformedArgs
     backupSettingsUpdated?: boolean | UserCountOutputTypeCountBackupSettingsUpdatedArgs
+    featureSettingsUpdated?: boolean | UserCountOutputTypeCountFeatureSettingsUpdatedArgs
     backupJobsTriggered?: boolean | UserCountOutputTypeCountBackupJobsTriggeredArgs
     candidateExamIdentitiesCreated?: boolean | UserCountOutputTypeCountCandidateExamIdentitiesCreatedArgs
     candidateExamIdentitiesUpdated?: boolean | UserCountOutputTypeCountCandidateExamIdentitiesUpdatedArgs
@@ -7002,6 +7089,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountBackupSettingsUpdatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BackupSettingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountFeatureSettingsUpdatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SystemFeatureSettingsWhereInput
   }
 
   /**
@@ -9089,6 +9183,7 @@ export namespace Prisma {
     certificateRequestsRequested?: boolean | User$certificateRequestsRequestedArgs<ExtArgs>
     postResultsAuditLogsPerformed?: boolean | User$postResultsAuditLogsPerformedArgs<ExtArgs>
     backupSettingsUpdated?: boolean | User$backupSettingsUpdatedArgs<ExtArgs>
+    featureSettingsUpdated?: boolean | User$featureSettingsUpdatedArgs<ExtArgs>
     backupJobsTriggered?: boolean | User$backupJobsTriggeredArgs<ExtArgs>
     candidateExamIdentitiesCreated?: boolean | User$candidateExamIdentitiesCreatedArgs<ExtArgs>
     candidateExamIdentitiesUpdated?: boolean | User$candidateExamIdentitiesUpdatedArgs<ExtArgs>
@@ -9164,6 +9259,7 @@ export namespace Prisma {
     certificateRequestsRequested?: boolean | User$certificateRequestsRequestedArgs<ExtArgs>
     postResultsAuditLogsPerformed?: boolean | User$postResultsAuditLogsPerformedArgs<ExtArgs>
     backupSettingsUpdated?: boolean | User$backupSettingsUpdatedArgs<ExtArgs>
+    featureSettingsUpdated?: boolean | User$featureSettingsUpdatedArgs<ExtArgs>
     backupJobsTriggered?: boolean | User$backupJobsTriggeredArgs<ExtArgs>
     candidateExamIdentitiesCreated?: boolean | User$candidateExamIdentitiesCreatedArgs<ExtArgs>
     candidateExamIdentitiesUpdated?: boolean | User$candidateExamIdentitiesUpdatedArgs<ExtArgs>
@@ -9223,6 +9319,7 @@ export namespace Prisma {
       certificateRequestsRequested: Prisma.$CertificateRequestPayload<ExtArgs>[]
       postResultsAuditLogsPerformed: Prisma.$PostResultsAuditLogPayload<ExtArgs>[]
       backupSettingsUpdated: Prisma.$BackupSettingPayload<ExtArgs>[]
+      featureSettingsUpdated: Prisma.$SystemFeatureSettingsPayload<ExtArgs>[]
       backupJobsTriggered: Prisma.$BackupJobPayload<ExtArgs>[]
       candidateExamIdentitiesCreated: Prisma.$CandidateExamIdentityPayload<ExtArgs>[]
       candidateExamIdentitiesUpdated: Prisma.$CandidateExamIdentityPayload<ExtArgs>[]
@@ -9630,6 +9727,7 @@ export namespace Prisma {
     certificateRequestsRequested<T extends User$certificateRequestsRequestedArgs<ExtArgs> = {}>(args?: Subset<T, User$certificateRequestsRequestedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CertificateRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     postResultsAuditLogsPerformed<T extends User$postResultsAuditLogsPerformedArgs<ExtArgs> = {}>(args?: Subset<T, User$postResultsAuditLogsPerformedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostResultsAuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     backupSettingsUpdated<T extends User$backupSettingsUpdatedArgs<ExtArgs> = {}>(args?: Subset<T, User$backupSettingsUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BackupSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    featureSettingsUpdated<T extends User$featureSettingsUpdatedArgs<ExtArgs> = {}>(args?: Subset<T, User$featureSettingsUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemFeatureSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     backupJobsTriggered<T extends User$backupJobsTriggeredArgs<ExtArgs> = {}>(args?: Subset<T, User$backupJobsTriggeredArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BackupJobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     candidateExamIdentitiesCreated<T extends User$candidateExamIdentitiesCreatedArgs<ExtArgs> = {}>(args?: Subset<T, User$candidateExamIdentitiesCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateExamIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     candidateExamIdentitiesUpdated<T extends User$candidateExamIdentitiesUpdatedArgs<ExtArgs> = {}>(args?: Subset<T, User$candidateExamIdentitiesUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateExamIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -10946,6 +11044,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BackupSettingScalarFieldEnum | BackupSettingScalarFieldEnum[]
+  }
+
+  /**
+   * User.featureSettingsUpdated
+   */
+  export type User$featureSettingsUpdatedArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
+    where?: SystemFeatureSettingsWhereInput
+    orderBy?: SystemFeatureSettingsOrderByWithRelationInput | SystemFeatureSettingsOrderByWithRelationInput[]
+    cursor?: SystemFeatureSettingsWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SystemFeatureSettingsScalarFieldEnum | SystemFeatureSettingsScalarFieldEnum[]
   }
 
   /**
@@ -17297,6 +17419,957 @@ export namespace Prisma {
      * Omit specific fields from the SystemEmailSettings
      */
     omit?: SystemEmailSettingsOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SystemFeatureSettings
+   */
+
+  export type AggregateSystemFeatureSettings = {
+    _count: SystemFeatureSettingsCountAggregateOutputType | null
+    _min: SystemFeatureSettingsMinAggregateOutputType | null
+    _max: SystemFeatureSettingsMaxAggregateOutputType | null
+  }
+
+  export type SystemFeatureSettingsMinAggregateOutputType = {
+    id: string | null
+    studentLoginEnabled: boolean | null
+    updatedByUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SystemFeatureSettingsMaxAggregateOutputType = {
+    id: string | null
+    studentLoginEnabled: boolean | null
+    updatedByUserId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SystemFeatureSettingsCountAggregateOutputType = {
+    id: number
+    studentLoginEnabled: number
+    updatedByUserId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SystemFeatureSettingsMinAggregateInputType = {
+    id?: true
+    studentLoginEnabled?: true
+    updatedByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SystemFeatureSettingsMaxAggregateInputType = {
+    id?: true
+    studentLoginEnabled?: true
+    updatedByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SystemFeatureSettingsCountAggregateInputType = {
+    id?: true
+    studentLoginEnabled?: true
+    updatedByUserId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SystemFeatureSettingsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SystemFeatureSettings to aggregate.
+     */
+    where?: SystemFeatureSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemFeatureSettings to fetch.
+     */
+    orderBy?: SystemFeatureSettingsOrderByWithRelationInput | SystemFeatureSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SystemFeatureSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemFeatureSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemFeatureSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SystemFeatureSettings
+    **/
+    _count?: true | SystemFeatureSettingsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SystemFeatureSettingsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SystemFeatureSettingsMaxAggregateInputType
+  }
+
+  export type GetSystemFeatureSettingsAggregateType<T extends SystemFeatureSettingsAggregateArgs> = {
+        [P in keyof T & keyof AggregateSystemFeatureSettings]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSystemFeatureSettings[P]>
+      : GetScalarType<T[P], AggregateSystemFeatureSettings[P]>
+  }
+
+
+
+
+  export type SystemFeatureSettingsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SystemFeatureSettingsWhereInput
+    orderBy?: SystemFeatureSettingsOrderByWithAggregationInput | SystemFeatureSettingsOrderByWithAggregationInput[]
+    by: SystemFeatureSettingsScalarFieldEnum[] | SystemFeatureSettingsScalarFieldEnum
+    having?: SystemFeatureSettingsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SystemFeatureSettingsCountAggregateInputType | true
+    _min?: SystemFeatureSettingsMinAggregateInputType
+    _max?: SystemFeatureSettingsMaxAggregateInputType
+  }
+
+  export type SystemFeatureSettingsGroupByOutputType = {
+    id: string
+    studentLoginEnabled: boolean
+    updatedByUserId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: SystemFeatureSettingsCountAggregateOutputType | null
+    _min: SystemFeatureSettingsMinAggregateOutputType | null
+    _max: SystemFeatureSettingsMaxAggregateOutputType | null
+  }
+
+  type GetSystemFeatureSettingsGroupByPayload<T extends SystemFeatureSettingsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SystemFeatureSettingsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SystemFeatureSettingsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SystemFeatureSettingsGroupByOutputType[P]>
+            : GetScalarType<T[P], SystemFeatureSettingsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SystemFeatureSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentLoginEnabled?: boolean
+    updatedByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    updatedBy?: boolean | SystemFeatureSettings$updatedByArgs<ExtArgs>
+  }, ExtArgs["result"]["systemFeatureSettings"]>
+
+
+
+  export type SystemFeatureSettingsSelectScalar = {
+    id?: boolean
+    studentLoginEnabled?: boolean
+    updatedByUserId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SystemFeatureSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentLoginEnabled" | "updatedByUserId" | "createdAt" | "updatedAt", ExtArgs["result"]["systemFeatureSettings"]>
+  export type SystemFeatureSettingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    updatedBy?: boolean | SystemFeatureSettings$updatedByArgs<ExtArgs>
+  }
+
+  export type $SystemFeatureSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SystemFeatureSettings"
+    objects: {
+      updatedBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      /**
+       * When false, students cannot sign in, reset password, or stay in a session.
+       */
+      studentLoginEnabled: boolean
+      updatedByUserId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["systemFeatureSettings"]>
+    composites: {}
+  }
+
+  type SystemFeatureSettingsGetPayload<S extends boolean | null | undefined | SystemFeatureSettingsDefaultArgs> = $Result.GetResult<Prisma.$SystemFeatureSettingsPayload, S>
+
+  type SystemFeatureSettingsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SystemFeatureSettingsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SystemFeatureSettingsCountAggregateInputType | true
+    }
+
+  export interface SystemFeatureSettingsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SystemFeatureSettings'], meta: { name: 'SystemFeatureSettings' } }
+    /**
+     * Find zero or one SystemFeatureSettings that matches the filter.
+     * @param {SystemFeatureSettingsFindUniqueArgs} args - Arguments to find a SystemFeatureSettings
+     * @example
+     * // Get one SystemFeatureSettings
+     * const systemFeatureSettings = await prisma.systemFeatureSettings.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SystemFeatureSettingsFindUniqueArgs>(args: SelectSubset<T, SystemFeatureSettingsFindUniqueArgs<ExtArgs>>): Prisma__SystemFeatureSettingsClient<$Result.GetResult<Prisma.$SystemFeatureSettingsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SystemFeatureSettings that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SystemFeatureSettingsFindUniqueOrThrowArgs} args - Arguments to find a SystemFeatureSettings
+     * @example
+     * // Get one SystemFeatureSettings
+     * const systemFeatureSettings = await prisma.systemFeatureSettings.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SystemFeatureSettingsFindUniqueOrThrowArgs>(args: SelectSubset<T, SystemFeatureSettingsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SystemFeatureSettingsClient<$Result.GetResult<Prisma.$SystemFeatureSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SystemFeatureSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemFeatureSettingsFindFirstArgs} args - Arguments to find a SystemFeatureSettings
+     * @example
+     * // Get one SystemFeatureSettings
+     * const systemFeatureSettings = await prisma.systemFeatureSettings.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SystemFeatureSettingsFindFirstArgs>(args?: SelectSubset<T, SystemFeatureSettingsFindFirstArgs<ExtArgs>>): Prisma__SystemFeatureSettingsClient<$Result.GetResult<Prisma.$SystemFeatureSettingsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SystemFeatureSettings that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemFeatureSettingsFindFirstOrThrowArgs} args - Arguments to find a SystemFeatureSettings
+     * @example
+     * // Get one SystemFeatureSettings
+     * const systemFeatureSettings = await prisma.systemFeatureSettings.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SystemFeatureSettingsFindFirstOrThrowArgs>(args?: SelectSubset<T, SystemFeatureSettingsFindFirstOrThrowArgs<ExtArgs>>): Prisma__SystemFeatureSettingsClient<$Result.GetResult<Prisma.$SystemFeatureSettingsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SystemFeatureSettings that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemFeatureSettingsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SystemFeatureSettings
+     * const systemFeatureSettings = await prisma.systemFeatureSettings.findMany()
+     * 
+     * // Get first 10 SystemFeatureSettings
+     * const systemFeatureSettings = await prisma.systemFeatureSettings.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const systemFeatureSettingsWithIdOnly = await prisma.systemFeatureSettings.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SystemFeatureSettingsFindManyArgs>(args?: SelectSubset<T, SystemFeatureSettingsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SystemFeatureSettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SystemFeatureSettings.
+     * @param {SystemFeatureSettingsCreateArgs} args - Arguments to create a SystemFeatureSettings.
+     * @example
+     * // Create one SystemFeatureSettings
+     * const SystemFeatureSettings = await prisma.systemFeatureSettings.create({
+     *   data: {
+     *     // ... data to create a SystemFeatureSettings
+     *   }
+     * })
+     * 
+     */
+    create<T extends SystemFeatureSettingsCreateArgs>(args: SelectSubset<T, SystemFeatureSettingsCreateArgs<ExtArgs>>): Prisma__SystemFeatureSettingsClient<$Result.GetResult<Prisma.$SystemFeatureSettingsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SystemFeatureSettings.
+     * @param {SystemFeatureSettingsCreateManyArgs} args - Arguments to create many SystemFeatureSettings.
+     * @example
+     * // Create many SystemFeatureSettings
+     * const systemFeatureSettings = await prisma.systemFeatureSettings.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SystemFeatureSettingsCreateManyArgs>(args?: SelectSubset<T, SystemFeatureSettingsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a SystemFeatureSettings.
+     * @param {SystemFeatureSettingsDeleteArgs} args - Arguments to delete one SystemFeatureSettings.
+     * @example
+     * // Delete one SystemFeatureSettings
+     * const SystemFeatureSettings = await prisma.systemFeatureSettings.delete({
+     *   where: {
+     *     // ... filter to delete one SystemFeatureSettings
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SystemFeatureSettingsDeleteArgs>(args: SelectSubset<T, SystemFeatureSettingsDeleteArgs<ExtArgs>>): Prisma__SystemFeatureSettingsClient<$Result.GetResult<Prisma.$SystemFeatureSettingsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SystemFeatureSettings.
+     * @param {SystemFeatureSettingsUpdateArgs} args - Arguments to update one SystemFeatureSettings.
+     * @example
+     * // Update one SystemFeatureSettings
+     * const systemFeatureSettings = await prisma.systemFeatureSettings.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SystemFeatureSettingsUpdateArgs>(args: SelectSubset<T, SystemFeatureSettingsUpdateArgs<ExtArgs>>): Prisma__SystemFeatureSettingsClient<$Result.GetResult<Prisma.$SystemFeatureSettingsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SystemFeatureSettings.
+     * @param {SystemFeatureSettingsDeleteManyArgs} args - Arguments to filter SystemFeatureSettings to delete.
+     * @example
+     * // Delete a few SystemFeatureSettings
+     * const { count } = await prisma.systemFeatureSettings.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SystemFeatureSettingsDeleteManyArgs>(args?: SelectSubset<T, SystemFeatureSettingsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SystemFeatureSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemFeatureSettingsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SystemFeatureSettings
+     * const systemFeatureSettings = await prisma.systemFeatureSettings.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SystemFeatureSettingsUpdateManyArgs>(args: SelectSubset<T, SystemFeatureSettingsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SystemFeatureSettings.
+     * @param {SystemFeatureSettingsUpsertArgs} args - Arguments to update or create a SystemFeatureSettings.
+     * @example
+     * // Update or create a SystemFeatureSettings
+     * const systemFeatureSettings = await prisma.systemFeatureSettings.upsert({
+     *   create: {
+     *     // ... data to create a SystemFeatureSettings
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SystemFeatureSettings we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SystemFeatureSettingsUpsertArgs>(args: SelectSubset<T, SystemFeatureSettingsUpsertArgs<ExtArgs>>): Prisma__SystemFeatureSettingsClient<$Result.GetResult<Prisma.$SystemFeatureSettingsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SystemFeatureSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemFeatureSettingsCountArgs} args - Arguments to filter SystemFeatureSettings to count.
+     * @example
+     * // Count the number of SystemFeatureSettings
+     * const count = await prisma.systemFeatureSettings.count({
+     *   where: {
+     *     // ... the filter for the SystemFeatureSettings we want to count
+     *   }
+     * })
+    **/
+    count<T extends SystemFeatureSettingsCountArgs>(
+      args?: Subset<T, SystemFeatureSettingsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SystemFeatureSettingsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SystemFeatureSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemFeatureSettingsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SystemFeatureSettingsAggregateArgs>(args: Subset<T, SystemFeatureSettingsAggregateArgs>): Prisma.PrismaPromise<GetSystemFeatureSettingsAggregateType<T>>
+
+    /**
+     * Group by SystemFeatureSettings.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SystemFeatureSettingsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SystemFeatureSettingsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SystemFeatureSettingsGroupByArgs['orderBy'] }
+        : { orderBy?: SystemFeatureSettingsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SystemFeatureSettingsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSystemFeatureSettingsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SystemFeatureSettings model
+   */
+  readonly fields: SystemFeatureSettingsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SystemFeatureSettings.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SystemFeatureSettingsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    updatedBy<T extends SystemFeatureSettings$updatedByArgs<ExtArgs> = {}>(args?: Subset<T, SystemFeatureSettings$updatedByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SystemFeatureSettings model
+   */
+  interface SystemFeatureSettingsFieldRefs {
+    readonly id: FieldRef<"SystemFeatureSettings", 'String'>
+    readonly studentLoginEnabled: FieldRef<"SystemFeatureSettings", 'Boolean'>
+    readonly updatedByUserId: FieldRef<"SystemFeatureSettings", 'String'>
+    readonly createdAt: FieldRef<"SystemFeatureSettings", 'DateTime'>
+    readonly updatedAt: FieldRef<"SystemFeatureSettings", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SystemFeatureSettings findUnique
+   */
+  export type SystemFeatureSettingsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which SystemFeatureSettings to fetch.
+     */
+    where: SystemFeatureSettingsWhereUniqueInput
+  }
+
+  /**
+   * SystemFeatureSettings findUniqueOrThrow
+   */
+  export type SystemFeatureSettingsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which SystemFeatureSettings to fetch.
+     */
+    where: SystemFeatureSettingsWhereUniqueInput
+  }
+
+  /**
+   * SystemFeatureSettings findFirst
+   */
+  export type SystemFeatureSettingsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which SystemFeatureSettings to fetch.
+     */
+    where?: SystemFeatureSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemFeatureSettings to fetch.
+     */
+    orderBy?: SystemFeatureSettingsOrderByWithRelationInput | SystemFeatureSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SystemFeatureSettings.
+     */
+    cursor?: SystemFeatureSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemFeatureSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemFeatureSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SystemFeatureSettings.
+     */
+    distinct?: SystemFeatureSettingsScalarFieldEnum | SystemFeatureSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * SystemFeatureSettings findFirstOrThrow
+   */
+  export type SystemFeatureSettingsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which SystemFeatureSettings to fetch.
+     */
+    where?: SystemFeatureSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemFeatureSettings to fetch.
+     */
+    orderBy?: SystemFeatureSettingsOrderByWithRelationInput | SystemFeatureSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SystemFeatureSettings.
+     */
+    cursor?: SystemFeatureSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemFeatureSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemFeatureSettings.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SystemFeatureSettings.
+     */
+    distinct?: SystemFeatureSettingsScalarFieldEnum | SystemFeatureSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * SystemFeatureSettings findMany
+   */
+  export type SystemFeatureSettingsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
+    /**
+     * Filter, which SystemFeatureSettings to fetch.
+     */
+    where?: SystemFeatureSettingsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SystemFeatureSettings to fetch.
+     */
+    orderBy?: SystemFeatureSettingsOrderByWithRelationInput | SystemFeatureSettingsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SystemFeatureSettings.
+     */
+    cursor?: SystemFeatureSettingsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SystemFeatureSettings from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SystemFeatureSettings.
+     */
+    skip?: number
+    distinct?: SystemFeatureSettingsScalarFieldEnum | SystemFeatureSettingsScalarFieldEnum[]
+  }
+
+  /**
+   * SystemFeatureSettings create
+   */
+  export type SystemFeatureSettingsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SystemFeatureSettings.
+     */
+    data: XOR<SystemFeatureSettingsCreateInput, SystemFeatureSettingsUncheckedCreateInput>
+  }
+
+  /**
+   * SystemFeatureSettings createMany
+   */
+  export type SystemFeatureSettingsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SystemFeatureSettings.
+     */
+    data: SystemFeatureSettingsCreateManyInput | SystemFeatureSettingsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SystemFeatureSettings update
+   */
+  export type SystemFeatureSettingsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SystemFeatureSettings.
+     */
+    data: XOR<SystemFeatureSettingsUpdateInput, SystemFeatureSettingsUncheckedUpdateInput>
+    /**
+     * Choose, which SystemFeatureSettings to update.
+     */
+    where: SystemFeatureSettingsWhereUniqueInput
+  }
+
+  /**
+   * SystemFeatureSettings updateMany
+   */
+  export type SystemFeatureSettingsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SystemFeatureSettings.
+     */
+    data: XOR<SystemFeatureSettingsUpdateManyMutationInput, SystemFeatureSettingsUncheckedUpdateManyInput>
+    /**
+     * Filter which SystemFeatureSettings to update
+     */
+    where?: SystemFeatureSettingsWhereInput
+    /**
+     * Limit how many SystemFeatureSettings to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SystemFeatureSettings upsert
+   */
+  export type SystemFeatureSettingsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SystemFeatureSettings to update in case it exists.
+     */
+    where: SystemFeatureSettingsWhereUniqueInput
+    /**
+     * In case the SystemFeatureSettings found by the `where` argument doesn't exist, create a new SystemFeatureSettings with this data.
+     */
+    create: XOR<SystemFeatureSettingsCreateInput, SystemFeatureSettingsUncheckedCreateInput>
+    /**
+     * In case the SystemFeatureSettings was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SystemFeatureSettingsUpdateInput, SystemFeatureSettingsUncheckedUpdateInput>
+  }
+
+  /**
+   * SystemFeatureSettings delete
+   */
+  export type SystemFeatureSettingsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
+    /**
+     * Filter which SystemFeatureSettings to delete.
+     */
+    where: SystemFeatureSettingsWhereUniqueInput
+  }
+
+  /**
+   * SystemFeatureSettings deleteMany
+   */
+  export type SystemFeatureSettingsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SystemFeatureSettings to delete
+     */
+    where?: SystemFeatureSettingsWhereInput
+    /**
+     * Limit how many SystemFeatureSettings to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SystemFeatureSettings.updatedBy
+   */
+  export type SystemFeatureSettings$updatedByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * SystemFeatureSettings without action
+   */
+  export type SystemFeatureSettingsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SystemFeatureSettings
+     */
+    select?: SystemFeatureSettingsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SystemFeatureSettings
+     */
+    omit?: SystemFeatureSettingsOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SystemFeatureSettingsInclude<ExtArgs> | null
   }
 
 
@@ -57642,6 +58715,7 @@ export namespace Prisma {
     regenerationReason: number
     regenerationChangedByUserId: number
     regenerationChangedAt: number
+    pendingRepricePayload: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -57787,6 +58861,7 @@ export namespace Prisma {
     regenerationReason?: true
     regenerationChangedByUserId?: true
     regenerationChangedAt?: true
+    pendingRepricePayload?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -57915,6 +58990,7 @@ export namespace Prisma {
     regenerationReason: string | null
     regenerationChangedByUserId: string | null
     regenerationChangedAt: Date | null
+    pendingRepricePayload: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: FeeStatementCountAggregateOutputType | null
@@ -57975,6 +59051,7 @@ export namespace Prisma {
     regenerationReason?: boolean
     regenerationChangedByUserId?: boolean
     regenerationChangedAt?: boolean
+    pendingRepricePayload?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     candidate?: boolean | FeeStatement$candidateArgs<ExtArgs>
@@ -58039,11 +59116,12 @@ export namespace Prisma {
     regenerationReason?: boolean
     regenerationChangedByUserId?: boolean
     regenerationChangedAt?: boolean
+    pendingRepricePayload?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type FeeStatementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessType" | "candidateId" | "studentId" | "registrationWorkspaceId" | "registrationWindowId" | "reviewWindowId" | "statementNo" | "statementKind" | "displayCurrency" | "exchangeRateSnapshot" | "studentNameSnapshot" | "studentNoSnapshot" | "gradeSnapshot" | "classNameSnapshot" | "emailSnapshot" | "assessmentHubCandidateNumberSnapshot" | "candidateTypeSnapshot" | "status" | "paymentSettlement" | "studentVisible" | "totalGbpAmount" | "totalCnyAmount" | "previouslyPaidGbpAmount" | "previouslyPaidCnyAmount" | "amountDueGbpAmount" | "amountDueCnyAmount" | "paymentNotes" | "generatedByUserId" | "generatedAt" | "issuedAt" | "revisedFromStatementId" | "revisedToStatementId" | "regenerationReason" | "regenerationChangedByUserId" | "regenerationChangedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["feeStatement"]>
+  export type FeeStatementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessType" | "candidateId" | "studentId" | "registrationWorkspaceId" | "registrationWindowId" | "reviewWindowId" | "statementNo" | "statementKind" | "displayCurrency" | "exchangeRateSnapshot" | "studentNameSnapshot" | "studentNoSnapshot" | "gradeSnapshot" | "classNameSnapshot" | "emailSnapshot" | "assessmentHubCandidateNumberSnapshot" | "candidateTypeSnapshot" | "status" | "paymentSettlement" | "studentVisible" | "totalGbpAmount" | "totalCnyAmount" | "previouslyPaidGbpAmount" | "previouslyPaidCnyAmount" | "amountDueGbpAmount" | "amountDueCnyAmount" | "paymentNotes" | "generatedByUserId" | "generatedAt" | "issuedAt" | "revisedFromStatementId" | "revisedToStatementId" | "regenerationReason" | "regenerationChangedByUserId" | "regenerationChangedAt" | "pendingRepricePayload" | "createdAt" | "updatedAt", ExtArgs["result"]["feeStatement"]>
   export type FeeStatementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     candidate?: boolean | FeeStatement$candidateArgs<ExtArgs>
     student?: boolean | FeeStatement$studentArgs<ExtArgs>
@@ -58135,6 +59213,10 @@ export namespace Prisma {
       regenerationReason: string | null
       regenerationChangedByUserId: string | null
       regenerationChangedAt: Date | null
+      /**
+       * * Deferred fee-stage updates for a reprice draft; applied only when the draft is issued.
+       */
+      pendingRepricePayload: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["feeStatement"]>
@@ -58562,6 +59644,7 @@ export namespace Prisma {
     readonly regenerationReason: FieldRef<"FeeStatement", 'String'>
     readonly regenerationChangedByUserId: FieldRef<"FeeStatement", 'String'>
     readonly regenerationChangedAt: FieldRef<"FeeStatement", 'DateTime'>
+    readonly pendingRepricePayload: FieldRef<"FeeStatement", 'Json'>
     readonly createdAt: FieldRef<"FeeStatement", 'DateTime'>
     readonly updatedAt: FieldRef<"FeeStatement", 'DateTime'>
   }
@@ -78767,6 +79850,17 @@ export namespace Prisma {
   export type SystemEmailSettingsScalarFieldEnum = (typeof SystemEmailSettingsScalarFieldEnum)[keyof typeof SystemEmailSettingsScalarFieldEnum]
 
 
+  export const SystemFeatureSettingsScalarFieldEnum: {
+    id: 'id',
+    studentLoginEnabled: 'studentLoginEnabled',
+    updatedByUserId: 'updatedByUserId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SystemFeatureSettingsScalarFieldEnum = (typeof SystemFeatureSettingsScalarFieldEnum)[keyof typeof SystemFeatureSettingsScalarFieldEnum]
+
+
   export const StudentNotificationLogScalarFieldEnum: {
     id: 'id',
     type: 'type',
@@ -79470,6 +80564,7 @@ export namespace Prisma {
     regenerationReason: 'regenerationReason',
     regenerationChangedByUserId: 'regenerationChangedByUserId',
     regenerationChangedAt: 'regenerationChangedAt',
+    pendingRepricePayload: 'pendingRepricePayload',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -79941,6 +81036,14 @@ export namespace Prisma {
   };
 
   export type SystemEmailSettingsOrderByRelevanceFieldEnum = (typeof SystemEmailSettingsOrderByRelevanceFieldEnum)[keyof typeof SystemEmailSettingsOrderByRelevanceFieldEnum]
+
+
+  export const SystemFeatureSettingsOrderByRelevanceFieldEnum: {
+    id: 'id',
+    updatedByUserId: 'updatedByUserId'
+  };
+
+  export type SystemFeatureSettingsOrderByRelevanceFieldEnum = (typeof SystemFeatureSettingsOrderByRelevanceFieldEnum)[keyof typeof SystemFeatureSettingsOrderByRelevanceFieldEnum]
 
 
   export const StudentNotificationLogOrderByRelevanceFieldEnum: {
@@ -81227,6 +82330,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestListRelationFilter
     postResultsAuditLogsPerformed?: PostResultsAuditLogListRelationFilter
     backupSettingsUpdated?: BackupSettingListRelationFilter
+    featureSettingsUpdated?: SystemFeatureSettingsListRelationFilter
     backupJobsTriggered?: BackupJobListRelationFilter
     candidateExamIdentitiesCreated?: CandidateExamIdentityListRelationFilter
     candidateExamIdentitiesUpdated?: CandidateExamIdentityListRelationFilter
@@ -81295,6 +82399,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestOrderByRelationAggregateInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogOrderByRelationAggregateInput
     backupSettingsUpdated?: BackupSettingOrderByRelationAggregateInput
+    featureSettingsUpdated?: SystemFeatureSettingsOrderByRelationAggregateInput
     backupJobsTriggered?: BackupJobOrderByRelationAggregateInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityOrderByRelationAggregateInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityOrderByRelationAggregateInput
@@ -81367,6 +82472,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestListRelationFilter
     postResultsAuditLogsPerformed?: PostResultsAuditLogListRelationFilter
     backupSettingsUpdated?: BackupSettingListRelationFilter
+    featureSettingsUpdated?: SystemFeatureSettingsListRelationFilter
     backupJobsTriggered?: BackupJobListRelationFilter
     candidateExamIdentitiesCreated?: CandidateExamIdentityListRelationFilter
     candidateExamIdentitiesUpdated?: CandidateExamIdentityListRelationFilter
@@ -81914,6 +83020,62 @@ export namespace Prisma {
     notifyFeeStatementPaid?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
     notifyStaffStudentAdjustment?: BoolWithAggregatesFilter<"SystemEmailSettings"> | boolean
     updatedAt?: DateTimeWithAggregatesFilter<"SystemEmailSettings"> | Date | string
+  }
+
+  export type SystemFeatureSettingsWhereInput = {
+    AND?: SystemFeatureSettingsWhereInput | SystemFeatureSettingsWhereInput[]
+    OR?: SystemFeatureSettingsWhereInput[]
+    NOT?: SystemFeatureSettingsWhereInput | SystemFeatureSettingsWhereInput[]
+    id?: StringFilter<"SystemFeatureSettings"> | string
+    studentLoginEnabled?: BoolFilter<"SystemFeatureSettings"> | boolean
+    updatedByUserId?: StringNullableFilter<"SystemFeatureSettings"> | string | null
+    createdAt?: DateTimeFilter<"SystemFeatureSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"SystemFeatureSettings"> | Date | string
+    updatedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type SystemFeatureSettingsOrderByWithRelationInput = {
+    id?: SortOrder
+    studentLoginEnabled?: SortOrder
+    updatedByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    updatedBy?: UserOrderByWithRelationInput
+    _relevance?: SystemFeatureSettingsOrderByRelevanceInput
+  }
+
+  export type SystemFeatureSettingsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SystemFeatureSettingsWhereInput | SystemFeatureSettingsWhereInput[]
+    OR?: SystemFeatureSettingsWhereInput[]
+    NOT?: SystemFeatureSettingsWhereInput | SystemFeatureSettingsWhereInput[]
+    studentLoginEnabled?: BoolFilter<"SystemFeatureSettings"> | boolean
+    updatedByUserId?: StringNullableFilter<"SystemFeatureSettings"> | string | null
+    createdAt?: DateTimeFilter<"SystemFeatureSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"SystemFeatureSettings"> | Date | string
+    updatedBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type SystemFeatureSettingsOrderByWithAggregationInput = {
+    id?: SortOrder
+    studentLoginEnabled?: SortOrder
+    updatedByUserId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SystemFeatureSettingsCountOrderByAggregateInput
+    _max?: SystemFeatureSettingsMaxOrderByAggregateInput
+    _min?: SystemFeatureSettingsMinOrderByAggregateInput
+  }
+
+  export type SystemFeatureSettingsScalarWhereWithAggregatesInput = {
+    AND?: SystemFeatureSettingsScalarWhereWithAggregatesInput | SystemFeatureSettingsScalarWhereWithAggregatesInput[]
+    OR?: SystemFeatureSettingsScalarWhereWithAggregatesInput[]
+    NOT?: SystemFeatureSettingsScalarWhereWithAggregatesInput | SystemFeatureSettingsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SystemFeatureSettings"> | string
+    studentLoginEnabled?: BoolWithAggregatesFilter<"SystemFeatureSettings"> | boolean
+    updatedByUserId?: StringNullableWithAggregatesFilter<"SystemFeatureSettings"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SystemFeatureSettings"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SystemFeatureSettings"> | Date | string
   }
 
   export type StudentNotificationLogWhereInput = {
@@ -85958,6 +87120,7 @@ export namespace Prisma {
     regenerationReason?: StringNullableFilter<"FeeStatement"> | string | null
     regenerationChangedByUserId?: StringNullableFilter<"FeeStatement"> | string | null
     regenerationChangedAt?: DateTimeNullableFilter<"FeeStatement"> | Date | string | null
+    pendingRepricePayload?: JsonNullableFilter<"FeeStatement">
     createdAt?: DateTimeFilter<"FeeStatement"> | Date | string
     updatedAt?: DateTimeFilter<"FeeStatement"> | Date | string
     candidate?: XOR<CandidateNullableScalarRelationFilter, CandidateWhereInput> | null
@@ -86019,6 +87182,7 @@ export namespace Prisma {
     regenerationReason?: SortOrderInput | SortOrder
     regenerationChangedByUserId?: SortOrderInput | SortOrder
     regenerationChangedAt?: SortOrderInput | SortOrder
+    pendingRepricePayload?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     candidate?: CandidateOrderByWithRelationInput
@@ -86084,6 +87248,7 @@ export namespace Prisma {
     regenerationReason?: StringNullableFilter<"FeeStatement"> | string | null
     regenerationChangedByUserId?: StringNullableFilter<"FeeStatement"> | string | null
     regenerationChangedAt?: DateTimeNullableFilter<"FeeStatement"> | Date | string | null
+    pendingRepricePayload?: JsonNullableFilter<"FeeStatement">
     createdAt?: DateTimeFilter<"FeeStatement"> | Date | string
     updatedAt?: DateTimeFilter<"FeeStatement"> | Date | string
     candidate?: XOR<CandidateNullableScalarRelationFilter, CandidateWhereInput> | null
@@ -86145,6 +87310,7 @@ export namespace Prisma {
     regenerationReason?: SortOrderInput | SortOrder
     regenerationChangedByUserId?: SortOrderInput | SortOrder
     regenerationChangedAt?: SortOrderInput | SortOrder
+    pendingRepricePayload?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: FeeStatementCountOrderByAggregateInput
@@ -86194,6 +87360,7 @@ export namespace Prisma {
     regenerationReason?: StringNullableWithAggregatesFilter<"FeeStatement"> | string | null
     regenerationChangedByUserId?: StringNullableWithAggregatesFilter<"FeeStatement"> | string | null
     regenerationChangedAt?: DateTimeNullableWithAggregatesFilter<"FeeStatement"> | Date | string | null
+    pendingRepricePayload?: JsonNullableWithAggregatesFilter<"FeeStatement">
     createdAt?: DateTimeWithAggregatesFilter<"FeeStatement"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"FeeStatement"> | Date | string
   }
@@ -88274,6 +89441,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -88342,6 +89510,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -88410,6 +89579,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -88478,6 +89648,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -89092,6 +90263,61 @@ export namespace Prisma {
     notifyRegistrationUpdated?: BoolFieldUpdateOperationsInput | boolean
     notifyFeeStatementPaid?: BoolFieldUpdateOperationsInput | boolean
     notifyStaffStudentAdjustment?: BoolFieldUpdateOperationsInput | boolean
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SystemFeatureSettingsCreateInput = {
+    id?: string
+    studentLoginEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    updatedBy?: UserCreateNestedOneWithoutFeatureSettingsUpdatedInput
+  }
+
+  export type SystemFeatureSettingsUncheckedCreateInput = {
+    id?: string
+    studentLoginEnabled?: boolean
+    updatedByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SystemFeatureSettingsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentLoginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedBy?: UserUpdateOneWithoutFeatureSettingsUpdatedNestedInput
+  }
+
+  export type SystemFeatureSettingsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentLoginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SystemFeatureSettingsCreateManyInput = {
+    id?: string
+    studentLoginEnabled?: boolean
+    updatedByUserId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SystemFeatureSettingsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentLoginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SystemFeatureSettingsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentLoginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    updatedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -93456,6 +94682,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -93517,6 +94744,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -93560,6 +94788,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -93621,6 +94850,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -93673,6 +94903,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -93705,6 +94936,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -93746,6 +94978,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -96072,6 +97305,12 @@ export namespace Prisma {
     none?: BackupSettingWhereInput
   }
 
+  export type SystemFeatureSettingsListRelationFilter = {
+    every?: SystemFeatureSettingsWhereInput
+    some?: SystemFeatureSettingsWhereInput
+    none?: SystemFeatureSettingsWhereInput
+  }
+
   export type BackupJobListRelationFilter = {
     every?: BackupJobWhereInput
     some?: BackupJobWhereInput
@@ -96228,6 +97467,10 @@ export namespace Prisma {
   }
 
   export type BackupSettingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SystemFeatureSettingsOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -96945,6 +98188,36 @@ export namespace Prisma {
   export type SystemEmailSettingsSumOrderByAggregateInput = {
     smtpPort?: SortOrder
     passwordResetExpiresMinutes?: SortOrder
+  }
+
+  export type SystemFeatureSettingsOrderByRelevanceInput = {
+    fields: SystemFeatureSettingsOrderByRelevanceFieldEnum | SystemFeatureSettingsOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type SystemFeatureSettingsCountOrderByAggregateInput = {
+    id?: SortOrder
+    studentLoginEnabled?: SortOrder
+    updatedByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SystemFeatureSettingsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    studentLoginEnabled?: SortOrder
+    updatedByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SystemFeatureSettingsMinOrderByAggregateInput = {
+    id?: SortOrder
+    studentLoginEnabled?: SortOrder
+    updatedByUserId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type EnumStudentNotificationTypeFilter<$PrismaModel = never> = {
@@ -100047,6 +101320,7 @@ export namespace Prisma {
     regenerationReason?: SortOrder
     regenerationChangedByUserId?: SortOrder
     regenerationChangedAt?: SortOrder
+    pendingRepricePayload?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -102044,6 +103318,13 @@ export namespace Prisma {
     connect?: BackupSettingWhereUniqueInput | BackupSettingWhereUniqueInput[]
   }
 
+  export type SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput = {
+    create?: XOR<SystemFeatureSettingsCreateWithoutUpdatedByInput, SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput> | SystemFeatureSettingsCreateWithoutUpdatedByInput[] | SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput[]
+    connectOrCreate?: SystemFeatureSettingsCreateOrConnectWithoutUpdatedByInput | SystemFeatureSettingsCreateOrConnectWithoutUpdatedByInput[]
+    createMany?: SystemFeatureSettingsCreateManyUpdatedByInputEnvelope
+    connect?: SystemFeatureSettingsWhereUniqueInput | SystemFeatureSettingsWhereUniqueInput[]
+  }
+
   export type BackupJobCreateNestedManyWithoutTriggeredByUserInput = {
     create?: XOR<BackupJobCreateWithoutTriggeredByUserInput, BackupJobUncheckedCreateWithoutTriggeredByUserInput> | BackupJobCreateWithoutTriggeredByUserInput[] | BackupJobUncheckedCreateWithoutTriggeredByUserInput[]
     connectOrCreate?: BackupJobCreateOrConnectWithoutTriggeredByUserInput | BackupJobCreateOrConnectWithoutTriggeredByUserInput[]
@@ -102410,6 +103691,13 @@ export namespace Prisma {
     connectOrCreate?: BackupSettingCreateOrConnectWithoutUpdatedByInput | BackupSettingCreateOrConnectWithoutUpdatedByInput[]
     createMany?: BackupSettingCreateManyUpdatedByInputEnvelope
     connect?: BackupSettingWhereUniqueInput | BackupSettingWhereUniqueInput[]
+  }
+
+  export type SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput = {
+    create?: XOR<SystemFeatureSettingsCreateWithoutUpdatedByInput, SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput> | SystemFeatureSettingsCreateWithoutUpdatedByInput[] | SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput[]
+    connectOrCreate?: SystemFeatureSettingsCreateOrConnectWithoutUpdatedByInput | SystemFeatureSettingsCreateOrConnectWithoutUpdatedByInput[]
+    createMany?: SystemFeatureSettingsCreateManyUpdatedByInputEnvelope
+    connect?: SystemFeatureSettingsWhereUniqueInput | SystemFeatureSettingsWhereUniqueInput[]
   }
 
   export type BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput = {
@@ -103062,6 +104350,20 @@ export namespace Prisma {
     update?: BackupSettingUpdateWithWhereUniqueWithoutUpdatedByInput | BackupSettingUpdateWithWhereUniqueWithoutUpdatedByInput[]
     updateMany?: BackupSettingUpdateManyWithWhereWithoutUpdatedByInput | BackupSettingUpdateManyWithWhereWithoutUpdatedByInput[]
     deleteMany?: BackupSettingScalarWhereInput | BackupSettingScalarWhereInput[]
+  }
+
+  export type SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput = {
+    create?: XOR<SystemFeatureSettingsCreateWithoutUpdatedByInput, SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput> | SystemFeatureSettingsCreateWithoutUpdatedByInput[] | SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput[]
+    connectOrCreate?: SystemFeatureSettingsCreateOrConnectWithoutUpdatedByInput | SystemFeatureSettingsCreateOrConnectWithoutUpdatedByInput[]
+    upsert?: SystemFeatureSettingsUpsertWithWhereUniqueWithoutUpdatedByInput | SystemFeatureSettingsUpsertWithWhereUniqueWithoutUpdatedByInput[]
+    createMany?: SystemFeatureSettingsCreateManyUpdatedByInputEnvelope
+    set?: SystemFeatureSettingsWhereUniqueInput | SystemFeatureSettingsWhereUniqueInput[]
+    disconnect?: SystemFeatureSettingsWhereUniqueInput | SystemFeatureSettingsWhereUniqueInput[]
+    delete?: SystemFeatureSettingsWhereUniqueInput | SystemFeatureSettingsWhereUniqueInput[]
+    connect?: SystemFeatureSettingsWhereUniqueInput | SystemFeatureSettingsWhereUniqueInput[]
+    update?: SystemFeatureSettingsUpdateWithWhereUniqueWithoutUpdatedByInput | SystemFeatureSettingsUpdateWithWhereUniqueWithoutUpdatedByInput[]
+    updateMany?: SystemFeatureSettingsUpdateManyWithWhereWithoutUpdatedByInput | SystemFeatureSettingsUpdateManyWithWhereWithoutUpdatedByInput[]
+    deleteMany?: SystemFeatureSettingsScalarWhereInput | SystemFeatureSettingsScalarWhereInput[]
   }
 
   export type BackupJobUpdateManyWithoutTriggeredByUserNestedInput = {
@@ -103794,6 +105096,20 @@ export namespace Prisma {
     deleteMany?: BackupSettingScalarWhereInput | BackupSettingScalarWhereInput[]
   }
 
+  export type SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput = {
+    create?: XOR<SystemFeatureSettingsCreateWithoutUpdatedByInput, SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput> | SystemFeatureSettingsCreateWithoutUpdatedByInput[] | SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput[]
+    connectOrCreate?: SystemFeatureSettingsCreateOrConnectWithoutUpdatedByInput | SystemFeatureSettingsCreateOrConnectWithoutUpdatedByInput[]
+    upsert?: SystemFeatureSettingsUpsertWithWhereUniqueWithoutUpdatedByInput | SystemFeatureSettingsUpsertWithWhereUniqueWithoutUpdatedByInput[]
+    createMany?: SystemFeatureSettingsCreateManyUpdatedByInputEnvelope
+    set?: SystemFeatureSettingsWhereUniqueInput | SystemFeatureSettingsWhereUniqueInput[]
+    disconnect?: SystemFeatureSettingsWhereUniqueInput | SystemFeatureSettingsWhereUniqueInput[]
+    delete?: SystemFeatureSettingsWhereUniqueInput | SystemFeatureSettingsWhereUniqueInput[]
+    connect?: SystemFeatureSettingsWhereUniqueInput | SystemFeatureSettingsWhereUniqueInput[]
+    update?: SystemFeatureSettingsUpdateWithWhereUniqueWithoutUpdatedByInput | SystemFeatureSettingsUpdateWithWhereUniqueWithoutUpdatedByInput[]
+    updateMany?: SystemFeatureSettingsUpdateManyWithWhereWithoutUpdatedByInput | SystemFeatureSettingsUpdateManyWithWhereWithoutUpdatedByInput[]
+    deleteMany?: SystemFeatureSettingsScalarWhereInput | SystemFeatureSettingsScalarWhereInput[]
+  }
+
   export type BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput = {
     create?: XOR<BackupJobCreateWithoutTriggeredByUserInput, BackupJobUncheckedCreateWithoutTriggeredByUserInput> | BackupJobCreateWithoutTriggeredByUserInput[] | BackupJobUncheckedCreateWithoutTriggeredByUserInput[]
     connectOrCreate?: BackupJobCreateOrConnectWithoutTriggeredByUserInput | BackupJobCreateOrConnectWithoutTriggeredByUserInput[]
@@ -104094,6 +105410,22 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutTeacherProfileInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTeacherProfileInput, UserUpdateWithoutTeacherProfileInput>, UserUncheckedUpdateWithoutTeacherProfileInput>
+  }
+
+  export type UserCreateNestedOneWithoutFeatureSettingsUpdatedInput = {
+    create?: XOR<UserCreateWithoutFeatureSettingsUpdatedInput, UserUncheckedCreateWithoutFeatureSettingsUpdatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeatureSettingsUpdatedInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneWithoutFeatureSettingsUpdatedNestedInput = {
+    create?: XOR<UserCreateWithoutFeatureSettingsUpdatedInput, UserUncheckedCreateWithoutFeatureSettingsUpdatedInput>
+    connectOrCreate?: UserCreateOrConnectWithoutFeatureSettingsUpdatedInput
+    upsert?: UserUpsertWithoutFeatureSettingsUpdatedInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutFeatureSettingsUpdatedInput, UserUpdateWithoutFeatureSettingsUpdatedInput>, UserUncheckedUpdateWithoutFeatureSettingsUpdatedInput>
   }
 
   export type UserCreateNestedOneWithoutStudentNotificationLogsInput = {
@@ -115907,6 +117239,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -115966,6 +117299,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -116019,6 +117353,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -116078,6 +117413,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -116131,6 +117467,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -116190,6 +117527,7 @@ export namespace Prisma {
     revisedToStatementId?: string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -117322,6 +118660,30 @@ export namespace Prisma {
 
   export type BackupSettingCreateManyUpdatedByInputEnvelope = {
     data: BackupSettingCreateManyUpdatedByInput | BackupSettingCreateManyUpdatedByInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SystemFeatureSettingsCreateWithoutUpdatedByInput = {
+    id?: string
+    studentLoginEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput = {
+    id?: string
+    studentLoginEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SystemFeatureSettingsCreateOrConnectWithoutUpdatedByInput = {
+    where: SystemFeatureSettingsWhereUniqueInput
+    create: XOR<SystemFeatureSettingsCreateWithoutUpdatedByInput, SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput>
+  }
+
+  export type SystemFeatureSettingsCreateManyUpdatedByInputEnvelope = {
+    data: SystemFeatureSettingsCreateManyUpdatedByInput | SystemFeatureSettingsCreateManyUpdatedByInput[]
     skipDuplicates?: boolean
   }
 
@@ -118584,6 +119946,7 @@ export namespace Prisma {
     regenerationReason?: StringNullableFilter<"FeeStatement"> | string | null
     regenerationChangedByUserId?: StringNullableFilter<"FeeStatement"> | string | null
     regenerationChangedAt?: DateTimeNullableFilter<"FeeStatement"> | Date | string | null
+    pendingRepricePayload?: JsonNullableFilter<"FeeStatement">
     createdAt?: DateTimeFilter<"FeeStatement"> | Date | string
     updatedAt?: DateTimeFilter<"FeeStatement"> | Date | string
   }
@@ -119336,6 +120699,33 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"BackupSetting"> | Date | string
   }
 
+  export type SystemFeatureSettingsUpsertWithWhereUniqueWithoutUpdatedByInput = {
+    where: SystemFeatureSettingsWhereUniqueInput
+    update: XOR<SystemFeatureSettingsUpdateWithoutUpdatedByInput, SystemFeatureSettingsUncheckedUpdateWithoutUpdatedByInput>
+    create: XOR<SystemFeatureSettingsCreateWithoutUpdatedByInput, SystemFeatureSettingsUncheckedCreateWithoutUpdatedByInput>
+  }
+
+  export type SystemFeatureSettingsUpdateWithWhereUniqueWithoutUpdatedByInput = {
+    where: SystemFeatureSettingsWhereUniqueInput
+    data: XOR<SystemFeatureSettingsUpdateWithoutUpdatedByInput, SystemFeatureSettingsUncheckedUpdateWithoutUpdatedByInput>
+  }
+
+  export type SystemFeatureSettingsUpdateManyWithWhereWithoutUpdatedByInput = {
+    where: SystemFeatureSettingsScalarWhereInput
+    data: XOR<SystemFeatureSettingsUpdateManyMutationInput, SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByInput>
+  }
+
+  export type SystemFeatureSettingsScalarWhereInput = {
+    AND?: SystemFeatureSettingsScalarWhereInput | SystemFeatureSettingsScalarWhereInput[]
+    OR?: SystemFeatureSettingsScalarWhereInput[]
+    NOT?: SystemFeatureSettingsScalarWhereInput | SystemFeatureSettingsScalarWhereInput[]
+    id?: StringFilter<"SystemFeatureSettings"> | string
+    studentLoginEnabled?: BoolFilter<"SystemFeatureSettings"> | boolean
+    updatedByUserId?: StringNullableFilter<"SystemFeatureSettings"> | string | null
+    createdAt?: DateTimeFilter<"SystemFeatureSettings"> | Date | string
+    updatedAt?: DateTimeFilter<"SystemFeatureSettings"> | Date | string
+  }
+
   export type BackupJobUpsertWithWhereUniqueWithoutTriggeredByUserInput = {
     where: BackupJobWhereUniqueInput
     update: XOR<BackupJobUpdateWithoutTriggeredByUserInput, BackupJobUncheckedUpdateWithoutTriggeredByUserInput>
@@ -119801,6 +121191,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -119868,6 +121259,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -119951,6 +121343,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -120018,6 +121411,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -120084,6 +121478,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -120151,6 +121546,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -120234,6 +121630,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -120301,6 +121698,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -120368,6 +121766,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -120435,6 +121834,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -120518,6 +121918,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -120585,6 +121986,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -120652,6 +122054,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -120719,6 +122122,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -120802,6 +122206,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -120854,6 +122259,295 @@ export namespace Prisma {
     feeRefundsRecorded?: FeeRefundUncheckedUpdateManyWithoutRecordedByNestedInput
     registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
     candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUncheckedUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutFeatureSettingsUpdatedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventCreateNestedManyWithoutActorInput
+    feeRefundsRecorded?: FeeRefundCreateNestedManyWithoutRecordedByInput
+    registrationsAdded?: StudentExamRegistrationCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutFeatureSettingsUpdatedInput = {
+    id?: string
+    name: string
+    username?: string | null
+    email?: string | null
+    phone?: string | null
+    studentNo?: string | null
+    passwordHash: string
+    role?: $Enums.UserRole
+    isActive?: boolean
+    mustChangePassword?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sourceDocuments?: SourceDocumentUncheckedCreateNestedManyWithoutUploadedByInput
+    studentProfile?: StudentProfileUncheckedCreateNestedOneWithoutUserInput
+    teacherAssignments?: TeacherAssignmentUncheckedCreateNestedManyWithoutTeacherInput
+    registrationWindows?: RegistrationWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    studentRegistrations?: StudentExamRegistrationUncheckedCreateNestedManyWithoutStudentInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedCreateNestedManyWithoutStudentInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutStudentInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutLastAdjustedByUserInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+    feeRulesCreated?: FeeRuleUncheckedCreateNestedManyWithoutCreatedByInput
+    exchangeRatesCreated?: ExchangeRateUncheckedCreateNestedManyWithoutCreatedByInput
+    feeStatementsGenerated?: FeeStatementUncheckedCreateNestedManyWithoutGeneratedByInput
+    feeStatementsAsStudent?: FeeStatementUncheckedCreateNestedManyWithoutStudentInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedCreateNestedManyWithoutRegenerationChangedByInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedCreateNestedManyWithoutActorInput
+    feeRefundsRecorded?: FeeRefundUncheckedCreateNestedManyWithoutRecordedByInput
+    registrationsAdded?: StudentExamRegistrationUncheckedCreateNestedManyWithoutAddedByUserInput
+    candidate?: CandidateUncheckedCreateNestedOneWithoutUserInput
+    teacherProfile?: TeacherProfileUncheckedCreateNestedOneWithoutUserInput
+    userAuditLogsPerformed?: UserAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    userAuditLogsTarget?: UserAuditLogUncheckedCreateNestedManyWithoutTargetUserInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedCreatedByInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUncheckedCreateNestedManyWithoutRestrictedUpdatedByInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    reviewWindowsCreated?: ReviewWindowUncheckedCreateNestedManyWithoutCreatedByInput
+    feeSchedulesCreated?: FeeScheduleUncheckedCreateNestedManyWithoutCreatedByInput
+    reviewRequestsRequested?: ReviewRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    reviewRequestsReviewed?: ReviewRequestUncheckedCreateNestedManyWithoutReviewedByInput
+    cashInRequestsRequested?: CashInRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
+    paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCreatedByUserInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUncheckedCreateNestedManyWithoutCompletedByUserInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUncheckedCreateNestedManyWithoutSubmittedByInput
+    studentNotificationLogs?: StudentNotificationLogUncheckedCreateNestedManyWithoutStudentInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutStudentInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutTeacherReviewedByInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutEoReviewedByInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUncheckedCreateNestedManyWithoutPrimaryHomeroomTeacherInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUncheckedCreateNestedManyWithoutTeacherInput
+    loginLogs?: LoginLogUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutFeatureSettingsUpdatedInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutFeatureSettingsUpdatedInput, UserUncheckedCreateWithoutFeatureSettingsUpdatedInput>
+  }
+
+  export type UserUpsertWithoutFeatureSettingsUpdatedInput = {
+    update: XOR<UserUpdateWithoutFeatureSettingsUpdatedInput, UserUncheckedUpdateWithoutFeatureSettingsUpdatedInput>
+    create: XOR<UserCreateWithoutFeatureSettingsUpdatedInput, UserUncheckedCreateWithoutFeatureSettingsUpdatedInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutFeatureSettingsUpdatedInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutFeatureSettingsUpdatedInput, UserUncheckedUpdateWithoutFeatureSettingsUpdatedInput>
+  }
+
+  export type UserUpdateWithoutFeatureSettingsUpdatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUpdateManyWithoutActorNestedInput
+    feeRefundsRecorded?: FeeRefundUpdateManyWithoutRecordedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUpdateOneWithoutUserNestedInput
+    userAuditLogsPerformed?: UserAuditLogUpdateManyWithoutPerformedByNestedInput
+    userAuditLogsTarget?: UserAuditLogUpdateManyWithoutTargetUserNestedInput
+    restrictedRegistrationsCreated?: RegistrationWorkspaceUpdateManyWithoutRestrictedCreatedByNestedInput
+    restrictedRegistrationsUpdated?: RegistrationWorkspaceUpdateManyWithoutRestrictedUpdatedByNestedInput
+    examDocumentAuditLogsPerformed?: ExamDocumentAuditLogUpdateManyWithoutPerformedByNestedInput
+    candidateAuditLogsPerformed?: CandidateAuditLogUpdateManyWithoutPerformedByNestedInput
+    reviewWindowsCreated?: ReviewWindowUpdateManyWithoutCreatedByNestedInput
+    feeSchedulesCreated?: FeeScheduleUpdateManyWithoutCreatedByNestedInput
+    reviewRequestsRequested?: ReviewRequestUpdateManyWithoutRequestedByNestedInput
+    reviewRequestsReviewed?: ReviewRequestUpdateManyWithoutReviewedByNestedInput
+    cashInRequestsRequested?: CashInRequestUpdateManyWithoutRequestedByNestedInput
+    accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
+    certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
+    postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
+    candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
+    candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
+    paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
+    offlineWithdrawalRefundsCreated?: OfflineWithdrawalRefundUpdateManyWithoutCreatedByUserNestedInput
+    offlineWithdrawalRefundsCompleted?: OfflineWithdrawalRefundUpdateManyWithoutCompletedByUserNestedInput
+    boardSubmissionBaselinesSubmitted?: BoardSubmissionBaselineUpdateManyWithoutSubmittedByNestedInput
+    studentNotificationLogs?: StudentNotificationLogUpdateManyWithoutStudentNestedInput
+    studentAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutStudentNestedInput
+    teacherReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutTeacherReviewedByNestedInput
+    eoReviewedStudentAdjustments?: StudentAdjustmentRequestUpdateManyWithoutEoReviewedByNestedInput
+    primaryHomeroomAdjustmentRequests?: StudentAdjustmentRequestUpdateManyWithoutPrimaryHomeroomTeacherNestedInput
+    classHomeroomAssignments?: ClassHomeroomTeacherUpdateManyWithoutTeacherNestedInput
+    loginLogs?: LoginLogUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutFeatureSettingsUpdatedInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    studentNo?: NullableStringFieldUpdateOperationsInput | string | null
+    passwordHash?: StringFieldUpdateOperationsInput | string
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sourceDocuments?: SourceDocumentUncheckedUpdateManyWithoutUploadedByNestedInput
+    studentProfile?: StudentProfileUncheckedUpdateOneWithoutUserNestedInput
+    teacherAssignments?: TeacherAssignmentUncheckedUpdateManyWithoutTeacherNestedInput
+    registrationWindows?: RegistrationWindowUncheckedUpdateManyWithoutCreatedByNestedInput
+    studentRegistrations?: StudentExamRegistrationUncheckedUpdateManyWithoutStudentNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    registrationAuditLogsAsStudent?: RegistrationAuditLogUncheckedUpdateManyWithoutStudentNestedInput
+    registrationAuditLogsPerformed?: RegistrationAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    registrationWorkspaces?: RegistrationWorkspaceUncheckedUpdateManyWithoutStudentNestedInput
+    workspacesLastAdjusted?: RegistrationWorkspaceUncheckedUpdateManyWithoutLastAdjustedByUserNestedInput
+    registrationChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutRequestedByNestedInput
+    reviewedChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+    studentChangeRequests?: RegistrationChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+    feeRulesCreated?: FeeRuleUncheckedUpdateManyWithoutCreatedByNestedInput
+    exchangeRatesCreated?: ExchangeRateUncheckedUpdateManyWithoutCreatedByNestedInput
+    feeStatementsGenerated?: FeeStatementUncheckedUpdateManyWithoutGeneratedByNestedInput
+    feeStatementsAsStudent?: FeeStatementUncheckedUpdateManyWithoutStudentNestedInput
+    feeStatementsRegenerationChanged?: FeeStatementUncheckedUpdateManyWithoutRegenerationChangedByNestedInput
+    feeAuditLogsPerformed?: FeeAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    feeStatementEventsActed?: FeeStatementEventUncheckedUpdateManyWithoutActorNestedInput
+    feeRefundsRecorded?: FeeRefundUncheckedUpdateManyWithoutRecordedByNestedInput
+    registrationsAdded?: StudentExamRegistrationUncheckedUpdateManyWithoutAddedByUserNestedInput
+    candidate?: CandidateUncheckedUpdateOneWithoutUserNestedInput
+    teacherProfile?: TeacherProfileUncheckedUpdateOneWithoutUserNestedInput
     userAuditLogsPerformed?: UserAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     userAuditLogsTarget?: UserAuditLogUncheckedUpdateManyWithoutTargetUserNestedInput
     restrictedRegistrationsCreated?: RegistrationWorkspaceUncheckedUpdateManyWithoutRestrictedCreatedByNestedInput
@@ -120937,6 +122631,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -121004,6 +122699,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -121133,6 +122829,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -121193,6 +122890,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -121275,6 +122973,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -121342,6 +123041,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -121483,6 +123183,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -121543,6 +123244,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -121608,6 +123310,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -121675,6 +123378,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -121747,6 +123451,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -121814,6 +123519,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -121897,6 +123603,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -121964,6 +123671,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -122042,6 +123750,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -122109,6 +123818,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -122425,6 +124135,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -122492,6 +124203,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -122842,6 +124554,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -122909,6 +124622,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -122976,6 +124690,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -123043,6 +124758,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -123516,6 +125232,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     student?: UserCreateNestedOneWithoutFeeStatementsAsStudentInput
@@ -123575,6 +125292,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -124028,6 +125746,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -124095,6 +125814,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -124513,6 +126233,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -124580,6 +126301,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -124780,6 +126502,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -124847,6 +126570,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -125115,6 +126839,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
@@ -125182,6 +126907,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
@@ -125254,6 +126980,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
@@ -125321,6 +127048,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
@@ -125616,6 +127344,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
@@ -125683,6 +127412,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
@@ -125761,6 +127491,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
@@ -125828,6 +127559,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
@@ -125894,6 +127626,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -125961,6 +127694,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -126089,6 +127823,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -126156,6 +127891,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -126275,6 +128011,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -126342,6 +128079,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -126425,6 +128163,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -126492,6 +128231,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -126702,6 +128442,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -126769,6 +128510,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -127338,6 +129080,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -127397,6 +129140,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -127954,6 +129698,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -128021,6 +129766,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -128473,6 +130219,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -128540,6 +130287,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -128710,6 +130458,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -128777,6 +130526,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -129732,6 +131482,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -129799,6 +131550,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -129952,6 +131704,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -130019,6 +131772,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -130136,6 +131890,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -130203,6 +131958,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -130275,6 +132031,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -130342,6 +132099,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -130667,6 +132425,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -130726,6 +132485,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -131042,6 +132802,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -131109,6 +132870,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -131274,6 +133036,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -131341,6 +133104,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -131470,6 +133234,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -131537,6 +133302,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -131615,6 +133381,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -131682,6 +133449,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -131972,6 +133740,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -132039,6 +133808,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -132582,6 +134352,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -132649,6 +134420,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -133062,6 +134834,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -133129,6 +134902,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -133720,6 +135494,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -133787,6 +135562,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -134248,6 +136024,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -134315,6 +136092,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -134586,6 +136364,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -134653,6 +136432,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -135049,6 +136829,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -135116,6 +136897,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -135411,6 +137193,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -135478,6 +137261,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -135729,6 +137513,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -135796,6 +137581,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -135979,6 +137765,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -136046,6 +137833,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -136232,6 +138020,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -136299,6 +138088,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -136600,6 +138390,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -136667,6 +138458,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -136862,6 +138654,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -136929,6 +138722,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -137133,6 +138927,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -137200,6 +138995,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -137698,6 +139494,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -137765,6 +139562,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -137948,6 +139746,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -138015,6 +139814,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -138087,6 +139887,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -138154,6 +139955,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -138226,6 +140028,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -138293,6 +140096,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -138600,6 +140404,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -138667,6 +140472,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -138862,6 +140668,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -138929,6 +140736,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -139007,6 +140815,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -139074,6 +140883,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -139152,6 +140962,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -139219,6 +141030,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -147970,6 +149782,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -148037,6 +149850,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -148465,6 +150279,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -148532,6 +150347,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -149082,6 +150898,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -149149,6 +150966,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -149677,6 +151495,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -149744,6 +151563,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -149892,6 +151712,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -149959,6 +151780,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -150129,6 +151951,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -150196,6 +152019,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -150374,6 +152198,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -150441,6 +152266,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -150744,6 +152570,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -150811,6 +152638,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -150860,6 +152688,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -150920,6 +152749,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     predecessorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedToStatementInput
@@ -150967,6 +152797,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -151026,6 +152857,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -151079,6 +152911,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -151139,6 +152972,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -151186,6 +153020,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -151245,6 +153080,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -151321,6 +153157,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -151388,6 +153225,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -152018,6 +153856,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -152085,6 +153924,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -152412,6 +154252,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -152479,6 +154320,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -152534,6 +154376,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -152594,6 +154437,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     predecessorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedToStatementNestedInput
@@ -152663,6 +154507,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -152723,6 +154568,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -152815,6 +154661,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -152882,6 +154729,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -153070,6 +154918,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -153130,6 +154979,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -153201,6 +155051,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -153268,6 +155119,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -153327,6 +155179,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -153387,6 +155240,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -153464,6 +155318,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -153531,6 +155386,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -153574,6 +155430,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -153634,6 +155491,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -153704,6 +155562,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -153771,6 +155630,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -153831,6 +155691,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -153891,6 +155752,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -153967,6 +155829,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -154034,6 +155897,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -154078,6 +155942,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -154138,6 +156003,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -154312,6 +156178,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -154372,6 +156239,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -154918,6 +156786,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -154985,6 +156854,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -155057,6 +156927,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -155124,6 +156995,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -155605,6 +157477,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -155672,6 +157545,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -155750,6 +157624,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -155817,6 +157692,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -155886,6 +157762,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -155946,6 +157823,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -156200,6 +158078,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -156267,6 +158146,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -156349,6 +158229,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -156409,6 +158290,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -156681,6 +158563,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -156748,6 +158631,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -157128,6 +159012,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -157195,6 +159080,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -157365,6 +159251,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -157432,6 +159319,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -157643,6 +159531,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -157710,6 +159599,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -157981,6 +159871,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -158040,6 +159931,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -158323,6 +160215,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -158390,6 +160283,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -159224,6 +161118,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -159291,6 +161186,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -159363,6 +161259,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -159430,6 +161327,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -159479,6 +161377,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -159539,6 +161438,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -160210,6 +162110,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -160277,6 +162178,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -160355,6 +162257,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -160422,6 +162325,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -160477,6 +162381,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -160537,6 +162442,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -161043,6 +162949,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -161110,6 +163017,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -161159,6 +163067,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -161219,6 +163128,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -161783,6 +163693,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -161850,6 +163761,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -161905,6 +163817,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -161965,6 +163878,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -162572,6 +164486,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -162639,6 +164554,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -162688,6 +164604,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -162748,6 +164665,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -163419,6 +165337,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -163486,6 +165405,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -163541,6 +165461,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -163601,6 +165522,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -163968,6 +165890,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -164035,6 +165958,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -164084,6 +166008,7 @@ export namespace Prisma {
     issuedAt?: Date | string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     candidate?: CandidateCreateNestedOneWithoutFeeStatementsInput
@@ -164144,6 +166069,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     successorStatements?: FeeStatementUncheckedCreateNestedManyWithoutRevisedFromStatementInput
@@ -164551,6 +166477,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -164618,6 +166545,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -164673,6 +166601,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -164733,6 +166662,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -165063,6 +166993,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -165130,6 +167061,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -165632,6 +167564,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -165699,6 +167632,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -166181,6 +168115,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -166248,6 +168183,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -166744,6 +168680,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -166811,6 +168748,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -166878,6 +168816,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestCreateNestedManyWithoutRequestedByInput
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
@@ -166945,6 +168884,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedCreateNestedManyWithoutRequestedByInput
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     backupJobsTriggered?: BackupJobUncheckedCreateNestedManyWithoutTriggeredByUserInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
@@ -167028,6 +168968,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestUpdateManyWithoutRequestedByNestedInput
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
@@ -167095,6 +169036,7 @@ export namespace Prisma {
     accessToScriptRequestsRequested?: AccessToScriptRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     backupJobsTriggered?: BackupJobUncheckedUpdateManyWithoutTriggeredByUserNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
@@ -167163,6 +169105,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsCreateNestedManyWithoutUpdatedByInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderCreateNestedManyWithoutCancelledByInput
@@ -167230,6 +169173,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedCreateNestedManyWithoutRequestedByInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedCreateNestedManyWithoutPerformedByInput
     backupSettingsUpdated?: BackupSettingUncheckedCreateNestedManyWithoutUpdatedByInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedCreateNestedManyWithoutUpdatedByInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutCreatedByUserInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedCreateNestedManyWithoutUpdatedByUserInput
     paymentOrdersCancelled?: PaymentOrderUncheckedCreateNestedManyWithoutCancelledByInput
@@ -167313,6 +169257,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUpdateManyWithoutUpdatedByNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUpdateManyWithoutCancelledByNestedInput
@@ -167380,6 +169325,7 @@ export namespace Prisma {
     certificateRequestsRequested?: CertificateRequestUncheckedUpdateManyWithoutRequestedByNestedInput
     postResultsAuditLogsPerformed?: PostResultsAuditLogUncheckedUpdateManyWithoutPerformedByNestedInput
     backupSettingsUpdated?: BackupSettingUncheckedUpdateManyWithoutUpdatedByNestedInput
+    featureSettingsUpdated?: SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByNestedInput
     candidateExamIdentitiesCreated?: CandidateExamIdentityUncheckedUpdateManyWithoutCreatedByUserNestedInput
     candidateExamIdentitiesUpdated?: CandidateExamIdentityUncheckedUpdateManyWithoutUpdatedByUserNestedInput
     paymentOrdersCancelled?: PaymentOrderUncheckedUpdateManyWithoutCancelledByNestedInput
@@ -167760,6 +169706,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -167800,6 +169747,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -167840,6 +169788,7 @@ export namespace Prisma {
     revisedToStatementId?: string | null
     regenerationReason?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -168204,6 +170153,13 @@ export namespace Prisma {
     backupDirectory?: string
     retentionDays?: number
     backupType?: $Enums.BackupType
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SystemFeatureSettingsCreateManyUpdatedByInput = {
+    id?: string
+    studentLoginEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -169567,6 +171523,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -169626,6 +171583,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -169677,6 +171635,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -169709,6 +171668,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -169768,6 +171728,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -169819,6 +171780,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -169851,6 +171813,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -169910,6 +171873,7 @@ export namespace Prisma {
     revisedToStatementId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -169961,6 +171925,7 @@ export namespace Prisma {
     revisedToStatementId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -171111,6 +173076,27 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SystemFeatureSettingsUpdateWithoutUpdatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentLoginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SystemFeatureSettingsUncheckedUpdateWithoutUpdatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentLoginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SystemFeatureSettingsUncheckedUpdateManyWithoutUpdatedByInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    studentLoginEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type BackupJobUpdateWithoutTriggeredByUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     backupType?: EnumBackupTypeFieldUpdateOperationsInput | $Enums.BackupType
@@ -172109,6 +174095,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -172817,6 +174804,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     student?: UserUpdateOneWithoutFeeStatementsAsStudentNestedInput
@@ -172876,6 +174864,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -172927,6 +174916,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -173600,6 +175590,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -174392,6 +176383,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -174451,6 +176443,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -174502,6 +176495,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -175480,6 +177474,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -175905,6 +177900,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -175964,6 +177960,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -176015,6 +178012,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -182509,6 +184507,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -182549,6 +184548,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -182750,6 +184750,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -182809,6 +184810,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -182860,6 +184862,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -182892,6 +184895,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -182951,6 +184955,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -183002,6 +185007,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -183685,6 +185691,7 @@ export namespace Prisma {
     regenerationReason?: string | null
     regenerationChangedByUserId?: string | null
     regenerationChangedAt?: Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -183990,6 +185997,7 @@ export namespace Prisma {
     issuedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     candidate?: CandidateUpdateOneWithoutFeeStatementsNestedInput
@@ -184049,6 +186057,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     successorStatements?: FeeStatementUncheckedUpdateManyWithoutRevisedFromStatementNestedInput
@@ -184100,6 +186109,7 @@ export namespace Prisma {
     regenerationReason?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedByUserId?: NullableStringFieldUpdateOperationsInput | string | null
     regenerationChangedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    pendingRepricePayload?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

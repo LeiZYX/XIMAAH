@@ -1,9 +1,16 @@
 import { AppHeader } from "@/components/layout/AppHeader";
+import { getSessionUser } from "@/lib/auth/session";
+import { redirectIfStudentLoginDisabled } from "@/lib/features/settings";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export default function StudentLayout({ children }: { children: React.ReactNode }) {
+export default async function StudentLayout({ children }: { children: React.ReactNode }) {
+  const session = await getSessionUser();
+  if (session) {
+    await redirectIfStudentLoginDisabled(session.role);
+  }
+
   return (
     <div className="min-h-screen overflow-x-hidden">
       <AppHeader />

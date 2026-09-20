@@ -5,6 +5,7 @@ import { canGenerateFeeStatements, canRepriceFeeStatements, FEE_OPERATOR_ROLES }
 import { createFeeAuditLog } from "@/lib/fees/audit";
 import {
   FeeError,
+  discardDraftFeeStatement,
   generateFeeStatement,
   issueFeeStatement,
   regenerateRevisedFeeStatement,
@@ -370,6 +371,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(statement);
     }
 
+    if (data.action === "discard-draft" && data.statementId) {
+      const result = await discardDraftFeeStatement(data.statementId, {
+        performedByUserId: auth.user.id,
+      });
+      return NextResponse.json(result);
+    }
+
     if (data.action === "mark-paid-offline" && data.statementId) {
       const result = await markFeeStatementPaidOffline({
         statementId: data.statementId,
@@ -538,6 +546,7 @@ export async function POST(request: NextRequest) {
             displayCurrency:
               (data.displayCurrency as "GBP" | "CNY" | "BOTH") ??
               DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+            issue: Boolean(data.issue),
           });
           results.push({
             workspaceId: workspace.id,
@@ -565,6 +574,7 @@ export async function POST(request: NextRequest) {
           note: "Batch reprice by current fee stage",
           metadata: {
             action: "batch-reprice-by-current-fee-stage",
+            issue: Boolean(data.issue),
             results,
           },
         });
@@ -611,13 +621,18 @@ export async function POST(request: NextRequest) {
         generatedByUserId: auth.user.id,
         displayCurrency:
           (data.displayCurrency as "GBP" | "CNY" | "BOTH") ?? DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+        issue: data.issue !== false,
       });
 
       await createFeeAuditLog({
         action: "FEE_STATEMENT_REGENERATED_REVISED",
         performedByUserId: auth.user.id,
         registrationWindowId: statement.registrationWindowId,
-        metadata: { statementId: statement.id, statementNo: statement.statementNo },
+        metadata: {
+          statementId: statement.id,
+          statementNo: statement.statementNo,
+          issue: data.issue !== false,
+        },
       }).catch((auditError) => {
         console.error("Fee audit log failed:", auditError);
       });
@@ -631,6 +646,7 @@ export async function POST(request: NextRequest) {
         performedByUserId: auth.user.id,
         displayCurrency:
           (data.displayCurrency as "GBP" | "CNY" | "BOTH") ?? DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY,
+        issue: data.issue !== false,
       });
 
       return NextResponse.json(

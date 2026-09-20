@@ -9,9 +9,29 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.4.4";
+export const CURRENT_VERSION = "1.4.6";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.4.6",
+    releaseDate: "2026-09-20",
+    summary: "Admin can turn student login off from Feature switches.",
+    changes: [
+      "Settings → Feature switches adds Allow student login (Admin only)",
+      "When off, students cannot sign in or reset passwords, and open student sessions end on the next visit",
+    ],
+  },
+  {
+    version: "1.4.5",
+    releaseDate: "2026-09-20",
+    summary:
+      "Fee statement regenerate and reprice can save as draft first; discard draft without changing the issued bill.",
+    changes: [
+      "Regenerate and Reprice ask whether to Issue now or Save as draft; drafts stay office-only while the current issued statement remains for students",
+      "Reprice draft previews the new stage prices; Normal / Late / High Late on the registration update only when you Issue",
+      "Batch reprice splits into draft and issue. Discard draft removes the draft only",
+    ],
+  },
   {
     version: "1.4.4",
     releaseDate: "2026-09-20",

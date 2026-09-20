@@ -2,6 +2,10 @@ import type { FeeEntryType, FeeStatementDisplayCurrency } from "@/generated/pris
 import { prisma } from "@/lib/prisma";
 import { createFeeAuditLog } from "@/lib/fees/audit";
 import { DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY } from "@/lib/fees/display-currency";
+import {
+  applyPendingRepricePayload,
+  type PendingRepricePayload,
+} from "@/lib/fees/pending-reprice";
 import { FeeError, regenerateRevisedFeeStatement } from "@/lib/fees/statement";
 import {
   feeStageLabel,
@@ -20,9 +24,12 @@ export async function repriceWorkspaceByCurrentFeeStage(params: {
   workspaceId: string;
   performedByUserId: string;
   displayCurrency?: FeeStatementDisplayCurrency;
+  /** When false, stages are not written until the draft is issued. Default true. */
+  issue?: boolean;
   now?: Date;
 }) {
   const now = params.now ?? new Date();
+  const issue = params.issue ?? true;
   const displayCurrency =
     params.displayCurrency ?? DEFAULT_FEE_STATEMENT_DISPLAY_CURRENCY;
 
@@ -72,65 +79,79 @@ export async function repriceWorkspaceByCurrentFeeStage(params: {
 
   const targetEntryType = resolution.entryType;
   const changes: EntryTypeChange[] = [];
-  const skippedOverridden: Array<{ registrationId: string; paperCode: string | null; entryType: FeeEntryType }> =
-    [];
+  const skippedOverridden: Array<{
+    registrationId: string;
+    paperCode: string | null;
+    entryType: FeeEntryType;
+  }> = [];
+  const registrationUpdates: PendingRepricePayload["registrationUpdates"] = [];
+  const entryTypeByRegistrationId: Record<string, FeeEntryType> = {};
 
-  await prisma.$transaction(async (tx) => {
-    for (const reg of workspace.registrations) {
-      if (reg.entryTypeOverridden) {
-        skippedOverridden.push({
-          registrationId: reg.id,
-          paperCode: reg.paper?.code ?? null,
-          entryType: reg.entryType,
-        });
-        continue;
-      }
-      if (reg.entryType === targetEntryType && reg.feeStageId === resolution.feeStageId) {
-        continue;
-      }
-      changes.push({
+  for (const reg of workspace.registrations) {
+    if (reg.entryTypeOverridden) {
+      skippedOverridden.push({
         registrationId: reg.id,
         paperCode: reg.paper?.code ?? null,
-        from: reg.entryType,
-        to: targetEntryType,
+        entryType: reg.entryType,
       });
-      await tx.studentExamRegistration.update({
-        where: { id: reg.id },
-        data: {
-          entryType: targetEntryType,
-          feeStageId: resolution.feeStageId,
-          entryTypeOverridden: false,
-          entryTypeOverrideReason: null,
-        },
-      });
+      continue;
     }
+    if (reg.entryType === targetEntryType && reg.feeStageId === resolution.feeStageId) {
+      continue;
+    }
+    changes.push({
+      registrationId: reg.id,
+      paperCode: reg.paper?.code ?? null,
+      from: reg.entryType,
+      to: targetEntryType,
+    });
+    registrationUpdates.push({
+      registrationId: reg.id,
+      entryType: targetEntryType,
+      feeStageId: resolution.feeStageId,
+    });
+    entryTypeByRegistrationId[reg.id] = targetEntryType;
+  }
 
-    if (!workspace.entryTypeOverridden) {
-      await tx.registrationWorkspace.update({
-        where: { id: workspace.id },
-        data: {
-          entryType: targetEntryType,
-          feeStageId: resolution.feeStageId,
-          isLateRegistration: resolution.isLateRegistration,
-          entryTypeOverridden: false,
-          entryTypeOverrideReason: null,
-        },
-      });
-    }
-  });
+  const updateWorkspace = !workspace.entryTypeOverridden;
+  const pendingRepricePayload: PendingRepricePayload = {
+    version: 1,
+    workspaceId: workspace.id,
+    targetEntryType,
+    feeStageId: resolution.feeStageId,
+    isLateRegistration: resolution.isLateRegistration,
+    updateWorkspace,
+    registrationUpdates,
+    asOf: now.toISOString(),
+  };
+
+  if (issue) {
+    await prisma.$transaction(async (tx) => {
+      await applyPendingRepricePayload(pendingRepricePayload, tx);
+    });
+  }
 
   const statement = await regenerateRevisedFeeStatement({
     workspaceId: params.workspaceId,
     generatedByUserId: params.performedByUserId,
     displayCurrency,
     repriced: true,
+    issue,
+    ...(issue
+      ? {}
+      : {
+          entryTypeByRegistrationId,
+          pendingRepricePayload,
+        }),
   });
 
   await createFeeAuditLog({
     action: "FEE_STATEMENT_REPRICED_BY_CURRENT_STAGE",
     performedByUserId: params.performedByUserId,
     registrationWindowId: workspace.registrationWindowId,
-    note: `Repriced to ${feeStageLabel(targetEntryType)} using current fee-stage windows`,
+    note: issue
+      ? `Repriced to ${feeStageLabel(targetEntryType)} using current fee-stage windows`
+      : `Reprice draft to ${feeStageLabel(targetEntryType)} (stages apply on issue)`,
     metadata: {
       workspaceId: workspace.id,
       statementId: statement.id,
@@ -140,6 +161,8 @@ export async function repriceWorkspaceByCurrentFeeStage(params: {
       defaultedToNormal: resolution.defaultedToNormal,
       changes,
       skippedOverridden,
+      issue,
+      stagesApplied: issue,
       asOf: now.toISOString(),
     },
   }).catch((auditError) => {

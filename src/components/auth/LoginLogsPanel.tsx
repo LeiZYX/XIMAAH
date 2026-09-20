@@ -11,7 +11,7 @@ type LoginLogRow = {
   occurredAt: string;
   lastAttemptAt: string;
   result: "SUCCESS" | "FAILED" | "LOGOUT";
-  failureReason: "INVALID_CREDENTIALS" | "INACTIVE" | null;
+  failureReason: "INVALID_CREDENTIALS" | "INACTIVE" | "FEATURE_DISABLED" | null;
   attemptCount: number;
   name: string | null;
   role: string | null;
@@ -111,7 +111,12 @@ function resultClass(result: LoginLogRow["result"]): string {
 
 function noteFor(row: LoginLogRow): string {
   if (row.result !== "FAILED") return "";
-  const reason = row.failureReason === "INACTIVE" ? "Account inactive" : "Invalid credentials";
+  const reason =
+    row.failureReason === "INACTIVE"
+      ? "Account inactive"
+      : row.failureReason === "FEATURE_DISABLED"
+        ? "Student login disabled"
+        : "Invalid credentials";
   if (row.attemptCount <= 1) return reason;
   return `${reason} · ${row.attemptCount} attempts · last ${formatClock(row.lastAttemptAt)}`;
 }

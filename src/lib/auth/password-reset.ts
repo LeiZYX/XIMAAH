@@ -37,6 +37,20 @@ export async function createPasswordResetToken(userId: string) {
   return { token, expiresAt };
 }
 
+export async function peekPasswordResetToken(token: string) {
+  const tokenHash = hashResetToken(token);
+  const record = await prisma.passwordResetToken.findUnique({
+    where: { tokenHash },
+    include: { user: true },
+  });
+
+  if (!record || record.usedAt || record.expiresAt < new Date()) {
+    return null;
+  }
+
+  return record.user;
+}
+
 export async function consumePasswordResetToken(token: string) {
   const tokenHash = hashResetToken(token);
   const record = await prisma.passwordResetToken.findUnique({

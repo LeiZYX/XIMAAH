@@ -216,6 +216,14 @@ exports.Prisma.SystemEmailSettingsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.SystemFeatureSettingsScalarFieldEnum = {
+  id: 'id',
+  studentLoginEnabled: 'studentLoginEnabled',
+  updatedByUserId: 'updatedByUserId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.StudentNotificationLogScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -817,6 +825,7 @@ exports.Prisma.FeeStatementScalarFieldEnum = {
   regenerationReason: 'regenerationReason',
   regenerationChangedByUserId: 'regenerationChangedByUserId',
   regenerationChangedAt: 'regenerationChangedAt',
+  pendingRepricePayload: 'pendingRepricePayload',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -1201,6 +1210,11 @@ exports.Prisma.SystemEmailSettingsOrderByRelevanceFieldEnum = {
   smtpPassword: 'smtpPassword',
   mailFrom: 'mailFrom',
   appUrl: 'appUrl'
+};
+
+exports.Prisma.SystemFeatureSettingsOrderByRelevanceFieldEnum = {
+  id: 'id',
+  updatedByUserId: 'updatedByUserId'
 };
 
 exports.Prisma.StudentNotificationLogOrderByRelevanceFieldEnum = {
@@ -1800,7 +1814,8 @@ exports.LoginLogResult = exports.$Enums.LoginLogResult = {
 
 exports.LoginLogFailureReason = exports.$Enums.LoginLogFailureReason = {
   INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
-  INACTIVE: 'INACTIVE'
+  INACTIVE: 'INACTIVE',
+  FEATURE_DISABLED: 'FEATURE_DISABLED'
 };
 
 exports.Grade = exports.$Enums.Grade = {
@@ -1862,7 +1877,8 @@ exports.UserAuditAction = exports.$Enums.UserAuditAction = {
   BACKUP_MANUAL_SUCCESS: 'BACKUP_MANUAL_SUCCESS',
   BACKUP_MANUAL_FAILED: 'BACKUP_MANUAL_FAILED',
   BACKUP_FILE_DOWNLOADED: 'BACKUP_FILE_DOWNLOADED',
-  BACKUP_FILE_DELETED: 'BACKUP_FILE_DELETED'
+  BACKUP_FILE_DELETED: 'BACKUP_FILE_DELETED',
+  FEATURE_SETTINGS_UPDATED: 'FEATURE_SETTINGS_UPDATED'
 };
 
 exports.ExamDocumentAuditAction = exports.$Enums.ExamDocumentAuditAction = {
@@ -2335,6 +2351,7 @@ exports.Prisma.ModelName = {
   StudentIdSequence: 'StudentIdSequence',
   TeacherProfile: 'TeacherProfile',
   SystemEmailSettings: 'SystemEmailSettings',
+  SystemFeatureSettings: 'SystemFeatureSettings',
   StudentNotificationLog: 'StudentNotificationLog',
   UserAuditLog: 'UserAuditLog',
   ExamDocumentAuditLog: 'ExamDocumentAuditLog',

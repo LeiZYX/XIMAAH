@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
-import { getSessionUser } from "@/lib/auth/session";
+import { getSessionUser, clearSessionCookieOptions } from "@/lib/auth/session";
 import { homePathForRole } from "@/lib/auth/permissions";
+import {
+  isStudentLoginEnabled,
+  STUDENT_LOGIN_DISABLED_MESSAGE,
+} from "@/lib/features/settings";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -10,6 +14,15 @@ export async function GET() {
   const session = await getSessionUser();
   if (!session) {
     return NextResponse.json({ user: null }, { status: 401 });
+  }
+
+  if (session.role === "STUDENT" && !(await isStudentLoginEnabled())) {
+    const response = NextResponse.json(
+      { user: null, error: STUDENT_LOGIN_DISABLED_MESSAGE },
+      { status: 403 },
+    );
+    response.cookies.set(clearSessionCookieOptions());
+    return response;
   }
 
   const user = await prisma.user.findUnique({

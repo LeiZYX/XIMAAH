@@ -57,6 +57,23 @@ export async function POST(request: NextRequest) {
       return jsonError("This account is inactive. Contact the Exams Office if you need access.", 403);
     }
 
+    if (user.role === "STUDENT") {
+      const { isStudentLoginEnabled, STUDENT_LOGIN_DISABLED_MESSAGE } = await import(
+        "@/lib/features/settings"
+      );
+      if (!(await isStudentLoginEnabled())) {
+        await recordLoginFailure({
+          headers: request.headers,
+          identifier: data.identifier,
+          user: { id: user.id, name: user.name, role: user.role },
+          reason: "FEATURE_DISABLED",
+        }).catch((error) => {
+          console.error("Login log failed:", error);
+        });
+        return jsonError(STUDENT_LOGIN_DISABLED_MESSAGE, 403);
+      }
+    }
+
     await recordLoginSuccess({
       headers: request.headers,
       identifier: data.identifier,

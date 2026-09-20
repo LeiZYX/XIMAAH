@@ -9,11 +9,16 @@ function LoginFormInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = searchParams.get("next") || "/";
+  const notice = searchParams.get("notice");
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    notice === "student-login-closed"
+      ? "Student sign-in is temporarily closed. Contact the Exams Office."
+      : null,
+  );
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();

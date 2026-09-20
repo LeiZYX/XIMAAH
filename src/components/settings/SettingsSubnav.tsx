@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 const settingsLinks = [
   { href: "/admin/settings/backup", label: "Backup Settings", exact: true },
+  { href: "/admin/settings/feature-switches", label: "Feature switches", exact: true },
 ];
 
 export function SettingsSubnav() {
