@@ -19,9 +19,16 @@ import { prisma } from "@/lib/prisma";
 export interface FeeSummaryCards {
   totalCandidates: number;
   totalExamEntries: number;
+  /** Sum of current fee totals to collect (statement total, or calculated if none). */
   totalGbpAmount: number;
   totalCnyAmount: number;
+  /** Online + offline cash already collected. */
   paidAmount: number;
+  paidOnlineGbp: number;
+  paidOfflineGbp: number;
+  /** Share of totalGbpAmount, 0–100. */
+  paidOnlinePercent: number;
+  paidOfflinePercent: number;
   unpaidAmount: number;
   missingFeeRules: number;
   statementsGenerated: number;
@@ -57,6 +64,8 @@ export interface FeeSummaryRow {
   examSeriesYear: number;
   subjectCount: number;
   registrationFeeGbp: number | null;
+  /** Current fee total to collect for this student. */
+  totalGbp: number;
   amountDueGbp: number;
   paymentStatus: string;
   statementStatus: string;
@@ -255,6 +264,8 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
         totalGbpAmount: true,
         totalCnyAmount: true,
         amountDueGbpAmount: true,
+        previouslyPaidGbpAmount: true,
+        paymentSettlement: true,
         generatedAt: true,
         regenerationReason: true,
         items: {
@@ -478,6 +489,9 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
 
     const calculatedDue =
       Math.round((student.examGbp + (student.registrationFeeGbp ?? 0)) * 100) / 100;
+    const totalGbp = statement
+      ? toNumber(statement.totalGbpAmount)
+      : calculatedDue;
     const amountDueGbp = statement
       ? toNumber(statement.amountDueGbpAmount ?? statement.totalGbpAmount)
       : calculatedDue;
@@ -506,6 +520,7 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
       examSeriesYear: student.examSeriesYear,
       subjectCount: student.subjectIds.size,
       registrationFeeGbp: student.registrationFeeGbp,
+      totalGbp: Math.round(totalGbp * 100) / 100,
       amountDueGbp: Math.round(amountDueGbp * 100) / 100,
       paymentStatus: feeSummaryPaymentStatus(statementStatus),
       statementStatus,
@@ -597,20 +612,104 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
     matchedStudents.map((s) => s.workspaceId).filter(Boolean) as string[],
   );
 
-  let paidAmount = 0;
-  let unpaidAmount = 0;
-  for (const row of rows) {
-    if (row.statementStatus === "PAID") paidAmount += row.amountDueGbp;
-    else if (row.statementStatus === "ISSUED") unpaidAmount += row.amountDueGbp;
+  const filteredWorkspaceIds = [
+    ...new Set(
+      matchedStudents
+        .filter((s) =>
+          rows.some(
+            (r) =>
+              r.candidateKey === s.candidateKey &&
+              r.registrationWindowId === s.registrationWindowId,
+          ),
+        )
+        .map((s) => s.workspaceId)
+        .filter(Boolean) as string[],
+    ),
+  ];
+
+  const [paidOrders, offlinePaidStatements] = await Promise.all([
+    filteredWorkspaceIds.length === 0
+      ? Promise.resolve([])
+      : prisma.paymentOrder.findMany({
+          where: {
+            status: "PAID",
+            feeStatement: { registrationWorkspaceId: { in: filteredWorkspaceIds } },
+          },
+          select: {
+            amountGbp: true,
+            feeStatement: { select: { registrationWorkspaceId: true } },
+          },
+        }),
+    filteredWorkspaceIds.length === 0
+      ? Promise.resolve([])
+      : prisma.feeStatement.findMany({
+          where: {
+            registrationWorkspaceId: { in: filteredWorkspaceIds },
+            paymentSettlement: "OFFLINE",
+          },
+          select: {
+            registrationWorkspaceId: true,
+            totalGbpAmount: true,
+            previouslyPaidGbpAmount: true,
+          },
+        }),
+  ]);
+
+  const onlineByWorkspace = new Map<string, number>();
+  for (const order of paidOrders) {
+    const workspaceId = order.feeStatement.registrationWorkspaceId;
+    if (!workspaceId) continue;
+    onlineByWorkspace.set(
+      workspaceId,
+      Math.round(((onlineByWorkspace.get(workspaceId) ?? 0) + toNumber(order.amountGbp)) * 100) /
+        100,
+    );
   }
+
+  const offlineByWorkspace = new Map<string, number>();
+  for (const statement of offlinePaidStatements) {
+    const workspaceId = statement.registrationWorkspaceId;
+    if (!workspaceId) continue;
+    const total = toNumber(statement.totalGbpAmount);
+    const previously =
+      statement.previouslyPaidGbpAmount == null
+        ? 0
+        : toNumber(statement.previouslyPaidGbpAmount);
+    const offline = Math.max(0, Math.round((total - previously) * 100) / 100);
+    offlineByWorkspace.set(
+      workspaceId,
+      Math.round(((offlineByWorkspace.get(workspaceId) ?? 0) + offline) * 100) / 100,
+    );
+  }
+
+  let paidOnlineGbp = 0;
+  let paidOfflineGbp = 0;
+  for (const workspaceId of filteredWorkspaceIds) {
+    paidOnlineGbp += onlineByWorkspace.get(workspaceId) ?? 0;
+    paidOfflineGbp += offlineByWorkspace.get(workspaceId) ?? 0;
+  }
+  paidOnlineGbp = Math.round(paidOnlineGbp * 100) / 100;
+  paidOfflineGbp = Math.round(paidOfflineGbp * 100) / 100;
+  const paidAmount = Math.round((paidOnlineGbp + paidOfflineGbp) * 100) / 100;
+
+  const totalGbpAmount = Math.round(rows.reduce((sum, row) => sum + row.totalGbp, 0) * 100) / 100;
+  const unpaidAmount = Math.max(0, Math.round((totalGbpAmount - paidAmount) * 100) / 100);
+  const paidOnlinePercent =
+    totalGbpAmount > 0 ? Math.round((paidOnlineGbp / totalGbpAmount) * 1000) / 10 : 0;
+  const paidOfflinePercent =
+    totalGbpAmount > 0 ? Math.round((paidOfflineGbp / totalGbpAmount) * 1000) / 10 : 0;
 
   const cards: FeeSummaryCards = {
     totalCandidates: rows.length,
     totalExamEntries: matchedStudents.reduce((sum, s) => sum + s.examEntryCount, 0),
-    totalGbpAmount: Math.round(rows.reduce((sum, row) => sum + row.amountDueGbp, 0) * 100) / 100,
+    totalGbpAmount,
     totalCnyAmount: Math.round(totalCny * 100) / 100,
-    paidAmount: Math.round(paidAmount * 100) / 100,
-    unpaidAmount: Math.round(unpaidAmount * 100) / 100,
+    paidAmount,
+    paidOnlineGbp,
+    paidOfflineGbp,
+    paidOnlinePercent,
+    paidOfflinePercent,
+    unpaidAmount,
     missingFeeRules: rows.reduce((sum, row) => sum + row.missingFeeRuleCount, 0),
     statementsGenerated: workspacesWithStatement.size,
     statementsNotGenerated: Math.max(0, lockedWorkspaceIds.size - workspacesWithStatement.size),

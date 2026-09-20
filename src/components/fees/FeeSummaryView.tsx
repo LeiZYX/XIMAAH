@@ -27,11 +27,20 @@ interface FeeSummaryViewProps {
 
 type CandidateTypeSelection = "INTERNAL" | "EXTERNAL";
 
-function SummaryCard({ label, value }: { label: string; value: string | number }) {
+function SummaryCard({
+  label,
+  value,
+  detail,
+}: {
+  label: string;
+  value: string | number;
+  detail?: string;
+}) {
   return (
     <Card>
       <p className="text-sm font-medium text-slate-500">{label}</p>
       <p className="mt-2 text-2xl font-semibold text-slate-900">{value}</p>
+      {detail ? <p className="mt-1 text-xs text-slate-500">{detail}</p> : null}
     </Card>
   );
 }
@@ -351,9 +360,35 @@ export function FeeSummaryView({ basePath }: FeeSummaryViewProps) {
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <SummaryCard label="Total Candidates" value={cards.totalCandidates} />
           <SummaryCard label="Total Exam Entries" value={cards.totalExamEntries} />
-          <SummaryCard label="Total GBP" value={formatMoney(cards.totalGbpAmount, "GBP")} />
-          <SummaryCard label="Paid Amount" value={formatMoney(cards.paidAmount, "GBP")} />
-          <SummaryCard label="Unpaid Amount" value={formatMoney(cards.unpaidAmount, "GBP")} />
+          <SummaryCard
+            label="Total to collect"
+            value={formatMoney(cards.totalGbpAmount, "GBP")}
+            detail="Current fee totals for the students in this list"
+          />
+          <SummaryCard
+            label="Paid total"
+            value={formatMoney(cards.paidAmount, "GBP")}
+            detail={
+              cards.totalGbpAmount > 0
+                ? `${Math.round((cards.paidAmount / cards.totalGbpAmount) * 1000) / 10}% of total`
+                : undefined
+            }
+          />
+          <SummaryCard
+            label="Paid online"
+            value={formatMoney(cards.paidOnlineGbp, "GBP")}
+            detail={`${cards.paidOnlinePercent}% of total`}
+          />
+          <SummaryCard
+            label="Paid offline"
+            value={formatMoney(cards.paidOfflineGbp, "GBP")}
+            detail={`${cards.paidOfflinePercent}% of total`}
+          />
+          <SummaryCard
+            label="Unpaid"
+            value={formatMoney(cards.unpaidAmount, "GBP")}
+            detail="Total to collect minus paid"
+          />
           <SummaryCard label="Missing Fee Rules" value={cards.missingFeeRules} />
           <SummaryCard label="Statements Generated" value={cards.statementsGenerated} />
           <SummaryCard label="Statements Not Generated" value={cards.statementsNotGenerated} />

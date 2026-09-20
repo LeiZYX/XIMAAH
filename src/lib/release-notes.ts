@@ -9,9 +9,18 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.4.3";
+export const CURRENT_VERSION = "1.4.4";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.4.4",
+    releaseDate: "2026-09-20",
+    summary: "Fee Summary shows total to collect and splits paid into online and offline.",
+    changes: [
+      "Total to collect is the sum of current fee totals, not the remaining balance",
+      "Paid is split into Paid online and Paid offline, each with the share of the total. Unpaid is total minus paid",
+    ],
+  },
   {
     version: "1.4.3",
     releaseDate: "2026-09-20",
