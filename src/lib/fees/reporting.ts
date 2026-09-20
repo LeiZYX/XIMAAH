@@ -39,6 +39,8 @@ export interface FeeSummaryFacet {
   key: string;
   label: string;
   count: number;
+  /** Students in this bucket whose current statement status is PAID. */
+  paidCount: number;
 }
 
 /** One row per student (workspace) for Fee Summary. */
@@ -532,16 +534,20 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
     };
   });
 
-  const gradeCounts = new Map<string, number>();
+  const gradeCounts = new Map<string, { count: number; paidCount: number }>();
   for (const row of allStudents) {
     const key = row.grade?.trim() || "UNASSIGNED";
-    gradeCounts.set(key, (gradeCounts.get(key) ?? 0) + 1);
+    const current = gradeCounts.get(key) ?? { count: 0, paidCount: 0 };
+    current.count += 1;
+    if (row.statementStatus === "PAID") current.paidCount += 1;
+    gradeCounts.set(key, current);
   }
   const byGrade: FeeSummaryFacet[] = [...gradeCounts.entries()]
-    .map(([key, count]) => ({
+    .map(([key, { count, paidCount }]) => ({
       key,
       label: key === "UNASSIGNED" ? "Unassigned grade" : key,
       count,
+      paidCount,
     }))
     .sort((a, b) => a.label.localeCompare(b.label));
 
@@ -549,16 +555,20 @@ export async function buildFeeSummaryReport(filters: FeeReportFilters): Promise<
   const classSource = gradeForClass
     ? allStudents.filter((row) => (row.grade?.trim() || "UNASSIGNED") === gradeForClass)
     : allStudents;
-  const classCounts = new Map<string, number>();
+  const classCounts = new Map<string, { count: number; paidCount: number }>();
   for (const row of classSource) {
     const key = row.className?.trim() || "UNASSIGNED";
-    classCounts.set(key, (classCounts.get(key) ?? 0) + 1);
+    const current = classCounts.get(key) ?? { count: 0, paidCount: 0 };
+    current.count += 1;
+    if (row.statementStatus === "PAID") current.paidCount += 1;
+    classCounts.set(key, current);
   }
   const byClass: FeeSummaryFacet[] = [...classCounts.entries()]
-    .map(([key, count]) => ({
+    .map(([key, { count, paidCount }]) => ({
       key,
       label: key === "UNASSIGNED" ? "Unassigned class" : key,
       count,
+      paidCount,
     }))
     .sort((a, b) => a.label.localeCompare(b.label));
 

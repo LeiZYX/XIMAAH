@@ -9,9 +9,17 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.4.6";
+export const CURRENT_VERSION = "1.4.7";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.4.7",
+    releaseDate: "2026-09-20",
+    summary: "Fee Summary class tabs show how many students in each class have paid.",
+    changes: [
+      "Class filters show candidate count and paid count, for example Class 1 33 (12)",
+    ],
+  },
   {
     version: "1.4.6",
     releaseDate: "2026-09-20",

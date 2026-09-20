@@ -192,6 +192,7 @@ export function FeeSummaryView({ basePath }: FeeSummaryViewProps) {
 
   const typeLabel = candidateType === "INTERNAL" ? "Internal" : "External";
   const classScopeTotal = byClass.reduce((sum, row) => sum + row.count, 0);
+  const classScopePaidTotal = byClass.reduce((sum, row) => sum + (row.paidCount ?? 0), 0);
   const visibleTips = systemTips.filter((tip) => !dismissedTips.includes(tip));
   const showRegistrationFeeColumn = rows.some((row) => row.registrationFeeGbp != null);
   const colSpan =
@@ -319,7 +320,9 @@ export function FeeSummaryView({ basePath }: FeeSummaryViewProps) {
               }`}
             >
               <span className="font-medium">All classes</span>
-              <span className="ml-2 opacity-80">{classScopeTotal}</span>
+              <span className="ml-2 opacity-80">
+                {classScopeTotal} ({classScopePaidTotal})
+              </span>
             </button>
             {byClass.map((bucket) => (
               <button
@@ -333,7 +336,9 @@ export function FeeSummaryView({ basePath }: FeeSummaryViewProps) {
                 }`}
               >
                 <span className="font-medium">{bucket.label}</span>
-                <span className="ml-2 opacity-80">{bucket.count}</span>
+                <span className="ml-2 opacity-80">
+                  {bucket.count} ({bucket.paidCount ?? 0})
+                </span>
               </button>
             ))}
           </div>
