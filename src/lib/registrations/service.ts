@@ -32,6 +32,7 @@ import {
   ensureEdexcelUciAndRegistrationFeeOnSubjectAdd,
   maybeClearEdexcelRegistrationFeeAndUciAfterSubjectRemoval,
 } from "@/lib/registrations/edexcel-uci-registration";
+import { isCieExamBoard } from "@/lib/exam-boards/branch";
 
 export { registrationInclude } from "@/lib/registrations/include";
 
@@ -200,6 +201,18 @@ export async function createStudentRegistration(studentId: string, examSessionId
     throw new RegistrationError("Exam session not found", 404);
   }
 
+  const examBoard = await prisma.examBoard.findUnique({
+    where: { id: session.paper.subject.qualification.examBoardId },
+    select: { code: true, name: true },
+  });
+  // CIE uses syllabus+option registration; single-paper calendar add is blocked.
+  if (examBoard && isCieExamBoard(examBoard.code, examBoard.name)) {
+    throw new RegistrationError(
+      "Cambridge entries must be registered by syllabus option (or a complete option combination). Use CIE registration.",
+      400,
+    );
+  }
+
   if (existing?.status === RegistrationStatus.ACTIVE) {
     throw new RegistrationError("Already registered for this exam session", 409);
   }
@@ -352,7 +365,10 @@ export async function cancelStudentRegistration(studentId: string, registrationI
     throw new RegistrationError("Locked registrations cannot be changed", 400);
   }
 
-  if (registration.status !== RegistrationStatus.ACTIVE) {
+  if (
+    registration.status !== RegistrationStatus.ACTIVE &&
+    registration.status !== RegistrationStatus.PENDING_SUBJECT_TEACHER
+  ) {
     throw new RegistrationError("Registration cannot be changed", 400);
   }
 

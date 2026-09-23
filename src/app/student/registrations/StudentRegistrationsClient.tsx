@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { StudentRegistrationGroups } from "@/components/registrations/StudentRegistrationGroups";
+import { StudentCieRegistrationPanel } from "@/components/registrations/StudentCieRegistrationPanel";
 import type { StudentRegistrationRow } from "@/lib/registrations/student-groups";
 
 export function StudentRegistrationsClient() {
@@ -48,7 +49,9 @@ export function StudentRegistrationsClient() {
   }
 
   return (
-    <>
+    <div className="space-y-6">
+      <StudentCieRegistrationPanel onChanged={() => void load()} />
+
       {error ? (
         <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
@@ -65,6 +68,6 @@ export function StudentRegistrationsClient() {
           onRefresh={load}
         />
       )}
-    </>
+    </div>
   );
 }

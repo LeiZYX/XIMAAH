@@ -360,6 +360,7 @@ exports.Prisma.RegistrationWindowScalarFieldEnum = {
   postLockAdjustmentEnabled: 'postLockAdjustmentEnabled',
   studentAdjustmentRequestEnabled: 'studentAdjustmentRequestEnabled',
   studentAdjustmentRequestCloseAt: 'studentAdjustmentRequestCloseAt',
+  requireSubjectTeacherConfirmation: 'requireSubjectTeacherConfirmation',
   paymentFeePercent: 'paymentFeePercent',
   createdById: 'createdById',
   createdAt: 'createdAt',
@@ -378,6 +379,52 @@ exports.Prisma.BoardSubmissionBaselineScalarFieldEnum = {
   fileCount: 'fileCount',
   notes: 'notes',
   entrySnapshot: 'entrySnapshot'
+};
+
+exports.Prisma.CieBoardSubmissionBaselineScalarFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  version: 'version',
+  submittedAt: 'submittedAt',
+  submittedByUserId: 'submittedByUserId',
+  candidateCount: 'candidateCount',
+  entryCount: 'entryCount',
+  fileCount: 'fileCount',
+  notes: 'notes',
+  entrySnapshot: 'entrySnapshot'
+};
+
+exports.Prisma.CieSyllabusOptionScalarFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  syllabusCode: 'syllabusCode',
+  syllabusTitle: 'syllabusTitle',
+  optionCode: 'optionCode',
+  componentCodes: 'componentCodes',
+  disallowedSyllabusCodes: 'disallowedSyllabusCodes',
+  subjectId: 'subjectId',
+  notes: 'notes',
+  active: 'active',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CieEntryAssignmentScalarFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  candidateId: 'candidateId',
+  studentId: 'studentId',
+  subjectId: 'subjectId',
+  syllabusCode: 'syllabusCode',
+  optionCode: 'optionCode',
+  status: 'status',
+  confirmedByUserId: 'confirmedByUserId',
+  confirmedAt: 'confirmedAt',
+  rejectedReason: 'rejectedReason',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.RegistrationWindowIncludedSeriesScalarFieldEnum = {
@@ -1145,6 +1192,10 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
@@ -1316,6 +1367,37 @@ exports.Prisma.BoardSubmissionBaselineOrderByRelevanceFieldEnum = {
   registrationWindowId: 'registrationWindowId',
   submittedByUserId: 'submittedByUserId',
   notes: 'notes'
+};
+
+exports.Prisma.CieBoardSubmissionBaselineOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  submittedByUserId: 'submittedByUserId',
+  notes: 'notes'
+};
+
+exports.Prisma.CieSyllabusOptionOrderByRelevanceFieldEnum = {
+  id: 'id',
+  examBoardId: 'examBoardId',
+  examSeriesId: 'examSeriesId',
+  syllabusCode: 'syllabusCode',
+  syllabusTitle: 'syllabusTitle',
+  optionCode: 'optionCode',
+  subjectId: 'subjectId',
+  notes: 'notes'
+};
+
+exports.Prisma.CieEntryAssignmentOrderByRelevanceFieldEnum = {
+  id: 'id',
+  registrationWindowId: 'registrationWindowId',
+  registrationWorkspaceId: 'registrationWorkspaceId',
+  candidateId: 'candidateId',
+  studentId: 'studentId',
+  subjectId: 'subjectId',
+  syllabusCode: 'syllabusCode',
+  optionCode: 'optionCode',
+  confirmedByUserId: 'confirmedByUserId',
+  rejectedReason: 'rejectedReason'
 };
 
 exports.Prisma.RegistrationWindowIncludedSeriesOrderByRelevanceFieldEnum = {
@@ -1958,7 +2040,15 @@ exports.RegistrationWindowStatus = exports.$Enums.RegistrationWindowStatus = {
 
 exports.BoardSubmissionKind = exports.$Enums.BoardSubmissionKind = {
   BULK_ENTRIES: 'BULK_ENTRIES',
-  AMENDMENT: 'AMENDMENT'
+  AMENDMENT: 'AMENDMENT',
+  CIE_ENTRIES: 'CIE_ENTRIES'
+};
+
+exports.RegistrationStatus = exports.$Enums.RegistrationStatus = {
+  ACTIVE: 'ACTIVE',
+  CANCELLED: 'CANCELLED',
+  LOCKED: 'LOCKED',
+  PENDING_SUBJECT_TEACHER: 'PENDING_SUBJECT_TEACHER'
 };
 
 exports.FeeEntryType = exports.$Enums.FeeEntryType = {
@@ -2001,12 +2091,6 @@ exports.RegistrationType = exports.$Enums.RegistrationType = {
   INTERNAL_NORMAL: 'INTERNAL_NORMAL',
   RESTRICTED_INTERNAL: 'RESTRICTED_INTERNAL',
   EXTERNAL: 'EXTERNAL'
-};
-
-exports.RegistrationStatus = exports.$Enums.RegistrationStatus = {
-  ACTIVE: 'ACTIVE',
-  CANCELLED: 'CANCELLED',
-  LOCKED: 'LOCKED'
 };
 
 exports.RegistrationAuditAction = exports.$Enums.RegistrationAuditAction = {
@@ -2362,6 +2446,9 @@ exports.Prisma.ModelName = {
   ClassHomeroomTeacher: 'ClassHomeroomTeacher',
   RegistrationWindow: 'RegistrationWindow',
   BoardSubmissionBaseline: 'BoardSubmissionBaseline',
+  CieBoardSubmissionBaseline: 'CieBoardSubmissionBaseline',
+  CieSyllabusOption: 'CieSyllabusOption',
+  CieEntryAssignment: 'CieEntryAssignment',
   RegistrationWindowIncludedSeries: 'RegistrationWindowIncludedSeries',
   RegistrationFeeStage: 'RegistrationFeeStage',
   RegistrationWorkspace: 'RegistrationWorkspace',

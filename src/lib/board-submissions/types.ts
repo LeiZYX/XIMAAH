@@ -1,4 +1,4 @@
-export type BoardSubmissionsTab = "bulk-entries" | "amendment";
+export type BoardSubmissionsTab = "bulk-entries" | "amendment" | "cie-entries";
 
 export type TimelineSegmentKind =
   | "NOT_STARTED"
@@ -32,7 +32,7 @@ export interface TimelineMilestone {
 
 export interface BoardSubmissionBaselineSummary {
   version: number;
-  kind: "BULK_ENTRIES" | "AMENDMENT";
+  kind: "BULK_ENTRIES" | "AMENDMENT" | "CIE_ENTRIES";
   submittedAt: string;
   submittedByName: string | null;
   candidateCount: number;

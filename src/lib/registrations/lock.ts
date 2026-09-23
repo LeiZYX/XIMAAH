@@ -136,6 +136,8 @@ export async function ensurePostStudentRegistrationCloseLocks(now = new Date()) 
   for (const window of windows) {
     if (!isStudentRegistrationPeriodClosed(window, now)) continue;
     if (now <= window.studentRegistrationCloseAt) continue;
+    const { cancelPendingCieOnStudentLock } = await import("@/lib/cie/registration");
+    await cancelPendingCieOnStudentLock(window.id);
     lockedCount += await lockRegistrationsForWindow(
       window.id,
       undefined,

@@ -8,9 +8,22 @@ import {
   resolveBoardSubmissionPhaseLabel,
 } from "@/lib/board-submissions/timeline";
 import type { BoardSubmissionWindowSummary } from "@/lib/board-submissions/types";
+import { isCieExamBoard } from "@/lib/exam-boards/branch";
 
 function isInternalRegistrationType(registrationType: string): boolean {
   return registrationType === "INTERNAL_NORMAL" || registrationType === "RESTRICTED_INTERNAL";
+}
+
+function identityMissingForBoard(params: {
+  boardCode: string;
+  boardName: string;
+  candidateNumber: string | null | undefined;
+  uciNumber: string | null | undefined;
+}): boolean {
+  if (isCieExamBoard(params.boardCode, params.boardName)) {
+    return !params.candidateNumber?.trim();
+  }
+  return !params.candidateNumber?.trim() || !params.uciNumber?.trim();
 }
 
 export async function buildBoardSubmissionWindowSummary(
@@ -107,7 +120,14 @@ export async function buildBoardSubmissionWindowSummary(
     examEntryCount += workspace.registrations.length;
 
     const identity = workspace.candidate?.examIdentities[0];
-    if (!identity?.candidateNumber?.trim() || !identity?.uciNumber?.trim()) {
+    if (
+      identityMissingForBoard({
+        boardCode: window.examBoard.code,
+        boardName: window.examBoard.name,
+        candidateNumber: identity?.candidateNumber,
+        uciNumber: identity?.uciNumber,
+      })
+    ) {
       missingIdentityCount += 1;
     }
   }

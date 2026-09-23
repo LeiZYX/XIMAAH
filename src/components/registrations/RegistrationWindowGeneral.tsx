@@ -19,6 +19,7 @@ import {
   conflictsForWindow,
   type OpenWindowSeriesConflict,
 } from "@/lib/registrations/open-window-series-conflicts";
+import { canConfigureSubjectTeacherConfirmation } from "@/lib/exam-boards/branch";
 
 interface WindowDetail {
   id: string;
@@ -34,6 +35,7 @@ interface WindowDetail {
   postLockAdjustmentEnabled: boolean;
   studentAdjustmentRequestEnabled: boolean;
   studentAdjustmentRequestCloseAt: string;
+  requireSubjectTeacherConfirmation: boolean;
   examBoard: { id: string; code: string; name: string };
   examSeries: { id: string; name: string; year: number };
   includedExamSessions?: IncludedExamSession[];
@@ -169,6 +171,7 @@ export function RegistrationWindowGeneral({
       studentAdjustmentRequestCloseAt: data.studentAdjustmentRequestCloseAt
         ? isoToDatetimeLocalValue(data.studentAdjustmentRequestCloseAt)
         : "",
+      requireSubjectTeacherConfirmation: Boolean(data.requireSubjectTeacherConfirmation),
     });
     setExamSeriesIds((data.includedExamSessions ?? []).map((session) => session.examSeriesId));
     await Promise.all([loadSessions(data.examBoard.id), loadTimeline(), loadSeriesConflicts()]);
@@ -228,6 +231,7 @@ export function RegistrationWindowGeneral({
         studentAdjustmentRequestCloseAt: window.studentAdjustmentRequestEnabled
           ? datetimeLocalValueToIso(window.studentAdjustmentRequestCloseAt)
           : null,
+        requireSubjectTeacherConfirmation: window.requireSubjectTeacherConfirmation,
       }),
     });
 
@@ -527,6 +531,25 @@ export function RegistrationWindowGeneral({
                   </span>
                 </label>
               ) : null}
+              {canConfigureSubjectTeacherConfirmation(
+                window.examBoard.code,
+                window.examBoard.name,
+              ) ? (
+                <label className="flex items-center gap-2 text-sm text-slate-700">
+                  <input
+                    type="checkbox"
+                    checked={window.requireSubjectTeacherConfirmation}
+                    onChange={(e) =>
+                      setWindow({
+                        ...window,
+                        requireSubjectTeacherConfirmation: e.target.checked,
+                      })
+                    }
+                    className="rounded border-slate-300"
+                  />
+                  Require subject-teacher confirmation for CIE entries
+                </label>
+              ) : null}
             </fieldset>
 
             <div ref={feedbackRef} className="space-y-3 border-t border-slate-100 pt-4">
@@ -574,6 +597,12 @@ export function RegistrationWindowGeneral({
                 ? ` (close ${new Date(datetimeLocalValueToIso(window.studentAdjustmentRequestCloseAt)).toLocaleString()})`
                 : ""}
             </li>
+            {canConfigureSubjectTeacherConfirmation(window.examBoard.code, window.examBoard.name) ? (
+              <li>
+                Subject-teacher confirmation:{" "}
+                {window.requireSubjectTeacherConfirmation ? "Enabled" : "Disabled"}
+              </li>
+            ) : null}
           </ul>
         </Card>
       )}

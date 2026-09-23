@@ -4,6 +4,7 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { LateRegistrationModal } from "@/components/registrations/LateRegistrationModal";
 import { PendingStudentAdjustmentRequests } from "@/components/registrations/PendingStudentAdjustmentRequests";
+import { TeacherCiePendingConfirmations } from "@/components/registrations/TeacherCiePendingConfirmations";
 import { TeacherStudentRegistrationRequestModal } from "@/components/registrations/TeacherStudentRegistrationRequestModal";
 import {
   TeacherChangeRequestModal,
@@ -572,6 +573,8 @@ export function TeacherClassRegistrations() {
         title="Student adjustment requests"
         description="Needs review: late adjustment requests for your class or other classes in the same grade. Reviewed shows your past approvals and rejections, including items waiting for Exams Office."
       />
+
+      <TeacherCiePendingConfirmations />
 
       {success ? (
         <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">

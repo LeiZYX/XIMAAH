@@ -9,9 +9,22 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.4.7";
+export const CURRENT_VERSION = "1.5.0";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.5.0",
+    releaseDate: "2026-09-22",
+    summary:
+      "Cambridge (CIE) registration by syllabus option, optional subject-teacher confirmation, and CIE Entries export.",
+    changes: [
+      "Students can register CIE by choosing a syllabus option (components are added together)",
+      "CIE registration windows can require subject-teacher confirmation before an entry is active",
+      "Board Submissions shows CIE Entries (preview, CSV export, mark submitted) instead of Pearson Bulk for Cambridge windows",
+      "Board Submissions missing-identity count for CIE checks candidate number only (not UCI)",
+      "Exams Office can import CIE syllabus option catalogues per exam series",
+    ],
+  },
   {
     version: "1.4.7",
     releaseDate: "2026-09-20",

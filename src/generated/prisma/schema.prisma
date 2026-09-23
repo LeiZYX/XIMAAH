@@ -65,6 +65,8 @@ enum RegistrationStatus {
   ACTIVE
   CANCELLED
   LOCKED
+  /// CIE open-period subject awaiting subject-teacher confirmation (window switch).
+  PENDING_SUBJECT_TEACHER
 }
 
 enum CandidateExamIdentityStatus {
@@ -364,6 +366,7 @@ enum FeeRefundReason {
 enum BoardSubmissionKind {
   BULK_ENTRIES
   AMENDMENT
+  CIE_ENTRIES
 }
 
 enum ReviewWindowStatus {
@@ -549,60 +552,63 @@ model User {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
-  sourceDocuments                   SourceDocument[]
-  studentProfile                    StudentProfile?
-  teacherAssignments                TeacherAssignment[]         @relation("TeacherAssignments")
-  registrationWindows               RegistrationWindow[]        @relation("RegistrationWindowCreator")
-  studentRegistrations              StudentExamRegistration[]   @relation("StudentRegistrations")
-  passwordResetTokens               PasswordResetToken[]
-  registrationAuditLogsAsStudent    RegistrationAuditLog[]      @relation("RegistrationAuditStudent")
-  registrationAuditLogsPerformed    RegistrationAuditLog[]      @relation("RegistrationAuditPerformer")
-  registrationWorkspaces            RegistrationWorkspace[]     @relation("StudentRegistrationWorkspaces")
-  workspacesLastAdjusted            RegistrationWorkspace[]     @relation("WorkspaceLastAdjuster")
-  registrationChangeRequests        RegistrationChangeRequest[] @relation("ChangeRequestRequester")
-  reviewedChangeRequests            RegistrationChangeRequest[] @relation("ChangeRequestReviewer")
-  studentChangeRequests             RegistrationChangeRequest[] @relation("ChangeRequestStudent")
-  feeRulesCreated                   FeeRule[]                   @relation("FeeRuleCreator")
-  exchangeRatesCreated              ExchangeRate[]              @relation("ExchangeRateCreator")
-  feeStatementsGenerated            FeeStatement[]              @relation("FeeStatementGenerator")
-  feeStatementsAsStudent            FeeStatement[]              @relation("FeeStatementStudent")
-  feeStatementsRegenerationChanged  FeeStatement[]              @relation("FeeStatementRegenerationChanged")
-  feeAuditLogsPerformed             FeeAuditLog[]               @relation("FeeAuditPerformer")
-  feeStatementEventsActed           FeeStatementEvent[]         @relation("FeeStatementEventActor")
-  feeRefundsRecorded                FeeRefund[]                 @relation("FeeRefundRecorder")
-  registrationsAdded                StudentExamRegistration[]   @relation("RegistrationAddedBy")
-  candidate                         Candidate?
-  teacherProfile                    TeacherProfile?
-  userAuditLogsPerformed            UserAuditLog[]              @relation("UserAuditPerformer")
-  userAuditLogsTarget               UserAuditLog[]              @relation("UserAuditTarget")
-  restrictedRegistrationsCreated    RegistrationWorkspace[]     @relation("RestrictedRegistrationCreator")
-  restrictedRegistrationsUpdated    RegistrationWorkspace[]     @relation("RestrictedRegistrationUpdater")
-  examDocumentAuditLogsPerformed    ExamDocumentAuditLog[]      @relation("ExamDocumentAuditPerformer")
-  candidateAuditLogsPerformed       CandidateAuditLog[]         @relation("CandidateAuditPerformer")
-  reviewWindowsCreated              ReviewWindow[]              @relation("ReviewWindowCreator")
-  feeSchedulesCreated               FeeSchedule[]               @relation("FeeScheduleCreator")
-  reviewRequestsRequested           ReviewRequest[]             @relation("ReviewRequestRequester")
-  reviewRequestsReviewed            ReviewRequest[]             @relation("ReviewRequestReviewer")
-  cashInRequestsRequested           CashInRequest[]             @relation("CashInRequestRequester")
-  accessToScriptRequestsRequested   AccessToScriptRequest[]     @relation("AccessToScriptRequester")
-  certificateRequestsRequested      CertificateRequest[]        @relation("CertificateRequestRequester")
-  postResultsAuditLogsPerformed     PostResultsAuditLog[]       @relation("PostResultsAuditPerformer")
-  backupSettingsUpdated             BackupSetting[]             @relation("BackupSettingsUpdater")
-  featureSettingsUpdated            SystemFeatureSettings[]     @relation("FeatureSettingsUpdater")
-  backupJobsTriggered               BackupJob[]                 @relation("BackupJobTriggeredBy")
-  candidateExamIdentitiesCreated    CandidateExamIdentity[]     @relation("CandidateExamIdentityCreatedBy")
-  candidateExamIdentitiesUpdated    CandidateExamIdentity[]     @relation("CandidateExamIdentityUpdatedBy")
-  paymentOrdersCancelled            PaymentOrder[]              @relation("PaymentOrderCancelledBy")
-  offlineWithdrawalRefundsCreated   OfflineWithdrawalRefund[]   @relation("OfflineWithdrawalRefundCreatedBy")
-  offlineWithdrawalRefundsCompleted OfflineWithdrawalRefund[]   @relation("OfflineWithdrawalRefundCompletedBy")
-  boardSubmissionBaselinesSubmitted BoardSubmissionBaseline[]   @relation("BoardSubmissionSubmitter")
-  studentNotificationLogs           StudentNotificationLog[]
-  studentAdjustmentRequests         StudentAdjustmentRequest[]  @relation("StudentAdjustmentRequestStudent")
-  teacherReviewedStudentAdjustments StudentAdjustmentRequest[]  @relation("StudentAdjustmentTeacherReviewer")
-  eoReviewedStudentAdjustments      StudentAdjustmentRequest[]  @relation("StudentAdjustmentEoReviewer")
-  primaryHomeroomAdjustmentRequests StudentAdjustmentRequest[]  @relation("StudentAdjustmentPrimaryHomeroom")
-  classHomeroomAssignments          ClassHomeroomTeacher[]      @relation("ClassHomeroomTeacher")
-  loginLogs                         LoginLog[]
+  sourceDocuments                      SourceDocument[]
+  studentProfile                       StudentProfile?
+  teacherAssignments                   TeacherAssignment[]          @relation("TeacherAssignments")
+  registrationWindows                  RegistrationWindow[]         @relation("RegistrationWindowCreator")
+  studentRegistrations                 StudentExamRegistration[]    @relation("StudentRegistrations")
+  passwordResetTokens                  PasswordResetToken[]
+  registrationAuditLogsAsStudent       RegistrationAuditLog[]       @relation("RegistrationAuditStudent")
+  registrationAuditLogsPerformed       RegistrationAuditLog[]       @relation("RegistrationAuditPerformer")
+  registrationWorkspaces               RegistrationWorkspace[]      @relation("StudentRegistrationWorkspaces")
+  workspacesLastAdjusted               RegistrationWorkspace[]      @relation("WorkspaceLastAdjuster")
+  registrationChangeRequests           RegistrationChangeRequest[]  @relation("ChangeRequestRequester")
+  reviewedChangeRequests               RegistrationChangeRequest[]  @relation("ChangeRequestReviewer")
+  studentChangeRequests                RegistrationChangeRequest[]  @relation("ChangeRequestStudent")
+  feeRulesCreated                      FeeRule[]                    @relation("FeeRuleCreator")
+  exchangeRatesCreated                 ExchangeRate[]               @relation("ExchangeRateCreator")
+  feeStatementsGenerated               FeeStatement[]               @relation("FeeStatementGenerator")
+  feeStatementsAsStudent               FeeStatement[]               @relation("FeeStatementStudent")
+  feeStatementsRegenerationChanged     FeeStatement[]               @relation("FeeStatementRegenerationChanged")
+  feeAuditLogsPerformed                FeeAuditLog[]                @relation("FeeAuditPerformer")
+  feeStatementEventsActed              FeeStatementEvent[]          @relation("FeeStatementEventActor")
+  feeRefundsRecorded                   FeeRefund[]                  @relation("FeeRefundRecorder")
+  registrationsAdded                   StudentExamRegistration[]    @relation("RegistrationAddedBy")
+  candidate                            Candidate?
+  teacherProfile                       TeacherProfile?
+  userAuditLogsPerformed               UserAuditLog[]               @relation("UserAuditPerformer")
+  userAuditLogsTarget                  UserAuditLog[]               @relation("UserAuditTarget")
+  restrictedRegistrationsCreated       RegistrationWorkspace[]      @relation("RestrictedRegistrationCreator")
+  restrictedRegistrationsUpdated       RegistrationWorkspace[]      @relation("RestrictedRegistrationUpdater")
+  examDocumentAuditLogsPerformed       ExamDocumentAuditLog[]       @relation("ExamDocumentAuditPerformer")
+  candidateAuditLogsPerformed          CandidateAuditLog[]          @relation("CandidateAuditPerformer")
+  reviewWindowsCreated                 ReviewWindow[]               @relation("ReviewWindowCreator")
+  feeSchedulesCreated                  FeeSchedule[]                @relation("FeeScheduleCreator")
+  reviewRequestsRequested              ReviewRequest[]              @relation("ReviewRequestRequester")
+  reviewRequestsReviewed               ReviewRequest[]              @relation("ReviewRequestReviewer")
+  cashInRequestsRequested              CashInRequest[]              @relation("CashInRequestRequester")
+  accessToScriptRequestsRequested      AccessToScriptRequest[]      @relation("AccessToScriptRequester")
+  certificateRequestsRequested         CertificateRequest[]         @relation("CertificateRequestRequester")
+  postResultsAuditLogsPerformed        PostResultsAuditLog[]        @relation("PostResultsAuditPerformer")
+  backupSettingsUpdated                BackupSetting[]              @relation("BackupSettingsUpdater")
+  featureSettingsUpdated               SystemFeatureSettings[]      @relation("FeatureSettingsUpdater")
+  backupJobsTriggered                  BackupJob[]                  @relation("BackupJobTriggeredBy")
+  candidateExamIdentitiesCreated       CandidateExamIdentity[]      @relation("CandidateExamIdentityCreatedBy")
+  candidateExamIdentitiesUpdated       CandidateExamIdentity[]      @relation("CandidateExamIdentityUpdatedBy")
+  paymentOrdersCancelled               PaymentOrder[]               @relation("PaymentOrderCancelledBy")
+  offlineWithdrawalRefundsCreated      OfflineWithdrawalRefund[]    @relation("OfflineWithdrawalRefundCreatedBy")
+  offlineWithdrawalRefundsCompleted    OfflineWithdrawalRefund[]    @relation("OfflineWithdrawalRefundCompletedBy")
+  boardSubmissionBaselinesSubmitted    BoardSubmissionBaseline[]    @relation("BoardSubmissionSubmitter")
+  cieBoardSubmissionBaselinesSubmitted CieBoardSubmissionBaseline[] @relation("CieBoardSubmissionSubmitter")
+  studentCieEntryAssignments           CieEntryAssignment[]         @relation("StudentCieEntryAssignments")
+  cieEntryAssignmentsConfirmed         CieEntryAssignment[]         @relation("CieEntryAssignmentConfirmer")
+  studentNotificationLogs              StudentNotificationLog[]
+  studentAdjustmentRequests            StudentAdjustmentRequest[]   @relation("StudentAdjustmentRequestStudent")
+  teacherReviewedStudentAdjustments    StudentAdjustmentRequest[]   @relation("StudentAdjustmentTeacherReviewer")
+  eoReviewedStudentAdjustments         StudentAdjustmentRequest[]   @relation("StudentAdjustmentEoReviewer")
+  primaryHomeroomAdjustmentRequests    StudentAdjustmentRequest[]   @relation("StudentAdjustmentPrimaryHomeroom")
+  classHomeroomAssignments             ClassHomeroomTeacher[]       @relation("ClassHomeroomTeacher")
+  loginLogs                            LoginLog[]
 
   @@index([role])
   @@index([isActive])
@@ -837,6 +843,7 @@ model Candidate {
   examIdentities            CandidateExamIdentity[]
   registrationWorkspaces    RegistrationWorkspace[]
   examRegistrations         StudentExamRegistration[]
+  cieEntryAssignments       CieEntryAssignment[]
   auditLogs                 RegistrationAuditLog[]
   changeRequests            RegistrationChangeRequest[]
   studentAdjustmentRequests StudentAdjustmentRequest[]
@@ -941,50 +948,54 @@ model ClassHomeroomTeacher {
 }
 
 model RegistrationWindow {
-  id                              String                   @id @default(cuid())
-  examBoardId                     String
-  examBoard                       ExamBoard                @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
-  examSeriesId                    String
-  examSeries                      ExamSeries               @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
-  title                           String
+  id                                String                   @id @default(cuid())
+  examBoardId                       String
+  examBoard                         ExamBoard                @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  examSeriesId                      String
+  examSeries                        ExamSeries               @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
+  title                             String
   /// UK-style label, e.g. "2026/27" (September–August).
-  academicYear                    String
-  studentRegistrationOpenAt       DateTime
-  studentRegistrationCloseAt      DateTime
-  registrationCloseAt             DateTime
-  status                          RegistrationWindowStatus @default(DRAFT)
-  studentSelfRegistrationEnabled  Boolean                  @default(true)
-  eoAssistedRegistrationEnabled   Boolean                  @default(true)
-  officeOnlyRegistrationEnabled   Boolean                  @default(true)
-  postLockAdjustmentEnabled       Boolean                  @default(true)
+  academicYear                      String
+  studentRegistrationOpenAt         DateTime
+  studentRegistrationCloseAt        DateTime
+  registrationCloseAt               DateTime
+  status                            RegistrationWindowStatus @default(DRAFT)
+  studentSelfRegistrationEnabled    Boolean                  @default(true)
+  eoAssistedRegistrationEnabled     Boolean                  @default(true)
+  officeOnlyRegistrationEnabled     Boolean                  @default(true)
+  postLockAdjustmentEnabled         Boolean                  @default(true)
   /// When true, students may submit a late adjustment request after student registration close.
-  studentAdjustmentRequestEnabled Boolean                  @default(false)
+  studentAdjustmentRequestEnabled   Boolean                  @default(false)
   /// Latest time a student may submit (or resubmit after reject) a late adjustment request.
-  studentAdjustmentRequestCloseAt DateTime?
+  studentAdjustmentRequestCloseAt   DateTime?
+  /// CIE only (phase 1): open-period entries need subject-teacher confirmation before ACTIVE.
+  requireSubjectTeacherConfirmation Boolean                  @default(false)
   /// Payment platform fee retained on withdrawal refunds (copied from exam-board policy).
-  paymentFeePercent               Decimal                  @default(2) @db.Decimal(5, 2)
-  createdById                     String?
-  createdBy                       User?                    @relation("RegistrationWindowCreator", fields: [createdById], references: [id], onDelete: SetNull)
-  createdAt                       DateTime                 @default(now())
-  updatedAt                       DateTime                 @updatedAt
+  paymentFeePercent                 Decimal                  @default(2) @db.Decimal(5, 2)
+  createdById                       String?
+  createdBy                         User?                    @relation("RegistrationWindowCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt                         DateTime                 @default(now())
+  updatedAt                         DateTime                 @updatedAt
 
-  registrations             StudentExamRegistration[]
-  workspaces                RegistrationWorkspace[]
-  changeRequests            RegistrationChangeRequest[]
-  studentAdjustmentRequests StudentAdjustmentRequest[]
-  feeStages                 RegistrationFeeStage[]
-  registrationAuditLogs     RegistrationAuditLog[]
-  feeRules                  FeeRule[]
-  exchangeRates             ExchangeRate[]
-  feeStatements             FeeStatement[]
-  feeAuditLogs              FeeAuditLog[]
-  includedSeries            RegistrationWindowIncludedSeries[]
-  examDocumentAuditLogs     ExamDocumentAuditLog[]
-  postResultsAuditLogs      PostResultsAuditLog[]
-  offlineWithdrawalRefunds  OfflineWithdrawalRefund[]
-  feeRefunds                FeeRefund[]
-  boardSubmissionBaselines  BoardSubmissionBaseline[]
-  studentNotificationLogs   StudentNotificationLog[]
+  registrations               StudentExamRegistration[]
+  workspaces                  RegistrationWorkspace[]
+  changeRequests              RegistrationChangeRequest[]
+  studentAdjustmentRequests   StudentAdjustmentRequest[]
+  feeStages                   RegistrationFeeStage[]
+  registrationAuditLogs       RegistrationAuditLog[]
+  feeRules                    FeeRule[]
+  exchangeRates               ExchangeRate[]
+  feeStatements               FeeStatement[]
+  feeAuditLogs                FeeAuditLog[]
+  includedSeries              RegistrationWindowIncludedSeries[]
+  examDocumentAuditLogs       ExamDocumentAuditLog[]
+  postResultsAuditLogs        PostResultsAuditLog[]
+  offlineWithdrawalRefunds    OfflineWithdrawalRefund[]
+  feeRefunds                  FeeRefund[]
+  boardSubmissionBaselines    BoardSubmissionBaseline[]
+  cieBoardSubmissionBaselines CieBoardSubmissionBaseline[]
+  cieEntryAssignments         CieEntryAssignment[]
+  studentNotificationLogs     StudentNotificationLog[]
 
   @@index([examBoardId])
   @@index([examSeriesId])
@@ -1011,6 +1022,89 @@ model BoardSubmissionBaseline {
   @@unique([registrationWindowId, version])
   @@index([registrationWindowId])
   @@index([submittedAt])
+}
+
+/// CIE Direct submission baseline (independent from Pearson Bulk/Amendment baselines).
+model CieBoardSubmissionBaseline {
+  id                   String             @id @default(cuid())
+  registrationWindowId String
+  registrationWindow   RegistrationWindow @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  version              Int
+  submittedAt          DateTime           @default(now())
+  submittedByUserId    String?
+  submittedBy          User?              @relation("CieBoardSubmissionSubmitter", fields: [submittedByUserId], references: [id], onDelete: SetNull)
+  candidateCount       Int                @default(0)
+  entryCount           Int                @default(0)
+  fileCount            Int                @default(1)
+  notes                String?            @db.Text
+  entrySnapshot        Json?
+
+  @@unique([registrationWindowId, version])
+  @@index([registrationWindowId])
+  @@index([submittedAt])
+}
+
+/// Cambridge syllabus option catalogue (Direct entry option codes + components).
+model CieSyllabusOption {
+  id                      String     @id @default(cuid())
+  examBoardId             String
+  examBoard               ExamBoard  @relation(fields: [examBoardId], references: [id], onDelete: Cascade)
+  examSeriesId            String
+  examSeries              ExamSeries @relation(fields: [examSeriesId], references: [id], onDelete: Cascade)
+  syllabusCode            String
+  syllabusTitle           String?
+  optionCode              String
+  /// Component / paper numbers for this option, e.g. ["12","02"].
+  componentCodes          Json
+  /// Syllabus codes that cannot be taken with this syllabus, e.g. ["0510"].
+  disallowedSyllabusCodes Json?
+  subjectId               String?
+  subject                 Subject?   @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  notes                   String?    @db.Text
+  active                  Boolean    @default(true)
+  createdAt               DateTime   @default(now())
+  updatedAt               DateTime   @updatedAt
+
+  @@unique([examSeriesId, syllabusCode, optionCode], map: "cie_option_series_syllabus_option_uq")
+  @@index([examBoardId])
+  @@index([examSeriesId])
+  @@index([syllabusCode])
+  @@index([subjectId])
+  @@index([active])
+}
+
+/// Confirmed CIE Direct syllabus+option assignment for a candidate in a registration window.
+model CieEntryAssignment {
+  id                      String                 @id @default(cuid())
+  registrationWindowId    String
+  registrationWindow      RegistrationWindow     @relation(fields: [registrationWindowId], references: [id], onDelete: Cascade)
+  registrationWorkspaceId String?
+  registrationWorkspace   RegistrationWorkspace? @relation(fields: [registrationWorkspaceId], references: [id], onDelete: SetNull)
+  candidateId             String
+  candidate               Candidate              @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  studentId               String?
+  student                 User?                  @relation("StudentCieEntryAssignments", fields: [studentId], references: [id], onDelete: SetNull)
+  subjectId               String
+  subject                 Subject                @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  syllabusCode            String
+  optionCode              String
+  /// Mirrors subject confirmation: ACTIVE once confirmed (or when switch off); PENDING_SUBJECT_TEACHER when awaiting teacher.
+  status                  RegistrationStatus     @default(ACTIVE)
+  confirmedByUserId       String?
+  confirmedBy             User?                  @relation("CieEntryAssignmentConfirmer", fields: [confirmedByUserId], references: [id], onDelete: SetNull)
+  confirmedAt             DateTime?
+  rejectedReason          String?                @db.Text
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
+
+  @@unique([candidateId, registrationWindowId, syllabusCode], map: "cie_assignment_candidate_window_syllabus_uq")
+  @@index([registrationWindowId])
+  @@index([registrationWorkspaceId])
+  @@index([candidateId])
+  @@index([studentId])
+  @@index([subjectId])
+  @@index([status])
+  @@index([syllabusCode, optionCode])
 }
 
 /// Applicable exam sessions for a registration window (exam series / seasons per board).
@@ -1122,6 +1216,7 @@ model RegistrationWorkspace {
   feeStatements             FeeStatement[]
   offlineWithdrawalRefunds  OfflineWithdrawalRefund[]
   feeRefunds                FeeRefund[]
+  cieEntryAssignments       CieEntryAssignment[]
 
   @@unique([candidateId, registrationWindowId, registrationType], map: "rw_candidate_window_type_uq")
   @@unique([studentId, registrationWindowId, registrationType], map: "rw_student_window_type_uq")
@@ -1423,6 +1518,7 @@ model ExamBoard {
   certificateRequests       CertificateRequest[]
   postResultsAuditLogs      PostResultsAuditLog[]
   withdrawalPolicy          ExamBoardWithdrawalPolicy?
+  cieSyllabusOptions        CieSyllabusOption[]
 
   @@index([country])
 }
@@ -1486,6 +1582,8 @@ model Subject {
   cashInRequests            CashInRequest[]
   cashInCodes               CashInCode[]
   accessToScriptRequests    AccessToScriptRequest[]
+  cieSyllabusOptions        CieSyllabusOption[]
+  cieEntryAssignments       CieEntryAssignment[]
 
   @@index([qualificationId])
 }
@@ -1591,6 +1689,7 @@ model ExamSeries {
   certificateRequests      CertificateRequest[]
   postResultsAuditLogs     PostResultsAuditLog[]
   feeSchedules             FeeSchedule[]
+  cieSyllabusOptions       CieSyllabusOption[]
 
   @@index([examBoardId])
   @@index([year])

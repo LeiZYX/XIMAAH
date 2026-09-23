@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { BoardSubmissionsAmendmentTab } from "@/components/board-submissions/BoardSubmissionsAmendmentTab";
 import { BoardSubmissionsBulkEntriesTab } from "@/components/board-submissions/BoardSubmissionsBulkEntriesTab";
+import { BoardSubmissionsCieEntriesTab } from "@/components/board-submissions/BoardSubmissionsCieEntriesTab";
 import { BoardSubmissionsStatusBar } from "@/components/board-submissions/BoardSubmissionsStatusBar";
 import { BoardSubmissionsSummaryCards } from "@/components/board-submissions/BoardSubmissionsSummaryCards";
 import { Card } from "@/components/ui/Card";
@@ -13,12 +14,14 @@ import {
   useRegistrationWindowSelector,
 } from "@/components/registrations/RegistrationWindowSelector";
 import type { BoardSubmissionWindowSummary, BoardSubmissionsTab } from "@/lib/board-submissions/types";
+import { isCieExamBoard } from "@/lib/exam-boards/branch";
 
 interface BoardSubmissionsViewProps {
   basePath: "/admin" | "/exam-office";
 }
 
-function parseTab(value: string | null): BoardSubmissionsTab {
+function parseTab(value: string | null, cieWindow: boolean): BoardSubmissionsTab {
+  if (cieWindow) return "cie-entries";
   return value === "amendment" ? "amendment" : "bulk-entries";
 }
 
@@ -29,10 +32,13 @@ export function BoardSubmissionsView({ basePath }: BoardSubmissionsViewProps) {
 
   const windowFromUrl = searchParams.get("registrationWindowId") ?? "";
   const yearFromUrl = searchParams.get("academicYear") ?? undefined;
-  const tabFromUrl = parseTab(searchParams.get("tab"));
-
-  const [activeTab, setActiveTab] = useState<BoardSubmissionsTab>(tabFromUrl);
   const [summary, setSummary] = useState<BoardSubmissionWindowSummary | null>(null);
+  const cieWindow = summary
+    ? isCieExamBoard(summary.window.examBoard.code, summary.window.examBoard.name)
+    : false;
+  const [activeTab, setActiveTab] = useState<BoardSubmissionsTab>(
+    parseTab(searchParams.get("tab"), false),
+  );
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [summaryError, setSummaryError] = useState<string | null>(null);
 
@@ -74,8 +80,8 @@ export function BoardSubmissionsView({ basePath }: BoardSubmissionsViewProps) {
   );
 
   useEffect(() => {
-    setActiveTab(parseTab(searchParams.get("tab")));
-  }, [searchParams]);
+    setActiveTab(parseTab(searchParams.get("tab"), cieWindow));
+  }, [searchParams, cieWindow]);
 
   useEffect(() => {
     if (!selector.registrationWindowId) return;
@@ -166,45 +172,71 @@ export function BoardSubmissionsView({ basePath }: BoardSubmissionsViewProps) {
             financial={summary.financial}
           />
 
-          <div className="border-b border-slate-200">
-            <nav className="-mb-px flex gap-6">
-              <button
-                type="button"
-                onClick={() => setTab("bulk-entries")}
-                className={`border-b-2 px-1 pb-3 text-sm font-medium transition ${
-                  activeTab === "bulk-entries"
-                    ? "border-indigo-600 text-indigo-600"
-                    : "border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900"
-                }`}
-              >
-                Bulk Entries
-              </button>
-              <button
-                type="button"
-                onClick={() => setTab("amendment")}
-                className={`border-b-2 px-1 pb-3 text-sm font-medium transition ${
-                  activeTab === "amendment"
-                    ? "border-indigo-600 text-indigo-600"
-                    : "border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900"
-                }`}
-              >
-                Amendment
-              </button>
-            </nav>
-          </div>
-
-          {activeTab === "bulk-entries" ? (
-            <BoardSubmissionsBulkEntriesTab
-              summary={summary}
-              basePath={basePath}
-              onSubmitted={() => void loadSummary(selector.registrationWindowId)}
-            />
+          {cieWindow ? (
+            <>
+              <div className="border-b border-slate-200">
+                <nav className="-mb-px flex gap-6">
+                  <button
+                    type="button"
+                    onClick={() => setTab("cie-entries")}
+                    className={`border-b-2 px-1 pb-3 text-sm font-medium transition ${
+                      activeTab === "cie-entries"
+                        ? "border-indigo-600 text-indigo-600"
+                        : "border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900"
+                    }`}
+                  >
+                    CIE Entries
+                  </button>
+                </nav>
+              </div>
+              <BoardSubmissionsCieEntriesTab
+                registrationWindowId={summary.window.id}
+                onSubmitted={() => void loadSummary(selector.registrationWindowId)}
+              />
+            </>
           ) : (
-            <BoardSubmissionsAmendmentTab
-              summary={summary}
-              basePath={basePath}
-              onSubmitted={() => void loadSummary(selector.registrationWindowId)}
-            />
+            <>
+              <div className="border-b border-slate-200">
+                <nav className="-mb-px flex gap-6">
+                  <button
+                    type="button"
+                    onClick={() => setTab("bulk-entries")}
+                    className={`border-b-2 px-1 pb-3 text-sm font-medium transition ${
+                      activeTab === "bulk-entries"
+                        ? "border-indigo-600 text-indigo-600"
+                        : "border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900"
+                    }`}
+                  >
+                    Bulk Entries
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTab("amendment")}
+                    className={`border-b-2 px-1 pb-3 text-sm font-medium transition ${
+                      activeTab === "amendment"
+                        ? "border-indigo-600 text-indigo-600"
+                        : "border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900"
+                    }`}
+                  >
+                    Amendment
+                  </button>
+                </nav>
+              </div>
+
+              {activeTab === "bulk-entries" ? (
+                <BoardSubmissionsBulkEntriesTab
+                  summary={summary}
+                  basePath={basePath}
+                  onSubmitted={() => void loadSummary(selector.registrationWindowId)}
+                />
+              ) : (
+                <BoardSubmissionsAmendmentTab
+                  summary={summary}
+                  basePath={basePath}
+                  onSubmitted={() => void loadSummary(selector.registrationWindowId)}
+                />
+              )}
+            </>
           )}
         </>
       ) : null}

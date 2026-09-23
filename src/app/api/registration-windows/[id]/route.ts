@@ -101,6 +101,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     postLockAdjustmentEnabled?: boolean;
     studentAdjustmentRequestEnabled?: boolean;
     studentAdjustmentRequestCloseAt?: string | null;
+    requireSubjectTeacherConfirmation?: boolean;
   }>(body, []);
 
   if (!data) return jsonError("Invalid body");
@@ -236,6 +237,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
           ? {
               studentAdjustmentRequestEnabled,
               studentAdjustmentRequestCloseAt,
+            }
+          : {}),
+        ...(data.requireSubjectTeacherConfirmation !== undefined
+          ? {
+              requireSubjectTeacherConfirmation: Boolean(
+                data.requireSubjectTeacherConfirmation,
+              ),
             }
           : {}),
       },

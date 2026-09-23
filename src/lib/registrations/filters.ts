@@ -96,7 +96,7 @@ export function buildStudentVisibleRegistrationWhere(
   studentUserId: string,
 ): Prisma.StudentExamRegistrationWhereInput {
   return {
-    status: { in: ["ACTIVE", "LOCKED"] },
+    status: { in: ["ACTIVE", "LOCKED", "PENDING_SUBJECT_TEACHER"] },
     registrationType: "INTERNAL_NORMAL",
     visibleToStudent: true,
     visibleInStudentPortal: true,
