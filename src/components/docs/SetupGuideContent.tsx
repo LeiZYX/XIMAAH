@@ -49,10 +49,11 @@ export function SetupGuideContent({ basePath = "/admin" }: { basePath?: GuideBas
           </span>
           <span className="block">
             <span className="font-semibold">Time:</span> Series → Sessions
+            <span className="text-slate-600"> (CIE: also import syllabus options)</span>
           </span>
           <span className="block">
             <span className="font-semibold">Operations:</span> Calendar Subjects → Registration
-            Window → Fees
+            Window → Fees → Board Submissions
           </span>
         </p>
       </Card>
@@ -66,13 +67,15 @@ export function SetupGuideContent({ basePath = "/admin" }: { basePath?: GuideBas
               Exam board master data (Edexcel, AQA, CIE…).
             </Step>
             <Step n={2} title="Qualification" href={a("/qualifications") ?? undefined}>
-              Belongs to a board (e.g. IAL Mathematics).
+              Belongs to a board (e.g. IAL Mathematics, Cambridge IGCSE).
             </Step>
             <Step n={3} title="Subject" href={a("/subjects") ?? undefined}>
-              Belongs to a qualification (e.g. Physics).
+              Belongs to a qualification. For CIE, subject code should match the syllabus code (e.g.
+              0452).
             </Step>
             <Step n={4} title="Paper" href={a("/papers") ?? undefined}>
-              Belongs to a subject — paper code/title stays stable across seasons.
+              Belongs to a subject — paper code/title stays stable across seasons. For CIE, paper
+              codes map to Direct component numbers (e.g. 12, 02).
             </Step>
           </ol>
         </Card>
@@ -82,17 +85,24 @@ export function SetupGuideContent({ basePath = "/admin" }: { basePath?: GuideBas
           <p className="mt-1 text-sm text-slate-600">When each paper is sat — changes every season.</p>
           <ol className="mt-4 space-y-3">
             <Step n={1} title="Exam Series" href={a("/exam-series") ?? undefined}>
-              An exam season for a board (e.g. Summer 2026).
+              An exam season for a board (e.g. Summer 2026 / Nov 2026).
             </Step>
             <Step n={2} title="Exam Sessions" href={a("/exam-sessions") ?? undefined}>
               Paper + Series + date/time. Same paper, different dates each season.
+            </Step>
+            <Step n={3} title="CIE syllabus options">
+              Cambridge only: for each series, import the Direct option catalogue (syllabus + option
+              code + component list). Required before students can register by option. Use{" "}
+              <span className="font-medium">POST /api/cie/options</span> (Admin UI coming later).
             </Step>
           </ol>
         </Card>
 
         <Card>
           <h2 className="text-lg font-semibold text-slate-900">3. Operations</h2>
-          <p className="mt-1 text-sm text-slate-600">Calendar display, registration, and pricing.</p>
+          <p className="mt-1 text-sm text-slate-600">
+            Calendar, registration, pricing, and board file submission.
+          </p>
           <ol className="mt-4 space-y-3">
             {isAdmin ? (
               <Step n={1} title="Calendar Subjects" href="/admin/calendar-subjects">
@@ -104,11 +114,16 @@ export function SetupGuideContent({ basePath = "/admin" }: { basePath?: GuideBas
               title="Registration Window"
               href={shared("/registration-windows")}
             >
-              Open registration for a series (optional included series).
+              Open registration for a series (optional included series). For CIE windows you can
+              turn on subject-teacher confirmation (default off).
             </Step>
             <Step n={isAdmin ? 3 : 2} title="Fees" href={shared("/registration-windows")}>
-              On the window Fees tab: one row per series subject; Normal / Late / High Late cost &amp;
-              sales.
+              On the window Fees tab: one row per series subject; Normal / Late / High Late cost
+              &amp; sales. Fees still follow paper registrations (CIE options expand to papers).
+            </Step>
+            <Step n={isAdmin ? 4 : 3} title="Board Submissions" href={shared("/board-submissions")}>
+              Edexcel: Bulk Entries + Amendment. CIE: CIE Entries (preview, CSV, mark submitted) —
+              not Pearson Bulk.
             </Step>
           </ol>
         </Card>
@@ -122,13 +137,23 @@ export function SetupGuideContent({ basePath = "/admin" }: { basePath?: GuideBas
             <span className="font-medium">Exam Session</span> is that paper on a Series date/time.
           </li>
           <li>
-            Students register for <span className="font-medium">Sessions</span> inside a{" "}
-            <span className="font-medium">Registration Window</span>, not for Papers directly.
+            <span className="font-medium">Edexcel / AQA:</span> students register for{" "}
+            <span className="font-medium">Sessions</span> (papers) inside a Registration Window.
+          </li>
+          <li>
+            <span className="font-medium">CIE:</span> students register by{" "}
+            <span className="font-medium">syllabus option</span> (or a complete option combination).
+            The Hub still stores paper sessions for fees and timetables, and writes a Direct
+            syllabus+option assignment for board submission.
           </li>
           <li>
             <span className="font-medium">Fee rules</span> follow subjects that have Sessions in the
             window’s series. Sync after sessions exist; calendar subject ticks alone do not create
             fees.
+          </li>
+          <li>
+            Board identity readiness differs by board: CIE needs centre + candidate number; Edexcel
+            Bulk also needs UCI.
           </li>
         </ul>
       </Card>

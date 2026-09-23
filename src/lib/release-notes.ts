@@ -9,9 +9,17 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.5.0";
+export const CURRENT_VERSION = "1.5.1";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.5.1",
+    releaseDate: "2026-09-23",
+    summary: "Setup guide covers Cambridge option catalogue and CIE Entries submission.",
+    changes: [
+      "Setup guide adds CIE syllabus options after Exam Sessions, and Board Submissions with CIE vs Edexcel channels",
+    ],
+  },
   {
     version: "1.5.0",
     releaseDate: "2026-09-22",
