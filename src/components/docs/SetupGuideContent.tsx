@@ -90,10 +90,9 @@ export function SetupGuideContent({ basePath = "/admin" }: { basePath?: GuideBas
             <Step n={2} title="Exam Sessions" href={a("/exam-sessions") ?? undefined}>
               Paper + Series + date/time. Same paper, different dates each season.
             </Step>
-            <Step n={3} title="CIE syllabus options">
-              Cambridge only: for each series, import the Direct option catalogue (syllabus + option
-              code + component list). Required before students can register by option. Use{" "}
-              <span className="font-medium">POST /api/cie/options</span> (Admin UI coming later).
+            <Step n={3} title="CIE syllabus options" href={shared("/cie-options")}>
+              Cambridge only: for each series, maintain the Direct option catalogue (syllabus + option
+              code + component list). Required before students can register by option.
             </Step>
           </ol>
         </Card>

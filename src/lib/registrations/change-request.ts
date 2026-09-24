@@ -386,6 +386,9 @@ export async function submitTeacherChangeRequest(
 
   const workspace = await assertTeacherCanRequestChange(teacher.id, input.registrationWorkspaceId);
 
+  const { assertNotCiePaperLevelChange } = await import("@/lib/cie/assert-option-level");
+  await assertNotCiePaperLevelChange(workspace.registrationWindowId);
+
   if (
     (input.requestType === RegistrationChangeRequestType.ADD_EXAM ||
       input.requestType === RegistrationChangeRequestType.REPLACE_EXAM) &&

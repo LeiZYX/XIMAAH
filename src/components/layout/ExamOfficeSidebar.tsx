@@ -11,6 +11,7 @@ import {
 const topLinks = [
   { href: "/exam-office/registrations", label: "Registrations" },
   { href: "/exam-office/setup-guide", label: "Setup guide" },
+  { href: "/exam-office/cie-options", label: "CIE Options" },
   { href: "/exam-office/board-submissions", label: "Board Submissions" },
   { href: "/exam-office/exam-documents", label: "Exam Documents" },
   { href: "/exam-office/candidates", label: "Candidates" },

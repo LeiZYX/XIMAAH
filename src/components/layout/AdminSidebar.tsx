@@ -20,6 +20,7 @@ const setupLinks = [
   { href: "/admin/papers", label: "Papers" },
   { href: "/admin/exam-series", label: "Exam Series" },
   { href: "/admin/exam-sessions", label: "Exam Sessions" },
+  { href: "/admin/cie-options", label: "CIE Options" },
   { href: "/admin/key-dates", label: "Key Dates" },
   { href: "/admin/exam-documents", label: "Exam Documents" },
   { href: "/admin/import", label: "Import Data" },

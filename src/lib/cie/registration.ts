@@ -210,13 +210,23 @@ export async function registerCieOptionForStudent(params: {
   /** When true and window requires confirmation, skip pending (teacher/EO self-confirm). */
   autoConfirm?: boolean;
   performedByRole?: UserRole;
+  performedById?: string;
+  /** Staff assisted: allow when student self-registration is closed but staff window still open. */
+  asStaff?: boolean;
 }) {
   await ensureExpiredWindowsLocked();
-  await assertStudentCanRegister(params.studentId);
+  if (!params.asStaff) {
+    await assertStudentCanRegister(params.studentId);
+  }
   const now = new Date();
 
   const window = await assertCieWindow(params.registrationWindowId);
-  if (
+  if (params.asStaff) {
+    const { isRegistrationWindowOpenForStaff } = await import("@/lib/registrations/window");
+    if (!isRegistrationWindowOpenForStaff(window, now)) {
+      throw new RegistrationError("Registration window is not open for staff registration", 400);
+    }
+  } else if (
     !canStudentRegisterInWindow(
       {
         ...window,
@@ -321,6 +331,14 @@ export async function registerCieOptionForStudent(params: {
   const status = requireConfirm
     ? RegistrationStatus.PENDING_SUBJECT_TEACHER
     : RegistrationStatus.ACTIVE;
+  const actorId = params.performedById ?? params.studentId;
+  const actorRole = params.performedByRole ?? "STUDENT";
+  const registrationSource =
+    params.asStaff && params.performedByRole === "ADMIN"
+      ? ("ADMIN_ASSISTED" as const)
+      : params.asStaff
+        ? ("EO_ASSISTED" as const)
+        : ("STUDENT_SUBMITTED" as const);
 
   const snapshots = candidateRegistrationSnapshots({
     englishName: student.name,
@@ -399,7 +417,7 @@ export async function registerCieOptionForStudent(params: {
         status,
         lockedAt: null,
         cancelledAt: null,
-        registrationSource: "STUDENT_SUBMITTED" as const,
+        registrationSource,
         visibility: "STUDENT_AND_TEACHER" as const,
         billingScope: "NORMAL_BILLING" as const,
         registrationType: "INTERNAL_NORMAL" as const,
@@ -407,6 +425,9 @@ export async function registerCieOptionForStudent(params: {
         entryType: entry.entryType,
         feeStageId: entry.feeStageId,
         entryTypeOverridden: entry.entryTypeOverridden,
+        ...(params.asStaff
+          ? { addedByUserId: actorId, addedByRole: actorRole, addedAt: now }
+          : {}),
       };
 
       const row = existing
@@ -427,10 +448,12 @@ export async function registerCieOptionForStudent(params: {
           studentId: params.studentId,
           registrationId: row.id,
           examSessionId: session.id,
-          action: RegistrationAuditAction.STUDENT_ADD,
-          performedById: params.studentId,
-          performedByRole: "STUDENT",
-          registrationSource: "STUDENT_SUBMITTED",
+          action: params.asStaff
+            ? RegistrationAuditAction.EO_ASSISTED_REGISTRATION_CREATED
+            : RegistrationAuditAction.STUDENT_ADD,
+          performedById: actorId,
+          performedByRole: actorRole,
+          registrationSource,
           registrationType: "INTERNAL_NORMAL",
           visibility: "STUDENT_AND_TEACHER",
           billingScope: "NORMAL_BILLING",
@@ -454,7 +477,7 @@ export async function registerCieOptionForStudent(params: {
         syllabusCode,
         optionCode: option.optionCode,
         status,
-        confirmedByUserId: requireConfirm ? null : params.studentId,
+        confirmedByUserId: requireConfirm ? null : actorId,
         confirmedAt: requireConfirm ? null : now,
       },
     });
@@ -469,6 +492,9 @@ export async function registerCieComposeForStudent(params: {
   subjectId: string;
   examSessionIds: string[];
   autoConfirm?: boolean;
+  asStaff?: boolean;
+  performedById?: string;
+  performedByRole?: UserRole;
 }) {
   const preview = await previewCieOptionMatch({
     registrationWindowId: params.registrationWindowId,
@@ -494,6 +520,126 @@ export async function registerCieComposeForStudent(params: {
     subjectId: params.subjectId,
     optionCode: preview.match.option.optionCode,
     autoConfirm: params.autoConfirm,
+    asStaff: params.asStaff,
+    performedById: params.performedById,
+    performedByRole: params.performedByRole,
+  });
+}
+
+export async function registerCieOptionForCandidate(params: {
+  candidateId: string;
+  registrationWindowId: string;
+  subjectId?: string;
+  syllabusCode?: string;
+  optionCode: string;
+  actorUserId: string;
+  actorRole: UserRole;
+  examSessionIds?: string[];
+}) {
+  const candidate = await prisma.candidate.findUnique({
+    where: { id: params.candidateId },
+    select: { id: true, userId: true },
+  });
+  if (!candidate?.userId) {
+    throw new RegistrationError(
+      "CIE option registration currently requires an internal candidate linked to a student account",
+      400,
+    );
+  }
+
+  let autoConfirm = params.actorRole === "ADMIN" || params.actorRole === "EXAM_OFFICER";
+  if (params.actorRole === "SUBJECT_TEACHER" && params.subjectId) {
+    const assignment = await prisma.teacherAssignment.findFirst({
+      where: { teacherId: params.actorUserId, subjectId: params.subjectId },
+    });
+    autoConfirm = Boolean(assignment);
+  }
+
+  if (params.examSessionIds?.length) {
+    if (!params.subjectId) {
+      throw new RegistrationError("subjectId is required for compose registration", 400);
+    }
+    return registerCieComposeForStudent({
+      studentId: candidate.userId,
+      registrationWindowId: params.registrationWindowId,
+      subjectId: params.subjectId,
+      examSessionIds: params.examSessionIds,
+      autoConfirm,
+      asStaff: true,
+      performedById: params.actorUserId,
+      performedByRole: params.actorRole,
+    });
+  }
+
+  return registerCieOptionForStudent({
+    studentId: candidate.userId,
+    registrationWindowId: params.registrationWindowId,
+    subjectId: params.subjectId,
+    syllabusCode: params.syllabusCode,
+    optionCode: params.optionCode,
+    autoConfirm,
+    asStaff: true,
+    performedById: params.actorUserId,
+    performedByRole: params.actorRole,
+  });
+}
+
+export async function withdrawCieSyllabusForCandidate(params: {
+  candidateId: string;
+  registrationWindowId: string;
+  syllabusCode: string;
+  asStaff?: boolean;
+}) {
+  const candidate = await prisma.candidate.findUnique({
+    where: { id: params.candidateId },
+    select: { id: true, userId: true },
+  });
+  if (!candidate?.userId) {
+    throw new RegistrationError("Candidate has no linked student account", 400);
+  }
+  if (params.asStaff) {
+    await ensureExpiredWindowsLocked();
+    const window = await assertCieWindow(params.registrationWindowId);
+    const { isRegistrationWindowOpenForStaff } = await import("@/lib/registrations/window");
+    if (!isRegistrationWindowOpenForStaff(window, new Date())) {
+      throw new RegistrationError("Registration window is not open for staff changes", 400);
+    }
+    // reuse student withdraw after bypassing student edit check by temporarily calling transaction path
+    const syllabusCode = params.syllabusCode.trim().toUpperCase();
+    const assignment = await prisma.cieEntryAssignment.findUnique({
+      where: {
+        candidateId_registrationWindowId_syllabusCode: {
+          candidateId: candidate.id,
+          registrationWindowId: window.id,
+          syllabusCode,
+        },
+      },
+    });
+    if (!assignment) throw new RegistrationError("CIE assignment not found", 404);
+    if (assignment.status === RegistrationStatus.LOCKED) {
+      throw new RegistrationError("Locked CIE entries cannot be withdrawn here", 400);
+    }
+    const now = new Date();
+    return prisma.$transaction(async (tx) => {
+      await tx.studentExamRegistration.updateMany({
+        where: {
+          candidateId: candidate.id,
+          registrationWindowId: window.id,
+          subjectId: assignment.subjectId,
+          status: {
+            in: [RegistrationStatus.ACTIVE, RegistrationStatus.PENDING_SUBJECT_TEACHER],
+          },
+        },
+        data: { status: RegistrationStatus.CANCELLED, cancelledAt: now },
+      });
+      await tx.cieEntryAssignment.delete({ where: { id: assignment.id } });
+      return { ok: true as const, syllabusCode };
+    });
+  }
+  return withdrawCieSyllabusForStudent({
+    studentId: candidate.userId,
+    registrationWindowId: params.registrationWindowId,
+    syllabusCode: params.syllabusCode,
   });
 }
 

@@ -509,6 +509,9 @@ export async function submitStudentAdjustmentRequest(
     );
   }
 
+  const { assertNotCiePaperLevelChange } = await import("@/lib/cie/assert-option-level");
+  await assertNotCiePaperLevelChange(workspace.registrationWindowId);
+
   await assertNoPendingStudentAdjustment(workspace.id);
 
   const pendingTeacherChange = await prisma.registrationChangeRequest.findFirst({

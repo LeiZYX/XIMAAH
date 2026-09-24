@@ -28,6 +28,8 @@ import {
 } from "@/components/calendar/sessionEventContent";
 import { CALENDAR_EVENT_BODY_HEIGHT_PX } from "@/lib/calendar-event-layout";
 import { filterCalendarEvents } from "@/lib/calendar-search";
+import { CieOptionRegistrationForm } from "@/components/registrations/CieOptionRegistrationForm";
+import { isCieExamBoard } from "@/lib/exam-boards/branch";
 
 interface ExamBoardOption {
   id: string;
@@ -569,6 +571,11 @@ export function CalendarView() {
     selectedEvent?.type === "session" &&
     selectedProps.registrationOpen &&
     !selectedProps.isRegistered;
+  const isCieSession =
+    selectedEvent?.type === "session" &&
+    isCieExamBoard(String(selectedProps.examBoard ?? ""), null);
+  const cieWindowId = String(selectedProps.registrationWindowId ?? "");
+  const cieSyllabusCode = String(selectedProps.subjectCode ?? "");
   const showLatePhaseAddHint =
     isStudent &&
     selectedEvent?.type === "session" &&
@@ -1016,7 +1023,22 @@ export function CalendarView() {
                       ) : null}
                     </div>
                   )}
-                  {canRegister ? (
+                  {canRegister && isCieSession && cieWindowId ? (
+                    <div className="rounded-lg border border-indigo-100 bg-indigo-50/40 p-3">
+                      <p className="mb-2 text-sm font-medium text-indigo-900">
+                        Cambridge entry — register by syllabus option
+                      </p>
+                      <CieOptionRegistrationForm
+                        key={`${cieWindowId}-${cieSyllabusCode}`}
+                        registrationWindowId={cieWindowId}
+                        initialSyllabusCode={cieSyllabusCode || undefined}
+                        compact
+                        onSuccess={async () => {
+                          await loadEvents();
+                        }}
+                      />
+                    </div>
+                  ) : canRegister ? (
                     <button
                       type="button"
                       disabled={registrationActionLoading}
@@ -1048,7 +1070,7 @@ export function CalendarView() {
                       onClick={handleRemoveFromList}
                       className="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
                     >
-                      Remove from list
+                      {isCieSession ? "Withdraw syllabus" : "Remove from list"}
                     </button>
                   ) : null}
                   <Link

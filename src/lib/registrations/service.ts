@@ -384,6 +384,30 @@ export async function cancelStudentRegistration(studentId: string, registrationI
     );
   }
 
+  const examBoard = await prisma.examBoard.findUnique({
+    where: { id: registration.examBoardId },
+    select: { code: true, name: true },
+  });
+  if (examBoard && isCieExamBoard(examBoard.code, examBoard.name)) {
+    const subject = await prisma.subject.findUnique({
+      where: { id: registration.subjectId },
+      select: { code: true },
+    });
+    if (!subject) {
+      throw new RegistrationError("Subject not found for this registration", 400);
+    }
+    const { withdrawCieSyllabusForStudent } = await import("@/lib/cie/registration");
+    await withdrawCieSyllabusForStudent({
+      studentId,
+      registrationWindowId: registration.registrationWindowId,
+      syllabusCode: subject.code,
+    });
+    return prisma.studentExamRegistration.findUniqueOrThrow({
+      where: { id: registrationId },
+      include: registrationInclude,
+    });
+  }
+
   return prisma.$transaction(async (tx) => {
     const updated = await tx.studentExamRegistration.update({
       where: { id: registrationId },

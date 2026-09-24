@@ -9,9 +9,22 @@ export interface ReleaseNote {
   knownIssues?: string[];
 }
 
-export const CURRENT_VERSION = "1.5.1";
+export const CURRENT_VERSION = "1.5.2";
 
 export const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.5.2",
+    releaseDate: "2026-09-24",
+    summary:
+      "CIE registration can compose options, use the calendar, and staff can assist; option catalogue has an admin page.",
+    changes: [
+      "Students can select a CIE option or compose components until they match a valid option",
+      "Calendar opens CIE option registration for Cambridge sessions; remove withdraws the whole syllabus",
+      "Staff assisted registration for CIE windows uses the same option flow",
+      "Admin and Exam Office can maintain CIE syllabus options per exam series",
+      "Cambridge late adjustments and teacher single-paper change requests are blocked in favour of complete options",
+    ],
+  },
   {
     version: "1.5.1",
     releaseDate: "2026-09-23",

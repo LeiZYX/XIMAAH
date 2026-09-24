@@ -26,6 +26,8 @@ import {
   logRegistrationSubmitPayload,
   readSubmitErrorMessage,
 } from "@/lib/registrations/submit-response";
+import { CieOptionRegistrationForm } from "@/components/registrations/CieOptionRegistrationForm";
+import { isCieExamBoard } from "@/lib/exam-boards/branch";
 
 interface CandidateOption {
   id: string;
@@ -75,8 +77,12 @@ export function StaffRegistrationModal({
   const selectedWindow = windowSelector.selectedWindow as {
     id: string;
     examSeries: { id: string; name: string; year: number };
-    examBoard: { id: string; name: string };
+    examBoard: { id: string; name: string; code?: string };
   } | null;
+  const isCieWindow = Boolean(
+    selectedWindow &&
+      isCieExamBoard(selectedWindow.examBoard.code ?? "", selectedWindow.examBoard.name),
+  );
   const [subjectFilter, setSubjectFilter] = useState("");
   const [sessionQuery, setSessionQuery] = useState("");
   const [sessions, setSessions] = useState<ExamSessionOption[]>([]);
@@ -322,6 +328,26 @@ export function StaffRegistrationModal({
             candidateDetailBasePath={candidateDetailBasePath}
           />
 
+          {isCieWindow && registrationWindowId && selectedCandidate ? (
+            <div className="rounded-lg border border-indigo-100 bg-indigo-50/30 p-3">
+              <p className="mb-2 text-sm font-medium text-indigo-900">
+                Cambridge assisted registration — use syllabus options (not single papers)
+              </p>
+              <CieOptionRegistrationForm
+                registrationWindowId={registrationWindowId}
+                candidateId={selectedCandidate.id}
+                submitLabel={submitLabel}
+                onSuccess={() => {
+                  onSubmitted({ workspaceId: undefined });
+                  onClose();
+                }}
+                onError={setError}
+              />
+            </div>
+          ) : null}
+
+          {!isCieWindow ? (
+          <>
           <label className="block text-sm">
             <span className="mb-1 block font-medium text-slate-700">Exam sessions *</span>
             <input
@@ -385,11 +411,14 @@ export function StaffRegistrationModal({
               className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
             />
           </label>
+          </>
+          ) : null}
         </div>
 
         {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
         {warning ? <p className="mt-3 text-sm text-amber-700">{warning}</p> : null}
 
+        {!isCieWindow ? (
         <div className="mt-6 flex justify-end gap-2">
           <button type="button" onClick={onClose} disabled={submitting} className="rounded-lg border border-slate-300 px-4 py-2 text-sm">
             Cancel
@@ -403,6 +432,13 @@ export function StaffRegistrationModal({
             {submitting ? "Submitting..." : submitLabel}
           </button>
         </div>
+        ) : (
+        <div className="mt-6 flex justify-end">
+          <button type="button" onClick={onClose} className="rounded-lg border border-slate-300 px-4 py-2 text-sm">
+            Close
+          </button>
+        </div>
+        )}
       </div>
     </div>
   );
